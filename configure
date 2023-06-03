@@ -3931,7 +3931,7 @@ $as_echo "$ac_cv_safe_to_define___extensions__" >&6; }
 
 
 
-am__api_version='1.15'
+am__api_version='1.16'
 
 # Find a good install program.  We prefer a C program (faster),
 # so one script is as good as another.  But avoid the broken or
@@ -17824,7 +17824,7 @@ fi
 
 
 
-for ac_prog in python2 python2.7 python2.6 python2.5 python2.4 python2.3 python2.2 python2.1 python2.0 python
+for ac_prog in python3 python3.10 python3.9 python3.8 python3.7 python3.6 python2 python2.7 python2.6 python2.5 python2.4 python2.3 python2.2 python2.1 python2.0 python
 do
   # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2
@@ -20457,7 +20457,7 @@ if ${am_cv_pathless_PYTHON+:} false; then :
   $as_echo_n "(cached) " >&6
 else
 
-	for am_cv_pathless_PYTHON in python2 python2.7 python2.6 python none; do
+	for am_cv_pathless_PYTHON in python3 python3.10 python3.9 python3.8 python3.7 python3.6 python2 python2.7 python2.6 python none; do
 	  test "$am_cv_pathless_PYTHON" = none && break
 	  prog="import sys
 # split strings by '.' and convert to numeric.  Append some zeros
@@ -20540,7 +20540,7 @@ $as_echo_n "checking for $am_display_PYTHON version... " >&6; }
 if ${am_cv_python_version+:} false; then :
   $as_echo_n "(cached) " >&6
 else
-  am_cv_python_version=`$PYTHON -c "import sys; sys.stdout.write(sys.version[:3])"`
+  am_cv_python_version=`$PYTHON -c "import sys; sys.stdout.write(F'{sys.version_info.major}.{sys.version_info.minor}')"`
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $am_cv_python_version" >&5
 $as_echo "$am_cv_python_version" >&6; }
@@ -20569,7 +20569,7 @@ $as_echo "$am_cv_python_platform" >&6; }
   # Just factor out some code duplication.
   am_python_setup_sysconfig="\
 import sys
-# Prefer sysconfig over distutils.sysconfig, for better compatibility
+# Prefer sysconfig over sysconfig, for better compatibility
 # with python 3.x.  See automake bug#10227.
 try:
     import sysconfig
@@ -20708,8 +20708,8 @@ Please check your Python installation." >&2;}
 $as_echo_n "checking for Python include path... " >&6; }
 
       if test -z "$PYTHON_INCLUDES"; then
-          python_path=`$PYTHON -c "import distutils.sysconfig; \
-                                   print distutils.sysconfig.get_python_inc();"`
+          python_path=`$PYTHON -c "import sysconfig; \
+                                   print(sysconfig.get_path('include'));"`
           if test -n "${python_path}"; then
               python_path="-I$python_path"
           fi
@@ -20730,22 +20730,20 @@ $as_echo_n "checking Python linker flags... " >&6; }
       if test "x$PYTHON_LIBS" = "x"; then
           # (makes two attempts to ensure we've got a version number
           # from the interpreter)
-          py_version=`$PYTHON -c "from distutils.sysconfig import *; \
-                      from string import join; \
-                      print join(get_config_vars('VERSION'))"`
+          py_version=`$PYTHON -c "from sysconfig import *; \
+                      print(' '.join(get_config_vars('py_version')))"`
           if test "x$py_version" = "xNone"; then
               if test "x$PYTHON_VERSION" != "x"; then
                   py_version=$PYTHON_VERSION
               else
                   py_version=`$PYTHON -c "import sys; \
-                              print sys.version[:3]"`
+                              print(sys.version[:3])"`
               fi
           fi
 
-          PYTHON_LIBS=`$PYTHON -c "from distutils.sysconfig import *; \
-                                   from string import join; \
-                                   print '-L' + PREFIX + '/lib', \
-                                   '-lpython';"`$py_version
+          PYTHON_LIBS=`$PYTHON -c "from sysconfig import *; \
+                                   print('-L' + ' '.join(get_config_vars('prefix')) + '/lib', \
+                                   '-lpython');"`$py_version
       fi
 
       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PYTHON_LIBS" >&5
