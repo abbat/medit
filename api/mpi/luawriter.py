@@ -392,10 +392,10 @@ class Writer(object):
         func_call += ');'
 
         for line in func_body.start:
-            print >>self.out, '    ' + line
-        print >>self.out, '    ' + func_call
+            print('    ' + line, file=self.out)
+        print('    ' + func_call, file=self.out)
         for line in func_body.end:
-            print >>self.out, '    ' + line
+            print('    ' + line, file=self.out)
 
         self.out.write('}\n\n')
 

@@ -5,11 +5,11 @@ import os
 import string
 import sys
 
-import argtypes
-import definitions
-import defsparser
-import override
-import reversewrapper
+from . import argtypes
+from . import definitions
+from . import defsparser
+from . import override
+from . import reversewrapper
 import warnings
 
 pygtk_version = 16
@@ -272,7 +272,7 @@ class Wrapper:
         self.fp.write('\n/* ----------- %s ----------- */\n\n' %
                       self.objinfo.c_name)
         substdict = self.get_initial_class_substdict()
-        if not substdict.has_key('tp_flags'):
+        if 'tp_flags' not in substdict:
             substdict['tp_flags'] = 'Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE'
         substdict['typename'] = self.objinfo.c_name
         if self.overrides.modulename:
@@ -302,7 +302,7 @@ class Wrapper:
                 self.write_function(slotname, data)
                 substdict[slot] = slotfunc
             else:
-                if not substdict.has_key(slot):
+                if slot not in substdict:
                     substdict[slot] = '0'
 
         self.fp.write(self.type_tmpl % substdict)
@@ -436,7 +436,7 @@ class Wrapper:
                     constructor))[0]
                 self.fp.write(code)
             initfunc = '_wrap_' + funcname
-        except argtypes.ArgTypeError, ex:
+        except argtypes.ArgTypeError as ex:
             sys.stderr.write('Could not write constructor for %s: %s\n'
                              % (self.objinfo.c_name, str(ex)))
 
@@ -514,7 +514,7 @@ class Wrapper:
                                  'flags': methflags,
                                  'docstring': meth.docstring })
                 methods_coverage.declare_wrapped()
-            except argtypes.ArgTypeError, ex:
+            except argtypes.ArgTypeError as ex:
                 methods_coverage.declare_not_wrapped()
                 sys.stderr.write('Could not write method %s.%s: %s\n'
                                 % (klass, meth.name, str(ex)))
@@ -536,7 +536,7 @@ class Wrapper:
                                  'flags': methflags,
                                  'docstring': meth.docstring })
                 methods_coverage.declare_wrapped()
-            except argtypes.ArgTypeError, ex:
+            except argtypes.ArgTypeError as ex:
                 methods_coverage.declare_not_wrapped()
                 sys.stderr.write('Could not write method %s.%s: %s\n'
                                 % (klass, method_name, str(ex)))
@@ -590,7 +590,7 @@ class Wrapper:
                                  'flags': methflags + '|METH_CLASS',
                                  'docstring': 'NULL'})
                 vaccessors_coverage.declare_wrapped()
-            except argtypes.ArgTypeError, ex:
+            except argtypes.ArgTypeError as ex:
                 vaccessors_coverage.declare_not_wrapped()
                 sys.stderr.write(
                     'Could not write virtual accessor method %s.%s: %s\n'
@@ -633,7 +633,7 @@ class Wrapper:
                     self.fp.write(buf.flush())
                 virtuals.append((fixname(meth.name), '_wrap_' + method_name))
                 vproxies_coverage.declare_wrapped()
-            except argtypes.ArgTypeError, ex:
+            except argtypes.ArgTypeError as ex:
                 vproxies_coverage.declare_not_wrapped()
                 virtuals.append((fixname(meth.name), None))
                 sys.stderr.write('Could not write virtual proxy %s.%s: %s\n'
@@ -721,7 +721,7 @@ class Wrapper:
                                     'field': self.get_field_accessor(cfname),
                                     'codeafter': info.get_codeafter() })
                     gettername = funcname
-                except argtypes.ArgTypeError, ex:
+                except argtypes.ArgTypeError as ex:
                     sys.stderr.write(
                         "Could not write getter for %s.%s: %s\n"
                         % (self.objinfo.c_name, fname, str(ex)))
@@ -861,7 +861,7 @@ _wrap__get_symbol(G_GNUC_UNUSED PyObject *self, PyObject *args)
                 functions.append((func.name, '_wrap_' + funcname,
                                   methflags, func.docstring))
                 functions_coverage.declare_wrapped()
-            except argtypes.ArgTypeError, ex:
+            except argtypes.ArgTypeError as ex:
                 functions_coverage.declare_not_wrapped()
                 sys.stderr.write('Could not write function %s: %s\n'
                                  % (func.name, str(ex)))
@@ -875,7 +875,7 @@ _wrap__get_symbol(G_GNUC_UNUSED PyObject *self, PyObject *args)
                 functions.append((funcname, '_wrap_' + funcname,
                                   methflags, 'NULL'))
                 functions_coverage.declare_wrapped()
-            except argtypes.ArgTypeError, ex:
+            except argtypes.ArgTypeError as ex:
                 functions_coverage.declare_not_wrapped()
                 sys.stderr.write('Could not write function %s: %s\n'
                                  % (funcname, str(ex)))
@@ -1018,17 +1018,17 @@ class GObjectWrapper(Wrapper):
     def write_property_based_constructor(self, constructor):
         self.objinfo.has_new_constructor_api = True
         out = self.fp
-        print >> out, "static int"
-        print >> out, '_wrap_%s(PyGObject *self, PyObject *args,' \
-              ' PyObject *kwargs)\n{' % constructor.c_name
+        print("static int", file=out)
+        print('_wrap_%s(PyGObject *self, PyObject *args,' \
+              ' PyObject *kwargs)\n{' % constructor.c_name, file=out)
         if constructor.params:
             s = "    GType obj_type = pyg_type_from_object((PyObject *) self);"
-            print >> out, s
+            print(s, file=out)
 
         def py_str_list_to_c(arg):
             if arg:
                 return "{" + ", ".join(
-                    map(lambda s: '(char*) "' + s + '"', arg)) + ", NULL }"
+                    ['(char*) "' + s + '"' for s in arg]) + ", NULL }"
             else:
                 return "{ NULL }"
 
@@ -1048,21 +1048,21 @@ class GObjectWrapper(Wrapper):
             [param.pname
              for param in mandatory_arguments + optional_arguments])
 
-            print >> out, "    GParameter params[%i];" % \
-                  len(constructor.params)
-            print >> out, "    PyObject *parsed_args[%i] = {NULL, };" % \
-                  len(constructor.params)
-            print >> out, "    char *arg_names[] = %s;" % arg_names
-            print >> out, "    char *prop_names[] = %s;" % prop_names
-            print >> out, "    guint nparams, i;"
-            print >> out
+            print("    GParameter params[%i];" % \
+                  len(constructor.params), file=out)
+            print("    PyObject *parsed_args[%i] = {NULL, };" % \
+                  len(constructor.params), file=out)
+            print("    char *arg_names[] = %s;" % arg_names, file=out)
+            print("    char *prop_names[] = %s;" % prop_names, file=out)
+            print("    guint nparams, i;", file=out)
+            print(file=out)
             if constructor.deprecated is not None:
                 out.write(
                     '    if (PyErr_Warn(PyExc_DeprecationWarning, '
                     '"%s") < 0)\n' %
                     constructor.deprecated)
-                print >> out, '        return -1;'
-                print >> out
+                print('        return -1;', file=out)
+                print(file=out)
             out.write("    if (!PyArg_ParseTupleAndKeywords(args, kwargs, ")
             template = '"'
             if mandatory_arguments:
@@ -1070,9 +1070,9 @@ class GObjectWrapper(Wrapper):
             if optional_arguments:
                 template += "|" + "O"*len(optional_arguments)
             template += ':%s.__init__"' % classname
-            print >> out, template, ", arg_names",
+            print(template, ", arg_names", end=' ', file=out)
             for i in range(len(constructor.params)):
-                print >> out, ", &parsed_args[%i]" % i,
+                print(", &parsed_args[%i]" % i, end=' ', file=out)
 
             out.write(
                 "))\n"
@@ -1114,7 +1114,7 @@ class GObjectWrapper(Wrapper):
             '    }\n' % classname)
 
         if not constructor.caller_owns_return:
-            print >> out, "    g_object_ref(self->obj);\n"
+            print("    g_object_ref(self->obj);\n", file=out)
 
         out.write(
             '    return 0;\n'
@@ -1200,7 +1200,7 @@ class GInterfaceWrapper(GObjectWrapper):
                     self.fp.write(buf.flush())
                 proxies.append((fixname(meth.name), '_wrap_' + method_name))
                 iproxies_coverage.declare_wrapped()
-            except argtypes.ArgTypeError, ex:
+            except argtypes.ArgTypeError as ex:
                 iproxies_coverage.declare_not_wrapped()
                 proxies.append((fixname(meth.name), None))
                 sys.stderr.write('Could not write interface proxy %s.%s: %s\n'
@@ -1733,7 +1733,7 @@ def main(argv):
             sys.platform = arg
         elif opt in ('-t', '--load-types'):
             globals = {}
-            execfile(arg, globals)
+            exec(compile(open(arg, "rb").read(), arg, 'exec'), globals)
         elif opt == '-D':
             nameval = arg.split('=')
             try:
@@ -1751,7 +1751,7 @@ def main(argv):
             global extra_codeafter
             extra_codeafter = open(arg).read()
     if len(args) < 1:
-        print >> sys.stderr, usage
+        print(usage, file=sys.stderr)
         return 1
     if errorfilename:
         sys.stderr = open(errorfilename, "w")

@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- Mode: Python; py-indent-offset: 4 -*-
-from __future__ import generators
+
 
 import string
-from cStringIO import StringIO
+from io import StringIO
 
 class error(Exception):
     def __init__(self, filename, lineno, msg):
@@ -140,4 +140,4 @@ if __name__ == '__main__':
         fp = StringIO(_testString)
     statements = parse(fp)
     for s in statements:
-        print `s`
+        print(repr(s))

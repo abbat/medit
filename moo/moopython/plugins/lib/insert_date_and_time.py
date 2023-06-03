@@ -101,4 +101,4 @@ def get_format(parent=None):
     return fmt
 
 if __name__ == '__main__':
-    print get_format()
+    print(get_format())

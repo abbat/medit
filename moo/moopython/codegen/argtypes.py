@@ -20,13 +20,13 @@ class VarList:
     def __init__(self):
         self.vars = {}
     def add(self, ctype, name):
-        if self.vars.has_key(ctype):
+        if ctype in self.vars:
             self.vars[ctype] = self.vars[ctype] + (name,)
         else:
             self.vars[ctype] = (name,)
     def __str__(self):
         ret = []
-        for type in self.vars.keys():
+        for type in list(self.vars.keys()):
             ret.append('    ')
             ret.append(type)
             ret.append(' ')
@@ -79,14 +79,14 @@ class ArgType:
     def write_param(self, ptype, pname, pdflt, pnull, info):
         """Add code to the WrapperInfo instance to handle
         parameter."""
-        raise RuntimeError, "write_param not implemented for %s" % \
-              self.__class__.__name__
+        raise RuntimeError("write_param not implemented for %s" % \
+              self.__class__.__name__)
     def write_return(self, ptype, ownsreturn, info):
         """Adds a variable named ret of the return type to
         info.varlist, and add any required code to info.codeafter to
         convert the return value to a python object."""
-        raise RuntimeError, "write_return not implemented for %s" % \
-              self.__class__.__name__
+        raise RuntimeError("write_return not implemented for %s" % \
+              self.__class__.__name__)
 
 class NoneArg(ArgType):
     def write_return(self, ptype, ownsreturn, info):
@@ -889,7 +889,7 @@ class ArgMatcher:
             self.register('GdkBitmap', oa)
             self.register('GdkBitmap*', oa)
     def register_boxed(self, ptype, typecode):
-        if self.argtypes.has_key(ptype): return
+        if ptype in self.argtypes: return
         arg = BoxedArg(ptype, typecode)
         self.register(ptype, arg)
         self.register(ptype+'*', arg)
@@ -947,7 +947,7 @@ class ArgMatcher:
     def object_is_a(self, otype, parent):
         if otype == None: return 0
         if otype == parent: return 1
-        if not self.argtypes.has_key(otype): return 0
+        if otype not in self.argtypes: return 0
         return self.object_is_a(self.get(otype).parent, parent)
 
 matcher = ArgMatcher()

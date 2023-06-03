@@ -81,9 +81,9 @@ if __name__ == '__main__':
         elif opt in ('-m', '--module'):
             module = arg
         elif opt in ('-h', '--help'):
-            print 'usage: mkskel.py -f fileprefix -p prefix -m module'
+            print('usage: mkskel.py -f fileprefix -p prefix -m module')
             sys.exit(0)
     if not fileprefix or not prefix or not module:
-        print 'usage: mkskel.py -f fileprefix -p prefix -m module'
+        print('usage: mkskel.py -f fileprefix -p prefix -m module')
         sys.exit(1)
     write_skels(fileprefix, prefix, module)

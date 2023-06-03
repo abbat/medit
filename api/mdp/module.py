@@ -252,7 +252,7 @@ class Module(object):
 
     def __add_enum(self, ptyp):
         if DEBUG:
-            print 'enum', ptyp.name
+            print('enum', ptyp.name)
         name = ptyp.name
         short_name = getattr(ptyp, 'short_name', strip_module_prefix_from_class(ptyp.name, self.name))
         gtype_id = getattr(ptyp, 'gtype_id', make_gtype_id(ptyp.name))
@@ -395,7 +395,7 @@ class Module(object):
 
     def __parse_param(self, pp, pfunc):
         if DEBUG:
-            print pp.name, pp.type, pp.docs
+            print(pp.name, pp.type, pp.docs)
         param = Param(pp.name, pp.type, pp.docs)
         if pp.annotations:
             for a in pp.annotations:
@@ -504,7 +504,7 @@ class Module(object):
             m = re.match(r'(const-)?([\w\d_]+)\*', params[0].type)
             if m:
                 cls = m.group(2)
-                if not self.__class_dict.has_key(cls):
+                if cls not in self.__class_dict:
                     cls = None
 
         if cls:
@@ -624,8 +624,8 @@ class Module(object):
 
         if DEBUG:
             for cls in self.classes:
-                print 'class %s' % (cls.name,)
+                print('class %s' % (cls.name,))
                 for meth in cls.methods:
-                    print '  %s' % (format_func(meth),)
+                    print('  %s' % (format_func(meth),))
             for func in self.functions:
-                print format_func(func)
+                print(format_func(func))

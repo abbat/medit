@@ -11,13 +11,13 @@ tmp_output = output + '.tmp'
 varname = sys.argv[3]
 
 outfile = open(tmp_output, 'w')
-print >> outfile, '/* -*- C -*- */'
-print >> outfile, 'static const char %s [] = ""' % (varname,)
+print('/* -*- C -*- */', file=outfile)
+print('static const char %s [] = ""' % (varname,), file=outfile)
 for line in open(input):
     if line.endswith('\n'):
         line = line[:-1]
-    print >> outfile, '"' + line.replace('"', '\\"') + '\\n"'
-print >> outfile, ';'
+    print('"' + line.replace('"', '\\"') + '\\n"', file=outfile)
+print(';', file=outfile)
 
 outfile.close()
 

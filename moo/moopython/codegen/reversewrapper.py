@@ -1,7 +1,7 @@
 ### -*- python -*-
 ### Code to generate "Reverse Wrappers", i.e. C->Python wrappers
 ### (C) 2004 Gustavo Carneiro <gjc@gnome.org>
-import argtypes
+from . import argtypes
 import os
 
 DEBUG_MODE = ('PYGTK_CODEGEN_DEBUG' in os.environ)
@@ -200,7 +200,7 @@ class ReverseWrapper(object):
             sink.writeln('static %s' % self.return_type.get_c_type())
         else:
             sink.writeln(self.return_type.get_c_type())
-        c_proto_params = map(Parameter.format_for_c_proto, self.parameters)
+        c_proto_params = list(map(Parameter.format_for_c_proto, self.parameters))
         sink.writeln("%s(%s)\n{" % (self.cname, ", ".join(c_proto_params)))
 
         self.return_type.write_decl()

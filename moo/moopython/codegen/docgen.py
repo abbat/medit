@@ -2,9 +2,9 @@
 # -*- Mode: Python; py-indent-offset: 4 -*-
 import sys, os, string, re, getopt
 
-import defsparser
-import definitions
-import override
+from . import defsparser
+from . import definitions
+from . import override
 import docextract
 
 class Node:
@@ -87,16 +87,16 @@ class DocWriter:
             self.overrides.handle_file(overrides_file)
 
         for obj in self.parser.objects:
-            if not self.classmap.has_key(obj.c_name):
+            if obj.c_name not in self.classmap:
                 self.classmap[obj.c_name] = '%s.%s' % (module_name, obj.name)
         for obj in self.parser.interfaces:
-            if not self.classmap.has_key(obj.c_name):
+            if obj.c_name not in self.classmap:
                 self.classmap[obj.c_name] = '%s.%s' % (module_name, obj.name)
         for obj in self.parser.boxes:
-            if not self.classmap.has_key(obj.c_name):
+            if obj.c_name not in self.classmap:
                 self.classmap[obj.c_name] = '%s.%s' % (module_name, obj.name)
         for obj in self.parser.pointers:
-            if not self.classmap.has_key(obj.c_name):
+            if obj.c_name not in self.classmap:
                 self.classmap[obj.c_name] = '%s.%s' % (module_name, obj.name)
 
     def pyname(self, name):
@@ -172,8 +172,8 @@ class DocWriter:
             self.close_section(fp)
 
         methods = self.parser.find_methods(obj_def)
-        methods = filter(lambda meth, self=self:
-                         not self.overrides.is_ignored(meth.c_name), methods)
+        methods = list(filter(lambda meth, self=self:
+                         not self.overrides.is_ignored(meth.c_name), methods))
         if methods:
             self.write_heading('Methods', fp)
             for method in methods:
@@ -190,8 +190,8 @@ class DocWriter:
         self.close_section(fp)
 
         methods = self.parser.find_methods(int_def)
-        methods = filter(lambda meth, self=self:
-                         not self.overrides.is_ignored(meth.c_name), methods)
+        methods = list(filter(lambda meth, self=self:
+                         not self.overrides.is_ignored(meth.c_name), methods))
         if methods:
             self.write_heading('Methods', fp)
             for method in methods:
@@ -216,8 +216,8 @@ class DocWriter:
             self.close_section(fp)
 
         methods = self.parser.find_methods(box_def)
-        methods = filter(lambda meth, self=self:
-                         not self.overrides.is_ignored(meth.c_name), methods)
+        methods = list(filter(lambda meth, self=self:
+                         not self.overrides.is_ignored(meth.c_name), methods))
         if methods:
             self.write_heading('Methods', fp)
             for method in methods:
@@ -254,16 +254,16 @@ class DocWriter:
     # these need to handle default args ...
     def create_constructor_prototype(self, func_def):
         return func_def.is_constructor_of + '(' + \
-               string.join(map(lambda x: x[1], func_def.params), ', ') + \
+               string.join([x[1] for x in func_def.params], ', ') + \
                ')'
     def create_function_prototype(self, func_def):
         return func_def.name + '(' + \
-               string.join(map(lambda x: x[1], func_def.params), ', ') + \
+               string.join([x[1] for x in func_def.params], ', ') + \
                ')'
     def create_method_prototype(self, meth_def):
         return meth_def.of_object + '.' + \
                meth_def.name + '(' + \
-               string.join(map(lambda x: x[1], meth_def.params), ', ') + \
+               string.join([x[1] for x in meth_def.params], ', ') + \
                ')'
 
     def write_class_header(self, obj_name, fp):
@@ -290,8 +290,8 @@ class DocWriter:
             prototype = self.create_constructor_prototype(constructor)
             fp.write('    def %s\n' % prototype)
         methods = self.parser.find_methods(obj_def)
-        methods = filter(lambda meth, self=self:
-                         not self.overrides.is_ignored(meth.c_name), methods)
+        methods = list(filter(lambda meth, self=self:
+                         not self.overrides.is_ignored(meth.c_name), methods))
         for meth in methods:
             prototype = self.create_method_prototype(meth)
             fp.write('    def %s\n' % prototype)
@@ -589,8 +589,8 @@ class DocbookDocWriter(DocWriter):
         if constructor:
             fp.write('%s\n' % self.create_constructor_prototype(constructor))
         methods = self.parser.find_methods(obj_def)
-        methods = filter(lambda meth, self=self:
-                         not self.overrides.is_ignored(meth.c_name), methods)
+        methods = list(filter(lambda meth, self=self:
+                         not self.overrides.is_ignored(meth.c_name), methods))
         for meth in methods:
             fp.write('%s\n' % self.create_method_prototype(meth, addlink=1))
         fp.write('</classsynopsis>\n\n')
@@ -722,7 +722,7 @@ if __name__ == '__main__':
         opts, args = getopt.getopt(sys.argv[1:], "d:s:o:",
                                    ["defs-file=", "override=", "source-dir=",
                                     "output-prefix="])
-    except getopt.error, e:
+    except getopt.error as e:
         sys.stderr.write('docgen.py: %s\n' % e)
         sys.stderr.write(
             'usage: docgen.py -d file.defs [-s /src/dir] [-o output-prefix]\n')

@@ -1,4 +1,4 @@
-from argtypes import ArgType, IntArg, matcher
+from .argtypes import ArgType, IntArg, matcher
 
 matcher.register('index', IntArg())
 

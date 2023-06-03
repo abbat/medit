@@ -54,7 +54,7 @@ class _XmlObject(object):
             return False
 
     def _parse_xml(self, module, elm, *args):
-        for attr, value in elm.items():
+        for attr, value in list(elm.items()):
             if not self._parse_attribute(attr, value):
                 raise RuntimeError('unknown attribute %s' % (attr,))
         for child in elm.getchildren():

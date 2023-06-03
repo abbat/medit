@@ -1,4 +1,4 @@
-import StringIO
+import io
 
 from mpi.util import *
 from mpi.module import *
@@ -99,7 +99,7 @@ class Writer(object):
     def __init__(self, mode, template, out):
         super(Writer, self).__init__()
         self.file = out
-        self.out = StringIO.StringIO()
+        self.out = io.StringIO()
         self.mode = mode
         self.template = template
         if mode == 'python':

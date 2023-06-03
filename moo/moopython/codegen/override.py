@@ -175,7 +175,7 @@ class Overrides:
             if func.find('.') != -1:
                 klass, func = func.split('.', 1)
 
-                if not self.defines.has_key(klass):
+                if klass not in self.defines:
                     self.defines[klass] = {}
                 self.defines[klass][func] = rest
             else:
@@ -205,7 +205,7 @@ class Overrides:
                     self.dynamicnamespace = True
 
     def is_ignored(self, name):
-        if self.ignores.has_key(name):
+        if name in self.ignores:
             return 1
         for glob in self.glob_ignores:
             if fnmatch.fnmatchcase(name, glob):
@@ -216,10 +216,10 @@ class Overrides:
         return name in self.type_ignores
 
     def is_overriden(self, name):
-        return self.overrides.has_key(name)
+        return name in self.overrides
 
     def is_already_included(self, name):
-        return self.overridden.has_key(name)
+        return name in self.overridden
 
     def override(self, name):
         self.overridden[name] = 1
@@ -236,28 +236,28 @@ class Overrides:
         return self.startlines[name]
 
     def wants_kwargs(self, name):
-        return self.kwargs.has_key(name)
+        return name in self.kwargs
 
     def wants_noargs(self, name):
-        return self.noargs.has_key(name)
+        return name in self.noargs
 
     def wants_onearg(self, name):
-        return self.onearg.has_key(name)
+        return name in self.onearg
 
     def is_staticmethod(self, name):
-        return self.staticmethod.has_key(name)
+        return name in self.staticmethod
 
     def is_classmethod(self, name):
-        return self.classmethod.has_key(name)
+        return name in self.classmethod
 
     def attr_is_overriden(self, attr):
-        return self.override_attrs.has_key(attr)
+        return attr in self.override_attrs
 
     def attr_override(self, attr):
         return self.override_attrs[attr]
 
     def slot_is_overriden(self, slot):
-        return self.override_slots.has_key(slot)
+        return slot in self.override_slots
 
     def slot_override(self, slot):
         return self.override_slots[slot]

@@ -92,7 +92,7 @@ class _ReadLine(object):
 
             if text != self.items[self.ptr]:
                 self.edited[self.ptr] = text
-            elif self.edited.has_key(self.ptr):
+            elif self.ptr in self.edited:
                 del self.edited[self.ptr]
 
             self.ptr = self.ptr + dir
@@ -543,7 +543,7 @@ class _Console(_ReadLine, code.InteractiveInterpreter):
                 for s in strings:
                     if s.startswith(end):
                         completions[s] = None
-                completions = completions.keys()
+                completions = list(completions.keys())
             else:
                 completions = strings
 
@@ -576,13 +576,13 @@ class _Console(_ReadLine, code.InteractiveInterpreter):
         strings = keyword.kwlist
 
         if self.locals:
-            strings.extend(self.locals.keys())
+            strings.extend(list(self.locals.keys()))
 
-        try: strings.extend(eval("globals()", self.locals).keys())
+        try: strings.extend(list(eval("globals()", self.locals).keys()))
         except: pass
 
         try:
-            exec "import __builtin__" in self.locals
+            exec("import __builtin__", self.locals)
             strings.extend(eval("dir(__builtin__)", self.locals))
         except:
             pass
@@ -590,7 +590,7 @@ class _Console(_ReadLine, code.InteractiveInterpreter):
         for s in strings:
             if s.startswith(text):
                 completions[s] = None
-        completions = completions.keys()
+        completions = list(completions.keys())
         completions.sort()
         return completions
 

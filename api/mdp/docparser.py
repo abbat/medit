@@ -80,7 +80,7 @@ class DoxBlock(object):
     def __parse_annotations(self, text):
         annotations = []
         ann_start = -1
-        for i in xrange(len(text)):
+        for i in range(len(text)):
             c = text[i]
             if c in ' \t':
                 pass
@@ -251,7 +251,7 @@ class Parser(object):
     def __parse_annotations(self, text):
         annotations = []
         ann_start = -1
-        for i in xrange(len(text)):
+        for i in range(len(text)):
             c = text[i]
             if c in ' \t':
                 pass
@@ -314,7 +314,7 @@ class Parser(object):
         func = What(db.symbol, db.annotations, params, retval, db.docs, block)
         func.summary = db.summary
         if DEBUG:
-            print 'func.name:', func.name
+            print('func.name:', func.name)
         if func.name in self.__symbol_dict:
             raise ParseError('duplicated symbol %s' % (func.name,), block)
         self.__symbol_dict[func.name] = func
@@ -582,7 +582,7 @@ class Parser(object):
                 continue
 
             if DEBUG:
-                print 'matching line', repr(p)
+                print('matching line', repr(p))
 
             fname = None
             vfname = None
@@ -590,26 +590,26 @@ class Parser(object):
             m = proto_pat.match(p)
             if m is None:
                 if DEBUG:
-                    print 'proto_pat not matched'
+                    print('proto_pat not matched')
                 m = vproto_pat.match(p)
                 if m is None:
                     if DEBUG:
-                        print 'vproto_pat not matched'
+                        print('vproto_pat not matched')
                         if p.find('vtable:') >= 0:
-                            print "oops", repr(p)
+                            print("oops", repr(p))
                         if p.find('moo_file_enc_new') >= 0:
-                            print '***', repr(p)
+                            print('***', repr(p))
                     continue
                 else:
                     vfname = m.group('vfunc')
                     if m.group('what') == 'signal':
                         is_signal = True
                     if DEBUG:
-                        print 'proto_pat matched', repr(m.group(0))
-                        print '+++ ', ('vfunc', 'signal')[is_signal], vfname
+                        print('proto_pat matched', repr(m.group(0)))
+                        print('+++ ', ('vfunc', 'signal')[is_signal], vfname)
             else:
                 if DEBUG:
-                    print 'proto_pat matched', repr(m.group(0))
+                    print('proto_pat matched', repr(m.group(0)))
                 fname = m.group('func')
             ret = m.group('ret')
             if ret in ('return', 'else', 'if', 'switch'):
@@ -619,7 +619,7 @@ class Parser(object):
                 if func is None:
                     continue
                 if DEBUG:
-                    print 'match:|%s|' % fname
+                    print('match:|%s|' % fname)
             elif not is_signal:
                 symbol_name = 'vfunc:%s:%s' % (m.group('vtable'), m.group('vfunc'))
                 func = self.__symbol_dict.get(symbol_name)
@@ -628,7 +628,7 @@ class Parser(object):
                     self.__symbol_dict[symbol_name] = func
                     self.vmethods.append(func)
                 if DEBUG:
-                    print 'match:|%s|' % func.name
+                    print('match:|%s|' % func.name)
             else:
                 symbol_name = ('signal:%s:%s' % (m.group('vtable'), m.group('vfunc'))).replace('_', '-')
                 func = self.__symbol_dict.get(symbol_name)
@@ -637,7 +637,7 @@ class Parser(object):
                     self.__symbol_dict[symbol_name] = func
                     self.signals.append(func)
                 if DEBUG:
-                    print 'match:|%s|' % func.name
+                    print('match:|%s|' % func.name)
 
             args = m.group('args')
             args = arg_split_pat.split(args)
@@ -663,7 +663,7 @@ class Parser(object):
                 elif arg in ('void', 'void '):
                     has_args = 0
             if DEBUG:
-                print 'func ', ', '.join([p.name for p in func.params] if func.params else '')
+                print('func ', ', '.join([p.name for p in func.params] if func.params else ''))
             if has_args and not is_varargs:
                 if func.params is None:
                     func.params = []
@@ -671,10 +671,10 @@ class Parser(object):
                     assert len(func.params) == len(args)
                 for i in range(len(args)):
                     if DEBUG:
-                        print 'arg:', args[i]
+                        print('arg:', args[i])
                     argtype, argname = string.split(args[i])
                     if DEBUG:
-                        print argtype, argname
+                        print(argtype, argname)
                     if len(func.params) <= i:
                         func.params.append(Param())
                     if func.params[i].name is None:
@@ -682,10 +682,10 @@ class Parser(object):
                     if func.params[i].type is None:
                         func.params[i].type = argtype
             if DEBUG:
-                print 'func ', ', '.join([p.name for p in func.params])
+                print('func ', ', '.join([p.name for p in func.params]))
 
     def __read_declarations(self, filename):
         if DEBUG:
-            print filename
+            print(filename)
         buf = open(filename).read()
         self.__read_declarations_in_buf(buf, filename)

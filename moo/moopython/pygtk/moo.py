@@ -41,7 +41,7 @@ class _ActionFactory(object):
         self.props = {}
         self.fake_props = {}
 
-        for key in kwargs.keys():
+        for key in list(kwargs.keys()):
             if key in ["callback"]:
                 self.fake_props[key] = kwargs[key]
             elif kwargs[key] is not None or key not in ["stock_id"]:
@@ -57,18 +57,18 @@ class _ActionFactory(object):
         def _activate(action, callback, window):
             callback(window)
 
-        for key in self.fake_props.keys():
+        for key in list(self.fake_props.keys()):
             if key == "callback":
                 action.connect("activate", _activate, self.fake_props[key], self.window)
             else:
                 raise ValueError("unknown property " + key)
 
     def set_props(self, action):
-        for key in self.props.keys():
+        for key in list(self.props.keys()):
             action.set_property(key, self.props[key])
 
 def window_class_add_action(klass, action_id, group=None, **kwargs):
-    if kwargs.has_key("factory"):
+    if "factory" in kwargs:
         _moo.window_class_add_action(klass, action_id, group, kwargs["factory"])
     else:
         _moo.window_class_add_action(klass, action_id, group, _ActionFactory(action_id, **kwargs))

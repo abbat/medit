@@ -3,7 +3,7 @@
 
 import optparse
 
-import defsparser
+from . import defsparser
 
 parser = optparse.OptionParser(
     usage="usage: %prog [options] generated-defs old-defs")

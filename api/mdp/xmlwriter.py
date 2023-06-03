@@ -86,7 +86,7 @@ class Writer(object):
 
     def __check_type(self, param, func):
         if param.type in ('char*', 'const-char*'):
-            print >>sys.stderr, '*** WARNING: raw type %s used in function %s' % (param.type, func)
+            print('*** WARNING: raw type %s used in function %s' % (param.type, func), file=sys.stderr)
 
     def __write_param(self, param, func):
         self.__check_type(param, func)

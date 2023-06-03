@@ -33,19 +33,19 @@ vrs = {}
 for a in sys.argv[5:]:
     key, val = a.split('=')
     vrs[key] = eval(val)
-execfile(input_py, vrs)
+exec(compile(open(input_py, "rb").read(), input_py, 'exec'), vrs)
 
 def parse_name(Name):
     Pieces = re.findall('[A-Z][a-z]+', Name)
     assert Name == ''.join(Pieces)
-    PIECES = map(lambda s: s.upper(), Pieces)
-    pieces = map(lambda s: s.lower(), Pieces)
+    PIECES = [s.upper() for s in Pieces]
+    pieces = [s.lower() for s in Pieces]
     return { 'Name': Name, 'name': '_'.join(pieces),
              'Prefix': pieces[0], 'prefix': pieces[0].lower(), 'PREFIX': pieces[0].upper(),
              'short': '_'.join(pieces[1:]), 'SHORT': '_'.join(PIECES[1:]), }
 
 def print_enum_h(name, vals, out):
-    print >> out, 'typedef enum {'
+    print('typedef enum {', file=out)
     for i in range(len(vals)):
         v = vals[i]
         out.write('    %s' % (v[0],))
@@ -56,11 +56,11 @@ def print_enum_h(name, vals, out):
         if v[2:] and v[2] is not None:
             out.write(' /* %s */' % (v[2],))
         out.write('\n')
-    print >> out, '} %s;' % name
-    print >> out, ''
+    print('} %s;' % name, file=out)
+    print('', file=out)
     dic = parse_name(name)
-    print >> out, 'GType %(name)s_get_type (void) G_GNUC_CONST;' % dic
-    print >> out, '#define %(PREFIX)s_TYPE_%(SHORT)s (%(name)s_get_type())' % dic
+    print('GType %(name)s_get_type (void) G_GNUC_CONST;' % dic, file=out)
+    print('#define %(PREFIX)s_TYPE_%(SHORT)s (%(name)s_get_type())' % dic, file=out)
 
 def print_flags_h(name, vals, out):
     print_enum_h(name, vals, out)
@@ -69,25 +69,25 @@ def print_flags_h(name, vals, out):
 
 out = open(output_h_tmp, 'w')
 
-print >> out, '#ifndef %s_ENUMS_H' % (comp_name.upper(),)
-print >> out, '#define %s_ENUMS_H' % (comp_name.upper(),)
-print >> out, ''
-print >> out, '#include <glib-object.h>'
-print >> out, ''
-print >> out, 'G_BEGIN_DECLS'
-print >> out, ''
+print('#ifndef %s_ENUMS_H' % (comp_name.upper(),), file=out)
+print('#define %s_ENUMS_H' % (comp_name.upper(),), file=out)
+print('', file=out)
+print('#include <glib-object.h>', file=out)
+print('', file=out)
+print('G_BEGIN_DECLS', file=out)
+print('', file=out)
 
 for name in vrs.get('enums', {}):
     print_enum_h(name, vrs['enums'][name], out)
-    print >> out, ''
+    print('', file=out)
 for name in vrs.get('flags', {}):
     print_flags_h(name, vrs['flags'][name], out)
-    print >> out, ''
+    print('', file=out)
 
-print >> out, ''
-print >> out, 'G_END_DECLS'
-print >> out, ''
-print >> out, '#endif /* %s_ENUMS_H */' % (comp_name.upper(),)
+print('', file=out)
+print('G_END_DECLS', file=out)
+print('', file=out)
+print('#endif /* %s_ENUMS_H */' % (comp_name.upper(),), file=out)
 
 out.close()
 copy_tmp_if_changed(output_h_tmp, output_h)
@@ -132,15 +132,15 @@ def print_flags_c(name, vals, out):
 
 out = open(output_c_tmp, 'w')
 
-print >> out, '#include "%s"' % (os.path.basename(output_h),)
-print >> out, ''
+print('#include "%s"' % (os.path.basename(output_h),), file=out)
+print('', file=out)
 
 for name in vrs.get('enums', {}):
     print_enum_c(name, vrs['enums'][name], out)
 for name in vrs.get('flags', {}):
     print_flags_c(name, vrs['flags'][name], out)
 
-print >> out, ''
+print('', file=out)
 
 out.close()
 copy_tmp_if_changed(output_c_tmp, output_c)
