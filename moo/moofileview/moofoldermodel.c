@@ -244,7 +244,7 @@ _moo_folder_model_set_folder (MooFolderModel *model,
 
         files = _moo_folder_list_files (folder);
         moo_folder_model_add_files (model, files);
-        g_slist_foreach (files, (GFunc) _moo_file_unref, NULL);
+        g_slist_foreach (files, (GFunc) _moo_file_unref_data, NULL);
         g_slist_free (files);
     }
 
@@ -398,7 +398,7 @@ moo_folder_model_disconnect_folder (MooFolderModel *model)
 
         files = file_list_get_slist (model->priv->files);
         moo_folder_model_remove_files (model, files);
-        g_slist_foreach (files, (GFunc) _moo_file_unref, NULL);
+        g_slist_foreach (files, (GFunc) _moo_file_unref_data, NULL);
         g_slist_free (files);
 
         g_object_unref (model->priv->folder);

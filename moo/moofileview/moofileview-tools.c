@@ -437,6 +437,6 @@ _moo_file_view_tools_check (MooFileView *fileview)
     for (l = info->actions; l != NULL; l = l->next)
         action_check (l->data, files);
 
-    g_list_foreach (files, (GFunc) _moo_file_unref, NULL);
+    g_list_foreach (files, (GFunc) _moo_file_unref_data, NULL);
     g_list_free (files);
 }

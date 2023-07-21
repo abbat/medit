@@ -1169,7 +1169,7 @@ _moo_folder_get_path (MooFolder *folder)
 static void
 files_list_free (GSList **list)
 {
-    g_slist_foreach (*list, (GFunc) _moo_file_unref, NULL);
+    g_slist_foreach (*list, (GFunc) _moo_file_unref_data, NULL);
     g_slist_free (*list);
     *list = NULL;
 }

@@ -145,7 +145,7 @@ static void      file_list_destroy      (FileList   *flist)
     g_hash_table_destroy (flist->name_to_file);
     g_hash_table_destroy (flist->file_to_link);
 
-    g_list_foreach (flist->list, (GFunc) _moo_file_unref, NULL);
+    g_list_foreach (flist->list, (GFunc) _moo_file_unref_data, NULL);
     g_list_free (flist->list);
 
     g_free (flist);

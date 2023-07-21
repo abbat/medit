@@ -316,6 +316,13 @@ _moo_file_unref (MooFile *file)
 
 
 void
+_moo_file_unref_data (MooFile *file, gpointer)
+{
+    _moo_file_unref (file);
+}
+
+
+void
 _moo_file_stat (MooFile    *file,
                 const char *dirname)
 {

@@ -59,6 +59,7 @@ MooFile     *_moo_file_new              (const char     *dirname,
 
 MooFile     *_moo_file_ref              (MooFile        *file);
 void         _moo_file_unref            (MooFile        *file);
+void         _moo_file_unref_data       (MooFile        *file, gpointer);
 
 MooFileInfo  _moo_file_get_info         (const MooFile  *file);
 
