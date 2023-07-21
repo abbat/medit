@@ -96,6 +96,7 @@ void         _moo_folder_set_wanted             (MooFolder      *folder,
                                                  MooFileFlags    wanted,
                                                  gboolean        bit_now);
 void         _moo_folder_impl_free              (MooFolderImpl  *impl);
+void         _moo_folder_impl_free_data         (MooFolderImpl  *impl, gpointer);
 
 void         _moo_file_system_folder_finalized  (MooFileSystem  *fs,
                                                  MooFolder      *folder);

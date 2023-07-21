@@ -256,7 +256,7 @@ moo_file_system_dispose (GObject *object)
     {
         g_hash_table_destroy (fs->priv->folders);
         g_hash_table_destroy (fs->priv->cache.paths);
-        g_queue_foreach (fs->priv->cache.queue, (GFunc) _moo_folder_impl_free, NULL);
+        g_queue_foreach (fs->priv->cache.queue, (GFunc) _moo_folder_impl_free_data, NULL);
         g_queue_free (fs->priv->cache.queue);
 
         if (fs->priv->fam)

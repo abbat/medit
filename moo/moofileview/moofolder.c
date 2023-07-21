@@ -211,6 +211,13 @@ _moo_folder_impl_free (MooFolderImpl *impl)
 }
 
 
+void
+_moo_folder_impl_free_data (MooFolderImpl *impl, gpointer)
+{
+    _moo_folder_impl_free(impl);
+}
+
+
 static void
 moo_folder_dispose (GObject *object)
 {
