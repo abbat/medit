@@ -120,7 +120,7 @@ static PatternInfo *pattern_info_new    (OutputType      type,
                                          const char     *style,
                                          GSList         *actions,
                                          guint           span);
-static void         pattern_info_free   (PatternInfo    *pattern);
+static void         pattern_info_free   (PatternInfo    *pattern, gpointer);
 
 static ActionInfo  *action_info_new     (ActionType      type,
                                          ActionTarget    target,
@@ -685,7 +685,7 @@ pattern_info_new (OutputType  type,
 }
 
 static void
-pattern_info_free (PatternInfo *pattern)
+pattern_info_free (PatternInfo *pattern, gpointer)
 {
     if (pattern)
     {
@@ -768,7 +768,7 @@ filter_state_unref (FilterState *state)
         guint i;
 
         for (i = 0; i < state->n_patterns; ++i)
-            pattern_info_free (state->patterns[i]);
+            pattern_info_free (state->patterns[i], NULL);
 
         if (state->re_out)
             g_regex_unref (state->re_out);
