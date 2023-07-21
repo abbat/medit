@@ -220,7 +220,7 @@ _moo_app_input_channel_new (const char *appname,
 
     if (!input_channel_start (ch))
     {
-        _moo_app_input_channel_free (ch);
+        _moo_app_input_channel_free (ch, NULL);
         return NULL;
     }
 
@@ -228,7 +228,7 @@ _moo_app_input_channel_new (const char *appname,
 }
 
 void
-_moo_app_input_channel_free (InputChannel *ch)
+_moo_app_input_channel_free (InputChannel *ch, gpointer)
 {
     if (ch->event_id)
         _moo_event_queue_disconnect (ch->event_id);

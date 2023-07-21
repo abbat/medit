@@ -633,7 +633,7 @@ _moo_app_input_channel_new (const char *appname,
 
     if (!input_channel_start (ch, may_fail))
     {
-        _moo_app_input_channel_free (ch);
+        _moo_app_input_channel_free (ch, NULL);
         return NULL;
     }
 
@@ -641,7 +641,7 @@ _moo_app_input_channel_new (const char *appname,
 }
 
 void
-_moo_app_input_channel_free (InputChannel *ch)
+_moo_app_input_channel_free (InputChannel *ch, gpointer)
 {
     input_channel_shutdown (ch);
     g_free (ch->name);

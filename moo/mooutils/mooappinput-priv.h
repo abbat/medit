@@ -40,7 +40,7 @@ extern MooAppInput *_moo_app_input_instance;
 InputChannel *_moo_app_input_channel_new        (const char     *appname,
                                                  const char     *name,
                                                  gboolean        may_fail);
-void          _moo_app_input_channel_free       (InputChannel   *ch);
+void          _moo_app_input_channel_free       (InputChannel   *ch, gpointer);
 char         *_moo_app_input_channel_get_path   (InputChannel   *ch);
 const char   *_moo_app_input_channel_get_name   (InputChannel   *ch);
 
