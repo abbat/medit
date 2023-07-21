@@ -350,7 +350,7 @@ apply_one (GtkAction *action,
 static gboolean
 apply_global (GtkTreeModel *model,
               G_GNUC_UNUSED GtkTreePath *path,
-              GtkTreeIter  *iter)
+              GtkTreeIter  *iter, gpointer)
 {
     GtkAction *action = NULL;
     gboolean global = FALSE;

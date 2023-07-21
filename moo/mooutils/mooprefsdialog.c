@@ -180,7 +180,7 @@ moo_prefs_dialog_init (MooPrefsDialog *dialog)
 static gboolean
 destroy_page (GtkTreeModel  *model,
               G_GNUC_UNUSED GtkTreePath   *path,
-              GtkTreeIter   *iter)
+              GtkTreeIter   *iter, gpointer)
 {
     GtkWidget *page = NULL;
 
