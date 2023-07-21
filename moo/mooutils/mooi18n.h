@@ -71,7 +71,7 @@ inline static const char* QD_(const char* msgid, const char* domain)
 
 // a function to make sure that g_strip_context parameters really
 // point to the same char buffer
-G_INLINE_FUNC const char*
+static inline const char*
 _moo_strip_context (const char* s)
 {
     return g_strip_context (s, s);

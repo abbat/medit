@@ -22,7 +22,7 @@ ArrayType *array_type##_copy (ArrayType *ar);                           \
 typedef void (*ArrayType##Foreach) (ElmType *elm,                       \
                                     gpointer data);                     \
                                                                         \
-G_INLINE_FUNC void                                                      \
+static inline void                                                      \
 array_type##_foreach (const ArrayType *ar,                              \
                       ArrayType##Foreach func,                          \
                       gpointer data)                                    \
@@ -40,12 +40,12 @@ void array_type##_clear (ArrayType *ar);                                \
 gsize array_type##_insert_sorted (ArrayType *ar, ElmType *elm,          \
                                     GCompareFunc func);                 \
                                                                         \
-G_INLINE_FUNC gboolean array_type##_is_empty (ArrayType *ar)            \
+static inline gboolean array_type##_is_empty (ArrayType *ar)            \
 {                                                                       \
     return !ar || !ar->n_elms;                                          \
 }                                                                       \
                                                                         \
-G_INLINE_FUNC gsize array_type##_get_size (ArrayType *ar)               \
+static inline gsize array_type##_get_size (ArrayType *ar)               \
 {                                                                       \
     return ar ? ar->n_elms : 0;                                         \
 }
@@ -204,13 +204,13 @@ gssize array_type##_find (const ArrayType *ar, ElmType *elm)            \
     MOO_DECLARE_OBJECT_ARRAY_FULL (Element##Array, element##_array, Element)
 
 #define MOO_DEFINE_OBJECT_ARRAY_FULL(ArrayType, array_type, ElmType)    \
-    G_INLINE_FUNC ElmType *                                             \
+    static inline ElmType *                                             \
     array_type##_ref_elm__ (ElmType *elm)                               \
     {                                                                   \
         return (ElmType*) g_object_ref (elm);                           \
     }                                                                   \
                                                                         \
-    G_INLINE_FUNC void                                                  \
+    static inline void                                                  \
     array_type##_unref_elm__ (ElmType *elm)                             \
     {                                                                   \
         g_object_unref (elm);                                           \

@@ -8,7 +8,7 @@ G_BEGIN_DECLS
 
 MOO_DECLARE_OBJECT_ARRAY_FULL (MooFileArray, moo_file_array, GFile)
 
-G_INLINE_FUNC void
+static inline void
 moo_file_free (GFile *file)
 {
     if (file)

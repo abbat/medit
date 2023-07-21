@@ -47,13 +47,13 @@ void        moo_reset_log_func              (void);
 void MOO_NORETURN moo_segfault              (void);
 void MOO_NORETURN moo_abort                 (void);
 
-G_INLINE_FUNC void
+static inline void
 seriously_ignore_return_value (G_GNUC_UNUSED int v)
 {
     /* gcc guys are funny, casting to void is not enough */
 }
 
-G_INLINE_FUNC void
+static inline void
 seriously_ignore_return_value_p (G_GNUC_UNUSED void *p)
 {
 }
@@ -139,14 +139,14 @@ char      **moo_splitlines                  (const char     *string);
 
 char     **_moo_strv_reverse                (char          **str_array);
 
-G_INLINE_FUNC gboolean
+static inline gboolean
 moo_str_equal (const char *s1,
                const char *s2)
 {
     return strcmp (s1 ? s1 : "", s2 ? s2 : "") == 0;
 }
 
-G_INLINE_FUNC const char *
+static inline const char *
 moo_nonnull_str (const char *s)
 {
     return s ? s : "";
@@ -154,7 +154,7 @@ moo_nonnull_str (const char *s)
 
 #define MOO_NZS(s) (moo_nonnull_str (s))
 
-G_INLINE_FUNC void
+static inline void
 moo_assign_string (char       **where,
                    const char  *value)
 {
@@ -165,7 +165,7 @@ moo_assign_string (char       **where,
 
 #define MOO_ASSIGN_STRING(where, value) moo_assign_string (&(where), (value))
 
-G_INLINE_FUNC void
+static inline void
 moo_assign_strv (char ***where,
                  char  **value)
 {
@@ -176,7 +176,7 @@ moo_assign_strv (char ***where,
 
 #define MOO_ASSIGN_STRV(where, value) moo_assign_strv (&(where), (value))
 
-G_INLINE_FUNC void
+static inline void
 moo_assign_obj (void** dest, void* src)
 {
     if (*dest != src)
@@ -240,7 +240,7 @@ G_END_DECLS
 
 #endif /* G_OS_WIN32 */
 
-G_INLINE_FUNC gboolean
+static inline gboolean
 moo_os_win32 (void)
 {
 #ifdef __WIN32__
