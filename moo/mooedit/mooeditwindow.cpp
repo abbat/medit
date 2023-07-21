@@ -225,7 +225,7 @@ static MooEditTab   *get_nth_tab                        (MooNotebook        &not
 static MooEdit      *get_nth_doc                        (MooNotebook        *notebook,
                                                          guint               n);
 
-static GtkAction    *create_lang_action                 (MooEditWindow      *window);
+static GtkAction    *create_lang_action                 (MooEditWindow      *window, gpointer);
 
 static void          create_paned                       (MooEditWindow      *window);
 static void          save_paned_config                  (MooEditWindow      *window);
@@ -261,9 +261,9 @@ static gboolean      notebook_drag_motion               (GtkWidget          *wid
 static void action_new_doc                      (MooEditWindow      *window);
 static void action_open                         (MooEditWindow      *window);
 static void action_reload                       (MooEditWindow      *window);
-static GtkAction *create_reopen_with_encoding_action (MooEditWindow *window);
-static GtkAction *create_doc_encoding_action    (MooEditWindow      *window);
-static GtkAction *create_doc_line_end_action    (MooEditWindow      *window);
+static GtkAction *create_reopen_with_encoding_action (MooEditWindow *window, gpointer);
+static GtkAction *create_doc_encoding_action    (MooEditWindow      *window, gpointer);
+static GtkAction *create_doc_line_end_action    (MooEditWindow      *window, gpointer);
 static void action_save                         (MooEditWindow      *window);
 static void action_save_as                      (MooEditWindow      *window);
 static void action_close_tab                    (MooEditWindow      *window);
@@ -1348,7 +1348,7 @@ reopen_encoding_item_activated (const char *encoding,
 }
 
 static GtkAction *
-create_reopen_with_encoding_action (MooEditWindow *window)
+create_reopen_with_encoding_action (MooEditWindow *window, gpointer)
 {
     GtkAction *action;
 
@@ -1398,7 +1398,7 @@ doc_encoding_item_activated (const char *encoding,
 }
 
 static GtkAction *
-create_doc_encoding_action (MooEditWindow *window)
+create_doc_encoding_action (MooEditWindow *window, gpointer)
 {
     GtkAction *action;
 
@@ -1452,7 +1452,7 @@ doc_line_end_item_set_active (MooEditWindow *window, gpointer data)
 }
 
 static GtkAction *
-create_doc_line_end_action (MooEditWindow *window)
+create_doc_line_end_action (MooEditWindow *window, gpointer)
 {
     GtkAction *action;
     MooMenuMgr *mgr;
@@ -4028,7 +4028,7 @@ lang_item_activated (MooEditWindow *window,
 
 
 static GtkAction*
-create_lang_action (MooEditWindow *window)
+create_lang_action (MooEditWindow *window, gpointer)
 {
     GtkAction *action;
     MooMenuMgr *menu_mgr;
