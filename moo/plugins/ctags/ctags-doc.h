@@ -62,6 +62,7 @@ GtkTreeModel       *_moo_ctags_doc_plugin_get_store     (MooCtagsDocPlugin  *plu
 GType               _moo_ctags_entry_get_type           (void) G_GNUC_CONST;
 MooCtagsEntry      *_moo_ctags_entry_ref                (MooCtagsEntry      *entry);
 void                _moo_ctags_entry_unref              (MooCtagsEntry      *entry);
+void                _moo_ctags_entry_unref_data         (MooCtagsEntry      *entry, gpointer);
 
 
 #endif /* CTAGS_DOC_H */

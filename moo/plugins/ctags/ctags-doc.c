@@ -382,7 +382,7 @@ moo_ctags_doc_plugin_update (MooCtagsDocPlugin *plugin)
         else if ((list = moo_ctags_parse_file (filename, NULL)))
             process_entries (plugin, list, NULL);
 
-        g_slist_foreach (list, (GFunc) _moo_ctags_entry_unref, NULL);
+        g_slist_foreach (list, (GFunc) _moo_ctags_entry_unref_data, NULL);
         g_slist_free (list);
         g_free (lang_id);
     }
@@ -412,6 +412,13 @@ _moo_ctags_entry_unref (MooCtagsEntry *entry)
         g_free (entry->signature);
         g_slice_free (MooCtagsEntry, entry);
     }
+}
+
+
+void
+_moo_ctags_entry_unref_data (MooCtagsEntry *entry, gpointer)
+{
+    _moo_ctags_entry_unref(entry);
 }
 
 
