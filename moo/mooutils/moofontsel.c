@@ -138,7 +138,7 @@ static void    moo_font_selection_update_preview     (MooFontSelection *fs);
 static void    moo_font_selection_dialog_class_init  (MooFontSelectionDialogClass *klass);
 static void    moo_font_selection_dialog_init	     (MooFontSelectionDialog *fontseldiag);
 
-G_DEFINE_TYPE(MooFontSelection, moo_font_selection, GTK_TYPE_VBOX)
+G_DEFINE_TYPE (MooFontSelection, moo_font_selection, GTK_TYPE_VBOX)
 
 
 static void
@@ -1413,8 +1413,6 @@ moo_font_selection_dialog_set_preview_text (MooFontSelectionDialog *fsd,
 /* MooFontButton
  */
 
-#define MOO_FONT_BUTTON_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), MOO_TYPE_FONT_BUTTON, MooFontButtonPrivate))
-
 struct _MooFontButtonPrivate
 {
   gchar         *title;
@@ -1483,7 +1481,7 @@ static void moo_font_button_update_font_info        (MooFontButton     *gfs);
 static gpointer parent_class = NULL;
 static guint font_button_signals[LAST_SIGNAL] = { 0 };
 
-G_DEFINE_TYPE(MooFontButton, moo_font_button, GTK_TYPE_BUTTON)
+G_DEFINE_TYPE_WITH_CODE (MooFontButton, moo_font_button, GTK_TYPE_BUTTON, G_ADD_PRIVATE(MooFontButton))
 
 
 static void
@@ -1632,14 +1630,12 @@ moo_font_button_class_init (MooFontButtonClass *klass)
                                                 NULL, NULL,
                                                 g_cclosure_marshal_VOID__VOID,
                                                 G_TYPE_NONE, 0);
-
-  g_type_class_add_private (gobject_class, sizeof (MooFontButtonPrivate));
 }
 
 static void
 moo_font_button_init (MooFontButton *font_button)
 {
-  font_button->priv = MOO_FONT_BUTTON_GET_PRIVATE (font_button);
+  font_button->priv = (MooFontButtonPrivate*) moo_font_button_get_instance_private (font_button);
 
   /* Initialize fields */
   font_button->priv->fontname = g_strdup (D_("Sans 12", "gtk20"));

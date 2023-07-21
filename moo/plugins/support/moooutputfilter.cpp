@@ -30,7 +30,7 @@ struct _MooOutputFilterPrivate {
 };
 
 
-G_DEFINE_TYPE (MooOutputFilter, moo_output_filter, G_TYPE_OBJECT)
+G_DEFINE_TYPE_WITH_CODE (MooOutputFilter, moo_output_filter, G_TYPE_OBJECT, G_ADD_PRIVATE(MooOutputFilter))
 
 
 static void moo_output_filter_open_file_line    (MooOutputFilter    *filter,
@@ -82,8 +82,6 @@ moo_output_filter_class_init (MooOutputFilterClass *klass)
     G_OBJECT_CLASS (klass)->finalize = moo_output_filter_finalize;
     klass->activate = moo_output_filter_activate;
 
-    g_type_class_add_private (klass, sizeof (MooOutputFilterPrivate));
-
     signals[STDOUT_LINE] =
         g_signal_new ("stdout-line",
                       G_OBJECT_CLASS_TYPE (klass),
@@ -128,7 +126,7 @@ moo_output_filter_class_init (MooOutputFilterClass *klass)
 static void
 moo_output_filter_init (MooOutputFilter *filter)
 {
-    filter->priv = G_TYPE_INSTANCE_GET_PRIVATE (filter, MOO_TYPE_OUTPUT_FILTER, MooOutputFilterPrivate);
+    filter->priv = (MooOutputFilterPrivate*) moo_output_filter_get_instance_private (filter);
 }
 
 

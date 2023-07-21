@@ -96,7 +96,7 @@ static guint signals[LAST_SIGNAL];
 
 
 /* MOO_TYPE_CMD */
-G_DEFINE_TYPE (MooCmd, _moo_cmd, G_TYPE_OBJECT)
+G_DEFINE_TYPE_WITH_CODE (MooCmd, _moo_cmd, G_TYPE_OBJECT, G_ADD_PRIVATE(MooCmd))
 
 
 static void
@@ -111,8 +111,6 @@ _moo_cmd_class_init (MooCmdClass *klass)
     klass->cmd_exit = NULL;
     klass->stdout_line = moo_cmd_stdout_line;
     klass->stderr_line = moo_cmd_stderr_line;
-
-    g_type_class_add_private (klass, sizeof (MooCmdPrivate));
 
     signals[ABORT] =
             g_signal_new ("abort",
@@ -158,7 +156,7 @@ _moo_cmd_class_init (MooCmdClass *klass)
 static void
 _moo_cmd_init (MooCmd *cmd)
 {
-    cmd->priv = G_TYPE_INSTANCE_GET_PRIVATE (cmd, MOO_TYPE_CMD, MooCmdPrivate);
+    cmd->priv = (MooCmdPrivate*) _moo_cmd_get_instance_private (cmd);
     cmd->priv->out_buffer = g_string_new (NULL);
     cmd->priv->err_buffer = g_string_new (NULL);
 }

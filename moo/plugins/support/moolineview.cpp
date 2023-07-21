@@ -72,7 +72,7 @@ static guint signals[LAST_SIGNAL];
 
 
 /* MOO_TYPE_LINE_VIEW */
-G_DEFINE_TYPE (MooLineView, moo_line_view, MOO_TYPE_TEXT_VIEW)
+G_DEFINE_TYPE_WITH_CODE (MooLineView, moo_line_view, MOO_TYPE_TEXT_VIEW, G_ADD_PRIVATE(MooLineView))
 
 
 static void
@@ -93,8 +93,6 @@ moo_line_view_class_init (MooLineViewClass *klass)
     textview_class->populate_popup = moo_line_view_populate_popup;
 
     mootextview_class->get_text_cursor = moo_line_view_get_text_cursor;
-
-    g_type_class_add_private (klass, sizeof (MooLineViewPrivate));
 
     signals[ACTIVATE] =
             g_signal_new ("activate",
@@ -125,7 +123,7 @@ moo_line_view_class_init (MooLineViewClass *klass)
 static void
 moo_line_view_init (MooLineView *view)
 {
-    view->priv = G_TYPE_INSTANCE_GET_PRIVATE (view, MOO_TYPE_LINE_VIEW, MooLineViewPrivate);
+    view->priv = (MooLineViewPrivate*) moo_line_view_get_instance_private (view);
 
     view->priv->hscrollbar = NULL;
     view->priv->line_data = _moo_data_new (g_direct_hash,

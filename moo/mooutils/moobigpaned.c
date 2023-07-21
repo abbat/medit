@@ -113,7 +113,7 @@ static char              *config_serialize  (MooBigPanedConfig *config);
 
 
 /* MOO_TYPE_BIG_PANED */
-G_DEFINE_TYPE (MooBigPaned, moo_big_paned, GTK_TYPE_FRAME)
+G_DEFINE_TYPE_WITH_CODE (MooBigPaned, moo_big_paned, GTK_TYPE_FRAME, G_ADD_PRIVATE(MooBigPaned))
 
 enum {
     PROP_0,
@@ -134,8 +134,6 @@ static void
 moo_big_paned_class_init (MooBigPanedClass *klass)
 {
     GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
-
-    g_type_class_add_private (klass, sizeof (MooBigPanedPrivate));
 
     gobject_class->finalize = moo_big_paned_finalize;
     gobject_class->set_property = moo_big_paned_set_property;
@@ -191,9 +189,7 @@ moo_big_paned_init (MooBigPaned *paned)
 {
     int i;
 
-    paned->priv = G_TYPE_INSTANCE_GET_PRIVATE (paned,
-                                               MOO_TYPE_BIG_PANED,
-                                               MooBigPanedPrivate);
+    paned->priv = (MooBigPanedPrivate*) moo_big_paned_get_instance_private (paned);
 
     paned->priv->panes = g_hash_table_new_full (g_str_hash, g_str_equal,
                                                 g_free, g_object_unref);

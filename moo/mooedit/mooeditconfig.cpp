@@ -74,7 +74,7 @@ static void global_changed                  (GObject        *object,
 
 
 /* MOO_TYPE_EDIT_CONFIG */
-G_DEFINE_TYPE (MooEditConfig, moo_edit_config, G_TYPE_OBJECT)
+G_DEFINE_TYPE_WITH_CODE (MooEditConfig, moo_edit_config, G_TYPE_OBJECT, G_ADD_PRIVATE(MooEditConfig))
 
 
 static void
@@ -85,8 +85,6 @@ moo_edit_config_class_init (MooEditConfigClass *klass)
     gobject_class->set_property = moo_edit_config_set_property;
     gobject_class->get_property = moo_edit_config_get_property;
     gobject_class->finalize = moo_edit_config_finalize;
-
-    g_type_class_add_private (klass, sizeof (MooEditConfigPrivate));
 
     prop_id_quark = g_quark_from_static_string ("MooEditConfigPropId");
     aliases = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_free);
@@ -101,7 +99,7 @@ moo_edit_config_init (MooEditConfig *config)
 {
     guint i;
 
-    config->priv = G_TYPE_INSTANCE_GET_PRIVATE (config, MOO_TYPE_EDIT_CONFIG, MooEditConfigPrivate);
+    config->priv = (MooEditConfigPrivate*) moo_edit_config_get_instance_private (config);
 
     MOO_IP_ARRAY_INIT (Value, config->priv, values, vars->len);
 

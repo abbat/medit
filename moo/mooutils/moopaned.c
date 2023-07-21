@@ -198,7 +198,7 @@ static void     moo_paned_set_enable_detaching
                                             (MooPaned       *paned,
                                              gboolean        enable);
 
-G_DEFINE_TYPE (MooPaned, moo_paned, GTK_TYPE_BIN)
+G_DEFINE_TYPE_WITH_CODE (MooPaned, moo_paned, GTK_TYPE_BIN, G_ADD_PRIVATE(MooPaned))
 
 enum {
     PANED_PROP_0,
@@ -230,8 +230,6 @@ moo_paned_class_init (MooPanedClass *klass)
     GtkObjectClass *gtkobject_class = GTK_OBJECT_CLASS (klass);
     GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
     GtkContainerClass *container_class = GTK_CONTAINER_CLASS (klass);
-
-    g_type_class_add_private (klass, sizeof (MooPanedPrivate));
 
     gobject_class->set_property = moo_paned_set_property;
     gobject_class->get_property = moo_paned_get_property;
@@ -362,9 +360,7 @@ moo_paned_init (MooPaned *paned)
 {
     GTK_WIDGET_SET_NO_WINDOW (paned);
 
-    paned->priv = G_TYPE_INSTANCE_GET_PRIVATE (paned,
-                                               MOO_TYPE_PANED,
-                                               MooPanedPrivate);
+    paned->priv = (MooPanedPrivate*) moo_paned_get_instance_private (paned);
 
     paned->button_box = NULL;
 

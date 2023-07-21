@@ -2162,7 +2162,7 @@ install_first_update (GtkSourceContextEngine *ce)
 
 /* GtkSourceContextEngine class ------------------------------------------- */
 
-G_DEFINE_TYPE (GtkSourceContextEngine, _gtk_source_context_engine, GTK_TYPE_SOURCE_ENGINE)
+G_DEFINE_TYPE_WITH_CODE (GtkSourceContextEngine, _gtk_source_context_engine, GTK_TYPE_SOURCE_ENGINE, G_ADD_PRIVATE(GtkSourceContextEngine))
 
 static GQuark
 gtk_source_context_engine_error_quark (void)
@@ -2439,15 +2439,12 @@ _gtk_source_context_engine_class_init (GtkSourceContextEngineClass *klass)
 	engine_class->text_deleted = gtk_source_context_engine_text_deleted;
 	engine_class->update_highlight = gtk_source_context_engine_update_highlight;
 	engine_class->set_style_scheme = gtk_source_context_engine_set_style_scheme;
-
-	g_type_class_add_private (object_class, sizeof (GtkSourceContextEnginePrivate));
 }
 
 static void
 _gtk_source_context_engine_init (GtkSourceContextEngine *ce)
 {
-	ce->priv = G_TYPE_INSTANCE_GET_PRIVATE (ce, GTK_TYPE_SOURCE_CONTEXT_ENGINE,
-						GtkSourceContextEnginePrivate);
+	ce->priv = (GtkSourceContextEnginePrivate*) _gtk_source_context_engine_get_instance_private (ce);
 }
 
 GtkSourceContextEngine *

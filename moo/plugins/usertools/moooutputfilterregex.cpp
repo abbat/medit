@@ -130,7 +130,7 @@ static void         action_info_free      (ActionInfo *action);
 static void         action_info_free_data (ActionInfo *action, gpointer);
 
 
-G_DEFINE_TYPE (MooOutputFilterRegex, _moo_output_filter_regex, MOO_TYPE_OUTPUT_FILTER)
+G_DEFINE_TYPE_WITH_CODE (MooOutputFilterRegex, _moo_output_filter_regex, MOO_TYPE_OUTPUT_FILTER, G_ADD_PRIVATE(MooOutputFilterRegex))
 
 
 static void
@@ -591,15 +591,13 @@ _moo_output_filter_regex_class_init (MooOutputFilterRegexClass *klass)
     filter_class->detach = moo_output_filter_regex_detach;
     filter_class->stdout_line = moo_output_filter_regex_stdout_line;
     filter_class->stderr_line = moo_output_filter_regex_stderr_line;
-
-    g_type_class_add_private (klass, sizeof (MooOutputFilterRegexPrivate));
 }
 
 
 static void
 _moo_output_filter_regex_init (MooOutputFilterRegex *filter)
 {
-    filter->priv = G_TYPE_INSTANCE_GET_PRIVATE (filter, MOO_TYPE_OUTPUT_FILTER_REGEX, MooOutputFilterRegexPrivate);
+    filter->priv = (MooOutputFilterRegexPrivate*) _moo_output_filter_regex_get_instance_private (filter);
 }
 
 

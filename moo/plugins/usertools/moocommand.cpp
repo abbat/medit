@@ -33,11 +33,6 @@
 #include <string.h>
 #include <stdio.h>
 
-G_DEFINE_TYPE (MooCommand, moo_command, G_TYPE_OBJECT)
-G_DEFINE_TYPE (MooCommandFactory, moo_command_factory, G_TYPE_OBJECT)
-G_DEFINE_TYPE (MooCommandContext, moo_command_context, G_TYPE_OBJECT)
-MOO_DEFINE_BOXED_TYPE_R (MooCommandData, moo_command_data)
-
 enum {
     CTX_PROP_0,
     CTX_PROP_DOC,
@@ -76,6 +71,11 @@ typedef struct {
 
 static GHashTable *registered_factories;
 static GHashTable *registered_filters;
+
+G_DEFINE_TYPE (MooCommand, moo_command, G_TYPE_OBJECT)
+G_DEFINE_TYPE (MooCommandFactory, moo_command_factory, G_TYPE_OBJECT)
+G_DEFINE_TYPE_WITH_CODE (MooCommandContext, moo_command_context, G_TYPE_OBJECT, G_ADD_PRIVATE(MooCommandContext))
+MOO_DEFINE_BOXED_TYPE_R (MooCommandData, moo_command_data)
 
 
 static void         moo_command_data_take_code          (MooCommandData     *data,
@@ -627,8 +627,6 @@ moo_command_context_class_init (MooCommandContextClass *klass)
     object_class->set_property = moo_command_context_set_property;
     object_class->get_property = moo_command_context_get_property;
 
-    g_type_class_add_private (klass, sizeof (MooCommandContextPrivate));
-
     g_object_class_install_property (object_class, CTX_PROP_DOC,
         g_param_spec_object ("doc", "doc", "doc",
                              MOO_TYPE_EDIT, (GParamFlags) G_PARAM_READWRITE));
@@ -643,7 +641,7 @@ moo_command_context_class_init (MooCommandContextClass *klass)
 static void
 moo_command_context_init (MooCommandContext *ctx)
 {
-    ctx->priv = G_TYPE_INSTANCE_GET_PRIVATE (ctx, MOO_TYPE_COMMAND_CONTEXT, MooCommandContextPrivate);
+    ctx->priv = (MooCommandContextPrivate*) moo_command_context_get_instance_private (ctx);
 }
 
 

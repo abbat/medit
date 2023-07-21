@@ -82,7 +82,7 @@ static char    *get_text_func                   (GtkTreeModel       *model,
 
 
 /* MOO_TYPE_HISTORY_COMBO */
-G_DEFINE_TYPE (MooHistoryCombo, moo_history_combo, MOO_TYPE_COMBO)
+G_DEFINE_TYPE_WITH_CODE (MooHistoryCombo, moo_history_combo, MOO_TYPE_COMBO, G_ADD_PRIVATE(MooHistoryCombo))
 
 
 enum {
@@ -102,8 +102,6 @@ moo_history_combo_class_init (MooHistoryComboClass *klass)
     MooComboClass *combo_class = MOO_COMBO_CLASS (klass);
 
     moo_history_combo_parent_class = g_type_class_peek_parent (klass);
-
-    g_type_class_add_private (klass, sizeof (MooHistoryComboPrivate));
 
     gobject_class->dispose = moo_history_combo_dispose;
     gobject_class->finalize = moo_history_combo_finalize;
@@ -160,7 +158,7 @@ moo_history_combo_init (MooHistoryCombo *combo)
 {
     GtkCellRenderer *cell;
 
-    combo->priv = G_TYPE_INSTANCE_GET_PRIVATE (combo, MOO_TYPE_HISTORY_COMBO, MooHistoryComboPrivate);
+    combo->priv = (MooHistoryComboPrivate*) moo_history_combo_get_instance_private (combo);
 
     combo->priv->filter_func = default_filter_func;
     combo->priv->filter_data = combo;

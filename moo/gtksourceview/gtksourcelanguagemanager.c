@@ -49,7 +49,7 @@ struct _GtkSourceLanguageManagerPrivate
 	gchar          **ids; /* Cache the IDs of the available languages */
 };
 
-G_DEFINE_TYPE (GtkSourceLanguageManager, gtk_source_language_manager, G_TYPE_OBJECT)
+G_DEFINE_TYPE_WITH_CODE (GtkSourceLanguageManager, gtk_source_language_manager, G_TYPE_OBJECT, G_ADD_PRIVATE(GtkSourceLanguageManager))
 
 
 static void
@@ -146,15 +146,12 @@ gtk_source_language_manager_class_init (GtkSourceLanguageManagerClass *klass)
 							       "languages"),
 							     G_TYPE_STRV,
 							     G_PARAM_READABLE));
-
-	g_type_class_add_private (object_class, sizeof(GtkSourceLanguageManagerPrivate));
 }
 
 static void
 gtk_source_language_manager_init (GtkSourceLanguageManager *lm)
 {
-	lm->priv = G_TYPE_INSTANCE_GET_PRIVATE (lm, GTK_TYPE_SOURCE_LANGUAGE_MANAGER,
-						GtkSourceLanguageManagerPrivate);
+	lm->priv = (GtkSourceLanguageManagerPrivate*) gtk_source_language_manager_get_instance_private (lm);
 	lm->priv->language_ids = NULL;
 	lm->priv->ids = NULL;
 	lm->priv->lang_dirs = NULL;

@@ -34,7 +34,7 @@ static void     moo_edit_view_apply_style_scheme    (MooTextView        *view,
 static gboolean moo_edit_view_line_mark_clicked     (MooTextView        *view,
                                                      int                 line);
 
-G_DEFINE_TYPE (MooEditView, moo_edit_view, MOO_TYPE_TEXT_VIEW)
+G_DEFINE_TYPE_WITH_CODE (MooEditView, moo_edit_view, MOO_TYPE_TEXT_VIEW, G_ADD_PRIVATE(MooEditView))
 
 static void
 moo_edit_view_class_init (MooEditViewClass *klass)
@@ -52,15 +52,13 @@ moo_edit_view_class_init (MooEditViewClass *klass)
 
     textview_class->line_mark_clicked = moo_edit_view_line_mark_clicked;
     textview_class->apply_style_scheme = moo_edit_view_apply_style_scheme;
-
-    g_type_class_add_private (klass, sizeof (MooEditViewPrivate));
 }
 
 
 static void
 moo_edit_view_init (MooEditView *view)
 {
-    view->priv = G_TYPE_INSTANCE_GET_PRIVATE (view, MOO_TYPE_EDIT_VIEW, MooEditViewPrivate);
+    view->priv = (MooEditViewPrivate*) moo_edit_view_get_instance_private (view);
 }
 
 void

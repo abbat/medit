@@ -258,7 +258,7 @@ static void     dnd_info_free               (DndInfo        *info);
 
 
 /* MOO_TYPE_ICON_VIEW */
-G_DEFINE_TYPE (MooIconView, _moo_icon_view, GTK_TYPE_WIDGET)
+G_DEFINE_TYPE_WITH_CODE (MooIconView, _moo_icon_view, GTK_TYPE_WIDGET, G_ADD_PRIVATE(MooIconView))
 
 enum {
     PROP_0,
@@ -288,8 +288,6 @@ _moo_icon_view_class_init (MooIconViewClass *klass)
     GtkBindingSet *binding_set;
     GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
     GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
-
-    g_type_class_add_private (klass, sizeof (MooIconViewPrivate));
 
     gobject_class->dispose = moo_icon_view_dispose;
     gobject_class->set_property = moo_icon_view_set_property;
@@ -503,7 +501,7 @@ _moo_icon_view_init (MooIconView *view)
     GTK_WIDGET_UNSET_NO_WINDOW (view);
     GTK_WIDGET_SET_CAN_FOCUS (view);
 
-    view->priv = G_TYPE_INSTANCE_GET_PRIVATE (view, MOO_TYPE_ICON_VIEW, MooIconViewPrivate);
+    view->priv = (MooIconViewPrivate*) _moo_icon_view_get_instance_private(view);
 
     view->priv->pixbuf.cell = gtk_cell_renderer_pixbuf_new ();
     g_object_ref_sink (view->priv->pixbuf.cell);

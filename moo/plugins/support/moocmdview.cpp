@@ -75,7 +75,7 @@ static guint signals[LAST_SIGNAL];
 
 
 /* MOO_TYPE_CMD_VIEW */
-G_DEFINE_TYPE (MooCmdView, moo_cmd_view, MOO_TYPE_LINE_VIEW)
+G_DEFINE_TYPE_WITH_CODE (MooCmdView, moo_cmd_view, MOO_TYPE_LINE_VIEW, G_ADD_PRIVATE(MooCmdView))
 
 
 static void
@@ -92,8 +92,6 @@ moo_cmd_view_class_init (MooCmdViewClass *klass)
     klass->cmd_exit = moo_cmd_view_cmd_exit;
     klass->stdout_line = moo_cmd_view_stdout_line;
     klass->stderr_line = moo_cmd_view_stderr_line;
-
-    g_type_class_add_private (klass, sizeof (MooCmdViewPrivate));
 
     signals[ABORT] =
             g_signal_new ("abort",
@@ -158,7 +156,7 @@ moo_cmd_view_class_init (MooCmdViewClass *klass)
 static void
 moo_cmd_view_init (MooCmdView *view)
 {
-    view->priv = G_TYPE_INSTANCE_GET_PRIVATE (view, MOO_TYPE_CMD_VIEW, MooCmdViewPrivate);
+    view->priv = (MooCmdViewPrivate*) moo_cmd_view_get_instance_private (view);
 }
 
 

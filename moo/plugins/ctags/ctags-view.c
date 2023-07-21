@@ -22,12 +22,11 @@
 #include <mooutils/mooutils-treeview.h>
 #include <gtk/gtk.h>
 
-G_DEFINE_TYPE (MooCtagsView, _moo_ctags_view, GTK_TYPE_TREE_VIEW)
-
 struct _MooCtagsViewPrivate {
     guint nothing;
 };
 
+G_DEFINE_TYPE_WITH_CODE (MooCtagsView, _moo_ctags_view, GTK_TYPE_TREE_VIEW, G_ADD_PRIVATE(MooCtagsView))
 
 static void
 moo_ctags_view_cursor_changed (GtkTreeView *treeview)
@@ -68,8 +67,6 @@ _moo_ctags_view_class_init (MooCtagsViewClass *klass)
                   _moo_marshal_VOID__BOXED,
                   G_TYPE_NONE, 1,
                   MOO_TYPE_CTAGS_ENTRY);
-
-    g_type_class_add_private (klass, sizeof (MooCtagsViewPrivate));
 }
 
 
@@ -136,8 +133,7 @@ _moo_ctags_view_init (MooCtagsView *view)
     GtkTreeViewColumn *column;
     GtkCellRenderer *cell;
 
-    view->priv = G_TYPE_INSTANCE_GET_PRIVATE (view, MOO_TYPE_CTAGS_VIEW,
-                                              MooCtagsViewPrivate);
+    view->priv = (MooCtagsViewPrivate*) _moo_ctags_view_get_instance_private (view);
 
     gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (view), FALSE);
 

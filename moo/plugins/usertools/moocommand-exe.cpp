@@ -124,7 +124,7 @@ struct _MooCommandExePrivate {
     char *filter;
 };
 
-G_DEFINE_TYPE (MooCommandExe, _moo_command_exe, MOO_TYPE_COMMAND)
+G_DEFINE_TYPE_WITH_CODE (MooCommandExe, _moo_command_exe, MOO_TYPE_COMMAND, G_ADD_PRIVATE(MooCommandExe))
 
 typedef MooCommandFactory MooCommandFactoryExe;
 typedef MooCommandFactoryClass MooCommandFactoryExeClass;
@@ -134,9 +134,7 @@ MOO_DEFINE_TYPE_STATIC (MooCommandFactoryExe, _moo_command_factory_exe, MOO_TYPE
 static void
 _moo_command_exe_init (MooCommandExe *cmd)
 {
-    cmd->priv = G_TYPE_INSTANCE_GET_PRIVATE (cmd,
-                                             MOO_TYPE_COMMAND_EXE,
-                                             MooCommandExePrivate);
+    cmd->priv = (MooCommandExePrivate*) _moo_command_exe_get_instance_private (cmd);
 }
 
 
@@ -816,8 +814,6 @@ _moo_command_exe_class_init (MooCommandExeClass *klass)
     G_OBJECT_CLASS(klass)->finalize = moo_command_exe_finalize;
     MOO_COMMAND_CLASS(klass)->run = moo_command_exe_run;
     MOO_COMMAND_CLASS(klass)->check_sensitive = moo_command_exe_check_sensitive;
-
-    g_type_class_add_private (klass, sizeof (MooCommandExePrivate));
 
     factory = (MooCommandFactory*) g_object_new (_moo_command_factory_exe_get_type (), (const char*) NULL);
     moo_command_factory_register ("exe", _("Shell command"),

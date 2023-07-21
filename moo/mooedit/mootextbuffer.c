@@ -157,7 +157,7 @@ enum {
 
 
 /* MOO_TYPE_TEXT_BUFFER */
-G_DEFINE_TYPE (MooTextBuffer, moo_text_buffer, GTK_TYPE_TEXT_BUFFER)
+G_DEFINE_TYPE_WITH_CODE (MooTextBuffer, moo_text_buffer, GTK_TYPE_TEXT_BUFFER, G_ADD_PRIVATE(MooTextBuffer))
 
 
 static void
@@ -180,8 +180,6 @@ moo_text_buffer_class_init (MooTextBufferClass *klass)
     buffer_class->modified_changed = moo_text_buffer_modified_changed;
 
     klass->cursor_moved = moo_text_buffer_cursor_moved;
-
-    g_type_class_add_private (klass, sizeof (MooTextBufferPrivate));
 
     g_object_class_install_property (gobject_class,
                                      PROP_HIGHLIGHT_SYNTAX,
@@ -357,7 +355,7 @@ moo_text_buffer_class_init (MooTextBufferClass *klass)
 static void
 moo_text_buffer_init (MooTextBuffer *buffer)
 {
-    buffer->priv = G_TYPE_INSTANCE_GET_PRIVATE (buffer, MOO_TYPE_TEXT_BUFFER, MooTextBufferPrivate);
+    buffer->priv = (MooTextBufferPrivate*) moo_text_buffer_get_instance_private (buffer);
 
     buffer->priv->line_buf = _moo_line_buffer_new ();
     buffer->priv->do_highlight = TRUE;

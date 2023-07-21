@@ -122,7 +122,7 @@ enum {
     PROP_ENCODING
 };
 
-G_DEFINE_TYPE (MooEdit, moo_edit, G_TYPE_OBJECT)
+G_DEFINE_TYPE_WITH_CODE (MooEdit, moo_edit, G_TYPE_OBJECT, G_ADD_PRIVATE(MooEdit))
 
 
 static void
@@ -137,8 +137,6 @@ moo_edit_class_init (MooEditClass *klass)
     gobject_class->dispose = moo_edit_dispose;
 
     klass->before_save = moo_edit_before_save;
-
-    g_type_class_add_private (klass, sizeof (MooEditPrivate));
 
     g_object_class_install_property (gobject_class, PROP_EDITOR,
         g_param_spec_object ("editor", "editor", "editor",
@@ -308,7 +306,7 @@ MooEditPrivate::~MooEditPrivate()
 static void
 moo_edit_init (MooEdit *edit)
 {
-    edit->priv = G_TYPE_INSTANCE_GET_PRIVATE (edit, MOO_TYPE_EDIT, MooEditPrivate);
+    edit->priv = (MooEditPrivate*) moo_edit_get_instance_private (edit);
     new(edit->priv) MooEditPrivate;
 
     edit->priv->views = moo_edit_view_array_new ();

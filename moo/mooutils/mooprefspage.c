@@ -74,7 +74,7 @@ enum {
 static G_GNUC_UNUSED guint signals[LAST_SIGNAL];
 
 /* MOO_TYPE_PREFS_PAGE */
-G_DEFINE_TYPE (MooPrefsPage, moo_prefs_page, GTK_TYPE_VBOX)
+G_DEFINE_TYPE_WITH_CODE (MooPrefsPage, moo_prefs_page, GTK_TYPE_VBOX, G_ADD_PRIVATE(MooPrefsPage))
 
 static void
 moo_prefs_page_class_init (MooPrefsPageClass *klass)
@@ -87,8 +87,6 @@ moo_prefs_page_class_init (MooPrefsPageClass *klass)
 
     klass->init = moo_prefs_page_init_sig;
     klass->apply = moo_prefs_page_apply;
-
-    g_type_class_add_private (klass, sizeof (MooPrefsPagePrivate));
 
     g_object_class_install_property (gobject_class, PROP_LABEL,
         g_param_spec_string ("label", "label", "Label",
@@ -128,9 +126,7 @@ moo_prefs_page_class_init (MooPrefsPageClass *klass)
 static void
 moo_prefs_page_init (MooPrefsPage *page)
 {
-    page->priv = G_TYPE_INSTANCE_GET_PRIVATE (page,
-                                              MOO_TYPE_PREFS_PAGE,
-                                              MooPrefsPagePrivate);
+    page->priv = (MooPrefsPagePrivate*) moo_prefs_page_get_instance_private (page);
 
     page->label = NULL;
     page->priv->icon = NULL;

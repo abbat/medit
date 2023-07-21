@@ -28,15 +28,15 @@
 #endif
 #include <stdlib.h>
 
-
 MOO_DEFINE_BOXED_TYPE_R (MooCtagsEntry, _moo_ctags_entry)
-G_DEFINE_TYPE (MooCtagsDocPlugin, _moo_ctags_doc_plugin, MOO_TYPE_DOC_PLUGIN)
 
 struct _MooCtagsDocPluginPrivate
 {
     GtkTreeStore *store;
     guint update_idle;
 };
+
+G_DEFINE_TYPE_WITH_CODE (MooCtagsDocPlugin, _moo_ctags_doc_plugin, MOO_TYPE_DOC_PLUGIN, G_ADD_PRIVATE(MooCtagsDocPlugin))
 
 typedef struct {
     const char *name;
@@ -61,15 +61,12 @@ _moo_ctags_doc_plugin_class_init (MooCtagsDocPluginClass *klass)
 
     plugin_class->create = (MooDocPluginCreateFunc) moo_ctags_doc_plugin_create;
     plugin_class->destroy = (MooDocPluginDestroyFunc) moo_ctags_doc_plugin_destroy;
-
-    g_type_class_add_private (klass, sizeof (MooCtagsDocPluginPrivate));
 }
 
 static void
 _moo_ctags_doc_plugin_init (MooCtagsDocPlugin *plugin)
 {
-    plugin->priv = G_TYPE_INSTANCE_GET_PRIVATE (plugin, MOO_TYPE_CTAGS_DOC_PLUGIN,
-                                                MooCtagsDocPluginPrivate);
+    plugin->priv = (MooCtagsDocPluginPrivate*) _moo_ctags_doc_plugin_get_instance_private (plugin);
 }
 
 

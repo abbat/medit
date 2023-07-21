@@ -128,7 +128,7 @@ static guint signals[LAST_SIGNAL];
 
 
 /* MOO_TYPE_MENU_MGR */
-G_DEFINE_TYPE (MooMenuMgr, moo_menu_mgr, G_TYPE_OBJECT)
+G_DEFINE_TYPE_WITH_CODE (MooMenuMgr, moo_menu_mgr, G_TYPE_OBJECT, G_ADD_PRIVATE(MooMenuMgr))
 
 
 static void
@@ -137,8 +137,6 @@ moo_menu_mgr_class_init (MooMenuMgrClass *klass)
     GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
 
     gobject_class->finalize = moo_menu_mgr_finalize;
-
-    g_type_class_add_private (klass, sizeof (MooMenuMgrPrivate));
 
     signals[RADIO_SET_ACTIVE] =
             g_signal_new ("radio-set-active",
@@ -175,7 +173,7 @@ moo_menu_mgr_class_init (MooMenuMgrClass *klass)
 static void
 moo_menu_mgr_init (MooMenuMgr *mgr)
 {
-    mgr->priv = G_TYPE_INSTANCE_GET_PRIVATE (mgr, MOO_TYPE_MENU_MGR, MooMenuMgrPrivate);
+    mgr->priv = (MooMenuMgrPrivate*) moo_menu_mgr_get_instance_private (mgr);
     mgr->priv->named_nodes =
             g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
     mgr->priv->use_mnemonic = TRUE;

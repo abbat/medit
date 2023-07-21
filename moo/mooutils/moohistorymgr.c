@@ -119,7 +119,7 @@ static void         ipc_notify_update_file      (MooHistoryMgr   *mgr,
 static void         ipc_notify_remove_file      (MooHistoryMgr   *mgr,
                                                  MooHistoryItem  *item);
 
-G_DEFINE_TYPE (MooHistoryMgr, moo_history_mgr, G_TYPE_OBJECT)
+G_DEFINE_TYPE_WITH_CODE (MooHistoryMgr, moo_history_mgr, G_TYPE_OBJECT, G_ADD_PRIVATE(MooHistoryMgr))
 
 enum {
     PROP_0,
@@ -138,8 +138,6 @@ static void
 moo_history_mgr_class_init (MooHistoryMgrClass *klass)
 {
     GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
-    g_type_class_add_private (klass, sizeof (MooHistoryMgrPrivate));
 
     object_class->constructor = moo_history_mgr_constructor;
     object_class->set_property = moo_history_mgr_set_property;
@@ -167,7 +165,7 @@ moo_history_mgr_class_init (MooHistoryMgrClass *klass)
 static void
 moo_history_mgr_init (MooHistoryMgr *mgr)
 {
-    mgr->priv = G_TYPE_INSTANCE_GET_PRIVATE (mgr, MOO_TYPE_HISTORY_MGR, MooHistoryMgrPrivate);
+    mgr->priv = (MooHistoryMgrPrivate*) moo_history_mgr_get_instance_private (mgr);
     mgr->priv->filename = NULL;
     mgr->priv->basename = NULL;
     mgr->priv->files = moo_history_item_queue_new ();

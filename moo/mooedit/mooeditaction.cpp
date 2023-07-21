@@ -50,7 +50,7 @@ typedef struct {
 
 static FilterStore filter_store;
 
-G_DEFINE_TYPE (MooEditAction, moo_edit_action, MOO_TYPE_ACTION)
+G_DEFINE_TYPE_WITH_CODE (MooEditAction, moo_edit_action, MOO_TYPE_ACTION, G_ADD_PRIVATE(MooEditAction))
 
 enum {
     PROP_0,
@@ -201,7 +201,7 @@ moo_edit_action_set_property (GObject        *object,
 static void
 moo_edit_action_init (MooEditAction *action)
 {
-    action->priv = G_TYPE_INSTANCE_GET_PRIVATE (action, MOO_TYPE_EDIT_ACTION, MooEditActionPrivate);
+    action->priv = (MooEditActionPrivate*) moo_edit_action_get_instance_private (action);
 }
 
 
@@ -299,8 +299,6 @@ moo_edit_action_class_init (MooEditActionClass *klass)
     klass->check_state = moo_edit_action_check_state_real;
     klass->check_visible = moo_edit_action_check_visible_real;
     klass->check_sensitive = moo_edit_action_check_sensitive_real;
-
-    g_type_class_add_private (klass, sizeof (MooEditActionPrivate));
 
     g_object_class_install_property (gobject_class,
                                      PROP_DOC,

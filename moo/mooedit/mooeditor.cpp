@@ -128,7 +128,7 @@ static guint signals[LAST_SIGNAL];
 
 
 /* MOO_TYPE_EDITOR */
-G_DEFINE_TYPE (MooEditor, moo_editor, G_TYPE_OBJECT)
+G_DEFINE_TYPE_WITH_CODE (MooEditor, moo_editor, G_TYPE_OBJECT, G_ADD_PRIVATE(MooEditor))
 
 
 inline static gboolean test_flag(MooEditor *editor, MooEditorOptions flag)
@@ -168,8 +168,6 @@ moo_editor_class_init (MooEditorClass *klass)
     g_type_class_unref (g_type_class_ref (MOO_TYPE_EDIT));
     g_type_class_unref (g_type_class_ref (MOO_TYPE_EDIT_WINDOW));
     g_type_class_unref (g_type_class_ref (MOO_TYPE_INDENTER));
-
-    g_type_class_add_private (klass, sizeof (MooEditorPrivate));
 
     g_object_class_install_property (gobject_class, PROP_OPEN_SINGLE_FILE_INSTANCE,
         g_param_spec_boolean ("open-single-file-instance", "open-single-file-instance", "open-single-file-instance",
@@ -344,7 +342,7 @@ moo_editor_class_init (MooEditorClass *klass)
 static void
 moo_editor_init (MooEditor *editor)
 {
-    editor->priv = G_TYPE_INSTANCE_GET_PRIVATE (editor, MOO_TYPE_EDITOR, MooEditorPrivate);
+    editor->priv = (MooEditorPrivate*) moo_editor_get_instance_private (editor);
     editor->priv->windows = moo_edit_window_array_new ();
     editor->priv->windowless = moo_edit_array_new ();
 }

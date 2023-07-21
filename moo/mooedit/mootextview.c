@@ -246,7 +246,8 @@ enum {
 
 /* MOO_TYPE_TEXT_VIEW */
 G_DEFINE_TYPE_WITH_CODE (MooTextView, moo_text_view, GTK_TYPE_TEXT_VIEW,
-                         G_IMPLEMENT_INTERFACE (MOO_TYPE_UNDO_OPS, undo_ops_iface_init))
+                         G_IMPLEMENT_INTERFACE (MOO_TYPE_UNDO_OPS, undo_ops_iface_init)
+                         G_ADD_PRIVATE(MooTextView))
 
 
 static void moo_text_view_class_init (MooTextViewClass *klass)
@@ -259,7 +260,6 @@ static void moo_text_view_class_init (MooTextViewClass *klass)
 
     _moo_text_view_parent_class = moo_text_view_parent_class;
     g_type_class_unref (g_type_class_ref (MOO_TYPE_INDENTER));
-    g_type_class_add_private (klass, sizeof (MooTextViewPrivate));
 
     gobject_class->set_property = moo_text_view_set_property;
     gobject_class->get_property = moo_text_view_get_property;
@@ -652,7 +652,7 @@ static void moo_text_view_class_init (MooTextViewClass *klass)
 static void
 moo_text_view_init (MooTextView *view)
 {
-    view->priv = G_TYPE_INSTANCE_GET_PRIVATE (view, MOO_TYPE_TEXT_VIEW, MooTextViewPrivate);
+    view->priv = (MooTextViewPrivate*) moo_text_view_get_instance_private (view);
 
     view->priv->constructed = FALSE;
     view->priv->buffer_type = MOO_TYPE_TEXT_BUFFER;

@@ -308,7 +308,7 @@ static void         action_focus_next_split_view        (MooEditWindow  *window)
 static void         update_split_view_actions           (MooEditWindow  *window);
 
 
-G_DEFINE_TYPE (MooEditWindow, moo_edit_window, MOO_TYPE_WINDOW)
+G_DEFINE_TYPE_WITH_CODE (MooEditWindow, moo_edit_window, MOO_TYPE_WINDOW, G_ADD_PRIVATE(MooEditWindow))
 
 enum {
     PROP_0,
@@ -357,8 +357,6 @@ moo_edit_window_class_init (MooEditWindowClass *klass)
     window_class->close = moo_edit_window_close_handler;
 
     klass->before_close = moo_edit_window_before_close;
-
-    g_type_class_add_private (klass, sizeof (MooEditWindowPrivate));
 
     g_object_class_install_property (gobject_class, PROP_EDITOR,
         g_param_spec_object ("editor", "editor", "editor",
@@ -842,7 +840,7 @@ moo_edit_window_class_init (MooEditWindowClass *klass)
 static void
 moo_edit_window_init (MooEditWindow *window)
 {
-    window->priv = G_TYPE_INSTANCE_GET_PRIVATE (window, MOO_TYPE_EDIT_WINDOW, MooEditWindowPrivate);
+    window->priv = (MooEditWindowPrivate*) moo_edit_window_get_instance_private (window);
     new(window->priv) MooEditWindowPrivate;
 
     window->priv->history = nullptr;
