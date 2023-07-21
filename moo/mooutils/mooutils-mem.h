@@ -17,13 +17,19 @@
 #define MOO_UTILS_MEM_H
 
 #include <mooglib/moo-glib.h>
+#include <gtk/gtk.h>
 #include <string.h>
-
 
 // GFunc compatible g_free
 static inline void moo_free(gpointer mem, gpointer)
 {
     g_free(mem);
+}
+
+// GWeakNotify compatible g_nullify_pointer
+static inline void moo_nullify_pointer(gpointer data, GObject*)
+{
+    g_nullify_pointer((gpointer*)data);
 }
 
 #define _MOO_COPYELMS(func_,dest_,src_,n_)      \

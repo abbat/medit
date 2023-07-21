@@ -20,6 +20,7 @@
 #include "mooutils/moomenumgr.h"
 #include "marshals.h"
 #include "mooutils/mooutils-misc.h"
+#include "mooutils/mooutils-mem.h"
 #include "mooutils/moolist.h"
 #include <gtk/gtk.h>
 #include <string.h>

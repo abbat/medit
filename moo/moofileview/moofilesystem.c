@@ -283,7 +283,7 @@ _moo_file_system_create (void)
     {
         fs_instance = MOO_FILE_SYSTEM (g_object_new (MOO_TYPE_FILE_SYSTEM, (const char*) NULL));
         g_object_weak_ref (G_OBJECT (fs_instance),
-                           (GWeakNotify) g_nullify_pointer, &fs_instance);
+                           (GWeakNotify) moo_nullify_pointer, &fs_instance);
         return fs_instance;
     }
     else

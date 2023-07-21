@@ -24,6 +24,7 @@
 #include "marshals.h"
 #include "mooutils/moonotebook.h"
 #include "mooutils/mooutils-misc.h"
+#include "mooutils/mooutils-mem.h"
 #include "mooutils/moopane.h"
 #include "mooutils/moocompat.h"
 #include <gdk/gdkkeysyms.h>
@@ -1716,7 +1717,7 @@ delete_page (MooNotebook *nb,
 
     if (page->focus_child)
         g_object_weak_unref (G_OBJECT (page->focus_child),
-                             (GWeakNotify) g_nullify_pointer,
+                             (GWeakNotify) moo_nullify_pointer,
                              &page->focus_child);
 
     g_free (page->label);
@@ -3633,13 +3634,13 @@ moo_notebook_set_focus_child (GtkContainer *container,
             {
                 if (page->focus_child)
                     g_object_weak_unref (G_OBJECT (page->focus_child),
-                                         (GWeakNotify) g_nullify_pointer,
+                                         (GWeakNotify) moo_nullify_pointer,
                                          &page->focus_child);
 
                 page->focus_child = focus_child;
 
                 g_object_weak_ref (G_OBJECT (page->focus_child),
-                                   (GWeakNotify) g_nullify_pointer,
+                                   (GWeakNotify) moo_nullify_pointer,
                                    &page->focus_child);
             }
         }
