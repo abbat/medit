@@ -142,6 +142,7 @@ static gboolean node_is_ancestor        (Node           *node,
 static gboolean node_is_empty           (Node           *node);
 static GSList  *node_list_children      (Node           *ndoe);
 static void     node_free               (Node           *node);
+static void     node_free_data          (Node           *node, gpointer);
 static void     node_foreach            (Node           *node,
                                          NodeForeachFunc func,
                                          gpointer        data);
@@ -583,11 +584,17 @@ item_free (Item *item)
 }
 
 static void
+node_free_data (Node *node, gpointer)
+{
+    node_free(node);
+}
+
+static void
 node_free (Node *node)
 {
     if (node)
     {
-        g_slist_foreach (node->children, (GFunc) node_free, NULL);
+        g_slist_foreach (node->children, (GFunc) node_free_data, NULL);
         g_slist_free (node->children);
         node->children = NULL;
 
