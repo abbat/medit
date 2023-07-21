@@ -476,7 +476,7 @@ static Context	       *context_new		(Context		*parent,
 						 gboolean                ignore_children_style);
 static void		context_unref		(Context		*context);
 static void		context_freeze		(Context		*context);
-static void		context_thaw		(Context		*context);
+static void		context_thaw		(Context		*context, gpointer);
 static void		erase_segments		(GtkSourceContextEngine *ce,
 						 gint                    start,
 						 gint                    end,
@@ -3521,7 +3521,7 @@ get_child_contexts_hash_cb (G_GNUC_UNUSED gpointer text,
  * if it was incremented by context_freeze().
  */
 static void
-context_thaw (Context *ctx)
+context_thaw (Context *ctx, gpointer)
 {
 	ContextPtr *ptr;
 
@@ -3534,7 +3534,7 @@ context_thaw (Context *ctx)
 
 		if (ptr->fixed)
 		{
-			context_thaw (ptr->u.context);
+			context_thaw (ptr->u.context, NULL);
 		}
 		else
 		{
@@ -5644,7 +5644,7 @@ update_syntax (GtkSourceContextEngine *ce,
 
 out:
 	/* must call context_thaw, so this is the only return point */
-	context_thaw (ce->priv->root_context);
+	context_thaw (ce->priv->root_context, NULL);
 }
 
 
