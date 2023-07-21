@@ -27,8 +27,11 @@
 G_DEFINE_TYPE (MooEditBookmark, moo_edit_bookmark, MOO_TYPE_LINE_MARK)
 
 
-static void        disconnect_bookmark (MooEditBookmark *bk);
-static const char *get_bookmark_color  (MooEdit         *doc);
+static void disconnect_bookmark      (MooEditBookmark *bk);
+static void disconnect_bookmark_data (MooEditBookmark *bk, gpointer);
+
+
+static const char *get_bookmark_color (MooEdit *doc);
 
 
 static void
@@ -124,7 +127,7 @@ update_bookmarks (MooEdit *edit)
         else
             new_ = g_slist_prepend (new_, l->data);
 
-    g_slist_foreach (deleted, (GFunc) disconnect_bookmark, NULL);
+    g_slist_foreach (deleted, (GFunc) disconnect_bookmark_data, NULL);
     g_slist_foreach (deleted, (GFunc) moo_object_unref, NULL);
     g_slist_free (deleted);
 
@@ -308,6 +311,13 @@ static void
 disconnect_bookmark (MooEditBookmark *bk)
 {
     g_object_set_data (G_OBJECT (bk), "moo-edit-bookmark", (char*) 0);
+}
+
+
+static void
+disconnect_bookmark_data (MooEditBookmark *bk, gpointer)
+{
+    disconnect_bookmark (bk);
 }
 
 
