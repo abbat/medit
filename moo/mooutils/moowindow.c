@@ -174,7 +174,7 @@ static void         moo_window_action_select_all        (MooWindow      *window)
 static void         moo_window_action_undo              (MooWindow      *window);
 static void         moo_window_action_redo              (MooWindow      *window);
 
-static void         accel_entry_free                    (AccelEntry     *entry);
+static void         accel_entry_free                    (AccelEntry     *entry, gpointer);
 static void         accels_changed                      (MooWindow      *window);
 
 
@@ -692,7 +692,7 @@ accel_entry_new (guint            key,
 }
 
 static void
-accel_entry_free (AccelEntry *entry)
+accel_entry_free (AccelEntry *entry, gpointer)
 {
     if (entry)
     {
