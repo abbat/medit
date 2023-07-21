@@ -18,6 +18,7 @@
 #include "mooutils/mooaccel.h"
 #include "mooutils/mooutils-gobject.h"
 #include "mooutils/mooutils-misc.h"
+#include "mooutils/mooutils-treeview.h"
 #include "mooutils/moocompat.h"
 #include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
@@ -2922,7 +2923,7 @@ static void
 free_selection (MooIconView *view)
 {
     g_slist_foreach (view->priv->selection->selected,
-                     (GFunc) gtk_tree_row_reference_free, NULL);
+                     (GFunc) moo_tree_row_reference_free, NULL);
     g_slist_free (view->priv->selection->selected);
     g_free (view->priv->selection);
     view->priv->selection = NULL;
@@ -2948,7 +2949,7 @@ selection_clear (MooIconView *view)
     if (view->priv->selection && view->priv->selection->selected)
     {
         g_slist_foreach (view->priv->selection->selected,
-                         (GFunc) gtk_tree_row_reference_free, NULL);
+                         (GFunc) moo_tree_row_reference_free, NULL);
         g_slist_free (view->priv->selection->selected);
         view->priv->selection->selected = NULL;
         selection_changed (view);
@@ -3372,7 +3373,7 @@ moo_icon_view_select_all (MooIconView *view)
 
     selection = view->priv->selection;
     g_slist_foreach (selection->selected,
-                     (GFunc) gtk_tree_row_reference_free, NULL);
+                     (GFunc) moo_tree_row_reference_free, NULL);
     g_slist_free (selection->selected);
     selection->selected = NULL;
 
@@ -3411,7 +3412,7 @@ _moo_icon_view_unselect_all (MooIconView *view)
     g_return_if_fail (selection->mode != GTK_SELECTION_BROWSE);
 
     g_slist_foreach (selection->selected,
-                     (GFunc) gtk_tree_row_reference_free, NULL);
+                     (GFunc) moo_tree_row_reference_free, NULL);
     g_slist_free (selection->selected);
     selection->selected = NULL;
 

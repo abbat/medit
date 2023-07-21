@@ -26,6 +26,12 @@ static inline void moo_tree_path_free(GtkTreePath* path, gpointer)
     gtk_tree_path_free(path);
 }
 
+// GFunc compatible gtk_tree_row_reference_free
+static inline void moo_tree_row_reference_free(GtkTreeRowReference* reference, gpointer)
+{
+    gtk_tree_row_reference_free(reference);
+}
+
 #define MOO_TYPE_TREE_HELPER              (_moo_tree_helper_get_type ())
 #define MOO_TREE_HELPER(object)           (G_TYPE_CHECK_INSTANCE_CAST ((object), MOO_TYPE_TREE_HELPER, MooTreeHelper))
 #define MOO_TREE_HELPER_CLASS(klass)      (G_TYPE_CHECK_CLASS_CAST ((klass), MOO_TYPE_TREE_HELPER, MooTreeHelperClass))

@@ -1206,7 +1206,7 @@ delete_clicked (BkEditorXml *xml)
                        GINT_TO_POINTER (TRUE));
 
     g_list_foreach (paths, (GFunc) moo_tree_path_free, NULL);
-    g_list_foreach (rows, (GFunc) gtk_tree_row_reference_free, NULL);
+    g_list_foreach (rows, (GFunc) moo_tree_row_reference_free, NULL);
     g_list_free (paths);
     g_list_free (rows);
 }
