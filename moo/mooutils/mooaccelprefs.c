@@ -369,12 +369,17 @@ apply_global (GtkTreeModel *model,
     return FALSE;
 }
 
+static inline gboolean moo_true(gpointer, gpointer, gpointer)
+{
+    return TRUE;
+}
+
 static void
 moo_accel_prefs_page_apply (MooPrefsPage *prefs_page)
 {
     MooAccelPrefsPage *page = MOO_ACCEL_PREFS_PAGE (prefs_page);
     g_hash_table_foreach (page->changed, (GHFunc) apply_one, NULL);
-    g_hash_table_foreach_remove (page->changed, (GHRFunc) gtk_true, NULL);
+    g_hash_table_foreach_remove (page->changed, (GHRFunc) moo_true, NULL);
     gtk_tree_model_foreach (GTK_TREE_MODEL (page->store),
                             (GtkTreeModelForeachFunc) apply_global,
                             NULL);

@@ -2024,7 +2024,7 @@ traverse_tree_prepend_path (gpointer key,
 static GTree *
 path_set_new (void)
 {
-    return g_tree_new_full ((GCompareDataFunc) gtk_tree_path_compare, NULL,
+    return g_tree_new_full ((GCompareDataFunc) moo_tree_path_compare, NULL,
                             (GDestroyNotify) gtk_tree_path_free, NULL);
 }
 

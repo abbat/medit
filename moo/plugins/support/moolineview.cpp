@@ -642,7 +642,7 @@ moo_line_view_populate_popup (GtkTextView *text_view,
     gboolean has_selection, has_text;
 
     gtk_container_foreach (GTK_CONTAINER (menu),
-                           (GtkCallback) gtk_widget_destroy,
+                           (GtkCallback) moo_widget_destroy,
                            NULL);
 
     item = gtk_image_menu_item_new_from_stock (GTK_STOCK_COPY, NULL);

@@ -373,6 +373,11 @@ xdg_check_time_and_dirs (void)
   return retval;
 }
 
+static inline int moo_mime_init_from_directory (const char *directory, gpointer)
+{
+    return xdg_mime_init_from_directory(directory);
+}
+
 /* Called in every public function.  It reloads the hash function if need be.
  */
 static void
@@ -392,7 +397,7 @@ xdg_mime_init (void)
       icon_list = _xdg_mime_icon_list_new ();
       generic_icon_list = _xdg_mime_icon_list_new ();
 
-      xdg_run_command_on_dirs ((XdgDirectoryFunc) xdg_mime_init_from_directory,
+      xdg_run_command_on_dirs ((XdgDirectoryFunc) moo_mime_init_from_directory,
 			       NULL);
 
       need_reread = FALSE;

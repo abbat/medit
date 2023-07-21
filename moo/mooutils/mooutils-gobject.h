@@ -45,6 +45,12 @@ static inline void moo_object_unref(GObject* object, gpointer)
     g_object_unref(object);
 }
 
+// GtkCallback compatible gtk_widget_destroy
+static inline void moo_widget_destroy(GtkWidget* widget, gpointer)
+{
+    gtk_widget_destroy(widget);
+}
+
 /*****************************************************************************/
 /* GType type
  */
