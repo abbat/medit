@@ -368,7 +368,7 @@ _moo_app_input_channel_get_name (InputChannel *ch)
 }
 
 static void
-connection_free (Connection *conn)
+connection_free (Connection *conn, gpointer)
 {
     if (conn->io_watch)
         g_source_remove (conn->io_watch);
@@ -470,7 +470,7 @@ read_input (G_GNUC_UNUSED GIOChannel *source,
 remove:
     if (conn->ch)
         conn->ch->connections = g_slist_remove (conn->ch->connections, conn);
-    connection_free (conn);
+    connection_free (conn, NULL);
     return FALSE;
 }
 
