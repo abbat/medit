@@ -16,11 +16,17 @@
 #ifndef MOO_UI_XML_H
 #define MOO_UI_XML_H
 
+#include <libxml/parser.h>
 #include <mooutils/moomarkup.h>
 #include <mooutils/mooactioncollection.h>
 
 G_BEGIN_DECLS
 
+// GFunc compatible xmlFree
+static inline void moo_xmlFree(void *mem, gpointer)
+{
+    xmlFree(mem);
+}
 
 typedef enum {
     MOO_UI_NODE_CONTAINER = 1,
