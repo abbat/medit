@@ -21,6 +21,17 @@
 
 G_BEGIN_DECLS
 
+// GFunc compatible g_object_freeze_notify
+static inline void moo_object_freeze_notify(GObject* object, gpointer)
+{
+    g_object_freeze_notify(object);
+}
+
+// GFunc compatible g_object_thaw_notify
+static inline void moo_object_thaw_notify(GObject* object, gpointer)
+{
+    g_object_thaw_notify(object);
+}
 
 /*****************************************************************************/
 /* GType type

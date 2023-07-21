@@ -254,9 +254,9 @@ global_changed (G_GNUC_UNUSED GObject *object,
     prop_id = g_param_spec_get_qdata (pspec, prop_id_quark);
     g_return_if_fail (prop_id != NULL);
 
-    g_slist_foreach (instances, (GFunc) g_object_freeze_notify, NULL);
+    g_slist_foreach (instances, (GFunc) moo_object_freeze_notify, NULL);
     g_slist_foreach (instances, (GFunc) update_prop_from_global, prop_id);
-    g_slist_foreach (instances, (GFunc) g_object_thaw_notify, NULL);
+    g_slist_foreach (instances, (GFunc) moo_object_thaw_notify, NULL);
 
     /* XXX write to preferences here */
 }
@@ -304,9 +304,9 @@ moo_edit_config_install_setting (GParamSpec *pspec)
 
     global_add_prop (pspec, prop_id);
 
-    g_slist_foreach (instances, (GFunc) g_object_freeze_notify, NULL);
+    g_slist_foreach (instances, (GFunc) moo_object_freeze_notify, NULL);
     g_slist_foreach (instances, (GFunc) update_prop_from_global, GUINT_TO_POINTER (prop_id));
-    g_slist_foreach (instances, (GFunc) g_object_thaw_notify, NULL);
+    g_slist_foreach (instances, (GFunc) moo_object_thaw_notify, NULL);
 
     g_type_class_unref (klass);
     return prop_id;
