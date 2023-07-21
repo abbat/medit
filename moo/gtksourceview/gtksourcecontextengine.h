@@ -108,7 +108,7 @@ gboolean	 _gtk_source_context_data_add_ref 	(GtkSourceContextData	 *data,
 GtkSourceContextReplace *
 		 _gtk_source_context_replace_new	(const gchar             *to_replace_id,
 							 const gchar             *replace_with_id);
-void		 _gtk_source_context_replace_free	(GtkSourceContextReplace *repl);
+void		 _gtk_source_context_replace_free	(GtkSourceContextReplace *repl, gpointer);
 
 gboolean	 _gtk_source_context_data_finish_parse	(GtkSourceContextData	 *data,
 							 GList                   *overrides,

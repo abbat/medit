@@ -6252,7 +6252,7 @@ _gtk_source_context_replace_new	(const gchar *to_replace_id,
 }
 
 void
-_gtk_source_context_replace_free (GtkSourceContextReplace *repl)
+_gtk_source_context_replace_free (GtkSourceContextReplace *repl, gpointer)
 {
 	if (repl != NULL)
 	{
