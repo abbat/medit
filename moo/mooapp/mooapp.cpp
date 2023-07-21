@@ -732,7 +732,7 @@ on_gtk_main_quit (MooApp *app)
 
 
 static gboolean
-check_signal (void)
+check_signal (gpointer)
 {
     if (signal_received)
     {
