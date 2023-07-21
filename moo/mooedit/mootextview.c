@@ -638,7 +638,7 @@ static void moo_text_view_class_init (MooTextViewClass *klass)
                                 G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
                                 G_CALLBACK (start_quick_search),
                                 NULL, NULL,
-                                _moo_marshal_BOOL__VOID,
+                                _moo_marshal_BOOLEAN__VOID,
                                 G_TYPE_BOOLEAN, 0);
 
     binding_set = gtk_binding_set_by_class (klass);

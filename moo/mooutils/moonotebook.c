@@ -450,7 +450,7 @@ static void moo_notebook_class_init (MooNotebookClass *klass)
                           G_SIGNAL_RUN_LAST,
                           G_STRUCT_OFFSET (MooNotebookClass, populate_popup),
                           g_signal_accumulator_true_handled, NULL,
-                          _moo_marshal_BOOL__OBJECT_OBJECT,
+                          _moo_marshal_BOOLEAN__OBJECT_OBJECT,
                           G_TYPE_BOOLEAN, 2,
                           GTK_TYPE_WIDGET,
                           GTK_TYPE_MENU);

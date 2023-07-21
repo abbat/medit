@@ -340,7 +340,7 @@ moo_paned_class_init (MooPanedClass *klass)
                           G_SIGNAL_RUN_FIRST,
                           G_STRUCT_OFFSET (MooPanedClass, handle_drag_end),
                           NULL, NULL,
-                          _moo_marshal_VOID__OBJECT_BOOL,
+                          _moo_marshal_VOID__OBJECT_BOOLEAN,
                           G_TYPE_NONE, 2,
                           GTK_TYPE_WIDGET,
                           G_TYPE_BOOLEAN);

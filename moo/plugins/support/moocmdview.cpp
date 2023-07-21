@@ -101,7 +101,7 @@ moo_cmd_view_class_init (MooCmdViewClass *klass)
                           G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
                           G_STRUCT_OFFSET (MooCmdViewClass, abort),
                           g_signal_accumulator_true_handled, NULL,
-                          _moo_marshal_BOOL__VOID,
+                          _moo_marshal_BOOLEAN__VOID,
                           G_TYPE_BOOLEAN, 0);
 
     signals[CMD_EXIT] =
@@ -110,7 +110,7 @@ moo_cmd_view_class_init (MooCmdViewClass *klass)
                           G_SIGNAL_RUN_LAST,
                           G_STRUCT_OFFSET (MooCmdViewClass, cmd_exit),
                           g_signal_accumulator_true_handled, NULL,
-                          _moo_marshal_BOOL__INT,
+                          _moo_marshal_BOOLEAN__INT,
                           G_TYPE_BOOLEAN, 1,
                           G_TYPE_INT);
 
@@ -120,7 +120,7 @@ moo_cmd_view_class_init (MooCmdViewClass *klass)
                           G_SIGNAL_RUN_LAST,
                           G_STRUCT_OFFSET (MooCmdViewClass, stdout_line),
                           g_signal_accumulator_true_handled, NULL,
-                          _moo_marshal_BOOL__STRING,
+                          _moo_marshal_BOOLEAN__STRING,
                           G_TYPE_BOOLEAN, 1,
                           G_TYPE_STRING);
 
@@ -130,7 +130,7 @@ moo_cmd_view_class_init (MooCmdViewClass *klass)
                           G_SIGNAL_RUN_LAST,
                           G_STRUCT_OFFSET (MooCmdViewClass, stderr_line),
                           g_signal_accumulator_true_handled, NULL,
-                          _moo_marshal_BOOL__STRING,
+                          _moo_marshal_BOOLEAN__STRING,
                           G_TYPE_BOOLEAN, 1,
                           G_TYPE_STRING);
 

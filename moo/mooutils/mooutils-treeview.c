@@ -324,7 +324,7 @@ _moo_tree_helper_class_init (MooTreeHelperClass *klass)
                           G_SIGNAL_RUN_LAST,
                           G_STRUCT_OFFSET (MooTreeHelperClass, new_row),
                           g_signal_accumulator_true_handled, NULL,
-                          _moo_marshal_BOOL__OBJECT_BOXED,
+                          _moo_marshal_BOOLEAN__OBJECT_BOXED,
                           G_TYPE_BOOLEAN, 2,
                           GTK_TYPE_TREE_MODEL,
                           GTK_TYPE_TREE_PATH | G_SIGNAL_TYPE_STATIC_SCOPE);
@@ -335,7 +335,7 @@ _moo_tree_helper_class_init (MooTreeHelperClass *klass)
                           G_SIGNAL_RUN_LAST,
                           G_STRUCT_OFFSET (MooTreeHelperClass, delete_row),
                           g_signal_accumulator_true_handled, NULL,
-                          _moo_marshal_BOOL__OBJECT_BOXED,
+                          _moo_marshal_BOOLEAN__OBJECT_BOXED,
                           G_TYPE_BOOLEAN, 2,
                           GTK_TYPE_TREE_MODEL,
                           GTK_TYPE_TREE_PATH | G_SIGNAL_TYPE_STATIC_SCOPE);
@@ -346,7 +346,7 @@ _moo_tree_helper_class_init (MooTreeHelperClass *klass)
                           G_SIGNAL_RUN_LAST,
                           G_STRUCT_OFFSET (MooTreeHelperClass, move_row),
                           g_signal_accumulator_true_handled, NULL,
-                          _moo_marshal_BOOL__OBJECT_BOXED_BOXED,
+                          _moo_marshal_BOOLEAN__OBJECT_BOXED_BOXED,
                           G_TYPE_BOOLEAN, 3,
                           GTK_TYPE_TREE_MODEL,
                           GTK_TYPE_TREE_PATH | G_SIGNAL_TYPE_STATIC_SCOPE,

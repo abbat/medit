@@ -456,7 +456,7 @@ moo_pane_class_init (MooPaneClass *klass)
                           G_SIGNAL_RUN_LAST,
                           G_STRUCT_OFFSET (MooPaneClass, remove),
                           g_signal_accumulator_true_handled, NULL,
-                          _moo_marshal_BOOL__VOID,
+                          _moo_marshal_BOOLEAN__VOID,
                           G_TYPE_BOOLEAN, 0);
 }
 
