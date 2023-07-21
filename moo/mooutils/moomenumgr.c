@@ -70,7 +70,7 @@ static void         item_free               (Item               *item);
 
 static Menu        *menu_new                (gpointer            data,
                                              GDestroyNotify      destroy);
-static void         menu_free               (Menu               *menu);
+static void         menu_free               (Menu               *menu, gpointer);
 
 static int          mgr_insert              (MooMenuMgr         *mgr,
                                              GNode              *parent_node,
@@ -349,7 +349,7 @@ mgr_remove (MooMenuMgr         *mgr,
     }
 
     for (lm = menus_to_free; lm != NULL; lm = lm->next)
-        menu_free (lm->data);
+        menu_free (lm->data, NULL);
 
     g_slist_free (items_to_free);
     menu_list_free_links (menus_to_free);
@@ -498,7 +498,7 @@ menu_new (gpointer            data,
 
 
 static void
-menu_free (Menu               *menu)
+menu_free (Menu               *menu, gpointer)
 {
     if (menu)
     {
@@ -607,7 +607,7 @@ top_widget_destroyed (GtkWidget          *widget)
     g_return_if_fail (menu != NULL && menu->top_widget == widget);
 
     mgr->priv->menus = menu_list_remove (mgr->priv->menus, menu);
-    menu_free (menu);
+    menu_free (menu, NULL);
 }
 
 

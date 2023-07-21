@@ -658,7 +658,7 @@ combo_changed (GtkComboBox *combo,
 
 static gboolean
 row_separator_func (GtkTreeModel *model,
-                    GtkTreeIter  *iter)
+                    GtkTreeIter  *iter, gpointer)
 {
     char *text;
     gboolean separator;

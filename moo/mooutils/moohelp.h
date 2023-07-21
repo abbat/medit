@@ -34,7 +34,7 @@ void        moo_help_open_id            (const char    *id,
 void        moo_help_set_id             (GtkWidget     *widget,
                                          const char    *id);
 void        moo_help_set_func           (GtkWidget     *widget,
-                                         gboolean (*func) (GtkWidget*));
+                                         gboolean (*func) (GtkWidget*, gpointer));
 void        moo_help_set_func_full      (GtkWidget     *widget,
                                          MooHelpFunc    func,
                                          gpointer       func_data,

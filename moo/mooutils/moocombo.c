@@ -54,7 +54,7 @@ struct _MooComboPrivate {
 };
 
 
-static void moo_combo_cell_layout_init                  (GtkCellLayoutIface *iface);
+static void moo_combo_cell_layout_init                  (GtkCellLayoutIface *iface, gpointer);
 static void moo_combo_cell_layout_pack_start            (GtkCellLayout      *cell_layout,
                                                          GtkCellRenderer    *cell,
                                                          gboolean            expand);
@@ -261,7 +261,7 @@ moo_combo_class_init (MooComboClass *klass, gpointer)
 
 
 static void
-moo_combo_cell_layout_init (GtkCellLayoutIface *iface)
+moo_combo_cell_layout_init (GtkCellLayoutIface *iface, gpointer)
 {
     iface->pack_start = moo_combo_cell_layout_pack_start;
     iface->pack_end = moo_combo_cell_layout_pack_end;

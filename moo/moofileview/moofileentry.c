@@ -126,7 +126,7 @@ static void     completion_set_case_sensitive   (MooFileEntryCompletion *cmpl,
 static void     completion_set_file_system      (MooFileEntryCompletion *cmpl,
                                                  MooFileSystem          *file_system);
 static void     completion_finished             (MooFileEntryCompletion *cmpl);
-static gboolean completion_default_visible_func (MooFile                *file);
+static gboolean completion_default_visible_func (MooFile                *file, gpointer);
 static void     completion_entry_destroyed      (MooFileEntryCompletion *cmpl, GObject*);
 static void     completion_finish               (MooFileEntryCompletion *cmpl,
                                                  const char             *text);
@@ -1501,7 +1501,7 @@ completion_entry_key_press (GtkEntry               *entry,
 
 
 static gboolean
-completion_default_visible_func (MooFile *file)
+completion_default_visible_func (MooFile *file, gpointer)
 {
     return file && strcmp (_moo_file_name (file), "..");
 }

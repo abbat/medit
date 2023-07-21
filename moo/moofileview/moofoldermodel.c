@@ -31,7 +31,7 @@ struct _MooFolderModelPrivate {
 static void moo_folder_model_class_init         (MooFolderModelClass    *klass, gpointer);
 static void moo_folder_model_init               (MooFolderModel         *model, gpointer);
 
-static void moo_folder_model_tree_iface_init    (GtkTreeModelIface      *iface);
+static void moo_folder_model_tree_iface_init    (GtkTreeModelIface      *iface, gpointer);
 
 static void moo_folder_model_finalize           (GObject                *object);
 static void moo_folder_model_set_property       (GObject                *object,
@@ -153,7 +153,7 @@ static gboolean     moo_folder_model_iter_parent    (GtkTreeModel *tree_model,
 
 
 static void
-moo_folder_model_tree_iface_init (GtkTreeModelIface *iface)
+moo_folder_model_tree_iface_init (GtkTreeModelIface *iface, gpointer)
 {
     iface->get_flags = moo_folder_model_get_flags;
     iface->get_n_columns = moo_folder_model_get_n_columns;

@@ -208,7 +208,7 @@ moo_history_mgr_dispose (GObject *object)
 
         if (mgr->priv->files)
         {
-            moo_history_item_queue_foreach (mgr->priv->files, (MooHistoryItemListFunc) moo_history_item_free, NULL);
+            moo_history_item_queue_foreach (mgr->priv->files, (MooHistoryItemListFunc) moo_history_item_free_data, NULL);
             moo_history_item_queue_free_links (mgr->priv->files);
             g_hash_table_destroy (mgr->priv->hash);
         }
@@ -1398,7 +1398,7 @@ idle_loader_free (IdleLoader *data)
 {
     if (data->idle)
         g_source_remove (data->idle);
-    moo_history_item_list_foreach (data->items, (MooHistoryItemListFunc) moo_history_item_free, NULL);
+    moo_history_item_list_foreach (data->items, (MooHistoryItemListFunc) moo_history_item_free_data, NULL);
     moo_history_item_list_free_links (data->items);
     g_free (data);
 }

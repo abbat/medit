@@ -59,7 +59,7 @@ static void pages_list_selection_changed    (MooPrefsDialog *dialog,
 
 static void init_page                       (MooPrefsPage   *page);
 
-static gboolean moo_prefs_dialog_help       (GtkWidget      *widget);
+static gboolean moo_prefs_dialog_help       (GtkWidget      *widget, gpointer);
 
 
 enum {
@@ -546,7 +546,7 @@ moo_prefs_dialog_remove_page (MooPrefsDialog     *dialog,
 
 
 static gboolean
-moo_prefs_dialog_help (GtkWidget *widget)
+moo_prefs_dialog_help (GtkWidget *widget, gpointer)
 {
     int index;
     GtkWidget *current_page = NULL;

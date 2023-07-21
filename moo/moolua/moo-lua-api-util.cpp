@@ -881,7 +881,7 @@ static void
 signal_closure_marshal (MooLuaSignalClosure *closure,
                         GValue              *return_value,
                         guint                n_param_values,
-                        const GValue        *param_values)
+                        const GValue        *param_values, gpointer, gpointer)
 {
     lua_State *L = closure->L;
 

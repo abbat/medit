@@ -45,8 +45,8 @@ static guint DELETE_ACTION_TYPE;
 
 
 static void     moo_entry_class_init        (MooEntryClass      *klass, gpointer);
-static void     moo_entry_editable_init     (GtkEditableClass   *klass);
-static void     moo_entry_undo_ops_init     (MooUndoOpsIface    *iface);
+static void     moo_entry_editable_init     (GtkEditableClass   *klass, gpointer);
+static void     moo_entry_undo_ops_init     (MooUndoOpsIface    *iface, gpointer);
 
 static void     moo_entry_init              (MooEntry           *entry, gpointer);
 static void     moo_entry_finalize          (GObject            *object);
@@ -272,7 +272,7 @@ moo_entry_class_init (MooEntryClass *klass, gpointer)
 
 
 static void
-moo_entry_editable_init (GtkEditableClass   *klass)
+moo_entry_editable_init (GtkEditableClass   *klass, gpointer)
 {
     klass->do_insert_text = moo_entry_do_insert_text;
     klass->do_delete_text = moo_entry_do_delete_text;
@@ -457,7 +457,7 @@ undo_ops_can_redo (MooUndoOps *obj)
 }
 
 static void
-moo_entry_undo_ops_init (MooUndoOpsIface *iface)
+moo_entry_undo_ops_init (MooUndoOpsIface *iface, gpointer)
 {
     iface->undo = (void(*)(MooUndoOps*)) moo_entry_undo;
     iface->redo = (void(*)(MooUndoOps*)) moo_entry_redo;
@@ -754,16 +754,16 @@ static void     insert_action_undo      (InsertAction   *action,
 static void     insert_action_redo      (InsertAction   *action,
                                          GtkEditable    *editable);
 static gboolean insert_action_merge     (InsertAction   *action,
-                                         InsertAction   *what);
-static void     insert_action_destroy   (InsertAction   *action);
+                                         InsertAction   *what, gpointer);
+static void     insert_action_destroy   (InsertAction   *action, gpointer);
 
 static void     delete_action_undo      (DeleteAction   *action,
                                          GtkEditable    *editable);
 static void     delete_action_redo      (DeleteAction   *action,
                                          GtkEditable    *editable);
 static gboolean delete_action_merge     (DeleteAction   *action,
-                                         DeleteAction   *what);
-static void     delete_action_destroy   (DeleteAction   *action);
+                                         DeleteAction   *what, gpointer);
+static void     delete_action_destroy   (DeleteAction   *action, gpointer);
 
 
 static MooUndoActionClass InsertActionClass = {
@@ -883,7 +883,7 @@ delete_action_redo (DeleteAction   *action,
 
 
 static void
-insert_action_destroy (InsertAction *action)
+insert_action_destroy (InsertAction *action, gpointer)
 {
     if (action)
     {
@@ -894,7 +894,7 @@ insert_action_destroy (InsertAction *action)
 
 
 static void
-delete_action_destroy (DeleteAction *action)
+delete_action_destroy (DeleteAction *action, gpointer)
 {
     if (action)
     {
@@ -906,7 +906,7 @@ delete_action_destroy (DeleteAction *action)
 
 static gboolean
 insert_action_merge (InsertAction   *last_action,
-                     InsertAction   *action)
+                     InsertAction   *action, gpointer)
 {
     char *tmp;
 
@@ -930,7 +930,7 @@ insert_action_merge (InsertAction   *last_action,
 
 static gboolean
 delete_action_merge (DeleteAction   *last_action,
-                     DeleteAction   *action)
+                     DeleteAction   *action, gpointer)
 {
     char *tmp;
 

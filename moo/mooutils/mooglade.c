@@ -190,7 +190,7 @@ static Child        *child_new                  (MooGladeXML    *xml,
                                                  Widget         *parent,
                                                  MooMarkupNode  *node,
                                                  GError        **error);
-static void          child_free                 (Child          *child);
+static void          child_free                 (Child          *child, gpointer);
 static WidgetProps  *widget_props_new           (MooMarkupNode  *node,
                                                  GType           widget_type,
                                                  GHashTable     *add_props,
@@ -205,7 +205,7 @@ static void          packing_props_free         (PackingProps   *props);
 static Signal       *signal_new                 (const char     *id,
                                                  const char     *handler,
                                                  const char     *object);
-static void          signal_free                (Signal         *signal);
+static void          signal_free                (Signal         *signal, gpointer);
 static void          collect_signals            (MooMarkupNode  *node,
                                                  Widget         *widget);
 
@@ -1008,7 +1008,7 @@ signal_new (const char     *name,
 
 
 static void
-signal_free (Signal *signal)
+signal_free (Signal *signal, gpointer)
 {
     if (signal)
     {
@@ -1063,7 +1063,7 @@ widget_free (Widget *widget)
 
 
 static void
-child_free (Child *child)
+child_free (Child *child, gpointer)
 {
     if (child)
     {
@@ -1378,7 +1378,7 @@ child_new (MooGladeXML    *xml,
 
     if (!child->widget)
     {
-        child_free (child);
+        child_free (child, NULL);
         return NULL;
     }
 

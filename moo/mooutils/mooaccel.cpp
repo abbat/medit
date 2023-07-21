@@ -1020,7 +1020,7 @@ delete_prefs_keys (void)
 }
 
 static gboolean
-test_suite_init (void)
+test_suite_init (gpointer)
 {
     delete_prefs_keys ();
     return TRUE;

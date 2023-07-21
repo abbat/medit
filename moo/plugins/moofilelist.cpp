@@ -1744,7 +1744,7 @@ _moo_str_semicase_compare (const char *string,
 
 static gboolean
 row_separator_func (GtkTreeModel *model,
-                    GtkTreeIter  *iter)
+                    GtkTreeIter  *iter, gpointer)
 {
     Item *item = get_item_at_iter (FILE_LIST (model), iter);
     return item == nullptr;

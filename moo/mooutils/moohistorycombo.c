@@ -68,7 +68,7 @@ static gboolean default_filter_func             (const char         *text,
                                                  gpointer            data);
 static int      default_sort_func               (GtkTreeModel       *model,
                                                  GtkTreeIter        *a,
-                                                 GtkTreeIter        *b);
+                                                 GtkTreeIter        *b, gpointer);
 static void     cell_data_func                  (GtkCellLayout      *cell_layout,
                                                  GtkCellRenderer    *cell,
                                                  GtkTreeModel       *tree_model,
@@ -369,7 +369,7 @@ moo_history_combo_popup (MooCombo *combo)
 static int
 default_sort_func (GtkTreeModel       *model,
                    GtkTreeIter        *a,
-                   GtkTreeIter        *b)
+                   GtkTreeIter        *b, gpointer)
 {
     MooHistoryListItem *e1 = NULL, *e2 = NULL;
     int result;

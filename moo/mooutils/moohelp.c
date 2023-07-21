@@ -92,7 +92,7 @@ moo_help_set_func_full (GtkWidget     *widget,
 
 void
 moo_help_set_func (GtkWidget   *widget,
-                   gboolean (*func) (GtkWidget*))
+                   gboolean (*func) (GtkWidget*, gpointer))
 {
     g_return_if_fail (GTK_IS_WIDGET (widget));
     moo_help_set_func_full (widget, (MooHelpFunc) func, NULL, NULL);

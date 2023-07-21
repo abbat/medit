@@ -61,7 +61,7 @@ client_info_new (GObject        *obj,
 }
 
 static void
-client_info_ref (ClientInfo *ci)
+client_info_ref (ClientInfo *ci, gpointer)
 {
     ci->ref_count++;
 }
