@@ -1754,7 +1754,7 @@ static gboolean
 tree_view_search_equal_func (GtkTreeModel *model,
                              G_GNUC_UNUSED int column,
                              const char   *key,
-                             GtkTreeIter  *iter)
+                             GtkTreeIter  *iter, gpointer)
 {
     const char *compare_with = nullptr;
     Item *item;
