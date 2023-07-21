@@ -39,11 +39,11 @@ static void row_activated                   (GtkTreeView        *treeview,
 static void icon_data_func                  (GtkTreeViewColumn  *column,
                                              GtkCellRenderer    *cell,
                                              GtkTreeModel       *model,
-                                             GtkTreeIter        *iter);
+                                             GtkTreeIter        *iter, gpointer);
 static void label_data_func                 (GtkTreeViewColumn  *column,
                                              GtkCellRenderer    *cell,
                                              GtkTreeModel       *model,
-                                             GtkTreeIter        *iter);
+                                             GtkTreeIter        *iter, gpointer);
 
 
 /* MOO_TYPE_BOOKMARK_VIEW */
@@ -238,7 +238,7 @@ static void
 icon_data_func (G_GNUC_UNUSED GtkTreeViewColumn *column,
                 GtkCellRenderer    *cell,
                 GtkTreeModel       *model,
-                GtkTreeIter        *iter)
+                GtkTreeIter        *iter, gpointer)
 {
     MooBookmark *bookmark = get_bookmark (model, iter);
 
@@ -262,7 +262,7 @@ static void
 label_data_func (G_GNUC_UNUSED GtkTreeViewColumn *column,
                  GtkCellRenderer    *cell,
                  GtkTreeModel       *model,
-                 GtkTreeIter        *iter)
+                 GtkTreeIter        *iter, gpointer)
 {
     MooBookmark *bookmark = get_bookmark (model, iter);
 

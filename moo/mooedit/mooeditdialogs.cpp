@@ -245,7 +245,7 @@ static void
 name_data_func (G_GNUC_UNUSED GtkTreeViewColumn *column,
                 GtkCellRenderer   *cell,
                 GtkTreeModel      *model,
-                GtkTreeIter       *iter)
+                GtkTreeIter       *iter, gpointer)
 {
     MooEdit *doc = NULL;
 

@@ -77,7 +77,7 @@ static void
 data_func (G_GNUC_UNUSED GtkTreeViewColumn *column,
            GtkCellRenderer   *cell,
            GtkTreeModel      *model,
-           GtkTreeIter       *iter)
+           GtkTreeIter       *iter, gpointer)
 {
     MooCtagsEntry *entry = NULL;
     char *label = NULL;

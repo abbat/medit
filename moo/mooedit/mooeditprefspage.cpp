@@ -983,7 +983,7 @@ static void
 filter_icon_data_func (G_GNUC_UNUSED GtkTreeViewColumn *column,
                        GtkCellRenderer *cell,
                        GtkTreeModel    *model,
-                       GtkTreeIter     *iter)
+                       GtkTreeIter     *iter, gpointer)
 {
     gboolean invalid;
     gtk_tree_model_get (model, iter, FILTER_COLUMN_INVALID, &invalid, -1);

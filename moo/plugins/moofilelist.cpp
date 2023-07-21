@@ -1776,7 +1776,7 @@ static void
 pixbuf_data_func (G_GNUC_UNUSED GtkTreeViewColumn *column,
                   GtkCellRenderer   *cell,
                   GtkTreeModel      *model,
-                  GtkTreeIter       *iter)
+                  GtkTreeIter       *iter, gpointer)
 {
     Item *item = get_item_at_iter (FILE_LIST (model), iter);
     if (ITEM_IS_GROUP (item))
@@ -1789,7 +1789,7 @@ static void
 text_data_func (G_GNUC_UNUSED GtkTreeViewColumn *column,
                 GtkCellRenderer   *cell,
                 GtkTreeModel      *model,
-                GtkTreeIter       *iter)
+                GtkTreeIter       *iter, gpointer)
 {
     Item *item = get_item_at_iter (FILE_LIST (model), iter);
 

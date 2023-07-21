@@ -899,15 +899,15 @@ copy_bookmarks_back (GtkListStore   *store,
 static void     icon_data_func      (GtkTreeViewColumn  *column,
                                      GtkCellRenderer    *cell,
                                      GtkTreeModel       *model,
-                                     GtkTreeIter        *iter);
+                                     GtkTreeIter        *iter, gpointer);
 static void     label_data_func     (GtkTreeViewColumn  *column,
                                      GtkCellRenderer    *cell,
                                      GtkTreeModel       *model,
-                                     GtkTreeIter        *iter);
+                                     GtkTreeIter        *iter, gpointer);
 static void     path_data_func      (GtkTreeViewColumn  *column,
                                      GtkCellRenderer    *cell,
                                      GtkTreeModel       *model,
-                                     GtkTreeIter        *iter);
+                                     GtkTreeIter        *iter, gpointer);
 
 static void     selection_changed   (GtkTreeSelection   *selection,
                                      BkEditorXml        *xml);
@@ -1034,7 +1034,7 @@ static void
 icon_data_func (G_GNUC_UNUSED GtkTreeViewColumn *column,
                 GtkCellRenderer    *cell,
                 GtkTreeModel       *model,
-                GtkTreeIter        *iter)
+                GtkTreeIter        *iter, gpointer)
 {
     MooBookmark *bookmark = get_bookmark (model, iter);
 
@@ -1058,7 +1058,7 @@ static void
 label_data_func (G_GNUC_UNUSED GtkTreeViewColumn *column,
                  GtkCellRenderer    *cell,
                  GtkTreeModel       *model,
-                 GtkTreeIter        *iter)
+                 GtkTreeIter        *iter, gpointer)
 {
     MooBookmark *bookmark = get_bookmark (model, iter);
 
@@ -1081,7 +1081,7 @@ static void
 path_data_func (G_GNUC_UNUSED GtkTreeViewColumn *column,
                 GtkCellRenderer    *cell,
                 GtkTreeModel       *model,
-                GtkTreeIter        *iter)
+                GtkTreeIter        *iter, gpointer)
 {
     MooBookmark *bookmark = get_bookmark (model, iter);
 

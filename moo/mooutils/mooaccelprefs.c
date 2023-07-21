@@ -89,7 +89,7 @@ static void shortcut_custom_toggled     (MooAccelPrefsPage  *page);
 static void global_cell_data_func       (GtkTreeViewColumn  *column,
                                          GtkCellRenderer    *cell,
                                          GtkTreeModel       *model,
-                                         GtkTreeIter        *iter);
+                                         GtkTreeIter        *iter, gpointer);
 static void global_cell_toggled         (GtkTreeStore       *store,
                                          char               *path_string);
 
@@ -182,7 +182,7 @@ static void
 global_cell_data_func (G_GNUC_UNUSED GtkTreeViewColumn *column,
                        GtkCellRenderer    *cell,
                        GtkTreeModel       *model,
-                       GtkTreeIter        *iter)
+                       GtkTreeIter        *iter, gpointer)
 {
     GtkAction *action = NULL;
     char *accel = NULL;
