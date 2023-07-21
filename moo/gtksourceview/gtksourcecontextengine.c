@@ -5681,7 +5681,7 @@ definition_child_new (ContextDefinition *definition,
 }
 
 static void
-definition_child_free (DefinitionChild *ch)
+definition_child_free (DefinitionChild *ch, gpointer)
 {
 	if (!ch->resolved)
 		g_free (ch->u.id);
