@@ -125,7 +125,9 @@ static void         pattern_info_free   (PatternInfo    *pattern);
 static ActionInfo  *action_info_new     (ActionType      type,
                                          ActionTarget    target,
                                          const char     *substring);
-static void         action_info_free    (ActionInfo     *action);
+
+static void         action_info_free      (ActionInfo *action);
+static void         action_info_free_data (ActionInfo *action, gpointer);
 
 
 G_DEFINE_TYPE (MooOutputFilterRegex, _moo_output_filter_regex, MOO_TYPE_OUTPUT_FILTER)
@@ -644,6 +646,13 @@ action_info_free (ActionInfo *action)
 }
 
 
+static void
+action_info_free_data (ActionInfo *action, gpointer)
+{
+    action_info_free(action);
+}
+
+
 static PatternInfo *
 pattern_info_new (OutputType  type,
                   const char *pattern,
@@ -683,7 +692,7 @@ pattern_info_free (PatternInfo *pattern)
         if (pattern->re)
             g_regex_unref (pattern->re);
         g_match_info_free (pattern->mi);
-        g_slist_foreach (pattern->actions, (GFunc) action_info_free, NULL);
+        g_slist_foreach (pattern->actions, (GFunc) action_info_free_data, NULL);
         g_slist_free (pattern->actions);
         g_free (pattern->style);
         g_free (pattern);
@@ -937,7 +946,7 @@ parse_match_node (MooMarkupNode *node,
     return pattern_info;
 
 error:
-    g_slist_foreach (actions, (GFunc) action_info_free, NULL);
+    g_slist_foreach (actions, (GFunc) action_info_free_data, NULL);
     g_slist_free (actions);
     return NULL;
 }
