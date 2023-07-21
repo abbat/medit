@@ -7,7 +7,12 @@ medit (1.2.92) unstable; urgency=low
   * Convert python scripts to python3 support, see also
     <https://github.com/fangq/mooedit>
     thanks to Qianqian Fang <fangqq@gmail.com>.
-  * Fix SIGSEGV program crash in settings widget.
+  * Update Russian translation, see also:
+    <https://sourceforge.net/p/mooedit/bugs/197/>
+    thanks to Olesya Gerasimenko <gammaray@basealt.ru>.
+  * Fix SIGSEGV program crash in settings widget, see also
+    <https://sourceforge.net/p/mooedit/bugs/193/>
+    thanks to Alexey Dokuchaev.
   * Change package name to 'medit' instead 'mooedit' (like in debian repo).
   * Add debianisation again.
 
