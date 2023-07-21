@@ -167,11 +167,11 @@ element##_queue_foreach (Element##Queue *queue,                         \
                                                                         \
 static inline void                                                      \
 element##_queue_foreach (Element##Queue *queue,                         \
-                         void (*func) (Element *elm),                   \
-                         void *)                                        \
+                         void (*func) (Element *elm, gpointer data),    \
+                         void *data)                                    \
 {                                                                       \
     g_queue_foreach (element##_queue_to_gqueue (queue),                 \
-                     (GFunc) func, NULL);                               \
+                     (GFunc) func, data);                               \
 }
 #else
 #define _MOO_DEFINE_QUEUE_FOREACH(Element, element)                     \
