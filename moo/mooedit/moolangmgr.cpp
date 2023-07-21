@@ -292,7 +292,7 @@ get_lang_by_extension (MooLangMgr *mgr,
     if (!found)
         lang = NULL;
 
-    g_slist_foreach (langs, (GFunc) g_object_unref, NULL);
+    g_slist_foreach (langs, (GFunc) moo_object_unref, NULL);
     g_slist_free (langs);
     g_free (basename);
     return lang;
@@ -494,7 +494,7 @@ get_lang_for_mime_type (MooLangMgr *mgr,
         string_list_free (mimetypes);
     }
 
-    g_slist_foreach (langs, (GFunc) g_object_unref, NULL);
+    g_slist_foreach (langs, (GFunc) moo_object_unref, NULL);
     g_slist_free (langs);
     return found ? lang : NULL;
 }

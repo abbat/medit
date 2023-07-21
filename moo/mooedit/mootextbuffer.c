@@ -650,8 +650,8 @@ marks_moved_or_deleted (MooTextBuffer *buffer,
     if (!moved && !deleted)
         return;
 
-    g_slist_foreach (moved, (GFunc) g_object_ref, NULL);
-    g_slist_foreach (deleted, (GFunc) g_object_ref, NULL);
+    g_slist_foreach (moved, (GFunc) moo_object_ref, NULL);
+    g_slist_foreach (deleted, (GFunc) moo_object_ref, NULL);
 
     for (l = deleted; l != NULL; l = l->next)
         _moo_line_mark_set_buffer (l->data, NULL, NULL);
@@ -666,8 +666,8 @@ marks_moved_or_deleted (MooTextBuffer *buffer,
         if (!moo_line_mark_get_deleted (l->data))
             line_mark_moved (buffer, l->data);
 
-    g_slist_foreach (deleted, (GFunc) g_object_unref, NULL);
-    g_slist_foreach (moved, (GFunc) g_object_unref, NULL);
+    g_slist_foreach (deleted, (GFunc) moo_object_unref, NULL);
+    g_slist_foreach (moved, (GFunc) moo_object_unref, NULL);
 }
 
 static void

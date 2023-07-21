@@ -974,7 +974,7 @@ moo_plugin_shutdown (void)
         return;
 
     list = g_slist_copy (plugin_store->list);
-    g_slist_foreach (list, (GFunc) g_object_ref, NULL);
+    g_slist_foreach (list, (GFunc) moo_object_ref, NULL);
 
     while (list)
     {

@@ -47,7 +47,7 @@ class ObjectSListArg(ArgType):
             info.varlist.add('GSList', '*ret')
             info.varlist.add('PyObject', '*py_ret')
             info.codeafter.append('    py_ret = _moo_object_slist_to_pyobject (ret);\n' +
-                                  '    g_slist_foreach (ret, (GFunc) g_object_unref, NULL);\n' +
+                                  '    g_slist_foreach (ret, (GFunc) moo_object_unref, NULL);\n' +
                                   '    g_slist_free (ret);\n' +
                                   '    return py_ret;')
         else:

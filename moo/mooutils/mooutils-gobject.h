@@ -33,6 +33,18 @@ static inline void moo_object_thaw_notify(GObject* object, gpointer)
     g_object_thaw_notify(object);
 }
 
+// GFunc compatible g_object_ref
+static inline void moo_object_ref(GObject* object, gpointer)
+{
+    g_object_ref(object);
+}
+
+// GFunc compatible g_object_unref
+static inline void moo_object_unref(GObject* object, gpointer)
+{
+    g_object_unref(object);
+}
+
 /*****************************************************************************/
 /* GType type
  */

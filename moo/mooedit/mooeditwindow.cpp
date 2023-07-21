@@ -4072,7 +4072,7 @@ create_lang_action (MooEditWindow *window)
     g_signal_connect_swapped (menu_mgr, "radio-set-active",
                               G_CALLBACK (lang_item_activated), window);
 
-    g_slist_foreach (langs, (GFunc) g_object_unref, nullptr);
+    g_slist_foreach (langs, (GFunc) moo_object_unref, nullptr);
     g_slist_free (langs);
     g_slist_foreach (sections, (GFunc) moo_free, nullptr);
     g_slist_free (sections);

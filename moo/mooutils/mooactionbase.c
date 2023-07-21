@@ -17,6 +17,7 @@
 #include "mooutils/mooaction-private.h"
 #include "mooutils/mooactiongroup.h"
 #include "mooutils/mooaccel.h"
+#include "mooutils/mooutils-gobject.h"
 #include "marshals.h"
 #include <gtk/gtk.h>
 #include <string.h>
@@ -387,7 +388,7 @@ sync_proxies_use_underline (gpointer action,
     GSList *proxies;
 
     proxies = g_slist_copy (gtk_action_get_proxies (GTK_ACTION (action)));
-    g_slist_foreach (proxies, (GFunc) g_object_ref, NULL);
+    g_slist_foreach (proxies, (GFunc) moo_object_ref, NULL);
 
     while (proxies)
     {

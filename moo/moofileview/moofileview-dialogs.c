@@ -194,7 +194,7 @@ static void
 container_cleanup (GtkContainer *container)
 {
     GList *children = gtk_container_get_children (container);
-    g_list_foreach (children, (GFunc) g_object_ref, NULL);
+    g_list_foreach (children, (GFunc) moo_object_ref, NULL);
     while (children)
     {
         gtk_container_remove (container, children->data);

@@ -393,7 +393,7 @@ scheme_combo_init (GtkComboBox *combo)
                                         NULL, NULL);
 
     g_object_unref (store);
-    g_slist_foreach (list, (GFunc) g_object_unref, NULL);
+    g_slist_foreach (list, (GFunc) moo_object_unref, NULL);
     g_slist_free (list);
 }
 
@@ -618,7 +618,7 @@ create_lang_model (void)
         sections = g_slist_delete_link (sections, sections);
     }
 
-    g_slist_foreach (langs, (GFunc) g_object_unref, NULL);
+    g_slist_foreach (langs, (GFunc) moo_object_unref, NULL);
     g_slist_free (langs);
     return GTK_TREE_MODEL (store);
 }

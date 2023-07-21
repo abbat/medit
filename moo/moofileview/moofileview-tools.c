@@ -28,6 +28,7 @@
 #include "mooutils/mootype-macros.h"
 #include "mooutils/mooi18n.h"
 #include "mooutils/moo-mime.h"
+#include "mooutils/mooutils-gobject.h"
 #include <string.h>
 
 
@@ -163,7 +164,7 @@ tools_info_free (ToolsInfo *info)
 {
     if (info)
     {
-        g_slist_foreach (info->actions, (GFunc) g_object_unref, NULL);
+        g_slist_foreach (info->actions, (GFunc) moo_object_unref, NULL);
         g_slist_free (info->actions);
         g_free (info);
     }
