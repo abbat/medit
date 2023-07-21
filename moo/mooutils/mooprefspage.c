@@ -269,7 +269,7 @@ moo_prefs_page_set_callbacks (MooPrefsPage      *page,
 /* Settings
  */
 
-static void     setting_init        (GtkWidget      *widget);
+static void     setting_init        (GtkWidget      *widget, gpointer);
 static void     setting_apply       (GtkWidget      *widget, gpointer);
 static gboolean setting_get_value   (GtkWidget      *widget,
                                      GValue         *value,
@@ -324,7 +324,7 @@ moo_prefs_page_apply (MooPrefsPage *page)
 
 
 static void
-setting_init (GtkWidget *widget)
+setting_init (GtkWidget *widget, gpointer)
 {
     const GValue *value;
     const char *prefs_key = g_object_get_data (G_OBJECT (widget), "moo-prefs-key");
