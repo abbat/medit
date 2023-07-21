@@ -185,7 +185,7 @@ file_list_drag_dest_iface_init (GtkTreeDragDestIface *iface)
 
 
 static void
-file_list_init (FileList *list)
+file_list_init (FileList *list, gpointer)
 {
     GType types[2];
 

@@ -44,11 +44,11 @@ static guint INSERT_ACTION_TYPE;
 static guint DELETE_ACTION_TYPE;
 
 
-static void     moo_entry_class_init        (MooEntryClass      *klass);
+static void     moo_entry_class_init        (MooEntryClass      *klass, gpointer);
 static void     moo_entry_editable_init     (GtkEditableClass   *klass);
 static void     moo_entry_undo_ops_init     (MooUndoOpsIface    *iface);
 
-static void     moo_entry_init              (MooEntry           *entry);
+static void     moo_entry_init              (MooEntry           *entry, gpointer);
 static void     moo_entry_finalize          (GObject            *object);
 static void     moo_entry_set_property      (GObject            *object,
                                              guint               prop_id,
@@ -159,7 +159,7 @@ static GtkEditableClass *parent_editable_iface;
 static gpointer moo_entry_parent_class;
 
 static void
-moo_entry_class_init (MooEntryClass *klass)
+moo_entry_class_init (MooEntryClass *klass, gpointer)
 {
     GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
     GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
@@ -283,7 +283,7 @@ moo_entry_editable_init (GtkEditableClass   *klass)
 
 
 static void
-moo_entry_init (MooEntry *entry)
+moo_entry_init (MooEntry *entry, gpointer)
 {
     entry->priv = g_new0 (MooEntryPrivate, 1);
     entry->priv->undo_stack = moo_undo_stack_new (entry);

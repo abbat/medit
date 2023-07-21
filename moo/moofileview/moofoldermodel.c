@@ -28,8 +28,8 @@ struct _MooFolderModelPrivate {
 };
 
 
-static void moo_folder_model_class_init         (MooFolderModelClass    *klass);
-static void moo_folder_model_init               (MooFolderModel         *model);
+static void moo_folder_model_class_init         (MooFolderModelClass    *klass, gpointer);
+static void moo_folder_model_init               (MooFolderModel         *model, gpointer);
 
 static void moo_folder_model_tree_iface_init    (GtkTreeModelIface      *iface);
 
@@ -89,7 +89,7 @@ enum {
 
 
 static void
-moo_folder_model_class_init (MooFolderModelClass *klass)
+moo_folder_model_class_init (MooFolderModelClass *klass, gpointer)
 {
     GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
 
@@ -272,7 +272,7 @@ get_cmp_func (MooFolderModelSortFlags flags)
 }
 
 static void
-moo_folder_model_init (MooFolderModel *model)
+moo_folder_model_init (MooFolderModel *model, gpointer)
 {
     model->priv = g_new0 (MooFolderModelPrivate, 1);
     model->priv->sort_flags = MOO_FOLDER_MODEL_SORT_FLAGS_DEFAULT;

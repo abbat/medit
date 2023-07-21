@@ -56,7 +56,7 @@ _moo_action_get_window (gpointer action)
 
 #define DEFINE_ACTION_TYPE(TypeName, type_name, TYPE_PARENT)                \
                                                                             \
-static void type_name##_init            (TypeName           *self);         \
+static void type_name##_init            (TypeName           *self, gpointer);\
 static void type_name##_class_init      (TypeName##Class    *klass);        \
 static void type_name##_set_property    (GObject            *object,        \
                                          guint               property_id,   \
@@ -69,7 +69,7 @@ static void type_name##_get_property    (GObject            *object,        \
 static gpointer type_name##_parent_class = NULL;                            \
                                                                             \
 static void                                                                 \
-type_name##_class_intern_init (gpointer klass)                              \
+type_name##_class_intern_init (gpointer klass, gpointer)                    \
 {                                                                           \
     GObjectClass *object_class = G_OBJECT_CLASS (klass);                    \
                                                                             \
@@ -176,7 +176,7 @@ enum {
 
 
 static void
-moo_action_init (MooAction *action)
+moo_action_init (MooAction *action, gpointer)
 {
     action->priv = G_TYPE_INSTANCE_GET_PRIVATE (action,
                                                 MOO_TYPE_ACTION,
@@ -390,7 +390,7 @@ enum {
 
 
 static void
-moo_toggle_action_init (MooToggleAction *action)
+moo_toggle_action_init (MooToggleAction *action, gpointer)
 {
     action->priv = G_TYPE_INSTANCE_GET_PRIVATE (action,
                                                 MOO_TYPE_TOGGLE_ACTION,
@@ -579,7 +579,7 @@ enum {
 
 
 static void
-moo_radio_action_init (MooRadioAction *action)
+moo_radio_action_init (MooRadioAction *action, gpointer)
 {
     _moo_action_base_init_instance (action);
 }

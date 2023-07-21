@@ -828,7 +828,7 @@ _moo_command_exe_class_init (MooCommandExeClass *klass)
 
 
 static void
-_moo_command_factory_exe_init (G_GNUC_UNUSED MooCommandFactoryExe *factory)
+_moo_command_factory_exe_init (G_GNUC_UNUSED MooCommandFactoryExe *factory, gpointer)
 {
 }
 

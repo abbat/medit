@@ -50,7 +50,7 @@ MOO_DEFINE_TYPE_STATIC (ToolAction, _moo_file_view_tool_action, MOO_TYPE_ACTION)
 
 
 static void
-_moo_file_view_tool_action_init (G_GNUC_UNUSED ToolAction *action)
+_moo_file_view_tool_action_init (G_GNUC_UNUSED ToolAction *action, gpointer)
 {
 }
 

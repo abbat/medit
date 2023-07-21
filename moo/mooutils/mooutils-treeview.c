@@ -921,7 +921,7 @@ typedef struct {
 MOO_DEFINE_TYPE_STATIC (MooExpanderCell, moo_expander_cell, GTK_TYPE_CELL_RENDERER)
 
 static void
-moo_expander_cell_init (MooExpanderCell *cell)
+moo_expander_cell_init (MooExpanderCell *cell, gpointer)
 {
     cell->expanded = FALSE;
 }

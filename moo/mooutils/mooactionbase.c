@@ -32,7 +32,7 @@ enum {
 
 
 static void
-class_init (gpointer g_iface)
+class_init (gpointer g_iface, gpointer)
 {
     g_object_interface_install_property (g_iface,
         g_param_spec_string ("display-name", "display-name", "display-name",

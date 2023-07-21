@@ -507,7 +507,7 @@ moo_async_job_class_init (MooAsyncJobClass *klass)
 }
 
 static void
-moo_async_job_init (MooAsyncJob *job)
+moo_async_job_init (MooAsyncJob *job, gpointer)
 {
     job->callback = NULL;
     job->data = NULL;

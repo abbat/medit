@@ -77,8 +77,8 @@ static void moo_combo_cell_layout_reorder               (GtkCellLayout      *cel
                                                          GtkCellRenderer    *cell,
                                                          gint                position);
 
-static void     moo_combo_class_init        (MooComboClass  *klass);
-static void     moo_combo_init              (MooCombo       *combo);
+static void     moo_combo_class_init        (MooComboClass  *klass, gpointer);
+static void     moo_combo_init              (MooCombo       *combo, gpointer);
 static void     moo_combo_destroy           (GtkObject      *object);
 static void     moo_combo_set_property      (GObject        *object,
                                              guint           prop_id,
@@ -177,7 +177,7 @@ enum {
 static guint signals[NUM_SIGNALS];
 
 static void
-moo_combo_class_init (MooComboClass *klass)
+moo_combo_class_init (MooComboClass *klass, gpointer)
 {
     GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
     GtkObjectClass *gtkobject_class = GTK_OBJECT_CLASS (klass);
@@ -274,7 +274,7 @@ moo_combo_cell_layout_init (GtkCellLayoutIface *iface)
 
 
 static void
-moo_combo_init (MooCombo *combo)
+moo_combo_init (MooCombo *combo, gpointer)
 {
     combo->priv = G_TYPE_INSTANCE_GET_PRIVATE (combo, MOO_TYPE_COMBO, MooComboPrivate);
 

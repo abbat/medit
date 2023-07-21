@@ -1326,7 +1326,7 @@ moo_tool_action_check_state (MooEditAction *edit_action)
 
 
 static void
-_moo_tool_action_init (G_GNUC_UNUSED MooToolAction *action)
+_moo_tool_action_init (G_GNUC_UNUSED MooToolAction *action, gpointer)
 {
 }
 

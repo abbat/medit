@@ -81,8 +81,8 @@ static void     plugin_store_init       (void);
 static void     plugin_store_add        (MooPlugin      *plugin);
 static void     plugin_type_cleanup     (GType           type);
 
-static void     moo_plugin_class_init   (MooPluginClass *klass);
-static void     some_plugin_class_init  (gpointer        klass);
+static void     moo_plugin_class_init   (MooPluginClass *klass, gpointer);
+static void     some_plugin_class_init  (gpointer        klass, gpointer);
 
 static gboolean plugin_init             (MooPlugin      *plugin);
 static void     plugin_deinit           (MooPlugin      *plugin);
@@ -202,7 +202,7 @@ moo_doc_plugin_get_type (void)
 
 
 static void
-some_plugin_class_init (gpointer klass)
+some_plugin_class_init (gpointer klass, gpointer)
 {
     parent_class = g_type_class_peek_parent (klass);
 }
@@ -222,9 +222,9 @@ moo_plugin_finalize (GObject *object)
 
 
 static void
-moo_plugin_class_init (MooPluginClass *klass)
+moo_plugin_class_init (MooPluginClass *klass, gpointer data)
 {
-    some_plugin_class_init (klass);
+    some_plugin_class_init (klass, data);
     G_OBJECT_CLASS(klass)->finalize = moo_plugin_finalize;
 }
 

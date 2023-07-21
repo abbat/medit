@@ -31,11 +31,11 @@
 
 #define MOO_DEFINE_TYPE_STATIC_WITH_CODE(TypeName,type_name,TYPE_PARENT,code)               \
                                                                                             \
-static void     type_name##_init              (TypeName        *self);                      \
+static void     type_name##_init              (TypeName        *self, gpointer);            \
 static void     type_name##_class_init        (TypeName##Class *klass);                     \
 static gpointer type_name##_parent_class = NULL;                                            \
                                                                                             \
-static void     type_name##_class_intern_init (gpointer klass)                              \
+static void     type_name##_class_intern_init (gpointer klass, gpointer)                    \
 {                                                                                           \
     type_name##_parent_class = g_type_class_peek_parent (klass);                            \
     type_name##_class_init ((TypeName##Class*) klass);                                      \

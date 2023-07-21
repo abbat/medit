@@ -18,7 +18,7 @@
 #include <gtk/gtk.h>
 
 static void
-moo_edit_ops_class_init (G_GNUC_UNUSED MooEditOpsIface *iface)
+moo_edit_ops_class_init (G_GNUC_UNUSED MooEditOpsIface *iface, gpointer)
 {
     g_signal_new ("moo-edit-ops-can-do-op-changed",
                   MOO_TYPE_EDIT_OPS,
@@ -337,7 +337,7 @@ _moo_edit_ops_iface_install (void)
  */
 
 static void
-moo_undo_ops_class_init (G_GNUC_UNUSED MooUndoOpsIface *iface)
+moo_undo_ops_class_init (G_GNUC_UNUSED MooUndoOpsIface *iface, gpointer)
 {
     g_signal_new ("moo-undo-ops-can-undo-changed",
                   MOO_TYPE_UNDO_OPS,

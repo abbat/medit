@@ -105,8 +105,8 @@ struct _MooAppPrivate {
 };
 
 
-static void     moo_app_class_init      (MooAppClass        *klass);
-static void     moo_app_instance_init   (MooApp             *app);
+static void     moo_app_class_init      (MooAppClass        *klass, gpointer);
+static void     moo_app_instance_init   (MooApp             *app, gpointer);
 static GObject *moo_app_constructor     (GType               type,
                                          guint               n_params,
                                          GObjectConstructParam *params);
@@ -202,7 +202,7 @@ static guint signals[LAST_SIGNAL];
 
 
 static void
-moo_app_class_init (MooAppClass *klass)
+moo_app_class_init (MooAppClass *klass, gpointer)
 {
     GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
 
@@ -312,7 +312,7 @@ moo_app_class_init (MooAppClass *klass)
 
 
 static void
-moo_app_instance_init (MooApp *app)
+moo_app_instance_init (MooApp *app, gpointer)
 {
     g_return_if_fail (moo_app_data.instance == NULL);
 

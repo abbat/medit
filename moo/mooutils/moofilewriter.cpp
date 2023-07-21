@@ -41,7 +41,7 @@ struct _MooFileReader {
 MOO_DEFINE_TYPE_STATIC (MooFileReader, moo_file_reader, G_TYPE_OBJECT)
 
 static void
-moo_file_reader_init (MooFileReader *reader)
+moo_file_reader_init (MooFileReader *reader, gpointer)
 {
     reader->file = NULL;
 }
@@ -162,7 +162,7 @@ moo_file_reader_read (MooFileReader  *reader,
 MOO_DEFINE_TYPE_STATIC (MooFileWriter, moo_file_writer, G_TYPE_OBJECT)
 
 static void
-moo_file_writer_init (G_GNUC_UNUSED MooFileWriter *writer)
+moo_file_writer_init (G_GNUC_UNUSED MooFileWriter *writer, gpointer)
 {
 }
 
@@ -478,7 +478,7 @@ moo_local_file_writer_class_init (MooLocalFileWriterClass *klass)
 }
 
 static void
-moo_local_file_writer_init (MooLocalFileWriter *writer)
+moo_local_file_writer_init (MooLocalFileWriter *writer, gpointer)
 {
     writer->file = NULL;
     writer->stream = NULL;
@@ -548,7 +548,7 @@ moo_string_writer_class_init (MooStringWriterClass *klass)
 }
 
 static void
-moo_string_writer_init (MooStringWriter *writer)
+moo_string_writer_init (MooStringWriter *writer, gpointer)
 {
     writer->string = g_string_new (NULL);
 }

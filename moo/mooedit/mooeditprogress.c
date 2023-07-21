@@ -36,7 +36,7 @@ static void     cancel_clicked      (MooEditProgress *pr);
 MOO_DEFINE_TYPE_STATIC (MooEditProgress, moo_edit_progress, GTK_TYPE_ALIGNMENT)
 
 static void
-moo_edit_progress_init (MooEditProgress *pr)
+moo_edit_progress_init (MooEditProgress *pr, gpointer)
 {
     pr->xml = progress_widget_xml_new_with_root (GTK_WIDGET (pr));
     g_signal_connect_swapped (pr->xml->cancel, "clicked", G_CALLBACK (cancel_clicked), pr);

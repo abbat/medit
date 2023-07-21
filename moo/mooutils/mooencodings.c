@@ -1138,7 +1138,7 @@ MOO_DEFINE_TYPE_STATIC (MooEncodingsMenuAction, moo_encodings_menu_action, MOO_T
 #define ENCODINGS_MENU_ACTION_GET_CLASS(obj)        (G_TYPE_INSTANCE_GET_CLASS ((obj), MOO_TYPE_ENCODINGS_MENU_ACTION, MooEncodingsMenuActionClass))
 
 static void
-moo_encodings_menu_action_init (MooEncodingsMenuAction *action)
+moo_encodings_menu_action_init (MooEncodingsMenuAction *action, gpointer)
 {
     action->func = NULL;
     action->func_data = NULL;

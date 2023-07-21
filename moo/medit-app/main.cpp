@@ -89,7 +89,7 @@ medit_app_class_init (MooAppClass *klass)
 }
 
 static void
-medit_app_init (G_GNUC_UNUSED MooApp *app)
+medit_app_init (G_GNUC_UNUSED MooApp *app, gpointer)
 {
 }
 

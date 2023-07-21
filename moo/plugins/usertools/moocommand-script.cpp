@@ -253,7 +253,7 @@ script_factory_save_data (G_GNUC_UNUSED MooCommandFactory *factory,
 }
 
 static void
-_moo_command_factory_script_init (G_GNUC_UNUSED MooCommandFactoryScript *factory)
+_moo_command_factory_script_init (G_GNUC_UNUSED MooCommandFactoryScript *factory, gpointer)
 {
 }
 

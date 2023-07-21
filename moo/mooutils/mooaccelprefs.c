@@ -229,7 +229,7 @@ global_cell_toggled (GtkTreeStore *store,
 
 
 static void
-_moo_accel_prefs_page_init (MooAccelPrefsPage *page)
+_moo_accel_prefs_page_init (MooAccelPrefsPage *page, gpointer)
 {
     GtkCellRenderer *renderer;
     GtkTreeViewColumn *column;
