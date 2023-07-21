@@ -153,7 +153,7 @@ check_plus_line_arg (void)
 }
 
 static gboolean
-post_parse_func (void)
+post_parse_func (GOptionContext*, GOptionGroup*, void*, GError**)
 {
 	medit_opts.files = gstr::take(medit_opts.filesp);
 	medit_opts.filesp = nullptr;
