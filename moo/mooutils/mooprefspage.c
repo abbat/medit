@@ -53,6 +53,7 @@ static void moo_prefs_page_get_property (GObject        *object,
 
 static void moo_prefs_page_init_sig     (MooPrefsPage   *page);
 static void moo_prefs_page_apply        (MooPrefsPage   *page);
+static void moo_prefs_page_apply_data   (MooPrefsPage   *page, gpointer);
 
 
 enum {
@@ -295,6 +296,13 @@ moo_prefs_page_init_sig (MooPrefsPage *page)
 
 
 static void
+moo_prefs_page_apply_data (MooPrefsPage *page, gpointer)
+{
+    moo_prefs_page_apply(page);
+}
+
+
+static void
 moo_prefs_page_apply (MooPrefsPage *page)
 {
     g_slist_foreach (page->priv->widgets, (GFunc) setting_apply, NULL);
@@ -302,7 +310,7 @@ moo_prefs_page_apply (MooPrefsPage *page)
     if (page->priv->apply && page->priv->ui_initialized)
         page->priv->apply (page);
 
-    g_slist_foreach (page->priv->children, (GFunc) moo_prefs_page_apply, NULL);
+    g_slist_foreach (page->priv->children, (GFunc) moo_prefs_page_apply_data, NULL);
 }
 
 
