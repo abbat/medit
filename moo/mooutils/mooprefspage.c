@@ -52,6 +52,7 @@ static void moo_prefs_page_get_property (GObject        *object,
                                          GParamSpec     *pspec);
 
 static void moo_prefs_page_init_sig     (MooPrefsPage   *page);
+static void moo_prefs_page_init_sig_data(MooPrefsPage   *page, gpointer);
 static void moo_prefs_page_apply        (MooPrefsPage   *page);
 static void moo_prefs_page_apply_data   (MooPrefsPage   *page, gpointer);
 
@@ -277,6 +278,14 @@ static void     setting_set_value   (GtkWidget      *widget,
                                      const GValue   *value);
 
 
+
+static void
+moo_prefs_page_init_sig_data (MooPrefsPage *page, gpointer)
+{
+    moo_prefs_page_init_sig(page);
+}
+
+
 static void
 moo_prefs_page_init_sig (MooPrefsPage *page)
 {
@@ -291,7 +300,7 @@ moo_prefs_page_init_sig (MooPrefsPage *page)
         page->priv->init (page);
 
     g_slist_foreach (page->priv->widgets, (GFunc) setting_init, NULL);
-    g_slist_foreach (page->priv->children, (GFunc) moo_prefs_page_init_sig, NULL);
+    g_slist_foreach (page->priv->children, (GFunc) moo_prefs_page_init_sig_data, NULL);
 }
 
 
