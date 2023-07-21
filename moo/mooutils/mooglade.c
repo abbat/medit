@@ -1786,6 +1786,7 @@ parse_property (GParamSpec     *param_spec,
              param_spec->value_type == G_TYPE_LONG ||
                  param_spec->value_type == G_TYPE_INT64) /* XXX */
     {
+        errno = 0;
         long val = strtol (value, NULL, 0);
 
         if (errno)
