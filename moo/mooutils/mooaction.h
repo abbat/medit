@@ -71,10 +71,12 @@ struct _MooToggleActionClass {
 #define MOO_RADIO_ACTION_GET_CLASS(obj)           (G_TYPE_INSTANCE_GET_CLASS ((obj), MOO_TYPE_RADIO_ACTION, MooRadioActionClass))
 
 typedef struct _MooRadioAction        MooRadioAction;
+typedef struct _MooRadioActionPrivate MooRadioActionPrivate;
 typedef struct _MooRadioActionClass   MooRadioActionClass;
 
 struct _MooRadioAction {
     GtkRadioAction base;
+    MooRadioActionPrivate *priv;
 };
 
 struct _MooRadioActionClass {

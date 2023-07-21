@@ -54,108 +54,36 @@ _moo_action_get_window (gpointer action)
 }
 
 
-#define DEFINE_ACTION_TYPE(TypeName, type_name, TYPE_PARENT)                \
-                                                                            \
-static void type_name##_init            (TypeName           *self, gpointer);\
-static void type_name##_class_init      (TypeName##Class    *klass);        \
-static void type_name##_set_property    (GObject            *object,        \
-                                         guint               property_id,   \
-                                         const GValue       *value,         \
-                                         GParamSpec         *pspec);        \
-static void type_name##_get_property    (GObject            *object,        \
-                                         guint               property_id,   \
-                                         GValue             *value,         \
-                                         GParamSpec         *pspec);        \
-static gpointer type_name##_parent_class = NULL;                            \
-                                                                            \
-static void                                                                 \
-type_name##_class_intern_init (gpointer klass, gpointer)                    \
-{                                                                           \
-    GObjectClass *object_class = G_OBJECT_CLASS (klass);                    \
-                                                                            \
-    object_class->set_property = type_name##_set_property;                  \
-    object_class->get_property = type_name##_get_property;                  \
-    _moo_action_base_init_class (object_class);                             \
-                                                                            \
-    type_name##_parent_class = g_type_class_peek_parent (klass);            \
-    type_name##_class_init ((TypeName##Class*) klass);                      \
-}                                                                           \
-                                                                            \
-GType                                                                       \
-type_name##_get_type (void)                                                 \
-{                                                                           \
-    static GType type;                                                      \
-                                                                            \
-    if (G_UNLIKELY (!type))                                                 \
-    {                                                                       \
-        static const GTypeInfo info = {                                     \
-            sizeof (TypeName##Class),                                       \
-            (GBaseInitFunc) NULL,                                           \
-            (GBaseFinalizeFunc) NULL,                                       \
-            (GClassInitFunc) type_name##_class_intern_init,                 \
-            (GClassFinalizeFunc) NULL,                                      \
-            NULL,   /* class_data */                                        \
-            sizeof (TypeName),                                              \
-            0,      /* n_preallocs */                                       \
-            (GInstanceInitFunc) type_name##_init,                           \
-            NULL    /* value_table */                                       \
-        };                                                                  \
-                                                                            \
-        static const GInterfaceInfo iface_info = {NULL, NULL, NULL};        \
-                                                                            \
-        type = g_type_register_static (TYPE_PARENT,                         \
-                                       #TypeName,                           \
-                                       &info, (GTypeFlags) 0);              \
-        g_type_add_interface_static (type,                                  \
-                                     MOO_TYPE_ACTION_BASE,                  \
-                                     &iface_info);                          \
-    }                                                                       \
-                                                                            \
-    return type;                                                            \
+#define DEFINE_ACTION_TYPE(TypeName, type_name, TYPE_PARENT)               \
+                                                                           \
+G_DEFINE_TYPE_WITH_CODE (TypeName, type_name, TYPE_PARENT,                 \
+                         G_IMPLEMENT_INTERFACE(MOO_TYPE_ACTION_BASE, NULL) \
+                         G_ADD_PRIVATE(TypeName))                          \
+                                                                           \
+static void type_name##_set_property    (GObject            *object,       \
+                                         guint               property_id,  \
+                                         const GValue       *value,        \
+                                         GParamSpec         *pspec);       \
+                                                                           \
+static void type_name##_get_property    (GObject            *object,       \
+                                         guint               property_id,  \
+                                         GValue             *value,        \
+                                         GParamSpec         *pspec);       \
+                                                                           \
+static void                                                                \
+type_name##_base_class_init (gpointer klass)                               \
+{                                                                          \
+    GObjectClass *object_class = G_OBJECT_CLASS (klass);                   \
+                                                                           \
+    object_class->set_property = type_name##_set_property;                 \
+    object_class->get_property = type_name##_get_property;                 \
+                                                                           \
+    _moo_action_base_init_class (object_class);                            \
 }
 
 
-DEFINE_ACTION_TYPE (MooAction, moo_action, GTK_TYPE_ACTION)
-DEFINE_ACTION_TYPE (MooToggleAction, moo_toggle_action, GTK_TYPE_TOGGLE_ACTION)
-DEFINE_ACTION_TYPE (MooRadioAction, moo_radio_action, GTK_TYPE_RADIO_ACTION)
-
-
-static void
-connect_proxy (GtkAction *action,
-               GtkWidget *widget)
-{
-    GtkActionClass *parent_class;
-
-    if (MOO_IS_ACTION (action))
-        parent_class = GTK_ACTION_CLASS (moo_action_parent_class);
-    else if (MOO_IS_TOGGLE_ACTION (action))
-        parent_class = GTK_ACTION_CLASS (moo_toggle_action_parent_class);
-    else
-        parent_class = GTK_ACTION_CLASS (moo_radio_action_parent_class);
-
-    parent_class->connect_proxy (action, widget);
-    g_signal_emit_by_name (action, "connect-proxy", widget);
-
-    _moo_action_base_connect_proxy (action, widget);
-}
-
-static void
-disconnect_proxy (GtkAction *action,
-                  GtkWidget *widget)
-{
-    GtkActionClass *parent;
-
-    if (MOO_IS_ACTION (action))
-        parent = GTK_ACTION_CLASS (moo_action_parent_class);
-    else if (MOO_IS_TOGGLE_ACTION (action))
-        parent = GTK_ACTION_CLASS (moo_toggle_action_parent_class);
-    else
-        parent = GTK_ACTION_CLASS (moo_radio_action_parent_class);
-
-    g_signal_emit_by_name (action, "disconnect-proxy", widget);
-    parent->disconnect_proxy (action, widget);
-}
-
+static void connect_proxy    (GtkAction *action, GtkWidget *widget);
+static void disconnect_proxy (GtkAction *action, GtkWidget *widget);
 
 /*****************************************************************************/
 /* MooAction
@@ -164,6 +92,10 @@ disconnect_proxy (GtkAction *action,
 struct _MooActionPrivate {
     MooClosure *closure;
 };
+
+
+DEFINE_ACTION_TYPE (MooAction, moo_action, GTK_TYPE_ACTION)
+
 
 enum {
     MOO_ACTION_BASE_PROPS(ACTION),
@@ -176,11 +108,10 @@ enum {
 
 
 static void
-moo_action_init (MooAction *action, gpointer)
+moo_action_init (MooAction *action)
 {
-    action->priv = G_TYPE_INSTANCE_GET_PRIVATE (action,
-                                                MOO_TYPE_ACTION,
-                                                MooActionPrivate);
+    action->priv = (MooActionPrivate*) moo_action_get_instance_private (action);
+
     _moo_action_base_init_instance (action);
 }
 
@@ -268,10 +199,10 @@ moo_action_constructor (GType                  type,
 static void
 moo_action_class_init (MooActionClass *klass)
 {
+    moo_action_base_class_init (klass);
+
     GObjectClass *object_class = G_OBJECT_CLASS (klass);
     GtkActionClass *action_class = GTK_ACTION_CLASS (klass);
-
-    g_type_class_add_private (klass, sizeof (MooActionPrivate));
 
     object_class->dispose = moo_action_dispose;
     object_class->constructor = moo_action_constructor;
@@ -381,6 +312,10 @@ struct _MooToggleActionPrivate {
     gpointer data;
 };
 
+
+DEFINE_ACTION_TYPE (MooToggleAction, moo_toggle_action, GTK_TYPE_TOGGLE_ACTION)
+
+
 enum {
     MOO_ACTION_BASE_PROPS(TOGGLE_ACTION),
     TOGGLE_ACTION_PROP_TOGGLED_CALLBACK,
@@ -390,11 +325,10 @@ enum {
 
 
 static void
-moo_toggle_action_init (MooToggleAction *action, gpointer)
+moo_toggle_action_init (MooToggleAction *action)
 {
-    action->priv = G_TYPE_INSTANCE_GET_PRIVATE (action,
-                                                MOO_TYPE_TOGGLE_ACTION,
-                                                MooToggleActionPrivate);
+    action->priv = (MooToggleActionPrivate*) moo_toggle_action_get_instance_private (action);
+
     _moo_action_base_init_instance (action);
 }
 
@@ -507,11 +441,11 @@ moo_toggle_action_constructor (GType                  type,
 static void
 moo_toggle_action_class_init (MooToggleActionClass *klass)
 {
+    moo_toggle_action_base_class_init (klass);
+
     GObjectClass *object_class = G_OBJECT_CLASS (klass);
     GtkActionClass *action_class = GTK_ACTION_CLASS (klass);
     GtkToggleActionClass *toggle_action_class = GTK_TOGGLE_ACTION_CLASS (klass);
-
-    g_type_class_add_private (klass, sizeof (MooToggleActionPrivate));
 
     object_class->dispose = moo_toggle_action_dispose;
     object_class->constructor = moo_toggle_action_constructor;
@@ -573,14 +507,23 @@ moo_toggle_action_get_property (GObject    *object,
 /* MooRadioAction
  */
 
+struct _MooRadioActionPrivate {
+};
+
+
+DEFINE_ACTION_TYPE (MooRadioAction, moo_radio_action, GTK_TYPE_RADIO_ACTION)
+
+
 enum {
     MOO_ACTION_BASE_PROPS(RADIO_ACTION)
 };
 
 
 static void
-moo_radio_action_init (MooRadioAction *action, gpointer)
+moo_radio_action_init (MooRadioAction *action)
 {
+    action->priv = (MooRadioActionPrivate*) moo_radio_action_get_instance_private (action);
+
     _moo_action_base_init_instance (action);
 }
 
@@ -588,6 +531,8 @@ moo_radio_action_init (MooRadioAction *action, gpointer)
 static void
 moo_radio_action_class_init (MooRadioActionClass *klass)
 {
+    moo_radio_action_base_class_init (klass);
+
     GtkActionClass *action_class = GTK_ACTION_CLASS (klass);
     action_class->connect_proxy = connect_proxy;
     action_class->disconnect_proxy = disconnect_proxy;
@@ -772,4 +717,41 @@ action_toggled (ToggleWatch *watch)
         g_object_set (MOO_OBJECT_PTR_GET (watch->parent.source),
                       watch->pspec->name,
                       watch->invert ? !active : active, NULL);
+}
+
+
+static void
+connect_proxy (GtkAction *action,
+               GtkWidget *widget)
+{
+    GtkActionClass *parent_class;
+
+    if (MOO_IS_ACTION (action))
+        parent_class = GTK_ACTION_CLASS (moo_action_parent_class);
+    else if (MOO_IS_TOGGLE_ACTION (action))
+        parent_class = GTK_ACTION_CLASS (moo_toggle_action_parent_class);
+    else
+        parent_class = GTK_ACTION_CLASS (moo_radio_action_parent_class);
+
+    parent_class->connect_proxy (action, widget);
+    g_signal_emit_by_name (action, "connect-proxy", widget);
+
+    _moo_action_base_connect_proxy (action, widget);
+}
+
+static void
+disconnect_proxy (GtkAction *action,
+                  GtkWidget *widget)
+{
+    GtkActionClass *parent;
+
+    if (MOO_IS_ACTION (action))
+        parent = GTK_ACTION_CLASS (moo_action_parent_class);
+    else if (MOO_IS_TOGGLE_ACTION (action))
+        parent = GTK_ACTION_CLASS (moo_toggle_action_parent_class);
+    else
+        parent = GTK_ACTION_CLASS (moo_radio_action_parent_class);
+
+    g_signal_emit_by_name (action, "disconnect-proxy", widget);
+    parent->disconnect_proxy (action, widget);
 }
