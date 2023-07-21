@@ -182,7 +182,7 @@ end
     <type>python</type>
     <python:code><![CDATA[
 # insert_date_and_time.py is installed in
-# $prefix/share/medit-1/python
+# $prefix/share/medit/python
 from insert_date_and_time import get_format
 import time
 

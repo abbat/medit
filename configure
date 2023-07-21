@@ -12449,7 +12449,7 @@ MOO_COPYRIGHT="2004-2014 Yevgen Muntyan <emuntyan@users.sourceforge.net>"
 
 
 # keep in sync with po/maintain
-MOO_PACKAGE_NAME="medit-1"
+MOO_PACKAGE_NAME="medit"
 
 
 MOO_PREFS_XML_FILE_NAME="prefs.xml"
