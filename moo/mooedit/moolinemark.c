@@ -611,7 +611,7 @@ _moo_line_mark_realize (MooLineMark *mark,
 
 
 void
-_moo_line_mark_unrealize (MooLineMark *mark)
+_moo_line_mark_unrealize (MooLineMark *mark, gpointer)
 {
     g_assert (MOO_IS_LINE_MARK (mark));
     g_assert (mark->priv->realized);
