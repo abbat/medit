@@ -25,6 +25,7 @@
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/moostock.h"
 #include "mooutils/mootype-macros.h"
+#include "mooutils/mooutils-treeview.h"
 #include "moofileview/moobookmark-editor-gxml.h"
 #include <string.h>
 #ifdef HAVE_UNISTD_H
@@ -1204,7 +1205,7 @@ delete_clicked (BkEditorXml *xml)
                        "moo-bookmarks-modified",
                        GINT_TO_POINTER (TRUE));
 
-    g_list_foreach (paths, (GFunc) gtk_tree_path_free, NULL);
+    g_list_foreach (paths, (GFunc) moo_tree_path_free, NULL);
     g_list_foreach (rows, (GFunc) gtk_tree_row_reference_free, NULL);
     g_list_free (paths);
     g_list_free (rows);

@@ -31,6 +31,7 @@
 #include "mooutils/mooutils-fs.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooutils-debug.h"
+#include "mooutils/mooutils-treeview.h"
 #include "mooutils/moodialogs.h"
 #include "mooutils/moofiltermgr.h"
 #include "mooutils/moouixml.h"
@@ -3544,7 +3545,7 @@ moo_file_view_popup_menu (GtkWidget *widget)
 
     selected = _moo_tree_view_get_selected_rows (fileview->priv->view);
     do_popup (fileview, NULL, selected);
-    g_list_foreach (selected, (GFunc) gtk_tree_path_free, NULL);
+    g_list_foreach (selected, (GFunc) moo_tree_path_free, NULL);
     g_list_free (selected);
 
     return TRUE;
@@ -3579,7 +3580,7 @@ file_list_button_press (MooFileView    *fileview,
     selected = _moo_tree_view_get_selected_rows (view);
     do_popup (fileview, event, selected);
     gtk_tree_path_free (filter_path);
-    g_list_foreach (selected, (GFunc) gtk_tree_path_free, NULL);
+    g_list_foreach (selected, (GFunc) moo_tree_path_free, NULL);
     g_list_free (selected);
 
     return TRUE;

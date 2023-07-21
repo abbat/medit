@@ -20,6 +20,11 @@
 
 G_BEGIN_DECLS
 
+// GFunc compatible gtk_tree_path_free
+static inline void moo_tree_path_free(GtkTreePath* path, gpointer)
+{
+    gtk_tree_path_free(path);
+}
 
 #define MOO_TYPE_TREE_HELPER              (_moo_tree_helper_get_type ())
 #define MOO_TREE_HELPER(object)           (G_TYPE_CHECK_INSTANCE_CAST ((object), MOO_TYPE_TREE_HELPER, MooTreeHelper))
