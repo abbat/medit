@@ -12,20 +12,22 @@
 # Lebedev Roman <roman@lebedev.com>, 2008.
 # der_FeniX <kofenix@gmail.com>, 2010.
 # Yuri Kozlov <yuray@komyakino.ru>, 2010.
+# Olesya Gerasimenko <gammaray@basealt.ru>, 2019.
 msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-01-05 23:03-0800\n"
-"PO-Revision-Date: 2010-03-17 20:34+0300\n"
-"Last-Translator: Yuri Kozlov <yuray@komyakino.ru>\n"
-"Language-Team: Russian <debian-l10n-russian@lists.debian.org>\n"
+"PO-Revision-Date: 2019-10-28 17:56MSK\n"
+"Last-Translator: Olesya Gerasimenko <gammaray@basealt.ru>\n"
+"Language-Team: Basealt Translation Team\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms:  nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: KBabel 1.11.4"
+"Plural-Forms:  nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Lokalize 2.0\n"
 
 msgid "Background"
 msgstr "Фон"
@@ -52,13 +54,15 @@ msgid "C/C++/ObjC Header"
 msgstr "Заголовок C/C++/ObjC"
 
 msgid "CG Shader Language"
-msgstr "Язык Шейдеров CG"
+msgstr "Язык шейдеров CG"
 
 msgid ""
-"Cannot create a regex for all the transitions, the syntax highlighting process will be slower than usual.\n"
+"Cannot create a regex for all the transitions, the syntax highlighting"
+" process will be slower than usual.\n"
 "The error was: %s"
 msgstr ""
-"Не удалось создать регулярное выражение для всех преобразований, подсветка синтаксиса будет выполняться гораздо медленнее.\n"
+"Не удалось создать регулярное выражение для всех преобразований, подсветка"
+" синтаксиса будет выполняться гораздо медленнее.\n"
 "Ошибка: %s"
 
 msgid "Classic"
@@ -115,8 +119,12 @@ msgstr "Шестнадцатеричное число"
 msgid "Hidden"
 msgstr "Скрыто"
 
-msgid "Highlighting a single line took too much time, syntax highlighting will be disabled"
-msgstr "Обработка одной строки заняла слишком много времени, подсветка синтаксиса будет отключена"
+msgid ""
+"Highlighting a single line took too much time, syntax highlighting will be"
+" disabled"
+msgstr ""
+"Обработка одной строки заняла слишком много времени, подсветка синтаксиса"
+" будет отключена"
 
 msgid "Identifier"
 msgstr "Идентификатор"
@@ -157,7 +165,8 @@ msgstr "Цвет строки установлен"
 msgid "List of directories and files where the style schemes are located"
 msgstr "Список каталогов, где расположены файлы определения стилевых схем"
 
-msgid "List of directories where the language specification files (.lang) are located"
+msgid ""
+"List of directories where the language specification files (.lang) are located"
 msgstr "Список каталогов, где расположены файлы определения языка (.lang)"
 
 msgid "List of the ids of the available languages"
@@ -242,7 +251,7 @@ msgid "Whether background color is set"
 msgstr "Установлен ли цвет фона"
 
 msgid "Whether bold attribute is set"
-msgstr "Установлен атрибут жирного текста"
+msgstr "Установлен ли атрибут жирного текста"
 
 msgid "Whether foreground color is set"
 msgstr "Установлен ли цвет текста"
@@ -263,7 +272,7 @@ msgid "Whether underline attribute is set"
 msgstr "Установлен ли атрибут подчёркивания"
 
 msgid "Yacc"
-msgstr "Yack"
+msgstr "Yacc"
 
 msgid "context '%s' cannot contain a \\%%{...@start} command"
 msgstr "контекст «%s» не может содержать команду \\%%{...@start}"
@@ -280,12 +289,17 @@ msgstr "в регулярном выражении «%s»: обратные сс
 msgid "invalid context reference '%s'"
 msgstr "некорректная ссылка на контекст «%s»"
 
-msgid "style override used with wildcard context reference in language '%s' in ref '%s'"
-msgstr "в языке «%s» использовалось переопределение стиля с помощью шаблона в ссылке «%s»"
+msgid ""
+"style override used with wildcard context reference in language '%s' in ref '"
+"%s'"
+msgstr ""
+"в языке «%s» использовалось переопределение стиля с помощью шаблона в ссылке"
+" «%s»"
 
 msgid "unknown context '%s'"
 msgstr "неизвестный контекст «%s»"
 
 msgid "using \\C is not supported in language definitions"
-msgstr "Использование \\C не поддерживается в определениях языка"
+msgstr "использование \\C не поддерживается в определениях языка"
+
 

@@ -1,129 +1,137 @@
 # Russian translation of medit.
 # Copyright (C) 2007 Yevgen Muntyan
 # This file is distributed under the same license as the medit package.
+#
 # Andrey Fedoseev <andrey.fedoseev@gmail.com>, 2007.
 # Denis Koryavov <dkoryavov@yandex.ru>, 2010.
-#
+# Olesya Gerasimenko <gammaray@basealt.ru>, 2019.
 msgid ""
 msgstr ""
 "Project-Id-Version: moo\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-06 09:58-0800\n"
-"PO-Revision-Date: 2007-07-11 10:00+0500\n"
-"Last-Translator: Yevgen Muntyan <emuntyan@users.sourceforge.net>\n"
-"Language-Team: Russian\n"
+"POT-Creation-Date: 2017-10-28 13:34-0700\n"
+"PO-Revision-Date: 2019-10-28 16:46MSK\n"
+"Last-Translator: Olesya Gerasimenko <gammaray@basealt.ru>\n"
+"Language-Team: Basealt Translation Team\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<"
+"=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Lokalize 2.0\n"
 
-#. error message for wrong commmand line
-#: ../moo/medit-app/main.c:110
+#. error message for wrong command line
+#: ../moo/medit-app/main.cpp:116
 #, c-format
 msgid "Invalid value '%s' for option %s"
-msgstr "Для настройки %s введено неверное значение '%s'"
+msgstr "Неверное значение «%s» для параметра %s"
+
+#. error message for wrong commmand line
+#: ../moo/medit-app/main.cpp:179
+#, c-format
+msgid "%s and %s options may not be used simultaneously\n"
+msgstr "Параметры %s и %s не могут быть использованы одновременно\n"
 
 #. help message for command line option --new-app
-#: ../moo/medit-app/main.c:117
+#: ../moo/medit-app/main.cpp:204
 msgid "Run new instance of application"
 msgstr "Запустить новую копию приложения"
 
 #. help message for command line option --use-session
-#: ../moo/medit-app/main.c:119
+#: ../moo/medit-app/main.cpp:206
 msgid "Load and save session"
-msgstr "Загрузить и сохранить сессию"
+msgstr "Загрузить и сохранить сеанс"
 
 #. help message for command line option --pid=PID
-#: ../moo/medit-app/main.c:121
+#: ../moo/medit-app/main.cpp:208
 msgid "Use existing instance with process id PID"
-msgstr "Использовать существующую копию приложения с id PID"
+msgstr ""
+"Использовать существующую копию приложения с идентификатором процесса PID"
 
 #. "PID" part in "--pid=PID"
-#: ../moo/medit-app/main.c:122
+#: ../moo/medit-app/main.cpp:209
 msgid "PID"
 msgstr "PID"
 
 #. help message for command line option --app-name=NAME
-#: ../moo/medit-app/main.c:124
+#: ../moo/medit-app/main.cpp:211
 msgid "Set instance name to NAME if it's not already running"
 msgstr ""
-"Установить имя копии приложения в NAME если копия с таким именем уже не "
+"Установить имя копии приложения в NAME, если копия с таким именем ещё не "
 "запущена"
 
 #. "NAME" part in "--app-name=NAME"
-#: ../moo/medit-app/main.c:125
+#: ../moo/medit-app/main.cpp:212
 msgid "NAME"
 msgstr "NAME"
 
 #. help message for command line option --new-window
-#: ../moo/medit-app/main.c:127
+#: ../moo/medit-app/main.cpp:214
 msgid "Open file(s) in a new window"
 msgstr "Открыть файл(ы) в новом окне"
 
 #. help message for command line option --new-tab
-#: ../moo/medit-app/main.c:129
+#: ../moo/medit-app/main.cpp:216
 msgid "Open file(s) in a new tab"
-msgstr "Окрыть файл(ы) в новой вкладке"
+msgstr "Открыть файл(ы) в новой вкладке"
 
 #. help message for command line option --line=LINE
-#: ../moo/medit-app/main.c:135
+#: ../moo/medit-app/main.cpp:222
 msgid "Open file and position cursor on line LINE"
 msgstr "Открыть файл и установить курсор на линию LINE"
 
 #. "LINE" part in --line=LINE
-#: ../moo/medit-app/main.c:136
+#: ../moo/medit-app/main.cpp:223
 msgid "LINE"
 msgstr "LINE"
 
 #. help message for command line option --encoding=ENCODING
-#: ../moo/medit-app/main.c:138
+#: ../moo/medit-app/main.cpp:225
 msgid "Use character encoding ENCODING"
 msgstr "Использовать кодировку ENCODING"
 
 #. "ENCODING" part in --encoding=ENCODING
-#: ../moo/medit-app/main.c:139
+#: ../moo/medit-app/main.cpp:226
 msgid "ENCODING"
 msgstr "ENCODING"
 
 #. help message for command line option --reload
-#: ../moo/medit-app/main.c:141
+#: ../moo/medit-app/main.cpp:228
 msgid "Automatically reload file if it was modified on disk"
-msgstr "Перезагрузить файл если он был изменён на диске"
+msgstr "Автоматически перезагрузить файл, если он был изменён на диске"
 
 #. help message for command line option --geometry=WIDTHxHEIGHT[+X+Y]
-#: ../moo/medit-app/main.c:153
+#: ../moo/medit-app/main.cpp:240
 msgid "Default window size and position"
 msgstr "Размер и положение окна по умолчанию"
 
 #. "WIDTHxHEIGHT[+X+Y]" part in --geometry=WIDTHxHEIGHT[+X+Y]
-#: ../moo/medit-app/main.c:154
+#: ../moo/medit-app/main.cpp:241
 msgid "WIDTHxHEIGHT[+X+Y]"
 msgstr "WIDTHxHEIGHT[+X+Y]"
 
 #. help message for command line option --version
-#: ../moo/medit-app/main.c:156
+#: ../moo/medit-app/main.cpp:243
 msgid "Show version information and exit"
 msgstr "Показать информацию о версии и выйти"
 
 #. "FILES" part in "medit [OPTION...] [FILES]"
-#: ../moo/medit-app/main.c:172
+#: ../moo/medit-app/main.cpp:259
 msgid "FILES"
 msgstr "FILES"
-
-#. error message for wrong commmand line
-#: ../moo/medit-app/main.c:254
-#, c-format
-msgid "%s and %s options may not be used simultaneously\n"
-msgstr "Опция %s и %s не могут быть использованы одновременно\n"
 
 #: ../moo/medit-app/medit.desktop.in.h:1
 msgid "Text editor"
 msgstr "Текстовый редактор"
 
+#: ../moo/medit-app/medit.desktop.in.h:2
+msgid "editor;texteditor;text"
+msgstr "editor;texteditor;text;редактор;текстовыйредактор;текст"
+
 #. Translators: remove the part before and including |
 #: ../moo/mooapp/glade/mooappabout-credits.glade.h:2
+msgctxt "yes"
 msgid "Dialog title|Credits"
 msgstr "Благодарности"
 
@@ -144,49 +152,55 @@ msgstr "Перевод"
 
 #. Translators: remove the part before and including |
 #: ../moo/mooapp/glade/mooappabout-dialog.glade.h:2
+msgctxt "yes"
 msgid "Dialog title|About"
 msgstr "О программе"
 
 #. Credits button label in About dialog
 #: ../moo/mooapp/glade/mooappabout-dialog.glade.h:4
+msgctxt "yes"
 msgid "C_redits"
 msgstr "_Благодарности"
 
 #. License button label in About dialog
 #: ../moo/mooapp/glade/mooappabout-dialog.glade.h:6
+msgctxt "yes"
 msgid "_License"
-msgstr "Лицензия"
+msgstr "_Лицензия"
 
 #. Translators: remove the part before and including |
 #: ../moo/mooapp/glade/mooappabout-license.glade.h:2
+msgctxt "yes"
 msgid "Dialog title|License"
 msgstr "Лицензия"
 
 #. Translators: this goes into About box, under Translated by tab,
 #. do not ignore it, markup isn't always used. It should be something
 #. like "Some Guy <someguy@domain.net>", with lines separated by \n
-#: ../moo/mooapp/mooappabout.c:57
+#: ../moo/mooapp/mooappabout.cpp:59
 msgid "translator-credits"
 msgstr ""
 "Андрей Федосеев <andrey.fedoseev@gmail.com>\n"
-"Denis Koryavov <dkoryavov@yandex.ru>"
+"Denis Koryavov <dkoryavov@yandex.ru>\n"
+"Олеся Герасименко <gammaray@basealt.ru>"
 
 #. Translators: this goes into About box, under Translated by tab,
 #. this must be valid html markup, e.g.
 #. "Some Guy <a href=\"mailto:someguy@domain.net\">&lt;someguy@domain.net&gt;</a>"
 #. Lines must be separated by <br>, like "First guy<br>Second Guy"
-#: ../moo/mooapp/mooappabout.c:62
+#: ../moo/mooapp/mooappabout.cpp:64
 msgid "translator-credits-markup"
 msgstr ""
 "Андрей Федосеев <a href=\"mailto:andrey.fedoseev@gmail.com\">&lt;andrey."
 "fedoseev@gmail.com&gt;</a><br>Денис Корявов <a href=\"mailto:"
-"dkoryavov@yandex.ru\">&lt;dkoryavov@yandex.ru&gt;</a>"
+"dkoryavov@yandex.ru\">&lt;dkoryavov@yandex.ru&gt;</a><br>Олеся Герасименко "
+"<a href=\"mailto:gammaray@basealt.ru\">&lt;gammaray@basealt.ru&gt;</a>"
 
-#: ../moo/mooapp/mooapp.c:993
+#: ../moo/mooapp/mooapp.cpp:992
 msgid "Report a Bug..."
 msgstr "Сообщить о проблеме..."
 
-#: ../moo/mooapp/mooapp.c:1356
+#: ../moo/mooapp/mooapp.cpp:1356
 #, c-format
 msgid ""
 "The following URL will be opened:\n"
@@ -195,18 +209,18 @@ msgid ""
 "\n"
 "It contains medit version and your operating system name (%s)"
 msgstr ""
-"Следующий адрес будет открыт:\n"
+"Будет открыт следующий адрес:\n"
 "\n"
 "%s\n"
 "\n"
-"Он содержит версию программы и назавание вашей операционной системы (%s)"
+"Он содержит версию программы и название вашей операционной системы (%s)"
 
-#: ../moo/mooapp/mooapp.c:1363
+#: ../moo/mooapp/mooapp.cpp:1363
 msgid "Open URL?"
-msgstr "Открыть интернет адрес?"
+msgstr "Открыть интернет-адрес?"
 
 #. Prefs dialog title
-#: ../moo/mooapp/mooapp.c:1401
+#: ../moo/mooapp/mooapp.cpp:1401
 msgid "Preferences"
 msgstr "Настройки"
 
@@ -216,15 +230,15 @@ msgstr "<b>Открытие</b>"
 
 #: ../moo/mooedit/glade/mooeditprefs-file.glade.h:2
 msgid "Encodings to _autodetect:"
-msgstr "Автоопределение кодировок:"
+msgstr "_Автоопределение кодировок:"
 
 #: ../moo/mooedit/glade/mooeditprefs-file.glade.h:3
 msgid ""
 "Comma-separated list of encodings to try when opening a file. 'LOCALE' means "
 "current locale encoding."
 msgstr ""
-"Список кодировок, используемых при открытии файла (через запятую). 'LOCALE' "
-"означает использовать кодировку текущей локали."
+"Список кодировок, используемых при открытии файла (через запятую). «LOCALE» "
+"означает использование кодировки текущей локали."
 
 #: ../moo/mooedit/glade/mooeditprefs-file.glade.h:4
 msgid "<b>Saving</b>"
@@ -232,27 +246,27 @@ msgstr "<b>Сохранение</b>"
 
 #: ../moo/mooedit/glade/mooeditprefs-file.glade.h:5
 msgid "Encoding for _new files:"
-msgstr "Кодировка новых файлов:"
+msgstr "Кодировка _новых файлов:"
 
 #: ../moo/mooedit/glade/mooeditprefs-file.glade.h:6
 msgid "Remove trailing _spaces"
-msgstr "Удалять пробелы в конце строки"
+msgstr "Удалять _пробелы в конце строки"
 
 #: ../moo/mooedit/glade/mooeditprefs-file.glade.h:7
 msgid "Ensure trailing new_line"
-msgstr "Добавлять новую строку в конце файла"
+msgstr "Добавлять _новую строку в конце файла"
 
 #: ../moo/mooedit/glade/mooeditprefs-file.glade.h:8
 msgid "Make _backups"
-msgstr "Создавать резервные копии"
+msgstr "Создавать _резервные копии"
 
 #: ../moo/mooedit/glade/mooeditprefs-file.glade.h:9
 msgid "<b>Sessions</b>"
-msgstr "<b>Сессии</b>"
+msgstr "<b>Сеансы</b>"
 
 #: ../moo/mooedit/glade/mooeditprefs-file.glade.h:10
 msgid "Enable _session support"
-msgstr "Включить поддержку сессий"
+msgstr "Включить поддержку _сеансов"
 
 #: ../moo/mooedit/glade/mooeditprefs-file.glade.h:11
 msgid "<b>Dialogs</b>"
@@ -261,7 +275,15 @@ msgstr "<b>Диалоги</b>"
 #: ../moo/mooedit/glade/mooeditprefs-file.glade.h:12
 msgid "Open and Save As dialogs show current document _folder"
 msgstr ""
-"Диалоги открытия и сохранения файла открывать в папке текущего документа"
+"Диалоги открытия и сохранения файла открывать в _папке текущего документа"
+
+#: ../moo/mooedit/glade/mooeditprefs-file.glade.h:13
+msgid "<b>Autosync</b>"
+msgstr "<b>Автосинхронизация</b>"
+
+#: ../moo/mooedit/glade/mooeditprefs-file.glade.h:14
+msgid "Automatically sync files with disk"
+msgstr "Автоматически синхронизировать файлы с диском"
 
 #: ../moo/mooedit/glade/mooeditprefs-filters.glade.h:1
 msgid "<b>File filters</b>"
@@ -273,7 +295,7 @@ msgstr "<b>Клавиатура</b>"
 
 #: ../moo/mooedit/glade/mooeditprefs-general.glade.h:2
 msgid "Smart Home and End"
-msgstr "\"Умные\" клавиши Home и End"
+msgstr "«Умные» клавиши Home и End"
 
 #: ../moo/mooedit/glade/mooeditprefs-general.glade.h:3
 msgid "Enable auto indentation"
@@ -322,7 +344,7 @@ msgstr "Параметры:"
 #: ../moo/mooedit/glade/mooeditprefs-langs.glade.h:3
 #: ../moo/plugins/glade/moofileselector-prefs.glade.h:3
 msgid "Mime types:"
-msgstr "MIME-типы:"
+msgstr "Типы MIME:"
 
 #: ../moo/mooedit/glade/mooeditprefs-langs.glade.h:4
 #: ../moo/plugins/glade/moofileselector-prefs.glade.h:5
@@ -351,7 +373,7 @@ msgstr "<b>Подсветка</b>"
 
 #: ../moo/mooedit/glade/mooeditprefs-view.glade.h:5
 msgid "Enable syntax highlighting"
-msgstr "Включить подстветку синтаксиса"
+msgstr "Включить подсветку синтаксиса"
 
 #: ../moo/mooedit/glade/mooeditprefs-view.glade.h:6
 msgid "Highlight matching brackets"
@@ -397,7 +419,7 @@ msgstr "в столбце"
 
 #: ../moo/mooedit/glade/mooeditsavemult.glade.h:1
 msgid "Select the documents you want to save:"
-msgstr "Выберите документы, которые вы хотите сохранить:"
+msgstr "Выберите документы, которые следует сохранить:"
 
 #: ../moo/mooedit/glade/moopluginprefs.glade.h:1
 msgid "<b>Plugins</b>"
@@ -417,7 +439,7 @@ msgstr "<b>Описание:</b>"
 
 #: ../moo/mooedit/glade/mooprint.glade.h:1
 msgid "Print using text styles"
-msgstr "Печатать используя текстовые стили"
+msgstr "Печатать, используя текстовые стили"
 
 #: ../moo/mooedit/glade/mooprint.glade.h:2
 msgid "Use custom font:"
@@ -448,7 +470,7 @@ msgstr "строк"
 
 #: ../moo/mooedit/glade/mooprint.glade.h:11
 msgid "Print header"
-msgstr "Печатать заголовок"
+msgstr "Печатать верхний колонтитул"
 
 #: ../moo/mooedit/glade/mooprint.glade.h:12
 msgid "Print separator line"
@@ -468,19 +490,19 @@ msgstr "Слева:"
 
 #: ../moo/mooedit/glade/mooprint.glade.h:16
 msgid "Header"
-msgstr "Заголовок"
+msgstr "Верхний колонтитул"
 
 #: ../moo/mooedit/glade/mooprint.glade.h:17
 msgid "Print footer"
-msgstr "Печатать подвал"
+msgstr "Печатать нижний колонтитул"
 
 #: ../moo/mooedit/glade/mooprint.glade.h:18
 msgid "Footer"
-msgstr "Подвал"
+msgstr "Нижний колонтитул"
 
 #: ../moo/mooedit/glade/mooquicksearch.glade.h:1
 msgid "_Case sensitive"
-msgstr "С учетом _регистра"
+msgstr "С учётом _регистра"
 
 #: ../moo/mooedit/glade/mooquicksearch.glade.h:2
 msgid "_Regular expression"
@@ -488,23 +510,23 @@ msgstr "Регулярное _выражение"
 
 #: ../moo/mooedit/glade/mootextfind.glade.h:1
 msgid "_Text to find:"
-msgstr "Текст для поиска:"
+msgstr "_Текст для поиска:"
 
 #: ../moo/mooedit/glade/mootextfind.glade.h:2
 msgid "Regular e_xpression"
-msgstr "Регулярное выражение"
+msgstr "Регулярное в_ыражение"
 
-#: ../moo/mooedit/glade/mootextfind.glade.h:3 ../moo/plugins/moofind.c:1116
+#: ../moo/mooedit/glade/mootextfind.glade.h:3 ../moo/plugins/moofind.cpp:1130
 msgid "Find"
 msgstr "Найти"
 
 #: ../moo/mooedit/glade/mootextfind.glade.h:4
 msgid "_Replacement text:"
-msgstr "Текст для замены"
+msgstr "Текст для _замены"
 
 #: ../moo/mooedit/glade/mootextfind.glade.h:5
 msgid "_Literal replacement"
-msgstr "Литеральная замена"
+msgstr "_Литеральная замена"
 
 #: ../moo/mooedit/glade/mootextfind.glade.h:6
 msgid "Replace With"
@@ -512,11 +534,11 @@ msgstr "Заменить на"
 
 #: ../moo/mooedit/glade/mootextfind.glade.h:7
 msgid "Don't _prompt on replace"
-msgstr "Не спрашивать при замене"
+msgstr "Не _спрашивать при замене"
 
 #: ../moo/mooedit/glade/mootextfind.glade.h:8
 msgid "Find _backwards"
-msgstr "Снизу вверх"
+msgstr "Снизу _вверх"
 
 #: ../moo/mooedit/glade/mootextfind.glade.h:9
 #: ../moo/plugins/glade/moogrep.glade.h:5
@@ -525,15 +547,15 @@ msgstr "С учётом _регистра"
 
 #: ../moo/mooedit/glade/mootextfind.glade.h:10
 msgid "S_elected text"
-msgstr "В выделенном тексте"
+msgstr "В _выделенном тексте"
 
 #: ../moo/mooedit/glade/mootextfind.glade.h:11
 msgid "From c_ursor"
-msgstr "От курсора"
+msgstr "От _курсора"
 
 #: ../moo/mooedit/glade/mootextfind.glade.h:12
 msgid "_Whole words only"
-msgstr "Только целые слова"
+msgstr "Только _целые слова"
 
 #: ../moo/mooedit/glade/mootextfind.glade.h:13
 msgid "Options"
@@ -552,16 +574,16 @@ msgid "Replace _All"
 msgstr "Заменить _все"
 
 #: ../moo/mooedit/glade/mootextfind-prompt.glade.h:4
-#: ../moo/mooedit/mooeditwindow.c:551
+#: ../moo/mooedit/mooeditwindow.cpp:558
 msgid "Find _Next"
-msgstr "Найти следующее"
+msgstr "Найти _следующее"
 
 #: ../moo/mooedit/glade/mootextfind-prompt.glade.h:5
 msgid "Sto_p"
 msgstr "Сто_п"
 
 #: ../moo/mooedit/glade/mootextgotoline.glade.h:1
-#: ../moo/mooedit/mooeditwindow.c:601
+#: ../moo/mooedit/mooeditwindow.cpp:608
 msgid "Go to Line"
 msgstr "Перейти к строке"
 
@@ -605,7 +627,7 @@ msgstr "_Окно"
 
 #. Translators: number of documents here is always greater than one, so
 #. ignore singular form (which is simply copy of the plural here)
-#: ../moo/mooedit/mooeditdialogs.c:373
+#: ../moo/mooedit/mooeditdialogs.cpp:444
 #, c-format
 msgid ""
 "There are %u documents with unsaved changes. Save changes before closing?"
@@ -621,7 +643,7 @@ msgstr[2] ""
 "В %u документах есть несохранённые изменения. Сохранить изменения перед "
 "закрытием?"
 
-#: ../moo/mooedit/mooeditdialogs.c:428
+#: ../moo/mooedit/mooeditdialogs.cpp:499
 #, c-format
 msgid ""
 "Could not save file\n"
@@ -630,21 +652,21 @@ msgstr ""
 "Не удалось сохранить файл\n"
 "%s"
 
-#: ../moo/mooedit/mooeditdialogs.c:490
+#: ../moo/mooedit/mooeditdialogs.cpp:561
 #, c-format
 msgid ""
 "Could not save file %s in encoding %s. Do you want to save it in UTF-8 "
 "encoding instead?"
 msgstr ""
-"Не удалось преобразовать файл %s к требуемой кодировке %s. Сохранить в "
+"Не удалось сохранить файл %s в требуемой кодировке %s. Сохранить в "
 "кодировке UTF-8?"
 
-#: ../moo/mooedit/mooeditdialogs.c:494
+#: ../moo/mooedit/mooeditdialogs.cpp:565
 msgid "Save file in UTF-8 encoding?"
 msgstr "Сохранить в кодировке UTF-8?"
 
 #. Could not open file foo.txt
-#: ../moo/mooedit/mooeditdialogs.c:521 ../moo/mooedit/mooeditdialogs.c:588
+#: ../moo/mooedit/mooeditdialogs.cpp:592 ../moo/mooedit/mooeditdialogs.cpp:659
 #, c-format
 msgid ""
 "Could not open file\n"
@@ -653,27 +675,27 @@ msgstr ""
 "Не удалось открыть файл\n"
 "%s"
 
-#: ../moo/mooedit/mooeditdialogs.c:527 ../moo/mooedit/mooeditdialogs.c:590
+#: ../moo/mooedit/mooeditdialogs.cpp:598 ../moo/mooedit/mooeditdialogs.cpp:661
 msgid "Could not open file"
 msgstr "Не удалось открыть файл"
 
-#: ../moo/mooedit/mooeditdialogs.c:532
+#: ../moo/mooedit/mooeditdialogs.cpp:603
 #, c-format
 msgid ""
 "Could not open file using character encoding %s. Try to select another "
 "encoding below."
 msgstr ""
-"Не удалось открыть файл используя кодировку %s. Попробуйте выбрать другую "
+"Не удалось открыть файл, используя кодировку %s. Попробуйте выбрать другую "
 "кодировку."
 
-#: ../moo/mooedit/mooeditdialogs.c:535
+#: ../moo/mooedit/mooeditdialogs.cpp:606
 #, c-format
 msgid ""
 "Could not detect file character encoding. Try to select an encoding below."
 msgstr "Не удалось определить кодировку файла. Попробуйте выбрать кодировку."
 
 #. Could not reload file foo.txt
-#: ../moo/mooedit/mooeditdialogs.c:620
+#: ../moo/mooedit/mooeditdialogs.cpp:691
 #, c-format
 msgid ""
 "Could not reload file\n"
@@ -682,38 +704,38 @@ msgstr ""
 "Не удалось перезагрузить файл\n"
 "%s"
 
-#: ../moo/mooedit/mooeditdialogs.c:648
+#: ../moo/mooedit/mooeditdialogs.cpp:719
 #, c-format
 msgid "Discard changes in file '%s'?"
-msgstr "Отменить изменения в файле '%s'?"
+msgstr "Отменить изменения в файле «%s»?"
 
-#: ../moo/mooedit/mooeditdialogs.c:650
+#: ../moo/mooedit/mooeditdialogs.cpp:721
 msgid "If you reload the document, changes will be discarded"
-msgstr "Если вы перезгрузите документ, изменения будут утеряны"
+msgstr "Если вы перезагрузите документ, изменения будут утеряны"
 
-#: ../moo/mooedit/mooeditdialogs.c:651 ../moo/mooedit/mooeditwindow.c:441
+#: ../moo/mooedit/mooeditdialogs.cpp:722 ../moo/mooedit/mooeditwindow.cpp:448
 msgid "_Reload"
 msgstr "О_бновить"
 
-#: ../moo/mooedit/mooeditdialogs.c:673
+#: ../moo/mooedit/mooeditdialogs.cpp:744
 #, c-format
 msgid "Overwrite modified file '%s'?"
-msgstr "Перезаписать измененный файл '%s'?"
+msgstr "Перезаписать изменённый файл «%s»?"
 
-#: ../moo/mooedit/mooeditdialogs.c:674
+#: ../moo/mooedit/mooeditdialogs.cpp:745
 #, c-format
 msgid ""
 "File '%s' was modified on disk by another process. If you save it, changes "
 "on disk will be lost."
 msgstr ""
-"Файл '%s' был изменён другой программой. Если вы сохраните его, эти "
+"Файл «%s» был изменён другой программой. Если вы сохраните его, эти "
 "изменения будут потеряны."
 
-#: ../moo/mooedit/mooeditdialogs.c:676
+#: ../moo/mooedit/mooeditdialogs.cpp:747
 msgid "Over_write"
 msgstr "Пере_записать"
 
-#: ../moo/mooedit/mooeditdialogs.c:697
+#: ../moo/mooedit/mooeditdialogs.cpp:768
 msgid ""
 "Beginning of document reached.\n"
 "Continue from the end?"
@@ -721,7 +743,7 @@ msgstr ""
 "Достигнуто начало документа.\n"
 "Продолжить с конца?"
 
-#: ../moo/mooedit/mooeditdialogs.c:700
+#: ../moo/mooedit/mooeditdialogs.cpp:771
 msgid ""
 "End of document reached.\n"
 "Continue from the beginning?"
@@ -729,34 +751,35 @@ msgstr ""
 "Достигнут конец документа.\n"
 "Продолжить с начала?"
 
-#: ../moo/mooedit/mooeditdialogs.c:740
+#: ../moo/mooedit/mooeditdialogs.cpp:811
 #, c-format
 msgid "Invalid regular expression"
 msgstr "Неверное регулярное выражение"
 
-#: ../moo/mooedit/mooedit-fileops.c:1111 ../moo/plugins/moofileselector.c:511
+#: ../moo/mooedit/mooedit-fileops.cpp:1131
+#: ../moo/plugins/moofileselector.cpp:511
 msgid "Untitled"
 msgstr "Без имени"
 
-#: ../moo/mooedit/mooedit-fileops.c:1113
+#: ../moo/mooedit/mooedit-fileops.cpp:1133
 #, c-format
 msgid "Untitled %d"
 msgstr "Без имени %d"
 
-#: ../moo/mooedit/mooeditor.c:330
+#: ../moo/mooedit/mooeditor.cpp:332
 msgid "Open Recent Files Dialog"
 msgstr "Последние файлы"
 
 #. Translators: remove the part before and including |
-#: ../moo/mooedit/mooeditor.c:332
+#: ../moo/mooedit/mooeditor.cpp:334
 msgid "Open Recent|_More..."
-msgstr "_Еще.."
+msgstr "_Ещё..."
 
-#: ../moo/mooedit/mooeditor.c:598
+#: ../moo/mooedit/mooeditor.cpp:600
 msgid "Open new editor window"
 msgstr "Открыть новое окно"
 
-#: ../moo/mooedit/mooeditor.c:784
+#: ../moo/mooedit/mooeditor.cpp:786
 msgid "Open Recent"
 msgstr "Последние файлы"
 
@@ -767,432 +790,445 @@ msgstr "Последние файлы"
 #. You want to add common preferred non-UTF8 encodings used in your locale.
 #. Do not remove ISO_8859-15 and ISO_8859-1, instead leave them at the end,
 #. these are common source files encodings.
-#: ../moo/mooedit/mooeditprefs.c:51
+#: ../moo/mooedit/mooeditprefs.cpp:51
 msgid "encodings_list"
 msgstr "UTF-8,LOCALE,KOI8-R,WINDOWS-1251,ISO_8859-15,ISO_8859-1"
 
 #. Label of a Preferences dialog page, remove the part before and including |
-#: ../moo/mooedit/mooeditprefspage.c:168
+#: ../moo/mooedit/mooeditprefspage.cpp:172
 msgid "PreferencesPage|General"
 msgstr "Общие"
 
 #. Label of a Preferences dialog page, remove the part before and including |
-#: ../moo/mooedit/mooeditprefspage.c:204
+#: ../moo/mooedit/mooeditprefspage.cpp:210
 msgid "PreferencesPage|File Filters"
 msgstr "Фильтры файлов"
 
 #. Label of a Preferences dialog page, remove the part before and including |
-#: ../moo/mooedit/mooeditprefspage.c:257
+#: ../moo/mooedit/mooeditprefspage.cpp:265
 msgid "PreferencesPage|View"
 msgstr "Вид"
 
 #. Label of a Preferences dialog page, remove the part before and including |
-#: ../moo/mooedit/mooeditprefspage.c:304
+#: ../moo/mooedit/mooeditprefspage.cpp:315
 msgid "PreferencesPage|File"
 msgstr "Файл"
 
 #. Label of a Preferences dialog page, remove the part before and including |
-#: ../moo/mooedit/mooeditprefspage.c:344
+#: ../moo/mooedit/mooeditprefspage.cpp:357
 msgid "PreferencesPage|Languages"
 msgstr "Языки"
 
 #. Label in the Language combo box on Languages preferences page,
 #. remove the part before and including |
 #. Menu item in the Language menu
-#: ../moo/mooedit/mooeditprefspage.c:561 ../moo/mooedit/mooeditwindow.c:3992
+#: ../moo/mooedit/mooeditprefspage.cpp:574
+#: ../moo/mooedit/mooeditwindow.cpp:4037
 msgid "Language|None"
 msgstr "Ничего"
 
 #. Column label on File Filters prefs page
-#: ../moo/mooedit/mooeditprefspage.c:1024
+#: ../moo/mooedit/mooeditprefspage.cpp:1037
 msgctxt "filter-prefs-column"
 msgid "Filter"
 msgstr "Фильтр"
 
 #. Column label on File Filters prefs page
-#: ../moo/mooedit/mooeditprefspage.c:1026
+#: ../moo/mooedit/mooeditprefspage.cpp:1039
 msgctxt "filter-prefs-column"
 msgid "Options"
 msgstr "Параметры"
 
-#: ../moo/mooedit/mooeditwindow.c:424
+#: ../moo/mooedit/mooeditwindow.cpp:431
 msgid "Create new document"
 msgstr "Создать новый документ"
 
-#: ../moo/mooedit/mooeditwindow.c:432
+#: ../moo/mooedit/mooeditwindow.cpp:439
 msgid "_Open..."
 msgstr "_Открыть..."
 
-#: ../moo/mooedit/mooeditwindow.c:433
+#: ../moo/mooedit/mooeditwindow.cpp:440
 msgid "Open..."
 msgstr "Открыть..."
 
-#: ../moo/mooedit/mooeditwindow.c:440 ../moo/moofileview/moofileview.c:1281
+#: ../moo/mooedit/mooeditwindow.cpp:447 ../moo/moofileview/moofileview.c:1281
 #: ../moo/moofileview/moofileview.c:1282
 msgid "Reload"
 msgstr "Обновить"
 
-#: ../moo/mooedit/mooeditwindow.c:442
+#: ../moo/mooedit/mooeditwindow.cpp:449
 msgid "Reload document"
 msgstr "Обновить документ"
 
-#: ../moo/mooedit/mooeditwindow.c:473
+#: ../moo/mooedit/mooeditwindow.cpp:480
 msgid "Save _As..."
 msgstr "Сохранить _как..."
 
-#: ../moo/mooedit/mooeditwindow.c:474
+#: ../moo/mooedit/mooeditwindow.cpp:481
 msgid "Save as..."
 msgstr "Сохранить как..."
 
-#: ../moo/mooedit/mooeditwindow.c:484
+#: ../moo/mooedit/mooeditwindow.cpp:491
 msgid "Close document"
 msgstr "Закрыть документ"
 
-#: ../moo/mooedit/mooeditwindow.c:492
+#: ../moo/mooedit/mooeditwindow.cpp:499
 msgid "Close All"
-msgstr "Закрыть Все"
+msgstr "Закрыть все"
 
-#: ../moo/mooedit/mooeditwindow.c:493
+#: ../moo/mooedit/mooeditwindow.cpp:500
 msgid "Close A_ll"
-msgstr "Закрыть Все"
+msgstr "Закрыть _все"
 
-#: ../moo/mooedit/mooeditwindow.c:494
+#: ../moo/mooedit/mooeditwindow.cpp:501
 msgid "Close all documents"
 msgstr "Закрыть все документы"
 
-#: ../moo/mooedit/mooeditwindow.c:501
+#: ../moo/mooedit/mooeditwindow.cpp:508
 msgid "Previous Tab"
-msgstr "Предыдущая Закладка"
+msgstr "Предыдущая вкладка"
 
-#: ../moo/mooedit/mooeditwindow.c:502
+#: ../moo/mooedit/mooeditwindow.cpp:509
 msgid "_Previous Tab"
-msgstr "Предыдущая Закладка"
+msgstr "_Предыдущая вкладка"
 
-#: ../moo/mooedit/mooeditwindow.c:503
+#: ../moo/mooedit/mooeditwindow.cpp:510
 msgid "Previous tab"
-msgstr "Предыдущая закладка"
+msgstr "Предыдущая вкладка"
 
-#: ../moo/mooedit/mooeditwindow.c:511
+#: ../moo/mooedit/mooeditwindow.cpp:518
 msgid "Next Tab"
-msgstr "Следующая Закладка"
+msgstr "Следующая вкладка"
 
-#: ../moo/mooedit/mooeditwindow.c:512
+#: ../moo/mooedit/mooeditwindow.cpp:519
 msgid "_Next Tab"
-msgstr "Следующая Закладка"
+msgstr "_Следующая вкладка"
 
-#: ../moo/mooedit/mooeditwindow.c:513
+#: ../moo/mooedit/mooeditwindow.cpp:520
 msgid "Next tab"
-msgstr "Следующая закладка"
+msgstr "Следующая вкладка"
 
-#: ../moo/mooedit/mooeditwindow.c:521
+#: ../moo/mooedit/mooeditwindow.cpp:528
 msgid "Previous Tab In View"
-msgstr ""
+msgstr "Предыдущая вкладка в представлении"
 
-#: ../moo/mooedit/mooeditwindow.c:522
+#: ../moo/mooedit/mooeditwindow.cpp:529
 msgid "_Previous Tab In View"
-msgstr ""
+msgstr "_Предыдущая вкладка в представлении"
 
-#: ../moo/mooedit/mooeditwindow.c:523
+#: ../moo/mooedit/mooeditwindow.cpp:530
 msgid "Previous tab in view"
-msgstr ""
+msgstr "Предыдущая вкладка в представлении"
 
-#: ../moo/mooedit/mooeditwindow.c:530
+#: ../moo/mooedit/mooeditwindow.cpp:537
 msgid "Next Tab In View"
-msgstr ""
+msgstr "Следующая вкладка в представлении"
 
-#: ../moo/mooedit/mooeditwindow.c:531
+#: ../moo/mooedit/mooeditwindow.cpp:538
 msgid "_Next Tab In View"
-msgstr ""
+msgstr "_Следующая вкладка в представлении"
 
-#: ../moo/mooedit/mooeditwindow.c:532
+#: ../moo/mooedit/mooeditwindow.cpp:539
 msgid "Next tab in view"
-msgstr ""
+msgstr "Следующая вкладка в представлении"
 
-#: ../moo/mooedit/mooeditwindow.c:550
+#: ../moo/mooedit/mooeditwindow.cpp:557
 msgid "Find Next"
 msgstr "Найти следующее"
 
-#: ../moo/mooedit/mooeditwindow.c:552
+#: ../moo/mooedit/mooeditwindow.cpp:559
 msgid "Find next"
 msgstr "Найти следующее"
 
-#: ../moo/mooedit/mooeditwindow.c:561
+#: ../moo/mooedit/mooeditwindow.cpp:568
 msgid "Find Previous"
 msgstr "Найти предыдущее"
 
-#: ../moo/mooedit/mooeditwindow.c:562
+#: ../moo/mooedit/mooeditwindow.cpp:569
 msgid "Find _Previous"
-msgstr "Найти предыдущее"
+msgstr "Найти _предыдущее"
 
-#: ../moo/mooedit/mooeditwindow.c:563
+#: ../moo/mooedit/mooeditwindow.cpp:570
 msgid "Find previous"
 msgstr "Найти предыдущее"
 
-#: ../moo/mooedit/mooeditwindow.c:583
+#: ../moo/mooedit/mooeditwindow.cpp:590
 msgid "Find Current Word"
 msgstr "Найти текущее слово"
 
-#: ../moo/mooedit/mooeditwindow.c:584
+#: ../moo/mooedit/mooeditwindow.cpp:591
 msgid "Find Current _Word"
 msgstr "Найти текущее _слово"
 
-#: ../moo/mooedit/mooeditwindow.c:592
+#: ../moo/mooedit/mooeditwindow.cpp:599
 msgid "Find Current Word Backwards"
 msgstr "Найти текущее слово (назад)"
 
-#: ../moo/mooedit/mooeditwindow.c:593
+#: ../moo/mooedit/mooeditwindow.cpp:600
 msgid "Find Current Word _Backwards"
 msgstr "Найти текущее слово (_назад)"
 
-#: ../moo/mooedit/mooeditwindow.c:602
+#: ../moo/mooedit/mooeditwindow.cpp:609
 msgid "_Go to Line..."
 msgstr "Перейти к _строке..."
 
-#: ../moo/mooedit/mooeditwindow.c:603
+#: ../moo/mooedit/mooeditwindow.cpp:610
 msgid "Go to line..."
 msgstr "Перейти к строке..."
 
-#: ../moo/mooedit/mooeditwindow.c:612
+#: ../moo/mooedit/mooeditwindow.cpp:619
 msgid "Toggle Text Wrapping"
-msgstr "Включить перенос текста"
+msgstr "Включить/отключить перенос текста"
 
-#: ../moo/mooedit/mooeditwindow.c:613
+#: ../moo/mooedit/mooeditwindow.cpp:620
 msgid "_Wrap Text"
 msgstr "_Перенос текста"
 
-#: ../moo/mooedit/mooeditwindow.c:620
+#: ../moo/mooedit/mooeditwindow.cpp:627
 msgid "Toggle Line Numbers Display"
-msgstr "Отображать номера строк"
+msgstr "Включить/отключить отображение номеров строк"
 
-#: ../moo/mooedit/mooeditwindow.c:621
+#: ../moo/mooedit/mooeditwindow.cpp:628
 msgid "Show _Line Numbers"
 msgstr "Отображать _номера строк"
 
-#: ../moo/mooedit/mooeditwindow.c:627
+#: ../moo/mooedit/mooeditwindow.cpp:634
 msgid "Focus Document"
 msgstr "Перейти к документу"
 
-#: ../moo/mooedit/mooeditwindow.c:628
+#: ../moo/mooedit/mooeditwindow.cpp:635
 msgid "_Focus Document"
 msgstr "_Перейти к документу"
 
-#: ../moo/mooedit/mooeditwindow.c:635 ../moo/mooedit/mooeditwindow.c:636
+#: ../moo/mooedit/mooeditwindow.cpp:642 ../moo/mooedit/mooeditwindow.cpp:643
 msgid "Focus Other Split Notebook"
-msgstr ""
+msgstr "Перейти в другой разделённый блокнот"
 
-#: ../moo/mooedit/mooeditwindow.c:643
+#: ../moo/mooedit/mooeditwindow.cpp:650
 msgid "Move to Split Notebook"
-msgstr ""
+msgstr "Переместить в разделённый блокнот"
 
-#: ../moo/mooedit/mooeditwindow.c:644
+#: ../moo/mooedit/mooeditwindow.cpp:651
 msgid "_Move to Split Notebook"
-msgstr ""
+msgstr "_Переместить в разделённый блокнот"
 
-#: ../moo/mooedit/mooeditwindow.c:652 ../moo/mooedit/mooeditwindow.c:653
+#: ../moo/mooedit/mooeditwindow.cpp:659 ../moo/mooedit/mooeditwindow.cpp:660
 msgid "Split View Horizontally"
-msgstr ""
+msgstr "Разделить представление по горизонтали"
 
-#: ../moo/mooedit/mooeditwindow.c:660 ../moo/mooedit/mooeditwindow.c:661
+#: ../moo/mooedit/mooeditwindow.cpp:667 ../moo/mooedit/mooeditwindow.cpp:668
 msgid "Split View Vertically"
-msgstr ""
+msgstr "Разделить представление по вертикали"
 
-#: ../moo/mooedit/mooeditwindow.c:667 ../moo/mooedit/mooeditwindow.c:668
+#: ../moo/mooedit/mooeditwindow.cpp:674 ../moo/mooedit/mooeditwindow.cpp:675
 msgid "Focus Next Split View"
-msgstr ""
+msgstr "Перейти к следующему разделённому представлению"
 
-#: ../moo/mooedit/mooeditwindow.c:712
+#: ../moo/mooedit/mooeditwindow.cpp:719
 msgid "Toggle Bookmark"
-msgstr "Поставить закладку"
+msgstr "Поставить/снять закладку"
 
-#: ../moo/mooedit/mooeditwindow.c:713
+#: ../moo/mooedit/mooeditwindow.cpp:720
 msgid "Toggle _Bookmark"
-msgstr "Поставить закладку"
+msgstr "Поставить/снять _закладку"
 
-#: ../moo/mooedit/mooeditwindow.c:721
+#: ../moo/mooedit/mooeditwindow.cpp:728
 msgid "Next Bookmark"
 msgstr "Следующая закладка"
 
-#: ../moo/mooedit/mooeditwindow.c:722
+#: ../moo/mooedit/mooeditwindow.cpp:729
 msgid "_Next Bookmark"
-msgstr "Следующая закладка"
+msgstr "_Следующая закладка"
 
-#: ../moo/mooedit/mooeditwindow.c:729
+#: ../moo/mooedit/mooeditwindow.cpp:736
 msgid "Previous Bookmark"
 msgstr "Предыдущая закладка"
 
-#: ../moo/mooedit/mooeditwindow.c:730
+#: ../moo/mooedit/mooeditwindow.cpp:737
 msgid "_Previous Bookmark"
-msgstr "Предыдущая закладка"
+msgstr "_Предыдущая закладка"
 
 #. action
-#: ../moo/mooedit/mooeditwindow.c:738 ../moo/mooedit/mooeditwindow.c:739
-#: ../moo/mooedit/mooeditwindow.c:740
+#: ../moo/mooedit/mooeditwindow.cpp:745 ../moo/mooedit/mooeditwindow.cpp:746
+#: ../moo/mooedit/mooeditwindow.cpp:747
 msgid "Comment"
 msgstr "Закомментировать"
 
 #. action
-#: ../moo/mooedit/mooeditwindow.c:748 ../moo/mooedit/mooeditwindow.c:749
-#: ../moo/mooedit/mooeditwindow.c:750
+#: ../moo/mooedit/mooeditwindow.cpp:755 ../moo/mooedit/mooeditwindow.cpp:756
+#: ../moo/mooedit/mooeditwindow.cpp:757
 msgid "Uncomment"
 msgstr "Раскомментировать"
 
 #. Insensitive menu item which appears in Window menu with no documents open
-#: ../moo/mooedit/mooeditwindow.c:778
+#: ../moo/mooedit/mooeditwindow.cpp:785
 msgid "No Documents"
 msgstr "Нет документов"
 
-#: ../moo/mooedit/mooeditwindow.c:786
+#: ../moo/mooedit/mooeditwindow.cpp:793
 msgid "Page Setup"
 msgstr "Параметры страницы"
 
-#: ../moo/mooedit/mooeditwindow.c:787
+#: ../moo/mooedit/mooeditwindow.cpp:794
 msgid "Page S_etup..."
-msgstr "Параметры страницы..."
+msgstr "П_араметры страницы..."
 
-#: ../moo/mooedit/mooeditwindow.c:788
+#: ../moo/mooedit/mooeditwindow.cpp:795
 msgid "Page Setup..."
 msgstr "Параметры страницы..."
 
-#: ../moo/mooedit/mooeditwindow.c:804 ../moo/mooedit/mooeditwindow.c:805
+#: ../moo/mooedit/mooeditwindow.cpp:811 ../moo/mooedit/mooeditwindow.cpp:812
 msgid "Print..."
 msgstr "Печать..."
 
-#: ../moo/mooedit/mooeditwindow.c:813 ../moo/mooedit/mooeditwindow.c:2032
+#: ../moo/mooedit/mooeditwindow.cpp:820 ../moo/mooedit/mooeditwindow.cpp:2038
 msgid "Export as PDF"
 msgstr "Экспорт в PDF"
 
-#: ../moo/mooedit/mooeditwindow.c:814
+#: ../moo/mooedit/mooeditwindow.cpp:821
 msgid "E_xport as PDF..."
-msgstr "Экспорт в PDF..."
+msgstr "Э_кспорт в PDF..."
 
-#: ../moo/mooedit/mooeditwindow.c:815
+#: ../moo/mooedit/mooeditwindow.cpp:822
 msgid "Export as PDF..."
 msgstr "Экспорт в PDF..."
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [new file]"
-#: ../moo/mooedit/mooeditwindow.c:1087
+#: ../moo/mooedit/mooeditwindow.cpp:1093
 #, c-format
 msgid "%s [new file]"
 msgstr "%s [новый файл]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [modified on disk]"
-#: ../moo/mooedit/mooeditwindow.c:1090
+#: ../moo/mooedit/mooeditwindow.cpp:1096
 #, c-format
 msgid "%s [modified on disk]"
 msgstr "%s [есть изменения на диске]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [deleted]"
-#: ../moo/mooedit/mooeditwindow.c:1093
+#: ../moo/mooedit/mooeditwindow.cpp:1099
 #, c-format
 msgid "%s [deleted]"
 msgstr "%s [удалён]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [new file] [modified]"
-#: ../moo/mooedit/mooeditwindow.c:1101
+#: ../moo/mooedit/mooeditwindow.cpp:1107
 #, c-format
 msgid "%s [new file] [modified]"
 msgstr "%s [новый файл] [изменён]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [modified on disk] [modified]"
-#: ../moo/mooedit/mooeditwindow.c:1104
+#: ../moo/mooedit/mooeditwindow.cpp:1110
 #, c-format
 msgid "%s [modified on disk] [modified]"
 msgstr "%s [есть изменения на диске] [изменён]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [deleted] [modified]"
-#: ../moo/mooedit/mooeditwindow.c:1107
+#: ../moo/mooedit/mooeditwindow.cpp:1113
 #, c-format
 msgid "%s [deleted] [modified]"
 msgstr "%s [удалён] [изменён]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [modified]"
-#: ../moo/mooedit/mooeditwindow.c:1110
+#: ../moo/mooedit/mooeditwindow.cpp:1116
 #, c-format
 msgid "%s [modified]"
 msgstr "%s [изменён]"
 
-#: ../moo/mooedit/mooeditwindow.c:1357
+#: ../moo/mooedit/mooeditwindow.cpp:1356
 msgid "Reopen Using Encoding"
 msgstr "Открыть в кодировке"
 
-#: ../moo/mooedit/mooeditwindow.c:1407
+#: ../moo/mooedit/mooeditwindow.cpp:1406
 msgid "_Encoding"
-msgstr "Кодировка"
+msgstr "_Кодировка"
 
-#: ../moo/mooedit/mooeditwindow.c:1461
+#: ../moo/mooedit/mooeditwindow.cpp:1460
 msgid "Line En_dings"
-msgstr "Окончания строк"
+msgstr "Окон_чания строк"
 
-#: ../moo/mooedit/mooeditwindow.c:1468
+#: ../moo/mooedit/mooeditwindow.cpp:1467
 msgid "_Windows (CR+LF)"
-msgstr ""
+msgstr "_Windows (CR+LF)"
 
-#: ../moo/mooedit/mooeditwindow.c:1477
+#: ../moo/mooedit/mooeditwindow.cpp:1476
 msgid "_Unix (LF)"
-msgstr ""
+msgstr "_Unix (LF)"
 
-#: ../moo/mooedit/mooeditwindow.c:1481
+#: ../moo/mooedit/mooeditwindow.cpp:1480
 msgid "_Mac (CR)"
-msgstr ""
+msgstr "_Mac (CR)"
 
 #. Item in document tab context menu
-#: ../moo/mooedit/mooeditwindow.c:2239
+#: ../moo/mooedit/mooeditwindow.cpp:2294
 msgctxt "tab-context-menu"
 msgid "Close"
 msgstr "Закрыть"
 
 #. Item in document tab context menu
-#: ../moo/mooedit/mooeditwindow.c:2251
+#: ../moo/mooedit/mooeditwindow.cpp:2302
 msgctxt "tab-context-menu"
 msgid "Close All Others"
-msgstr "Закрыть Все Остальные"
+msgstr "Закрыть все остальные"
 
 #. Item in document tab context menu
-#: ../moo/mooedit/mooeditwindow.c:2269
+#: ../moo/mooedit/mooeditwindow.cpp:2311
+msgctxt "tab-context-menu"
+msgid "Copy Full Path"
+msgstr "Копировать полный путь"
+
+#. Item in document tab context menu
+#: ../moo/mooedit/mooeditwindow.cpp:2317
+msgctxt "tab-context-menu"
+msgid "Open Containing Folder"
+msgstr "Открыть содержащую объект папку"
+
+#. Item in document tab context menu
+#: ../moo/mooedit/mooeditwindow.cpp:2327
 msgctxt "tab-context-menu"
 msgid "Detach"
 msgstr "Отделить"
 
 #. Item in document tab context menu
-#: ../moo/mooedit/mooeditwindow.c:2279
+#: ../moo/mooedit/mooeditwindow.cpp:2333
 msgctxt "tab-context-menu"
 msgid "Move to Split Notebook"
-msgstr ""
+msgstr "Переместить в разделённый блокнот"
 
-#: ../moo/mooedit/mooeditwindow.c:3846
+#: ../moo/mooedit/mooeditwindow.cpp:3891
 #, c-format
 msgid "Line: %s Col: %s"
 msgstr "Строка: %s Столбец: %s"
 
-#: ../moo/mooedit/mooeditwindow.c:3847
+#: ../moo/mooedit/mooeditwindow.cpp:3892
 #, c-format
 msgid "Chars: %s"
 msgstr "Символов: %s"
 
 #. Label in the editor window statusbar - Overwrite or Insert mode
-#: ../moo/mooedit/mooeditwindow.c:3890
+#: ../moo/mooedit/mooeditwindow.cpp:3935
 msgid "OVR"
 msgstr "ЗАМЕНА"
 
-#: ../moo/mooedit/mooeditwindow.c:3890
+#: ../moo/mooedit/mooeditwindow.cpp:3935
 msgid "INS"
 msgstr "ВСТАВКА"
 
-#: ../moo/mooedit/mooeditwindow.c:3987
+#: ../moo/mooedit/mooeditwindow.cpp:4032
 msgid "_Language"
 msgstr "_Язык"
 
-#: ../moo/mooedit/mooplugin.c:1425
+#: ../moo/mooedit/mooplugin.c:1427
 msgctxt "Prefs page label"
 msgid "Plugins"
 msgstr "Модули"
 
-#: ../moo/mooedit/mooplugin.c:1450
+#: ../moo/mooedit/mooplugin.c:1454
 msgctxt "plugin-prefs-column"
 msgid "Enabled"
-msgstr "Включен"
+msgstr "Включён"
 
-#: ../moo/mooedit/mooplugin.c:1456
+#: ../moo/mooedit/mooplugin.c:1460
 msgctxt "plugin-prefs-column"
 msgid "Plugin"
 msgstr "Модуль"
@@ -1204,55 +1240,55 @@ msgid ""
 "console message|ignoring file '%s', module version '%s' is not compatible "
 "with current version %u.%u"
 msgstr ""
-"файл '%s' был пропущен, версия модуля '%s' не совместима с текищей версией "
+"файл «%s» был пропущен, версия модуля «%s» несовместима с текущей версией "
 "%u.%u"
 
 #. Translators: remove the part before and including |
 #: ../moo/mooedit/mooplugin-loader.c:237
 #, c-format
 msgid "console message|invalid module version '%s' in file '%s'"
-msgstr "неверная версия модуля '%s' в файле '%s'"
+msgstr "неверная версия модуля «%s» в файле «%s»"
 
-#: ../moo/mooedit/mootextfind.c:165
+#: ../moo/mooedit/mootextfind.c:167
 msgctxt "Dialog title"
 msgid "Replace"
 msgstr "Заменa"
 
-#: ../moo/mooedit/mootextfind.c:171
+#: ../moo/mooedit/mootextfind.c:173
 msgctxt "Dialog title"
 msgid "Find"
 msgstr "Поиск"
 
-#: ../moo/mooedit/mootextfind.c:475
+#: ../moo/mooedit/mootextfind.c:479
 msgid "No search term entered"
 msgstr "Не указан текст для поиска"
 
-#: ../moo/mooedit/mootextfind.c:778 ../moo/mooedit/mootextfind.c:884
-#: ../moo/mooedit/mootextfind.c:1039
+#: ../moo/mooedit/mootextfind.c:782 ../moo/mooedit/mootextfind.c:888
+#: ../moo/mooedit/mootextfind.c:1043
 msgid "Search hit top, continuing at bottom"
-msgstr "Достигнуто начало документа, продолжаем с конца"
+msgstr "Достигнуто начало документа, продолжение поиска с конца"
 
-#: ../moo/mooedit/mootextfind.c:780 ../moo/mooedit/mootextfind.c:882
-#: ../moo/mooedit/mootextfind.c:962
+#: ../moo/mooedit/mootextfind.c:784 ../moo/mooedit/mootextfind.c:886
+#: ../moo/mooedit/mootextfind.c:966
 msgid "Search hit bottom, continuing at top"
-msgstr "Достигнут конец документа, продолжаем с начала"
+msgstr "Достигнут конец документа, продолжение поиска с начала"
 
-#: ../moo/mooedit/mootextfind.c:789 ../moo/mooedit/mootextfind.c:894
-#: ../moo/mooedit/mootextfind.c:970 ../moo/mooedit/mootextfind.c:1047
+#: ../moo/mooedit/mootextfind.c:793 ../moo/mooedit/mootextfind.c:898
+#: ../moo/mooedit/mootextfind.c:974 ../moo/mooedit/mootextfind.c:1051
 #, c-format
 msgid "Pattern not found: %s"
 msgstr "Шаблон не найден: %s"
 
-#: ../moo/mooedit/mootextfind.c:876
+#: ../moo/mooedit/mootextfind.c:880
 #, c-format
 msgid "Found single instance of pattern '%s'"
-msgstr "Шаблон '%s' найден один раз"
+msgstr "Шаблон «%s» найден один раз"
 
-#: ../moo/mooedit/mootextfind.c:1082
+#: ../moo/mooedit/mootextfind.c:1086
 msgid "No replacement made"
 msgstr "Замена не произведена"
 
-#: ../moo/mooedit/mootextfind.c:1088
+#: ../moo/mooedit/mootextfind.c:1092
 #, c-format
 msgid "%u replacement made"
 msgid_plural "%u replacements made"
@@ -1309,31 +1345,33 @@ msgstr "Общее"
 
 #: ../moo/moofileview/glade/moofileview-drop.glade.h:1
 #: ../moo/plugins/glade/moofileselector.glade.h:1
-#: ../moo/plugins/moofileselector.c:907 ../moo/plugins/moofileselector.c:932
+#: ../moo/plugins/moofileselector.cpp:907
+#: ../moo/plugins/moofileselector.cpp:932
 msgid "Save As"
 msgstr "Сохранить как"
 
 #. Column label in file selector bookmark editor
-#: ../moo/moofileview/moobookmarkmgr.c:961
+#: ../moo/moofileview/moobookmarkmgr.c:960
 msgctxt "fileview-bookmark-editor"
 msgid "Icon"
 msgstr "Значок"
 
 #. Column label in file selector bookmark editor
-#: ../moo/moofileview/moobookmarkmgr.c:977
+#: ../moo/moofileview/moobookmarkmgr.c:976
 msgctxt "fileview-bookmark-editor"
 msgid "Label"
 msgstr "Название"
 
 #. Column label in file selector bookmark editor
-#: ../moo/moofileview/moobookmarkmgr.c:995
+#: ../moo/moofileview/moobookmarkmgr.c:994
 msgctxt "fileview-bookmark-editor"
 msgid "Path"
 msgstr "Путь"
 
-#: ../moo/moofileview/moofileview.c:1115 ../moo/plugins/moofileselector.c:647
-#: ../moo/plugins/moofileselector.c:648 ../moo/plugins/moofileselector.c:1290
-#: ../moo/plugins/moofileselector-prefs.c:72
+#: ../moo/moofileview/moofileview.c:1115 ../moo/plugins/moofileselector.cpp:647
+#: ../moo/plugins/moofileselector.cpp:648
+#: ../moo/plugins/moofileselector.cpp:1291
+#: ../moo/plugins/moofileselector-prefs.cpp:75
 msgid "File Selector"
 msgstr "Выбор файлов"
 
@@ -1341,11 +1379,11 @@ msgstr "Выбор файлов"
 msgid "Go to parent folder"
 msgstr "Вверх"
 
-#: ../moo/moofileview/moofileview.c:1173 ../moo/moofileview/moofileview.c:3350
+#: ../moo/moofileview/moofileview.c:1173 ../moo/moofileview/moofileview.c:3353
 msgid "Delete..."
 msgstr "Удалить..."
 
-#: ../moo/moofileview/moofileview.c:1174 ../moo/moofileview/moofileview.c:3351
+#: ../moo/moofileview/moofileview.c:1174 ../moo/moofileview/moofileview.c:3354
 msgid "Delete selected files"
 msgstr "Удалить выделенные файлы"
 
@@ -1359,7 +1397,7 @@ msgstr "Показывать папку верхнего уровня"
 
 #: ../moo/moofileview/moofileview.c:1200 ../moo/moofileview/moofileview.c:1201
 msgid "Case Sensitive Sort"
-msgstr "Регистрозависимая сортировка"
+msgstr "Сортировка с учётом регистра"
 
 #: ../moo/moofileview/moofileview.c:1207 ../moo/moofileview/moofileview.c:1208
 msgid "Show Folders First"
@@ -1374,53 +1412,53 @@ msgstr "Закладки"
 msgid "Add Bookmark"
 msgstr "Добавить закладку"
 
-#: ../moo/moofileview/moofileview.c:1585
+#: ../moo/moofileview/moofileview.c:1588
 msgid "Filter"
 msgstr "Фильтр"
 
-#: ../moo/moofileview/moofileview.c:3194
+#: ../moo/moofileview/moofileview.c:3197
 #, c-format
 msgid "Move folder %s to Trash?"
 msgstr "Удалить папку %s в корзину?"
 
-#: ../moo/moofileview/moofileview.c:3197
+#: ../moo/moofileview/moofileview.c:3200
 #, c-format
 msgid "Move file %s to Trash?"
 msgstr "Удалить файл %s в корзину?"
 
-#: ../moo/moofileview/moofileview.c:3202
+#: ../moo/moofileview/moofileview.c:3205
 msgid "Move selected files to Trash?"
 msgstr "Удалить выделенные файлы в корзину?"
 
-#: ../moo/moofileview/moofileview.c:3210
+#: ../moo/moofileview/moofileview.c:3213
 #, c-format
 msgid "Delete folder %s and all its content?"
 msgstr "Удалить папку %s со всем её содержимым?"
 
-#: ../moo/moofileview/moofileview.c:3213
+#: ../moo/moofileview/moofileview.c:3216
 #, c-format
 msgid "Delete file %s?"
 msgstr "Удалить файл %s?"
 
-#: ../moo/moofileview/moofileview.c:3218
+#: ../moo/moofileview/moofileview.c:3221
 msgid "Delete selected files?"
 msgstr "Удалить выделенные файлы?"
 
-#: ../moo/moofileview/moofileview.c:3280
+#: ../moo/moofileview/moofileview.c:3283
 #, c-format
 msgid "Could not delete folder %s"
 msgstr "Не удалось удалить папку %s"
 
-#: ../moo/moofileview/moofileview.c:3283
+#: ../moo/moofileview/moofileview.c:3286
 #, c-format
 msgid "Could not delete file %s"
 msgstr "Не удалось удалить файл %s"
 
-#: ../moo/moofileview/moofileview.c:3344
+#: ../moo/moofileview/moofileview.c:3347
 msgid "Move to Trash..."
 msgstr "Удалить в корзину..."
 
-#: ../moo/moofileview/moofileview.c:3345
+#: ../moo/moofileview/moofileview.c:3348
 msgid "Move selected files to Trash"
 msgstr "Удалить выделенные файлы в корзину"
 
@@ -1443,76 +1481,87 @@ msgstr "Lua"
 
 #: ../moo/moolua/mooluaplugin.cpp:112
 msgid "Lua support"
-msgstr "Скрипт Lua"
+msgstr "Поддержка Lua"
 
 #: ../moo/moopython/plugins/medit/runpython.py:43
 msgid "Python Output"
-msgstr "Вывод Питона"
+msgstr "Вывод Python"
 
 #: ../moo/moopython/plugins/python.py:48 ../moo/moopython/plugins/python.py:49
 msgid "Python Console"
-msgstr "Консоль Питона"
+msgstr "Консоль Python"
 
 #: ../moo/moopython/plugins/python.py:56 ../moo/moopython/plugins/python.py:57
 msgid "Run File"
 msgstr "Исполнить файл"
 
-#: ../moo/moopython/plugins/terminal.py:177
+#: ../moo/moopython/plugins/terminal.py:122
+msgid "“cd” to current file directory"
+msgstr "«cd» в папке с текущим файлом"
+
+#: ../moo/moopython/plugins/terminal.py:128
+msgid "“pushd” to current file directory"
+msgstr "«pushd» в папке с текущим файлом"
+
+#: ../moo/moopython/plugins/terminal.py:223
 msgid "Terminal"
 msgstr "Терминал"
 
-#: ../moo/moopython/plugins/terminal.py:225
+#: ../moo/moopython/plugins/terminal.py:273
 msgid "Default"
 msgstr "По умолчанию"
 
-#: ../moo/moopython/plugins/terminal.py:226
+#: ../moo/moopython/plugins/terminal.py:274
 msgid "Black on White"
 msgstr "Чёрное на белом"
 
-#: ../moo/moopython/plugins/terminal.py:229
+#: ../moo/moopython/plugins/terminal.py:277
 msgid "Black on Light Yellow"
 msgstr "Чёрное на жёлтом"
 
-#: ../moo/moopython/plugins/terminal.py:232
+#: ../moo/moopython/plugins/terminal.py:280
 msgid "Marble"
 msgstr "Мрамор"
 
-#: ../moo/moopython/plugins/terminal.py:235
+#: ../moo/moopython/plugins/terminal.py:283
 msgid "Green on Black"
 msgstr "Зелёное на чёрном"
 
-#: ../moo/moopython/plugins/terminal.py:238
+#: ../moo/moopython/plugins/terminal.py:286
 msgid "Paper, Light"
 msgstr "Бумага, светлая"
 
-#: ../moo/moopython/plugins/terminal.py:241
+#: ../moo/moopython/plugins/terminal.py:289
 msgid "Paper"
 msgstr "Бумага"
 
-#: ../moo/moopython/plugins/terminal.py:244
+#: ../moo/moopython/plugins/terminal.py:292
 msgid "Linux Colors"
-msgstr "Цвета Линукс"
+msgstr "Цвета Linux"
 
-#: ../moo/moopython/plugins/terminal.py:247
+#: ../moo/moopython/plugins/terminal.py:295
 msgid "VIM Colors"
 msgstr "Цвета VIM"
 
-#: ../moo/moopython/plugins/terminal.py:250
+#: ../moo/moopython/plugins/terminal.py:298
 msgid "White on Black"
 msgstr "Белое на чёрном"
 
 #. Translators: remove the part before and including |
 #: ../moo/mooutils/glade/mooaccelprefs.glade.h:2
+msgctxt "yes"
 msgid "Shortcut|None"
 msgstr "Нет"
 
 #. Translators: remove the part before and including |
 #: ../moo/mooutils/glade/mooaccelprefs.glade.h:4
+msgctxt "yes"
 msgid "Shortcut|Default"
 msgstr "По умолчанию"
 
 #. Translators: remove the part before and including |
 #: ../moo/mooutils/glade/mooaccelprefs.glade.h:6
+msgctxt "yes"
 msgid "Shortcut|Custom"
 msgstr "Особая"
 
@@ -1525,31 +1574,31 @@ msgid "Shortcut for selected action"
 msgstr "Комбинация клавиш для выбранного действия"
 
 #. Column label in Configure Shortcuts dialog
-#: ../moo/mooutils/mooaccelprefs.c:261
+#: ../moo/mooutils/mooaccelprefs.c:263
 msgctxt "accel-editor-column"
 msgid "Action"
 msgstr "Действие"
 
 #. Column label in Configure Shortcuts dialog
-#: ../moo/mooutils/mooaccelprefs.c:270
+#: ../moo/mooutils/mooaccelprefs.c:272
 msgctxt "accel-editor-column"
 msgid "Shortcut"
 msgstr "Клавиши"
 
 #. Column label in Configure Shortcuts dialog
-#: ../moo/mooutils/mooaccelprefs.c:279
+#: ../moo/mooutils/mooaccelprefs.c:281
 msgctxt "accel-editor-column"
 msgid "Global"
-msgstr ""
+msgstr "Глобальные"
 
-#: ../moo/mooutils/mooaccelprefs.c:804
+#: ../moo/mooutils/mooaccelprefs.c:806
 msgid "Configure Shortcuts"
-msgstr "Настройка горячих клавиш"
+msgstr "Настройка комбинаций клавиш"
 
 #: ../moo/mooutils/moodialogs.c:419
 #, c-format
 msgid "Save changes to document \"%s\" before closing?"
-msgstr "Сохранить изменения в документе \"%s\" перед закрытием?"
+msgstr "Сохранить изменения в документе «%s» перед закрытием?"
 
 #: ../moo/mooutils/moodialogs.c:420
 msgid "Save changes to the document before closing?"
@@ -1598,11 +1647,11 @@ msgstr "Восточная Азия"
 
 #: ../moo/mooutils/mooencodings-data.h:30
 msgid "SE & SW Asian"
-msgstr "Юговосточная и югозападная Азия"
+msgstr "Юго-Восточная и Юго-Западная Азия"
 
 #: ../moo/mooutils/mooencodings-data.h:31
 msgid "Middle Eastern"
-msgstr "Средний восток"
+msgstr "Ближний Восток"
 
 #: ../moo/mooutils/mooencodings-data.h:32
 msgid "Unicode"
@@ -1614,16 +1663,16 @@ msgstr "Ascii"
 
 #: ../moo/mooutils/mooencodings-data.h:55
 #: ../moo/mooutils/mooencodings-data.h:68
-#: ../moo/mooutils/mooencodings-data.h:113
-#: ../moo/mooutils/mooencodings-data.h:138
-#: ../moo/mooutils/mooencodings-data.h:151
+#: ../moo/mooutils/mooencodings-data.h:121
+#: ../moo/mooutils/mooencodings-data.h:146
+#: ../moo/mooutils/mooencodings-data.h:159
 msgid "Western"
 msgstr "Западная"
 
 #: ../moo/mooutils/mooencodings-data.h:56
-#: ../moo/mooutils/mooencodings-data.h:114
-#: ../moo/mooutils/mooencodings-data.h:128
-#: ../moo/mooutils/mooencodings-data.h:149
+#: ../moo/mooutils/mooencodings-data.h:122
+#: ../moo/mooutils/mooencodings-data.h:136
+#: ../moo/mooutils/mooencodings-data.h:157
 msgid "Central European"
 msgstr "Центральноевропейская"
 
@@ -1633,47 +1682,47 @@ msgstr "Южноевропейская"
 
 #: ../moo/mooutils/mooencodings-data.h:58
 #: ../moo/mooutils/mooencodings-data.h:66
-#: ../moo/mooutils/mooencodings-data.h:156
+#: ../moo/mooutils/mooencodings-data.h:164
 msgid "Baltic"
 msgstr "Балтийская"
 
 #: ../moo/mooutils/mooencodings-data.h:59
-#: ../moo/mooutils/mooencodings-data.h:115
-#: ../moo/mooutils/mooencodings-data.h:122
-#: ../moo/mooutils/mooencodings-data.h:124
+#: ../moo/mooutils/mooencodings-data.h:123
 #: ../moo/mooutils/mooencodings-data.h:130
-#: ../moo/mooutils/mooencodings-data.h:150
+#: ../moo/mooutils/mooencodings-data.h:132
+#: ../moo/mooutils/mooencodings-data.h:138
+#: ../moo/mooutils/mooencodings-data.h:158
 msgid "Cyrillic"
 msgstr "Кириллица"
 
 #: ../moo/mooutils/mooencodings-data.h:60
-#: ../moo/mooutils/mooencodings-data.h:118
-#: ../moo/mooutils/mooencodings-data.h:127
-#: ../moo/mooutils/mooencodings-data.h:155
+#: ../moo/mooutils/mooencodings-data.h:126
+#: ../moo/mooutils/mooencodings-data.h:135
+#: ../moo/mooutils/mooencodings-data.h:163
 msgid "Arabic"
 msgstr "Арабская"
 
 #: ../moo/mooutils/mooencodings-data.h:61
-#: ../moo/mooutils/mooencodings-data.h:133
-#: ../moo/mooutils/mooencodings-data.h:152
+#: ../moo/mooutils/mooencodings-data.h:141
+#: ../moo/mooutils/mooencodings-data.h:160
 msgid "Greek"
 msgstr "Греческая"
 
 #: ../moo/mooutils/mooencodings-data.h:62
 msgid "Hebrew Visual"
-msgstr "Еврейская видимая"
+msgstr "Еврейская (визуальная)"
 
 #: ../moo/mooutils/mooencodings-data.h:63
-#: ../moo/mooutils/mooencodings-data.h:117
-#: ../moo/mooutils/mooencodings-data.h:136
-#: ../moo/mooutils/mooencodings-data.h:154
+#: ../moo/mooutils/mooencodings-data.h:125
+#: ../moo/mooutils/mooencodings-data.h:144
+#: ../moo/mooutils/mooencodings-data.h:162
 msgid "Hebrew"
 msgstr "Еврейская"
 
 #: ../moo/mooutils/mooencodings-data.h:64
-#: ../moo/mooutils/mooencodings-data.h:116
-#: ../moo/mooutils/mooencodings-data.h:140
-#: ../moo/mooutils/mooencodings-data.h:153
+#: ../moo/mooutils/mooencodings-data.h:124
+#: ../moo/mooutils/mooencodings-data.h:148
+#: ../moo/mooutils/mooencodings-data.h:161
 msgid "Turkish"
 msgstr "Турецкая"
 
@@ -1686,181 +1735,193 @@ msgid "Celtic"
 msgstr "Кельтская"
 
 #: ../moo/mooutils/mooencodings-data.h:69
-#: ../moo/mooutils/mooencodings-data.h:139
+#: ../moo/mooutils/mooencodings-data.h:147
 msgid "Romanian"
-msgstr "Романская"
+msgstr "Румынская"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: ../moo/mooutils/mooencodings-data.h:72
 msgid "encoding label|UTF-7"
-msgstr ""
+msgstr "UTF-7"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: ../moo/mooutils/mooencodings-data.h:74
 msgid "encoding label|UTF-32BE-BOM (big-endian, with BOM)"
-msgstr ""
+msgstr "UTF-32BE-BOM (big-endian, с меткой порядка байтов)"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: ../moo/mooutils/mooencodings-data.h:76
 msgid "encoding label|UTF-32LE-BOM (little-endian, with BOM)"
-msgstr ""
+msgstr "UTF-32LE-BOM (little-endian, с меткой порядка байтов)"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: ../moo/mooutils/mooencodings-data.h:78
 msgid "encoding label|UTF-32BE (big-endian, no BOM)"
-msgstr ""
+msgstr "UTF-32BE (big-endian, без метки порядка байтов)"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: ../moo/mooutils/mooencodings-data.h:80
 msgid "encoding label|UTF-32LE (little-endian, no BOM)"
-msgstr ""
+msgstr "UTF-32LE (little-endian, без метки порядка байтов)"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: ../moo/mooutils/mooencodings-data.h:82
 msgid "encoding label|UTF-16BE-BOM (big-endian, with BOM)"
-msgstr ""
+msgstr "UTF-16BE-BOM (big-endian, с меткой порядка байтов)"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: ../moo/mooutils/mooencodings-data.h:84
 msgid "encoding label|UTF-16LE-BOM (little-endian, with BOM)"
-msgstr ""
+msgstr "UTF-16LE-BOM (little-endian,  с меткой порядка байтов)"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: ../moo/mooutils/mooencodings-data.h:86
 msgid "encoding label|UTF-16BE (big-endian, no BOM)"
-msgstr ""
+msgstr "UTF-16BE (big-endian, без метки порядка байтов)"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: ../moo/mooutils/mooencodings-data.h:88
 msgid "encoding label|UTF-16LE (little-endian, no BOM)"
-msgstr ""
+msgstr "UTF-16LE (little-endian, без метки порядка байтов)"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: ../moo/mooutils/mooencodings-data.h:90
 msgid "encoding label|UTF-8-BOM"
-msgstr ""
+msgstr "UTF-8-BOM"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: ../moo/mooutils/mooencodings-data.h:92
-msgid "encoding label|UTF-32"
-msgstr ""
+#: ../moo/mooutils/mooencodings-data.h:96
+msgid "encoding label|UTF-32-BOM"
+msgstr "UTF-32-BOM"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: ../moo/mooutils/mooencodings-data.h:94
-msgid "encoding label|UTF-16"
-msgstr ""
+#: ../moo/mooutils/mooencodings-data.h:98
+msgid "encoding label|UTF-16-BOM"
+msgstr "UTF-16-BOM"
 
 #. Label of an encoding menu item, remove the part before and including |
-#: ../moo/mooutils/mooencodings-data.h:96
-msgid "encoding label|UTF-8"
-msgstr ""
+#: ../moo/mooutils/mooencodings-data.h:100
+msgid "encoding label|UTF-32"
+msgstr "UTF-32"
 
-#: ../moo/mooutils/mooencodings-data.h:98
+#. Label of an encoding menu item, remove the part before and including |
+#: ../moo/mooutils/mooencodings-data.h:102
+msgid "encoding label|UTF-16"
+msgstr "UTF-16"
+
+#. Label of an encoding menu item, remove the part before and including |
+#: ../moo/mooutils/mooencodings-data.h:104
+msgid "encoding label|UTF-8"
+msgstr "UTF-8"
+
+#: ../moo/mooutils/mooencodings-data.h:106
 msgid "Armenian"
 msgstr "Армянская"
 
-#: ../moo/mooutils/mooencodings-data.h:99
-#: ../moo/mooutils/mooencodings-data.h:100
-#: ../moo/mooutils/mooencodings-data.h:105
+#: ../moo/mooutils/mooencodings-data.h:107
+#: ../moo/mooutils/mooencodings-data.h:108
+#: ../moo/mooutils/mooencodings-data.h:113
 msgid "Chinese Traditional"
 msgstr "Китайская традиционная"
 
-#: ../moo/mooutils/mooencodings-data.h:101
+#: ../moo/mooutils/mooencodings-data.h:109
 msgid "Cyrillic/Russian"
 msgstr "Кириллица (российская)"
 
-#: ../moo/mooutils/mooencodings-data.h:103
-#: ../moo/mooutils/mooencodings-data.h:120
-#: ../moo/mooutils/mooencodings-data.h:143
+#: ../moo/mooutils/mooencodings-data.h:111
+#: ../moo/mooutils/mooencodings-data.h:128
+#: ../moo/mooutils/mooencodings-data.h:151
 msgid "Japanese"
 msgstr "Японская"
 
-#: ../moo/mooutils/mooencodings-data.h:104
-#: ../moo/mooutils/mooencodings-data.h:121
-#: ../moo/mooutils/mooencodings-data.h:123
-#: ../moo/mooutils/mooencodings-data.h:146
+#: ../moo/mooutils/mooencodings-data.h:112
+#: ../moo/mooutils/mooencodings-data.h:129
+#: ../moo/mooutils/mooencodings-data.h:131
+#: ../moo/mooutils/mooencodings-data.h:154
 msgid "Korean"
 msgstr "Корейская"
 
-#: ../moo/mooutils/mooencodings-data.h:107
-#: ../moo/mooutils/mooencodings-data.h:108
-#: ../moo/mooutils/mooencodings-data.h:109
-#: ../moo/mooutils/mooencodings-data.h:111
+#: ../moo/mooutils/mooencodings-data.h:115
+#: ../moo/mooutils/mooencodings-data.h:116
+#: ../moo/mooutils/mooencodings-data.h:117
+#: ../moo/mooutils/mooencodings-data.h:119
 msgid "Chinese Simplified"
 msgstr "Китайская упрощенная"
 
-#: ../moo/mooutils/mooencodings-data.h:110
+#: ../moo/mooutils/mooencodings-data.h:118
 msgid "Georgian"
 msgstr "Грузинская"
 
-#: ../moo/mooutils/mooencodings-data.h:125
-#: ../moo/mooutils/mooencodings-data.h:141
+#: ../moo/mooutils/mooencodings-data.h:133
+#: ../moo/mooutils/mooencodings-data.h:149
 msgid "Cyrillic/Ukrainian"
 msgstr "Кириллица (украинская)"
 
-#: ../moo/mooutils/mooencodings-data.h:129
+#: ../moo/mooutils/mooencodings-data.h:137
 msgid "Croatian"
 msgstr "Хорватская"
 
-#: ../moo/mooutils/mooencodings-data.h:131
+#: ../moo/mooutils/mooencodings-data.h:139
 msgid "Hindi"
 msgstr "Хинди"
 
-#: ../moo/mooutils/mooencodings-data.h:132
+#: ../moo/mooutils/mooencodings-data.h:140
 msgid "Persian"
 msgstr "Персидская"
 
-#: ../moo/mooutils/mooencodings-data.h:134
+#: ../moo/mooutils/mooencodings-data.h:142
 msgid "Gujarati"
 msgstr "Гуджарати"
 
-#: ../moo/mooutils/mooencodings-data.h:135
+#: ../moo/mooutils/mooencodings-data.h:143
 msgid "Gurmukhi"
 msgstr "Гурмукхи"
 
-#: ../moo/mooutils/mooencodings-data.h:137
+#: ../moo/mooutils/mooencodings-data.h:145
 msgid "Icelandic"
 msgstr "Исландская"
 
-#: ../moo/mooutils/mooencodings-data.h:144
-#: ../moo/mooutils/mooencodings-data.h:147
-#: ../moo/mooutils/mooencodings-data.h:157
+#: ../moo/mooutils/mooencodings-data.h:152
+#: ../moo/mooutils/mooencodings-data.h:155
+#: ../moo/mooutils/mooencodings-data.h:165
 msgid "Vietnamese"
 msgstr "Вьетнамская"
 
-#: ../moo/mooutils/mooencodings-data.h:145
+#: ../moo/mooutils/mooencodings-data.h:153
 msgid "Thai"
 msgstr "Тайская"
 
 #. menu item in Insert Special Character submenu of text entry context menu
-#: ../moo/mooutils/mooentry.c:533
+#: ../moo/mooutils/mooentry.cpp:532
 msgctxt "insert-special-char"
 msgid "Line End"
 msgstr "Конец строки"
 
 #. menu item in Insert Special Character submenu of text entry context menu
-#: ../moo/mooutils/mooentry.c:535
+#: ../moo/mooutils/mooentry.cpp:534
 msgctxt "insert-special-char"
 msgid "Tab"
 msgstr "Табуляция"
 
 #. label of Insert Special Character submenu in text entry context menu
-#: ../moo/mooutils/mooentry.c:578
+#: ../moo/mooutils/mooentry.cpp:577
 msgctxt "insert-special-char"
 msgid "Insert Special Character"
 msgstr "Вставить специальный символ"
 
 #: ../moo/mooutils/moofiledialog.c:650
 msgid "Selected file is not a regular file"
-msgstr "Выделенный файл не является регулярным файлом"
+msgstr "Выделенный файл не является обычным файлом"
 
-#: ../moo/mooutils/moofilewriter.c:101
+#: ../moo/mooutils/moofilewriter.cpp:98
 #, c-format
 msgid "Could not open %s: %s"
 msgstr "Не удалось открыть файл %s: %s"
 
-#: ../moo/mooutils/moofilewriter.c:291 ../moo/mooutils/mooutils-fs.c:386
-#: ../moo/mooutils/mooutils-fs.c:405 ../moo/mooutils/mooutils-fs.c:421
+#: ../moo/mooutils/moofilewriter.cpp:287 ../moo/mooutils/mooutils-fs.cpp:379
+#: ../moo/mooutils/mooutils-fs.cpp:395 ../moo/mooutils/mooutils-fs.cpp:411
 #, c-format
 msgid "Could not create folder %s: %s"
 msgstr "Не удалось создать папку %s: %s"
@@ -1876,43 +1937,43 @@ msgstr "Файлы справки не найдены"
 #: ../moo/mooutils/moohelp.c:217
 #, c-format
 msgid "File '%s' is missing in the directory '%s'"
-msgstr "Файл '%s' в директории '%s' не найден"
+msgstr "Файл «%s» не найден в папке «%s»"
 
 #: ../moo/mooutils/moohelp.c:220
 msgid "Could not find help file"
 msgstr "Файл справки не найден"
 
-#: ../moo/mooutils/moopane.c:702
+#: ../moo/mooutils/moopane.c:649
 msgid "Remove pane"
 msgstr "Удалить панель"
 
-#: ../moo/mooutils/moopane.c:712
+#: ../moo/mooutils/moopane.c:659
 msgid "Hide pane"
 msgstr "Скрыть панель"
 
-#: ../moo/mooutils/moopane.c:716
+#: ../moo/mooutils/moopane.c:663
 msgid "Sticky"
 msgstr "Зафиксировать"
 
-#: ../moo/mooutils/moopane.c:720
+#: ../moo/mooutils/moopane.c:667
 msgid "Detach pane"
 msgstr "Отделить панель"
 
-#: ../moo/mooutils/moopane.c:733
+#: ../moo/mooutils/moopane.c:680
 msgid "Attach"
 msgstr "Прикрепить"
 
-#: ../moo/mooutils/moopane.c:737
+#: ../moo/mooutils/moopane.c:684
 msgid "Keep on top"
 msgstr "Удерживать наверху"
 
 #: ../moo/mooutils/moostock.c:29
 msgid "Save _None"
-msgstr "Не сохранять"
+msgstr "_Не сохранять"
 
 #: ../moo/mooutils/moostock.c:30
 msgid "Save _Selected"
-msgstr "Сохранить выделенные"
+msgstr "Сохранить _выделенные"
 
 #: ../moo/mooutils/moostock.c:32
 msgid "Move"
@@ -1920,9 +1981,9 @@ msgstr "Переместить"
 
 #: ../moo/mooutils/moostock.c:33
 msgid "Link"
-msgstr "Сделать ссылку"
+msgstr "Создать ссылку"
 
-#: ../moo/mooutils/moostock.c:35 ../moo/plugins/moofileselector.c:1136
+#: ../moo/mooutils/moostock.c:35 ../moo/plugins/moofileselector.cpp:1136
 msgid "Save Copy"
 msgstr "Сохранить копию"
 
@@ -1936,31 +1997,31 @@ msgstr "Новое _окно"
 
 #. This is error message in file selector when rm
 #. fails for some strange reason
-#: ../moo/mooutils/mooutils-fs.c:226
+#: ../moo/mooutils/mooutils-fs.cpp:224
 #, c-format
 msgid "Could not run 'rm' command: %s"
-msgstr "Не удалось выполнить команду 'rm':%s"
+msgstr "Не удалось выполнить команду «rm»: %s"
 
 #. This is error message in file selector when rm
 #. fails to delete a file or folder
-#: ../moo/mooutils/mooutils-fs.c:244
+#: ../moo/mooutils/mooutils-fs.cpp:242
 #, c-format
 msgid "'rm' command failed: %s"
-msgstr "Ошибка при выполнении команды 'rm': %s"
+msgstr "Ошибка при выполнении команды «rm»: %s"
 
-#: ../moo/mooutils/mooutils-fs.c:294 ../moo/mooutils/mooutils-fs.c:314
-#: ../moo/mooutils/mooutils-fs.c:341
+#: ../moo/mooutils/mooutils-fs.cpp:291 ../moo/mooutils/mooutils-fs.cpp:310
+#: ../moo/mooutils/mooutils-fs.cpp:336
 #, c-format
 msgid "Could not remove %s: %s"
 msgstr "Не удалось удалить файл %s: %s"
 
-#: ../moo/mooutils/mooutils-fs.c:450
+#: ../moo/mooutils/mooutils-fs.cpp:438
 #, c-format
 msgid "Could not rename file %s to %s: %s"
 msgstr "Не удалось переименовать файл %s в %s: %s"
 
 #. Translators: remove the part before and including |
-#: ../moo/mooutils/mooutils-misc.c:1803
+#: ../moo/mooutils/mooutils-misc.cpp:1854
 #, c-format
 msgid "console message|in file %s, line %d, function %s: %s"
 msgstr "в файле %s, на строке %d, в функции %s: %s"
@@ -1968,13 +2029,13 @@ msgstr "в файле %s, на строке %d, в функции %s: %s"
 #. "Unknown error" may be displayed if there is a bug in the program
 #. and proper error message has not been set. It doesn't provide any
 #. useful information obviously
-#: ../moo/mooutils/mooutils-misc.c:2186
+#: ../moo/mooutils/mooutils-misc.cpp:2115
 msgid "Unknown error"
 msgstr "Неизвестная ошибка"
 
 #: ../moo/mooutils/moowindow.c:248
 msgid "Configure _Shortcuts..."
-msgstr "Настроить горячие _клавиши..."
+msgstr "Настроить комбинации _клавиш..."
 
 #: ../moo/mooutils/moowindow.c:256 ../moo/mooutils/moowindow.c:257
 msgid "Show Toolbar"
@@ -1986,16 +2047,16 @@ msgstr "Показывать меню"
 
 #: ../moo/mooutils/moowindow.c:271 ../moo/mooutils/moowindow.c:272
 msgid "Show Statusbar"
-msgstr "Показывать строку статуса"
+msgstr "Показывать строку состояния"
 
 #: ../moo/mooutils/moowindow.c:508
 #, c-format
 msgid "Could not parse geometry string '%s'\n"
-msgstr ""
+msgstr "Не удалось разобрать строку геометрии «%s»\n"
 
 #: ../moo/mooutils/moowindow.c:1254
 msgid "_Icons Only"
-msgstr "Tолько пиктограммы"
+msgstr "Tолько _значки"
 
 #: ../moo/mooutils/moowindow.c:1255
 msgid "_Labels Only"
@@ -2003,15 +2064,15 @@ msgstr "Tолько текст"
 
 #: ../moo/mooutils/moowindow.c:1256
 msgid "Labels _Below Icons"
-msgstr "Текст под пиктограммами"
+msgstr "Текст _под значками"
 
 #: ../moo/mooutils/moowindow.c:1257
 msgid "Labels Be_side Icons"
-msgstr "Текст позади пиктограмм"
+msgstr "Текст _позади значков"
 
 #: ../moo/mooutils/moowindow.c:1267
 msgid "Toolbar _Style"
-msgstr "Стиль панели инструментов"
+msgstr "_Стиль панели инструментов"
 
 #. label of Ctags plugin pane
 #: ../moo/plugins/ctags/ctags-plugin.c:119
@@ -2036,12 +2097,14 @@ msgstr "<b>Открыть с помощью</b>"
 msgid ""
 "Semicolon-separated list of mime types, e.g. 'text/*;application/x-glade'"
 msgstr ""
-"Список типов файлов разделенных запятой, например 'text/*;application/x-"
-"glade'"
+"Список разделённых точкой с запятой типов файлов, например «text/*;"
+"application/x-glade»"
 
 #: ../moo/plugins/glade/moofileselector-prefs.glade.h:4
 msgid "Semicolon-separated list of file globs, e.g. '*.txt;foo.*;*bar*'"
-msgstr "Список масок файлов разделенных запятой, например '*.txt;foo.*;*bar*'"
+msgstr ""
+"Список разделённых точкой с запятой масок файлов, например «*.txt;foo.*;"
+"*bar*»"
 
 #: ../moo/plugins/glade/moofileselector-prefs.glade.h:7
 #, no-c-format
@@ -2049,8 +2112,9 @@ msgid ""
 "Shell command to open the file: '%f' is replaced with file path, e.g. "
 "'foobar %f'"
 msgstr ""
-"Команда оболочки для открытия файла '%f' заменена на путь к файлу, например "
-"'foobar %f'"
+"Команда оболочки для открытия файла: «%f» заменяется на путь к файлу,"
+" например "
+"«foobar %f»"
 
 #: ../moo/plugins/glade/moofileselector-prefs.glade.h:8
 msgid "Command:"
@@ -2085,116 +2149,118 @@ msgstr "_Папка:"
 #: ../moo/plugins/glade/moofind.glade.h:3
 #: ../moo/plugins/glade/moogrep.glade.h:4
 msgid "S_kip files:"
-msgstr "_Пропускать файлы:"
+msgstr "П_ропускать файлы:"
 
 #: ../moo/plugins/glade/moogrep.glade.h:2
 msgid "Fi_les:"
 msgstr "_Файлы:"
 
-#: ../moo/plugins/moofilelist.c:2353 ../moo/plugins/moofilelist.c:2354
-#: ../moo/plugins/moofilelist.c:2411
+#: ../moo/plugins/moofilelist.cpp:2349 ../moo/plugins/moofilelist.cpp:2350
+#: ../moo/plugins/moofilelist.cpp:2407
 msgid "File List"
 msgstr "Список файлов"
 
-#: ../moo/plugins/moofilelist.c:2411
+#: ../moo/plugins/moofilelist.cpp:2407
 msgid "List of files"
 msgstr "Список файлов"
 
-#: ../moo/plugins/moofileselector.c:388
+#: ../moo/plugins/moofileselector.cpp:388
 #, c-format
 msgid "Create file in folder '%s':"
-msgstr "Создать файл в папке '%s':"
+msgstr "Создать файл в папке «%s»:"
 
-#: ../moo/plugins/moofileselector.c:443
+#: ../moo/plugins/moofileselector.cpp:443
 #, c-format
 msgid "Could not create file '%s'"
-msgstr "Не удалось создать файл '%s'"
+msgstr "Не удалось создать файл «%s»"
 
-#: ../moo/plugins/moofileselector.c:444 ../moo/plugins/moofileselector.c:820
+#: ../moo/plugins/moofileselector.cpp:444
+#: ../moo/plugins/moofileselector.cpp:820
 #, c-format
 msgid ""
 "Could not convert '%s' to filename encoding. Please consider simpler name, "
 "such as foo.blah or blah.foo"
 msgstr ""
-"Не удалось преобразовать '%s' к кодировке имени файла. Попробуйте "
-"использовать, более простое имя, например, foo.blah или blah.foo"
+"Не удалось преобразовать «%s» в указанную кодировку. Попробуйте "
+"использовать более простое имя, например foo.blah или blah.foo"
 
-#: ../moo/plugins/moofileselector.c:459
+#: ../moo/plugins/moofileselector.cpp:459
 #, c-format
 msgid "File '%s' already exists"
-msgstr "Файл '%s' уже существует"
+msgstr "Файл «%s» уже существует"
 
-#: ../moo/plugins/moofileselector.c:612
+#: ../moo/plugins/moofileselector.cpp:612
 msgid "Go to current document directory"
 msgstr "Перейти в папку с текущим документом"
 
-#: ../moo/plugins/moofileselector.c:624 ../moo/plugins/moofileselector.c:625
+#: ../moo/plugins/moofileselector.cpp:624
+#: ../moo/plugins/moofileselector.cpp:625
 msgid "New File..."
 msgstr "Создать файл..."
 
-#: ../moo/plugins/moofileselector.c:819
+#: ../moo/plugins/moofileselector.cpp:819
 #, c-format
 msgid "Could not save file as '%s'"
-msgstr "Не удалось сохранить файл как '%s'"
+msgstr "Не удалось сохранить файл как «%s»"
 
-#: ../moo/plugins/moofileselector.c:952
+#: ../moo/plugins/moofileselector.cpp:952
 msgid "Save Copy As"
 msgstr "Сохранить копию как"
 
-#: ../moo/plugins/moofileselector.c:978
+#: ../moo/plugins/moofileselector.cpp:978
 msgid "Rename To"
 msgstr "Переименовать"
 
-#: ../moo/plugins/moofileselector.c:1118
+#: ../moo/plugins/moofileselector.cpp:1118
 msgid "Move Here"
 msgstr "Переместить сюда"
 
-#: ../moo/plugins/moofileselector.c:1119
+#: ../moo/plugins/moofileselector.cpp:1119
 msgid "Move/Rename..."
 msgstr "Переместить/переименовать..."
 
-#: ../moo/plugins/moofileselector.c:1127
+#: ../moo/plugins/moofileselector.cpp:1127
 msgid "Save Here"
 msgstr "Сохранить здесь"
 
-#: ../moo/plugins/moofileselector.c:1128
+#: ../moo/plugins/moofileselector.cpp:1128
 msgid "Save As..."
 msgstr "Сохранить как..."
 
-#: ../moo/plugins/moofileselector.c:1137
+#: ../moo/plugins/moofileselector.cpp:1137
 msgid "Save Copy As..."
 msgstr "Сохранить копию как..."
 
-#: ../moo/plugins/moofileselector.c:1291
+#: ../moo/plugins/moofileselector.cpp:1292
 msgid "File selector pane for editor window"
 msgstr "Панель выбора файлов в окне редактора"
 
-#: ../moo/plugins/moofind.c:186
+#: ../moo/plugins/moofind.cpp:187
 msgid "Search Results"
 msgstr "Результаты поиска"
 
-#: ../moo/plugins/moofind.c:250 ../moo/plugins/moofind.c:251
+#: ../moo/plugins/moofind.cpp:252 ../moo/plugins/moofind.cpp:253
 msgid "Find In Files"
 msgstr "Найти в файлах"
 
-#: ../moo/plugins/moofind.c:252
+#: ../moo/plugins/moofind.cpp:254
 msgid "Find in files"
 msgstr "Поиск в файлах"
 
-#: ../moo/plugins/moofind.c:260 ../moo/plugins/moofind.c:261
-#: ../moo/plugins/moofind.c:996
+#: ../moo/plugins/moofind.cpp:262 ../moo/plugins/moofind.cpp:263
+#: ../moo/plugins/moofind.cpp:1010
 msgid "Find File"
 msgstr "Найти файл"
 
-#: ../moo/plugins/moofind.c:262
+#: ../moo/plugins/moofind.cpp:264
 msgid "Find file"
 msgstr "Найти файл"
 
-#: ../moo/plugins/moofind.c:965
+#: ../moo/plugins/moofind.cpp:979
 msgid "Find in Files"
 msgstr "Поиск в файлах"
 
-#: ../moo/plugins/moofind.c:1048 ../moo/plugins/moofind.c:1074
+#: ../moo/plugins/moofind.cpp:1062 ../moo/plugins/moofind.cpp:1088
 #, c-format
 msgid "*** %u match found ***"
 msgid_plural "*** %u matches found ***"
@@ -2202,7 +2268,7 @@ msgstr[0] "*** Найдено %u совпадение ***"
 msgstr[1] "*** Найдены %u совпадения ***"
 msgstr[2] "*** Найдены %u совпадений ***"
 
-#: ../moo/plugins/moofind.c:1055 ../moo/plugins/moofind.c:1080
+#: ../moo/plugins/moofind.cpp:1069 ../moo/plugins/moofind.cpp:1094
 #, c-format
 msgid "*** %u file found ***"
 msgid_plural "*** %u files found ***"
@@ -2210,13 +2276,13 @@ msgstr[0] "*** Найден %u файл ***"
 msgstr[1] "*** Найдены %u файла ***"
 msgstr[2] "*** Найдены %u файлов ***"
 
-#: ../moo/plugins/moofind.c:1116
+#: ../moo/plugins/moofind.cpp:1130
 msgid "Finds everything"
 msgstr "Найдётся всё!"
 
 #. label of Output window pane
-#: ../moo/plugins/support/mooeditwindowoutput.c:47
-#: ../moo/plugins/support/mooeditwindowoutput.c:48
+#: ../moo/plugins/support/mooeditwindowoutput.cpp:47
+#: ../moo/plugins/support/mooeditwindowoutput.cpp:48
 msgctxt "window-pane"
 msgid "Output"
 msgstr "Вывод"
@@ -2224,7 +2290,7 @@ msgstr "Вывод"
 #. Output filter for shell commands. Translators: remove the part before and including |.
 #: ../moo/plugins/usertools/filters.xml.h:2
 msgid "Filter|Default"
-msgstr "Фильтр|По умолчанию"
+msgstr "По умолчанию"
 
 #. Output filter for shell commands. Translators: remove the part before and including |.
 #: ../moo/plugins/usertools/filters.xml.h:4
@@ -2234,7 +2300,7 @@ msgstr "Ничего"
 #. Output filter for shell commands. Translators: remove the part before and including |.
 #: ../moo/plugins/usertools/filters.xml.h:6
 msgid "Filter|Bison"
-msgstr "Фильтр|Bison"
+msgstr "Bison"
 
 #. Output filter for shell commands. Translators: remove the part before and including |.
 #: ../moo/plugins/usertools/filters.xml.h:8
@@ -2281,15 +2347,15 @@ msgstr "Переместить вверх"
 
 #: ../moo/plugins/usertools/glade/moousertools.glade.h:5
 msgid "Enabled"
-msgstr "Включен"
+msgstr "Включён"
 
 #: ../moo/plugins/usertools/glade/moousertools.glade.h:6
 msgid "_Files:"
-msgstr "Файлы:"
+msgstr "_Файлы:"
 
 #: ../moo/plugins/usertools/glade/moousertools.glade.h:7
 msgid "_Requires:"
-msgstr "Требует"
+msgstr "_Требуется:"
 
 #: ../moo/plugins/usertools/glade/moousertools.glade.h:8
 msgid "_Save:"
@@ -2297,134 +2363,136 @@ msgstr "Сохранить:"
 
 #: ../moo/plugins/usertools/glade/moousertools.glade.h:9
 msgid "_Type:"
-msgstr "Тип:"
+msgstr "_Тип:"
 
 #. Label of notebook tab on User Tools prefs page, remove the part before and including |
 #: ../moo/plugins/usertools/glade/moousertools.glade.h:11
+msgctxt "yes"
 msgid "user-tools-prefs|Tools menu"
 msgstr "Меню инструментов"
 
 #. Label of notebook tab on User Tools prefs page, remove the part before and including |
 #: ../moo/plugins/usertools/glade/moousertools.glade.h:13
+msgctxt "yes"
 msgid "user-tools-prefs|Context menu"
 msgstr "Контекстное меню"
 
 #. Translators: this is an action for output of a shell command, remove the part before and including |
-#: ../moo/plugins/usertools/moocommand-exe.c:89
+#: ../moo/plugins/usertools/moocommand-exe.cpp:89
 msgid "Output|None"
 msgstr "Ничего"
 
 #. Translators: this is an action for output of a shell command, remove the part before and including |
-#: ../moo/plugins/usertools/moocommand-exe.c:91
+#: ../moo/plugins/usertools/moocommand-exe.cpp:91
 msgid "Output|None, asynchronous"
 msgstr "Ничего, асинхронно"
 
 #. Translators: this is an action for output of a shell command, remove the part before and including |
-#: ../moo/plugins/usertools/moocommand-exe.c:94
+#: ../moo/plugins/usertools/moocommand-exe.cpp:94
 msgid "Output|Console"
 msgstr "На консоль"
 
 #. Translators: this is an action for output of a shell command, remove the part before and including |
-#: ../moo/plugins/usertools/moocommand-exe.c:97
+#: ../moo/plugins/usertools/moocommand-exe.cpp:97
 msgid "Output|Output pane"
 msgstr "Панель вывода"
 
 #. Translators: this is an action for output of a shell command, remove the part before and including |
-#: ../moo/plugins/usertools/moocommand-exe.c:99
+#: ../moo/plugins/usertools/moocommand-exe.cpp:99
 msgid "Output|Insert into the document"
 msgstr "Вставить в документ"
 
 #. Translators: this is an action for output of a shell command, remove the part before and including |
-#: ../moo/plugins/usertools/moocommand-exe.c:101
+#: ../moo/plugins/usertools/moocommand-exe.cpp:101
 msgid "Output|New document"
 msgstr "Новый документ"
 
-#: ../moo/plugins/usertools/moocommand-exe.c:819
+#: ../moo/plugins/usertools/moocommand-exe.cpp:823
 msgid "Shell command"
 msgstr "Команда оболочки"
 
 #. Translators: this is a kind of input for a shell command, remove the part before and including |
-#: ../moo/plugins/usertools/moocommand-exe.c:1063
+#: ../moo/plugins/usertools/moocommand-exe.cpp:1067
 msgid "Input|None"
 msgstr "Ничего"
 
 #. Translators: this is a kind of input for a shell command, remove the part before and including |
-#: ../moo/plugins/usertools/moocommand-exe.c:1065
+#: ../moo/plugins/usertools/moocommand-exe.cpp:1069
 msgid "Input|Selected lines"
 msgstr "Выделенные строки"
 
 #. Translators: this is a kind of input for a shell command, remove the part before and including |
-#: ../moo/plugins/usertools/moocommand-exe.c:1067
+#: ../moo/plugins/usertools/moocommand-exe.cpp:1071
 msgid "Input|Selection"
 msgstr "Выделенный текст"
 
 #. Translators: this is a kind of input for a shell command, remove the part before and including |
-#: ../moo/plugins/usertools/moocommand-exe.c:1069
+#: ../moo/plugins/usertools/moocommand-exe.cpp:1073
 msgid "Input|Whole document"
 msgstr "Целый документ"
 
 #. Translators: this is a kind of input for a shell command, remove the part before and including |
-#: ../moo/plugins/usertools/moocommand-exe.c:1071
+#: ../moo/plugins/usertools/moocommand-exe.cpp:1075
 msgid "Input|Document copy"
 msgstr "Копия документа"
 
 #: ../moo/plugins/usertools/moocommand-script.cpp:279
 msgid "Lua script"
-msgstr "Скрипт Lua"
+msgstr "Сценарий Lua"
 
 #: ../moo/plugins/usertools/moocommand-script.cpp:285
 msgid "Python script"
-msgstr "Питон"
+msgstr "Сценарий Python"
 
-#: ../moo/plugins/usertools/moousertools.c:394
-#: ../moo/plugins/usertools/moousertools-prefs.c:559
+#: ../moo/plugins/usertools/moousertools.cpp:394
+#: ../moo/plugins/usertools/moousertools-prefs.cpp:564
 msgid "Tools"
 msgstr "Инструменты"
 
-#: ../moo/plugins/usertools/moousertools.c:1376
+#: ../moo/plugins/usertools/moousertools.cpp:1376
 msgid "User Tools"
-msgstr ""
+msgstr "Пользовательские инструменты"
 
-#: ../moo/plugins/usertools/moousertools.c:1377
+#: ../moo/plugins/usertools/moousertools.cpp:1377
 msgid "Configurable tools"
-msgstr ""
+msgstr "Настраиваемые инструменты"
 
-#: ../moo/plugins/usertools/moousertools-prefs.c:109
+#: ../moo/plugins/usertools/moousertools-prefs.cpp:114
 msgid "New Command"
 msgstr "Новая команда"
 
 #. 'Requires' combo box entry on Tools prefs page
-#: ../moo/plugins/usertools/moousertools-prefs.c:162
+#: ../moo/plugins/usertools/moousertools-prefs.cpp:167
 msgctxt "Requires-combo"
 msgid "Nothing"
 msgstr "Ничего"
 
 #. 'Requires' combo box entry on Tools prefs page
-#: ../moo/plugins/usertools/moousertools-prefs.c:164
+#: ../moo/plugins/usertools/moousertools-prefs.cpp:169
 msgctxt "Requires-combo"
 msgid "Document"
 msgstr "Документ"
 
 #. 'Requires' combo box entry on Tools prefs page
-#: ../moo/plugins/usertools/moousertools-prefs.c:166
+#: ../moo/plugins/usertools/moousertools-prefs.cpp:171
 msgctxt "Requires-combo"
 msgid "File on disk"
 msgstr "Файл на диске"
 
 #. 'Save' combo box entry on Tools prefs page
-#: ../moo/plugins/usertools/moousertools-prefs.c:177
+#: ../moo/plugins/usertools/moousertools-prefs.cpp:182
 msgctxt "Save-combo"
 msgid "Nothing"
 msgstr "Ничего"
 
 #. 'Save' combo box entry on Tools prefs page
-#: ../moo/plugins/usertools/moousertools-prefs.c:179
+#: ../moo/plugins/usertools/moousertools-prefs.cpp:184
 msgctxt "Save-combo"
 msgid "Current document"
 msgstr "Текущий документ"
 
 #. 'Save' combo box entry on Tools prefs page
-#: ../moo/plugins/usertools/moousertools-prefs.c:181
+#: ../moo/plugins/usertools/moousertools-prefs.cpp:186
 msgctxt "Save-combo"
 msgid "All documents"
 msgstr "Все документы"
@@ -2493,9 +2561,6 @@ msgstr "Все документы"
 
 #~ msgid "Languages and files"
 #~ msgstr "Языки и файлы"
-
-#~ msgid "medit is a text editor"
-#~ msgstr "Текстовый редактор"
 
 #~ msgid "Show File Selector"
 #~ msgstr "Отображать выбор файлов"
