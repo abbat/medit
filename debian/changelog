@@ -1,0 +1,14 @@
+medit (1.2.92) unstable; urgency=low
+
+  * Release 1.2.92 from original source code from
+    <https://sourceforge.net/projects/mooedit/files/medit/1.2.92/>
+    released at 2017-11-12, upstream repo was deleted, see also
+    <https://sourceforge.net/p/mooedit/discussion/571682/thread/87dbc94e/>.
+  * Convert python scripts to python3 support, see also
+    <https://github.com/fangq/mooedit>
+    thanks to Qianqian Fang <fangqq@gmail.com>.
+  * Fix SIGSEGV program crash in settings widget.
+  * Change package name to 'medit' instead 'mooedit' (like in debian repo).
+  * Add debianisation again.
+
+ -- Anton Batenev <antonbatenev@yandex.ru>  Fri, 21 Jul 2023 09:06:32 +0300

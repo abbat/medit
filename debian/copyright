@@ -1,0 +1,23 @@
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: medit
+Source: https://github.com/abbat/medit
+
+Files: *
+Copyright: 2017, Yevgen Muntyan <emuntyan@users.sourceforge.net>
+           2017, Daniel Poelzleithner <mooedit@poelzi.org>
+           2017, Lasse Makholm
+           2017, Ryan Anonymous
+           2017, Ulrich Eckhardt <ulrich.eckhardt@base-42.de>
+           2023, Qianqian Fang <fangqq@gmail.com>
+           2023, Anton Batenev <antonbatenev@yandex.ru>
+License: LGPL-2.1
+ On Debian systems, the full text of the GNU General
+ Public License version 2 can be found in the file
+ `/usr/share/common-licenses/LGPL-2.1’.
+
+Files: debian/*
+Copyright: 2023, Anton Batenev <antonbatenev@yandex.ru>
+License: LGPL-2.1
+ On Debian systems, the full text of the GNU General
+ Public License version 2 can be found in the file
+ `/usr/share/common-licenses/LGPL-2.1’.

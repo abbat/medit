@@ -1,0 +1,27 @@
+Source: medit
+Section: editors
+Priority: optional
+Maintainer: Anton Batenev <antonbatenev@yandex.ru>
+Build-Depends: debhelper (>= 10), pkg-config, intltool, python-is-python3,
+ libjpeg62-turbo-dev | libjpeg-dev,
+ libgtk2.0-dev,
+ libxml2-dev,
+Standards-Version: 4.1.2
+Vcs-Git: https://github.com/abbat/medit.git
+Vcs-Browser: https://github.com/abbat/medit
+Homepage: https://github.com/abbat/medit
+
+Package: medit
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}, ${python:Depends}
+Description: Useful programming and around-programming text editor
+ Features:
+  * Configurable syntax highlighting.
+  * Configurable keyboard accelerators.
+  * Multiplatform - works both on unix and windows.
+  * Plugins: can be written in C or Python.
+  * Configurable tools available from the main and context menus. They can be
+    written in Python, or it can be a shell script, or in MooScript - simple
+    builtin scripting lanugage.
+  * Regular expression search/replace, grep and find frontends, builtin file
+    selector and whatnot.
