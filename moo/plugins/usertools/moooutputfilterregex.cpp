@@ -148,10 +148,10 @@ moo_output_filter_regex_dispose (GObject *object)
     moo_file_line_data_free (filter->priv->line);
     filter->priv->line = NULL;
 
-    g_slist_foreach (filter->priv->file_stack, (GFunc) g_free, NULL);
+    g_slist_foreach (filter->priv->file_stack, (GFunc) moo_free, NULL);
     g_slist_free (filter->priv->file_stack);
     filter->priv->file_stack = NULL;
-    g_slist_foreach (filter->priv->dir_stack, (GFunc) g_free, NULL);
+    g_slist_foreach (filter->priv->dir_stack, (GFunc) moo_free, NULL);
     g_slist_free (filter->priv->dir_stack);
     filter->priv->dir_stack = NULL;
 

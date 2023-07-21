@@ -20,6 +20,12 @@
 #include <string.h>
 
 
+// GFunc compatible g_free
+static inline void moo_free(gpointer mem, gpointer)
+{
+    g_free(mem);
+}
+
 #define _MOO_COPYELMS(func_,dest_,src_,n_)      \
 G_STMT_START {                                  \
     gsize n__ = n_;                             \

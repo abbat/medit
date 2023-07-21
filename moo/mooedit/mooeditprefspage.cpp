@@ -526,7 +526,7 @@ list_to_string (GSList  *list,
 
     if (free_list)
     {
-        g_slist_foreach (list, (GFunc) g_free, NULL);
+        g_slist_foreach (list, (GFunc) moo_free, NULL);
         g_slist_free (list);
     }
 
@@ -936,7 +936,7 @@ populate_filter_settings_store (GtkListStore *store)
         l = l->next->next;
     }
 
-    g_slist_foreach (strings, (GFunc) g_free, NULL);
+    g_slist_foreach (strings, (GFunc) moo_free, NULL);
     g_slist_free (strings);
 }
 
@@ -1092,7 +1092,7 @@ apply_filter_settings (PrefsFiltersXml *gxml)
     _moo_edit_filter_settings_set_strings (strings);
     filter_store_set_modified (G_OBJECT (model), FALSE);
 
-    g_slist_foreach (strings, (GFunc) g_free, NULL);
+    g_slist_foreach (strings, (GFunc) moo_free, NULL);
     g_slist_free (strings);
 }
 

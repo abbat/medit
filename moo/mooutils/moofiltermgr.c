@@ -1136,7 +1136,7 @@ mgr_do_save (MooFilterMgr *mgr)
 
     mgr->priv->changed = FALSE;
 
-    g_slist_foreach (user_ids, (GFunc) g_free, NULL);
+    g_slist_foreach (user_ids, (GFunc) moo_free, NULL);
     g_slist_free (user_ids);
     return FALSE;
 }

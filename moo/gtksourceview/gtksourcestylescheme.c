@@ -23,6 +23,7 @@
 #include "gtksourceview.h"
 #include "gtksourcelanguage-private.h"
 #include "gtksourcestyle-private.h"
+#include "mooutils/mooutils-mem.h"
 #include <libxml/parser.h>
 #include <string.h>
 
@@ -78,7 +79,7 @@ gtk_source_style_scheme_finalize (GObject *object)
 
 	if (scheme->priv->authors != NULL)
 	{
-		g_ptr_array_foreach (scheme->priv->authors, (GFunc)g_free, NULL);
+		g_ptr_array_foreach (scheme->priv->authors, (GFunc) moo_free, NULL);
 		g_ptr_array_free (scheme->priv->authors, TRUE);
 	}
 

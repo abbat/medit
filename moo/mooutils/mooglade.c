@@ -1086,7 +1086,7 @@ widget_props_free (WidgetProps *props)
 
         if (props->custom_props)
         {
-            g_ptr_array_foreach (props->custom_props, (GFunc) g_free, NULL);
+            g_ptr_array_foreach (props->custom_props, (GFunc) moo_free, NULL);
             g_ptr_array_free (props->custom_props, TRUE);
         }
 

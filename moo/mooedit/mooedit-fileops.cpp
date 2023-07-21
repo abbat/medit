@@ -1155,7 +1155,7 @@ _moo_edit_set_file (MooEdit    *edit,
 
     moo_file_free (tmp);
 
-    g_slist_foreach (free_list, (GFunc) g_free, NULL);
+    g_slist_foreach (free_list, (GFunc) moo_free, NULL);
     g_slist_free (free_list);
 }
 
@@ -1458,7 +1458,7 @@ moo_convert_file_data_to_utf8 (const char  *data,
             g_free (enc);
         }
 
-        g_slist_foreach (encodings, (GFunc) g_free, NULL);
+        g_slist_foreach (encodings, (GFunc) moo_free, NULL);
         g_slist_free (encodings);
     }
     else

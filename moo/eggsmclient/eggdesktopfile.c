@@ -28,6 +28,7 @@
 #define MOO_DO_NOT_MANGLE_GLIB_FUNCTIONS
 
 #include "eggdesktopfile.h"
+#include "mooutils/mooutils-mem.h"
 
 #include <string.h>
 #include <unistd.h>
@@ -1292,7 +1293,7 @@ egg_desktop_file_launchv (EggDesktopFile *desktop_file,
  out:
   if (env)
     {
-      g_ptr_array_foreach (env, (GFunc)g_free, NULL);
+      g_ptr_array_foreach (env, (GFunc) moo_free, NULL);
       g_ptr_array_free (env, TRUE);
     }
   free_document_list (translated_documents);

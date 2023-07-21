@@ -1575,7 +1575,7 @@ fill_icon_store (GtkListStore       *store,
     gtk_list_store_append (store, &iter);
     gtk_list_store_set (store, &iter, ICON_COLUMN_LABEL, "None", -1);
 
-    g_slist_foreach (stock_ids, (GFunc) g_free, NULL);
+    g_slist_foreach (stock_ids, (GFunc) moo_free, NULL);
     g_slist_free (stock_ids);
 }
 

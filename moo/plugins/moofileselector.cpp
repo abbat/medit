@@ -524,7 +524,7 @@ file_selector_create_file (MooFileSelector *filesel)
 out:
     g_free (path);
     g_free (dir);
-    g_list_foreach (selected, (GFunc) g_free, nullptr);
+    g_list_foreach (selected, (GFunc) moo_free, nullptr);
     g_list_free (selected);
 }
 

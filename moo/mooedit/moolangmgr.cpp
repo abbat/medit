@@ -199,7 +199,7 @@ string_list_copy (GSList *list)
 static void
 string_list_free (GSList *list)
 {
-    g_slist_foreach (list, (GFunc) g_free, NULL);
+    g_slist_foreach (list, (GFunc) moo_free, NULL);
     g_slist_free (list);
 }
 

@@ -893,7 +893,7 @@ moo_edit_window_destroy (GtkObject *object)
         GSList *list, *l;
 
         moo_edit_window_abort_jobs (window);
-        g_slist_foreach (window->priv->jobs, (GFunc) g_free, nullptr);
+        g_slist_foreach (window->priv->jobs, (GFunc) moo_free, nullptr);
         g_slist_free (window->priv->jobs);
         window->priv->jobs = nullptr;
 
@@ -4074,7 +4074,7 @@ create_lang_action (MooEditWindow *window)
 
     g_slist_foreach (langs, (GFunc) g_object_unref, nullptr);
     g_slist_free (langs);
-    g_slist_foreach (sections, (GFunc) g_free, nullptr);
+    g_slist_foreach (sections, (GFunc) moo_free, nullptr);
     g_slist_free (sections);
 
     moo_bind_bool_property (action, "sensitive", window, "has-open-document", FALSE);

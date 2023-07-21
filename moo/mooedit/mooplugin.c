@@ -1312,7 +1312,7 @@ sync_pages (MooPrefsDialog *dialog)
     g_object_set_data_full (G_OBJECT (dialog), "moo-plugin-prefs-pages",
                             plugin_pages, (GDestroyNotify) g_slist_free);
 
-    g_slist_foreach (plugin_ids, (GFunc) g_free, NULL);
+    g_slist_foreach (plugin_ids, (GFunc) moo_free, NULL);
     g_slist_free (plugin_ids);
     g_slist_free (plugins);
 }

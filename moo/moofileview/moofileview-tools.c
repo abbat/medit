@@ -60,9 +60,9 @@ moo_file_view_tool_action_finalize (GObject *object)
 {
     ToolAction *action = (ToolAction*) object;
 
-    g_slist_foreach (action->extensions, (GFunc) g_free, NULL);
+    g_slist_foreach (action->extensions, (GFunc) moo_free, NULL);
     g_slist_free (action->extensions);
-    g_slist_foreach (action->mimetypes, (GFunc) g_free, NULL);
+    g_slist_foreach (action->mimetypes, (GFunc) moo_free, NULL);
     g_slist_free (action->mimetypes);
     g_free (action->command);
 

@@ -20,6 +20,7 @@
 #include "moofileview/moofilesystem.h"
 #include "moofileview/moofolder-private.h"
 #include "mooutils/mooutils-fs.h"
+#include "mooutils/mooutils-mem.h"
 #include "mooutils/mooutils-misc.h"
 #include "marshals.h"
 #include <mooglib/moo-glib.h>
@@ -1008,8 +1009,8 @@ moo_folder_do_reload (MooFolderImpl *impl)
     for (l = deleted; l != NULL; l = l->next)
         file_deleted (impl, l->data);
 
-    g_slist_foreach (new, (GFunc) g_free, NULL);
-    g_slist_foreach (deleted, (GFunc) g_free, NULL);
+    g_slist_foreach (new, (GFunc) moo_free, NULL);
+    g_slist_foreach (deleted, (GFunc) moo_free, NULL);
     g_slist_free (new);
     g_slist_free (deleted);
     g_hash_table_destroy (files);

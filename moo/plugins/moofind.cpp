@@ -610,7 +610,7 @@ do_grep (MooEditWindow *window,
     execute_grep (pattern, glob, dirs, skip,
                   case_sensitive, stuff);
 
-    g_slist_foreach (dirs, (GFunc) g_free, NULL);
+    g_slist_foreach (dirs, (GFunc) moo_free, NULL);
     g_slist_free (dirs);
 }
 
@@ -649,7 +649,7 @@ do_find (MooEditWindow *window,
         execute_find (pattern, (const char*) dirs->data, skip, stuff);
     }
 
-    g_slist_foreach (dirs, (GFunc) g_free, NULL);
+    g_slist_foreach (dirs, (GFunc) moo_free, NULL);
     g_slist_free (dirs);
 }
 

@@ -2097,8 +2097,8 @@ history_init (MooFileView *fileview)
 static void
 history_clear (MooFileView *fileview)
 {
-    g_slist_foreach (fileview->priv->history->back, (GFunc) g_free, NULL);
-    g_slist_foreach (fileview->priv->history->fwd, (GFunc) g_free, NULL);
+    g_slist_foreach (fileview->priv->history->back, (GFunc) moo_free, NULL);
+    g_slist_foreach (fileview->priv->history->fwd, (GFunc) moo_free, NULL);
     g_slist_free (fileview->priv->history->back);
     g_slist_free (fileview->priv->history->fwd);
     fileview->priv->history->back = NULL;
@@ -2209,7 +2209,7 @@ history_add (MooFileView    *fileview,
     if (hist->fwd)
     {
         could_go_forward = TRUE;
-        g_slist_foreach (hist->fwd, (GFunc) g_free, NULL);
+        g_slist_foreach (hist->fwd, (GFunc) moo_free, NULL);
         g_slist_free (hist->fwd);
         hist->fwd = NULL;
     }
@@ -2810,7 +2810,7 @@ file_view_paste_clipboard (MooFileView *fileview)
             copy_files (fileview, filenames, destdir);
         }
 
-        g_list_foreach (filenames, (GFunc) g_free, NULL);
+        g_list_foreach (filenames, (GFunc) moo_free, NULL);
         g_list_free (filenames);
 
         goto out;
@@ -2840,7 +2840,7 @@ file_view_paste_clipboard (MooFileView *fileview)
             copy_files (fileview, filenames, destdir);
 
         g_strfreev (uris);
-        g_list_foreach (filenames, (GFunc) g_free, NULL);
+        g_list_foreach (filenames, (GFunc) moo_free, NULL);
         g_list_free (filenames);
 
         goto out;
@@ -5813,7 +5813,7 @@ link_files (G_GNUC_UNUSED MooFileView *fileview,
 static void
 free_string_list (GList *list)
 {
-    g_list_foreach (list, (GFunc) g_free, NULL);
+    g_list_foreach (list, (GFunc) moo_free, NULL);
     g_list_free (list);
 }
 
