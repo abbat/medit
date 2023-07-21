@@ -674,7 +674,7 @@ static void
 cell_data_func (G_GNUC_UNUSED GtkCellLayout *layout,
 		GtkCellRenderer *cell,
                 GtkTreeModel    *model,
-                GtkTreeIter     *iter)
+                GtkTreeIter     *iter, gpointer)
 {
     gboolean sensitive;
     sensitive = !gtk_tree_model_iter_has_child (model, iter);

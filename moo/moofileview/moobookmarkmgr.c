@@ -1386,11 +1386,11 @@ path_entry_unrealize (GtkWidget *entry)
 static void combo_icon_data_func    (GtkCellLayout      *cell_layout,
                                      GtkCellRenderer    *cell,
                                      GtkTreeModel       *model,
-                                     GtkTreeIter        *iter);
+                                     GtkTreeIter        *iter, gpointer);
 static void combo_label_data_func   (GtkCellLayout      *cell_layout,
                                      GtkCellRenderer    *cell,
                                      GtkTreeModel       *model,
-                                     GtkTreeIter        *iter);
+                                     GtkTreeIter        *iter, gpointer);
 static void fill_icon_store         (GtkListStore       *store,
                                      GtkStyle           *style);
 static void icon_store_find_pixbuf  (GtkListStore       *store,
@@ -1489,7 +1489,7 @@ static void
 combo_icon_data_func (G_GNUC_UNUSED GtkCellLayout *cell_layout,
                       GtkCellRenderer    *cell,
                       GtkTreeModel       *model,
-                      GtkTreeIter        *iter)
+                      GtkTreeIter        *iter, gpointer)
 {
     char *stock = NULL;
     GdkPixbuf *pixbuf = NULL;
@@ -1513,7 +1513,7 @@ static void
 combo_label_data_func (G_GNUC_UNUSED GtkCellLayout *cell_layout,
                        GtkCellRenderer    *cell,
                        GtkTreeModel       *model,
-                       GtkTreeIter        *iter)
+                       GtkTreeIter        *iter, gpointer)
 {
     char *label = NULL;
     gtk_tree_model_get (model, iter, ICON_COLUMN_LABEL, &label, -1);

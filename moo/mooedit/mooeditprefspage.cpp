@@ -48,7 +48,7 @@ static void     scheme_combo_init           (GtkComboBox        *combo);
 static void     scheme_combo_data_func      (GtkCellLayout      *layout,
                                              GtkCellRenderer    *cell,
                                              GtkTreeModel       *model,
-                                             GtkTreeIter        *iter);
+                                             GtkTreeIter        *iter, gpointer);
 static void     scheme_combo_set_scheme     (GtkComboBox        *combo,
                                              MooTextStyleScheme *scheme);
 
@@ -402,7 +402,7 @@ static void
 scheme_combo_data_func (G_GNUC_UNUSED GtkCellLayout *layout,
                         GtkCellRenderer    *cell,
                         GtkTreeModel       *model,
-                        GtkTreeIter        *iter)
+                        GtkTreeIter        *iter, gpointer)
 {
     MooTextStyleScheme *scheme = NULL;
     gtk_tree_model_get (model, iter, 0, &scheme, -1);

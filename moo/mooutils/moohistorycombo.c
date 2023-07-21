@@ -72,7 +72,7 @@ static int      default_sort_func               (GtkTreeModel       *model,
 static void     cell_data_func                  (GtkCellLayout      *cell_layout,
                                                  GtkCellRenderer    *cell,
                                                  GtkTreeModel       *tree_model,
-                                                 GtkTreeIter        *iter);
+                                                 GtkTreeIter        *iter, gpointer);
 static gboolean row_separator_func              (GtkTreeModel       *model,
                                                  GtkTreeIter        *iter,
                                                  gpointer            data);
@@ -603,7 +603,7 @@ static void
 cell_data_func (G_GNUC_UNUSED GtkCellLayout *cell_layout,
                 GtkCellRenderer    *cell,
                 GtkTreeModel       *model,
-                GtkTreeIter        *iter)
+                GtkTreeIter        *iter, gpointer)
 {
     MooHistoryListItem *e = NULL;
 
