@@ -2078,7 +2078,7 @@ hf_format_chunk_new (HFFormatType type,
 
 
 static void
-hf_format_chunk_free (HFFormatChunk *chunk)
+hf_format_chunk_free (HFFormatChunk *chunk, gpointer)
 {
     if (chunk)
     {
