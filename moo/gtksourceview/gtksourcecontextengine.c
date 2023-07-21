@@ -3337,7 +3337,7 @@ context_new (Context           *parent,
 
 static void
 context_unref_hash_cb (G_GNUC_UNUSED gpointer text,
-		       Context *context)
+		       Context *context, gpointer)
 {
 	context->parent = NULL;
 	context_unref (context);
@@ -3456,7 +3456,7 @@ context_unref (Context *context)
 
 static void
 context_freeze_hash_cb (G_GNUC_UNUSED gpointer text,
-		        Context *context)
+		        Context *context, gpointer)
 {
 	context_freeze (context);
 }

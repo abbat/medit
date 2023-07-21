@@ -323,7 +323,7 @@ get_action_accel (GtkAction *action)
 
 static void
 apply_one (GtkAction *action,
-           Shortcut  *shortcut)
+           Shortcut  *shortcut, gpointer)
 {
     const char *accel_path = _moo_action_get_accel_path (action);
     const char *default_accel = _moo_get_default_accel (accel_path);

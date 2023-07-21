@@ -150,7 +150,7 @@ get_event_client (guint id)
 
 static void
 invoke_callback (gpointer        id,
-                 EventDataQueue *events)
+                 EventDataQueue *events, gpointer)
 {
     EventDataList *l;
     QueueClient *client;
@@ -228,7 +228,7 @@ _moo_event_queue_do_events (guint event_id)
     moo_static_mutex_unlock (&queue_lock);
 
     if (events)
-        invoke_callback (GUINT_TO_POINTER (event_id), events);
+        invoke_callback (GUINT_TO_POINTER (event_id), events, NULL);
 }
 
 
