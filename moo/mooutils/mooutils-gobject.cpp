@@ -1537,7 +1537,7 @@ watch_destroy (Watch *w)
 
 
 static void
-watch_source_died (Watch *w)
+watch_source_died (Watch *w, GObject*)
 {
     if (w->klass->source_notify)
         w->klass->source_notify (w);
@@ -1547,7 +1547,7 @@ watch_source_died (Watch *w)
 }
 
 static void
-watch_target_died (Watch *w)
+watch_target_died (Watch *w, GObject*)
 {
     if (w->klass->target_notify)
         w->klass->target_notify (w);

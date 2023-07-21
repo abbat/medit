@@ -127,7 +127,7 @@ static void     completion_set_file_system      (MooFileEntryCompletion *cmpl,
                                                  MooFileSystem          *file_system);
 static void     completion_finished             (MooFileEntryCompletion *cmpl);
 static gboolean completion_default_visible_func (MooFile                *file);
-static void     completion_entry_destroyed      (MooFileEntryCompletion *cmpl);
+static void     completion_entry_destroyed      (MooFileEntryCompletion *cmpl, GObject*);
 static void     completion_finish               (MooFileEntryCompletion *cmpl,
                                                  const char             *text);
 
@@ -1428,7 +1428,7 @@ completion_set_file_system (MooFileEntryCompletion *cmpl,
 
 
 static void
-completion_entry_destroyed (MooFileEntryCompletion *cmpl)
+completion_entry_destroyed (MooFileEntryCompletion *cmpl, GObject*)
 {
     cmpl->priv->entry = NULL;
     g_object_notify (G_OBJECT (cmpl), "entry");
