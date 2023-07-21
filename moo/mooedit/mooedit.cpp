@@ -1274,7 +1274,7 @@ moo_edit_get_lang_id (MooEdit *doc)
 }
 
 static gboolean
-moo_edit_apply_config_all_in_idle (void)
+moo_edit_apply_config_all_in_idle (gpointer)
 {
     MooEditList *l;
 
