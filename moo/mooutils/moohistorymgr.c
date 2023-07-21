@@ -1337,7 +1337,7 @@ open_selected (GtkTreeView *tree_view)
     if (items)
         data->callback (items, data->data);
 
-    g_slist_foreach (items, (GFunc) moo_history_item_free, NULL);
+    g_slist_foreach (items, (GFunc) moo_history_item_free_data, NULL);
     g_slist_free (items);
 }
 
@@ -1623,6 +1623,13 @@ schedule_update_widgets (MooHistoryMgr *mgr)
     if (!mgr->priv->update_widgets_idle && mgr->priv->widgets)
         mgr->priv->update_widgets_idle =
             g_idle_add ((GSourceFunc) do_update_widgets, mgr);
+}
+
+
+void
+moo_history_item_free_data (MooHistoryItem *item, gpointer)
+{
+    moo_history_item_free (item);
 }
 
 

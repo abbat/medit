@@ -82,6 +82,7 @@ MooHistoryItem *moo_history_item_new            (const char     *uri,
                                                  ...);
 MooHistoryItem *moo_history_item_copy           (MooHistoryItem *item);
 void            moo_history_item_free           (MooHistoryItem *item);
+void            moo_history_item_free_data      (MooHistoryItem *item, gpointer);
 void            moo_history_item_set            (MooHistoryItem *item,
                                                  const char     *key,
                                                  const char     *value);
