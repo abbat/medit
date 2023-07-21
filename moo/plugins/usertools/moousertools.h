@@ -55,8 +55,9 @@ typedef struct {
 
 GType _moo_user_tool_info_get_type (void) G_GNUC_CONST;
 
-MooUserToolInfo *_moo_user_tool_info_new    (void);
-void             _moo_user_tool_info_unref  (MooUserToolInfo *info);
+MooUserToolInfo *_moo_user_tool_info_new        (void);
+void             _moo_user_tool_info_unref      (MooUserToolInfo *info);
+void             _moo_user_tool_info_unref_data (MooUserToolInfo *info, gpointer);
 
 void    _moo_edit_load_user_tools       (void);
 void    _moo_edit_load_user_tools_type  (MooUserToolType         type);

@@ -1089,7 +1089,7 @@ generate_real_list (MooUserToolType  type,
     g_hash_table_foreach (sys_ids, (GHFunc) add_deleted, &real_list);
 
     g_hash_table_destroy (sys_ids);
-    g_slist_foreach (sys_list, (GFunc) _moo_user_tool_info_unref, NULL);
+    g_slist_foreach (sys_list, (GFunc) _moo_user_tool_info_unref_data, NULL);
     g_slist_free (sys_list);
 
     return g_slist_reverse (real_list);
@@ -1213,6 +1213,13 @@ _moo_user_tool_info_unref (MooUserToolInfo *info)
         moo_command_data_unref (info->cmd_data);
 
     g_free (info);
+}
+
+
+void
+_moo_user_tool_info_unref_data (MooUserToolInfo *info, gpointer)
+{
+    _moo_user_tool_info_unref (info);
 }
 
 

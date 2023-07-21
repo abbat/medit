@@ -531,7 +531,7 @@ command_page_apply (MooPrefsPage *page)
     _moo_edit_save_user_tools (page_get_type (page), list);
     _moo_edit_load_user_tools_type (page_get_type (page));
 
-    g_slist_foreach (list, (GFunc) _moo_user_tool_info_unref, NULL);
+    g_slist_foreach (list, (GFunc) _moo_user_tool_info_unref_data, NULL);
     g_slist_free (list);
 
     set_changed (page, FALSE);
