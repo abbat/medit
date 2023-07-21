@@ -409,6 +409,13 @@ filter_setting_free (FilterSetting *setting)
 }
 
 
+static void
+filter_setting_free_data (FilterSetting *setting, gpointer)
+{
+    filter_setting_free(setting);
+}
+
+
 static FilterSetting *
 filter_setting_new (const char *filter,
                     const char *config)
@@ -447,7 +454,7 @@ filter_settings_store_new (void)
 static void
 filter_settings_store_free (FilterSettingsStore *store)
 {
-    g_slist_foreach (store->settings, (GFunc) filter_setting_free, NULL);
+    g_slist_foreach (store->settings, (GFunc) filter_setting_free_data, NULL);
     g_slist_free (store->settings);
     g_free (store);
 }
