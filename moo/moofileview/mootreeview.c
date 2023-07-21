@@ -41,7 +41,7 @@ static Child   *find_child                  (MooTreeView        *view,
 
 static Child   *child_new                   (MooTreeView        *view,
                                              GtkWidget          *real_view);
-static void     child_free                  (Child              *child);
+static void     child_free                  (Child              *child, gpointer);
 static void     child_set_model             (Child              *child,
                                              GtkTreeModel       *model);
 
@@ -354,7 +354,7 @@ child_new (MooTreeView  *view,
 
 
 static void
-child_free (Child *child)
+child_free (Child *child, gpointer)
 {
     if (child->widget)
     {
