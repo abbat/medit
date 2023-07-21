@@ -32,9 +32,6 @@
 
 #define GTK_TEXT_UNKNOWN_CHAR 0xFFFC
 
-#if GLIB_CHECK_VERSION(2,30,0) && !defined(G_UNICODE_COMBINING_MARK)
-#define G_UNICODE_COMBINING_MARK G_UNICODE_SPACING_MARK
-#endif
 
 /* this function acts like g_utf8_offset_to_pointer() except that if it finds a
  * decomposable character it consumes the decomposition length from the given
@@ -77,7 +74,7 @@ exact_prefix_cmp (const gchar *string,
 	/* If string contains prefix, check that prefix is not followed
 	 * by a unicode mark symbol, e.g. that trailing 'a' in prefix
 	 * is not part of two-char a-with-hat symbol in string. */
-	return type != G_UNICODE_COMBINING_MARK &&
+	return type != G_UNICODE_SPACING_MARK &&
 		type != G_UNICODE_ENCLOSING_MARK &&
 		type != G_UNICODE_NON_SPACING_MARK;
 }
