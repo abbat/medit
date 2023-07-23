@@ -132,7 +132,7 @@ source_files = \
     ../moo/mooutils/mooaccelbutton.h\
     ../moo/mooutils/mooaccel.cpp\
     ../moo/mooutils/mooaccel.h\
-    ../moo/mooutils/mooaccelprefs.c\
+    ../moo/mooutils/mooaccelprefs.cpp\
     ../moo/mooutils/mooaccelprefs.h\
     ../moo/mooutils/mooactionbase.c\
     ../moo/mooutils/mooactionbase.h\

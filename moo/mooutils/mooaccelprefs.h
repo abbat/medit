@@ -1,5 +1,5 @@
 /*
- *   mooaccelprefs.c
+ *   mooaccelprefs.cpp
  *
  *   Copyright (C) 2004-2010 by Yevgen Muntyan <emuntyan@users.sourceforge.net>
  *

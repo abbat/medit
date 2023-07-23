@@ -520,7 +520,7 @@ BUILT_SOURCES = $(am__append_1)
 @MOO_DEV_MODE_TRUE@    ../moo/mooutils/mooaccelbutton.h\
 @MOO_DEV_MODE_TRUE@    ../moo/mooutils/mooaccel.cpp\
 @MOO_DEV_MODE_TRUE@    ../moo/mooutils/mooaccel.h\
-@MOO_DEV_MODE_TRUE@    ../moo/mooutils/mooaccelprefs.c\
+@MOO_DEV_MODE_TRUE@    ../moo/mooutils/mooaccelprefs.cpp\
 @MOO_DEV_MODE_TRUE@    ../moo/mooutils/mooaccelprefs.h\
 @MOO_DEV_MODE_TRUE@    ../moo/mooutils/mooactionbase.c\
 @MOO_DEV_MODE_TRUE@    ../moo/mooutils/mooactionbase.h\

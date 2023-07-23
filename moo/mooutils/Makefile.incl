@@ -16,7 +16,7 @@ moo_sources +=				\
 	mooutils/mooaccel.h		\
 	mooutils/mooaccelbutton.c	\
 	mooutils/mooaccelbutton.h	\
-	mooutils/mooaccelprefs.c	\
+	mooutils/mooaccelprefs.cpp	\
 	mooutils/mooaccelprefs.h	\
 	mooutils/mooaction-private.h	\
 	mooutils/mooaction.c		\

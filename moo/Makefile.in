@@ -253,7 +253,7 @@ am___moo_la_SOURCES_DIST = medit-module/medit-module.cpp moo-config.h \
 	mooutils/moohistorymgr.c mooutils/moohistorymgr.h \
 	mooutils/moo-environ.h mooutils/mooaccel.cpp \
 	mooutils/mooaccel.h mooutils/mooaccelbutton.c \
-	mooutils/mooaccelbutton.h mooutils/mooaccelprefs.c \
+	mooutils/mooaccelbutton.h mooutils/mooaccelprefs.cpp \
 	mooutils/mooaccelprefs.h mooutils/mooaction-private.h \
 	mooutils/mooaction.c mooutils/mooaction.h \
 	mooutils/mooactionbase-private.h mooutils/mooactionbase.c \
@@ -654,7 +654,7 @@ am__medit_SOURCES_DIST = medit-app/mem-debug.h medit-app/run-tests.h \
 	mooutils/moohistorymgr.c mooutils/moohistorymgr.h \
 	mooutils/moo-environ.h mooutils/mooaccel.cpp \
 	mooutils/mooaccel.h mooutils/mooaccelbutton.c \
-	mooutils/mooaccelbutton.h mooutils/mooaccelprefs.c \
+	mooutils/mooaccelbutton.h mooutils/mooaccelprefs.cpp \
 	mooutils/mooaccelprefs.h mooutils/mooaction-private.h \
 	mooutils/mooaction.c mooutils/mooaction.h \
 	mooutils/mooactionbase-private.h mooutils/mooactionbase.c \
@@ -1969,7 +1969,7 @@ moo_sources = moo-config.h mooglib/moo-glib.h mooglib/moo-stat.h \
 	mooutils/moohistorymgr.c mooutils/moohistorymgr.h \
 	mooutils/moo-environ.h mooutils/mooaccel.cpp \
 	mooutils/mooaccel.h mooutils/mooaccelbutton.c \
-	mooutils/mooaccelbutton.h mooutils/mooaccelprefs.c \
+	mooutils/mooaccelbutton.h mooutils/mooaccelprefs.cpp \
 	mooutils/mooaccelprefs.h mooutils/mooaction-private.h \
 	mooutils/mooaction.c mooutils/mooaction.h \
 	mooutils/mooactionbase-private.h mooutils/mooactionbase.c \
@@ -4053,13 +4053,6 @@ mooutils/_moo_la-mooaccelbutton.lo: mooutils/mooaccelbutton.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CFLAGS) $(CFLAGS) -c -o mooutils/_moo_la-mooaccelbutton.lo `test -f 'mooutils/mooaccelbutton.c' || echo '$(srcdir)/'`mooutils/mooaccelbutton.c
 
-mooutils/_moo_la-mooaccelprefs.lo: mooutils/mooaccelprefs.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CFLAGS) $(CFLAGS) -MT mooutils/_moo_la-mooaccelprefs.lo -MD -MP -MF mooutils/$(DEPDIR)/_moo_la-mooaccelprefs.Tpo -c -o mooutils/_moo_la-mooaccelprefs.lo `test -f 'mooutils/mooaccelprefs.c' || echo '$(srcdir)/'`mooutils/mooaccelprefs.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) mooutils/$(DEPDIR)/_moo_la-mooaccelprefs.Tpo mooutils/$(DEPDIR)/_moo_la-mooaccelprefs.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='mooutils/mooaccelprefs.c' object='mooutils/_moo_la-mooaccelprefs.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CFLAGS) $(CFLAGS) -c -o mooutils/_moo_la-mooaccelprefs.lo `test -f 'mooutils/mooaccelprefs.c' || echo '$(srcdir)/'`mooutils/mooaccelprefs.c
-
 mooutils/_moo_la-mooaction.lo: mooutils/mooaction.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CFLAGS) $(CFLAGS) -MT mooutils/_moo_la-mooaction.lo -MD -MP -MF mooutils/$(DEPDIR)/_moo_la-mooaction.Tpo -c -o mooutils/_moo_la-mooaction.lo `test -f 'mooutils/mooaction.c' || echo '$(srcdir)/'`mooutils/mooaction.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) mooutils/$(DEPDIR)/_moo_la-mooaction.Tpo mooutils/$(DEPDIR)/_moo_la-mooaction.Plo
@@ -4839,6 +4832,13 @@ mooutils/_moo_la-mooaccel.lo: mooutils/mooaccel.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='mooutils/mooaccel.cpp' object='mooutils/_moo_la-mooaccel.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CXXFLAGS) $(CXXFLAGS) -c -o mooutils/_moo_la-mooaccel.lo `test -f 'mooutils/mooaccel.cpp' || echo '$(srcdir)/'`mooutils/mooaccel.cpp
+
+mooutils/_moo_la-mooaccelprefs.lo: mooutils/mooaccelprefs.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CXXFLAGS) $(CXXFLAGS) -MT mooutils/_moo_la-mooaccelprefs.lo -MD -MP -MF mooutils/$(DEPDIR)/_moo_la-mooaccelprefs.Tpo -c -o mooutils/_moo_la-mooaccelprefs.lo `test -f 'mooutils/mooaccelprefs.cpp' || echo '$(srcdir)/'`mooutils/mooaccelprefs.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) mooutils/$(DEPDIR)/_moo_la-mooaccelprefs.Tpo mooutils/$(DEPDIR)/_moo_la-mooaccelprefs.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='mooutils/mooaccelprefs.cpp' object='mooutils/_moo_la-mooaccelprefs.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CXXFLAGS) $(CXXFLAGS) -c -o mooutils/_moo_la-mooaccelprefs.lo `test -f 'mooutils/mooaccelprefs.cpp' || echo '$(srcdir)/'`mooutils/mooaccelprefs.cpp
 
 mooutils/_moo_la-mooencodings.lo: mooutils/mooencodings.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CXXFLAGS) $(CXXFLAGS) -MT mooutils/_moo_la-mooencodings.lo -MD -MP -MF mooutils/$(DEPDIR)/_moo_la-mooencodings.Tpo -c -o mooutils/_moo_la-mooencodings.lo `test -f 'mooutils/mooencodings.cpp' || echo '$(srcdir)/'`mooutils/mooencodings.cpp

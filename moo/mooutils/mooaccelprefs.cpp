@@ -1,5 +1,5 @@
 /*
- *   mooaccelprefs.c
+ *   mooaccelprefs.cpp
  *
  *   Copyright (C) 2004-2010 by Yevgen Muntyan <emuntyan@users.sourceforge.net>
  *
@@ -54,7 +54,7 @@ typedef MooPrefsPageClass MooAccelPrefsPageClass;
 
 #define MOO_TYPE_ACCEL_PREFS_PAGE    (_moo_accel_prefs_page_get_type ())
 #define MOO_ACCEL_PREFS_PAGE(object) (G_TYPE_CHECK_INSTANCE_CAST ((object), MOO_TYPE_ACCEL_PREFS_PAGE, MooAccelPrefsPage))
-MOO_DEFINE_TYPE_STATIC (MooAccelPrefsPage, _moo_accel_prefs_page, MOO_TYPE_PREFS_PAGE)
+G_DEFINE_TYPE (MooAccelPrefsPage, _moo_accel_prefs_page, MOO_TYPE_PREFS_PAGE)
 
 
 typedef enum {
@@ -197,11 +197,11 @@ global_cell_data_func (G_GNUC_UNUSED GtkTreeViewColumn *column,
                       "visible", TRUE,
                       "sensitive", accel && accel[0],
                       "activatable", accel && accel[0],
-                      NULL);
+                      (char*)NULL);
     else
         g_object_set (cell,
                       "visible", FALSE,
-                      NULL);
+                      (char*)NULL);
 
     if (action)
         g_object_unref (action);
@@ -229,7 +229,7 @@ global_cell_toggled (GtkTreeStore *store,
 
 
 static void
-_moo_accel_prefs_page_init (MooAccelPrefsPage *page, gpointer)
+_moo_accel_prefs_page_init (MooAccelPrefsPage *page)
 {
     GtkCellRenderer *renderer;
     GtkTreeViewColumn *column;
@@ -242,7 +242,7 @@ _moo_accel_prefs_page_init (MooAccelPrefsPage *page, gpointer)
                                           (GDestroyNotify) gtk_tree_row_reference_free);
 
     page->gxml = accel_prefs_page_xml_new_with_root (GTK_WIDGET (page));
-    g_object_set (page, "label", "Shortcuts", "icon-stock-id", MOO_STOCK_KEYBOARD, NULL);
+    g_object_set (page, "label", "Shortcuts", "icon-stock-id", MOO_STOCK_KEYBOARD, (char*)NULL);
 
     gtk_tree_view_set_search_column (page->gxml->treeview, 0);
 
@@ -263,7 +263,7 @@ _moo_accel_prefs_page_init (MooAccelPrefsPage *page, gpointer)
     column = gtk_tree_view_column_new_with_attributes (C_("accel-editor-column", "Action"),
                                                        renderer,
                                                        "text", COLUMN_ACTION_NAME,
-                                                       NULL);
+                                                       (char*)NULL);
     gtk_tree_view_append_column (page->gxml->treeview, column);
     gtk_tree_view_column_set_sort_column_id (column, COLUMN_ACTION_NAME);
 
@@ -272,7 +272,7 @@ _moo_accel_prefs_page_init (MooAccelPrefsPage *page, gpointer)
     column = gtk_tree_view_column_new_with_attributes (C_("accel-editor-column", "Shortcut"),
                                                        renderer,
                                                        "text", COLUMN_ACCEL,
-                                                       NULL);
+                                                       (char*)NULL);
     gtk_tree_view_append_column (page->gxml->treeview, column);
     gtk_tree_view_column_set_sort_column_id (column, COLUMN_ACCEL);
 
@@ -281,7 +281,7 @@ _moo_accel_prefs_page_init (MooAccelPrefsPage *page, gpointer)
     column = gtk_tree_view_column_new_with_attributes (C_("accel-editor-column", "Global"),
                                                        renderer,
                                                        "active", COLUMN_GLOBAL,
-                                                       NULL);
+                                                       (char*)NULL);
     gtk_tree_view_append_column (page->gxml->treeview, column);
     gtk_tree_view_column_set_sort_column_id (column, COLUMN_GLOBAL);
     gtk_tree_view_column_set_cell_data_func (column, renderer,
