@@ -1019,14 +1019,6 @@ moo_set_log_func_silent (void)
  */
 
 void MOO_NORETURN
-moo_segfault (void)
-{
-    char *var = NULL;
-    *var = 42;
-    moo_abort ();
-}
-
-void MOO_NORETURN
 moo_abort (void)
 {
     abort ();

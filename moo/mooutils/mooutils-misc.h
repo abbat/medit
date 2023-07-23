@@ -44,7 +44,6 @@ void        moo_set_log_func_file           (const char     *log_file);
 void        moo_set_log_func_silent         (void);
 void        moo_reset_log_func              (void);
 
-void MOO_NORETURN moo_segfault              (void);
 void MOO_NORETURN moo_abort                 (void);
 
 static inline void
