@@ -551,7 +551,7 @@ BUILT_SOURCES = $(am__append_1)
 @MOO_DEV_MODE_TRUE@    ../moo/mooutils/moodialogs.h\
 @MOO_DEV_MODE_TRUE@    ../moo/mooutils/mooeditops.c\
 @MOO_DEV_MODE_TRUE@    ../moo/mooutils/mooeditops.h\
-@MOO_DEV_MODE_TRUE@    ../moo/mooutils/mooencodings.c\
+@MOO_DEV_MODE_TRUE@    ../moo/mooutils/mooencodings.cpp\
 @MOO_DEV_MODE_TRUE@    ../moo/mooutils/mooencodings-data.h\
 @MOO_DEV_MODE_TRUE@    ../moo/mooutils/mooencodings.h\
 @MOO_DEV_MODE_TRUE@    ../moo/mooutils/mooentry.cpp\

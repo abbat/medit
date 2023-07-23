@@ -268,7 +268,7 @@ am___moo_la_SOURCES_DIST = medit-module/medit-module.cpp moo-config.h \
 	mooutils/mooclosure.h mooutils/moocombo.c mooutils/moocombo.h \
 	mooutils/moocompat.h mooutils/moodialogs.c \
 	mooutils/mooeditops.c mooutils/mooeditops.h \
-	mooutils/mooencodings-data.h mooutils/mooencodings.c \
+	mooutils/mooencodings-data.h mooutils/mooencodings.cpp \
 	mooutils/mooencodings.h mooutils/mooentry.cpp \
 	mooutils/mooentry.h mooutils/moofiledialog.c \
 	mooutils/moofileicon.c mooutils/moofileicon.h \
@@ -669,7 +669,7 @@ am__medit_SOURCES_DIST = medit-app/mem-debug.h medit-app/run-tests.h \
 	mooutils/mooclosure.h mooutils/moocombo.c mooutils/moocombo.h \
 	mooutils/moocompat.h mooutils/moodialogs.c \
 	mooutils/mooeditops.c mooutils/mooeditops.h \
-	mooutils/mooencodings-data.h mooutils/mooencodings.c \
+	mooutils/mooencodings-data.h mooutils/mooencodings.cpp \
 	mooutils/mooencodings.h mooutils/mooentry.cpp \
 	mooutils/mooentry.h mooutils/moofiledialog.c \
 	mooutils/moofileicon.c mooutils/moofileicon.h \
@@ -1984,7 +1984,7 @@ moo_sources = moo-config.h mooglib/moo-glib.h mooglib/moo-stat.h \
 	mooutils/mooclosure.h mooutils/moocombo.c mooutils/moocombo.h \
 	mooutils/moocompat.h mooutils/moodialogs.c \
 	mooutils/mooeditops.c mooutils/mooeditops.h \
-	mooutils/mooencodings-data.h mooutils/mooencodings.c \
+	mooutils/mooencodings-data.h mooutils/mooencodings.cpp \
 	mooutils/mooencodings.h mooutils/mooentry.cpp \
 	mooutils/mooentry.h mooutils/moofiledialog.c \
 	mooutils/moofileicon.c mooutils/moofileicon.h \
@@ -4144,13 +4144,6 @@ mooutils/_moo_la-mooeditops.lo: mooutils/mooeditops.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CFLAGS) $(CFLAGS) -c -o mooutils/_moo_la-mooeditops.lo `test -f 'mooutils/mooeditops.c' || echo '$(srcdir)/'`mooutils/mooeditops.c
 
-mooutils/_moo_la-mooencodings.lo: mooutils/mooencodings.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CFLAGS) $(CFLAGS) -MT mooutils/_moo_la-mooencodings.lo -MD -MP -MF mooutils/$(DEPDIR)/_moo_la-mooencodings.Tpo -c -o mooutils/_moo_la-mooencodings.lo `test -f 'mooutils/mooencodings.c' || echo '$(srcdir)/'`mooutils/mooencodings.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) mooutils/$(DEPDIR)/_moo_la-mooencodings.Tpo mooutils/$(DEPDIR)/_moo_la-mooencodings.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='mooutils/mooencodings.c' object='mooutils/_moo_la-mooencodings.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CFLAGS) $(CFLAGS) -c -o mooutils/_moo_la-mooencodings.lo `test -f 'mooutils/mooencodings.c' || echo '$(srcdir)/'`mooutils/mooencodings.c
-
 mooutils/_moo_la-moofiledialog.lo: mooutils/moofiledialog.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CFLAGS) $(CFLAGS) -MT mooutils/_moo_la-moofiledialog.lo -MD -MP -MF mooutils/$(DEPDIR)/_moo_la-moofiledialog.Tpo -c -o mooutils/_moo_la-moofiledialog.lo `test -f 'mooutils/moofiledialog.c' || echo '$(srcdir)/'`mooutils/moofiledialog.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) mooutils/$(DEPDIR)/_moo_la-moofiledialog.Tpo mooutils/$(DEPDIR)/_moo_la-moofiledialog.Plo
@@ -4846,6 +4839,13 @@ mooutils/_moo_la-mooaccel.lo: mooutils/mooaccel.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='mooutils/mooaccel.cpp' object='mooutils/_moo_la-mooaccel.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CXXFLAGS) $(CXXFLAGS) -c -o mooutils/_moo_la-mooaccel.lo `test -f 'mooutils/mooaccel.cpp' || echo '$(srcdir)/'`mooutils/mooaccel.cpp
+
+mooutils/_moo_la-mooencodings.lo: mooutils/mooencodings.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CXXFLAGS) $(CXXFLAGS) -MT mooutils/_moo_la-mooencodings.lo -MD -MP -MF mooutils/$(DEPDIR)/_moo_la-mooencodings.Tpo -c -o mooutils/_moo_la-mooencodings.lo `test -f 'mooutils/mooencodings.cpp' || echo '$(srcdir)/'`mooutils/mooencodings.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) mooutils/$(DEPDIR)/_moo_la-mooencodings.Tpo mooutils/$(DEPDIR)/_moo_la-mooencodings.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='mooutils/mooencodings.cpp' object='mooutils/_moo_la-mooencodings.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CXXFLAGS) $(CXXFLAGS) -c -o mooutils/_moo_la-mooencodings.lo `test -f 'mooutils/mooencodings.cpp' || echo '$(srcdir)/'`mooutils/mooencodings.cpp
 
 mooutils/_moo_la-mooentry.lo: mooutils/mooentry.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CXXFLAGS) $(CXXFLAGS) -MT mooutils/_moo_la-mooentry.lo -MD -MP -MF mooutils/$(DEPDIR)/_moo_la-mooentry.Tpo -c -o mooutils/_moo_la-mooentry.lo `test -f 'mooutils/mooentry.cpp' || echo '$(srcdir)/'`mooutils/mooentry.cpp

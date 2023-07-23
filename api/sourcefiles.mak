@@ -163,7 +163,7 @@ source_files = \
     ../moo/mooutils/moodialogs.h\
     ../moo/mooutils/mooeditops.c\
     ../moo/mooutils/mooeditops.h\
-    ../moo/mooutils/mooencodings.c\
+    ../moo/mooutils/mooencodings.cpp\
     ../moo/mooutils/mooencodings-data.h\
     ../moo/mooutils/mooencodings.h\
     ../moo/mooutils/mooentry.cpp\

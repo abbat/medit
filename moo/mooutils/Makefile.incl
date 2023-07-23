@@ -47,7 +47,7 @@ moo_sources +=				\
 	mooutils/mooeditops.c		\
 	mooutils/mooeditops.h		\
 	mooutils/mooencodings-data.h	\
-	mooutils/mooencodings.c		\
+	mooutils/mooencodings.cpp	\
 	mooutils/mooencodings.h		\
 	mooutils/mooentry.cpp		\
 	mooutils/mooentry.h		\

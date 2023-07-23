@@ -1,5 +1,5 @@
 /*
- *   mooencodings.c
+ *   mooencodings.cpp
  *
  *   Copyright (C) 2004-2010 by Yevgen Muntyan <emuntyan@users.sourceforge.net>
  *
@@ -678,7 +678,7 @@ cell_data_func (G_GNUC_UNUSED GtkCellLayout *layout,
 {
     gboolean sensitive;
     sensitive = !gtk_tree_model_iter_has_child (model, iter);
-    g_object_set (cell, "sensitive", sensitive, NULL);
+    g_object_set (cell, "sensitive", sensitive, (char*)NULL);
 }
 
 static void
@@ -758,7 +758,7 @@ setup_combo (GtkComboBox      *combo,
     gtk_cell_layout_clear (GTK_CELL_LAYOUT (combo));
     gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (combo), cell, TRUE);
     gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (combo), cell,
-                                    "text", COLUMN_DISPLAY, NULL);
+                                    "text", COLUMN_DISPLAY, (char*)NULL);
     gtk_cell_layout_set_cell_data_func (GTK_CELL_LAYOUT (combo), cell,
                                         (GtkCellLayoutDataFunc) cell_data_func,
 					NULL, NULL);
@@ -1063,7 +1063,7 @@ exclude_item (MenuData *menu_data,
                 visible = exclude_enc != enc;
             }
 
-            g_object_set (item, "visible", visible, NULL);
+            g_object_set (item, "visible", visible, (char*)NULL);
         }
     }
 
@@ -1129,7 +1129,7 @@ typedef struct {
     guint update_idle;
 } MooEncodingsMenuAction;
 typedef MooActionClass MooEncodingsMenuActionClass;
-MOO_DEFINE_TYPE_STATIC (MooEncodingsMenuAction, moo_encodings_menu_action, MOO_TYPE_ACTION)
+G_DEFINE_TYPE (MooEncodingsMenuAction, moo_encodings_menu_action, MOO_TYPE_ACTION)
 #define MOO_TYPE_ENCODINGS_MENU_ACTION              (moo_encodings_menu_action_get_type ())
 #define MOO_ENCODINGS_MENU_ACTION(object)           (G_TYPE_CHECK_INSTANCE_CAST ((object), MOO_TYPE_ENCODINGS_MENU_ACTION, MooEncodingsMenuAction))
 #define MOO_ENCODINGS_MENU_ACTION_CLASS(klass)      (G_TYPE_CHECK_CLASS_CAST ((klass), MOO_TYPE_ENCODINGS_MENU_ACTION, MooEncodingsMenuActionClass))
@@ -1138,7 +1138,7 @@ MOO_DEFINE_TYPE_STATIC (MooEncodingsMenuAction, moo_encodings_menu_action, MOO_T
 #define ENCODINGS_MENU_ACTION_GET_CLASS(obj)        (G_TYPE_INSTANCE_GET_CLASS ((obj), MOO_TYPE_ENCODINGS_MENU_ACTION, MooEncodingsMenuActionClass))
 
 static void
-moo_encodings_menu_action_init (MooEncodingsMenuAction *action, gpointer)
+moo_encodings_menu_action_init (MooEncodingsMenuAction *action)
 {
     action->func = NULL;
     action->func_data = NULL;
@@ -1146,7 +1146,7 @@ moo_encodings_menu_action_init (MooEncodingsMenuAction *action, gpointer)
     action->cur_item = NULL;
     action->cur_separator = NULL;
     action->menu_data = NULL;
-    g_object_set (action, "no-accel", TRUE, NULL);
+    g_object_set (action, "no-accel", TRUE, (char*)NULL);
 }
 
 static void
