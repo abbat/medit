@@ -27,12 +27,13 @@ struct _MooFolderModelPrivate {
     MooFileCmp   cmp_func;
 };
 
+enum {
+    PROP_0,
+    PROP_FOLDER
+};
 
-static void moo_folder_model_class_init         (MooFolderModelClass    *klass, gpointer);
-static void moo_folder_model_init               (MooFolderModel         *model, gpointer);
 
-static void moo_folder_model_tree_iface_init    (GtkTreeModelIface      *iface, gpointer);
-
+static void moo_folder_model_tree_iface_init    (GtkTreeModelIface      *iface);
 static void moo_folder_model_finalize           (GObject                *object);
 static void moo_folder_model_set_property       (GObject                *object,
                                                  guint                   property_id,
@@ -43,53 +44,13 @@ static void moo_folder_model_get_property       (GObject                *object,
                                                  GValue                 *value,
                                                  GParamSpec             *pspec);
 
-static gpointer moo_folder_model_parent_class = NULL;
 
-GType
-_moo_folder_model_get_type (void)
-{
-    static GType type = 0;
-
-    if (G_UNLIKELY (!type))
-    {
-        static GTypeInfo info = {
-            /* interface types, classed types, instantiated types */
-            sizeof (MooFolderClass),
-            NULL, /* base_init; */
-            NULL, /* base_finalize; */
-            (GClassInitFunc) moo_folder_model_class_init,
-            NULL, /* class_finalize; */
-            NULL, /* class_data; */
-            sizeof (MooFolder),
-            0, /* n_preallocs; */
-            (GInstanceInitFunc) moo_folder_model_init,
-            NULL /* value_table; */
-        };
-
-        static GInterfaceInfo tree_model_info = {
-            (GInterfaceInitFunc) moo_folder_model_tree_iface_init,
-            NULL, /* interface_finalize; */
-            NULL /* interface_data; */
-        };
-
-        type = g_type_register_static (G_TYPE_OBJECT,
-                                       "MooFolderModel",
-                                       &info, 0);
-        g_type_add_interface_static (type, GTK_TYPE_TREE_MODEL,
-                                     &tree_model_info);
-    }
-
-    return type;
-}
-
-enum {
-    PROP_0,
-    PROP_FOLDER
-};
+G_DEFINE_TYPE_WITH_CODE (MooFolderModel, moo_folder_model, G_TYPE_OBJECT,
+                         G_IMPLEMENT_INTERFACE (GTK_TYPE_TREE_MODEL, moo_folder_model_tree_iface_init))
 
 
 static void
-moo_folder_model_class_init (MooFolderModelClass *klass, gpointer)
+moo_folder_model_class_init (MooFolderModelClass *klass)
 {
     GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
 
@@ -153,7 +114,7 @@ static gboolean     moo_folder_model_iter_parent    (GtkTreeModel *tree_model,
 
 
 static void
-moo_folder_model_tree_iface_init (GtkTreeModelIface *iface, gpointer)
+moo_folder_model_tree_iface_init (GtkTreeModelIface *iface)
 {
     iface->get_flags = moo_folder_model_get_flags;
     iface->get_n_columns = moo_folder_model_get_n_columns;
@@ -272,7 +233,7 @@ get_cmp_func (MooFolderModelSortFlags flags)
 }
 
 static void
-moo_folder_model_init (MooFolderModel *model, gpointer)
+moo_folder_model_init (MooFolderModel *model)
 {
     model->priv = g_new0 (MooFolderModelPrivate, 1);
     model->priv->sort_flags = MOO_FOLDER_MODEL_SORT_FLAGS_DEFAULT;

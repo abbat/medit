@@ -21,7 +21,7 @@
 
 G_BEGIN_DECLS
 
-#define MOO_TYPE_FOLDER_MODEL            (_moo_folder_model_get_type ())
+#define MOO_TYPE_FOLDER_MODEL            (moo_folder_model_get_type ())
 #define MOO_FOLDER_MODEL(object)         (G_TYPE_CHECK_INSTANCE_CAST ((object), MOO_TYPE_FOLDER_MODEL, MooFolderModel))
 #define MOO_FOLDER_MODEL_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), MOO_TYPE_FOLDER_MODEL, MooFolderModelClass))
 #define MOO_IS_FOLDER_MODEL(object)      (G_TYPE_CHECK_INSTANCE_TYPE ((object), MOO_TYPE_FOLDER_MODEL))
@@ -62,7 +62,7 @@ typedef enum {
 } MooFolderModelSortFlags;
 
 
-GType            _moo_folder_model_get_type      (void) G_GNUC_CONST;
+GType            moo_folder_model_get_type       (void);
 GtkTreeModel    *_moo_folder_model_new           (MooFolder      *folder);
 void             _moo_folder_model_set_folder    (MooFolderModel *model,
                                                   MooFolder      *folder);
