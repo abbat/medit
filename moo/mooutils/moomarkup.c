@@ -547,11 +547,12 @@ moo_markup_doc_unref_private (G_GNUC_UNUSED MooMarkupDoc *doc)
 char*
 moo_markup_node_get_string (MooMarkupNode *node)
 {
+    GString *str;
     MooMarkupNode *child;
-    GString *str = g_string_new ("");
 
     g_return_val_if_fail (node != NULL, NULL);
 
+    str = g_string_new ("");
     for (child = node->children; child != NULL; child = child->next)
         switch (child->type)
         {
@@ -568,7 +569,11 @@ moo_markup_node_get_string (MooMarkupNode *node)
                 g_assert_not_reached ();
         }
 
+#if GLIB_CHECK_VERSION(2,76,0)
+    return g_string_free_and_steal (str);
+#else
     return g_string_free (str, FALSE);
+#endif
 }
 
 
