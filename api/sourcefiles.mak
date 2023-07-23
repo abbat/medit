@@ -254,7 +254,7 @@ source_files = \
     ../moo/mooutils/mooutils-tests.h\
     ../moo/mooutils/mooutils-thread.cpp\
     ../moo/mooutils/mooutils-thread.h\
-    ../moo/mooutils/mooutils-treeview.c\
+    ../moo/mooutils/mooutils-treeview.cpp\
     ../moo/mooutils/mooutils-treeview.h\
     ../moo/mooutils/mooutils-win32.cpp\
     ../moo/mooutils/moowin32/mingw/fnmatch.h\

@@ -642,7 +642,7 @@ BUILT_SOURCES = $(am__append_1)
 @MOO_DEV_MODE_TRUE@    ../moo/mooutils/mooutils-tests.h\
 @MOO_DEV_MODE_TRUE@    ../moo/mooutils/mooutils-thread.cpp\
 @MOO_DEV_MODE_TRUE@    ../moo/mooutils/mooutils-thread.h\
-@MOO_DEV_MODE_TRUE@    ../moo/mooutils/mooutils-treeview.c\
+@MOO_DEV_MODE_TRUE@    ../moo/mooutils/mooutils-treeview.cpp\
 @MOO_DEV_MODE_TRUE@    ../moo/mooutils/mooutils-treeview.h\
 @MOO_DEV_MODE_TRUE@    ../moo/mooutils/mooutils-win32.cpp\
 @MOO_DEV_MODE_TRUE@    ../moo/mooutils/moowin32/mingw/fnmatch.h\

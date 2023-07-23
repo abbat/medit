@@ -305,7 +305,7 @@ am___moo_la_SOURCES_DIST = medit-module/medit-module.cpp moo-config.h \
 	mooutils/mooutils-mem.h mooutils/mooutils-messages.h \
 	mooutils/mooutils-misc.cpp mooutils/mooutils-misc.h \
 	mooutils/mooutils-script.c mooutils/mooutils-script.h \
-	mooutils/mooutils-tests.h mooutils/mooutils-treeview.c \
+	mooutils/mooutils-tests.h mooutils/mooutils-treeview.cpp \
 	mooutils/mooutils-treeview.h mooutils/moowindow.c \
 	mooutils/stock-file-24.h mooutils/stock-file-selector-24.h \
 	mooutils/stock-terminal-24.h mooutils/mooutils-win32.cpp \
@@ -706,7 +706,7 @@ am__medit_SOURCES_DIST = medit-app/mem-debug.h medit-app/run-tests.h \
 	mooutils/mooutils-mem.h mooutils/mooutils-messages.h \
 	mooutils/mooutils-misc.cpp mooutils/mooutils-misc.h \
 	mooutils/mooutils-script.c mooutils/mooutils-script.h \
-	mooutils/mooutils-tests.h mooutils/mooutils-treeview.c \
+	mooutils/mooutils-tests.h mooutils/mooutils-treeview.cpp \
 	mooutils/mooutils-treeview.h mooutils/moowindow.c \
 	mooutils/stock-file-24.h mooutils/stock-file-selector-24.h \
 	mooutils/stock-terminal-24.h mooutils/mooutils-win32.cpp \
@@ -2021,7 +2021,7 @@ moo_sources = moo-config.h mooglib/moo-glib.h mooglib/moo-stat.h \
 	mooutils/mooutils-mem.h mooutils/mooutils-messages.h \
 	mooutils/mooutils-misc.cpp mooutils/mooutils-misc.h \
 	mooutils/mooutils-script.c mooutils/mooutils-script.h \
-	mooutils/mooutils-tests.h mooutils/mooutils-treeview.c \
+	mooutils/mooutils-tests.h mooutils/mooutils-treeview.cpp \
 	mooutils/mooutils-treeview.h mooutils/moowindow.c \
 	mooutils/stock-file-24.h mooutils/stock-file-selector-24.h \
 	mooutils/stock-terminal-24.h $(am__append_4) $(am__append_5) \
@@ -4347,13 +4347,6 @@ mooutils/_moo_la-mooutils-script.lo: mooutils/mooutils-script.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CFLAGS) $(CFLAGS) -c -o mooutils/_moo_la-mooutils-script.lo `test -f 'mooutils/mooutils-script.c' || echo '$(srcdir)/'`mooutils/mooutils-script.c
 
-mooutils/_moo_la-mooutils-treeview.lo: mooutils/mooutils-treeview.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CFLAGS) $(CFLAGS) -MT mooutils/_moo_la-mooutils-treeview.lo -MD -MP -MF mooutils/$(DEPDIR)/_moo_la-mooutils-treeview.Tpo -c -o mooutils/_moo_la-mooutils-treeview.lo `test -f 'mooutils/mooutils-treeview.c' || echo '$(srcdir)/'`mooutils/mooutils-treeview.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) mooutils/$(DEPDIR)/_moo_la-mooutils-treeview.Tpo mooutils/$(DEPDIR)/_moo_la-mooutils-treeview.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='mooutils/mooutils-treeview.c' object='mooutils/_moo_la-mooutils-treeview.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CFLAGS) $(CFLAGS) -c -o mooutils/_moo_la-mooutils-treeview.lo `test -f 'mooutils/mooutils-treeview.c' || echo '$(srcdir)/'`mooutils/mooutils-treeview.c
-
 mooutils/_moo_la-moowindow.lo: mooutils/moowindow.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CFLAGS) $(CFLAGS) -MT mooutils/_moo_la-moowindow.lo -MD -MP -MF mooutils/$(DEPDIR)/_moo_la-moowindow.Tpo -c -o mooutils/_moo_la-moowindow.lo `test -f 'mooutils/moowindow.c' || echo '$(srcdir)/'`mooutils/moowindow.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) mooutils/$(DEPDIR)/_moo_la-moowindow.Tpo mooutils/$(DEPDIR)/_moo_la-moowindow.Plo
@@ -4895,6 +4888,13 @@ mooutils/_moo_la-mooutils-misc.lo: mooutils/mooutils-misc.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='mooutils/mooutils-misc.cpp' object='mooutils/_moo_la-mooutils-misc.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CXXFLAGS) $(CXXFLAGS) -c -o mooutils/_moo_la-mooutils-misc.lo `test -f 'mooutils/mooutils-misc.cpp' || echo '$(srcdir)/'`mooutils/mooutils-misc.cpp
+
+mooutils/_moo_la-mooutils-treeview.lo: mooutils/mooutils-treeview.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CXXFLAGS) $(CXXFLAGS) -MT mooutils/_moo_la-mooutils-treeview.lo -MD -MP -MF mooutils/$(DEPDIR)/_moo_la-mooutils-treeview.Tpo -c -o mooutils/_moo_la-mooutils-treeview.lo `test -f 'mooutils/mooutils-treeview.cpp' || echo '$(srcdir)/'`mooutils/mooutils-treeview.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) mooutils/$(DEPDIR)/_moo_la-mooutils-treeview.Tpo mooutils/$(DEPDIR)/_moo_la-mooutils-treeview.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='mooutils/mooutils-treeview.cpp' object='mooutils/_moo_la-mooutils-treeview.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CXXFLAGS) $(CXXFLAGS) -c -o mooutils/_moo_la-mooutils-treeview.lo `test -f 'mooutils/mooutils-treeview.cpp' || echo '$(srcdir)/'`mooutils/mooutils-treeview.cpp
 
 mooutils/_moo_la-mooutils-win32.lo: mooutils/mooutils-win32.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CXXFLAGS) $(CXXFLAGS) -MT mooutils/_moo_la-mooutils-win32.lo -MD -MP -MF mooutils/$(DEPDIR)/_moo_la-mooutils-win32.Tpo -c -o mooutils/_moo_la-mooutils-win32.lo `test -f 'mooutils/mooutils-win32.cpp' || echo '$(srcdir)/'`mooutils/mooutils-win32.cpp

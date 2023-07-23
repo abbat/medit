@@ -1,5 +1,5 @@
 /*
- *   mooutils-treeview.c
+ *   mooutils-treeview.cpp
  *
  *   Copyright (C) 2004-2010 by Yevgen Muntyan <emuntyan@users.sourceforge.net>
  *
@@ -76,7 +76,7 @@ tree_selection_changed (GtkTreeSelection *selection,
     GtkTreeIter iter;
     GtkTreePath *path, *old_path;
 
-    old_row = g_object_get_data (G_OBJECT (selection), "moo-tree-helper-current-row");
+    old_row = (GtkTreeRowReference*) g_object_get_data (G_OBJECT (selection), "moo-tree-helper-current-row");
     old_path = old_row ? gtk_tree_row_reference_get_path (old_row) : NULL;
 
     if (old_row && !old_path)
@@ -138,7 +138,7 @@ combo_changed (GtkComboBox   *combo,
     g_return_if_fail (MOO_IS_TREE_HELPER (helper));
     g_return_if_fail (combo == helper->widget);
 
-    old_row = g_object_get_data (G_OBJECT (combo), "moo-tree-helper-current-row");
+    old_row = (GtkTreeRowReference*) g_object_get_data (G_OBJECT (combo), "moo-tree-helper-current-row");
     old_path = old_row ? gtk_tree_row_reference_get_path (old_row) : NULL;
 
     if (old_row && !old_path)
@@ -204,7 +204,7 @@ moo_tree_helper_destroy (GtkObject *object)
         switch (helper->type)
         {
             case TREE_VIEW:
-                selection = gtk_tree_view_get_selection (helper->widget);
+                selection = gtk_tree_view_get_selection ((GtkTreeView*) helper->widget);
                 g_signal_handlers_disconnect_by_func (selection,
                                                       (gpointer) tree_selection_changed,
                                                       helper);
@@ -288,7 +288,7 @@ tree_helper_move_row_default (G_GNUC_UNUSED MooTreeHelper *helper,
                               GtkTreePath  *new_path)
 {
     GtkTreeIter old_iter, new_iter;
-    int new, old;
+    int inew, iold;
 
     if (!GTK_IS_LIST_STORE (model))
         return FALSE;
@@ -297,9 +297,9 @@ tree_helper_move_row_default (G_GNUC_UNUSED MooTreeHelper *helper,
     g_return_val_if_fail (gtk_tree_path_get_depth (old_path) == 1, FALSE);
     g_return_val_if_fail (gtk_tree_path_get_depth (new_path) == 1, FALSE);
 
-    new = gtk_tree_path_get_indices(new_path)[0];
-    old = gtk_tree_path_get_indices(old_path)[0];
-    g_return_val_if_fail (ABS (new - old) == 1, FALSE);
+    inew = gtk_tree_path_get_indices(new_path)[0];
+    iold = gtk_tree_path_get_indices(old_path)[0];
+    g_return_val_if_fail (ABS (inew - iold) == 1, FALSE);
 
     gtk_tree_model_get_iter (model, &old_iter, old_path);
     gtk_tree_model_get_iter (model, &new_iter, new_path);
@@ -510,9 +510,9 @@ moo_tree_helper_get_model (MooTreeHelper *helper)
     switch (helper->type)
     {
         case TREE_VIEW:
-            return gtk_tree_view_get_model (helper->widget);
+            return gtk_tree_view_get_model ((GtkTreeView*) helper->widget);
         case COMBO_BOX:
-            return gtk_combo_box_get_model (helper->widget);
+            return gtk_combo_box_get_model ((GtkComboBox*) helper->widget);
     }
 
     g_return_val_if_reached (NULL);
@@ -529,13 +529,13 @@ moo_tree_helper_get_selected (MooTreeHelper *helper,
     switch (helper->type)
     {
         case TREE_VIEW:
-            selection = gtk_tree_view_get_selection (helper->widget);
+            selection = gtk_tree_view_get_selection ((GtkTreeView*) helper->widget);
             return gtk_tree_selection_get_selected (selection, model, iter);
 
         case COMBO_BOX:
             if (model)
-                *model = gtk_combo_box_get_model (helper->widget);
-            return gtk_combo_box_get_active_iter (helper->widget, iter);
+                *model = gtk_combo_box_get_model ((GtkComboBox*)helper->widget);
+            return gtk_combo_box_get_active_iter ((GtkComboBox*)helper->widget, iter);
     }
 
     g_return_val_if_reached (FALSE);
@@ -573,7 +573,7 @@ moo_tree_helper_new_row (MooTreeHelper *helper)
 
     g_return_if_fail (helper->type == TREE_VIEW);
 
-    selection = gtk_tree_view_get_selection (helper->widget);
+    selection = gtk_tree_view_get_selection ((GtkTreeView*)helper->widget);
 
     if (!gtk_tree_selection_get_selected (selection, &model, &iter))
         index = gtk_tree_model_iter_n_children (model, NULL);
@@ -605,7 +605,7 @@ moo_tree_helper_delete_row (MooTreeHelper *helper)
 
     g_return_if_fail (helper->type == TREE_VIEW);
 
-    selection = gtk_tree_view_get_selection (helper->widget);
+    selection = gtk_tree_view_get_selection ((GtkTreeView*)helper->widget);
 
     if (!gtk_tree_selection_get_selected (selection, &model, &iter))
     {
@@ -642,7 +642,7 @@ moo_tree_helper_row_move (MooTreeHelper *helper,
 
     g_return_if_fail (helper->type == TREE_VIEW);
 
-    selection = gtk_tree_view_get_selection (helper->widget);
+    selection = gtk_tree_view_get_selection ((GtkTreeView*)helper->widget);
 
     if (!gtk_tree_selection_get_selected (selection, &model, &iter))
     {
@@ -724,7 +724,7 @@ _moo_tree_helper_connect (MooTreeHelper *helper,
     switch (helper->type)
     {
         case TREE_VIEW:
-            selection = gtk_tree_view_get_selection (helper->widget);
+            selection = gtk_tree_view_get_selection ((GtkTreeView*)helper->widget);
             g_signal_connect (selection, "changed",
                               G_CALLBACK (tree_selection_changed),
                               helper);
@@ -767,7 +767,7 @@ _moo_tree_helper_new (GtkWidget *widget,
 
     g_return_val_if_fail (GTK_IS_TREE_VIEW (widget) || GTK_IS_COMBO_BOX (widget), NULL);
 
-    helper = g_object_new (MOO_TYPE_TREE_HELPER, (const char*) NULL);
+    helper = (MooTreeHelper*) g_object_new (MOO_TYPE_TREE_HELPER, (const char*) NULL);
     g_object_ref_sink (helper);
 
     _moo_tree_helper_connect (helper, widget, new_btn, delete_btn, up_btn, down_btn);
@@ -918,10 +918,10 @@ typedef struct {
     GtkCellRendererClass base_class;
 } MooExpanderCellClass;
 
-MOO_DEFINE_TYPE_STATIC (MooExpanderCell, moo_expander_cell, GTK_TYPE_CELL_RENDERER)
+G_DEFINE_TYPE (MooExpanderCell, moo_expander_cell, GTK_TYPE_CELL_RENDERER)
 
 static void
-moo_expander_cell_init (MooExpanderCell *cell, gpointer)
+moo_expander_cell_init (MooExpanderCell *cell)
 {
     cell->expanded = FALSE;
 }
@@ -1000,7 +1000,7 @@ moo_expander_cell_render (GtkCellRenderer      *cell,
         !gdk_rectangle_intersect (expose_area, &draw_rect, &draw_rect))
             return;
 
-    state = GTK_WIDGET_STATE (widget);
+    state = (GtkStateType) GTK_WIDGET_STATE (widget);
 
     if (!cell->sensitive)
     {
@@ -1059,7 +1059,7 @@ expander_cell_data_func (G_GNUC_UNUSED GtkTreeViewColumn *column,
     GtkTreePath *path;
 
     has_children = gtk_tree_model_iter_has_child (model, iter);
-    g_object_set (cell, "visible", has_children, NULL);
+    g_object_set (cell, "visible", has_children, (char*) NULL);
 
     if (!has_children)
         return;
@@ -1205,9 +1205,9 @@ _moo_tree_view_setup_expander (GtkTreeView       *tree_view,
     g_object_set (tree_view,
                   "show-expanders", FALSE,
                   "level-indentation", LEVEL_INDENTATION,
-                  NULL);
+                  (char*) NULL);
 
-    cell = g_object_new (MOO_TYPE_EXPANDER_CELL, (const char*) NULL);
+    cell = (GtkCellRenderer*) g_object_new (MOO_TYPE_EXPANDER_CELL, (const char*) NULL);
     gtk_tree_view_column_pack_start (column, cell, FALSE);
     gtk_tree_view_column_set_cell_data_func (column, cell,
                                              (GtkTreeCellDataFunc) expander_cell_data_func,

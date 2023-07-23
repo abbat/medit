@@ -128,7 +128,7 @@ moo_sources +=				\
 	mooutils/mooutils-script.c	\
 	mooutils/mooutils-script.h	\
 	mooutils/mooutils-tests.h	\
-	mooutils/mooutils-treeview.c	\
+	mooutils/mooutils-treeview.cpp	\
 	mooutils/mooutils-treeview.h	\
 	mooutils/moowindow.c		\
 	mooutils/stock-file-24.h	\
