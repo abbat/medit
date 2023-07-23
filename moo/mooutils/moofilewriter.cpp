@@ -513,17 +513,13 @@ moo_string_writer_printf (MooFileWriter *fwriter,
                           const char    *fmt,
                           va_list        args)
 {
-    char *buf;
-    gint len;
-    MooStringWriter *writer = (MooStringWriter*) fwriter;
-
-    len = g_vasprintf (&buf, fmt, args);
+    char *buf = NULL;
+    gint len = g_vasprintf (&buf, fmt, args);
 
     if (len >= 0)
-    {
-        g_string_append_len (writer->string, buf, len);
-        g_free (buf);
-    }
+        g_string_append_len (((MooStringWriter*) fwriter)->string, buf, len);
+
+    g_free (buf);
 
     return TRUE;
 }
