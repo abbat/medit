@@ -72,10 +72,12 @@ const char *
 moo_get_mime_type_for_filename (const char *filename)
 {
     const char *mime;
-    char *filename_utf8 = NULL;
+    char *filename_utf8;
 
-    if (filename)
-        filename_utf8 = g_filename_display_name (filename);
+    if (filename == NULL)
+        return NULL;
+
+    filename_utf8 = g_filename_display_name (filename);
 
     G_LOCK (moo_mime);
     mime = mime_type_intern (xdg_mime_get_mime_type_from_file_name (filename_utf8));
