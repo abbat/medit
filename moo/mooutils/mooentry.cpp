@@ -44,11 +44,8 @@ static guint INSERT_ACTION_TYPE;
 static guint DELETE_ACTION_TYPE;
 
 
-static void     moo_entry_class_init        (MooEntryClass      *klass, gpointer);
-static void     moo_entry_editable_init     (GtkEditableClass   *klass, gpointer);
-static void     moo_entry_undo_ops_init     (MooUndoOpsIface    *iface, gpointer);
-
-static void     moo_entry_init              (MooEntry           *entry, gpointer);
+static void     moo_entry_editable_init     (GtkEditableClass   *klass);
+static void     moo_entry_undo_ops_init     (MooUndoOpsIface    *iface);
 static void     moo_entry_finalize          (GObject            *object);
 static void     moo_entry_set_property      (GObject            *object,
                                              guint               prop_id,
@@ -98,42 +95,9 @@ static MooUndoAction *delete_action_new     (GtkEditable        *editable,
                                              gint                end_pos);
 
 
-GType
-moo_entry_get_type (void)
-{
-    static GType type = 0;
-
-    if (G_UNLIKELY (!type))
-    {
-        static const GTypeInfo info =
-        {
-            sizeof (MooEntryClass),
-            NULL,		/* base_init */
-            NULL,		/* base_finalize */
-            (GClassInitFunc) moo_entry_class_init,
-            NULL,		/* class_finalize */
-            NULL,		/* class_data */
-            sizeof (MooEntry),
-            0,
-            (GInstanceInitFunc) moo_entry_init,
-            NULL
-        };
-
-        static const GInterfaceInfo editable_info = {
-            (GInterfaceInitFunc) moo_entry_editable_init, NULL, NULL
-        };
-
-        static const GInterfaceInfo undo_ops_info = {
-            (GInterfaceInitFunc) moo_entry_undo_ops_init, NULL, NULL
-        };
-
-        type = g_type_register_static (GTK_TYPE_ENTRY, "MooEntry", &info, (GTypeFlags) 0);
-        g_type_add_interface_static (type, GTK_TYPE_EDITABLE, &editable_info);
-        g_type_add_interface_static (type, MOO_TYPE_UNDO_OPS, &undo_ops_info);
-    }
-
-    return type;
-}
+G_DEFINE_TYPE_WITH_CODE (MooEntry, moo_entry, GTK_TYPE_ENTRY,
+                         G_IMPLEMENT_INTERFACE (GTK_TYPE_EDITABLE, moo_entry_editable_init)
+                         G_IMPLEMENT_INTERFACE (MOO_TYPE_UNDO_OPS, moo_entry_undo_ops_init))
 
 
 enum {
@@ -156,10 +120,9 @@ enum {
 
 static guint signals[NUM_SIGNALS];
 static GtkEditableClass *parent_editable_iface;
-static gpointer moo_entry_parent_class;
 
 static void
-moo_entry_class_init (MooEntryClass *klass, gpointer)
+moo_entry_class_init (MooEntryClass *klass)
 {
     GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
     GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
@@ -272,7 +235,7 @@ moo_entry_class_init (MooEntryClass *klass, gpointer)
 
 
 static void
-moo_entry_editable_init (GtkEditableClass   *klass, gpointer)
+moo_entry_editable_init (GtkEditableClass   *klass)
 {
     klass->do_insert_text = moo_entry_do_insert_text;
     klass->do_delete_text = moo_entry_do_delete_text;
@@ -283,7 +246,7 @@ moo_entry_editable_init (GtkEditableClass   *klass, gpointer)
 
 
 static void
-moo_entry_init (MooEntry *entry, gpointer)
+moo_entry_init (MooEntry *entry)
 {
     entry->priv = g_new0 (MooEntryPrivate, 1);
     entry->priv->undo_stack = moo_undo_stack_new (entry);
@@ -457,7 +420,7 @@ undo_ops_can_redo (MooUndoOps *obj)
 }
 
 static void
-moo_entry_undo_ops_init (MooUndoOpsIface *iface, gpointer)
+moo_entry_undo_ops_init (MooUndoOpsIface *iface)
 {
     iface->undo = (void(*)(MooUndoOps*)) moo_entry_undo;
     iface->redo = (void(*)(MooUndoOps*)) moo_entry_redo;

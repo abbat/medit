@@ -47,7 +47,7 @@ struct _MooEntryClass
 };
 
 
-GType       moo_entry_get_type                  (void) G_GNUC_CONST;
+GType       moo_entry_get_type                  (void);
 
 GtkWidget  *moo_entry_new                       (void);
 
