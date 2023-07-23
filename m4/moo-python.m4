@@ -30,8 +30,8 @@ Please check your Python installation.])
       AC_MSG_CHECKING([for Python include path])
 
       if test -z "$PYTHON_INCLUDES"; then
-          python_path=`$PYTHON -c "import distutils.sysconfig; \
-                                   print distutils.sysconfig.get_python_inc();"`
+          python_path=`$PYTHON -c "import sysconfig; \
+                                   print(sysconfig.get_path('include'));"`
           if test -n "${python_path}"; then
               python_path="-I$python_path"
           fi
@@ -50,9 +50,8 @@ Please check your Python installation.])
       if test "x$PYTHON_LIBS" = "x"; then
           # (makes two attempts to ensure we've got a version number
           # from the interpreter)
-          py_version=`$PYTHON -c "from distutils.sysconfig import *; \
-                      from string import join; \
-                      print join(get_config_vars('VERSION'))"`
+          py_version=`$PYTHON -c "import sysconfig; \
+                      print(sysconfig.get_python_version())"`
           if test "x$py_version" = "x[None]"; then
               if test "x$PYTHON_VERSION" != "x"; then
                   py_version=$PYTHON_VERSION
@@ -62,10 +61,9 @@ Please check your Python installation.])
               fi
           fi
 
-          PYTHON_LIBS=`$PYTHON -c "from distutils.sysconfig import *; \
-                                   from string import join; \
-                                   print '-L' + PREFIX + '/lib', \
-                                   '-lpython';"`$py_version
+          PYTHON_LIBS=`$PYTHON -c "import sysconfig; \
+                                   print('-L' + sysconfig.get_config_var('prefix') + '/lib', \
+                                   '-lpython');"`$py_version
       fi
 
       AC_MSG_RESULT([$PYTHON_LIBS])
