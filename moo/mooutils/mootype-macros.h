@@ -19,46 +19,6 @@
 #include <glib-object.h>
 #include <mooutils/mooonce.h>
 
-#define _MOO_REGISTER_TYPE(TypeName,type_name,TYPE_PARENT,flags)                            \
-    g_define_type_id =                                                                      \
-        g_type_register_static_simple (TYPE_PARENT,                                         \
-                                       g_intern_static_string (#TypeName),                  \
-                                       sizeof (TypeName##Class),                            \
-                                       (GClassInitFunc) type_name##_class_intern_init,      \
-                                       sizeof (TypeName),                                   \
-                                       (GInstanceInitFunc) type_name##_init,                \
-                                       (GTypeFlags) flags);
-
-#define MOO_DEFINE_TYPE_STATIC_WITH_CODE(TypeName,type_name,TYPE_PARENT,code)               \
-                                                                                            \
-static void     type_name##_init              (TypeName        *self, gpointer);            \
-static void     type_name##_class_init        (TypeName##Class *klass);                     \
-static gpointer type_name##_parent_class = NULL;                                            \
-                                                                                            \
-static void     type_name##_class_intern_init (gpointer klass, gpointer)                    \
-{                                                                                           \
-    type_name##_parent_class = g_type_class_peek_parent (klass);                            \
-    type_name##_class_init ((TypeName##Class*) klass);                                      \
-}                                                                                           \
-                                                                                            \
-static GType G_GNUC_CONST                                                                   \
-type_name##_get_type (void)                                                                 \
-{                                                                                           \
-    static GType g_define_type_id;                                                          \
-                                                                                            \
-    MOO_DO_ONCE_BEGIN                                                                       \
-                                                                                            \
-    _MOO_REGISTER_TYPE(TypeName,type_name,TYPE_PARENT,0)                                    \
-    code                                                                                    \
-                                                                                            \
-    MOO_DO_ONCE_END                                                                         \
-                                                                                            \
-    return g_define_type_id;                                                                \
-}
-
-#define MOO_DEFINE_TYPE_STATIC(TypeName,type_name,TYPE_PARENT)                              \
-    MOO_DEFINE_TYPE_STATIC_WITH_CODE (TypeName, type_name, TYPE_PARENT, {})
-
 
 #define MOO_DEFINE_BOXED_TYPE__(TypeName,type_name,copy_func,free_func)                     \
 {                                                                                           \
