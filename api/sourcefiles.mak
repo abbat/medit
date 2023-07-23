@@ -116,7 +116,7 @@ source_files = \
     ../moo/moofileview/moofileview.h\
     ../moo/moofileview/moofileview-impl.h\
     ../moo/moofileview/moofileview-private.h\
-    ../moo/moofileview/moofileview-tools.c\
+    ../moo/moofileview/moofileview-tools.cpp\
     ../moo/moofileview/moofileview-tools.h\
     ../moo/moofileview/moofolder.c\
     ../moo/moofileview/moofolder.h\
