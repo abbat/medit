@@ -572,7 +572,7 @@ _moo_edit_save_error_enc_dialog (MooEdit    *doc,
 
 
 MooEditTryEncodingResponse
-_moo_edit_try_encoding_dialog (G_GNUC_UNUSED GFile *file,
+_moo_edit_try_encoding_dialog (GFile       *file,
                                const char  *encoding,
                                char       **new_encoding)
 {
@@ -580,18 +580,26 @@ _moo_edit_try_encoding_dialog (G_GNUC_UNUSED GFile *file,
     GtkWidget *dialog;
     TryEncodingDialogXml *xml;
     int dialog_response;
-    char *filename = NULL;
-    char *msg = NULL;
-    char *secondary = NULL;
+    char *filename;
+    char *msg;
+    char *secondary;
+
+    xml = try_encoding_dialog_xml_new ();
+    g_return_val_if_fail (xml, MOO_EDIT_TRY_ENCODING_RESPONSE_CANCEL);
+
+    if (xml->TryEncodingDialog == NULL) {
+        _try_encoding_dialog_xml_free (xml);
+        return MOO_EDIT_TRY_ENCODING_RESPONSE_CANCEL;
+    }
 
     filename = moo_file_get_display_name (file);
-
     if (filename)
     {
         /* Could not open file foo.txt */
         char *tmp = g_strdup_printf (_("Could not open file\n%s"), filename);
         msg = g_markup_printf_escaped ("<b><big>%s</big></b>", tmp);
         g_free (tmp);
+        g_free (filename);
     }
     else
     {
@@ -605,9 +613,6 @@ _moo_edit_try_encoding_dialog (G_GNUC_UNUSED GFile *file,
     else
         secondary = g_strdup_printf (_("Could not detect file character encoding. "
                                        "Try to select an encoding below."));
-
-    xml = try_encoding_dialog_xml_new ();
-    g_return_val_if_fail (xml && xml->TryEncodingDialog, MOO_EDIT_TRY_ENCODING_RESPONSE_CANCEL);
 
     gtk_label_set_markup (xml->label_primary, msg);
     gtk_label_set_text (xml->label_secondary, secondary);
