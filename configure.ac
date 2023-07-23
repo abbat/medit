@@ -15,7 +15,7 @@ m4_define([_moo_web_contact_],[http://mooedit.sourceforge.net/contact.html])
 m4_define([_moo_email_],[emuntyan@users.sourceforge.net])
 m4_define([_moo_copyright_],[2004-2014 Yevgen Muntyan <_moo_email_>])
 
-AC_PREREQ([2.68])
+AC_PREREQ([2.71])
 AC_INIT([medit],[_moo_display_version_],[_moo_email_])
 AC_USE_SYSTEM_EXTENSIONS
 AC_CONFIG_MACRO_DIR([m4])
