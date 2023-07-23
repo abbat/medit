@@ -753,6 +753,7 @@ medit_main (int argc, char *argv[])
             GString *msg = g_string_new ("e");
             g_string_append (msg, *p);
             moo_app_send_msg (name, msg->str, msg->len + 1);
+            g_string_free(msg, TRUE);
         }
         notify_startup_complete ();
         exit (0);
