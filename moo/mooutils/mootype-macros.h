@@ -97,17 +97,6 @@ static GType G_GNUC_CONST type_name##_get_type (void)                           
     MOO_DEFINE_BOXED_TYPE_STATIC(TypeName,type_name,type_name##_ref,type_name##_unref)
 
 
-#define MOO_DEFINE_POINTER_TYPE(TypeName,type_name)                                         \
-GType type_name##_get_type (void)                                                           \
-{                                                                                           \
-    static GType g_define_type_id;                                                          \
-    MOO_DO_ONCE_BEGIN                                                                       \
-    g_define_type_id = g_pointer_type_register_static (#TypeName);                          \
-    MOO_DO_ONCE_END                                                                         \
-    return g_define_type_id;                                                                \
-}
-
-
 #define MOO_DEFINE_QUARK__(QuarkName)                                                       \
 {                                                                                           \
     static GQuark q;                                                                        \
