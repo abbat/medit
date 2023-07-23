@@ -35,7 +35,7 @@
 #include <windowsx.h>
 #endif
 
-struct MeditOpts 
+struct MeditOpts
 {
     int use_session = -1;
 	int pid = -1;
@@ -74,7 +74,7 @@ static MeditOpts medit_opts;
 
 typedef MooApp MeditApp;
 typedef MooAppClass MeditAppClass;
-MOO_DEFINE_TYPE_STATIC (MeditApp, medit_app, MOO_TYPE_APP)
+G_DEFINE_TYPE (MeditApp, medit_app, MOO_TYPE_APP)
 
 static void
 medit_app_init_plugins (G_GNUC_UNUSED MooApp *app)
@@ -89,7 +89,7 @@ medit_app_class_init (MooAppClass *klass)
 }
 
 static void
-medit_app_init (G_GNUC_UNUSED MooApp *app, gpointer)
+medit_app_init (G_GNUC_UNUSED MooApp *app)
 {
 }
 
@@ -632,7 +632,7 @@ setup_portable_mode (void)
     }
 
     g_return_if_fail (datadir != NULL && cachedir != NULL);
-    
+
     tmp = _moo_normalize_file_path (datadir);
     moo_set_user_data_dir (tmp);
     g_free (tmp);

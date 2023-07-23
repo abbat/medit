@@ -43,7 +43,7 @@ G_DEFINE_TYPE (MooCommandScript, _moo_command_script, MOO_TYPE_COMMAND)
 
 typedef struct MooCommandFactoryScript MooCommandFactoryScript;
 typedef MooCommandFactoryClass MooCommandFactoryScriptClass;
-MOO_DEFINE_TYPE_STATIC (MooCommandFactoryScript, _moo_command_factory_script, MOO_TYPE_COMMAND_FACTORY)
+G_DEFINE_TYPE (MooCommandFactoryScript, _moo_command_factory_script, MOO_TYPE_COMMAND_FACTORY)
 
 static MooCommand  *moo_command_script_new (MooScriptType     type,
                                             const char       *code,
@@ -253,7 +253,7 @@ script_factory_save_data (G_GNUC_UNUSED MooCommandFactory *factory,
 }
 
 static void
-_moo_command_factory_script_init (G_GNUC_UNUSED MooCommandFactoryScript *factory, gpointer)
+_moo_command_factory_script_init (G_GNUC_UNUSED MooCommandFactoryScript *factory)
 {
 }
 

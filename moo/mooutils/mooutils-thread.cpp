@@ -474,7 +474,7 @@ typedef struct {
 } MooAsyncJobClass;
 
 
-MOO_DEFINE_TYPE_STATIC (MooAsyncJob, moo_async_job, G_TYPE_OBJECT)
+G_DEFINE_TYPE (MooAsyncJob, moo_async_job, G_TYPE_OBJECT)
 
 static void
 moo_async_job_dispose (GObject *object)
@@ -507,7 +507,7 @@ moo_async_job_class_init (MooAsyncJobClass *klass)
 }
 
 static void
-moo_async_job_init (MooAsyncJob *job, gpointer)
+moo_async_job_init (MooAsyncJob *job)
 {
     job->callback = NULL;
     job->data = NULL;

@@ -161,11 +161,11 @@ static gboolean drag_dest_row_drop_possible     (GtkTreeDragDest    *drag_dest,
                                                  GtkSelectionData   *selection_data);
 
 MOO_DEFINE_BOXED_TYPE_STATIC_R (MooFileListItem, item)
-MOO_DEFINE_TYPE_STATIC_WITH_CODE (FileList, file_list, GTK_TYPE_TREE_STORE,
-                                  G_IMPLEMENT_INTERFACE (GTK_TYPE_TREE_DRAG_SOURCE,
-                                                         file_list_drag_source_iface_init)
-                                  G_IMPLEMENT_INTERFACE (GTK_TYPE_TREE_DRAG_DEST,
-                                                         file_list_drag_dest_iface_init))
+G_DEFINE_TYPE_WITH_CODE (FileList, file_list, GTK_TYPE_TREE_STORE,
+                         G_IMPLEMENT_INTERFACE (GTK_TYPE_TREE_DRAG_SOURCE,
+                                                file_list_drag_source_iface_init)
+                         G_IMPLEMENT_INTERFACE (GTK_TYPE_TREE_DRAG_DEST,
+                                                file_list_drag_dest_iface_init))
 
 
 static void
@@ -185,7 +185,7 @@ file_list_drag_dest_iface_init (GtkTreeDragDestIface *iface)
 
 
 static void
-file_list_init (FileList *list, gpointer)
+file_list_init (FileList *list)
 {
     GType types[2];
 

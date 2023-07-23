@@ -81,7 +81,7 @@ static void                 add_info                (MooUserToolInfo *info,
                                                      GHashTable     *ids);
 
 MOO_DEFINE_BOXED_TYPE_R (MooUserToolInfo, _moo_user_tool_info)
-MOO_DEFINE_TYPE_STATIC (MooToolAction, _moo_tool_action, MOO_TYPE_EDIT_ACTION)
+G_DEFINE_TYPE (MooToolAction, _moo_tool_action, MOO_TYPE_EDIT_ACTION)
 #define MOO_TYPE_TOOL_ACTION    (_moo_tool_action_get_type())
 #define MOO_IS_TOOL_ACTION(obj) (G_TYPE_CHECK_INSTANCE_TYPE (obj, MOO_TYPE_TOOL_ACTION))
 #define MOO_TOOL_ACTION(obj)    (G_TYPE_CHECK_INSTANCE_CAST (obj, MOO_TYPE_TOOL_ACTION, MooToolAction))
@@ -1333,7 +1333,7 @@ moo_tool_action_check_state (MooEditAction *edit_action)
 
 
 static void
-_moo_tool_action_init (G_GNUC_UNUSED MooToolAction *action, gpointer)
+_moo_tool_action_init (G_GNUC_UNUSED MooToolAction *action)
 {
 }
 

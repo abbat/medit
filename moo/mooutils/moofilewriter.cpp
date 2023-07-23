@@ -38,10 +38,10 @@ struct _MooFileReader {
     MGW_FILE *file;
 };
 
-MOO_DEFINE_TYPE_STATIC (MooFileReader, moo_file_reader, G_TYPE_OBJECT)
+G_DEFINE_TYPE (MooFileReader, moo_file_reader, G_TYPE_OBJECT)
 
 static void
-moo_file_reader_init (MooFileReader *reader, gpointer)
+moo_file_reader_init (MooFileReader *reader)
 {
     reader->file = NULL;
 }
@@ -159,10 +159,10 @@ moo_file_reader_read (MooFileReader  *reader,
 /* MooFileWriter
  */
 
-MOO_DEFINE_TYPE_STATIC (MooFileWriter, moo_file_writer, G_TYPE_OBJECT)
+G_DEFINE_TYPE (MooFileWriter, moo_file_writer, G_TYPE_OBJECT)
 
 static void
-moo_file_writer_init (G_GNUC_UNUSED MooFileWriter *writer, gpointer)
+moo_file_writer_init (G_GNUC_UNUSED MooFileWriter *writer)
 {
 }
 
@@ -257,7 +257,7 @@ struct _MooLocalFileWriter {
     GError *error;
 };
 
-MOO_DEFINE_TYPE_STATIC (MooLocalFileWriter, moo_local_file_writer, MOO_TYPE_FILE_WRITER)
+G_DEFINE_TYPE (MooLocalFileWriter, moo_local_file_writer, MOO_TYPE_FILE_WRITER)
 
 static MooFileWriter *
 moo_local_file_writer_new (GFile               *file,
@@ -478,7 +478,7 @@ moo_local_file_writer_class_init (MooLocalFileWriterClass *klass)
 }
 
 static void
-moo_local_file_writer_init (MooLocalFileWriter *writer, gpointer)
+moo_local_file_writer_init (MooLocalFileWriter *writer)
 {
     writer->file = NULL;
     writer->stream = NULL;
@@ -495,7 +495,7 @@ struct _MooStringWriter {
     GString *string;
 };
 
-MOO_DEFINE_TYPE_STATIC (MooStringWriter, moo_string_writer, MOO_TYPE_FILE_WRITER)
+G_DEFINE_TYPE (MooStringWriter, moo_string_writer, MOO_TYPE_FILE_WRITER)
 
 static gboolean
 moo_string_writer_write (MooFileWriter *fwriter,
@@ -544,7 +544,7 @@ moo_string_writer_class_init (MooStringWriterClass *klass)
 }
 
 static void
-moo_string_writer_init (MooStringWriter *writer, gpointer)
+moo_string_writer_init (MooStringWriter *writer)
 {
     writer->string = g_string_new (NULL);
 }
