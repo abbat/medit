@@ -20,7 +20,7 @@ moo_sources +=					\
 	moofileview/moofileview-dialogs.h	\
 	moofileview/moofileview-impl.h		\
 	moofileview/moofileview-private.h	\
-	moofileview/moofileview-tools.c		\
+	moofileview/moofileview-tools.cpp	\
 	moofileview/moofileview-tools.h		\
 	moofileview/moofolder-private.h		\
 	moofileview/moofolder.c			\

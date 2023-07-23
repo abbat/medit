@@ -1,5 +1,5 @@
 /*
- *   moofileview-tools.c
+ *   moofileview-tools.cpp
  *
  *   Copyright (C) 2004-2010 by Yevgen Muntyan <emuntyan@users.sourceforge.net>
  *
@@ -47,11 +47,11 @@ typedef struct {
 
 typedef MooActionClass ToolActionClass;
 
-MOO_DEFINE_TYPE_STATIC (ToolAction, _moo_file_view_tool_action, MOO_TYPE_ACTION)
+G_DEFINE_TYPE (ToolAction, _moo_file_view_tool_action, MOO_TYPE_ACTION)
 
 
 static void
-_moo_file_view_tool_action_init (G_GNUC_UNUSED ToolAction *action, gpointer)
+_moo_file_view_tool_action_init (G_GNUC_UNUSED ToolAction *action)
 {
 }
 
@@ -79,10 +79,10 @@ run_command (const char *command_template,
     GError *error = NULL;
     GRegex *regex;
 
-    regex = g_regex_new ("%[fF]", 0, 0, NULL);
+    regex = g_regex_new ("%[fF]", G_REGEX_DEFAULT, G_REGEX_MATCH_DEFAULT, NULL);
     g_return_if_fail (regex != NULL);
 
-    command = g_regex_replace_literal (regex, command_template, -1, 0, files, 0, &error);
+    command = g_regex_replace_literal (regex, command_template, -1, 0, files, G_REGEX_MATCH_DEFAULT, &error);
 
     if (!command)
     {
@@ -178,7 +178,7 @@ remove_old_tools (MooFileView    *fileview,
 {
     ToolsInfo *info;
 
-    info = g_object_get_data (G_OBJECT (fileview), "moo-file-view-tools-info");
+    info = (ToolsInfo*) g_object_get_data (G_OBJECT (fileview), "moo-file-view-tools-info");
 
     if (info)
     {
@@ -186,7 +186,7 @@ remove_old_tools (MooFileView    *fileview,
 
         while (info->actions)
         {
-            GtkAction *action = info->actions->data;
+            GtkAction *action = (GtkAction*) info->actions->data;
             gtk_action_group_remove_action (group, action);
             g_object_unref (action);
             info->actions = g_slist_delete_link (info->actions, info->actions);
@@ -347,7 +347,7 @@ _moo_file_view_tools_load (MooFileView *fileview)
 
     for (l = info->actions; l != NULL; l = l->next)
     {
-        GtkAction *action = l->data;
+        GtkAction *action = (GtkAction*) l->data;
         char *markup;
 
         gtk_action_group_add_action (group, action);
@@ -373,7 +373,7 @@ action_check_one (ToolAction *action,
         return TRUE;
 
     for (l = action->extensions; l != NULL; l = l->next)
-        if (_moo_glob_match_simple (l->data, _moo_file_display_name (file)))
+        if (_moo_glob_match_simple ((const char*) l->data, _moo_file_display_name (file)))
             return TRUE;
 
     mime = _moo_file_get_mime_type (file);
@@ -383,7 +383,7 @@ action_check_one (ToolAction *action,
         return FALSE;
 
     for (l = action->mimetypes; l != NULL; l = l->next)
-        if (moo_mime_type_is_subclass (mime, l->data))
+        if (moo_mime_type_is_subclass (mime, (const char*) l->data))
             return TRUE;
 
     return FALSE;
@@ -398,7 +398,7 @@ action_check (ToolAction *action,
 
     while (files)
     {
-        MooFile *f = files->data;
+        MooFile *f = (MooFile*) files->data;
 
         if (!MOO_FILE_EXISTS (f) || MOO_FILE_IS_DIR (f) || !action_check_one (action, f))
         {
@@ -409,7 +409,7 @@ action_check (ToolAction *action,
         files = files->next;
     }
 
-    g_object_set (action, "visible", visible, NULL);
+    g_object_set (action, "visible", visible, (char*) NULL);
 }
 
 
@@ -420,7 +420,7 @@ _moo_file_view_tools_check (MooFileView *fileview)
     ToolsInfo *info;
     GSList *l;
 
-    info = g_object_get_data (G_OBJECT (fileview), "moo-file-view-tools-info");
+    info = (ToolsInfo*) g_object_get_data (G_OBJECT (fileview), "moo-file-view-tools-info");
 
     if (!info)
         return;
@@ -430,12 +430,12 @@ _moo_file_view_tools_check (MooFileView *fileview)
     if (!files)
     {
         for (l = info->actions; l != NULL; l = l->next)
-            g_object_set (l->data, "visible", FALSE, NULL);
+            g_object_set ((ToolAction*) l->data, "visible", FALSE, (char*) NULL);
         return;
     }
 
     for (l = info->actions; l != NULL; l = l->next)
-        action_check (l->data, files);
+        action_check ((ToolAction*) l->data, files);
 
     g_list_foreach (files, (GFunc) _moo_file_unref_data, NULL);
     g_list_free (files);

@@ -19,6 +19,7 @@
 #ifndef MOO_FILE_VIEW_PRIVATE_H
 #define MOO_FILE_VIEW_PRIVATE_H
 
+G_BEGIN_DECLS
 
 #define MOO_TYPE_FILE_VIEW_TYPE         (_moo_file_view_type_get_type ())
 
@@ -34,5 +35,6 @@ GType       _moo_file_view_type_get_type                (void) G_GNUC_CONST;
 /* returns list of MooFile* pointers, must be freed, and elements must be unref'ed */
 GList      *_moo_file_view_get_files                    (MooFileView    *fileview);
 
+G_END_DECLS
 
 #endif /* MOO_FILE_VIEW_PRIVATE_H */

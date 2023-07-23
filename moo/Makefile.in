@@ -323,7 +323,7 @@ am___moo_la_SOURCES_DIST = medit-module/medit-module.cpp moo-config.h \
 	moofileview/moofileview-dialogs.h \
 	moofileview/moofileview-impl.h \
 	moofileview/moofileview-private.h \
-	moofileview/moofileview-tools.c \
+	moofileview/moofileview-tools.cpp \
 	moofileview/moofileview-tools.h \
 	moofileview/moofolder-private.h moofileview/moofolder.c \
 	moofileview/moofolder.h moofileview/moofoldermodel.c \
@@ -724,7 +724,7 @@ am__medit_SOURCES_DIST = medit-app/mem-debug.h medit-app/run-tests.h \
 	moofileview/moofileview-dialogs.h \
 	moofileview/moofileview-impl.h \
 	moofileview/moofileview-private.h \
-	moofileview/moofileview-tools.c \
+	moofileview/moofileview-tools.cpp \
 	moofileview/moofileview-tools.h \
 	moofileview/moofolder-private.h moofileview/moofolder.c \
 	moofileview/moofolder.h moofileview/moofoldermodel.c \
@@ -2037,7 +2037,7 @@ moo_sources = moo-config.h mooglib/moo-glib.h mooglib/moo-stat.h \
 	moofileview/moofileview-dialogs.h \
 	moofileview/moofileview-impl.h \
 	moofileview/moofileview-private.h \
-	moofileview/moofileview-tools.c \
+	moofileview/moofileview-tools.cpp \
 	moofileview/moofileview-tools.h \
 	moofileview/moofolder-private.h moofileview/moofolder.c \
 	moofileview/moofolder.h moofileview/moofoldermodel.c \
@@ -4417,13 +4417,6 @@ moofileview/_moo_la-moofileview-dialogs.lo: moofileview/moofileview-dialogs.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CFLAGS) $(CFLAGS) -c -o moofileview/_moo_la-moofileview-dialogs.lo `test -f 'moofileview/moofileview-dialogs.c' || echo '$(srcdir)/'`moofileview/moofileview-dialogs.c
 
-moofileview/_moo_la-moofileview-tools.lo: moofileview/moofileview-tools.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CFLAGS) $(CFLAGS) -MT moofileview/_moo_la-moofileview-tools.lo -MD -MP -MF moofileview/$(DEPDIR)/_moo_la-moofileview-tools.Tpo -c -o moofileview/_moo_la-moofileview-tools.lo `test -f 'moofileview/moofileview-tools.c' || echo '$(srcdir)/'`moofileview/moofileview-tools.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) moofileview/$(DEPDIR)/_moo_la-moofileview-tools.Tpo moofileview/$(DEPDIR)/_moo_la-moofileview-tools.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='moofileview/moofileview-tools.c' object='moofileview/_moo_la-moofileview-tools.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CFLAGS) $(CFLAGS) -c -o moofileview/_moo_la-moofileview-tools.lo `test -f 'moofileview/moofileview-tools.c' || echo '$(srcdir)/'`moofileview/moofileview-tools.c
-
 moofileview/_moo_la-moofolder.lo: moofileview/moofolder.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CFLAGS) $(CFLAGS) -MT moofileview/_moo_la-moofolder.lo -MD -MP -MF moofileview/$(DEPDIR)/_moo_la-moofolder.Tpo -c -o moofileview/_moo_la-moofolder.lo `test -f 'moofileview/moofolder.c' || echo '$(srcdir)/'`moofileview/moofolder.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) moofileview/$(DEPDIR)/_moo_la-moofolder.Tpo moofileview/$(DEPDIR)/_moo_la-moofolder.Plo
@@ -4923,6 +4916,13 @@ mooutils/_moo_la-moo-test-utils.lo: mooutils/moo-test-utils.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='mooutils/moo-test-utils.cpp' object='mooutils/_moo_la-moo-test-utils.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CXXFLAGS) $(CXXFLAGS) -c -o mooutils/_moo_la-moo-test-utils.lo `test -f 'mooutils/moo-test-utils.cpp' || echo '$(srcdir)/'`mooutils/moo-test-utils.cpp
+
+moofileview/_moo_la-moofileview-tools.lo: moofileview/moofileview-tools.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CXXFLAGS) $(CXXFLAGS) -MT moofileview/_moo_la-moofileview-tools.lo -MD -MP -MF moofileview/$(DEPDIR)/_moo_la-moofileview-tools.Tpo -c -o moofileview/_moo_la-moofileview-tools.lo `test -f 'moofileview/moofileview-tools.cpp' || echo '$(srcdir)/'`moofileview/moofileview-tools.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) moofileview/$(DEPDIR)/_moo_la-moofileview-tools.Tpo moofileview/$(DEPDIR)/_moo_la-moofileview-tools.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='moofileview/moofileview-tools.cpp' object='moofileview/_moo_la-moofileview-tools.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CXXFLAGS) $(CXXFLAGS) -c -o moofileview/_moo_la-moofileview-tools.lo `test -f 'moofileview/moofileview-tools.cpp' || echo '$(srcdir)/'`moofileview/moofileview-tools.cpp
 
 mooapp/_moo_la-mooappabout.lo: mooapp/mooappabout.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CXXFLAGS) $(CXXFLAGS) -MT mooapp/_moo_la-mooappabout.lo -MD -MP -MF mooapp/$(DEPDIR)/_moo_la-mooappabout.Tpo -c -o mooapp/_moo_la-mooappabout.lo `test -f 'mooapp/mooappabout.cpp' || echo '$(srcdir)/'`mooapp/mooappabout.cpp
