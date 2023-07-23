@@ -33,10 +33,10 @@ struct MooEditProgressClass
 
 static void     cancel_clicked      (MooEditProgress *pr);
 
-MOO_DEFINE_TYPE_STATIC (MooEditProgress, moo_edit_progress, GTK_TYPE_ALIGNMENT)
+G_DEFINE_TYPE (MooEditProgress, moo_edit_progress, GTK_TYPE_ALIGNMENT)
 
 static void
-moo_edit_progress_init (MooEditProgress *pr, gpointer)
+moo_edit_progress_init (MooEditProgress *pr)
 {
     pr->xml = progress_widget_xml_new_with_root (GTK_WIDGET (pr));
     g_signal_connect_swapped (pr->xml->cancel, "clicked", G_CALLBACK (cancel_clicked), pr);
@@ -68,7 +68,7 @@ moo_edit_progress_class_init (MooEditProgressClass *klass)
 MooEditProgress *
 _moo_edit_progress_new (void)
 {
-    return g_object_new (MOO_TYPE_EDIT_PROGRESS, NULL);
+    return (MooEditProgress*) g_object_new (MOO_TYPE_EDIT_PROGRESS, NULL);
 }
 
 static void

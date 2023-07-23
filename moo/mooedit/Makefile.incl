@@ -51,7 +51,7 @@ moo_sources +=				\
 	mooedit/mooeditprefspage.cpp	\
 	mooedit/mooedit-private.h	\
 	mooedit/mooeditprogress.h	\
-	mooedit/mooeditprogress.c	\
+	mooedit/mooeditprogress.cpp	\
 	mooedit/mooedittab.cpp		\
 	mooedit/mooedittab.h		\
 	mooedit/mooedittab-impl.h	\

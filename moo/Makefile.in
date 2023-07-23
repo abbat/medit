@@ -219,7 +219,7 @@ am___moo_la_SOURCES_DIST = medit-module/medit-module.cpp moo-config.h \
 	mooedit/mooedit-script.cpp mooedit/mooedit-script.h \
 	mooedit/mooeditprefs.cpp mooedit/mooeditprefspage.cpp \
 	mooedit/mooedit-private.h mooedit/mooeditprogress.h \
-	mooedit/mooeditprogress.c mooedit/mooedittab.cpp \
+	mooedit/mooeditprogress.cpp mooedit/mooedittab.cpp \
 	mooedit/mooedittab.h mooedit/mooedittab-impl.h \
 	mooedit/mooeditwindow.cpp mooedit/mooeditwindow-impl.h \
 	mooedit/mooeditfileinfo-impl.h mooedit/mooeditfileinfo.cpp \
@@ -620,7 +620,7 @@ am__medit_SOURCES_DIST = medit-app/mem-debug.h medit-app/run-tests.h \
 	mooedit/mooedit-script.cpp mooedit/mooedit-script.h \
 	mooedit/mooeditprefs.cpp mooedit/mooeditprefspage.cpp \
 	mooedit/mooedit-private.h mooedit/mooeditprogress.h \
-	mooedit/mooeditprogress.c mooedit/mooedittab.cpp \
+	mooedit/mooeditprogress.cpp mooedit/mooedittab.cpp \
 	mooedit/mooedittab.h mooedit/mooedittab-impl.h \
 	mooedit/mooeditwindow.cpp mooedit/mooeditwindow-impl.h \
 	mooedit/mooeditfileinfo-impl.h mooedit/mooeditfileinfo.cpp \
@@ -1942,7 +1942,7 @@ moo_sources = moo-config.h mooglib/moo-glib.h mooglib/moo-stat.h \
 	mooedit/mooedit-script.cpp mooedit/mooedit-script.h \
 	mooedit/mooeditprefs.cpp mooedit/mooeditprefspage.cpp \
 	mooedit/mooedit-private.h mooedit/mooeditprogress.h \
-	mooedit/mooeditprogress.c mooedit/mooedittab.cpp \
+	mooedit/mooeditprogress.cpp mooedit/mooedittab.cpp \
 	mooedit/mooedittab.h mooedit/mooedittab-impl.h \
 	mooedit/mooeditwindow.cpp mooedit/mooeditwindow-impl.h \
 	mooedit/mooeditfileinfo-impl.h mooedit/mooeditfileinfo.cpp \
@@ -3906,13 +3906,6 @@ mooedit/_moo_la-mooedit-enum-types.lo: mooedit/mooedit-enum-types.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CFLAGS) $(CFLAGS) -c -o mooedit/_moo_la-mooedit-enum-types.lo `test -f 'mooedit/mooedit-enum-types.c' || echo '$(srcdir)/'`mooedit/mooedit-enum-types.c
 
-mooedit/_moo_la-mooeditprogress.lo: mooedit/mooeditprogress.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CFLAGS) $(CFLAGS) -MT mooedit/_moo_la-mooeditprogress.lo -MD -MP -MF mooedit/$(DEPDIR)/_moo_la-mooeditprogress.Tpo -c -o mooedit/_moo_la-mooeditprogress.lo `test -f 'mooedit/mooeditprogress.c' || echo '$(srcdir)/'`mooedit/mooeditprogress.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) mooedit/$(DEPDIR)/_moo_la-mooeditprogress.Tpo mooedit/$(DEPDIR)/_moo_la-mooeditprogress.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='mooedit/mooeditprogress.c' object='mooedit/_moo_la-mooeditprogress.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CFLAGS) $(CFLAGS) -c -o mooedit/_moo_la-mooeditprogress.lo `test -f 'mooedit/mooeditprogress.c' || echo '$(srcdir)/'`mooedit/mooeditprogress.c
-
 mooedit/_moo_la-moolinebuffer.lo: mooedit/moolinebuffer.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CFLAGS) $(CFLAGS) -MT mooedit/_moo_la-moolinebuffer.lo -MD -MP -MF mooedit/$(DEPDIR)/_moo_la-moolinebuffer.Tpo -c -o mooedit/_moo_la-moolinebuffer.lo `test -f 'mooedit/moolinebuffer.c' || echo '$(srcdir)/'`mooedit/moolinebuffer.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) mooedit/$(DEPDIR)/_moo_la-moolinebuffer.Tpo mooedit/$(DEPDIR)/_moo_la-moolinebuffer.Plo
@@ -4783,6 +4776,13 @@ mooedit/_moo_la-mooeditprefspage.lo: mooedit/mooeditprefspage.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='mooedit/mooeditprefspage.cpp' object='mooedit/_moo_la-mooeditprefspage.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CXXFLAGS) $(CXXFLAGS) -c -o mooedit/_moo_la-mooeditprefspage.lo `test -f 'mooedit/mooeditprefspage.cpp' || echo '$(srcdir)/'`mooedit/mooeditprefspage.cpp
+
+mooedit/_moo_la-mooeditprogress.lo: mooedit/mooeditprogress.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CXXFLAGS) $(CXXFLAGS) -MT mooedit/_moo_la-mooeditprogress.lo -MD -MP -MF mooedit/$(DEPDIR)/_moo_la-mooeditprogress.Tpo -c -o mooedit/_moo_la-mooeditprogress.lo `test -f 'mooedit/mooeditprogress.cpp' || echo '$(srcdir)/'`mooedit/mooeditprogress.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) mooedit/$(DEPDIR)/_moo_la-mooeditprogress.Tpo mooedit/$(DEPDIR)/_moo_la-mooeditprogress.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='mooedit/mooeditprogress.cpp' object='mooedit/_moo_la-mooeditprogress.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CXXFLAGS) $(CXXFLAGS) -c -o mooedit/_moo_la-mooeditprogress.lo `test -f 'mooedit/mooeditprogress.cpp' || echo '$(srcdir)/'`mooedit/mooeditprogress.cpp
 
 mooedit/_moo_la-mooedittab.lo: mooedit/mooedittab.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CXXFLAGS) $(CXXFLAGS) -MT mooedit/_moo_la-mooedittab.lo -MD -MP -MF mooedit/$(DEPDIR)/_moo_la-mooedittab.Tpo -c -o mooedit/_moo_la-mooedittab.lo `test -f 'mooedit/mooedittab.cpp' || echo '$(srcdir)/'`mooedit/mooedittab.cpp
