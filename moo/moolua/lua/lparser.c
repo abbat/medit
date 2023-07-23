@@ -915,7 +915,7 @@ static void check_conflict (LexState *ls, struct LHS_assign *lh, expdesc *v) {
         conflict = 1;
         lh->v.u.s.info = extra;  /* previous assignment will use safe copy */
       }
-      if (lh->v.u.s.aux == v->u.s.info) {  /* conflict? */
+      if (lh->v.u.s.aux == v->u.s.aux) {  /* conflict? */
         conflict = 1;
         lh->v.u.s.aux = extra;  /* previous assignment will use safe copy */
       }
