@@ -326,7 +326,7 @@ add_arrow (GdkPixbuf     *original,
     if (!small_arrow)
     {
         small_arrow = gdk_pixbuf_new_from_inline (-1, SYMLINK_ARROW_SMALL, TRUE, NULL);
-        g_return_val_if_fail (arrow != NULL, GDK_PIXBUF (g_object_ref (original)));
+        g_return_val_if_fail (small_arrow != NULL, GDK_PIXBUF (g_object_ref (original)));
     }
 
     if (size == GTK_ICON_SIZE_MENU)
