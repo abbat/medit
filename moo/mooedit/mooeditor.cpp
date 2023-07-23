@@ -1828,9 +1828,15 @@ filename_from_utf8 (const char *encoded)
         gsize len;
 
         filename = g_base64_decode (encoded + strlen ("base64"), &len);
-
-        if (!filename || !len || filename[len-1] != 0)
+        if (filename == NULL)
         {
+            g_critical ("oops");
+            return NULL;
+        }
+
+        if (!len || filename[len-1] != 0)
+        {
+            g_free (filename);
             g_critical ("oops");
             return NULL;
         }
