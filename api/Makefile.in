@@ -504,7 +504,7 @@ BUILT_SOURCES = $(am__append_1)
 @MOO_DEV_MODE_TRUE@    ../moo/moofileview/moofileview.h\
 @MOO_DEV_MODE_TRUE@    ../moo/moofileview/moofileview-impl.h\
 @MOO_DEV_MODE_TRUE@    ../moo/moofileview/moofileview-private.h\
-@MOO_DEV_MODE_TRUE@    ../moo/moofileview/moofileview-tools.c\
+@MOO_DEV_MODE_TRUE@    ../moo/moofileview/moofileview-tools.cpp\
 @MOO_DEV_MODE_TRUE@    ../moo/moofileview/moofileview-tools.h\
 @MOO_DEV_MODE_TRUE@    ../moo/moofileview/moofolder.c\
 @MOO_DEV_MODE_TRUE@    ../moo/moofileview/moofolder.h\
