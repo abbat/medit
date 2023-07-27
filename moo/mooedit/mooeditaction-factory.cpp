@@ -598,33 +598,6 @@ _moo_edit_add_class_actions (MooEdit *edit)
     }
 }
 
-
-static GtkWidget *
-create_input_methods_menu_item (GtkAction *action)
-{
-    MooEditView *view;
-    GtkWidget *item, *menu;
-    gboolean visible = TRUE;
-
-    view = MOO_EDIT_VIEW (g_object_get_data (G_OBJECT (action), "moo-edit-view"));
-    g_return_val_if_fail (MOO_IS_EDIT_VIEW (view), NULL);
-
-    item = gtk_menu_item_new ();
-    menu = gtk_menu_new ();
-    gtk_widget_show (menu);
-    gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
-
-    gtk_im_multicontext_append_menuitems (GTK_IM_MULTICONTEXT (GTK_TEXT_VIEW (view)->im_context),
-					  GTK_MENU_SHELL (menu));
-
-    g_object_get (gtk_widget_get_settings (GTK_WIDGET (view)),
-                  "gtk-show-input-method-menu", &visible,
-                  (char*) 0);
-    g_object_set (action, "visible", visible, (char*) 0);
-
-    return item;
-}
-
 static GtkWidget *
 create_special_chars_menu_item (GtkAction *action)
 {
@@ -705,12 +678,6 @@ _moo_edit_class_init_actions (MooEditClass *klass)
                                "view-condition::sensitive", "has-text",
                                (char*) 0);
 
-    moo_edit_class_new_action (klass, "InputMethods",
-                               "action-type::", MOO_TYPE_MENU_ACTION,
-                               "label", D_("Input _Methods", "gtk20"),
-                               "menu-func", create_input_methods_menu_item,
-                               (char*) 0);
-
     moo_edit_class_new_action (klass, "SpecialChars",
                                "action-type::", MOO_TYPE_MENU_ACTION,
                                "label", D_("_Insert Unicode Control Character", "gtk20"),
@@ -758,20 +725,20 @@ bidi_menu_item_activate (GtkWidget   *menuitem,
     gtk_text_buffer_begin_user_action (buffer);
 
     had_selection = gtk_text_buffer_get_selection_bounds (buffer, NULL, NULL);
-    gtk_text_buffer_delete_selection (buffer, TRUE, view->editable);
+    gtk_text_buffer_delete_selection (buffer, TRUE, gtk_text_view_get_editable(view));
 
-    if (!had_selection && view->overwrite_mode)
+    if (!had_selection && gtk_text_view_get_overwrite(view))
     {
         GtkTextIter insert, end;
         gtk_text_buffer_get_iter_at_mark (buffer, &insert, gtk_text_buffer_get_insert (buffer));
         if (!gtk_text_iter_ends_line (&insert))
         {
             gtk_text_iter_forward_cursor_positions (&end, 1);
-            gtk_text_buffer_delete_interactive (buffer, &insert, &end, view->editable);
+            gtk_text_buffer_delete_interactive (buffer, &insert, &end, gtk_text_view_get_editable(view));
         }
     }
 
-    gtk_text_buffer_insert_interactive_at_cursor (buffer, string, -1, view->editable);
+    gtk_text_buffer_insert_interactive_at_cursor (buffer, string, -1, gtk_text_view_get_editable(view));
 
     gtk_text_buffer_end_user_action (buffer);
     gtk_text_view_scroll_mark_onscreen (view, gtk_text_buffer_get_insert (buffer));
