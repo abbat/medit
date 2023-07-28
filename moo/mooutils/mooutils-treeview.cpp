@@ -52,7 +52,11 @@ static gboolean tree_helper_move_row_default    (MooTreeHelper      *helper,
                                                  GtkTreePath        *new_path);
 
 
+#if GTK_CHECK_VERSION(3,0,0)
+G_DEFINE_TYPE (MooTreeHelper, _moo_tree_helper, GTK_TYPE_WIDGET)
+#else
 G_DEFINE_TYPE (MooTreeHelper, _moo_tree_helper, GTK_TYPE_OBJECT)
+#endif
 
 
 enum {
@@ -189,7 +193,11 @@ combo_changed (GtkComboBox   *combo,
 
 
 static void
+#if GTK_CHECK_VERSION(3,0,0)
+moo_tree_helper_destroy (GtkWidget *object)
+#else
 moo_tree_helper_destroy (GtkObject *object)
+#endif
 {
     MooTreeHelper *helper = MOO_TREE_HELPER (object);
 
@@ -197,9 +205,15 @@ moo_tree_helper_destroy (GtkObject *object)
     {
         GtkTreeSelection *selection;
 
+#if GTK_CHECK_VERSION(3,0,0)
+        g_signal_handlers_disconnect_by_func (helper->widget,
+                                              (gpointer) gtk_widget_destroy,
+                                              helper);
+#else
         g_signal_handlers_disconnect_by_func (helper->widget,
                                               (gpointer) gtk_object_destroy,
                                               helper);
+#endif
 
         switch (helper->type)
         {
@@ -237,7 +251,11 @@ moo_tree_helper_destroy (GtkObject *object)
         helper->widget = NULL;
     }
 
+#if GTK_CHECK_VERSION(3,0,0)
+    GTK_WIDGET_CLASS (_moo_tree_helper_parent_class)->destroy (object);
+#else
     GTK_OBJECT_CLASS (_moo_tree_helper_parent_class)->destroy (object);
+#endif
 }
 
 
@@ -312,7 +330,11 @@ tree_helper_move_row_default (G_GNUC_UNUSED MooTreeHelper *helper,
 static void
 _moo_tree_helper_class_init (MooTreeHelperClass *klass)
 {
+#if GTK_CHECK_VERSION(3,0,0)
+    GTK_WIDGET_CLASS(klass)->destroy = moo_tree_helper_destroy;
+#else
     GTK_OBJECT_CLASS(klass)->destroy = moo_tree_helper_destroy;
+#endif
 
     klass->move_row = tree_helper_move_row_default;
     klass->new_row = tree_helper_new_row_default;
@@ -717,9 +739,15 @@ _moo_tree_helper_connect (MooTreeHelper *helper,
     helper->up_btn = up_btn;
     helper->down_btn = down_btn;
 
+#if GTK_CHECK_VERSION(3,0,0)
+    g_signal_connect_swapped (widget, "destroy",
+                              G_CALLBACK (gtk_widget_destroy),
+                              helper);
+#else
     g_signal_connect_swapped (widget, "destroy",
                               G_CALLBACK (gtk_object_destroy),
                               helper);
+#endif
 
     switch (helper->type)
     {

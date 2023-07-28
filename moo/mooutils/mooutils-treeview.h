@@ -49,7 +49,11 @@ typedef struct _MooTreeHelper MooTreeHelper;
 typedef struct _MooTreeHelperClass MooTreeHelperClass;
 
 struct _MooTreeHelper {
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkWidget parent;
+#else
     GtkObject parent;
+#endif
 
     gboolean modified;
     int type;
@@ -62,7 +66,11 @@ struct _MooTreeHelper {
 };
 
 struct _MooTreeHelperClass {
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkWidgetClass parent_class;
+#else
     GtkObjectClass parent_class;
+#endif
 
     gboolean    (*new_row)          (MooTreeHelper  *helper,
                                      GtkTreeModel   *model,
