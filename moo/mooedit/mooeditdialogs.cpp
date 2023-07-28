@@ -393,7 +393,7 @@ find_widget_for_response (GtkDialog *dialog,
     GList *l, *children;
     GtkWidget *ret = NULL;
 
-    children = gtk_container_get_children (GTK_CONTAINER (dialog->action_area));
+    children = gtk_container_get_children (GTK_CONTAINER (gtk_dialog_get_action_area(dialog)));
 
     for (l = children; ret == NULL && l != NULL; l = l->next)
     {
