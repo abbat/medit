@@ -57,8 +57,9 @@
 </packing>
 </child>
 <child>
-<widget class="GtkComboBoxEntry" id="encoding_combo">
+<widget class="GtkComboBox" id="encoding_combo">
 <property name="visible">True</property>
+<property name="has_entry">True</property>
 </widget>
 <packing>
 <property name="expand">False</property>

@@ -180,7 +180,7 @@ moo_filter_mgr_init_filter_combo (MooFilterMgr *mgr,
     FilterStore *store;
 
     g_return_if_fail (MOO_IS_FILTER_MGR (mgr));
-    g_return_if_fail (GTK_IS_COMBO_BOX_ENTRY (combo));
+    g_return_if_fail (GTK_IS_COMBO_BOX (combo));
 
     mgr_load (mgr);
 
@@ -190,8 +190,8 @@ moo_filter_mgr_init_filter_combo (MooFilterMgr *mgr,
     gtk_combo_box_set_model (combo, GTK_TREE_MODEL (store->filters));
     gtk_combo_box_set_row_separator_func (combo, combo_row_separator_func, NULL, NULL);
 
-    if (GTK_IS_COMBO_BOX_ENTRY (combo))
-        gtk_combo_box_entry_set_text_column (GTK_COMBO_BOX_ENTRY (combo), COLUMN_DESCRIPTION);
+    if (GTK_IS_COMBO_BOX (combo))
+        gtk_combo_box_set_entry_text_column (GTK_COMBO_BOX (combo), COLUMN_DESCRIPTION);
 }
 
 

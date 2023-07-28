@@ -752,7 +752,7 @@ setup_combo (GtkComboBox      *combo,
     }
 
     gtk_combo_box_set_model (combo, GTK_TREE_MODEL (store));
-    gtk_combo_box_entry_set_text_column (GTK_COMBO_BOX_ENTRY (combo), COLUMN_DISPLAY);
+    gtk_combo_box_set_entry_text_column (GTK_COMBO_BOX (combo), COLUMN_DISPLAY);
 
     cell = gtk_cell_renderer_text_new ();
     gtk_cell_layout_clear (GTK_CELL_LAYOUT (combo));
@@ -796,7 +796,7 @@ _moo_encodings_combo_init (GtkComboBox          *combo,
                            MooEncodingComboType  type,
 			   gboolean		 use_separators)
 {
-    g_return_if_fail (GTK_IS_COMBO_BOX_ENTRY (combo));
+    g_return_if_fail (GTK_IS_COMBO_BOX (combo));
     setup_combo (combo, get_enc_mgr (),
 		 type == MOO_ENCODING_COMBO_SAVE,
 		 use_separators);
@@ -807,7 +807,7 @@ _moo_encodings_combo_set_enc (GtkComboBox         *combo,
                               const char          *enc,
                               MooEncodingComboType type)
 {
-    g_return_if_fail (GTK_IS_COMBO_BOX_ENTRY (combo));
+    g_return_if_fail (GTK_IS_COMBO_BOX (combo));
     encoding_combo_set_active (combo, enc, type == MOO_ENCODING_COMBO_SAVE);
 }
 
@@ -901,7 +901,7 @@ _moo_encodings_combo_get (GtkWidget *dialog,
     GtkComboBox *combo;
 
     combo = GTK_COMBO_BOX (g_object_get_data (G_OBJECT (dialog), "moo-encodings-combo"));
-    g_return_val_if_fail (GTK_IS_COMBO_BOX_ENTRY (combo), MOO_ENCODING_UTF8);
+    g_return_val_if_fail (GTK_IS_COMBO_BOX (combo), MOO_ENCODING_UTF8);
 
     return combo_get (combo, save_mode);
 }

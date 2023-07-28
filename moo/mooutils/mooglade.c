@@ -817,7 +817,7 @@ create_child (MooGladeXML    *xml,
         {
             widget = GTK_DIALOG (real_parent)->action_area;
         }
-        else if (!strcmp (child->internal_child, "entry") && GTK_IS_COMBO_BOX_ENTRY (real_parent))
+        else if (!strcmp (child->internal_child, "entry") && GTK_IS_COMBO_BOX (real_parent))
         {
             widget = GTK_BIN (real_parent)->child;
         }
@@ -1304,7 +1304,7 @@ child_new (MooGladeXML    *xml,
         else if (!strcmp (internal_child, "entry"))
         {
             parent_types[0] = GTK_TYPE_COMBO;
-            parent_types[1] = GTK_TYPE_COMBO_BOX_ENTRY;
+            parent_types[1] = GTK_TYPE_COMBO_BOX;
             n_parent_types = 2;
         }
         else if (!strcmp (internal_child, "list"))
