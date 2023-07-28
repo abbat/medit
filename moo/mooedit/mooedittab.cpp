@@ -310,13 +310,13 @@ _moo_edit_tab_set_split_horizontal (MooEditTab *tab,
         if (view1)
         {
             _moo_edit_remove_view (tab->doc, view1);
-            gtk_container_remove (GTK_CONTAINER (tab->vpaned2), GTK_WIDGET (view1)->parent);
+            gtk_container_remove (GTK_CONTAINER (tab->vpaned2), gtk_widget_get_parent (GTK_WIDGET (view1)));
         }
 
         if (view2)
         {
             _moo_edit_remove_view (tab->doc, view2);
-            gtk_container_remove (GTK_CONTAINER (tab->vpaned2), GTK_WIDGET (view2)->parent);
+            gtk_container_remove (GTK_CONTAINER (tab->vpaned2), gtk_widget_get_parent (GTK_WIDGET (view2)));
         }
 
         gtk_widget_hide (tab->vpaned2);
@@ -404,13 +404,13 @@ _moo_edit_tab_set_split_vertical (MooEditTab *tab,
         if (view1)
         {
             _moo_edit_remove_view (tab->doc, view1);
-            gtk_container_remove (GTK_CONTAINER (tab->vpaned1), GTK_WIDGET (view1)->parent);
+            gtk_container_remove (GTK_CONTAINER (tab->vpaned1), gtk_widget_get_parent (GTK_WIDGET (view1)));
         }
 
         if (view2)
         {
             _moo_edit_remove_view (tab->doc, view2);
-            gtk_container_remove (GTK_CONTAINER (tab->vpaned2), GTK_WIDGET (view2)->parent);
+            gtk_container_remove (GTK_CONTAINER (tab->vpaned2), gtk_widget_get_parent (GTK_WIDGET (view2)));
         }
 
         if (has_focus)
