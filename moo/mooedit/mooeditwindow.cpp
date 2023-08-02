@@ -142,7 +142,12 @@ static GObject *moo_edit_window_constructor     (GType               type,
                                                  guint               n_props,
                                                  GObjectConstructParam *props);
 static void     moo_edit_window_finalize        (GObject            *object);
+
+#if GTK_CHECK_VERSION(3,0,0)
+static void     moo_edit_window_destroy         (GtkWidget          *object);
+#else
 static void     moo_edit_window_destroy         (GtkObject          *object);
+#endif
 
 static void     moo_edit_window_set_property    (GObject            *object,
                                                  guint               prop_id,
@@ -344,7 +349,11 @@ moo_edit_window_class_init (MooEditWindowClass *klass)
 {
     guint i;
     GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkWidgetClass *gtkobject_class = GTK_WIDGET_CLASS (klass);
+#else
     GtkObjectClass *gtkobject_class = GTK_OBJECT_CLASS (klass);
+#endif
     MooWindowClass *window_class = MOO_WINDOW_CLASS (klass);
 
     action_checks_init ();
@@ -870,7 +879,11 @@ moo_edit_window_get_editor (MooEditWindow *window)
 
 
 static void
+#if GTK_CHECK_VERSION(3,0,0)
+moo_edit_window_destroy (GtkWidget *object)
+#else
 moo_edit_window_destroy (GtkObject *object)
+#endif
 {
     MooEditWindow *window = MOO_EDIT_WINDOW (object);
 
@@ -906,7 +919,11 @@ moo_edit_window_destroy (GtkObject *object)
 
     windows.erase(window);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    GTK_WIDGET_CLASS(moo_edit_window_parent_class)->destroy (object);
+#else
     GTK_OBJECT_CLASS(moo_edit_window_parent_class)->destroy (object);
+#endif
 }
 
 
@@ -1894,7 +1911,7 @@ populate_bookmark_menu (MooEditWindow *window,
     GList *children, *l;
     int pos;
 
-    children = g_list_copy (GTK_MENU_SHELL (menu)->children);
+    children = g_list_copy (gtk_container_get_children (GTK_CONTAINER (menu)));
     pos = g_list_index (children, next_bk_item);
     g_return_if_fail (pos >= 0);
 
@@ -4589,7 +4606,7 @@ populate_window_menu (MooEditWindow *window,
     guint i;
     GtkWidget *item;
 
-    children = g_list_copy (GTK_MENU_SHELL (menu)->children);
+    children = g_list_copy (gtk_container_get_children (GTK_CONTAINER (menu)));
     pos = g_list_index (children, no_docs_item);
     g_return_if_fail (pos >= 0);
 
@@ -4718,7 +4735,7 @@ notebook_drag_motion (GtkWidget          *widget,
     if (target == MOO_EDIT_TAB_ATOM)
         gtk_drag_get_data (widget, context, MOO_EDIT_TAB_ATOM, time);
     else
-        gdk_drag_status (context, context->suggested_action, time);
+        gdk_drag_status (context, gdk_drag_context_get_suggested_action (context), time);
 
     return TRUE;
 }
@@ -4766,7 +4783,8 @@ notebook_drag_data_recv (GtkWidget          *widget,
     {
         data_window_drop.set(widget, false);
 
-        if (data->target == MOO_EDIT_TAB_ATOM)
+        GdkAtom target = gtk_selection_data_get_target (data);
+        if (target == MOO_EDIT_TAB_ATOM)
         {
             GtkWidget *toplevel;
             GtkWidget *src_notebook = nullptr;
@@ -4795,14 +4813,14 @@ notebook_drag_data_recv (GtkWidget          *widget,
 
             goto out;
         }
-        else if (data->target == moo_atom_uri_list ())
+        else if (target == moo_atom_uri_list ())
         {
             char **uris;
             char **u;
 
             /* XXX this is wrong but works. gtk_selection_data_get_uris()
              * does not work on windows */
-            uris = g_uri_list_extract_uris ((char*) data->data);
+            uris = g_uri_list_extract_uris ((char*) gtk_selection_data_get_data (data));
 
             if (!uris)
                 goto out;
@@ -4842,7 +4860,7 @@ notebook_drag_data_recv (GtkWidget          *widget,
 
             g_free (text);
             gtk_drag_finish (context, TRUE,
-                             context->suggested_action == GDK_ACTION_MOVE,
+                             gdk_drag_context_get_suggested_action (context) == GDK_ACTION_MOVE,
                              time);
             finished = TRUE;
         }
