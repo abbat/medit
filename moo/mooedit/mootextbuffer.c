@@ -49,6 +49,7 @@ struct MooTextBufferPrivate {
     LineBuffer *line_buf;
     MooFoldTree *fold_tree;
 
+    guint user_action_count;
     guint non_interactive;
     int cursor_moved_frozen;
     gboolean cursor_moved;
@@ -489,6 +490,7 @@ moo_text_buffer_begin_user_action (GtkTextBuffer *text_buffer)
     MooTextBuffer *buffer = MOO_TEXT_BUFFER (text_buffer);
     moo_text_buffer_freeze (buffer);
     moo_undo_stack_start_group (buffer->priv->undo_stack);
+    buffer->priv->user_action_count++;
 }
 
 
@@ -498,6 +500,7 @@ moo_text_buffer_end_user_action (GtkTextBuffer *text_buffer)
     MooTextBuffer *buffer = MOO_TEXT_BUFFER (text_buffer);
     moo_text_buffer_thaw (buffer);
     moo_undo_stack_end_group (buffer->priv->undo_stack);
+    buffer->priv->user_action_count--;
 }
 
 
@@ -1643,7 +1646,7 @@ action_new (ActionType     type,
 
     g_assert (size != 0);
     action = g_malloc0 (size);
-    action->interactive = (!buffer->priv->non_interactive && text_buffer->user_action_count) ? TRUE : FALSE;
+    action->interactive = (!buffer->priv->non_interactive && buffer->priv->user_action_count) ? TRUE : FALSE;
 
     if (!gtk_text_buffer_get_modified (text_buffer))
         buffer->priv->modifying_action = action;
