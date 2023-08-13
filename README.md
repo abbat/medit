@@ -25,10 +25,10 @@ Second life for `medit` (also known as `mooedit`) text editor in modern linux di
 | fedora 38    | 2.76.4          | 2.24.33 | 3.24.38           | 4.10.5 |
 | minimum      | 2.64.2 (2.64.6) | 2.24.32 | 3.24.18 (3.24.20) | 4.6.2  |
 
-* ((https://gitlab.gnome.org/GNOME/glib/-/blob/main/NEWS glib changelog))
-* ((https://gitlab.gnome.org/GNOME/gtk/-/blob/gtk-2-24/NEWS gtk-2.24 changelog))
-* ((https://gitlab.gnome.org/GNOME/gtk/-/blob/gtk-3-24/NEWS gtk-3.24 changelog))
-* ((https://gitlab.gnome.org/GNOME/gtk/-/blob/main/NEWS gtk-4 changelog))
+* [glib changelog](https://gitlab.gnome.org/GNOME/glib/-/blob/main/NEWS)
+* [gtk-2.24 changelog](https://gitlab.gnome.org/GNOME/gtk/-/blob/gtk-2-24/NEWS)
+* [gtk-3.24 changelog](https://gitlab.gnome.org/GNOME/gtk/-/blob/gtk-3-24/NEWS)
+* [gtk-4 changelog](https://gitlab.gnome.org/GNOME/gtk/-/blob/main/NEWS)
 
 ### sub-goals
 
