@@ -819,7 +819,7 @@ create_child (MooGladeXML    *xml,
         }
         else if (!strcmp (child->internal_child, "entry") && GTK_IS_COMBO_BOX (real_parent))
         {
-            widget = GTK_BIN (real_parent)->child;
+            widget = gtk_bin_get_child (GTK_BIN (real_parent));
         }
         else if (!strcmp (child->internal_child, "entry") && GTK_IS_COMBO (real_parent))
         {
@@ -1984,7 +1984,7 @@ parse_adjustment (const char *value)
     for (i = 0; i < 6; ++i)
     {
         mgw_errno_t err;
-    
+
         vals[i] = mgw_ascii_strtod (pieces[i], NULL, &err);
 
         if (mgw_errno_is_set (err))

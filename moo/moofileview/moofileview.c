@@ -1596,7 +1596,7 @@ create_filter_combo (G_GNUC_UNUSED MooFileView *fileview)
 
     fileview->priv->filter_button = GTK_TOGGLE_BUTTON (button);
     fileview->priv->filter_combo = GTK_COMBO_BOX (combo);
-    fileview->priv->filter_entry = GTK_ENTRY (GTK_BIN (combo)->child);
+    fileview->priv->filter_entry = GTK_ENTRY (gtk_bin_get_child (GTK_BIN (combo)));
 
     g_signal_connect_swapped (button, "toggled",
                               G_CALLBACK (filter_button_toggled),
@@ -1605,7 +1605,7 @@ create_filter_combo (G_GNUC_UNUSED MooFileView *fileview)
                            G_CALLBACK (filter_combo_changed),
                            fileview, NULL,
                            G_CONNECT_AFTER | G_CONNECT_SWAPPED);
-    g_signal_connect_swapped (GTK_BIN (combo)->child, "activate",
+    g_signal_connect_swapped (gtk_bin_get_child (GTK_BIN (combo)), "activate",
                               G_CALLBACK (filter_entry_activate),
                               fileview);
 

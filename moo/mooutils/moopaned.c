@@ -644,8 +644,8 @@ moo_paned_realize (GtkWidget *widget)
 
     if (paned->button_box)
         gtk_widget_set_parent_window (paned->button_box, paned->priv->bin_window);
-    if (GTK_BIN(paned)->child)
-        gtk_widget_set_parent_window (GTK_BIN(paned)->child, paned->priv->bin_window);
+    if (gtk_bin_get_child (GTK_BIN(paned)))
+        gtk_widget_set_parent_window (gtk_bin_get_child (GTK_BIN(paned)), paned->priv->bin_window);
 }
 
 
@@ -958,9 +958,9 @@ moo_paned_size_request (GtkWidget      *widget,
     requisition->width = 0;
     requisition->height = 0;
 
-    if (bin->child && GTK_WIDGET_VISIBLE (bin->child))
+    if (gtk_bin_get_child (bin) && GTK_WIDGET_VISIBLE (gtk_bin_get_child (bin)))
     {
-        gtk_widget_size_request (bin->child, &child_requisition);
+        gtk_widget_size_request (gtk_bin_get_child (bin), &child_requisition);
         requisition->width += child_requisition.width;
         requisition->height += child_requisition.height;
     }
@@ -1304,8 +1304,8 @@ moo_paned_size_allocate (GtkWidget     *widget,
     if (!paned->priv->pane_widget_visible)
         paned->priv->pane_widget_size = 0;
 
-    if (bin->child && GTK_WIDGET_VISIBLE (bin->child))
-        gtk_widget_get_child_requisition (bin->child, &child_requisition);
+    if (gtk_bin_get_child (bin) && GTK_WIDGET_VISIBLE (gtk_bin_get_child (bin)))
+        gtk_widget_get_child_requisition (gtk_bin_get_child (bin), &child_requisition);
 
     if (paned->priv->handle_visible)
         clamp_handle_size (paned);
@@ -1334,10 +1334,10 @@ moo_paned_size_allocate (GtkWidget     *widget,
         gtk_widget_size_allocate (paned->button_box, &child_allocation);
     }
 
-    if (bin->child)
+    if (gtk_bin_get_child (bin))
     {
         get_bin_child_allocation (paned, &child_allocation);
-        gtk_widget_size_allocate (bin->child, &child_allocation);
+        gtk_widget_size_allocate (gtk_bin_get_child (bin), &child_allocation);
     }
 
     if (GTK_WIDGET_REALIZED (widget))
@@ -1427,8 +1427,8 @@ moo_paned_forall (GtkContainer   *container,
     if (!paned->priv->forall_bottom_to_top && include_internals)
         forall_internals (paned, callback, callback_data);
 
-    if (bin->child)
-        callback (bin->child, callback_data);
+    if (gtk_bin_get_child (bin))
+        callback (gtk_bin_get_child (bin), callback_data);
 
     if (paned->priv->forall_bottom_to_top && include_internals)
         forall_internals (paned, callback, callback_data);
@@ -1445,9 +1445,9 @@ moo_paned_expose (GtkWidget      *widget,
         gtk_container_propagate_expose (GTK_CONTAINER (paned),
                                         paned->button_box, event);
 
-    if (GTK_BIN(paned)->child && GTK_WIDGET_DRAWABLE (GTK_BIN(paned)->child))
+    if (gtk_bin_get_child (GTK_BIN(paned)) && GTK_WIDGET_DRAWABLE (gtk_bin_get_child (GTK_BIN(paned))))
         gtk_container_propagate_expose (GTK_CONTAINER (paned),
-                                        GTK_BIN(paned)->child,
+                                        gtk_bin_get_child (GTK_BIN(paned)),
                                         event);
 
     if (paned->priv->pane_widget_visible)
@@ -1496,7 +1496,7 @@ moo_paned_add (GtkContainer   *container,
 
     g_return_if_fail (GTK_IS_WIDGET (child));
 
-    if (bin->child != NULL)
+    if (gtk_bin_get_child (bin) != NULL)
     {
         g_warning ("Attempting to add a widget with type %s to a %s, "
                    "but as a GtkBin subclass a %s can only contain one widget at a time; "
@@ -1504,7 +1504,7 @@ moo_paned_add (GtkContainer   *container,
         g_type_name (G_OBJECT_TYPE (child)),
         g_type_name (G_OBJECT_TYPE (bin)),
         g_type_name (G_OBJECT_TYPE (bin)),
-        g_type_name (G_OBJECT_TYPE (bin->child)));
+        g_type_name (G_OBJECT_TYPE (gtk_bin_get_child (bin))));
         return;
     }
 
@@ -1520,7 +1520,7 @@ moo_paned_remove (GtkContainer   *container,
 {
     MooPaned *paned = MOO_PANED (container);
 
-    g_return_if_fail (widget == GTK_BIN(paned)->child);
+    g_return_if_fail (widget == gtk_bin_get_child (GTK_BIN(paned)));
 
     GTK_CONTAINER_CLASS(moo_paned_parent_class)->remove (container, widget);
 }
@@ -2427,7 +2427,7 @@ find_focus (GtkWidget *widget)
 static GtkWidget *
 find_focus_child (MooPaned *paned)
 {
-    return find_focus (GTK_BIN(paned)->child);
+    return find_focus (gtk_bin_get_child (GTK_BIN(paned)));
 }
 
 
@@ -2443,7 +2443,7 @@ moo_paned_set_focus_child (GtkContainer *container,
 
     if (widget)
     {
-        if (widget == GTK_BIN(paned)->child)
+        if (widget == gtk_bin_get_child (GTK_BIN(paned)))
             new_focus = FOCUS_CHILD;
         else if (widget == paned->button_box)
             new_focus = FOCUS_BUTTON;
@@ -2524,8 +2524,8 @@ static gboolean
 focus_to_child (MooPaned         *paned,
                 GtkDirectionType  direction)
 {
-    return GTK_BIN(paned)->child &&
-            gtk_widget_child_focus (GTK_BIN(paned)->child, direction);
+    return gtk_bin_get_child (GTK_BIN(paned)) &&
+            gtk_widget_child_focus (gtk_bin_get_child (GTK_BIN(paned)), direction);
 }
 
 
@@ -2925,8 +2925,8 @@ moo_paned_hide_pane_real (MooPaned *paned)
         {
             gtk_widget_grab_focus (paned->priv->focus_child);
         }
-        else if (!GTK_BIN(paned)->child ||
-                  !gtk_widget_child_focus (GTK_BIN(paned)->child, GTK_DIR_TAB_FORWARD))
+        else if (!gtk_bin_get_child (GTK_BIN(paned)) ||
+                  !gtk_widget_child_focus (gtk_bin_get_child (GTK_BIN(paned)), GTK_DIR_TAB_FORWARD))
         {
             if (GTK_WIDGET_VISIBLE (button))
                 gtk_widget_grab_focus (button);

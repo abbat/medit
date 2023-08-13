@@ -855,7 +855,7 @@ sync_combo (GtkComboBox *combo,
     if (gtk_combo_box_get_active_iter (combo, &dummy))
         return;
 
-    enc_name = gtk_entry_get_text (GTK_ENTRY (GTK_BIN (combo)->child));
+    enc_name = gtk_entry_get_text (GTK_ENTRY (gtk_bin_get_child (GTK_BIN (combo))));
 
     if (!validate_encoding_name (enc_name))
         enc_name = save_mode ? MOO_ENCODING_UTF8 : MOO_ENCODING_AUTO;
@@ -1234,7 +1234,7 @@ update_recent_list_visibility (MooEncodingsMenuAction *action)
         gtk_widget_show (action->cur_item);
         gtk_widget_show (action->cur_separator);
 
-        child = GTK_BIN (action->cur_item)->child;
+        child = gtk_bin_get_child (GTK_BIN (action->cur_item));
         gtk_label_set_text (GTK_LABEL (child), action->cur_enc->display_name);
 
         exclude_item (action->menu_data, action->cur_enc);

@@ -172,7 +172,7 @@ static gboolean
 textview_can_do_op (GtkTextView   *obj,
                     MooEditOpType  type)
 {
-    GtkTextBuffer *buffer = obj->buffer;
+    GtkTextBuffer *buffer = gtk_text_view_get_buffer (obj);
 
     switch (type)
     {
@@ -198,7 +198,7 @@ static void
 textview_connect (GtkTextView *obj)
 {
     /* XXX */
-    GtkTextBuffer *buffer = obj->buffer;
+    GtkTextBuffer *buffer = gtk_text_view_get_buffer (obj);
 
     if (buffer)
     {
@@ -213,7 +213,7 @@ static void
 textview_disconnect (GtkTextView *obj)
 {
     /* XXX */
-    GtkTextBuffer *buffer = obj->buffer;
+    GtkTextBuffer *buffer = gtk_text_view_get_buffer (obj);
 
     if (buffer)
         g_signal_handlers_disconnect_by_func (buffer, (gpointer) emit_can_do_op_changed, obj);

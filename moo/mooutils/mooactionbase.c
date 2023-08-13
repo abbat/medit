@@ -641,8 +641,8 @@ proxy_set_use_underline (GtkWidget *proxy,
 {
     g_return_if_fail (GTK_IS_WIDGET (proxy));
 
-    if (GTK_IS_MENU_ITEM (proxy) && GTK_BIN (proxy)->child && GTK_IS_LABEL (GTK_BIN (proxy)->child))
-        gtk_label_set_use_underline (GTK_LABEL (GTK_BIN (proxy)->child), use_underline);
+    if (GTK_IS_MENU_ITEM (proxy) && gtk_bin_get_child (GTK_BIN (proxy)) && GTK_IS_LABEL (gtk_bin_get_child (GTK_BIN (proxy))))
+        gtk_label_set_use_underline (GTK_LABEL (gtk_bin_get_child (GTK_BIN (proxy))), use_underline);
     else if (GTK_IS_BUTTON (proxy))
         gtk_button_set_use_underline (GTK_BUTTON (proxy), use_underline);
 }

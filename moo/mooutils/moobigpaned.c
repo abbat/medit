@@ -252,11 +252,11 @@ check_children_order (MooBigPaned *paned)
 {
     int i;
 
-    if (GTK_BIN (paned)->child != NTH_CHILD (paned, 0))
+    if (gtk_bin_get_child (GTK_BIN (paned)) != NTH_CHILD (paned, 0))
         return FALSE;
 
     for (i = 0; i < 3; ++i)
-        if (GTK_BIN (NTH_CHILD (paned, i))->child != NTH_CHILD (paned, i+1))
+        if (gtk_bin_get_child (GTK_BIN (NTH_CHILD (paned, i))) != NTH_CHILD (paned, i+1))
                 return FALSE;
 
     return TRUE;
@@ -739,7 +739,7 @@ moo_big_paned_remove_child (MooBigPaned *paned)
 {
     g_return_if_fail (MOO_IS_BIG_PANED (paned));
     gtk_container_remove (GTK_CONTAINER (paned->priv->inner),
-                          GTK_BIN (paned->priv->inner)->child);
+                          gtk_bin_get_child (GTK_BIN (paned->priv->inner)));
 }
 
 
@@ -747,7 +747,7 @@ GtkWidget *
 moo_big_paned_get_child (MooBigPaned *paned)
 {
     g_return_val_if_fail (MOO_IS_BIG_PANED (paned), NULL);
-    return GTK_BIN(paned->priv->inner)->child;
+    return gtk_bin_get_child (GTK_BIN(paned->priv->inner));
 }
 
 

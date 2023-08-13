@@ -551,7 +551,7 @@ moo_filter_mgr_attach (MooFilterMgr   *mgr,
     gtk_widget_show (combo);
     gtk_box_pack_start (GTK_BOX (hbox), combo, TRUE, TRUE, 0);
 
-    entry = GTK_BIN (combo)->child;
+    entry = gtk_bin_get_child (GTK_BIN (combo));
     gtk_label_set_mnemonic_widget (GTK_LABEL (label), entry);
 
     g_signal_connect (entry, "activate",
