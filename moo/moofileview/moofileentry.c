@@ -984,45 +984,45 @@ completion_move_selection (MooFileEntryCompletion *cmpl,
 
     switch (event->keyval)
     {
-        case GDK_Down:
-        case GDK_KP_Down:
+        case GDK_KEY_Down:
+        case GDK_KEY_KP_Down:
             if (current_item < n_items - 1)
                 new_item = current_item + 1;
             else
                 new_item = -1;
             break;
 
-        case GDK_Up:
-        case GDK_KP_Up:
+        case GDK_KEY_Up:
+        case GDK_KEY_KP_Up:
             if (current_item < 0)
                 new_item = n_items - 1;
             else
                 new_item = current_item - 1;
             break;
 
-        case GDK_Page_Down:
-        case GDK_KP_Page_Down:
+        case GDK_KEY_Page_Down:
+        case GDK_KEY_KP_Page_Down:
             new_item = current_item + COMPLETION_POPUP_LEN - 1;
             if (new_item >= n_items)
                 new_item = n_items - 1;
             break;
 
-        case GDK_Page_Up:
-        case GDK_KP_Page_Up:
+        case GDK_KEY_Page_Up:
+        case GDK_KEY_KP_Page_Up:
             new_item = current_item - COMPLETION_POPUP_LEN + 1;
             if (new_item < 0)
                 new_item = 0;
             break;
 
-        case GDK_Tab:
-        case GDK_KP_Tab:
+        case GDK_KEY_Tab:
+        case GDK_KEY_KP_Tab:
             if (current_item < n_items - 1)
                 new_item = current_item + 1;
             else
                 new_item = 0;
             break;
 
-        case GDK_ISO_Left_Tab:
+        case GDK_KEY_ISO_Left_Tab:
             if (current_item <= 0)
                 new_item = n_items - 1;
             else
@@ -1077,12 +1077,12 @@ completion_popup_key_press (G_GNUC_UNUSED GtkWidget *popup,
 {
     switch (event->keyval)
     {
-        case GDK_Down:
-        case GDK_Up:
-        case GDK_KP_Down:
-        case GDK_KP_Up:
-        case GDK_Page_Down:
-        case GDK_Page_Up:
+        case GDK_KEY_Down:
+        case GDK_KEY_Up:
+        case GDK_KEY_KP_Down:
+        case GDK_KEY_KP_Up:
+        case GDK_KEY_Page_Down:
+        case GDK_KEY_Page_Up:
             if (!(event->state & MOD_MASK()))
             {
                 completion_move_selection (cmpl, event);
@@ -1090,8 +1090,8 @@ completion_popup_key_press (G_GNUC_UNUSED GtkWidget *popup,
             }
             break;
 
-        case GDK_Tab:
-        case GDK_KP_Tab:
+        case GDK_KEY_Tab:
+        case GDK_KEY_KP_Tab:
             if (!(event->state & MOD_MASK()))
             {
                 if (cmpl->priv->walking_list)
@@ -1107,13 +1107,13 @@ completion_popup_key_press (G_GNUC_UNUSED GtkWidget *popup,
             }
             break;
 
-        case GDK_Escape:
+        case GDK_KEY_Escape:
             completion_popdown (cmpl);
             return TRUE;
 
-        case GDK_Return:
-        case GDK_ISO_Enter:
-        case GDK_KP_Enter:
+        case GDK_KEY_Return:
+        case GDK_KEY_ISO_Enter:
+        case GDK_KEY_KP_Enter:
             if (!(event->state & MOD_MASK()))
                 return completion_return_key (cmpl);
             break;

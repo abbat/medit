@@ -3701,7 +3701,7 @@ moo_text_view_size_allocate (GtkWidget     *widget,
 
     GTK_WIDGET_CLASS(moo_text_view_parent_class)->size_allocate (widget, allocation);
 
-    border_width = GTK_CONTAINER(widget)->border_width;
+    border_width = gtk_container_get_border_width(GTK_CONTAINER(widget));
 
     right = get_border_window_size (text_view, GTK_TEXT_WINDOW_RIGHT);
     left = get_border_window_size (text_view, GTK_TEXT_WINDOW_LEFT);
@@ -4012,12 +4012,12 @@ search_entry_key_press (MooTextView *view,
 
     switch (event->keyval)
     {
-        case GDK_Escape:
+        case GDK_KEY_Escape:
             moo_text_view_stop_quick_search (view);
             return TRUE;
 
-        case GDK_Return:
-        case GDK_KP_Enter:
+        case GDK_KEY_Return:
+        case GDK_KEY_KP_Enter:
             quick_search_find_next (view, entry,
                                     event->state & GDK_CONTROL_MASK);
             return TRUE;

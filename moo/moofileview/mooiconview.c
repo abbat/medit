@@ -408,49 +408,49 @@ _moo_icon_view_class_init (MooIconViewClass *klass)
 
     binding_set = gtk_binding_set_by_class (klass);
 
-    gtk_binding_entry_add_signal (binding_set, GDK_Return, 0, "activate-item-at-cursor", 0);
-    gtk_binding_entry_add_signal (binding_set, GDK_ISO_Enter, 0, "activate-item-at-cursor", 0);
-    gtk_binding_entry_add_signal (binding_set, GDK_KP_Enter, 0, "activate-item-at-cursor", 0);
-    gtk_binding_entry_add_signal (binding_set, GDK_a, MOO_ACCEL_CTRL_MASK, "select-all", 0);
+    gtk_binding_entry_add_signal (binding_set, GDK_KEY_Return, 0, "activate-item-at-cursor", 0);
+    gtk_binding_entry_add_signal (binding_set, GDK_KEY_ISO_Enter, 0, "activate-item-at-cursor", 0);
+    gtk_binding_entry_add_signal (binding_set, GDK_KEY_KP_Enter, 0, "activate-item-at-cursor", 0);
+    gtk_binding_entry_add_signal (binding_set, GDK_KEY_a, MOO_ACCEL_CTRL_MASK, "select-all", 0);
 
-    add_move_binding (binding_set, GDK_Up, 0,
+    add_move_binding (binding_set, GDK_KEY_Up, 0,
                       GTK_MOVEMENT_DISPLAY_LINES, -1);
-    add_move_binding (binding_set, GDK_KP_Up, 0,
+    add_move_binding (binding_set, GDK_KEY_KP_Up, 0,
                       GTK_MOVEMENT_DISPLAY_LINES, -1);
 
-    add_move_binding (binding_set, GDK_Down, 0,
+    add_move_binding (binding_set, GDK_KEY_Down, 0,
                       GTK_MOVEMENT_DISPLAY_LINES, 1);
-    add_move_binding (binding_set, GDK_KP_Down, 0,
+    add_move_binding (binding_set, GDK_KEY_KP_Down, 0,
                       GTK_MOVEMENT_DISPLAY_LINES, 1);
 
-    add_move_binding (binding_set, GDK_Home, 0,
+    add_move_binding (binding_set, GDK_KEY_Home, 0,
                       GTK_MOVEMENT_BUFFER_ENDS, -1);
-    add_move_binding (binding_set, GDK_KP_Home, 0,
+    add_move_binding (binding_set, GDK_KEY_KP_Home, 0,
                       GTK_MOVEMENT_BUFFER_ENDS, -1);
 
-    add_move_binding (binding_set, GDK_End, 0,
+    add_move_binding (binding_set, GDK_KEY_End, 0,
                       GTK_MOVEMENT_BUFFER_ENDS, 1);
-    add_move_binding (binding_set, GDK_KP_End, 0,
+    add_move_binding (binding_set, GDK_KEY_KP_End, 0,
                       GTK_MOVEMENT_BUFFER_ENDS, 1);
 
-    add_move_binding (binding_set, GDK_Page_Up, 0,
+    add_move_binding (binding_set, GDK_KEY_Page_Up, 0,
                       GTK_MOVEMENT_PAGES, -1);
-    add_move_binding (binding_set, GDK_KP_Page_Up, 0,
+    add_move_binding (binding_set, GDK_KEY_KP_Page_Up, 0,
                       GTK_MOVEMENT_PAGES, -1);
 
-    add_move_binding (binding_set, GDK_Page_Down, 0,
+    add_move_binding (binding_set, GDK_KEY_Page_Down, 0,
                       GTK_MOVEMENT_PAGES, 1);
-    add_move_binding (binding_set, GDK_KP_Page_Down, 0,
+    add_move_binding (binding_set, GDK_KEY_KP_Page_Down, 0,
                       GTK_MOVEMENT_PAGES, 1);
 
-    add_move_binding (binding_set, GDK_Right, 0,
+    add_move_binding (binding_set, GDK_KEY_Right, 0,
                       GTK_MOVEMENT_VISUAL_POSITIONS, 1);
-    add_move_binding (binding_set, GDK_Left, 0,
+    add_move_binding (binding_set, GDK_KEY_Left, 0,
                       GTK_MOVEMENT_VISUAL_POSITIONS, -1);
 
-    add_move_binding (binding_set, GDK_KP_Right, 0,
+    add_move_binding (binding_set, GDK_KEY_KP_Right, 0,
                       GTK_MOVEMENT_VISUAL_POSITIONS, 1);
-    add_move_binding (binding_set, GDK_KP_Left, 0,
+    add_move_binding (binding_set, GDK_KEY_KP_Left, 0,
                       GTK_MOVEMENT_VISUAL_POSITIONS, -1);
 }
 

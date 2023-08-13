@@ -1243,7 +1243,7 @@ _moo_text_view_key_press_event (GtkWidget          *widget,
 
     moo_accel_translate_event (widget, event, &keyval, &mods);
 
-    if (keyval == GDK_KP_Enter || keyval == GDK_Return)
+    if (keyval == GDK_KEY_KP_Enter || keyval == GDK_KEY_Return)
     {
         gtk_text_buffer_begin_user_action (buffer);
         handled = handle_enter (view, event);
@@ -1253,12 +1253,12 @@ _moo_text_view_key_press_event (GtkWidget          *widget,
     {
         switch (keyval)
         {
-            case GDK_Tab:
-            case GDK_KP_Tab:
-            case GDK_ISO_Left_Tab:
+            case GDK_KEY_Tab:
+            case GDK_KEY_KP_Tab:
+            case GDK_KEY_ISO_Left_Tab:
                 handled = handle_tab (view, event);
                 break;
-            case GDK_BackSpace:
+            case GDK_KEY_BackSpace:
                 gtk_text_buffer_begin_user_action (buffer);
                 handled = handle_backspace (view, event);
                 gtk_text_buffer_end_user_action (buffer);
@@ -1269,8 +1269,8 @@ _moo_text_view_key_press_event (GtkWidget          *widget,
     {
         switch (keyval)
         {
-            case GDK_ISO_Left_Tab:
-            case GDK_KP_Tab:
+            case GDK_KEY_ISO_Left_Tab:
+            case GDK_KEY_KP_Tab:
                 handled = handle_tab (view, event);
                 break;
         }
@@ -1279,24 +1279,24 @@ _moo_text_view_key_press_event (GtkWidget          *widget,
     {
         switch (keyval)
         {
-            case GDK_Up:
-            case GDK_KP_Up:
+            case GDK_KEY_Up:
+            case GDK_KEY_KP_Up:
                 handled = handle_ctrl_up (view, event, TRUE);
                 /* if we scroll, let mouse cursor stay */
                 obscure = FALSE;
                 break;
-            case GDK_Down:
-            case GDK_KP_Down:
+            case GDK_KEY_Down:
+            case GDK_KEY_KP_Down:
                 handled = handle_ctrl_up (view, event, FALSE);
                 obscure = FALSE;
                 break;
-            case GDK_Page_Up:
-            case GDK_KP_Page_Up:
+            case GDK_KEY_Page_Up:
+            case GDK_KEY_KP_Page_Up:
                 handled = handle_ctrl_pgup (view, event, TRUE);
                 obscure = FALSE;
                 break;
-            case GDK_Page_Down:
-            case GDK_KP_Page_Down:
+            case GDK_KEY_Page_Down:
+            case GDK_KEY_KP_Page_Down:
                 handled = handle_ctrl_pgup (view, event, FALSE);
                 obscure = FALSE;
                 break;

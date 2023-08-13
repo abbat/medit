@@ -3429,7 +3429,7 @@ moo_paned_key_press (GtkWidget   *widget,
     MooPaned *paned = MOO_PANED (widget);
 
     if (paned->priv->handle_in_drag &&
-        event->keyval == GDK_Escape)
+        event->keyval == GDK_KEY_Escape)
     {
         finish_handle_drag (paned, NULL, FALSE);
         return TRUE;
@@ -3439,29 +3439,29 @@ moo_paned_key_press (GtkWidget   *widget,
     {
         switch (event->keyval)
         {
-            case GDK_Up:
-            case GDK_KP_Up:
+            case GDK_KEY_Up:
+            case GDK_KEY_KP_Up:
                 if (paned->priv->pane_position == MOO_PANE_POS_TOP)
                     add = -delta;
                 else if (paned->priv->pane_position == MOO_PANE_POS_BOTTOM)
                     add = delta;
                 break;
-            case GDK_Down:
-            case GDK_KP_Down:
+            case GDK_KEY_Down:
+            case GDK_KEY_KP_Down:
                 if (paned->priv->pane_position == MOO_PANE_POS_TOP)
                     add = delta;
                 else if (paned->priv->pane_position == MOO_PANE_POS_BOTTOM)
                     add = -delta;
                 break;
-            case GDK_Left:
-            case GDK_KP_Left:
+            case GDK_KEY_Left:
+            case GDK_KEY_KP_Left:
                 if (paned->priv->pane_position == MOO_PANE_POS_LEFT)
                     add = -delta;
                 else if (paned->priv->pane_position == MOO_PANE_POS_RIGHT)
                     add = delta;
                 break;
-            case GDK_Right:
-            case GDK_KP_Right:
+            case GDK_KEY_Right:
+            case GDK_KEY_KP_Right:
                 if (paned->priv->pane_position == MOO_PANE_POS_LEFT)
                     add = delta;
                 else if (paned->priv->pane_position == MOO_PANE_POS_RIGHT)

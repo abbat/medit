@@ -115,7 +115,7 @@ moo_line_view_class_init (MooLineViewClass *klass)
 
     binding_set = gtk_binding_set_by_class (klass);
 
-    gtk_binding_entry_add_signal (binding_set, GDK_Return, (GdkModifierType) 0,
+    gtk_binding_entry_add_signal (binding_set, GDK_KEY_Return, (GdkModifierType) 0,
                                   "activate-current-line", 0);
 }
 

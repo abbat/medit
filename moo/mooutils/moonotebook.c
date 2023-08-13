@@ -3099,7 +3099,7 @@ moo_notebook_key_press (GtkWidget   *widget,
 {
     MooNotebook *nb = MOO_NOTEBOOK (widget);
 
-    if (nb->priv->in_drag && event->keyval == GDK_Escape)
+    if (nb->priv->in_drag && event->keyval == GDK_KEY_Escape)
     {
         tab_drag_end (nb, FALSE);
         return TRUE;
@@ -3111,8 +3111,8 @@ moo_notebook_key_press (GtkWidget   *widget,
     {
         switch (event->keyval)
         {
-            case GDK_Return:
-            case GDK_space:
+            case GDK_KEY_Return:
+            case GDK_KEY_space:
                 moo_notebook_set_current_page (nb, page_index (nb, nb->priv->focus_page));
                 return TRUE;
         }

@@ -61,9 +61,9 @@ moo_menu_key_event (GtkWidget   *widget,
 {
     switch (event->keyval)
     {
-        case GDK_Shift_L:
-        case GDK_Shift_R:
-        case GDK_Shift_Lock:
+        case GDK_KEY_Shift_L:
+        case GDK_KEY_Shift_R:
+        case GDK_KEY_Shift_Lock:
             g_signal_emit (widget, signals[ALTERNATE_TOGGLED], 0);
             break;
     }

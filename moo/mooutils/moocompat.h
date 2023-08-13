@@ -44,7 +44,6 @@
 #define GTK_WIDGET_STATE(w) (gtk_widget_get_state (GTK_WIDGET (w)))
 #endif
 
-
 #if defined(GTK_DISABLE_DEPRECATED)
 
 inline static void

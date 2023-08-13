@@ -144,13 +144,13 @@ static gboolean
 about_dialog_key_press (GtkWidget   *dialog,
                         GdkEventKey *event)
 {
-    if (event->keyval == GDK_Escape)
+    if (event->keyval == GDK_KEY_Escape)
     {
         gtk_widget_hide (dialog);
         return TRUE;
     }
 
-    if (event->keyval == GDK_s && (event->state & GDK_CONTROL_MASK))
+    if (event->keyval == GDK_KEY_s && (event->state & GDK_CONTROL_MASK))
     {
         char *info = moo_app_get_system_info (moo_app_instance ());
         if (info)

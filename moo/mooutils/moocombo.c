@@ -825,45 +825,45 @@ popup_move_selection (MooCombo     *combo,
 
     switch (event->keyval)
     {
-        case GDK_Down:
-        case GDK_KP_Down:
+        case GDK_KEY_Down:
+        case GDK_KEY_KP_Down:
             if (current_item < n_items - 1)
                 new_item = current_item + 1;
             else
                 new_item = -1;
             break;
 
-        case GDK_Up:
-        case GDK_KP_Up:
+        case GDK_KEY_Up:
+        case GDK_KEY_KP_Up:
             if (current_item < 0)
                 new_item = n_items - 1;
             else
                 new_item = current_item - 1;
             break;
 
-        case GDK_Page_Down:
-        case GDK_KP_Page_Down:
+        case GDK_KEY_Page_Down:
+        case GDK_KEY_KP_Page_Down:
             new_item = current_item + MAX_POPUP_LEN - 1;
             if (new_item >= n_items)
                 new_item = n_items - 1;
             break;
 
-        case GDK_Page_Up:
-        case GDK_KP_Page_Up:
+        case GDK_KEY_Page_Up:
+        case GDK_KEY_KP_Page_Up:
             new_item = current_item - MAX_POPUP_LEN + 1;
             if (new_item < 0)
                 new_item = 0;
             break;
 
-        case GDK_Tab:
-        case GDK_KP_Tab:
+        case GDK_KEY_Tab:
+        case GDK_KEY_KP_Tab:
             if (current_item < n_items - 1)
                 new_item = current_item + 1;
             else
                 new_item = 0;
             break;
 
-        case GDK_ISO_Left_Tab:
+        case GDK_KEY_ISO_Left_Tab:
             if (current_item <= 0)
                 new_item = n_items - 1;
             else
@@ -948,25 +948,25 @@ moo_combo_popup_key_press (MooCombo    *combo,
 {
     switch (event->keyval)
     {
-        case GDK_Down:
-        case GDK_Up:
-        case GDK_KP_Down:
-        case GDK_KP_Up:
-        case GDK_Page_Down:
-        case GDK_Page_Up:
-        case GDK_Tab:
-        case GDK_KP_Tab:
-        case GDK_ISO_Left_Tab:
+        case GDK_KEY_Down:
+        case GDK_KEY_Up:
+        case GDK_KEY_KP_Down:
+        case GDK_KEY_KP_Up:
+        case GDK_KEY_Page_Down:
+        case GDK_KEY_Page_Up:
+        case GDK_KEY_Tab:
+        case GDK_KEY_KP_Tab:
+        case GDK_KEY_ISO_Left_Tab:
             popup_move_selection (combo, event);
             return TRUE;
 
-        case GDK_Escape:
+        case GDK_KEY_Escape:
             moo_combo_popdown (combo);
             return TRUE;
 
-        case GDK_Return:
-        case GDK_ISO_Enter:
-        case GDK_KP_Enter:
+        case GDK_KEY_Return:
+        case GDK_KEY_ISO_Enter:
+        case GDK_KEY_KP_Enter:
             return popup_return_key (combo);
 
         default:

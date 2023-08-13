@@ -416,18 +416,18 @@ need_workaround_for_671562 (guint keyval)
 {
     switch (keyval)
     {
-        case GDK_F1:
-        case GDK_F2:
-        case GDK_F3:
-        case GDK_F4:
-        case GDK_F5:
-        case GDK_F6:
-        case GDK_F7:
-        case GDK_F8:
-        case GDK_F9:
-        case GDK_F10:
-        case GDK_F11:
-        case GDK_F12:
+        case GDK_KEY_F1:
+        case GDK_KEY_F2:
+        case GDK_KEY_F3:
+        case GDK_KEY_F4:
+        case GDK_KEY_F5:
+        case GDK_KEY_F6:
+        case GDK_KEY_F7:
+        case GDK_KEY_F8:
+        case GDK_KEY_F9:
+        case GDK_KEY_F10:
+        case GDK_KEY_F11:
+        case GDK_KEY_F12:
             return TRUE;
 
         default:
@@ -449,13 +449,13 @@ moo_keymap_translate_keyboard_state (GdkKeymap           *keymap,
 {
     guint keyval = 0;
     GdkModifierType consumed_modifiers = (GdkModifierType) 0;
-    gboolean retval = 
+    gboolean retval =
         gdk_keymap_translate_keyboard_state (keymap, hardware_keycode, state, group,
                                              &keyval, effective_group, level,
                                              &consumed_modifiers);
 
     /* Check whether Shift mask needs to be added back */
-    if ((state & GDK_SHIFT_MASK) && (consumed_modifiers & GDK_SHIFT_MASK) && 
+    if ((state & GDK_SHIFT_MASK) && (consumed_modifiers & GDK_SHIFT_MASK) &&
         need_workaround_for_671562 (keyval))
     {
         consumed_modifiers = (GdkModifierType) (consumed_modifiers & ~GDK_SHIFT_MASK);
@@ -519,42 +519,42 @@ keyval_from_symbol (char sym)
 {
     switch (sym)
     {
-        case '!': return GDK_exclam;
-        case '"': return GDK_quotedbl;
-        case '#': return GDK_numbersign;
-        case '$': return GDK_dollar;
-        case '%': return GDK_percent;
-        case '&': return GDK_ampersand;
-        case '\'': return GDK_apostrophe;
+        case '!':  return GDK_KEY_exclam;
+        case '"':  return GDK_KEY_quotedbl;
+        case '#':  return GDK_KEY_numbersign;
+        case '$':  return GDK_KEY_dollar;
+        case '%':  return GDK_KEY_percent;
+        case '&':  return GDK_KEY_ampersand;
+        case '\'': return GDK_KEY_apostrophe;
 #if 0
         case '\'': return GDK_quoteright;
 #define GDK_asciicircum 0x05e
 #define GDK_grave 0x060
 #endif
-        case '(': return GDK_parenleft;
-        case ')': return GDK_parenright;
-        case '*': return GDK_asterisk;
-        case '+': return GDK_plus;
-        case ',': return GDK_comma;
-        case '-': return GDK_minus;
-        case '.': return GDK_period;
-        case '/': return GDK_slash;
-        case ':': return GDK_colon;
-        case ';': return GDK_semicolon;
-        case '<': return GDK_less;
-        case '=': return GDK_equal;
-        case '>': return GDK_greater;
-        case '?': return GDK_question;
-        case '@': return GDK_at;
-        case '[': return GDK_bracketleft;
-        case '\\': return GDK_backslash;
-        case ']': return GDK_bracketright;
-        case '_': return GDK_underscore;
-        case '`': return GDK_quoteleft;
-        case '{': return GDK_braceleft;
-        case '|': return GDK_bar;
-        case '}': return GDK_braceright;
-        case '~': return GDK_asciitilde;
+        case '(':  return GDK_KEY_parenleft;
+        case ')':  return GDK_KEY_parenright;
+        case '*':  return GDK_KEY_asterisk;
+        case '+':  return GDK_KEY_plus;
+        case ',':  return GDK_KEY_comma;
+        case '-':  return GDK_KEY_minus;
+        case '.':  return GDK_KEY_period;
+        case '/':  return GDK_KEY_slash;
+        case ':':  return GDK_KEY_colon;
+        case ';':  return GDK_KEY_semicolon;
+        case '<':  return GDK_KEY_less;
+        case '=':  return GDK_KEY_equal;
+        case '>':  return GDK_KEY_greater;
+        case '?':  return GDK_KEY_question;
+        case '@':  return GDK_KEY_at;
+        case '[':  return GDK_KEY_bracketleft;
+        case '\\': return GDK_KEY_backslash;
+        case ']':  return GDK_KEY_bracketright;
+        case '_':  return GDK_KEY_underscore;
+        case '`':  return GDK_KEY_quoteleft;
+        case '{':  return GDK_KEY_braceleft;
+        case '|':  return GDK_KEY_bar;
+        case '}':  return GDK_KEY_braceright;
+        case '~':  return GDK_KEY_asciitilde;
     }
 
     return 0;
@@ -573,7 +573,7 @@ parse_key (const char *string)
     {
         key = gdk_keyval_from_name (stripped);
 
-        if (key == GDK_VoidSymbol)
+        if (key == GDK_KEY_VoidSymbol)
             key = 0;
 
         if (!key && !stripped[1])
@@ -652,7 +652,7 @@ my_gtk_accelerator_parse (const char      *accel,
     if (accel[0])
         *key = gdk_keyval_from_name (accel);
 
-    if (*key == GDK_VoidSymbol)
+    if (*key == GDK_KEY_VoidSymbol)
         *key = 0;
 }
 
