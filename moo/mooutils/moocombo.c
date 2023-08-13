@@ -218,7 +218,7 @@ moo_combo_class_init (MooComboClass *klass)
                           GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
 
     binding_set = gtk_binding_set_by_class (klass);
-    gtk_binding_entry_add_signal (binding_set, GDK_space, GDK_CONTROL_MASK,
+    gtk_binding_entry_add_signal (binding_set, GDK_KEY_space, GDK_CONTROL_MASK,
                                   "popup", 0);
 }
 

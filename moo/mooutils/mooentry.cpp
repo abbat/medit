@@ -222,13 +222,13 @@ moo_entry_class_init (MooEntryClass *klass)
                                 G_TYPE_NONE, 0);
 
     binding_set = gtk_binding_set_by_class (klass);
-    gtk_binding_entry_add_signal (binding_set, GDK_z,
+    gtk_binding_entry_add_signal (binding_set, GDK_KEY_z,
                                   MOO_ACCEL_CTRL_MASK,
                                   "undo", 0);
-    gtk_binding_entry_add_signal (binding_set, GDK_z,
+    gtk_binding_entry_add_signal (binding_set, GDK_KEY_z,
                                   (GdkModifierType) (MOO_ACCEL_CTRL_MASK | GDK_SHIFT_MASK),
                                   "redo", 0);
-    gtk_binding_entry_add_signal (binding_set, GDK_u,
+    gtk_binding_entry_add_signal (binding_set, GDK_KEY_u,
                                   GDK_CONTROL_MASK,
                                   "delete-to-start", 0);
 }

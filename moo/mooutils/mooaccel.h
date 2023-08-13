@@ -73,7 +73,7 @@ gboolean moo_keymap_translate_keyboard_state (GdkKeymap           *keymap,
 #define MOO_ACCEL_CTRL "<Meta>"
 #define MOO_ACCEL_CTRL_MASK GDK_META_MASK
 
-#define MOO_ACCEL_HELP_KEY  GDK_question
+#define MOO_ACCEL_HELP_KEY  GDK_KEY_question
 #define MOO_ACCEL_HELP_MODS GDK_META_MASK
 
 #endif /* GDK_WINDOWING_QUARTZ */

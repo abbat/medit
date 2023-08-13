@@ -642,9 +642,9 @@ static void moo_text_view_class_init (MooTextViewClass *klass)
                                 G_TYPE_BOOLEAN, 0);
 
     binding_set = gtk_binding_set_by_class (klass);
-    gtk_binding_entry_add_signal (binding_set, GDK_z, MOO_ACCEL_CTRL_MASK,
+    gtk_binding_entry_add_signal (binding_set, GDK_KEY_z, MOO_ACCEL_CTRL_MASK,
                                   "undo", 0);
-    gtk_binding_entry_add_signal (binding_set, GDK_z, MOO_ACCEL_CTRL_MASK | GDK_SHIFT_MASK,
+    gtk_binding_entry_add_signal (binding_set, GDK_KEY_z, MOO_ACCEL_CTRL_MASK | GDK_SHIFT_MASK,
                                   "redo", 0);
 }
 
