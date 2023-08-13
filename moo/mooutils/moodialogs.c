@@ -149,6 +149,7 @@ moo_position_window_real (GtkWidget  *window,
                           int         y)
 {
     GtkWidget *toplevel = NULL;
+    GtkAllocation allocation;
 
     g_return_if_fail (GTK_IS_WINDOW (window));
 
@@ -179,10 +180,11 @@ moo_position_window_real (GtkWidget  *window,
         {
             GdkWindow *parent_window = gtk_widget_get_parent_window (parent);
             gdk_window_get_origin (parent_window, &x, &y);
-            x += parent->allocation.x;
-            y += parent->allocation.y;
-            x += parent->allocation.width / 2;
-            y += parent->allocation.height / 2;
+            gtk_widget_get_allocation (parent, &allocation);
+            x += allocation.x;
+            y += allocation.y;
+            x += allocation.width / 2;
+            y += allocation.height / 2;
             at_coords = TRUE;
         }
     }

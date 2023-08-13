@@ -77,6 +77,7 @@ static void
 moo_link_label_realize (GtkWidget *widget)
 {
     GdkWindowAttr attributes;
+    GtkAllocation allocation;
     gint attributes_mask;
     MooLinkLabel *label = MOO_LINK_LABEL (widget);
 
@@ -84,10 +85,12 @@ moo_link_label_realize (GtkWidget *widget)
 
     widget = GTK_WIDGET (label);
 
-    attributes.x = widget->allocation.x;
-    attributes.y = widget->allocation.y;
-    attributes.width = widget->allocation.width;
-    attributes.height = widget->allocation.height;
+    gtk_widget_get_allocation (widget, &allocation);
+
+    attributes.x = allocation.x;
+    attributes.y = allocation.y;
+    attributes.width = allocation.width;
+    attributes.height = allocation.height;
     attributes.window_type = GDK_WINDOW_CHILD;
     attributes.wclass = GDK_INPUT_ONLY;
     attributes.override_redirect = TRUE;

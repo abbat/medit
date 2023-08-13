@@ -951,15 +951,18 @@ moo_icon_view_realize (GtkWidget *widget)
     static GdkWindowAttr attributes;
     gint attributes_mask;
     MooIconView *view;
+    GtkAllocation allocation;
 
     view = MOO_ICON_VIEW (widget);
 
     GTK_WIDGET_SET_REALIZED (widget);
 
-    attributes.x = widget->allocation.x;
-    attributes.y = widget->allocation.y;
-    attributes.width = widget->allocation.width;
-    attributes.height = widget->allocation.height;
+    gtk_widget_get_allocation (widget, &allocation);
+
+    attributes.x = allocation.x;
+    attributes.y = allocation.y;
+    attributes.width = allocation.width;
+    attributes.height = allocation.height;
     attributes.window_type = GDK_WINDOW_CHILD;
     attributes.event_mask = gtk_widget_get_events (widget)
             | GDK_POINTER_MOTION_MASK
@@ -1022,7 +1025,7 @@ moo_icon_view_size_allocate (GtkWidget     *widget,
 
     if (GTK_WIDGET_REALIZED (widget))
     {
-        if (widget->allocation.height < 0 ||
+        if (gtk_widget_get_allocated_height (widget) < 0 ||
             view->priv->layout->row_height == 0)
         {
             height_changed = TRUE;
@@ -1035,7 +1038,7 @@ moo_icon_view_size_allocate (GtkWidget     *widget,
         }
     }
 
-    widget->allocation = *allocation;
+    gtk_widget_set_allocation (widget, allocation); // or we need gtk_widget_size_allocate (widget, allocation); ???
 
     if (GTK_WIDGET_REALIZED (widget))
     {
@@ -1429,7 +1432,7 @@ static gboolean moo_icon_view_update_layout     (MooIconView    *view)
     calculate_pixbuf_size (view);
     calculate_row_height (view);
 
-    layout->num_rows = MAX (widget->allocation.height / layout->row_height, 1);
+    layout->num_rows = MAX (gtk_widget_get_allocated_height (widget) / layout->row_height, 1);
     layout->height = layout->row_height * layout->num_rows;
     layout->width = 0;
 
@@ -1779,19 +1782,21 @@ static void     value_changed           (MooIconView    *view,
 
 static void     moo_icon_view_update_adjustment (MooIconView    *view)
 {
+    int width;
     GSList *link;
 
     link = g_slist_last (view->priv->layout->columns);
     view->priv->xoffset = clamp_offset (view, view->priv->xoffset);
 
-    if (!link || view->priv->layout->width <= GTK_WIDGET(view)->allocation.width)
+    if (!link || view->priv->layout->width <= gtk_widget_get_allocated_width (GTK_WIDGET(view)))
     {
+        width = gtk_widget_get_allocated_width (GTK_WIDGET(view));
         view->priv->adjustment->lower = 0;
-        view->priv->adjustment->upper = GTK_WIDGET(view)->allocation.width - 1;
+        view->priv->adjustment->upper = width - 1;
         view->priv->adjustment->value = 0;
-        view->priv->adjustment->step_increment = GTK_WIDGET(view)->allocation.width - 1;
-        view->priv->adjustment->page_increment = GTK_WIDGET(view)->allocation.width - 1;
-        view->priv->adjustment->page_size = GTK_WIDGET(view)->allocation.width - 1;
+        view->priv->adjustment->step_increment = width - 1;
+        view->priv->adjustment->page_increment = width - 1;
+        view->priv->adjustment->page_size = width - 1;
     }
     else
     {
@@ -1803,11 +1808,11 @@ static void     moo_icon_view_update_adjustment (MooIconView    *view)
 
         view->priv->adjustment->value = view->priv->xoffset;
 
-        view->priv->adjustment->page_increment = GTK_WIDGET(view)->allocation.width;
+        view->priv->adjustment->page_increment = gtk_widget_get_allocated_width (GTK_WIDGET(view));
         view->priv->adjustment->step_increment =
                 view->priv->layout->width / (column->index + 1);
 
-        view->priv->adjustment->page_size = GTK_WIDGET(view)->allocation.width;
+        view->priv->adjustment->page_size = gtk_widget_get_allocated_width (GTK_WIDGET(view));
     }
 
     gtk_adjustment_changed (view->priv->adjustment);
@@ -2623,7 +2628,7 @@ static int  clamp_offset    (MooIconView    *view,
                              int             offset)
 {
     int layout_width = view->priv->layout->width;
-    int width = GTK_WIDGET(view)->allocation.width;
+    int width = gtk_widget_get_allocated_width (GTK_WIDGET(view));
 
     if (layout_width <= width)
         return 0;
@@ -3448,12 +3453,12 @@ _moo_icon_view_scroll_to_cell (MooIconView *view,
     new_offset = xoffset;
     widget = GTK_WIDGET(view);
 
-    if (widget->allocation.width <= column->width)
+    if (gtk_widget_get_allocated_width (widget) <= column->width)
         new_offset = column->offset;
     else if (column->offset < xoffset)
         new_offset = column->offset;
-    else if (column->offset + column->width > xoffset + widget->allocation.width)
-        new_offset = column->offset + column->width - widget->allocation.width;
+    else if (column->offset + column->width > xoffset + gtk_widget_get_allocated_width (widget))
+        new_offset = column->offset + column->width - gtk_widget_get_allocated_width (widget);
 
     moo_icon_view_scroll_to (view, new_offset);
 }
@@ -3782,7 +3787,8 @@ static gboolean
 drag_scroll_timeout (MooIconView *view)
 {
     GtkWidget *widget = GTK_WIDGET (view);
-    GtkAllocation *alc = &widget->allocation;
+    GtkAllocation allocation;
+    GtkAllocation *alc = &allocation;
     GtkWidget *toplevel;
     int x, y, new_offset;
     int delta, dist;
@@ -3791,6 +3797,8 @@ drag_scroll_timeout (MooIconView *view)
     GdkEvent *event;
     DndInfo *info = view->priv->dnd_info;
 
+    gtk_widget_get_allocation (widget, alc);
+
     gdk_window_get_pointer (widget->window, &x, &y, &mask);
 
     if (view->priv->drag_select)
@@ -3798,21 +3806,21 @@ drag_scroll_timeout (MooIconView *view)
         if (x < 0)
             delta = x;
         else
-            delta = x - widget->allocation.width;
+            delta = x - gtk_widget_get_allocated_width (widget);
     }
     else
     {
         if (x < 0 || x >= alc->width || y < 0 || y >= alc->height)
             goto out;
 
-        if (x < widget->allocation.width * DRAG_SCROLL_MARGIN)
+        if (x < gtk_widget_get_allocated_width (widget) * DRAG_SCROLL_MARGIN)
         {
             dist = x;
             delta = -1;
         }
-        else if (x > widget->allocation.width * (1 - DRAG_SCROLL_MARGIN))
+        else if (x > gtk_widget_get_allocated_width (widget) * (1 - DRAG_SCROLL_MARGIN))
         {
-            dist = widget->allocation.width - 1 - x;
+            dist = gtk_widget_get_allocated_width (widget) - 1 - x;
             delta = 1;
         }
         else
@@ -3820,7 +3828,7 @@ drag_scroll_timeout (MooIconView *view)
             goto out;
         }
 
-        margin = widget->allocation.width * DRAG_SCROLL_MARGIN;
+        margin = gtk_widget_get_allocated_width (widget) * DRAG_SCROLL_MARGIN;
         margin = MAX (margin, 2);
         dist = CLAMP (dist, 1, margin - 1);
         ratio = (margin - dist) / margin;
@@ -3892,7 +3900,10 @@ drag_scroll_check (MooIconView *view,
                    int          y)
 {
     gboolean need_scroll;
-    GtkAllocation *alc = &GTK_WIDGET(view)->allocation;
+    GtkAllocation allocation;
+    GtkAllocation *alc = &allocation;
+
+    gtk_widget_get_allocation (GTK_WIDGET(view), alc);
 
     if (view->priv->drag_select)
         need_scroll = x < 0 || x >= alc->width;

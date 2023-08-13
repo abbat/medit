@@ -812,7 +812,7 @@ static int
 get_tab_window_width (MooNotebook *nb)
 {
     GtkWidget *widget = GTK_WIDGET (nb);
-    return widget->allocation.width - nb->priv->action_widgets_size[LEFT] -
+    return gtk_widget_get_allocated_width (widget) - nb->priv->action_widgets_size[LEFT] -
             nb->priv->arrows_size - nb->priv->action_widgets_size[RIGHT] -
             2 * get_border_width (nb);
 }
@@ -830,7 +830,7 @@ moo_notebook_size_allocate (GtkWidget     *widget,
 
     NOTEBOOK_CHECK_INVARIANTS (nb);
 
-    widget->allocation = *allocation;
+    gtk_widget_set_allocation (widget, allocation); // or we need gtk_widget_size_allocate ???
 
     if (nb->priv->tabs_visible)
     {
@@ -1015,6 +1015,7 @@ moo_notebook_parent_set (GtkWidget *widget,
 static void
 moo_notebook_realize (GtkWidget *widget)
 {
+    GtkAllocation allocation;
     MooNotebook *nb = MOO_NOTEBOOK (widget);
     static GdkWindowAttr attributes;
     gint attributes_mask;
@@ -1029,9 +1030,10 @@ moo_notebook_realize (GtkWidget *widget)
     widget->style = gtk_style_attach (widget->style, widget->window);
 
     /* Tabs window */
-    attributes.x = widget->allocation.x + border_width + nb->priv->action_widgets_size[LEFT];
-    attributes.y = widget->allocation.y + border_width;
-    attributes.width = widget->allocation.width - nb->priv->action_widgets_size[LEFT] -
+    gtk_widget_get_allocation (widget, &allocation);
+    attributes.x = allocation.x + border_width + nb->priv->action_widgets_size[LEFT];
+    attributes.y = allocation.y + border_width;
+    attributes.width = allocation.width - nb->priv->action_widgets_size[LEFT] -
                        nb->priv->arrows_size - nb->priv->action_widgets_size[RIGHT] -
                        2*border_width;
     attributes.height = nb->priv->tabs_height;
@@ -1204,6 +1206,7 @@ static void
 moo_notebook_draw_child_border (MooNotebook    *nb,
                                 GdkEventExpose *event)
 {
+    GtkAllocation allocation;
     GtkWidget *widget = GTK_WIDGET (nb);
     Page *page = nb->priv->current_page;
     int border_width = get_border_width (nb);
@@ -1249,6 +1252,7 @@ moo_notebook_draw_child_border (MooNotebook    *nb,
         gap_x += nb->priv->action_widgets_size[LEFT];
     }
 
+    gtk_widget_get_allocation (widget, &allocation);
     if (draw_gap)
     {
         gtk_paint_box_gap (widget->style,
@@ -1258,9 +1262,9 @@ moo_notebook_draw_child_border (MooNotebook    *nb,
                            &event->area,
                            widget,
                            DETAIL_NOTEBOOK,
-                           widget->allocation.x + border_width,
-                           widget->allocation.y + border_width + nb->priv->tabs_height,
-                           widget->allocation.width - 2*border_width,
+                           allocation.x + border_width,
+                           allocation.y + border_width + nb->priv->tabs_height,
+                           allocation.width - 2*border_width,
                            nb->priv->child_height,
                            GTK_POS_TOP,
                            gap_x, gap_width);
@@ -1274,9 +1278,9 @@ moo_notebook_draw_child_border (MooNotebook    *nb,
                        &event->area,
                        widget,
                        DETAIL_NOTEBOOK,
-                       widget->allocation.x + border_width,
-                       widget->allocation.y + border_width + nb->priv->tabs_height,
-                       widget->allocation.width - 2*border_width,
+                       allocation.x + border_width,
+                       allocation.y + border_width + nb->priv->tabs_height,
+                       allocation.width - 2*border_width,
                        nb->priv->child_height);
     }
 }
@@ -2188,6 +2192,7 @@ moo_notebook_draw_label (MooNotebook    *nb,
                          Page           *page,
                          GdkEventExpose *event)
 {
+    GtkAllocation allocation;
     GtkWidget *widget = GTK_WIDGET (nb);
     GdkWindow *window = nb->priv->tab_window;
     int x, y, height;
@@ -2225,17 +2230,17 @@ moo_notebook_draw_label (MooNotebook    *nb,
         int focus_width;
 
         gtk_widget_style_get (widget, "focus-line-width", &focus_width, NULL);
-
+        gtk_widget_get_allocation (page->label->widget, &allocation);
         gtk_paint_focus (widget->style,
                          window,
                          state,
                          &event->area,
                          widget,
                          DETAIL_TAB,
-                         page->label->widget->allocation.x - focus_width,
-                         page->label->widget->allocation.y - focus_width,
-                         page->label->widget->allocation.width + 2 * focus_width,
-                         page->label->widget->allocation.height + 2 * focus_width);
+                         allocation.x - focus_width,
+                         allocation.y - focus_width,
+                         allocation.width + 2 * focus_width,
+                         allocation.height + 2 * focus_width);
     }
 }
 
@@ -2519,6 +2524,7 @@ find_label_at_xy (MooNotebook    *nb,
                   int             y,
                   gboolean        widget_only)
 {
+    GtkAllocation allocation;
     /* TODO labels overlap */
 
     if (y < 0 || y >= nb->priv->tabs_height)
@@ -2528,12 +2534,13 @@ find_label_at_xy (MooNotebook    *nb,
     /* XXX so it could just check if we are in drag */
     VISIBLE_FOREACH_START(nb, page)
     {
+        gtk_widget_get_allocation (page->label->widget, &allocation);
         int lx = page->label->offset - nb->priv->labels_offset;
         int lwidth = page->label->width;
-        int ax = page->label->widget->allocation.x;
-        int awidth = page->label->widget->allocation.width;
-        int ay = page->label->widget->allocation.y;
-        int aheight = page->label->widget->allocation.height;
+        int ax = allocation.x;
+        int awidth = allocation.width;
+        int ay = allocation.y;
+        int aheight = allocation.height;
 
         if (x >= lx && x < lx + lwidth)
         {
@@ -3302,6 +3309,7 @@ focus_to_action_widget (MooNotebook     *nb,
 static void
 labels_invalidate (MooNotebook *nb)
 {
+    GtkAllocation allocation;
     GdkRectangle rect;
     GtkWidget *widget = GTK_WIDGET(nb);
     int border_width = get_border_width (nb);
@@ -3315,9 +3323,10 @@ labels_invalidate (MooNotebook *nb)
     rect.height = nb->priv->tabs_height;
     gdk_window_invalidate_rect (nb->priv->tab_window, &rect, TRUE);
 
-    rect.x = widget->allocation.x + border_width;
-    rect.y = widget->allocation.y + border_width + nb->priv->tabs_height;
-    rect.width = widget->allocation.width - 2*border_width;
+    gtk_widget_get_allocation (widget, &allocation);
+    rect.x = allocation.x + border_width;
+    rect.y = allocation.y + border_width + nb->priv->tabs_height;
+    rect.width = allocation.width - 2*border_width;
     rect.height = 2*widget->style->ythickness;
     gdk_window_invalidate_rect (widget->window, &rect, FALSE);
 }

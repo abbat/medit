@@ -1374,7 +1374,8 @@ completion_resize_popup (MooFileEntryCompletion *cmpl)
     monitor_num = gdk_screen_get_monitor_at_window (screen, widget->window);
     gdk_screen_get_monitor_geometry (screen, monitor_num, &monitor);
 
-    width = MIN (widget->allocation.width, monitor.width) - 2 * x_border;
+    width = gtk_widget_get_allocated_width (widget);
+    width = MIN (width, monitor.width) - 2 * x_border;
     gtk_widget_style_get (GTK_WIDGET (cmpl->priv->treeview), "vertical-separator",
                           &vert_separator, NULL);
     gtk_widget_set_size_request (GTK_WIDGET (cmpl->priv->treeview), width,

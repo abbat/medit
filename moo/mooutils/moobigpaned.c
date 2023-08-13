@@ -1021,7 +1021,7 @@ get_drop_zones (MooBigPaned *paned)
         paned->priv->dz[pos].bbox_size = bbox_size[pos];
     }
 
-    parent = paned->priv->outer->allocation;
+    gtk_widget_get_allocation (paned->priv->outer, &parent);
 
     child_rect = parent;
     child_rect.x += bbox_size[MOO_PANE_POS_LEFT];
@@ -1328,9 +1328,12 @@ get_drop_area (MooBigPaned    *paned,
 {
     int width, height, size = 0;
     MooPanePosition active_position;
+    GtkAllocation allocation;
 
-    width = paned->priv->outer->allocation.width;
-    height = paned->priv->outer->allocation.height;
+    gtk_widget_get_allocation (paned->priv->outer, &allocation);
+
+    width = allocation.width;
+    height = allocation.height;
 
     g_object_get (active_child, "pane-position", &active_position, NULL);
     g_return_if_fail (active_position < 4);
@@ -1359,13 +1362,13 @@ get_drop_area (MooBigPaned    *paned,
     {
         case MOO_PANE_POS_LEFT:
         case MOO_PANE_POS_RIGHT:
-            rect->y = paned->priv->outer->allocation.y;
+            rect->y = allocation.y;
             rect->width = size;
             rect->height = height;
             break;
         case MOO_PANE_POS_TOP:
         case MOO_PANE_POS_BOTTOM:
-            rect->x = paned->priv->outer->allocation.x;
+            rect->x = allocation.x;
             rect->width = width;
             rect->height = size;
             break;
@@ -1374,16 +1377,16 @@ get_drop_area (MooBigPaned    *paned,
     switch (position)
     {
         case MOO_PANE_POS_LEFT:
-            rect->x = paned->priv->outer->allocation.x;
+            rect->x = allocation.x;
             break;
         case MOO_PANE_POS_RIGHT:
-            rect->x = paned->priv->outer->allocation.x + width - size;
+            rect->x = allocation.x + width - size;
             break;
         case MOO_PANE_POS_TOP:
-            rect->y = paned->priv->outer->allocation.y;
+            rect->y = allocation.y;
             break;
         case MOO_PANE_POS_BOTTOM:
-            rect->y = paned->priv->outer->allocation.y + height - size;
+            rect->y = allocation.y + height - size;
             break;
     }
 

@@ -1331,12 +1331,12 @@ create_pane_window (MooPane *pane)
         case MOO_PANE_POS_LEFT:
         case MOO_PANE_POS_RIGHT:
             width = moo_paned_get_pane_size (pane->parent);
-            height = GTK_WIDGET(pane->parent)->allocation.height;
+            height = gtk_widget_get_allocated_height (GTK_WIDGET(pane->parent));
             break;
         case MOO_PANE_POS_TOP:
         case MOO_PANE_POS_BOTTOM:
             height = moo_paned_get_pane_size (pane->parent);
-            width = GTK_WIDGET(pane->parent)->allocation.width;
+            width = gtk_widget_get_allocated_width (GTK_WIDGET(pane->parent));
             break;
     }
 
@@ -1642,6 +1642,7 @@ static void
 draw_pixbuf (GtkWidget      *widget,
              GdkEventExpose *event)
 {
+    GtkAllocation allocation;
     GdkPixbuf *pixbuf;
     int pixbuf_width, pixbuf_height;
     int x, y;
@@ -1652,8 +1653,9 @@ draw_pixbuf (GtkWidget      *widget,
     pixbuf_width = gdk_pixbuf_get_width (pixbuf);
     pixbuf_height = gdk_pixbuf_get_height (pixbuf);
 
-    x = widget->allocation.x + (widget->allocation.width - pixbuf_width) / 2;
-    y = widget->allocation.y + (widget->allocation.height - pixbuf_height) / 2;
+    gtk_widget_get_allocation (widget, &allocation);
+    x = allocation.x + (allocation.width - pixbuf_width) / 2;
+    y = allocation.y + (allocation.height - pixbuf_height) / 2;
 
     gdk_draw_pixbuf (event->window,
                      widget->style->black_gc,
@@ -1666,6 +1668,7 @@ static void
 draw_arrow (GtkWidget      *widget,
             GdkEventExpose *event)
 {
+    GtkAllocation allocation;
     GtkArrowType arrow_type;
     int x, y, width, height;
 
@@ -1687,10 +1690,11 @@ draw_arrow (GtkWidget      *widget,
             g_return_if_reached ();
     }
 
-    width = 3 * widget->allocation.width / 4;
-    height = 3 * widget->allocation.height / 4;
-    x = widget->allocation.x + width / 6;
-    y = widget->allocation.y + height / 6;
+    gtk_widget_get_allocation (widget, &allocation);
+    width = 3 * allocation.width / 4;
+    height = 3 * allocation.height / 4;
+    x = allocation.x + width / 6;
+    y = allocation.y + height / 6;
 
     gtk_paint_arrow (widget->style,
                      event->window,

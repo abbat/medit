@@ -526,7 +526,7 @@ check_if_scrolled (MooLineView *view)
     {
         int space;
         gtk_widget_style_get (GTK_WIDGET (view)->parent, "scrollbar-spacing", &space, nullptr);
-        delta = MAX (delta - 1, space + view->priv->hscrollbar->allocation.height) + 1;
+        delta = MAX (delta - 1, space + gtk_widget_get_allocated_height (view->priv->hscrollbar) + 1);
     }
 
     view->priv->scrolled = adj && GTK_WIDGET_REALIZED (view) &&
