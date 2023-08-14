@@ -101,7 +101,7 @@ moo_link_label_realize (GtkWidget *widget)
 
     attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_NOREDIR;
 
-    label->priv->window = gdk_window_new (widget->window, &attributes, attributes_mask);
+    label->priv->window = gdk_window_new (gtk_widget_get_window (widget), &attributes, attributes_mask);
     gdk_window_set_user_data (label->priv->window, widget);
 
     set_cursor (widget, label->priv->url && label->priv->text);

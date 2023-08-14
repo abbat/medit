@@ -823,7 +823,7 @@ save_size (MooWindow *window)
     if (MOO_IS_WINDOW (window) && GTK_WIDGET_REALIZED (window))
     {
         GdkWindowState state;
-        state = gdk_window_get_state (GTK_WIDGET(window)->window);
+        state = gdk_window_get_state (gtk_widget_get_window (GTK_WIDGET(window)));
         moo_prefs_set_bool (setting (window, PREFS_MAXIMIZED),
                             state & GDK_WINDOW_STATE_MAXIMIZED);
 

@@ -499,7 +499,7 @@ save_size (GtkWindow *window)
     if (!GTK_WIDGET_REALIZED (window))
         return FALSE;
 
-    state = gdk_window_get_state (GTK_WIDGET(window)->window);
+    state = gdk_window_get_state (gtk_widget_get_window (GTK_WIDGET(window)));
     moo_prefs_set_bool (pinfo->key_maximized,
                         state & GDK_WINDOW_STATE_MAXIMIZED);
 

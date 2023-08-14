@@ -615,8 +615,8 @@ moo_paned_realize (GtkWidget *widget)
 
     paned = MOO_PANED (widget);
 
-    widget->window = gtk_widget_get_parent_window (widget);
-    g_object_ref (widget->window);
+    gtk_widget_set_window (widget, gtk_widget_get_parent_window (widget));
+    g_object_ref (gtk_widget_get_window (widget));
 
     gtk_widget_get_allocation (widget, &allocation);
     attributes.x = allocation.x;
@@ -637,7 +637,7 @@ moo_paned_realize (GtkWidget *widget)
                                               &attributes, attributes_mask);
     gdk_window_set_user_data (paned->priv->bin_window, widget);
 
-    widget->style = gtk_style_attach (widget->style, widget->window);
+    widget->style = gtk_style_attach (widget->style, gtk_widget_get_window (widget));
     gtk_style_set_background (widget->style, paned->priv->bin_window, GTK_STATE_NORMAL);
 
     GTK_WIDGET_SET_REALIZED (widget);
@@ -798,7 +798,7 @@ realize_pane (MooPaned *paned)
             GDK_WA_COLORMAP;
 
     paned->priv->pane_window =
-            gdk_window_new (widget->window, &attributes, attributes_mask);
+            gdk_window_new (gtk_widget_get_window (widget), &attributes, attributes_mask);
     gdk_window_set_user_data (paned->priv->pane_window, widget);
 
     gtk_style_set_background (widget->style,
@@ -1964,7 +1964,7 @@ compute_window_offset (MooPaned  *paned,
 
     *x = *y = 0;
 
-    for (window = paned->button_box->window; window != NULL && window != parent; )
+    for (window = gtk_widget_get_window (paned->button_box); window != NULL && window != parent; )
     {
         int x_local, y_local;
         gdk_window_get_position (window, &x_local, &y_local);
@@ -3082,7 +3082,7 @@ handle_button_press (GtkWidget      *widget,
 #if 1
     cursor = gdk_cursor_new (paned->priv->handle_cursor_type);
     g_return_val_if_fail (cursor != NULL, TRUE);
-    gdk_window_set_cursor (widget->window, cursor);
+    gdk_window_set_cursor (gtk_widget_get_window (widget), cursor);
     gdk_cursor_unref (cursor);
 #endif
 
@@ -3151,7 +3151,7 @@ handle_button_release (GtkWidget      *widget,
     if (paned->priv->handle_button_pressed)
     {
 #if 1
-        gdk_window_set_cursor (widget->window, NULL);
+        gdk_window_set_cursor (gtk_widget_get_window (widget), NULL);
 #endif
         paned->priv->handle_button_pressed = FALSE;
 
@@ -3181,7 +3181,7 @@ handle_expose (GtkWidget      *widget,
     height = MIN (gtk_widget_get_allocated_height (widget), HANDLE_HEIGHT);
 
     gtk_paint_handle (widget->style,
-                      widget->window,
+                      gtk_widget_get_window (widget),
                       widget->state,
                       GTK_SHADOW_ETCHED_IN,
                       &event->area,

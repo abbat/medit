@@ -84,7 +84,7 @@ menu_position_func (G_GNUC_UNUSED GtkMenu *menu,
     GtkRequisition req;
     GtkAllocation allocation;
 
-    gdk_window_get_origin (button->window, x, y);
+    gdk_window_get_origin (gtk_widget_get_window (button), x, y);
     gtk_widget_size_request (button, &req);
     gtk_widget_get_allocation (button, &allocation);
 

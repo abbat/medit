@@ -560,7 +560,7 @@ moo_combo_popup_real (MooCombo *combo)
                             &GTK_WIDGET(combo->priv->treeview)->style->base[GTK_STATE_SELECTED]);
 
     gtk_grab_add (combo->priv->popup);
-    gdk_pointer_grab (combo->priv->popup->window, TRUE,
+    gdk_pointer_grab (gtk_widget_get_window (combo->priv->popup), TRUE,
                       (GdkEventMask) (GDK_BUTTON_PRESS_MASK |
                               GDK_BUTTON_RELEASE_MASK |
                               GDK_POINTER_MOTION_MASK),
@@ -658,7 +658,7 @@ resize_popup (MooCombo *combo)
 
     g_return_val_if_fail (GTK_WIDGET_REALIZED (combo->entry), FALSE);
 
-    gdk_window_get_origin (widget->window, &x, &y);
+    gdk_window_get_origin (gtk_widget_get_window (widget), &x, &y);
     /* XXX */
     entry_get_borders (GTK_ENTRY (combo->entry), &x_border, &y_border);
 
@@ -694,7 +694,7 @@ resize_popup (MooCombo *combo)
                                         NULL, NULL, NULL, &height);
 
     screen = gtk_widget_get_screen (widget);
-    monitor_num = gdk_screen_get_monitor_at_window (screen, widget->window);
+    monitor_num = gdk_screen_get_monitor_at_window (screen, gtk_widget_get_window (widget));
     gdk_screen_get_monitor_geometry (screen, monitor_num, &monitor);
 
     width = gtk_widget_get_allocated_width (GTK_WIDGET(combo));
@@ -751,7 +751,7 @@ static gboolean
 popup_button_press (MooCombo       *combo,
                     GdkEventButton *event)
 {
-    if (event->window == combo->priv->popup->window)
+    if (event->window == gtk_widget_get_window (combo->priv->popup))
     {
         gint width, height;
         gdk_drawable_get_size (GDK_DRAWABLE (event->window),

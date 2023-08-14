@@ -1024,10 +1024,10 @@ moo_notebook_realize (GtkWidget *widget)
 
     GTK_WIDGET_SET_REALIZED (widget);
 
-    widget->window = gtk_widget_get_parent_window (widget);
-    g_object_ref (widget->window);
+    gtk_widget_set_window (widget, gtk_widget_get_parent_window (widget));
+    g_object_ref (gtk_widget_get_window (widget));
 
-    widget->style = gtk_style_attach (widget->style, widget->window);
+    widget->style = gtk_style_attach (widget->style, gtk_widget_get_window (widget));
 
     /* Tabs window */
     gtk_widget_get_allocation (widget, &allocation);
@@ -1055,7 +1055,7 @@ moo_notebook_realize (GtkWidget *widget)
 
     attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL | GDK_WA_COLORMAP;
 
-    nb->priv->tab_window = gdk_window_new (widget->window, &attributes, attributes_mask);
+    nb->priv->tab_window = gdk_window_new (gtk_widget_get_window (widget), &attributes, attributes_mask);
     gdk_window_set_user_data (nb->priv->tab_window, widget);
 
 #if 0
@@ -1295,7 +1295,7 @@ moo_notebook_expose (GtkWidget      *widget,
     if (event->window == nb->priv->tab_window)
         moo_notebook_draw_labels (nb, event);
 
-    if (event->window == widget->window && nb->priv->tabs_visible)
+    if (event->window == gtk_widget_get_window (widget) && nb->priv->tabs_visible)
         moo_notebook_draw_child_border (nb, event);
 
     /* do not let GtkNotebook try to draw */
@@ -3328,7 +3328,7 @@ labels_invalidate (MooNotebook *nb)
     rect.y = allocation.y + border_width + nb->priv->tabs_height;
     rect.width = allocation.width - 2*border_width;
     rect.height = 2*widget->style->ythickness;
-    gdk_window_invalidate_rect (widget->window, &rect, FALSE);
+    gdk_window_invalidate_rect (gtk_widget_get_window (widget), &rect, FALSE);
 }
 
 static gboolean

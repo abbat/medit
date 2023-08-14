@@ -1135,7 +1135,7 @@ get_new_button_index (MooBigPaned *paned,
     child = MOO_PANED (paned->paned[paned->priv->drop_pos]);
 
     new_button = _moo_paned_get_button (child, x, y,
-                                        paned->priv->outer->window);
+                                        gtk_widget_get_window (paned->priv->outer));
 
     if (child == active_child)
     {
@@ -1230,7 +1230,7 @@ handle_drag_motion (MooPaned       *child,
 
     g_return_if_fail (GTK_WIDGET_REALIZED (paned->priv->outer));
 
-    gdk_window_get_pointer (paned->priv->outer->window, &x, &y, NULL);
+    gdk_window_get_pointer (gtk_widget_get_window (paned->priv->outer), &x, &y, NULL);
 
     if (!get_new_drop_position (paned, child, x, y))
         return;
@@ -1301,7 +1301,7 @@ handle_drag_end (MooPaned    *child,
         return;
     }
 
-    gdk_window_get_pointer (paned->priv->outer->window, &x, &y, NULL);
+    gdk_window_get_pointer (gtk_widget_get_window (paned->priv->outer), &x, &y, NULL);
     get_new_drop_position (paned, child, x, y);
 
     if (paned->priv->drop_pos < 0)
@@ -1392,7 +1392,7 @@ get_drop_area (MooBigPaned    *paned,
 
     _moo_paned_get_button_position (MOO_PANED (paned->paned[position]),
                                     index, button_rect,
-                                    paned->priv->outer->window);
+                                    gtk_widget_get_window (paned->priv->outer));
 }
 
 
@@ -1564,7 +1564,7 @@ create_drop_outline (MooBigPaned *paned)
 
     attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL | GDK_WA_COLORMAP;
 
-    paned->priv->drop_outline = gdk_window_new (paned->priv->outer->window,
+    paned->priv->drop_outline = gdk_window_new (gtk_widget_get_window (paned->priv->outer),
                                                 &attributes, attributes_mask);
     gdk_window_set_user_data (paned->priv->drop_outline, paned);
 

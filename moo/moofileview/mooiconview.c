@@ -919,7 +919,7 @@ moo_icon_view_style_set (GtkWidget *widget,
     MooIconView *view = MOO_ICON_VIEW (widget);
 
     if (GTK_WIDGET_REALIZED (widget))
-        gdk_window_set_background (widget->window,
+        gdk_window_set_background (gtk_widget_get_window (widget),
                                    &widget->style->base[GTK_WIDGET_STATE (widget)]);
 
     if (view->priv->sel_gc)
@@ -935,7 +935,7 @@ moo_icon_view_state_changed (GtkWidget *widget,
                              G_GNUC_UNUSED GtkStateType previous_state)
 {
     if (GTK_WIDGET_REALIZED (widget))
-        gdk_window_set_background (widget->window,
+        gdk_window_set_background (gtk_widget_get_window (widget),
                                    &widget->style->base[GTK_WIDGET_STATE (widget)]);
 
     if (!GTK_WIDGET_IS_SENSITIVE (widget))
@@ -978,12 +978,12 @@ moo_icon_view_realize (GtkWidget *widget)
 
     attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL | GDK_WA_COLORMAP;
 
-    widget->window = gdk_window_new (gtk_widget_get_parent_window (widget),
-                                     &attributes, attributes_mask);
-    gdk_window_set_user_data (widget->window, widget);
+    gtk_widget_set_window (widget, gdk_window_new (gtk_widget_get_parent_window (widget),
+                                     &attributes, attributes_mask));
+    gdk_window_set_user_data (gtk_widget_get_window (widget), widget);
 
-    widget->style = gtk_style_attach (widget->style, widget->window);
-    gdk_window_set_background (widget->window, &widget->style->base[GTK_STATE_NORMAL]);
+    widget->style = gtk_style_attach (widget->style, gtk_widget_get_window (widget));
+    gdk_window_set_background (gtk_widget_get_window (widget), &widget->style->base[GTK_STATE_NORMAL]);
 
     moo_icon_view_invalidate_layout (view);
 }
@@ -994,9 +994,9 @@ moo_icon_view_unrealize (GtkWidget *widget)
 {
     MooIconView *view = MOO_ICON_VIEW (widget);
 
-    gdk_window_set_user_data (widget->window, NULL);
-    gdk_window_destroy (widget->window);
-    widget->window = NULL;
+    gdk_window_set_user_data (gtk_widget_get_window (widget), NULL);
+    gdk_window_destroy (gtk_widget_get_window (widget));
+    gtk_widget_set_window (widget, NULL);
     GTK_WIDGET_UNSET_REALIZED (widget);
 
     if (view->priv->sel_gc)
@@ -1042,7 +1042,7 @@ moo_icon_view_size_allocate (GtkWidget     *widget,
 
     if (GTK_WIDGET_REALIZED (widget))
     {
-        gdk_window_move_resize (widget->window,
+        gdk_window_move_resize (gtk_widget_get_window (widget),
                                 allocation->x,
                                 allocation->y,
                                 allocation->width,
@@ -1289,7 +1289,7 @@ static void     draw_entry                  (MooIconView    *view,
             state = GTK_CELL_RENDERER_SELECTED;
         }
 
-        gdk_draw_rectangle (widget->window,
+        gdk_draw_rectangle (gtk_widget_get_window (widget),
                             selection_gc,
                             TRUE,
                             entry_rect->x,
@@ -1307,7 +1307,7 @@ static void     draw_entry                  (MooIconView    *view,
         cell_area.width = view->priv->layout->pixbuf_width;
 
         gtk_cell_renderer_render (view->priv->pixbuf.cell,
-                                  widget->window, widget,
+                                  gtk_widget_get_window (widget), widget,
                                   entry_rect,
                                   &cell_area,
                                   entry_rect,
@@ -1324,7 +1324,7 @@ static void     draw_entry                  (MooIconView    *view,
         cell_area.width = entry_rect->width - view->priv->layout->pixbuf_width;
 
         gtk_cell_renderer_render (view->priv->text.cell,
-                                  widget->window, widget,
+                                  gtk_widget_get_window (widget), widget,
                                   entry_rect,
                                   &cell_area,
                                   entry_rect,
@@ -1334,7 +1334,7 @@ static void     draw_entry                  (MooIconView    *view,
     if (cursor || drop)
     {
         gtk_paint_focus (widget->style,
-                         widget->window,
+                         gtk_widget_get_window (widget),
                          GTK_STATE_SELECTED,
                          entry_rect,
                          widget,
@@ -1759,7 +1759,7 @@ static void     invalidate_cell_rect        (MooIconView    *view,
     rect.width = column->width;
     rect.height = view->priv->layout->row_height;
 
-    gdk_window_invalidate_rect (GTK_WIDGET(view)->window, &rect, FALSE);
+    gdk_window_invalidate_rect (gtk_widget_get_window (GTK_WIDGET(view)), &rect, FALSE);
 }
 
 
@@ -1964,7 +1964,7 @@ drag_select_finish (MooIconView *view)
         {
             GdkRectangle rect;
             get_drag_select_rect (view, &rect);
-            gdk_window_invalidate_rect (GTK_WIDGET (view)->window, &rect, TRUE);
+            gdk_window_invalidate_rect (gtk_widget_get_window (GTK_WIDGET (view)), &rect, TRUE);
         }
 
         if (view->priv->old_selection)
@@ -2135,7 +2135,7 @@ moo_icon_view_drag_select (MooIconView    *view,
     get_drag_select_rect (view, &rect);
     gdk_region_union_with_rect (region, &rect);
 
-    gdk_window_invalidate_region (GTK_WIDGET (view)->window, region, TRUE);
+    gdk_window_invalidate_region (gtk_widget_get_window (GTK_WIDGET (view)), region, TRUE);
     drag_scroll_check (view, (int) event->x, (int) event->y);
 
     rect_items_list = moo_icon_view_get_paths_in_rect (view, &rect);
@@ -2580,7 +2580,7 @@ static void     moo_icon_view_scroll_to     (MooIconView    *view,
     if (offset == view->priv->xoffset)
         return;
 
-    gdk_window_scroll (GTK_WIDGET(view)->window, view->priv->xoffset - offset, 0);
+    gdk_window_scroll (gtk_widget_get_window (GTK_WIDGET(view)), view->priv->xoffset - offset, 0);
     view->priv->xoffset = offset;
 
     moo_icon_view_update_adjustment (view);
@@ -3799,7 +3799,7 @@ drag_scroll_timeout (MooIconView *view)
 
     gtk_widget_get_allocation (widget, alc);
 
-    gdk_window_get_pointer (widget->window, &x, &y, &mask);
+    gdk_window_get_pointer (gtk_widget_get_window (widget), &x, &y, &mask);
 
     if (view->priv->drag_select)
     {
@@ -3854,16 +3854,16 @@ drag_scroll_timeout (MooIconView *view)
     {
         event = gdk_event_new (GDK_MOTION_NOTIFY);
 
-        event->motion.window = g_object_ref (widget->window);
+        event->motion.window = g_object_ref (gtk_widget_get_window (widget));
         event->motion.axes = NULL;
-        gdk_window_get_pointer (widget->window, &x, &y, &mask);
+        gdk_window_get_pointer (gtk_widget_get_window (widget), &x, &y, &mask);
         event->motion.x = x;
         event->motion.y = y;
         event->motion.state = mask;
         event->motion.is_hint = FALSE;
         /* XXX ??? do I need it, is it right? */
         event->motion.device = gdk_device_get_core_pointer ();
-        gdk_window_get_position (toplevel->window, &x, &y);
+        gdk_window_get_position (gtk_widget_get_window (toplevel), &x, &y);
         event->motion.x_root = x + event->motion.x;
         event->motion.y_root = y + event->motion.y;
     }
@@ -3871,13 +3871,13 @@ drag_scroll_timeout (MooIconView *view)
     {
         event = gdk_event_new (GDK_DRAG_MOTION);
 
-        event->dnd.window = g_object_ref (toplevel->window);
+        event->dnd.window = g_object_ref (gtk_widget_get_window (toplevel));
         event->dnd.context = g_object_ref (info->drag_motion_context);
 
-        gdk_window_get_position (toplevel->window, &x, &y);
+        gdk_window_get_position (gtk_widget_get_window (toplevel), &x, &y);
         event->dnd.x_root = x;
         event->dnd.y_root = y;
-        gdk_window_get_pointer (toplevel->window, &x, &y, &mask);
+        gdk_window_get_pointer (gtk_widget_get_window (toplevel), &x, &y, &mask);
         event->dnd.x_root += x;
         event->dnd.y_root += y;
     }

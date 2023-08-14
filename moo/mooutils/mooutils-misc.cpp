@@ -182,9 +182,9 @@ add_xid (GtkWindow  *window,
 {
     XID xid;
 
-    if (GTK_IS_WINDOW(window) && GTK_WIDGET(window)->window)
+    if (GTK_IS_WINDOW(window) && gtk_widget_get_window (GTK_WIDGET(window)))
     {
-        xid = GDK_WINDOW_XID (GTK_WIDGET(window)->window);
+        xid = GDK_WINDOW_XID (gtk_widget_get_window (GTK_WIDGET(window)));
         g_array_append_val (array, xid);
     }
 }
@@ -276,7 +276,7 @@ find_by_xid (GSList *windows, XID w)
     GSList *l;
 
     for (l = windows; l != NULL; l = l->next)
-        if (GDK_WINDOW_XID (GTK_WIDGET(l->data)->window) == w)
+        if (GDK_WINDOW_XID (gtk_widget_get_window (GTK_WIDGET(l->data))) == w)
             return (GtkWindow*) l->data;
 
     return NULL;
@@ -324,7 +324,7 @@ _moo_get_top_window (GSList *windows)
         return NULL;
     }
 
-    display = GDK_WINDOW_XDISPLAY (GTK_WIDGET(windows->data)->window);
+    display = GDK_WINDOW_XDISPLAY (gtk_widget_get_window (GTK_WIDGET(windows->data)));
 
     if (!display)
     {
@@ -514,14 +514,14 @@ present_window_x11 (GtkWindow *window,
     if (!GTK_WIDGET_REALIZED (window))
         gtk_widget_realize (GTK_WIDGET (window));
 
-    gdk_x11_window_move_to_current_desktop (GTK_WIDGET(window)->window);
+    gdk_x11_window_move_to_current_desktop (gtk_widget_get_window (GTK_WIDGET(window)));
 
     gtk_widget_show (GTK_WIDGET (window));
 
     if (!stamp)
-        stamp = gdk_x11_get_server_time (GTK_WIDGET (window)->window);
+        stamp = gdk_x11_get_server_time (gtk_widget_get_window (GTK_WIDGET (window)));
 
-    gdk_window_focus (GTK_WIDGET (window)->window, stamp);
+    gdk_window_focus (gtk_widget_get_window (GTK_WIDGET (window)), stamp);
 }
 #endif
 

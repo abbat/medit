@@ -3476,7 +3476,7 @@ menu_position_func (G_GNUC_UNUSED GtkMenu *menu,
         GList *rows;
     } *data = user_data;
 
-    window = GTK_WIDGET(data->fileview)->window;
+    window = gtk_widget_get_window (GTK_WIDGET(data->fileview));
     gdk_window_get_origin (window, x, y);
 
     *push_in = TRUE;
@@ -4521,7 +4521,7 @@ moo_file_view_key_press (MooFileView    *fileview,
 
         copy = gdk_event_copy ((GdkEvent*) event);
         g_object_unref (copy->key.window);
-        copy->key.window = g_object_ref (entry->window);
+        copy->key.window = g_object_ref (gtk_widget_get_window (entry));
 
         gtk_widget_grab_focus (entry);
 
