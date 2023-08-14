@@ -1491,7 +1491,7 @@ completion_entry_key_press (GtkEntry               *entry,
     g_return_val_if_fail (entry == cmpl->priv->entry, FALSE);
 
     if (cmpl->priv->enabled &&
-        moo_accel_check_event (GTK_WIDGET (entry), event, GDK_Tab, 0))
+        moo_accel_check_event (GTK_WIDGET (entry), event, GDK_KEY_Tab, 0))
     {
         completion_tab_key (cmpl);
         return TRUE;

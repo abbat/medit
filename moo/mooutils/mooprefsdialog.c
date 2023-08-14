@@ -475,7 +475,7 @@ moo_prefs_dialog_insert_page (MooPrefsDialog     *dialog,
 
     g_return_if_fail (MOO_IS_PREFS_DIALOG (dialog));
     g_return_if_fail (MOO_IS_PREFS_PAGE (page));
-    g_return_if_fail (page->parent == NULL);
+    g_return_if_fail (gtk_widget_get_parent (page) == NULL);
 
     if (position < 0)
         position = gtk_tree_model_iter_n_children (GTK_TREE_MODEL (dialog->store), NULL);

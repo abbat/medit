@@ -2317,7 +2317,7 @@ moo_paned_insert_pane (MooPaned       *paned,
     g_return_val_if_fail (MOO_IS_PANED (paned), NULL);
     g_return_val_if_fail (GTK_IS_WIDGET (pane_widget), NULL);
     g_return_val_if_fail (pane_label != NULL, NULL);
-    g_return_val_if_fail (pane_widget->parent == NULL, NULL);
+    g_return_val_if_fail (gtk_widget_get_parent (pane_widget) == NULL, NULL);
 
     pane = _moo_pane_new (pane_widget, pane_label);
     _moo_paned_insert_pane (paned, pane, position);

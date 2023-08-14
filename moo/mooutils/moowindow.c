@@ -2438,7 +2438,7 @@ find_widget_for_edit_ops (MooWindow *window)
     {
         if (_moo_edit_ops_check (G_OBJECT (widget)))
             return widget;
-        widget = widget->parent;
+        widget = gtk_widget_get_parent (widget);
     }
 
     return window->priv ? window->priv->default_eo_widget : NULL;
@@ -2522,7 +2522,7 @@ find_widget_for_undo_ops (MooWindow *window)
         if (_moo_undo_ops_check (G_OBJECT (widget)))
             return widget;
 
-        widget = widget->parent;
+        widget = gtk_widget_get_parent (widget);
     }
 
     return window->priv ? window->priv->default_uo_widget : NULL;

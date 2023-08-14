@@ -65,7 +65,7 @@ gboolean moo_keymap_translate_keyboard_state (GdkKeymap           *keymap,
 #define MOO_ACCEL_CTRL "<Ctrl>"
 #define MOO_ACCEL_CTRL_MASK GDK_CONTROL_MASK
 
-#define MOO_ACCEL_HELP_KEY  GDK_F1
+#define MOO_ACCEL_HELP_KEY  GDK_KEY_F1
 #define MOO_ACCEL_HELP_MODS ((GdkModifierType)0)
 
 #else /* GDK_WINDOWING_QUARTZ */

@@ -1223,7 +1223,7 @@ moo_history_mgr_create_menu (MooHistoryMgr   *mgr,
 static void
 menu_item_activated (GtkWidget *menu_item)
 {
-    GtkWidget *parent = menu_item->parent;
+    GtkWidget *parent = gtk_widget_get_parent (menu_item);
     CallbackData *data;
     MooHistoryItem *item;
     GSList *list;

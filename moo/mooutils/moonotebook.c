@@ -1531,7 +1531,7 @@ moo_notebook_insert_page (MooNotebook *nb,
 
     g_return_val_if_fail (MOO_IS_NOTEBOOK (nb), -1);
     g_return_val_if_fail (GTK_IS_WIDGET (child), -1);
-    g_return_val_if_fail (child->parent == NULL, -1);
+    g_return_val_if_fail (gtk_widget_get_parent (child) == NULL, -1);
     g_return_val_if_fail (!label || GTK_IS_WIDGET (label), -1);
 
     /* XXX GTK_WIDGET_SET_FLAGS (nb, GTK_CAN_FOCUS); */
@@ -1889,7 +1889,7 @@ moo_notebook_set_action_widget (MooNotebook *notebook,
 
     g_return_if_fail (MOO_IS_NOTEBOOK (notebook));
     g_return_if_fail (!widget || GTK_IS_WIDGET (widget));
-    g_return_if_fail (!widget || widget->parent == NULL);
+    g_return_if_fail (!widget || gtk_widget_get_parent (widget) == NULL);
 
     widget_ptr = right ? &notebook->priv->action_widgets[RIGHT] :
             &notebook->priv->action_widgets[LEFT];
@@ -1993,7 +1993,7 @@ moo_notebook_set_tab_label (MooNotebook *notebook,
     g_return_if_fail (MOO_IS_NOTEBOOK (notebook));
     g_return_if_fail (GTK_IS_WIDGET (child));
     g_return_if_fail (GTK_IS_WIDGET (tab_label));
-    g_return_if_fail (tab_label->parent == NULL);
+    g_return_if_fail (gtk_widget_get_parent (tab_label) == NULL);
 
     page = find_child (notebook, child);
     g_return_if_fail (page != NULL);

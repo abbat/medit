@@ -3578,7 +3578,7 @@ moo_text_view_add_child_in_border (MooTextView        *view,
 
     g_return_if_fail (MOO_IS_TEXT_VIEW (view));
     g_return_if_fail (GTK_IS_WIDGET (widget));
-    g_return_if_fail (widget->parent == NULL);
+    g_return_if_fail (gtk_widget_get_parent (widget) == NULL);
 
     switch (which_border)
     {

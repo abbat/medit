@@ -119,7 +119,7 @@ moo_help_open_any (GtkWidget *widget)
     {
         if (moo_help_open (widget))
             return;
-        widget = widget->parent;
+        widget = gtk_widget_get_parent (widget);
     }
 
     moo_help_open_id (MOO_HELP_ID_CONTENTS, widget);
