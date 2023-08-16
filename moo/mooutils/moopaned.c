@@ -1535,7 +1535,7 @@ moo_paned_add (GtkContainer   *container,
 
     gtk_widget_set_parent_window (child, MOO_PANED(container)->priv->bin_window);
     gtk_widget_set_parent (child, GTK_WIDGET (bin));
-    bin->child = child;
+    gtk_container_add (container, child); // TODO: check this!
 }
 
 
@@ -3202,7 +3202,7 @@ handle_expose (GtkWidget      *widget,
 
     gtk_paint_handle (widget->style,
                       gtk_widget_get_window (widget),
-                      widget->state,
+                      gtk_widget_get_state (widget),
                       GTK_SHADOW_ETCHED_IN,
                       &event->area,
                       widget,

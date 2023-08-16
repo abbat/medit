@@ -43,7 +43,12 @@ struct _MooCmdViewPrivate {
     MooOutputFilter *filter;
 };
 
+#if GTK_CHECK_VERSION(3,0,0)
+static void      moo_cmd_view_destroy       (GtkWidget  *object);
+#else
 static void      moo_cmd_view_destroy       (GtkObject  *object);
+#endif
+
 static GObject  *moo_cmd_view_constructor   (GType                  type,
                                              guint                  n_construct_properties,
                                              GObjectConstructParam *construct_param);
@@ -82,7 +87,12 @@ static void
 moo_cmd_view_class_init (MooCmdViewClass *klass)
 {
     GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
+
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkWidgetClass *gtkobject_class = GTK_WIDGET_CLASS (klass);
+#else
     GtkObjectClass *gtkobject_class = GTK_OBJECT_CLASS (klass);
+#endif
 
     gobject_class->constructor = moo_cmd_view_constructor;
 
@@ -187,15 +197,24 @@ moo_cmd_view_constructor (GType                  type,
 
 
 static void
+#if GTK_CHECK_VERSION(3,0,0)
+moo_cmd_view_destroy (GtkWidget *object)
+#else
 moo_cmd_view_destroy (GtkObject *object)
+#endif
 {
     MooCmdView *view = MOO_CMD_VIEW (object);
 
     moo_cmd_view_abort_and_disconnect (view);
     moo_cmd_view_set_filter (view, NULL);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    if (GTK_WIDGET_CLASS (moo_cmd_view_parent_class)->destroy)
+        GTK_WIDGET_CLASS (moo_cmd_view_parent_class)->destroy (object);
+#else
     if (GTK_OBJECT_CLASS (moo_cmd_view_parent_class)->destroy)
         GTK_OBJECT_CLASS (moo_cmd_view_parent_class)->destroy (object);
+#endif
 }
 
 
@@ -581,7 +600,7 @@ moo_cmd_view_write_with_filter (MooCmdView *view,
 {
     char **lines;
     char **p;
-    
+
     lines = moo_splitlines (text);
 
     for (p = lines; p && *p; ++p)

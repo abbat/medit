@@ -97,13 +97,19 @@ struct _MooAppPrivate {
 
     MooUiXml   *ui_xml;
     const char *default_ui;
+
+#if !GTK_CHECK_VERSION(3,0,0)
     guint       quit_handler_id;
+#endif
 
 #ifdef MOO_USE_QUARTZ
     IgeMacDock *dock;
 #endif
 };
 
+#if GTK_CHECK_VERSION(3,0,0)
+static MooApp *g_app;   // used instead MooAppPrivate::quit_handler_id
+#endif
 
 static void     moo_app_class_init      (MooAppClass        *klass, gpointer);
 static void     moo_app_instance_init   (MooApp             *app, gpointer);
@@ -719,10 +725,19 @@ moo_app_send_msg (const char *pid,
 }
 
 
-static gboolean
-on_gtk_main_quit (MooApp *app)
+static
+#if GTK_CHECK_VERSION(3,0,0)
+void on_gtk_main_quit ()
+#else
+gboolean on_gtk_main_quit (MooApp *app)
+#endif
 {
+#if GTK_CHECK_VERSION(3,0,0)
+    MooApp *app = g_app;
+    g_app = NULL;
+#else
     app->priv->quit_handler_id = 0;
+#endif
 
     if (!moo_app_quit (app))
         moo_app_do_quit (app);
@@ -833,8 +848,12 @@ moo_app_do_quit (MooApp *app)
     moo_app_write_session (app);
     moo_app_save_prefs (app);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    g_app = NULL;
+#else
     if (app->priv->quit_handler_id)
         gtk_quit_remove (app->priv->quit_handler_id);
+#endif
 
     i = 0;
     while (gtk_main_level () && i < 1000)
@@ -884,8 +903,13 @@ moo_app_run (MooApp *app)
 
     app->priv->running = TRUE;
 
+#if GTK_CHECK_VERSION(3,0,0)
+    // FIXME: deprecated
+    g_atexit (on_gtk_main_quit);
+#else
     app->priv->quit_handler_id =
             gtk_quit_add (1, (GtkFunction) on_gtk_main_quit, app);
+#endif
 
     g_timeout_add (100, (GSourceFunc) check_signal, NULL);
 

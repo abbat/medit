@@ -432,7 +432,7 @@ create_popup_window (MooCombo *combo)
     gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scrolled_window),
                                          GTK_SHADOW_ETCHED_IN);
     /* a nasty hack to get the treeview to size nicely */
-    gtk_widget_set_size_request (GTK_SCROLLED_WINDOW (scrolled_window)->vscrollbar, -1, 0);
+    gtk_widget_set_size_request (gtk_scrolled_window_get_vscrollbar (GTK_SCROLLED_WINDOW (scrolled_window)), -1, 0);
     gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scrolled_window), GTK_SHADOW_NONE);
     gtk_container_add (GTK_CONTAINER (scrolled_window), GTK_WIDGET (combo->priv->treeview));
 

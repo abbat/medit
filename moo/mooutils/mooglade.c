@@ -2746,7 +2746,11 @@ get_type_by_name (const char *name)
         add_type ("GtkMessageDialog", gtk_message_dialog_get_type);
         add_type ("GtkMisc", gtk_misc_get_type);
         add_type ("GtkNotebook", gtk_notebook_get_type);
+
+#if !GTK_CHECK_VERSION(3,0,0)
         add_type ("GtkObject", gtk_object_get_type);
+#endif
+
         add_type ("GtkOptionMenu", gtk_option_menu_get_type);
         add_type ("GtkPaned", gtk_paned_get_type);
         add_type ("GtkProgressBar", gtk_progress_bar_get_type);

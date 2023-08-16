@@ -708,7 +708,7 @@ moo_file_selector_drop_data_received (MooFileView    *fileview,
         g_critical ("oops");
         goto parent;
     }
-    else if (data->length < 0)
+    else if (gtk_selection_data_get_length (data) < 0)
     {
         g_warning ("could not get MOO_EDIT_TAB data");
         goto error;

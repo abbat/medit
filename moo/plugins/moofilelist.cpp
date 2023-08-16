@@ -1251,12 +1251,12 @@ drag_source_drag_data_get (GtkTreeDragSource *drag_source,
                            GtkTreePath       *path,
                            GtkSelectionData  *selection_data)
 {
-    if (selection_data->target == TREE_MODEL_ROW_ATOM)
+    if (gtk_selection_data_get_target (selection_data) == TREE_MODEL_ROW_ATOM)
     {
         gtk_tree_set_row_drag_data (selection_data, GTK_TREE_MODEL (drag_source), path);
         return TRUE;
     }
-    else if (selection_data->target == moo_atom_uri_list ())
+    else if (gtk_selection_data_get_target (selection_data) == moo_atom_uri_list ())
     {
         Item *item = get_item_at_path (FILE_LIST (drag_source), path);
 
@@ -1676,7 +1676,7 @@ drag_dest_drag_data_received (GtkTreeDragDest  *drag_dest,
                               GtkTreePath      *dest,
                               GtkSelectionData *selection_data)
 {
-    if (selection_data->target == TREE_MODEL_ROW_ATOM)
+    if (gtk_selection_data_get_target (selection_data) == TREE_MODEL_ROW_ATOM)
     {
         GtkTreePath *path = nullptr;
         gboolean retval;
@@ -1690,7 +1690,7 @@ drag_dest_drag_data_received (GtkTreeDragDest  *drag_dest,
         gtk_tree_path_free (path);
         return retval;
     }
-    else if (selection_data->target == moo_atom_uri_list ())
+    else if (gtk_selection_data_get_target (selection_data) == moo_atom_uri_list ())
     {
         char **uris;
         gboolean retval = FALSE;

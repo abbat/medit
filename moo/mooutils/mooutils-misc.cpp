@@ -1048,16 +1048,16 @@ moo_selection_data_get_pointer (GtkSelectionData *data,
     gpointer result = NULL;
 
     g_return_val_if_fail (data != NULL, NULL);
-    g_return_val_if_fail (data->target == type, NULL);
-    g_return_val_if_fail (data->length == sizeof (result), NULL);
+    g_return_val_if_fail (gtk_selection_data_get_target (data) == type, NULL);
+    g_return_val_if_fail (gtk_selection_data_get_length (data) == sizeof (result), NULL);
 
     /* If we can get the owner, the selection is in-process */
-    owner = gdk_selection_owner_get_for_display (data->display, data->selection);
+    owner = gdk_selection_owner_get_for_display (gtk_selection_data_get_display (data), gtk_selection_data_get_selection (data));
 
     if (!owner || gdk_window_get_window_type (owner) == GDK_WINDOW_FOREIGN)
         return NULL;
 
-    memcpy (&result, data->data, sizeof (result));
+    memcpy (&result, gtk_selection_data_get_data (data), sizeof (result));
 
     return result;
 }

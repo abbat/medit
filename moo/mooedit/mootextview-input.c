@@ -312,7 +312,7 @@ _moo_text_view_move_cursor (GtkTextView        *text_view,
     GtkTextMark *insert;
     GtkTextIter iter;
 
-    if (!text_view->cursor_visible)
+    if (!gtk_text_view_get_cursor_visible (text_view))
     {
         GTK_TEXT_VIEW_CLASS (_moo_text_view_parent_class)->move_cursor (text_view, step, count, extend_selection);
         return;
@@ -1012,6 +1012,11 @@ text_view_start_selection_dnd (GtkTextView       *text_view,
 
     gtk_target_list_add_text_targets (target_list, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_drag_begin_with_coordinates (GTK_WIDGET (text_view), target_list
+                                     GDK_ACTION_COPY | GDK_ACTION_MOVE,
+                                     1, (GdkEvent*) event, -1, -1);
+#else
     text_view->drag_start_x = -1;
     text_view->drag_start_y = -1;
     text_view->pending_place_cursor_button = 0;
@@ -1019,6 +1024,7 @@ text_view_start_selection_dnd (GtkTextView       *text_view,
     gtk_drag_begin (GTK_WIDGET (text_view), target_list,
                     GDK_ACTION_COPY | GDK_ACTION_MOVE,
                     1, (GdkEvent*) event);
+#endif
 
     gtk_target_list_unref (target_list);
 }

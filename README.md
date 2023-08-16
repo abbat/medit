@@ -11,7 +11,7 @@ Second life for `medit` (also known as `mooedit`) text editor in modern linux di
 
 ## goals
 
-* gtk-2 EOL at Dec 21, 2020 (version 2.24.33), so we have to migrate to gtk-3 (or gtk-4) in the future.
+* gtk-2 EOL at Dec 21, 2020 (version 2.24.33), so we have to migrate to gtk-3 (or gtk-4) in the future (see [migration 2to3](https://docs.gtk.org/gtk3/migrating-2to3.html)).
 * also we can drop compatibility layer to older gtk2 and glib.
 * current glib / gtk version matrix in modern linux distros for reference:
 

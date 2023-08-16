@@ -5365,7 +5365,7 @@ moo_file_view_drop_data_received (MooFileView    *fileview,
     gboolean success = FALSE;
     gboolean delete = FALSE;
 
-    if (data->target == moo_atom_uri_list ())
+    if (gtk_selection_data_get_target (data) == moo_atom_uri_list ())
     {
         char **uris = gtk_selection_data_get_uris (data);
 
