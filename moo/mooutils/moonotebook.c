@@ -156,7 +156,11 @@ G_STMT_START {                                                  \
 static void     moo_notebook_class_init     (MooNotebookClass *klass);
 static void     moo_notebook_init           (MooNotebook    *nb);
 static void     moo_notebook_finalize       (GObject        *object);
+#if GTK_CHECK_VERSION(3,0,0)
+static void     moo_notebook_destroy        (GtkWidget      *object);
+#else
 static void     moo_notebook_destroy        (GtkObject      *object);
+#endif
 static void     moo_notebook_set_property   (GObject        *object,
                                              guint           prop_id,
                                              const GValue   *value,
@@ -319,7 +323,11 @@ static gpointer moo_notebook_grand_parent_class;
 static void moo_notebook_class_init (MooNotebookClass *klass)
 {
     GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkWidgetClass *gtkobject_class = GTK_WIDGET_CLASS (klass);
+#else
     GtkObjectClass *gtkobject_class = GTK_OBJECT_CLASS (klass);
+#endif
     GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
     GtkContainerClass *container_class = GTK_CONTAINER_CLASS (klass);
 
@@ -532,7 +540,11 @@ notebook_create_arrows (MooNotebook *nb)
 
 
 static void
+#if GTK_CHECK_VERSION(3,0,0)
+moo_notebook_destroy (GtkWidget *object)
+#else
 moo_notebook_destroy (GtkObject *object)
+#endif
 {
     GSList *l;
     MooNotebook *nb = MOO_NOTEBOOK (object);
@@ -560,7 +572,11 @@ moo_notebook_destroy (GtkObject *object)
     nb->priv->pages = NULL;
     nb->priv->current_page = NULL;
 
+#if GTK_CHECK_VERSION(3,0,0)
+    GTK_WIDGET_CLASS(moo_notebook_parent_class)->destroy (object);
+#else
     GTK_OBJECT_CLASS(moo_notebook_parent_class)->destroy (object);
+#endif
 }
 
 

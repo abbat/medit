@@ -110,7 +110,11 @@ static GObject *moo_paned_constructor       (GType                  type,
                                              guint                  n_construct_properties,
                                              GObjectConstructParam *construct_properties);
 
+#if GTK_CHECK_VERSION(3,0,0)
+static void     moo_paned_destroy           (GtkWidget      *object);
+#else
 static void     moo_paned_destroy           (GtkObject      *object);
+#endif
 
 static void     moo_paned_realize           (GtkWidget      *widget);
 static void     moo_paned_unrealize         (GtkWidget      *widget);
@@ -227,7 +231,11 @@ static void
 moo_paned_class_init (MooPanedClass *klass)
 {
     GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkWidgetClass *gtkobject_class = GTK_WIDGET_CLASS (klass);
+#else
     GtkObjectClass *gtkobject_class = GTK_OBJECT_CLASS (klass);
+#endif
     GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
     GtkContainerClass *container_class = GTK_CONTAINER_CLASS (klass);
 
@@ -547,15 +555,27 @@ moo_paned_get_property (GObject        *object,
 
 
 static void
+#if GTK_CHECK_VERSION(3,0,0)
+moo_paned_destroy (GtkWidget      *object)
+#else
 moo_paned_destroy (GtkObject      *object)
+#endif
 {
     GSList *l;
     MooPaned *paned = MOO_PANED (object);
 
     for (l = paned->priv->panes; l != NULL; l = l->next)
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_widget_destroy (l->data);
+#else
         gtk_object_destroy (l->data);
+#endif
 
+#if GTK_CHECK_VERSION(3,0,0)
+    GTK_WIDGET_CLASS(moo_paned_parent_class)->destroy (object);
+#else
     GTK_OBJECT_CLASS(moo_paned_parent_class)->destroy (object);
+#endif
 
     for (l = paned->priv->panes; l != NULL; l = l->next)
         g_object_unref (l->data);

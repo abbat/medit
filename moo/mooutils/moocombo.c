@@ -77,7 +77,12 @@ static void moo_combo_cell_layout_reorder               (GtkCellLayout      *cel
                                                          GtkCellRenderer    *cell,
                                                          gint                position);
 
+#if GTK_CHECK_VERSION(3,0,0)
+static void     moo_combo_destroy           (GtkWidget      *object);
+#else
 static void     moo_combo_destroy           (GtkObject      *object);
+#endif
+
 static void     moo_combo_set_property      (GObject        *object,
                                              guint           prop_id,
                                              const GValue   *value,
@@ -145,7 +150,11 @@ static void
 moo_combo_class_init (MooComboClass *klass)
 {
     GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkWidgetClass *gtkobject_class = GTK_WIDGET_CLASS (klass);
+#else
     GtkObjectClass *gtkobject_class = GTK_OBJECT_CLASS (klass);
+#endif
     GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
     GtkBindingSet *binding_set;
 
@@ -295,7 +304,11 @@ create_arrow_button (MooCombo       *combo)
 
 
 static void
+#if GTK_CHECK_VERSION(3,0,0)
+moo_combo_destroy (GtkWidget *object)
+#else
 moo_combo_destroy (GtkObject *object)
+#endif
 {
     MooCombo *combo = MOO_COMBO (object);
 
@@ -332,7 +345,11 @@ moo_combo_destroy (GtkObject *object)
         combo->priv->size_group = NULL;
     }
 
+#if GTK_CHECK_VERSION(3,0,0)
+    GTK_WIDGET_CLASS(moo_combo_parent_class)->destroy (object);
+#else
     GTK_OBJECT_CLASS(moo_combo_parent_class)->destroy (object);
+#endif
 }
 
 

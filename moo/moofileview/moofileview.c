@@ -175,7 +175,12 @@ static void         moo_file_view_get_property  (GObject        *object,
                                                  GValue         *value,
                                                  GParamSpec     *pspec);
 
+#if GTK_CHECK_VERSION(3,0,0)
+static void         moo_file_view_destroy       (GtkWidget      *object);
+#else
 static void         moo_file_view_destroy       (GtkObject      *object);
+#endif
+
 static void         moo_file_view_hide          (GtkWidget      *widget);
 static gboolean     moo_file_view_key_press     (MooFileView    *fileview,
                                                  GtkWidget      *widget,
@@ -492,7 +497,11 @@ static void
 moo_file_view_class_init (MooFileViewClass *klass)
 {
     GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkWidgetClass *gtkobject_class = GTK_WIDGET_CLASS (klass);
+#else
     GtkObjectClass *gtkobject_class = GTK_OBJECT_CLASS (klass);
+#endif
     GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
     GtkBindingSet *binding_set;
 
@@ -918,7 +927,11 @@ moo_file_view_init (MooFileView *fileview)
 
 
 static void
+#if GTK_CHECK_VERSION(3,0,0)
+moo_file_view_destroy (GtkWidget *object)
+#else
 moo_file_view_destroy (GtkObject *object)
+#endif
 {
     MooFileView *fileview = MOO_FILE_VIEW (object);
 
@@ -928,7 +941,11 @@ moo_file_view_destroy (GtkObject *object)
         fileview->priv->props_dialog = NULL;
     }
 
+#if GTK_CHECK_VERSION(3,0,0)
+    GTK_WIDGET_CLASS (moo_file_view_parent_class)->destroy (object);
+#else
     GTK_OBJECT_CLASS (moo_file_view_parent_class)->destroy (object);
+#endif
 }
 
 

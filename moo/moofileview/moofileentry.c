@@ -1573,7 +1573,13 @@ static void     moo_file_entry_get_property (GObject        *object,
                                              guint           prop_id,
                                              GValue         *value,
                                              GParamSpec     *pspec);
+
+#if GTK_CHECK_VERSION(3,0,0)
+static void     moo_file_entry_destroy      (GtkWidget      *object);
+#else
 static void     moo_file_entry_destroy      (GtkObject      *object);
+#endif
+
 static gboolean moo_file_entry_key_press    (GtkWidget      *widget,
                                              GdkEventKey    *event);
 
@@ -1590,7 +1596,11 @@ static void
 _moo_file_entry_class_init (MooFileEntryClass *klass)
 {
     GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkWidgetClass *gtkobject_class = GTK_WIDGET_CLASS (klass);
+#else
     GtkObjectClass *gtkobject_class = GTK_OBJECT_CLASS (klass);
+#endif
     GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
     gobject_class->set_property = moo_file_entry_set_property;
@@ -1618,7 +1628,11 @@ _moo_file_entry_init (G_GNUC_UNUSED MooFileEntry *entry)
 
 
 static void
+#if GTK_CHECK_VERSION(3,0,0)
+moo_file_entry_destroy (GtkWidget *object)
+#else
 moo_file_entry_destroy (GtkObject *object)
+#endif
 {
     MooFileEntry *entry = MOO_FILE_ENTRY (object);
 
@@ -1629,7 +1643,11 @@ moo_file_entry_destroy (GtkObject *object)
         entry->completion = NULL;
     }
 
+#if GTK_CHECK_VERSION(3,0,0)
+    GTK_WIDGET_CLASS(_moo_file_entry_parent_class)->destroy (object);
+#else
     GTK_OBJECT_CLASS(_moo_file_entry_parent_class)->destroy (object);
+#endif
 }
 
 

@@ -31,7 +31,11 @@ enum {
 static void moo_menu_tool_button_class_init (MooMenuToolButtonClass *klass);
 static void moo_menu_tool_button_init       (MooMenuToolButton      *button);
 
+#if GTK_CHECK_VERSION(3,0,0)
+static void moo_menu_tool_button_destroy    (GtkWidget              *object);
+#else
 static void moo_menu_tool_button_destroy    (GtkObject              *object);
+#endif
 static void moo_menu_tool_button_toggled    (GtkToggleToolButton    *button);
 
 
@@ -41,7 +45,11 @@ G_DEFINE_TYPE(MooMenuToolButton, moo_menu_tool_button, GTK_TYPE_TOGGLE_TOOL_BUTT
 static void
 moo_menu_tool_button_class_init (MooMenuToolButtonClass *klass)
 {
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkWidgetClass *gtkobject_class = GTK_WIDGET_CLASS (klass);
+#else
     GtkObjectClass *gtkobject_class = GTK_OBJECT_CLASS (klass);
+#endif
     GtkToggleToolButtonClass *toggle_class = GTK_TOGGLE_TOOL_BUTTON_CLASS (klass);
     gtkobject_class->destroy = moo_menu_tool_button_destroy;
     toggle_class->toggled = moo_menu_tool_button_toggled;
@@ -55,7 +63,11 @@ moo_menu_tool_button_init (G_GNUC_UNUSED MooMenuToolButton *button)
 
 
 static void
+#if GTK_CHECK_VERSION(3,0,0)
+moo_menu_tool_button_destroy (GtkWidget *object)
+#else
 moo_menu_tool_button_destroy (GtkObject *object)
+#endif
 {
     MooMenuToolButton *button = MOO_MENU_TOOL_BUTTON (object);
 
@@ -63,7 +75,11 @@ moo_menu_tool_button_destroy (GtkObject *object)
         gtk_widget_destroy (button->menu);
     button->menu = NULL;
 
+#if GTK_CHECK_VERSION(3,0,0)
+    GTK_WIDGET_CLASS (moo_menu_tool_button_parent_class)->destroy (object);
+#else
     GTK_OBJECT_CLASS (moo_menu_tool_button_parent_class)->destroy (object);
+#endif
 }
 
 

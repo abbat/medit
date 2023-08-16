@@ -479,7 +479,12 @@ command_page_init (MooPrefsPage    *page,
                                        GTK_WIDGET (gxml->up),
                                        GTK_WIDGET (gxml->down));
     g_object_set_data_full (G_OBJECT (page), "moo-tree-helper", helper, g_object_unref);
+
+#if GTK_CHECK_VERSION(3,0,0)
+    g_signal_connect_swapped (page, "destroy", G_CALLBACK (gtk_widget_destroy), helper);
+#else
     g_signal_connect_swapped (page, "destroy", G_CALLBACK (gtk_object_destroy), helper);
+#endif
 
     g_signal_connect_swapped (helper, "new-row", G_CALLBACK (new_row), page);
     g_signal_connect_swapped (helper, "delete-row", G_CALLBACK (delete_row), page);

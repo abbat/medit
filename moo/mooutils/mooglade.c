@@ -212,7 +212,7 @@ static void          collect_signals            (MooMarkupNode  *node,
 static GType         get_type_by_name           (const char     *name);
 static gboolean      parse_bool                 (const char     *value);
 static int           parse_int                  (const char     *value);
-static GtkObject    *parse_adjustment           (const char     *value);
+static GObject      *parse_adjustment           (const char     *value);
 static gboolean      parse_property             (GParamSpec     *param_spec,
                                                  const char     *value,
                                                  GParameter     *param);
@@ -1897,7 +1897,7 @@ parse_property (GParamSpec     *param_spec,
     }
     else if (param_spec->value_type == GTK_TYPE_ADJUSTMENT)
     {
-        GtkObject *adjustment = parse_adjustment (value);
+        GObject *adjustment = parse_adjustment (value);
 
         if (!adjustment)
         {
@@ -1963,17 +1963,17 @@ parse_int (const char *value)
 }
 
 
-static GtkObject*
+static GObject*
 parse_adjustment (const char *value)
 {
     char **pieces;
     double vals[6];
     guint i;
-    GtkObject *adj = NULL;
+    GObject *adj = NULL;
 
     /* XXX is this correct? */
     if (!value)
-        return GTK_OBJECT (g_object_new (GTK_TYPE_ADJUSTMENT, (const char*) NULL));
+        return g_object_new (GTK_TYPE_ADJUSTMENT, (const char*) NULL);
 
     pieces = g_strsplit (value, " ", 0);
     g_return_val_if_fail (pieces != NULL, NULL);
@@ -1994,7 +1994,7 @@ parse_adjustment (const char *value)
         }
     }
 
-    adj = (GtkObject*) gtk_adjustment_new (vals[0], vals[1], vals[2],
+    adj = (GObject*) gtk_adjustment_new (vals[0], vals[1], vals[2],
                               vals[3], vals[4], vals[5]);
 
 out:

@@ -39,7 +39,11 @@
 #include "mooi18n.h"
 
 struct _MooPane {
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkWidget base;
+#else
     GtkObject base;
+#endif
 
     char         *id;
     MooPaned     *parent;
@@ -82,11 +86,19 @@ struct _MooPane {
 };
 
 struct _MooPaneClass {
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkWidgetClass base_class;
+#else
     GtkObjectClass base_class;
+#endif
     gboolean (*remove) (MooPane *pane);
 };
 
+#if GTK_CHECK_VERSION(3,0,0)
+G_DEFINE_TYPE (MooPane, moo_pane, GTK_TYPE_WIDGET)
+#else
 G_DEFINE_TYPE (MooPane, moo_pane, GTK_TYPE_OBJECT)
+#endif
 
 enum {
     PROP_0,

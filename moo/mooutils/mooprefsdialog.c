@@ -47,7 +47,12 @@ static void moo_prefs_dialog_get_property   (GObject        *object,
                                              GValue         *value,
                                              GParamSpec     *pspec);
 
+#if GTK_CHECK_VERSION(3,0,0)
+static void moo_prefs_dialog_destroy        (GtkWidget      *object);
+#else
 static void moo_prefs_dialog_destroy        (GtkObject      *object);
+#endif
+
 static void moo_prefs_dialog_response       (GtkDialog      *dialog,
                                              int             response);
 
@@ -85,7 +90,11 @@ static void
 moo_prefs_dialog_class_init (MooPrefsDialogClass *klass)
 {
     GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkWidgetClass *gtkobject_class = GTK_WIDGET_CLASS (klass);
+#else
     GtkObjectClass *gtkobject_class = GTK_OBJECT_CLASS (klass);
+#endif
     GtkDialogClass *dialog_class = GTK_DIALOG_CLASS (klass);
 
     gobject_class->set_property = moo_prefs_dialog_set_property;
@@ -195,7 +204,11 @@ destroy_page (GtkTreeModel  *model,
 }
 
 static void
+#if GTK_CHECK_VERSION(3,0,0)
+moo_prefs_dialog_destroy (GtkWidget *object)
+#else
 moo_prefs_dialog_destroy (GtkObject *object)
+#endif
 {
     MooPrefsDialog *dialog = MOO_PREFS_DIALOG (object);
 
@@ -212,7 +225,11 @@ moo_prefs_dialog_destroy (GtkObject *object)
         dialog->store = NULL;
     }
 
+#if GTK_CHECK_VERSION(3,0,0)
+    GTK_WIDGET_CLASS(moo_prefs_dialog_parent_class)->destroy (object);
+#else
     GTK_OBJECT_CLASS(moo_prefs_dialog_parent_class)->destroy (object);
+#endif
 }
 
 
