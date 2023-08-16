@@ -934,8 +934,6 @@ typedef struct {
 
 #define LEVEL_INDENTATION 12
 #define EXPANDER_SIZE 8
-#define CELL_XPAD(cell) MAX ((cell)->xpad, 1)
-#define CELL_YPAD(cell) MAX ((cell)->ypad, 1)
 
 typedef struct {
     GtkCellRenderer base;
@@ -947,6 +945,22 @@ typedef struct {
 } MooExpanderCellClass;
 
 G_DEFINE_TYPE (MooExpanderCell, moo_expander_cell, GTK_TYPE_CELL_RENDERER)
+
+static gint
+CELL_XPAD (GtkCellRenderer *cell)
+{
+    gint xpad;
+    gtk_cell_renderer_get_padding (cell, &xpad, NULL);
+    return MAX (xpad, 1);
+}
+
+static gint
+CELL_YPAD (GtkCellRenderer *cell)
+{
+    gint ypad;
+    gtk_cell_renderer_get_padding (cell, NULL, &ypad);
+    return MAX (ypad, 1);
+}
 
 static void
 moo_expander_cell_init (MooExpanderCell *cell)
@@ -963,6 +977,7 @@ moo_expander_cell_get_size (GtkCellRenderer      *cell,
                             int                  *width_p,
                             int                  *height_p)
 {
+    gfloat xalign, yalign;
     int width, height;
 
     width  = CELL_XPAD (cell) * 2 + EXPANDER_SIZE;
@@ -972,15 +987,17 @@ moo_expander_cell_get_size (GtkCellRenderer      *cell,
     {
         if (x_offset)
         {
-            float xalign = (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_RTL) ?
-                                (1.0f - cell->xalign) : cell->xalign;
+            gtk_cell_renderer_get_alignment (cell, &xalign, NULL);
+            xalign = (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_RTL) ?
+                                (1.0f - xalign) : xalign;
             *x_offset = (int) (xalign * (cell_area->width - width));
             *x_offset = MAX (*x_offset, 0);
         }
 
         if (y_offset)
         {
-            *y_offset = (int) (cell->yalign * (cell_area->height - height));
+            gtk_cell_renderer_get_alignment (cell, NULL, &yalign);
+            *y_offset = (int) (yalign * (cell_area->height - height));
             *y_offset = MAX (*y_offset, 0);
         }
     }
@@ -1001,7 +1018,11 @@ moo_expander_cell_get_size (GtkCellRenderer      *cell,
 
 static void
 moo_expander_cell_render (GtkCellRenderer      *cell,
+    #if GTK_CHECK_VERSION(3,0,0)
+                          cairo_t              *window,
+    #else
                           GdkDrawable          *window,
+    #endif
                           GtkWidget            *widget,
                           G_GNUC_UNUSED GdkRectangle *background_area,
                           GdkRectangle         *cell_area,
@@ -1030,7 +1051,7 @@ moo_expander_cell_render (GtkCellRenderer      *cell,
 
     state = (GtkStateType) GTK_WIDGET_STATE (widget);
 
-    if (!cell->sensitive)
+    if (!gtk_cell_renderer_get_sensitive (cell))
     {
         state = GTK_STATE_INSENSITIVE;
     }
