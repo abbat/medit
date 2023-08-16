@@ -57,8 +57,8 @@ create_message_dialog (GtkWindow  *parent,
         gtk_dialog_set_default_response (GTK_DIALOG (dialog),
                                          default_response);
 
-    if (parent && parent->group)
-        gtk_window_group_add_window (parent->group, GTK_WINDOW (dialog));
+    if (parent && gtk_window_get_group (parent))
+        gtk_window_group_add_window (gtk_window_get_group (parent), GTK_WINDOW (dialog));
 
     return dialog;
 }
@@ -167,8 +167,8 @@ moo_position_window_real (GtkWidget  *window,
 #endif
     }
 
-    if (toplevel && GTK_WINDOW(toplevel)->group)
-        gtk_window_group_add_window (GTK_WINDOW(toplevel)->group, GTK_WINDOW (window));
+    if (toplevel && gtk_window_get_group (GTK_WINDOW(toplevel)))
+        gtk_window_group_add_window (gtk_window_get_group (GTK_WINDOW(toplevel)), GTK_WINDOW (window));
 
     if (!at_mouse && !at_coords && parent && GTK_WIDGET_REALIZED (parent))
     {

@@ -815,7 +815,7 @@ create_child (MooGladeXML    *xml,
         }
         else if (!strcmp (child->internal_child, "action_area") && GTK_IS_DIALOG (real_parent))
         {
-            widget = GTK_DIALOG (real_parent)->action_area;
+            widget = gtk_dialog_get_action_area (GTK_DIALOG (real_parent));
         }
         else if (!strcmp (child->internal_child, "entry") && GTK_IS_COMBO_BOX (real_parent))
         {

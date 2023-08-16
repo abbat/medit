@@ -544,8 +544,8 @@ moo_combo_popup_real (MooCombo *combo)
 
     gtk_widget_realize (combo->priv->popup);
 
-    if (GTK_WINDOW (window)->group)
-        gtk_window_group_add_window (GTK_WINDOW (window)->group,
+    if (gtk_window_get_group (GTK_WINDOW (window)))
+        gtk_window_group_add_window (gtk_window_get_group (GTK_WINDOW (window)),
                                      GTK_WINDOW (combo->priv->popup));
     gtk_window_set_modal (GTK_WINDOW (combo->priv->popup), TRUE);
 

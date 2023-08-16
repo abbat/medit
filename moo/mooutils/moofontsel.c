@@ -1308,8 +1308,8 @@ moo_font_selection_dialog_init (MooFontSelectionDialog *fontseldiag)
   gtk_dialog_set_has_separator (dialog, FALSE);
   gtk_container_set_border_width (GTK_CONTAINER (dialog), 5);
   gtk_box_set_spacing (GTK_BOX (dialog->vbox), 2); /* 2 * 5 + 2 = 12 */
-  gtk_container_set_border_width (GTK_CONTAINER (dialog->action_area), 5);
-  gtk_box_set_spacing (GTK_BOX (dialog->action_area), 6);
+  gtk_container_set_border_width (GTK_CONTAINER (gtk_dialog_get_action_area (dialog)), 5);
+  gtk_box_set_spacing (GTK_BOX (gtk_dialog_get_action_area (dialog)), 6);
 
   gtk_widget_push_composite_child ();
 
@@ -1324,7 +1324,7 @@ moo_font_selection_dialog_init (MooFontSelectionDialog *fontseldiag)
 		      fontseldiag->fontsel, TRUE, TRUE, 0);
 
   /* Create the action area */
-  fontseldiag->action_area = dialog->action_area;
+  fontseldiag->action_area = gtk_dialog_get_action_area (dialog);
 
   fontseldiag->cancel_button = gtk_dialog_add_button (dialog,
                                                       GTK_STOCK_CANCEL,

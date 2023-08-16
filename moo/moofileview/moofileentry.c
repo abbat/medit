@@ -765,8 +765,8 @@ completion_popup (MooFileEntryCompletion *cmpl)
 
     GTK_WIDGET_SET_CAN_FOCUS (cmpl->priv->treeview);
 
-    if (GTK_WINDOW (window)->group)
-        gtk_window_group_add_window (GTK_WINDOW (window)->group,
+    if (gtk_window_get_group (GTK_WINDOW (window)))
+        gtk_window_group_add_window (gtk_window_get_group (GTK_WINDOW (window)),
                                      GTK_WINDOW (cmpl->priv->popup));
     gtk_window_set_modal (GTK_WINDOW (cmpl->priv->popup), TRUE);
 
