@@ -1566,17 +1566,17 @@ handle_ctrl_up (MooTextView        *view,
 
     if (up)
     {
-        value = adjustment->value - line_height;
+        value = gtk_adjustment_get_value (adjustment) - line_height;
 
-        if (value < adjustment->lower)
-            value = adjustment->lower;
+        if (value < gtk_adjustment_get_lower (adjustment))
+            value = gtk_adjustment_get_lower (adjustment);
     }
     else
     {
-        value = adjustment->value + line_height;
+        value = gtk_adjustment_get_value (adjustment) + line_height;
 
-        if (value > adjustment->upper - adjustment->page_size)
-            value = adjustment->upper - adjustment->page_size;
+        if (value > gtk_adjustment_get_upper (adjustment) - gtk_adjustment_get_page_size (adjustment))
+            value = gtk_adjustment_get_upper (adjustment) - gtk_adjustment_get_page_size (adjustment);
     }
 
     gtk_adjustment_set_value (adjustment, value);
@@ -1605,16 +1605,16 @@ handle_ctrl_pgup (MooTextView        *view,
 
     if (up)
     {
-        value = adjustment->value - adjustment->page_increment;
-        if (value < adjustment->lower)
-            value = adjustment->lower;
+        value = gtk_adjustment_get_value (adjustment) - gtk_adjustment_get_page_increment (adjustment);
+        if (value < gtk_adjustment_get_lower (adjustment))
+            value = gtk_adjustment_get_lower (adjustment);
         gtk_adjustment_set_value (adjustment, value);
     }
     else
     {
-        value = adjustment->value + adjustment->page_increment;
-        if (value > adjustment->upper - adjustment->page_size)
-            value = adjustment->upper - adjustment->page_size;
+        value = gtk_adjustment_get_value (adjustment) + gtk_adjustment_get_page_increment (adjustment);
+        if (value > gtk_adjustment_get_upper (adjustment) - gtk_adjustment_get_page_size (adjustment))
+            value = gtk_adjustment_get_upper (adjustment) - gtk_adjustment_get_page_size (adjustment);
         gtk_adjustment_set_value (adjustment, value);
     }
 

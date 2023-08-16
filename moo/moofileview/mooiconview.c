@@ -1775,8 +1775,8 @@ moo_icon_view_set_scroll_adjustments    (GtkWidget      *widget,
 static void     value_changed           (MooIconView    *view,
                                          GtkAdjustment  *adj)
 {
-    if (adj->value != view->priv->xoffset)
-        moo_icon_view_scroll_to (view, (int) adj->value);
+    if (gtk_adjustment_get_value (adj) != view->priv->xoffset)
+        moo_icon_view_scroll_to (view, (int) gtk_adjustment_get_value (adj));
 }
 
 
@@ -1791,28 +1791,28 @@ static void     moo_icon_view_update_adjustment (MooIconView    *view)
     if (!link || view->priv->layout->width <= gtk_widget_get_allocated_width (GTK_WIDGET(view)))
     {
         width = gtk_widget_get_allocated_width (GTK_WIDGET(view));
-        view->priv->adjustment->lower = 0;
-        view->priv->adjustment->upper = width - 1;
-        view->priv->adjustment->value = 0;
-        view->priv->adjustment->step_increment = width - 1;
-        view->priv->adjustment->page_increment = width - 1;
-        view->priv->adjustment->page_size = width - 1;
+        gtk_adjustment_set_lower (view->priv->adjustment, 0);
+        gtk_adjustment_set_upper (view->priv->adjustment, width - 1);
+        gtk_adjustment_set_value (view->priv->adjustment, 0);
+        gtk_adjustment_set_step_increment (view->priv->adjustment, width - 1);
+        gtk_adjustment_set_page_increment (view->priv->adjustment, width - 1);
+        gtk_adjustment_set_page_size (view->priv->adjustment, width - 1);
     }
     else
     {
         Column *column = link->data;
 
-        view->priv->adjustment->lower = 0;
-        view->priv->adjustment->upper =
-                view->priv->layout->width - 1;
+        gtk_adjustment_set_lower (view->priv->adjustment, 0);
+        gtk_adjustment_set_upper (view->priv->adjustment,
+                view->priv->layout->width - 1);
 
-        view->priv->adjustment->value = view->priv->xoffset;
+        gtk_adjustment_set_value (view->priv->adjustment, view->priv->xoffset);
 
-        view->priv->adjustment->page_increment = gtk_widget_get_allocated_width (GTK_WIDGET(view));
-        view->priv->adjustment->step_increment =
-                view->priv->layout->width / (column->index + 1);
+        gtk_adjustment_set_page_increment (view->priv->adjustment, gtk_widget_get_allocated_width (GTK_WIDGET(view)));
+        gtk_adjustment_set_step_increment (view->priv->adjustment,
+                view->priv->layout->width / (column->index + 1));
 
-        view->priv->adjustment->page_size = gtk_widget_get_allocated_width (GTK_WIDGET(view));
+        gtk_adjustment_set_page_size (view->priv->adjustment, gtk_widget_get_allocated_width (GTK_WIDGET(view)));
     }
 
     gtk_adjustment_changed (view->priv->adjustment);
@@ -2593,9 +2593,9 @@ static double get_wheel_delta (MooIconView  *view)
     GtkAdjustment *adj = view->priv->adjustment;
 
 #if 1
-    return pow (adj->page_size, 2.0 / 3.0);
+    return pow (gtk_adjustment_get_page_size (adj), 2.0 / 3.0);
 #else
-    return adj->step_increment * 2;
+    return gtk_adjustment_get_step_increment (adj) * 2;
 #endif
 }
 

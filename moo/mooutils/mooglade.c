@@ -1967,9 +1967,9 @@ static GtkObject*
 parse_adjustment (const char *value)
 {
     char **pieces;
-    GtkObject *adj = NULL;
     double vals[6];
     guint i;
+    GtkObject *adj = NULL;
 
     /* XXX is this correct? */
     if (!value)
@@ -1994,7 +1994,7 @@ parse_adjustment (const char *value)
         }
     }
 
-    adj = gtk_adjustment_new (vals[0], vals[1], vals[2],
+    adj = (GtkObject*) gtk_adjustment_new (vals[0], vals[1], vals[2],
                               vals[3], vals[4], vals[5]);
 
 out:

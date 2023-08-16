@@ -530,7 +530,7 @@ check_if_scrolled (MooLineView *view)
     }
 
     view->priv->scrolled = adj && GTK_WIDGET_REALIZED (view) &&
-                           ABS (adj->value - (adj->upper - adj->page_size)) > delta;
+                           ABS (gtk_adjustment_get_value (adj) - (gtk_adjustment_get_upper (adj) - gtk_adjustment_get_page_size (adj))) > delta;
 }
 #endif
 
