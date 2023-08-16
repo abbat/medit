@@ -2573,7 +2573,8 @@ static void     move_cursor_end             (MooIconView    *view,
 static void     moo_icon_view_scroll_to     (MooIconView    *view,
                                              int             offset)
 {
-    g_return_if_fail (GTK_WIDGET_REALIZED (view));
+    if (!GTK_WIDGET_REALIZED (view))
+        return;
 
     offset = clamp_offset (view, offset);
 

@@ -1535,7 +1535,7 @@ moo_paned_add (GtkContainer   *container,
 
     gtk_widget_set_parent_window (child, MOO_PANED(container)->priv->bin_window);
     gtk_widget_set_parent (child, GTK_WIDGET (bin));
-    gtk_container_add (container, child); // TODO: check this!
+    bin->child = child;   //gtk_container_add (container, child); // TODO: check this!
 }
 
 
