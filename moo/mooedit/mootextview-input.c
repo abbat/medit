@@ -353,7 +353,7 @@ _moo_text_view_delete_from_cursor (GtkTextView        *text_view,
     /* XXX */
     if (gtk_text_buffer_get_selection_bounds (buf, &start, &end))
     {
-        gtk_text_buffer_delete_interactive (buf, &start, &end, text_view->editable);
+        gtk_text_buffer_delete_interactive (buf, &start, &end, gtk_text_view_get_editable (text_view));
         gtk_text_view_scroll_mark_onscreen (text_view, insert_mark);
         return;
     }
@@ -369,7 +369,7 @@ _moo_text_view_delete_from_cursor (GtkTextView        *text_view,
 
     if (!gtk_text_iter_equal (&start, &end))
     {
-        gtk_text_buffer_delete_interactive (buf, &start, &end, text_view->editable);
+        gtk_text_buffer_delete_interactive (buf, &start, &end, gtk_text_view_get_editable (text_view));
         gtk_text_view_scroll_mark_onscreen (text_view, insert_mark);
     }
 }
