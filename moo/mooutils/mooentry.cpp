@@ -62,7 +62,11 @@ static gboolean moo_entry_button_release    (GtkWidget          *widget,
 static void     moo_entry_delete_to_start   (MooEntry           *entry);
 
 static void     moo_entry_populate_popup    (GtkEntry           *entry,
+#if GTK_CHECK_VERSION(3,0,0)
+                                             GtkWidget          *menu);
+#else
                                              GtkMenu            *menu);
+#endif
 
 static void     moo_entry_delete_from_cursor(GtkEntry           *entry,
                                              GtkDeleteType       type,
@@ -502,7 +506,11 @@ create_special_chars_menu (MooEntry *entry)
 
 static void
 moo_entry_populate_popup (GtkEntry           *gtkentry,
-                          GtkMenu            *menu)
+#if GTK_CHECK_VERSION(3,0,0)
+                              GtkWidget      *menu)
+#else
+                              GtkMenu        *menu)
+#endif
 {
     GtkWidget *item;
     MooEntry *entry = MOO_ENTRY (gtkentry);
