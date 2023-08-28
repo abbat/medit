@@ -2228,8 +2228,8 @@ moo_text_view_draw_right_margin (GtkTextView    *text_view,
 
     y = gdk_window_get_height(event->window);
     x = view->priv->right_margin_pixel_offset + gtk_text_view_get_left_margin (text_view);
-    if (text_view->hadjustment)
-        x -= text_view->hadjustment->value;
+    if (gtk_text_view_get_hadjustment (text_view)) // DEPRECATED:
+        x -= gtk_adjustment_get_value (gtk_text_view_get_hadjustment (text_view));
 
     cr = gdk_cairo_create(event->window);
     gdk_cairo_set_source_color(cr, view->priv->gcs[MOO_TEXT_VIEW_COLOR_RIGHT_MARGIN]);
@@ -2269,9 +2269,9 @@ moo_text_view_draw_current_line (GtkTextView    *text_view,
     int margin;
     cairo_t *cr;
 
-    gtk_text_buffer_get_iter_at_mark (text_view->buffer,
+    gtk_text_buffer_get_iter_at_mark (gtk_text_view_get_buffer (text_view), // DUPLICATE:
                                       &cur,
-                                      gtk_text_buffer_get_insert (text_view->buffer));
+                                      gtk_text_buffer_get_insert (gtk_text_view_get_buffer (text_view)));
 
     moo_text_view_get_line_yrange (text_view, &cur, &y, &height);
 
@@ -2294,8 +2294,8 @@ moo_text_view_draw_current_line (GtkTextView    *text_view,
     redraw_rect.width = visible_rect.width;
     redraw_rect.height = visible_rect.height;
 
-    if (text_view->hadjustment)
-    	margin = gtk_text_view_get_left_margin (text_view) - (int) text_view->hadjustment->value;
+    if (gtk_text_view_get_hadjustment (text_view)) // DEPRECATED:
+    	margin = gtk_text_view_get_left_margin (text_view) - (int) gtk_adjustment_get_value (gtk_text_view_get_hadjustment (text_view->hadjustment));
     else
     	margin = gtk_text_view_get_left_margin (text_view);
 
