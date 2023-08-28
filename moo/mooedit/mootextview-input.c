@@ -182,19 +182,6 @@ text_iter_backward_word_start_n (GtkTextIter *iter,
     return moved;
 }
 
-
-/* TODO: may I do this? */
-static void
-text_view_reset_im_context (GtkTextView *text_view)
-{
-  if (text_view->need_im_reset)
-    {
-      text_view->need_im_reset = FALSE;
-      gtk_im_context_reset (text_view->im_context);
-    }
-}
-
-
 static void
 copy_and_place_cursor (GtkTextView       *text_view,
                        const GtkTextIter *where)
@@ -213,7 +200,7 @@ move_cursor_to (GtkTextView *text_view,
 
     buffer = gtk_text_view_get_buffer (text_view);
     insert = gtk_text_buffer_get_insert (buffer);
-    text_view_reset_im_context (text_view);
+    gtk_text_view_reset_im_context (text_view);
 
     if (extend_selection)
         gtk_text_buffer_move_mark (buffer, insert, where);
@@ -358,7 +345,7 @@ _moo_text_view_delete_from_cursor (GtkTextView        *text_view,
         return;
     }
 
-    text_view_reset_im_context (text_view);
+    gtk_text_view_reset_im_context (text_view);
 
     buf = gtk_text_view_get_buffer (text_view);
     insert_mark = gtk_text_buffer_get_insert (buf);
@@ -727,7 +714,7 @@ _moo_text_view_button_press_event (GtkWidget          *widget,
     buffer = gtk_text_view_get_buffer (text_view);
     gtk_widget_grab_focus (widget);
 
-    text_view_reset_im_context (text_view);
+    gtk_text_view_reset_im_context (text_view);
 
     if (!line_numbers)
     {
