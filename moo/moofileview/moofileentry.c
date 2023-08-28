@@ -1319,7 +1319,7 @@ entry_get_borders (GtkEntry *entry,
                           "focus-line-width", &focus_width,
                           NULL);
 
-    if (entry->has_frame)
+    if (gtk_entry_get_has_frame (entry))
     {
         *xborder = widget->style->xthickness;
         *yborder = widget->style->ythickness;
