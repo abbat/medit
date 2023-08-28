@@ -46,8 +46,13 @@ static void      moo_line_view_move_cursor      (GtkTextView    *text_view,
                                                  GtkMovementStep step,
                                                  gint            count,
                                                  gboolean        extend_selection);
+
 static void      moo_line_view_populate_popup   (GtkTextView    *text_view,
+#if GTK_CHECK_VERSION(3,0,0)
+                                                 GtkWidget      *menu);
+#else
                                                  GtkMenu        *menu);
+#endif
 
 static MooTextCursor
                  moo_line_view_get_text_cursor  (MooTextView    *view,
@@ -634,7 +639,11 @@ copy_clipboard (GtkTextView *text_view)
 
 static void
 moo_line_view_populate_popup (GtkTextView *text_view,
-                              GtkMenu     *menu)
+#if GTK_CHECK_VERSION(3,0,0)
+                              GtkWidget      *menu)
+#else
+                              GtkMenu        *menu)
+#endif
 {
     GtkWidget *item;
     gboolean has_selection, has_text;

@@ -95,8 +95,13 @@ static void     moo_text_view_remove        (GtkContainer       *container,
 static void     moo_text_view_copy_clipboard (GtkTextView       *text_view);
 static void     moo_text_view_cut_clipboard (GtkTextView        *text_view);
 static void     moo_text_view_paste_clipboard (GtkTextView      *text_view);
+
 static void     moo_text_view_populate_popup(GtkTextView        *text_view,
+#if GTK_CHECK_VERSION(3,0,0)
+                                             GtkWidget          *menu);
+#else
                                              GtkMenu            *menu);
+#endif
 
 static void     moo_text_view_apply_style_scheme (MooTextView   *view,
                                              MooTextStyleScheme *scheme);
@@ -2295,7 +2300,7 @@ moo_text_view_draw_current_line (GtkTextView    *text_view,
     redraw_rect.height = visible_rect.height;
 
     if (gtk_text_view_get_hadjustment (text_view)) // DEPRECATED:
-    	margin = gtk_text_view_get_left_margin (text_view) - (int) gtk_adjustment_get_value (gtk_text_view_get_hadjustment (text_view->hadjustment));
+    	margin = gtk_text_view_get_left_margin (text_view) - (int) gtk_adjustment_get_value (gtk_text_view_get_hadjustment (text_view));
     else
     	margin = gtk_text_view_get_left_margin (text_view);
 
@@ -2672,7 +2677,11 @@ moo_text_view_get_style_scheme (MooTextView *view)
 
 static void
 moo_text_view_populate_popup (GtkTextView    *text_view,
+#if GTK_CHECK_VERSION(3,0,0)
+                              GtkWidget      *menu)
+#else
                               GtkMenu        *menu)
+#endif
 {
     MooTextView *view = MOO_TEXT_VIEW (text_view);
     GtkWidget *item;
