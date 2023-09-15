@@ -32,7 +32,6 @@ typedef struct _MooCommandScriptPrivate MooCommandScriptPrivate;
 
 typedef enum {
     MOO_SCRIPT_LUA,
-    MOO_SCRIPT_PYTHON
 } MooScriptType;
 
 struct MooCommandScript : public MooCommand {

@@ -1,6 +1,5 @@
 #include <mooedit/mooeditor-tests.h>
 #include <moolua/moolua-tests.h>
-#include <moopython/moopython-tests.h>
 #include <mooutils/mooutils-tests.h>
 #include <gtk/gtk.h>
 #include <stdio.h>
@@ -21,10 +20,6 @@ add_tests (MooTestOptions opts)
 #endif
 
     moo_test_lua (opts);
-
-#ifdef MOO_ENABLE_PYTHON
-    moo_test_python ();
-#endif
 
     moo_test_editor ();
 }

@@ -18,18 +18,9 @@
 #include "plugins/mooplugin-builtin.h"
 #include "mooutils/mooutils-misc.h"
 
-#ifdef MOO_ENABLE_PYTHON
-#include "moopython/moopython-builtin.h"
-#endif
-
 void
 moo_plugin_init (void)
 {
-#ifdef MOO_ENABLE_PYTHON
-    if (!moo_getenv_bool ("MOO_DISABLE_PYTHON"))
-        _moo_python_builtin_init ();
-#endif
-
     if (!moo_getenv_bool ("MOO_DISABLE_LUA"))
         _moo_lua_plugin_init ();
 

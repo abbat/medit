@@ -107,10 +107,7 @@ bin_PROGRAMS = $(am__EXEEXT_1)
 @MOO_OS_DARWIN_FALSE@@MOO_OS_WIN32_FALSE@am__append_12 = -ldl
 @MOO_DEV_MODE_TRUE@am__append_13 = moolua/moo-lua-api.cpp \
 @MOO_DEV_MODE_TRUE@	moolua/gtk-lua-api.cpp
-@MOO_ENABLE_PYTHON_TRUE@am__append_14 = $(moo_python_ini_in_files) $(moo_python_ini_files)
-@MOO_ENABLE_PYTHON_TRUE@am__append_15 = $(moo_python_sources)
-@MOO_ENABLE_PYTHON_TRUE@am__append_16 = $(built_moo_python_sources)
-@MOO_BUILD_CTAGS_TRUE@am__append_17 = \
+@MOO_BUILD_CTAGS_TRUE@am__append_14 = \
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/readtags.c	\
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/readtags.h	\
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/readtags-mangle.h	\
@@ -120,21 +117,19 @@ bin_PROGRAMS = $(am__EXEEXT_1)
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/ctags-view.c	\
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/ctags-view.h
 
-@MOO_ENABLE_PYTHON_TRUE@am__append_18 = plugins/usertools/python-tool-setup.h
-@MOO_OS_WIN32_TRUE@am__append_19 = --enable=win32
-@MOO_OS_WIN32_FALSE@am__append_20 = --enable=unix
-@MOO_ENABLE_PYTHON_TRUE@am__append_21 = --enable=python
-@MOO_BUILD_APP_TRUE@am__append_22 = medit
-@MOO_BUILD_APP_TRUE@@MOO_ENABLE_COVERAGE_FALSE@am__append_23 = IGNORE_COVERAGE=1
-@MOO_BUILD_APP_TRUE@@MOO_OS_UNIX_TRUE@am__append_24 = -DMOO_UNIT_TEST_DATA_DIR=\"${MOO_TOP_SRCDIR}/moo/medit-app/data\"
-@MOO_BUILD_APP_TRUE@@MOO_OS_WIN32_TRUE@am__append_25 = -mwindows
-@MOO_BUILD_APP_TRUE@@MOO_OS_WIN32_TRUE@am__append_26 = medit-app/medit.rc medit-app/medit.res
-@MOO_BUILD_APP_TRUE@@MOO_OS_WIN32_TRUE@am__append_27 = medit-app/medit.res
-@MOO_BUILD_APP_TRUE@@MOO_OS_UNIX_TRUE@am__append_28 = medit-app/medit.desktop
-@MOO_BUILD_MODULE_TRUE@@MOO_OS_WIN32_TRUE@am__append_29 = -no-undefined -shrext .pyd
-@MOO_BUILD_MODULE_TRUE@am__append_30 = medit-module/moo.rc.in
-@MOO_BUILD_MODULE_TRUE@@MOO_OS_WIN32_TRUE@am__append_31 = medit-module/moo.rc medit-module/moo.res
-@MOO_BUILD_MODULE_TRUE@@MOO_OS_WIN32_TRUE@am__append_32 = medit-module/moo.res
+@MOO_OS_WIN32_TRUE@am__append_15 = --enable=win32
+@MOO_OS_WIN32_FALSE@am__append_16 = --enable=unix
+@MOO_BUILD_APP_TRUE@am__append_17 = medit
+@MOO_BUILD_APP_TRUE@@MOO_ENABLE_COVERAGE_FALSE@am__append_18 = IGNORE_COVERAGE=1
+@MOO_BUILD_APP_TRUE@@MOO_OS_UNIX_TRUE@am__append_19 = -DMOO_UNIT_TEST_DATA_DIR=\"${MOO_TOP_SRCDIR}/moo/medit-app/data\"
+@MOO_BUILD_APP_TRUE@@MOO_OS_WIN32_TRUE@am__append_20 = -mwindows
+@MOO_BUILD_APP_TRUE@@MOO_OS_WIN32_TRUE@am__append_21 = medit-app/medit.rc medit-app/medit.res
+@MOO_BUILD_APP_TRUE@@MOO_OS_WIN32_TRUE@am__append_22 = medit-app/medit.res
+@MOO_BUILD_APP_TRUE@@MOO_OS_UNIX_TRUE@am__append_23 = medit-app/medit.desktop
+@MOO_BUILD_MODULE_TRUE@@MOO_OS_WIN32_TRUE@am__append_24 = -no-undefined -shrext .pyd
+@MOO_BUILD_MODULE_TRUE@am__append_25 = medit-module/moo.rc.in
+@MOO_BUILD_MODULE_TRUE@@MOO_OS_WIN32_TRUE@am__append_26 = medit-module/moo.rc medit-module/moo.res
+@MOO_BUILD_MODULE_TRUE@@MOO_OS_WIN32_TRUE@am__append_27 = medit-module/moo.res
 subdir = moo
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -154,10 +149,7 @@ CONFIG_CLEAN_VPATH_FILES =
 @MOO_BUILD_APP_TRUE@am__EXEEXT_1 = medit$(EXEEXT)
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(pyexecdir)" \
 	"$(DESTDIR)$(cfgdir)" "$(DESTDIR)$(desktopdir)" \
-	"$(DESTDIR)$(iconthemedir)" "$(DESTDIR)$(langsdir)" \
-	"$(DESTDIR)$(moo_python_libdir)" \
-	"$(DESTDIR)$(moo_python_lib_meditdir)" \
-	"$(DESTDIR)$(moo_python_plugindir)" "$(DESTDIR)$(pythondir)"
+	"$(DESTDIR)$(iconthemedir)" "$(DESTDIR)$(langsdir)"
 PROGRAMS = $(bin_PROGRAMS)
 LIBRARIES = $(noinst_LIBRARIES)
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
@@ -191,7 +183,7 @@ LTLIBRARIES = $(pyexec_LTLIBRARIES)
 am__DEPENDENCIES_1 =
 am__DEPENDENCIES_2 = $(am__DEPENDENCIES_1)
 @MOO_BUILD_MODULE_TRUE@_moo_la_DEPENDENCIES = $(am__DEPENDENCIES_1) \
-@MOO_BUILD_MODULE_TRUE@	$(am__DEPENDENCIES_2) $(am__append_32)
+@MOO_BUILD_MODULE_TRUE@	$(am__DEPENDENCIES_2) $(am__append_27)
 am___moo_la_SOURCES_DIST = medit-module/medit-module.cpp moo-config.h \
 	mooglib/moo-glib.h mooglib/moo-stat.h mooglib/moo-time.h \
 	mooglib/moo-glib.cpp mooedit/mooedit-enums.h \
@@ -373,17 +365,9 @@ am___moo_la_SOURCES_DIST = medit-module/medit-module.cpp moo-config.h \
 	moolua/moo-lua-api.h moolua/gtk-lua-api.cpp \
 	moolua/gtk-lua-api.h moolua/lua/lfs.h moolua/lua/lfs.cpp \
 	moolua/lua/moolua.h moolua/lua/moolua.cpp \
-	moolua/lua/luaall.cpp moopython/medit-python.h \
-	moopython/medit-python.c moopython/pygtk/moo-pygtk.c \
-	moopython/pygtk/moo-pygtk.h moopython/moopython-pygtkmod.h \
-	moopython/moopython-builtin.h moopython/moopython-builtin.c \
-	moopython/moopython-api.h moopython/moopython-loader.h \
-	moopython/moopython-loader.c moopython/moopython-utils.h \
-	moopython/moopython-utils.c moopython/moopython-tests.h \
-	moopython/moopython-tests.cpp moocpp/fileutils.h \
-	moocpp/fileutils.cpp moocpp/gobjptr.h moocpp/gstr.h \
-	moocpp/gstr.cpp moocpp/moocpp.h moocpp/regex.h \
-	moocpp/regex.cpp moocpp/util.h \
+	moolua/lua/luaall.cpp moocpp/fileutils.h moocpp/fileutils.cpp \
+	moocpp/gobjptr.h moocpp/gstr.h moocpp/gstr.cpp moocpp/moocpp.h \
+	moocpp/regex.h moocpp/regex.cpp moocpp/util.h \
 	plugins/moofileselector-prefs.cpp plugins/moofileselector.cpp \
 	plugins/moofileselector.h plugins/mooplugin-builtin.h \
 	plugins/mooplugin-builtin.cpp plugins/moofilelist.cpp \
@@ -433,13 +417,7 @@ am__objects_8 = mooutils/_moo_la-moo-test-utils.lo
 @MOO_OS_DARWIN_TRUE@@MOO_OS_WIN32_FALSE@am__objects_10 = eggsmclient/_moo_la-eggsmclient-dummy.lo
 @MOO_OS_DARWIN_FALSE@@MOO_OS_WIN32_FALSE@am__objects_11 = eggsmclient/_moo_la-eggsmclient-xsmp.lo \
 @MOO_OS_DARWIN_FALSE@@MOO_OS_WIN32_FALSE@	eggsmclient/_moo_la-eggdesktopfile.lo
-am__objects_12 = moopython/pygtk/_moo_la-moo-pygtk.lo \
-	moopython/_moo_la-moopython-builtin.lo \
-	moopython/_moo_la-moopython-loader.lo \
-	moopython/_moo_la-moopython-utils.lo \
-	moopython/_moo_la-moopython-tests.lo
-@MOO_ENABLE_PYTHON_TRUE@am__objects_13 = $(am__objects_12)
-am__objects_14 = $(am__objects_1) $(am__objects_2) \
+am__objects_12 = $(am__objects_1) $(am__objects_2) \
 	mooedit/_moo_la-mooeditview.lo \
 	mooedit/_moo_la-mooeditview-script.lo \
 	mooedit/_moo_la-mooeditaction.lo \
@@ -546,19 +524,18 @@ am__objects_14 = $(am__objects_1) $(am__objects_2) \
 	moolua/_moo_la-moo-lua-api-util.lo \
 	moolua/_moo_la-moo-lua-api.lo moolua/_moo_la-gtk-lua-api.lo \
 	moolua/lua/_moo_la-lfs.lo moolua/lua/_moo_la-moolua.lo \
-	moolua/lua/_moo_la-luaall.lo moopython/_moo_la-medit-python.lo \
-	$(am__objects_13) moocpp/_moo_la-fileutils.lo \
+	moolua/lua/_moo_la-luaall.lo moocpp/_moo_la-fileutils.lo \
 	moocpp/_moo_la-gstr.lo moocpp/_moo_la-regex.lo
-@MOO_BUILD_CTAGS_TRUE@am__objects_15 =  \
+@MOO_BUILD_CTAGS_TRUE@am__objects_13 =  \
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/_moo_la-readtags.lo \
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/_moo_la-ctags-plugin.lo \
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/_moo_la-ctags-doc.lo \
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/_moo_la-ctags-view.lo
-am__objects_16 = plugins/_moo_la-moofileselector-prefs.lo \
+am__objects_14 = plugins/_moo_la-moofileselector-prefs.lo \
 	plugins/_moo_la-moofileselector.lo \
 	plugins/_moo_la-mooplugin-builtin.lo \
 	plugins/_moo_la-moofilelist.lo plugins/_moo_la-moofind.lo \
-	$(am__objects_15) plugins/usertools/_moo_la-moousertools.lo \
+	$(am__objects_13) plugins/usertools/_moo_la-moousertools.lo \
 	plugins/usertools/_moo_la-moousertools-prefs.lo \
 	plugins/usertools/_moo_la-moocommand.lo \
 	plugins/usertools/_moo_la-moocommanddisplay.lo \
@@ -572,17 +549,10 @@ am__objects_16 = plugins/_moo_la-moofileselector-prefs.lo \
 	plugins/support/_moo_la-moooutputfilter.lo
 @MOO_BUILD_MODULE_TRUE@am__moo_la_OBJECTS =  \
 @MOO_BUILD_MODULE_TRUE@	medit-module/_moo_la-medit-module.lo \
-@MOO_BUILD_MODULE_TRUE@	$(am__objects_14) $(am__objects_16)
-am__objects_17 = moopython/pygtk/_moo_la-moo-mod.lo
-@MOO_ENABLE_PYTHON_TRUE@am__objects_18 = $(am__objects_17)
-am__objects_19 = $(am__objects_2) _moo_la-marshals.lo $(am__objects_2) \
-	$(am__objects_18)
-@MOO_ENABLE_PYTHON_TRUE@am__objects_20 = $(am__objects_2)
-@MOO_ENABLE_PYTHON_TRUE@am__objects_21 = $(am__objects_2) \
-@MOO_ENABLE_PYTHON_TRUE@	$(am__objects_20)
-am__objects_22 = $(am__objects_21) $(am__objects_2)
-@MOO_BUILD_MODULE_TRUE@nodist__moo_la_OBJECTS = $(am__objects_19) \
-@MOO_BUILD_MODULE_TRUE@	$(am__objects_22)
+@MOO_BUILD_MODULE_TRUE@	$(am__objects_12) $(am__objects_14)
+am__objects_15 = $(am__objects_2) _moo_la-marshals.lo $(am__objects_2)
+@MOO_BUILD_MODULE_TRUE@nodist__moo_la_OBJECTS = $(am__objects_15) \
+@MOO_BUILD_MODULE_TRUE@	$(am__objects_2)
 _moo_la_OBJECTS = $(am__moo_la_OBJECTS) $(nodist__moo_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -774,17 +744,9 @@ am__medit_SOURCES_DIST = medit-app/mem-debug.h medit-app/run-tests.h \
 	moolua/moo-lua-api.h moolua/gtk-lua-api.cpp \
 	moolua/gtk-lua-api.h moolua/lua/lfs.h moolua/lua/lfs.cpp \
 	moolua/lua/moolua.h moolua/lua/moolua.cpp \
-	moolua/lua/luaall.cpp moopython/medit-python.h \
-	moopython/medit-python.c moopython/pygtk/moo-pygtk.c \
-	moopython/pygtk/moo-pygtk.h moopython/moopython-pygtkmod.h \
-	moopython/moopython-builtin.h moopython/moopython-builtin.c \
-	moopython/moopython-api.h moopython/moopython-loader.h \
-	moopython/moopython-loader.c moopython/moopython-utils.h \
-	moopython/moopython-utils.c moopython/moopython-tests.h \
-	moopython/moopython-tests.cpp moocpp/fileutils.h \
-	moocpp/fileutils.cpp moocpp/gobjptr.h moocpp/gstr.h \
-	moocpp/gstr.cpp moocpp/moocpp.h moocpp/regex.h \
-	moocpp/regex.cpp moocpp/util.h \
+	moolua/lua/luaall.cpp moocpp/fileutils.h moocpp/fileutils.cpp \
+	moocpp/gobjptr.h moocpp/gstr.h moocpp/gstr.cpp moocpp/moocpp.h \
+	moocpp/regex.h moocpp/regex.cpp moocpp/util.h \
 	plugins/moofileselector-prefs.cpp plugins/moofileselector.cpp \
 	plugins/moofileselector.h plugins/mooplugin-builtin.h \
 	plugins/mooplugin-builtin.cpp plugins/moofilelist.cpp \
@@ -815,29 +777,23 @@ am__medit_SOURCES_DIST = medit-app/mem-debug.h medit-app/run-tests.h \
 	plugins/support/moolineview.cpp plugins/support/moolineview.h \
 	plugins/support/moooutputfilter.cpp \
 	plugins/support/moooutputfilter.h
-@MOO_OS_WIN32_FALSE@am__objects_23 = mooglib/moo-glib.$(OBJEXT)
-am__objects_24 = xdgmime/xdgmimealias.$(OBJEXT) \
+@MOO_OS_WIN32_FALSE@am__objects_16 = mooglib/moo-glib.$(OBJEXT)
+am__objects_17 = xdgmime/xdgmimealias.$(OBJEXT) \
 	xdgmime/xdgmime.$(OBJEXT) xdgmime/xdgmimecache.$(OBJEXT) \
 	xdgmime/xdgmimeglob.$(OBJEXT) xdgmime/xdgmimeicon.$(OBJEXT) \
 	xdgmime/xdgmimemagic.$(OBJEXT) xdgmime/xdgmimeparent.$(OBJEXT)
-am__objects_25 = mooutils/mooutils-win32.$(OBJEXT) \
+am__objects_18 = mooutils/mooutils-win32.$(OBJEXT) \
 	mooutils/mooappinput-win32.$(OBJEXT)
-@MOO_OS_WIN32_TRUE@am__objects_26 = $(am__objects_25)
-am__objects_27 = mooutils/mooappinput-unix.$(OBJEXT)
-@MOO_OS_WIN32_FALSE@am__objects_28 = $(am__objects_27)
-am__objects_29 = mooutils/moo-test-utils.$(OBJEXT)
-@MOO_OS_WIN32_TRUE@am__objects_30 =  \
+@MOO_OS_WIN32_TRUE@am__objects_19 = $(am__objects_18)
+am__objects_20 = mooutils/mooappinput-unix.$(OBJEXT)
+@MOO_OS_WIN32_FALSE@am__objects_21 = $(am__objects_20)
+am__objects_22 = mooutils/moo-test-utils.$(OBJEXT)
+@MOO_OS_WIN32_TRUE@am__objects_23 =  \
 @MOO_OS_WIN32_TRUE@	eggsmclient/eggsmclient-win32.$(OBJEXT)
-@MOO_OS_DARWIN_TRUE@@MOO_OS_WIN32_FALSE@am__objects_31 = eggsmclient/eggsmclient-dummy.$(OBJEXT)
-@MOO_OS_DARWIN_FALSE@@MOO_OS_WIN32_FALSE@am__objects_32 = eggsmclient/eggsmclient-xsmp.$(OBJEXT) \
+@MOO_OS_DARWIN_TRUE@@MOO_OS_WIN32_FALSE@am__objects_24 = eggsmclient/eggsmclient-dummy.$(OBJEXT)
+@MOO_OS_DARWIN_FALSE@@MOO_OS_WIN32_FALSE@am__objects_25 = eggsmclient/eggsmclient-xsmp.$(OBJEXT) \
 @MOO_OS_DARWIN_FALSE@@MOO_OS_WIN32_FALSE@	eggsmclient/eggdesktopfile.$(OBJEXT)
-am__objects_33 = moopython/pygtk/moo-pygtk.$(OBJEXT) \
-	moopython/moopython-builtin.$(OBJEXT) \
-	moopython/moopython-loader.$(OBJEXT) \
-	moopython/moopython-utils.$(OBJEXT) \
-	moopython/moopython-tests.$(OBJEXT)
-@MOO_ENABLE_PYTHON_TRUE@am__objects_34 = $(am__objects_33)
-am__objects_35 = $(am__objects_23) $(am__objects_2) \
+am__objects_26 = $(am__objects_16) $(am__objects_2) \
 	mooedit/mooeditview.$(OBJEXT) \
 	mooedit/mooeditview-script.$(OBJEXT) \
 	mooedit/mooeditaction.$(OBJEXT) \
@@ -866,7 +822,7 @@ am__objects_35 = $(am__objects_23) $(am__objects_2) \
 	mooedit/mootextview.$(OBJEXT) \
 	mooedit/mootextview-input.$(OBJEXT) \
 	mooedit/mooeditor.$(OBJEXT) mooedit/mooeditor-tests.$(OBJEXT) \
-	$(am__objects_24) $(am__objects_2) \
+	$(am__objects_17) $(am__objects_2) \
 	mooutils/mooutils-thread.$(OBJEXT) \
 	mooutils/moohistorymgr.$(OBJEXT) mooutils/mooaccel.$(OBJEXT) \
 	mooutils/mooaccelbutton.$(OBJEXT) \
@@ -902,8 +858,8 @@ am__objects_35 = $(am__objects_23) $(am__objects_2) \
 	mooutils/mooutils-misc.$(OBJEXT) \
 	mooutils/mooutils-script.$(OBJEXT) \
 	mooutils/mooutils-treeview.$(OBJEXT) \
-	mooutils/moowindow.$(OBJEXT) $(am__objects_26) \
-	$(am__objects_28) $(am__objects_29) \
+	mooutils/moowindow.$(OBJEXT) $(am__objects_19) \
+	$(am__objects_21) $(am__objects_22) \
 	moofileview/moobookmarkmgr.$(OBJEXT) \
 	moofileview/moobookmarkview.$(OBJEXT) \
 	moofileview/moofile.$(OBJEXT) \
@@ -928,8 +884,8 @@ am__objects_35 = $(am__objects_23) $(am__objects_2) \
 	gtksourceview/gtksourcestyleschememanager.$(OBJEXT) \
 	gtksourceview/gtksourceview-utils.$(OBJEXT) \
 	gtksourceview/gtktextregion.$(OBJEXT) \
-	eggsmclient/eggsmclient.$(OBJEXT) $(am__objects_30) \
-	$(am__objects_31) $(am__objects_32) \
+	eggsmclient/eggsmclient.$(OBJEXT) $(am__objects_23) \
+	$(am__objects_24) $(am__objects_25) \
 	mooapp/mooappabout.$(OBJEXT) mooapp/mooapp.$(OBJEXT) \
 	mooapp/moohtml.$(OBJEXT) mooapp/moolinklabel.$(OBJEXT) \
 	moolua/medit-lua.$(OBJEXT) moolua/mooluaplugin.$(OBJEXT) \
@@ -937,19 +893,18 @@ am__objects_35 = $(am__objects_23) $(am__objects_2) \
 	moolua/moo-lua-api-util.$(OBJEXT) moolua/moo-lua-api.$(OBJEXT) \
 	moolua/gtk-lua-api.$(OBJEXT) moolua/lua/lfs.$(OBJEXT) \
 	moolua/lua/moolua.$(OBJEXT) moolua/lua/luaall.$(OBJEXT) \
-	moopython/medit-python.$(OBJEXT) $(am__objects_34) \
 	moocpp/fileutils.$(OBJEXT) moocpp/gstr.$(OBJEXT) \
 	moocpp/regex.$(OBJEXT)
-@MOO_BUILD_CTAGS_TRUE@am__objects_36 =  \
+@MOO_BUILD_CTAGS_TRUE@am__objects_27 =  \
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/readtags.$(OBJEXT) \
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/ctags-plugin.$(OBJEXT) \
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/ctags-doc.$(OBJEXT) \
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/ctags-view.$(OBJEXT)
-am__objects_37 = plugins/moofileselector-prefs.$(OBJEXT) \
+am__objects_28 = plugins/moofileselector-prefs.$(OBJEXT) \
 	plugins/moofileselector.$(OBJEXT) \
 	plugins/mooplugin-builtin.$(OBJEXT) \
 	plugins/moofilelist.$(OBJEXT) plugins/moofind.$(OBJEXT) \
-	$(am__objects_36) plugins/usertools/moousertools.$(OBJEXT) \
+	$(am__objects_27) plugins/usertools/moousertools.$(OBJEXT) \
 	plugins/usertools/moousertools-prefs.$(OBJEXT) \
 	plugins/usertools/moocommand.$(OBJEXT) \
 	plugins/usertools/moocommanddisplay.$(OBJEXT) \
@@ -962,16 +917,13 @@ am__objects_37 = plugins/moofileselector-prefs.$(OBJEXT) \
 	plugins/support/moolineview.$(OBJEXT) \
 	plugins/support/moooutputfilter.$(OBJEXT)
 @MOO_BUILD_APP_TRUE@am_medit_OBJECTS = medit-app/main.$(OBJEXT) \
-@MOO_BUILD_APP_TRUE@	$(am__objects_35) $(am__objects_37)
-am__objects_38 = moopython/pygtk/moo-mod.$(OBJEXT)
-@MOO_ENABLE_PYTHON_TRUE@am__objects_39 = $(am__objects_38)
-am__objects_40 = $(am__objects_2) marshals.$(OBJEXT) $(am__objects_2) \
-	$(am__objects_39)
-@MOO_BUILD_APP_TRUE@nodist_medit_OBJECTS = $(am__objects_40) \
-@MOO_BUILD_APP_TRUE@	$(am__objects_22)
+@MOO_BUILD_APP_TRUE@	$(am__objects_26) $(am__objects_28)
+am__objects_29 = $(am__objects_2) marshals.$(OBJEXT) $(am__objects_2)
+@MOO_BUILD_APP_TRUE@nodist_medit_OBJECTS = $(am__objects_29) \
+@MOO_BUILD_APP_TRUE@	$(am__objects_2)
 medit_OBJECTS = $(am_medit_OBJECTS) $(nodist_medit_OBJECTS)
 @MOO_BUILD_APP_TRUE@medit_DEPENDENCIES = $(am__DEPENDENCIES_1) \
-@MOO_BUILD_APP_TRUE@	$(am__DEPENDENCIES_2) $(am__append_27)
+@MOO_BUILD_APP_TRUE@	$(am__DEPENDENCIES_2) $(am__append_22)
 medit_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
 	$(CXXFLAGS) $(medit_LDFLAGS) $(LDFLAGS) -o $@
@@ -1153,20 +1105,6 @@ am__depfiles_remade = ./$(DEPDIR)/_moo_la-marshals.Plo \
 	moolua/lua/$(DEPDIR)/_moo_la-moolua.Plo \
 	moolua/lua/$(DEPDIR)/lfs.Po moolua/lua/$(DEPDIR)/luaall.Po \
 	moolua/lua/$(DEPDIR)/moolua.Po \
-	moopython/$(DEPDIR)/_moo_la-medit-python.Plo \
-	moopython/$(DEPDIR)/_moo_la-moopython-builtin.Plo \
-	moopython/$(DEPDIR)/_moo_la-moopython-loader.Plo \
-	moopython/$(DEPDIR)/_moo_la-moopython-tests.Plo \
-	moopython/$(DEPDIR)/_moo_la-moopython-utils.Plo \
-	moopython/$(DEPDIR)/medit-python.Po \
-	moopython/$(DEPDIR)/moopython-builtin.Po \
-	moopython/$(DEPDIR)/moopython-loader.Po \
-	moopython/$(DEPDIR)/moopython-tests.Po \
-	moopython/$(DEPDIR)/moopython-utils.Po \
-	moopython/pygtk/$(DEPDIR)/_moo_la-moo-mod.Plo \
-	moopython/pygtk/$(DEPDIR)/_moo_la-moo-pygtk.Plo \
-	moopython/pygtk/$(DEPDIR)/moo-mod.Po \
-	moopython/pygtk/$(DEPDIR)/moo-pygtk.Po \
 	mooutils/$(DEPDIR)/_moo_la-moo-mime.Plo \
 	mooutils/$(DEPDIR)/_moo_la-moo-test-utils.Plo \
 	mooutils/$(DEPDIR)/_moo_la-mooaccel.Plo \
@@ -1379,9 +1317,7 @@ am__can_run_installinfo = \
     n|no|NO) false;; \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
-DATA = $(cfg_DATA) $(desktop_DATA) $(icontheme_DATA) $(langs_DATA) \
-	$(moo_python_lib_DATA) $(moo_python_lib_medit_DATA) \
-	$(moo_python_plugin_DATA) $(python_DATA)
+DATA = $(cfg_DATA) $(desktop_DATA) $(icontheme_DATA) $(langs_DATA)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 # Read a list of newline-separated strings from the standard input,
 # and print each of them once, without duplicates.  Input order is
@@ -1588,9 +1524,6 @@ am__DIST_COMMON = $(srcdir)/Makefile.in \
 	$(srcdir)/moofileview/Makefile.incl \
 	$(srcdir)/moolua/Makefile.incl \
 	$(srcdir)/moolua/lua/Makefile.incl \
-	$(srcdir)/moopython/Makefile.incl \
-	$(srcdir)/moopython/plugins/Makefile.incl \
-	$(srcdir)/moopython/pygtk/Makefile.incl \
 	$(srcdir)/mooutils/Makefile.incl \
 	$(srcdir)/plugins/Makefile.incl \
 	$(srcdir)/plugins/ctags/Makefile.incl \
@@ -1872,19 +1805,7 @@ EXTRA_DIST = mooglib/moo-glib.cpp marshals.list \
 	moolua/lua/lzio.h moolua/lua/README moolua/lua/slnudata.c \
 	moolua/lua/slnunico.c moolua/lua/_moo \
 	moolua/lua-default-init.lua moolua/lua-module-init.lua \
-	moolua/lua-plugin-init.lua $(moo_override_files) \
-	moopython/pygtk/codebefore.c moopython/pygtk/codeafter.c \
-	moopython/pygtk/moo.py $(moo_python_ini_in_files) \
-	$(moo_python_plugins) $(moo_python_lib_files) \
-	$(moo_python_lib_medit_files) moopython/medit-python-init.py \
-	$(moo_python_sources) moopython/codegen/__init__.py \
-	moopython/codegen/argtypes.py moopython/codegen/argtypes_m.py \
-	moopython/codegen/codegen.py moopython/codegen/definitions.py \
-	moopython/codegen/defsparser.py moopython/codegen/docgen.py \
-	moopython/codegen/mergedefs.py moopython/codegen/mkskel.py \
-	moopython/codegen/override.py \
-	moopython/codegen/reversewrapper.py \
-	moopython/codegen/scmexpr.py \
+	moolua/lua-plugin-init.lua \
 	plugins/glade/moofileselector-prefs.glade \
 	plugins/glade/moofileselector.glade \
 	plugins/glade/moofind.glade plugins/glade/moogrep.glade \
@@ -1899,17 +1820,17 @@ EXTRA_DIST = mooglib/moo-glib.cpp marshals.list \
 	medit-app/run-tests.sh medit-app/print-functions.py \
 	medit-app/run-tests-installed.sh \
 	medit-app/run-tests-uninstalled.sh medit-app/medit.rc.in \
-	medit-app/medit.desktop.in $(am__append_30)
+	medit-app/medit.desktop.in $(am__append_25)
 BUILT_SOURCES = $(am__append_13) $(built_moo_sources) \
 	$(built_plugins_sources)
-CLEANFILES = $(am__append_26) $(am__append_28) $(am__append_31) \
+CLEANFILES = $(am__append_21) $(am__append_23) $(am__append_26) \
 	$(built_moo_sources) $(built_plugins_sources)
 noinst_LIBRARIES = 
 AM_CPPFLAGS = $(MOO_CPPFLAGS) -I$(top_srcdir)/doc/built \
 	-Imooutils/glade -Imoofileview -Imoofileview/glade \
 	-DLUA_USE_APICHECK $(am__append_10) $(am__append_11) \
 	-I$(srcdir)/plugins/support
-AM_CFLAGS = $(MOO_CFLAGS) $(am__append_8) $(am__append_24)
+AM_CFLAGS = $(MOO_CFLAGS) $(am__append_8) $(am__append_19)
 AM_CXXFLAGS = $(MOO_CXXFLAGS)
 
 #if MOO_OS_WIN32
@@ -2085,11 +2006,9 @@ moo_sources = moo-config.h mooglib/moo-glib.h mooglib/moo-stat.h \
 	moolua/moo-lua-api.h moolua/gtk-lua-api.cpp \
 	moolua/gtk-lua-api.h moolua/lua/lfs.h moolua/lua/lfs.cpp \
 	moolua/lua/moolua.h moolua/lua/moolua.cpp \
-	moolua/lua/luaall.cpp moopython/medit-python.h \
-	moopython/medit-python.c $(am__append_15) moocpp/fileutils.h \
-	moocpp/fileutils.cpp moocpp/gobjptr.h moocpp/gstr.h \
-	moocpp/gstr.cpp moocpp/moocpp.h moocpp/regex.h \
-	moocpp/regex.cpp moocpp/util.h
+	moolua/lua/luaall.cpp moocpp/fileutils.h moocpp/fileutils.cpp \
+	moocpp/gobjptr.h moocpp/gstr.h moocpp/gstr.cpp moocpp/moocpp.h \
+	moocpp/regex.h moocpp/regex.cpp moocpp/util.h
 built_moo_sources = marshals.h mooedit/moopluginprefs-gxml.h \
 	mooedit/mooeditprefs-view-gxml.h \
 	mooedit/mooeditprefs-file-gxml.h \
@@ -2112,13 +2031,12 @@ built_moo_sources = marshals.h mooedit/moopluginprefs-gxml.h \
 	mooapp/mooappabout-license-gxml.h \
 	mooapp/mooappabout-credits-gxml.h mooapp-credits.h \
 	moolua/lua-default-init.h moolua/lua-module-init.h \
-	moolua/lua-plugin-init.h moopython/medit-python-init.h \
-	$(am__append_16)
+	moolua/lua-plugin-init.h
 moo_libadd = $(am__append_12)
 plugins_sources = plugins/moofileselector-prefs.cpp \
 	plugins/moofileselector.cpp plugins/moofileselector.h \
 	plugins/mooplugin-builtin.h plugins/mooplugin-builtin.cpp \
-	plugins/moofilelist.cpp plugins/moofind.cpp $(am__append_17) \
+	plugins/moofilelist.cpp plugins/moofind.cpp $(am__append_14) \
 	plugins/usertools/moousertools.cpp \
 	plugins/usertools/moousertools.h \
 	plugins/usertools/moousertools-prefs.cpp \
@@ -2142,15 +2060,14 @@ plugins_sources = plugins/moofileselector-prefs.cpp \
 	plugins/support/moolineview.cpp plugins/support/moolineview.h \
 	plugins/support/moooutputfilter.cpp \
 	plugins/support/moooutputfilter.h
-built_plugins_sources = $(am__append_14) \
-	plugins/moofileselector-prefs-gxml.h \
+built_plugins_sources = plugins/moofileselector-prefs-gxml.h \
 	plugins/moofileselector-gxml.h plugins/moofind-gxml.h \
 	plugins/moogrep-gxml.h \
 	plugins/usertools/mooedittools-exe-gxml.h \
 	plugins/usertools/mooedittools-script-gxml.h \
 	plugins/usertools/moousertools-gxml.h \
-	plugins/usertools/lua-tool-setup.h $(am__append_18) \
-	plugins/usertools/menu.xml plugins/usertools/context.xml
+	plugins/usertools/lua-tool-setup.h plugins/usertools/menu.xml \
+	plugins/usertools/context.xml
 moo_srcdir = $(srcdir)
 moo_builddir = .
 moo_edit_enum_headers = \
@@ -2356,81 +2273,19 @@ genlua_files = \
 	$(top_srcdir)/api/mpi/luawriter.py
 
 luadir = $(MOO_DATA_DIR)/lua
-moo_python_sources = moopython/pygtk/moo-pygtk.c \
-	moopython/pygtk/moo-pygtk.h moopython/moopython-pygtkmod.h \
-	moopython/moopython-builtin.h moopython/moopython-builtin.c \
-	moopython/moopython-api.h moopython/moopython-loader.h \
-	moopython/moopython-loader.c moopython/moopython-utils.h \
-	moopython/moopython-utils.c moopython/moopython-tests.h \
-	moopython/moopython-tests.cpp
-built_moo_python_sources = moopython/pygtk/moo-mod.h \
-	moopython/pygtk/moo-mod.cpp moopython/pygtk/moo-mod.h \
-	moopython/pygtk/moo.defs
-gendefs_files = \
-	$(top_srcdir)/api/gendefs.py		\
-	$(top_srcdir)/api/mpi/__init__.py	\
-	$(top_srcdir)/api/mpi/module.py		\
-	$(top_srcdir)/api/mpi/defswriter.py
-
-moo_override_files = \
-	moopython/pygtk/mooutils.override	\
-	moopython/pygtk/moo.override
-
-@MOO_OS_WIN32_TRUE@codegen_platform = --platform win32
-codegen_files = \
-	$(srcdir)/moopython/codegen/codegen.py		\
-	$(srcdir)/moopython/codegen/argtypes.py		\
-	$(srcdir)/moopython/codegen/argtypes_m.py	\
-	$(srcdir)/moopython/codegen/reversewrapper.py
-
-codegen_script = $(srcdir)/moopython/codegen/codegen.py
-codegen = $(MOO_PYTHON) $(codegen_script) $(codegen_platform) \
-	--codebefore $(srcdir)/moopython/pygtk/codebefore.c \
-	--codeafter $(srcdir)/moopython/pygtk/codeafter.c
-
-moo_python_ini_in_files = \
-	moopython/plugins/terminal.ini.in	\
-	moopython/plugins/python.ini.in
-
-moo_python_plugins = \
-	moopython/plugins/terminal.py		\
-	moopython/plugins/python.py
-
-moo_python_lib_files = \
-	moopython/plugins/lib/pyconsole.py	\
-	moopython/plugins/lib/insert_date_and_time.py
-
-moo_python_lib_medit_files = \
-	moopython/plugins/medit/__init__.py	\
-	moopython/plugins/medit/runpython.py
-
-@MOO_ENABLE_PYTHON_TRUE@moo_python_ini_files = $(moo_python_ini_in_files:.ini.in=.ini)
-@MOO_ENABLE_PYTHON_TRUE@moo_python_plugindir = ${MOO_PYTHON_PLUGIN_DIR}
-@MOO_ENABLE_PYTHON_TRUE@moo_python_libdir = ${MOO_PYTHON_LIB_DIR}
-@MOO_ENABLE_PYTHON_TRUE@moo_python_lib_meditdir = ${MOO_PYTHON_LIB_DIR}/medit
-@MOO_ENABLE_PYTHON_TRUE@moo_python_plugin_DATA = \
-@MOO_ENABLE_PYTHON_TRUE@	$(moo_python_ini_files)			\
-@MOO_ENABLE_PYTHON_TRUE@	$(moo_python_plugins)
-
-@MOO_ENABLE_PYTHON_TRUE@moo_python_lib_DATA = \
-@MOO_ENABLE_PYTHON_TRUE@	$(moo_python_lib_files)
-
-@MOO_ENABLE_PYTHON_TRUE@moo_python_lib_medit_DATA = \
-@MOO_ENABLE_PYTHON_TRUE@	$(moo_python_lib_medit_files)
-
 cfgdir = $(MOO_DATA_DIR)
 cfg_DATA = \
 	plugins/usertools/filters.xml		\
 	plugins/usertools/menu.xml		\
 	plugins/usertools/context.xml
 
-genplatxml_args = $(am__append_19) $(am__append_20) $(am__append_21)
+genplatxml_args = $(am__append_15) $(am__append_16)
 @MOO_BUILD_APP_TRUE@TESTS = medit-app/run-tests-uninstalled.sh
 @MOO_BUILD_APP_TRUE@TESTS_ENVIRONMENT = EXEEXT=$(EXEEXT) \
 @MOO_BUILD_APP_TRUE@	top_srcdir=$(top_srcdir) bindir=$(bindir) \
 @MOO_BUILD_APP_TRUE@	PYTHON=$(MOO_PYTHON) \
 @MOO_BUILD_APP_TRUE@	print_functions=$(srcdir)/medit-app/print-functions.py \
-@MOO_BUILD_APP_TRUE@	$(am__append_23)
+@MOO_BUILD_APP_TRUE@	$(am__append_18)
 @MOO_BUILD_APP_TRUE@medit_SOURCES = \
 @MOO_BUILD_APP_TRUE@	medit-app/mem-debug.h		\
 @MOO_BUILD_APP_TRUE@	medit-app/run-tests.h		\
@@ -2443,12 +2298,12 @@ genplatxml_args = $(am__append_19) $(am__append_20) $(am__append_21)
 @MOO_BUILD_APP_TRUE@	dummy.cpp
 
 @MOO_BUILD_APP_TRUE@medit_LDADD = $(MOO_LIBS) $(moo_libadd) \
-@MOO_BUILD_APP_TRUE@	$(am__append_27)
+@MOO_BUILD_APP_TRUE@	$(am__append_22)
 @MOO_BUILD_APP_TRUE@nodist_medit_SOURCES = \
 @MOO_BUILD_APP_TRUE@	$(built_moo_sources)		\
 @MOO_BUILD_APP_TRUE@	$(built_plugins_sources)
 
-@MOO_BUILD_APP_TRUE@medit_LDFLAGS = $(am__append_25)
+@MOO_BUILD_APP_TRUE@medit_LDFLAGS = $(am__append_20)
 @MOO_BUILD_APP_TRUE@@MOO_OS_UNIX_TRUE@desktopdir = $(datadir)/applications
 @MOO_BUILD_APP_TRUE@@MOO_OS_UNIX_TRUE@desktop_DATA = medit-app/medit.desktop
 @MOO_BUILD_APP_TRUE@iconthemedir = $(datadir)/icons/hicolor/48x48/apps
@@ -2457,17 +2312,16 @@ genplatxml_args = $(am__append_19) $(am__append_20) $(am__append_21)
 @MOO_BUILD_MODULE_TRUE@pyexec_LTLIBRARIES = _moo.la
 @MOO_BUILD_MODULE_TRUE@_moo_la_LDFLAGS = -avoid-version -module \
 @MOO_BUILD_MODULE_TRUE@	-export-symbols-regex init_moo \
-@MOO_BUILD_MODULE_TRUE@	$(am__append_29)
+@MOO_BUILD_MODULE_TRUE@	$(am__append_24)
 @MOO_BUILD_MODULE_TRUE@_moo_la_CFLAGS = $(AM_CFLAGS)
 @MOO_BUILD_MODULE_TRUE@_moo_la_CXXFLAGS = $(AM_CXXFLAGS)
-@MOO_BUILD_MODULE_TRUE@python_DATA = moopython/pygtk/moo.py
 @MOO_BUILD_MODULE_TRUE@_moo_la_SOURCES = \
 @MOO_BUILD_MODULE_TRUE@	medit-module/medit-module.cpp	\
 @MOO_BUILD_MODULE_TRUE@	$(moo_sources)			\
 @MOO_BUILD_MODULE_TRUE@	$(plugins_sources)
 
 @MOO_BUILD_MODULE_TRUE@_moo_la_LIBADD = $(MOO_LIBS) $(moo_libadd) \
-@MOO_BUILD_MODULE_TRUE@	$(am__append_32)
+@MOO_BUILD_MODULE_TRUE@	$(am__append_27)
 @MOO_BUILD_MODULE_TRUE@nodist__moo_la_SOURCES = \
 @MOO_BUILD_MODULE_TRUE@	$(built_moo_sources)		\
 @MOO_BUILD_MODULE_TRUE@	$(built_plugins_sources)
@@ -2477,7 +2331,7 @@ all: $(BUILT_SOURCES)
 
 .SUFFIXES:
 .SUFFIXES: .c .cpp .lo .log .o .obj .test .test$(EXEEXT) .trs
-$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(srcdir)/mooedit/Makefile.incl $(srcdir)/mooedit/langs/Makefile.incl $(srcdir)/xdgmime/Makefile.incl $(srcdir)/mooutils/Makefile.incl $(srcdir)/moofileview/Makefile.incl $(srcdir)/gtksourceview/Makefile.incl $(srcdir)/eggsmclient/Makefile.incl $(srcdir)/mooapp/Makefile.incl $(srcdir)/moolua/Makefile.incl $(srcdir)/moolua/lua/Makefile.incl $(srcdir)/moopython/Makefile.incl $(srcdir)/moopython/pygtk/Makefile.incl $(srcdir)/moopython/plugins/Makefile.incl $(srcdir)/plugins/Makefile.incl $(srcdir)/plugins/ctags/Makefile.incl $(srcdir)/plugins/usertools/Makefile.incl $(srcdir)/plugins/support/Makefile.incl $(srcdir)/medit-app/Makefile.incl $(srcdir)/medit-module/Makefile.incl $(srcdir)/moocpp/Makefile.incl $(am__configure_deps)
+$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(srcdir)/mooedit/Makefile.incl $(srcdir)/mooedit/langs/Makefile.incl $(srcdir)/xdgmime/Makefile.incl $(srcdir)/mooutils/Makefile.incl $(srcdir)/moofileview/Makefile.incl $(srcdir)/gtksourceview/Makefile.incl $(srcdir)/eggsmclient/Makefile.incl $(srcdir)/mooapp/Makefile.incl $(srcdir)/moolua/Makefile.incl $(srcdir)/moolua/lua/Makefile.incl $(srcdir)/plugins/Makefile.incl $(srcdir)/plugins/ctags/Makefile.incl $(srcdir)/plugins/usertools/Makefile.incl $(srcdir)/plugins/support/Makefile.incl $(srcdir)/medit-app/Makefile.incl $(srcdir)/medit-module/Makefile.incl $(srcdir)/moocpp/Makefile.incl $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -2497,7 +2351,7 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	    echo ' cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__maybe_remake_depfiles)'; \
 	    cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__maybe_remake_depfiles);; \
 	esac;
-$(srcdir)/mooedit/Makefile.incl $(srcdir)/mooedit/langs/Makefile.incl $(srcdir)/xdgmime/Makefile.incl $(srcdir)/mooutils/Makefile.incl $(srcdir)/moofileview/Makefile.incl $(srcdir)/gtksourceview/Makefile.incl $(srcdir)/eggsmclient/Makefile.incl $(srcdir)/mooapp/Makefile.incl $(srcdir)/moolua/Makefile.incl $(srcdir)/moolua/lua/Makefile.incl $(srcdir)/moopython/Makefile.incl $(srcdir)/moopython/pygtk/Makefile.incl $(srcdir)/moopython/plugins/Makefile.incl $(srcdir)/plugins/Makefile.incl $(srcdir)/plugins/ctags/Makefile.incl $(srcdir)/plugins/usertools/Makefile.incl $(srcdir)/plugins/support/Makefile.incl $(srcdir)/medit-app/Makefile.incl $(srcdir)/medit-module/Makefile.incl $(srcdir)/moocpp/Makefile.incl $(am__empty):
+$(srcdir)/mooedit/Makefile.incl $(srcdir)/mooedit/langs/Makefile.incl $(srcdir)/xdgmime/Makefile.incl $(srcdir)/mooutils/Makefile.incl $(srcdir)/moofileview/Makefile.incl $(srcdir)/gtksourceview/Makefile.incl $(srcdir)/eggsmclient/Makefile.incl $(srcdir)/mooapp/Makefile.incl $(srcdir)/moolua/Makefile.incl $(srcdir)/moolua/lua/Makefile.incl $(srcdir)/plugins/Makefile.incl $(srcdir)/plugins/ctags/Makefile.incl $(srcdir)/plugins/usertools/Makefile.incl $(srcdir)/plugins/support/Makefile.incl $(srcdir)/medit-app/Makefile.incl $(srcdir)/medit-module/Makefile.incl $(srcdir)/moocpp/Makefile.incl $(am__empty):
 
 $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
@@ -2963,30 +2817,6 @@ moolua/lua/_moo_la-moolua.lo: moolua/lua/$(am__dirstamp) \
 	moolua/lua/$(DEPDIR)/$(am__dirstamp)
 moolua/lua/_moo_la-luaall.lo: moolua/lua/$(am__dirstamp) \
 	moolua/lua/$(DEPDIR)/$(am__dirstamp)
-moopython/$(am__dirstamp):
-	@$(MKDIR_P) moopython
-	@: > moopython/$(am__dirstamp)
-moopython/$(DEPDIR)/$(am__dirstamp):
-	@$(MKDIR_P) moopython/$(DEPDIR)
-	@: > moopython/$(DEPDIR)/$(am__dirstamp)
-moopython/_moo_la-medit-python.lo: moopython/$(am__dirstamp) \
-	moopython/$(DEPDIR)/$(am__dirstamp)
-moopython/pygtk/$(am__dirstamp):
-	@$(MKDIR_P) moopython/pygtk
-	@: > moopython/pygtk/$(am__dirstamp)
-moopython/pygtk/$(DEPDIR)/$(am__dirstamp):
-	@$(MKDIR_P) moopython/pygtk/$(DEPDIR)
-	@: > moopython/pygtk/$(DEPDIR)/$(am__dirstamp)
-moopython/pygtk/_moo_la-moo-pygtk.lo: moopython/pygtk/$(am__dirstamp) \
-	moopython/pygtk/$(DEPDIR)/$(am__dirstamp)
-moopython/_moo_la-moopython-builtin.lo: moopython/$(am__dirstamp) \
-	moopython/$(DEPDIR)/$(am__dirstamp)
-moopython/_moo_la-moopython-loader.lo: moopython/$(am__dirstamp) \
-	moopython/$(DEPDIR)/$(am__dirstamp)
-moopython/_moo_la-moopython-utils.lo: moopython/$(am__dirstamp) \
-	moopython/$(DEPDIR)/$(am__dirstamp)
-moopython/_moo_la-moopython-tests.lo: moopython/$(am__dirstamp) \
-	moopython/$(DEPDIR)/$(am__dirstamp)
 moocpp/$(am__dirstamp):
 	@$(MKDIR_P) moocpp
 	@: > moocpp/$(am__dirstamp)
@@ -3077,8 +2907,6 @@ plugins/support/_moo_la-moolineview.lo:  \
 plugins/support/_moo_la-moooutputfilter.lo:  \
 	plugins/support/$(am__dirstamp) \
 	plugins/support/$(DEPDIR)/$(am__dirstamp)
-moopython/pygtk/_moo_la-moo-mod.lo: moopython/pygtk/$(am__dirstamp) \
-	moopython/pygtk/$(DEPDIR)/$(am__dirstamp)
 
 _moo.la: $(_moo_la_OBJECTS) $(_moo_la_DEPENDENCIES) $(EXTRA__moo_la_DEPENDENCIES) 
 	$(AM_V_CXXLD)$(_moo_la_LINK) $(am__moo_la_rpath) $(_moo_la_OBJECTS) $(_moo_la_LIBADD) $(LIBS)
@@ -3390,18 +3218,6 @@ moolua/lua/moolua.$(OBJEXT): moolua/lua/$(am__dirstamp) \
 	moolua/lua/$(DEPDIR)/$(am__dirstamp)
 moolua/lua/luaall.$(OBJEXT): moolua/lua/$(am__dirstamp) \
 	moolua/lua/$(DEPDIR)/$(am__dirstamp)
-moopython/medit-python.$(OBJEXT): moopython/$(am__dirstamp) \
-	moopython/$(DEPDIR)/$(am__dirstamp)
-moopython/pygtk/moo-pygtk.$(OBJEXT): moopython/pygtk/$(am__dirstamp) \
-	moopython/pygtk/$(DEPDIR)/$(am__dirstamp)
-moopython/moopython-builtin.$(OBJEXT): moopython/$(am__dirstamp) \
-	moopython/$(DEPDIR)/$(am__dirstamp)
-moopython/moopython-loader.$(OBJEXT): moopython/$(am__dirstamp) \
-	moopython/$(DEPDIR)/$(am__dirstamp)
-moopython/moopython-utils.$(OBJEXT): moopython/$(am__dirstamp) \
-	moopython/$(DEPDIR)/$(am__dirstamp)
-moopython/moopython-tests.$(OBJEXT): moopython/$(am__dirstamp) \
-	moopython/$(DEPDIR)/$(am__dirstamp)
 moocpp/fileutils.$(OBJEXT): moocpp/$(am__dirstamp) \
 	moocpp/$(DEPDIR)/$(am__dirstamp)
 moocpp/gstr.$(OBJEXT): moocpp/$(am__dirstamp) \
@@ -3461,8 +3277,6 @@ plugins/support/moolineview.$(OBJEXT):  \
 plugins/support/moooutputfilter.$(OBJEXT):  \
 	plugins/support/$(am__dirstamp) \
 	plugins/support/$(DEPDIR)/$(am__dirstamp)
-moopython/pygtk/moo-mod.$(OBJEXT): moopython/pygtk/$(am__dirstamp) \
-	moopython/pygtk/$(DEPDIR)/$(am__dirstamp)
 
 medit$(EXEEXT): $(medit_OBJECTS) $(medit_DEPENDENCIES) $(EXTRA_medit_DEPENDENCIES) 
 	@rm -f medit$(EXEEXT)
@@ -3491,10 +3305,6 @@ mostlyclean-compile:
 	-rm -f moolua/*.lo
 	-rm -f moolua/lua/*.$(OBJEXT)
 	-rm -f moolua/lua/*.lo
-	-rm -f moopython/*.$(OBJEXT)
-	-rm -f moopython/*.lo
-	-rm -f moopython/pygtk/*.$(OBJEXT)
-	-rm -f moopython/pygtk/*.lo
 	-rm -f mooutils/*.$(OBJEXT)
 	-rm -f mooutils/*.lo
 	-rm -f plugins/*.$(OBJEXT)
@@ -3682,20 +3492,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@moolua/lua/$(DEPDIR)/lfs.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@moolua/lua/$(DEPDIR)/luaall.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@moolua/lua/$(DEPDIR)/moolua.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@moopython/$(DEPDIR)/_moo_la-medit-python.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@moopython/$(DEPDIR)/_moo_la-moopython-builtin.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@moopython/$(DEPDIR)/_moo_la-moopython-loader.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@moopython/$(DEPDIR)/_moo_la-moopython-tests.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@moopython/$(DEPDIR)/_moo_la-moopython-utils.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@moopython/$(DEPDIR)/medit-python.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@moopython/$(DEPDIR)/moopython-builtin.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@moopython/$(DEPDIR)/moopython-loader.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@moopython/$(DEPDIR)/moopython-tests.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@moopython/$(DEPDIR)/moopython-utils.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@moopython/pygtk/$(DEPDIR)/_moo_la-moo-mod.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@moopython/pygtk/$(DEPDIR)/_moo_la-moo-pygtk.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@moopython/pygtk/$(DEPDIR)/moo-mod.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@moopython/pygtk/$(DEPDIR)/moo-pygtk.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@mooutils/$(DEPDIR)/_moo_la-moo-mime.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@mooutils/$(DEPDIR)/_moo_la-moo-test-utils.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@mooutils/$(DEPDIR)/_moo_la-mooaccel.Plo@am__quote@ # am--include-marker
@@ -4543,41 +4339,6 @@ eggsmclient/_moo_la-eggdesktopfile.lo: eggsmclient/eggdesktopfile.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CFLAGS) $(CFLAGS) -c -o eggsmclient/_moo_la-eggdesktopfile.lo `test -f 'eggsmclient/eggdesktopfile.c' || echo '$(srcdir)/'`eggsmclient/eggdesktopfile.c
 
-moopython/_moo_la-medit-python.lo: moopython/medit-python.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CFLAGS) $(CFLAGS) -MT moopython/_moo_la-medit-python.lo -MD -MP -MF moopython/$(DEPDIR)/_moo_la-medit-python.Tpo -c -o moopython/_moo_la-medit-python.lo `test -f 'moopython/medit-python.c' || echo '$(srcdir)/'`moopython/medit-python.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) moopython/$(DEPDIR)/_moo_la-medit-python.Tpo moopython/$(DEPDIR)/_moo_la-medit-python.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='moopython/medit-python.c' object='moopython/_moo_la-medit-python.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CFLAGS) $(CFLAGS) -c -o moopython/_moo_la-medit-python.lo `test -f 'moopython/medit-python.c' || echo '$(srcdir)/'`moopython/medit-python.c
-
-moopython/pygtk/_moo_la-moo-pygtk.lo: moopython/pygtk/moo-pygtk.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CFLAGS) $(CFLAGS) -MT moopython/pygtk/_moo_la-moo-pygtk.lo -MD -MP -MF moopython/pygtk/$(DEPDIR)/_moo_la-moo-pygtk.Tpo -c -o moopython/pygtk/_moo_la-moo-pygtk.lo `test -f 'moopython/pygtk/moo-pygtk.c' || echo '$(srcdir)/'`moopython/pygtk/moo-pygtk.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) moopython/pygtk/$(DEPDIR)/_moo_la-moo-pygtk.Tpo moopython/pygtk/$(DEPDIR)/_moo_la-moo-pygtk.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='moopython/pygtk/moo-pygtk.c' object='moopython/pygtk/_moo_la-moo-pygtk.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CFLAGS) $(CFLAGS) -c -o moopython/pygtk/_moo_la-moo-pygtk.lo `test -f 'moopython/pygtk/moo-pygtk.c' || echo '$(srcdir)/'`moopython/pygtk/moo-pygtk.c
-
-moopython/_moo_la-moopython-builtin.lo: moopython/moopython-builtin.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CFLAGS) $(CFLAGS) -MT moopython/_moo_la-moopython-builtin.lo -MD -MP -MF moopython/$(DEPDIR)/_moo_la-moopython-builtin.Tpo -c -o moopython/_moo_la-moopython-builtin.lo `test -f 'moopython/moopython-builtin.c' || echo '$(srcdir)/'`moopython/moopython-builtin.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) moopython/$(DEPDIR)/_moo_la-moopython-builtin.Tpo moopython/$(DEPDIR)/_moo_la-moopython-builtin.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='moopython/moopython-builtin.c' object='moopython/_moo_la-moopython-builtin.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CFLAGS) $(CFLAGS) -c -o moopython/_moo_la-moopython-builtin.lo `test -f 'moopython/moopython-builtin.c' || echo '$(srcdir)/'`moopython/moopython-builtin.c
-
-moopython/_moo_la-moopython-loader.lo: moopython/moopython-loader.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CFLAGS) $(CFLAGS) -MT moopython/_moo_la-moopython-loader.lo -MD -MP -MF moopython/$(DEPDIR)/_moo_la-moopython-loader.Tpo -c -o moopython/_moo_la-moopython-loader.lo `test -f 'moopython/moopython-loader.c' || echo '$(srcdir)/'`moopython/moopython-loader.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) moopython/$(DEPDIR)/_moo_la-moopython-loader.Tpo moopython/$(DEPDIR)/_moo_la-moopython-loader.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='moopython/moopython-loader.c' object='moopython/_moo_la-moopython-loader.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CFLAGS) $(CFLAGS) -c -o moopython/_moo_la-moopython-loader.lo `test -f 'moopython/moopython-loader.c' || echo '$(srcdir)/'`moopython/moopython-loader.c
-
-moopython/_moo_la-moopython-utils.lo: moopython/moopython-utils.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CFLAGS) $(CFLAGS) -MT moopython/_moo_la-moopython-utils.lo -MD -MP -MF moopython/$(DEPDIR)/_moo_la-moopython-utils.Tpo -c -o moopython/_moo_la-moopython-utils.lo `test -f 'moopython/moopython-utils.c' || echo '$(srcdir)/'`moopython/moopython-utils.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) moopython/$(DEPDIR)/_moo_la-moopython-utils.Tpo moopython/$(DEPDIR)/_moo_la-moopython-utils.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='moopython/moopython-utils.c' object='moopython/_moo_la-moopython-utils.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CFLAGS) $(CFLAGS) -c -o moopython/_moo_la-moopython-utils.lo `test -f 'moopython/moopython-utils.c' || echo '$(srcdir)/'`moopython/moopython-utils.c
-
 plugins/ctags/_moo_la-readtags.lo: plugins/ctags/readtags.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CFLAGS) $(CFLAGS) -MT plugins/ctags/_moo_la-readtags.lo -MD -MP -MF plugins/ctags/$(DEPDIR)/_moo_la-readtags.Tpo -c -o plugins/ctags/_moo_la-readtags.lo `test -f 'plugins/ctags/readtags.c' || echo '$(srcdir)/'`plugins/ctags/readtags.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) plugins/ctags/$(DEPDIR)/_moo_la-readtags.Tpo plugins/ctags/$(DEPDIR)/_moo_la-readtags.Plo
@@ -5015,13 +4776,6 @@ moolua/lua/_moo_la-luaall.lo: moolua/lua/luaall.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CXXFLAGS) $(CXXFLAGS) -c -o moolua/lua/_moo_la-luaall.lo `test -f 'moolua/lua/luaall.cpp' || echo '$(srcdir)/'`moolua/lua/luaall.cpp
 
-moopython/_moo_la-moopython-tests.lo: moopython/moopython-tests.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CXXFLAGS) $(CXXFLAGS) -MT moopython/_moo_la-moopython-tests.lo -MD -MP -MF moopython/$(DEPDIR)/_moo_la-moopython-tests.Tpo -c -o moopython/_moo_la-moopython-tests.lo `test -f 'moopython/moopython-tests.cpp' || echo '$(srcdir)/'`moopython/moopython-tests.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) moopython/$(DEPDIR)/_moo_la-moopython-tests.Tpo moopython/$(DEPDIR)/_moo_la-moopython-tests.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='moopython/moopython-tests.cpp' object='moopython/_moo_la-moopython-tests.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CXXFLAGS) $(CXXFLAGS) -c -o moopython/_moo_la-moopython-tests.lo `test -f 'moopython/moopython-tests.cpp' || echo '$(srcdir)/'`moopython/moopython-tests.cpp
-
 moocpp/_moo_la-fileutils.lo: moocpp/fileutils.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CXXFLAGS) $(CXXFLAGS) -MT moocpp/_moo_la-fileutils.lo -MD -MP -MF moocpp/$(DEPDIR)/_moo_la-fileutils.Tpo -c -o moocpp/_moo_la-fileutils.lo `test -f 'moocpp/fileutils.cpp' || echo '$(srcdir)/'`moocpp/fileutils.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) moocpp/$(DEPDIR)/_moo_la-fileutils.Tpo moocpp/$(DEPDIR)/_moo_la-fileutils.Plo
@@ -5162,13 +4916,6 @@ plugins/support/_moo_la-moooutputfilter.lo: plugins/support/moooutputfilter.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CXXFLAGS) $(CXXFLAGS) -c -o plugins/support/_moo_la-moooutputfilter.lo `test -f 'plugins/support/moooutputfilter.cpp' || echo '$(srcdir)/'`plugins/support/moooutputfilter.cpp
 
-moopython/pygtk/_moo_la-moo-mod.lo: moopython/pygtk/moo-mod.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CXXFLAGS) $(CXXFLAGS) -MT moopython/pygtk/_moo_la-moo-mod.lo -MD -MP -MF moopython/pygtk/$(DEPDIR)/_moo_la-moo-mod.Tpo -c -o moopython/pygtk/_moo_la-moo-mod.lo `test -f 'moopython/pygtk/moo-mod.cpp' || echo '$(srcdir)/'`moopython/pygtk/moo-mod.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) moopython/pygtk/$(DEPDIR)/_moo_la-moo-mod.Tpo moopython/pygtk/$(DEPDIR)/_moo_la-moo-mod.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='moopython/pygtk/moo-mod.cpp' object='moopython/pygtk/_moo_la-moo-mod.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_moo_la_CXXFLAGS) $(CXXFLAGS) -c -o moopython/pygtk/_moo_la-moo-mod.lo `test -f 'moopython/pygtk/moo-mod.cpp' || echo '$(srcdir)/'`moopython/pygtk/moo-mod.cpp
-
 mostlyclean-libtool:
 	-rm -f *.lo
 
@@ -5184,8 +4931,6 @@ clean-libtool:
 	-rm -rf mooglib/.libs mooglib/_libs
 	-rm -rf moolua/.libs moolua/_libs
 	-rm -rf moolua/lua/.libs moolua/lua/_libs
-	-rm -rf moopython/.libs moopython/_libs
-	-rm -rf moopython/pygtk/.libs moopython/pygtk/_libs
 	-rm -rf mooutils/.libs mooutils/_libs
 	-rm -rf plugins/.libs plugins/_libs
 	-rm -rf plugins/ctags/.libs plugins/ctags/_libs
@@ -5276,90 +5021,6 @@ uninstall-langsDATA:
 	@list='$(langs_DATA)'; test -n "$(langsdir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(langsdir)'; $(am__uninstall_files_from_dir)
-install-moo_python_libDATA: $(moo_python_lib_DATA)
-	@$(NORMAL_INSTALL)
-	@list='$(moo_python_lib_DATA)'; test -n "$(moo_python_libdir)" || list=; \
-	if test -n "$$list"; then \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(moo_python_libdir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(moo_python_libdir)" || exit 1; \
-	fi; \
-	for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  echo "$$d$$p"; \
-	done | $(am__base_list) | \
-	while read files; do \
-	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(moo_python_libdir)'"; \
-	  $(INSTALL_DATA) $$files "$(DESTDIR)$(moo_python_libdir)" || exit $$?; \
-	done
-
-uninstall-moo_python_libDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(moo_python_lib_DATA)'; test -n "$(moo_python_libdir)" || list=; \
-	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	dir='$(DESTDIR)$(moo_python_libdir)'; $(am__uninstall_files_from_dir)
-install-moo_python_lib_meditDATA: $(moo_python_lib_medit_DATA)
-	@$(NORMAL_INSTALL)
-	@list='$(moo_python_lib_medit_DATA)'; test -n "$(moo_python_lib_meditdir)" || list=; \
-	if test -n "$$list"; then \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(moo_python_lib_meditdir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(moo_python_lib_meditdir)" || exit 1; \
-	fi; \
-	for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  echo "$$d$$p"; \
-	done | $(am__base_list) | \
-	while read files; do \
-	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(moo_python_lib_meditdir)'"; \
-	  $(INSTALL_DATA) $$files "$(DESTDIR)$(moo_python_lib_meditdir)" || exit $$?; \
-	done
-
-uninstall-moo_python_lib_meditDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(moo_python_lib_medit_DATA)'; test -n "$(moo_python_lib_meditdir)" || list=; \
-	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	dir='$(DESTDIR)$(moo_python_lib_meditdir)'; $(am__uninstall_files_from_dir)
-install-moo_python_pluginDATA: $(moo_python_plugin_DATA)
-	@$(NORMAL_INSTALL)
-	@list='$(moo_python_plugin_DATA)'; test -n "$(moo_python_plugindir)" || list=; \
-	if test -n "$$list"; then \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(moo_python_plugindir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(moo_python_plugindir)" || exit 1; \
-	fi; \
-	for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  echo "$$d$$p"; \
-	done | $(am__base_list) | \
-	while read files; do \
-	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(moo_python_plugindir)'"; \
-	  $(INSTALL_DATA) $$files "$(DESTDIR)$(moo_python_plugindir)" || exit $$?; \
-	done
-
-uninstall-moo_python_pluginDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(moo_python_plugin_DATA)'; test -n "$(moo_python_plugindir)" || list=; \
-	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	dir='$(DESTDIR)$(moo_python_plugindir)'; $(am__uninstall_files_from_dir)
-install-pythonDATA: $(python_DATA)
-	@$(NORMAL_INSTALL)
-	@list='$(python_DATA)'; test -n "$(pythondir)" || list=; \
-	if test -n "$$list"; then \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(pythondir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(pythondir)" || exit 1; \
-	fi; \
-	for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  echo "$$d$$p"; \
-	done | $(am__base_list) | \
-	while read files; do \
-	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(pythondir)'"; \
-	  $(INSTALL_DATA) $$files "$(DESTDIR)$(pythondir)" || exit $$?; \
-	done
-
-uninstall-pythonDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(python_DATA)'; test -n "$(pythondir)" || list=; \
-	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	dir='$(DESTDIR)$(pythondir)'; $(am__uninstall_files_from_dir)
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
@@ -5617,7 +5278,7 @@ check: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) check-am
 all-am: Makefile $(PROGRAMS) $(LIBRARIES) $(LTLIBRARIES) $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(pyexecdir)" "$(DESTDIR)$(cfgdir)" "$(DESTDIR)$(desktopdir)" "$(DESTDIR)$(iconthemedir)" "$(DESTDIR)$(langsdir)" "$(DESTDIR)$(moo_python_libdir)" "$(DESTDIR)$(moo_python_lib_meditdir)" "$(DESTDIR)$(moo_python_plugindir)" "$(DESTDIR)$(pythondir)"; do \
+	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(pyexecdir)" "$(DESTDIR)$(cfgdir)" "$(DESTDIR)$(desktopdir)" "$(DESTDIR)$(iconthemedir)" "$(DESTDIR)$(langsdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: $(BUILT_SOURCES)
@@ -5674,10 +5335,6 @@ distclean-generic:
 	-rm -f moolua/$(am__dirstamp)
 	-rm -f moolua/lua/$(DEPDIR)/$(am__dirstamp)
 	-rm -f moolua/lua/$(am__dirstamp)
-	-rm -f moopython/$(DEPDIR)/$(am__dirstamp)
-	-rm -f moopython/$(am__dirstamp)
-	-rm -f moopython/pygtk/$(DEPDIR)/$(am__dirstamp)
-	-rm -f moopython/pygtk/$(am__dirstamp)
 	-rm -f mooutils/$(DEPDIR)/$(am__dirstamp)
 	-rm -f mooutils/$(am__dirstamp)
 	-rm -f plugins/$(DEPDIR)/$(am__dirstamp)
@@ -5877,20 +5534,6 @@ distclean: distclean-am
 	-rm -f moolua/lua/$(DEPDIR)/lfs.Po
 	-rm -f moolua/lua/$(DEPDIR)/luaall.Po
 	-rm -f moolua/lua/$(DEPDIR)/moolua.Po
-	-rm -f moopython/$(DEPDIR)/_moo_la-medit-python.Plo
-	-rm -f moopython/$(DEPDIR)/_moo_la-moopython-builtin.Plo
-	-rm -f moopython/$(DEPDIR)/_moo_la-moopython-loader.Plo
-	-rm -f moopython/$(DEPDIR)/_moo_la-moopython-tests.Plo
-	-rm -f moopython/$(DEPDIR)/_moo_la-moopython-utils.Plo
-	-rm -f moopython/$(DEPDIR)/medit-python.Po
-	-rm -f moopython/$(DEPDIR)/moopython-builtin.Po
-	-rm -f moopython/$(DEPDIR)/moopython-loader.Po
-	-rm -f moopython/$(DEPDIR)/moopython-tests.Po
-	-rm -f moopython/$(DEPDIR)/moopython-utils.Po
-	-rm -f moopython/pygtk/$(DEPDIR)/_moo_la-moo-mod.Plo
-	-rm -f moopython/pygtk/$(DEPDIR)/_moo_la-moo-pygtk.Plo
-	-rm -f moopython/pygtk/$(DEPDIR)/moo-mod.Po
-	-rm -f moopython/pygtk/$(DEPDIR)/moo-pygtk.Po
 	-rm -f mooutils/$(DEPDIR)/_moo_la-moo-mime.Plo
 	-rm -f mooutils/$(DEPDIR)/_moo_la-moo-test-utils.Plo
 	-rm -f mooutils/$(DEPDIR)/_moo_la-mooaccel.Plo
@@ -6080,9 +5723,7 @@ info: info-am
 info-am:
 
 install-data-am: install-cfgDATA install-data-local \
-	install-desktopDATA install-iconthemeDATA install-langsDATA \
-	install-moo_python_libDATA install-moo_python_lib_meditDATA \
-	install-moo_python_pluginDATA install-pythonDATA
+	install-desktopDATA install-iconthemeDATA install-langsDATA
 	@$(NORMAL_INSTALL)
 	$(MAKE) $(AM_MAKEFLAGS) install-data-hook
 install-dvi: install-dvi-am
@@ -6283,20 +5924,6 @@ maintainer-clean: maintainer-clean-am
 	-rm -f moolua/lua/$(DEPDIR)/lfs.Po
 	-rm -f moolua/lua/$(DEPDIR)/luaall.Po
 	-rm -f moolua/lua/$(DEPDIR)/moolua.Po
-	-rm -f moopython/$(DEPDIR)/_moo_la-medit-python.Plo
-	-rm -f moopython/$(DEPDIR)/_moo_la-moopython-builtin.Plo
-	-rm -f moopython/$(DEPDIR)/_moo_la-moopython-loader.Plo
-	-rm -f moopython/$(DEPDIR)/_moo_la-moopython-tests.Plo
-	-rm -f moopython/$(DEPDIR)/_moo_la-moopython-utils.Plo
-	-rm -f moopython/$(DEPDIR)/medit-python.Po
-	-rm -f moopython/$(DEPDIR)/moopython-builtin.Po
-	-rm -f moopython/$(DEPDIR)/moopython-loader.Po
-	-rm -f moopython/$(DEPDIR)/moopython-tests.Po
-	-rm -f moopython/$(DEPDIR)/moopython-utils.Po
-	-rm -f moopython/pygtk/$(DEPDIR)/_moo_la-moo-mod.Plo
-	-rm -f moopython/pygtk/$(DEPDIR)/_moo_la-moo-pygtk.Plo
-	-rm -f moopython/pygtk/$(DEPDIR)/moo-mod.Po
-	-rm -f moopython/pygtk/$(DEPDIR)/moo-pygtk.Po
 	-rm -f mooutils/$(DEPDIR)/_moo_la-moo-mime.Plo
 	-rm -f mooutils/$(DEPDIR)/_moo_la-moo-test-utils.Plo
 	-rm -f mooutils/$(DEPDIR)/_moo_la-mooaccel.Plo
@@ -6488,10 +6115,7 @@ ps-am:
 uninstall-am: uninstall-binPROGRAMS uninstall-cfgDATA \
 	uninstall-desktopDATA uninstall-iconthemeDATA \
 	uninstall-langsDATA uninstall-local \
-	uninstall-moo_python_libDATA \
-	uninstall-moo_python_lib_meditDATA \
-	uninstall-moo_python_pluginDATA uninstall-pyexecLTLIBRARIES \
-	uninstall-pythonDATA
+	uninstall-pyexecLTLIBRARIES
 	@$(NORMAL_INSTALL)
 	$(MAKE) $(AM_MAKEFLAGS) uninstall-hook
 .MAKE: all check check-am install install-am install-data-am \
@@ -6508,21 +6132,16 @@ uninstall-am: uninstall-binPROGRAMS uninstall-cfgDATA \
 	install-desktopDATA install-dvi install-dvi-am install-exec \
 	install-exec-am install-html install-html-am \
 	install-iconthemeDATA install-info install-info-am \
-	install-langsDATA install-man install-moo_python_libDATA \
-	install-moo_python_lib_meditDATA install-moo_python_pluginDATA \
-	install-pdf install-pdf-am install-ps install-ps-am \
-	install-pyexecLTLIBRARIES install-pythonDATA install-strip \
-	installcheck installcheck-am installcheck-local installdirs \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
-	pdf pdf-am ps ps-am recheck tags tags-am uninstall \
-	uninstall-am uninstall-binPROGRAMS uninstall-cfgDATA \
+	install-langsDATA install-man install-pdf install-pdf-am \
+	install-ps install-ps-am install-pyexecLTLIBRARIES \
+	install-strip installcheck installcheck-am installcheck-local \
+	installdirs maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool pdf pdf-am ps ps-am recheck tags tags-am \
+	uninstall uninstall-am uninstall-binPROGRAMS uninstall-cfgDATA \
 	uninstall-desktopDATA uninstall-hook uninstall-iconthemeDATA \
 	uninstall-langsDATA uninstall-local \
-	uninstall-moo_python_libDATA \
-	uninstall-moo_python_lib_meditDATA \
-	uninstall-moo_python_pluginDATA uninstall-pyexecLTLIBRARIES \
-	uninstall-pythonDATA
+	uninstall-pyexecLTLIBRARIES
 
 .PRECIOUS: Makefile
 
@@ -6627,47 +6246,11 @@ moolua/lua-plugin-init.h: moolua/lua-plugin-init.lua $(top_srcdir)/tools/xml2h.p
 @MOO_DEV_MODE_TRUE@		$(top_srcdir)/api/gtk.xml > moolua/gtk-lua-api.cpp.tmp && \
 @MOO_DEV_MODE_TRUE@	mv moolua/gtk-lua-api.cpp.tmp $(srcdir)/moolua/gtk-lua-api.cpp
 @MOO_DEV_MODE_TRUE@	$(AM_V_at)rm -f moolua/gtk-lua-api.cpp.tmp
-moopython/pygtk/moo.defs: $(gendefs_files) $(top_srcdir)/api/moo.xml Makefile
-	$(AM_V_at)$(MKDIR_P) moopython/pygtk
-	$(AM_V_GEN)$(MOO_PYTHON) $(top_srcdir)/api/gendefs.py $(top_srcdir)/api/moo.xml > moopython/pygtk/moo.defs.tmp
-	$(AM_V_at)mv moopython/pygtk/moo.defs.tmp moopython/pygtk/moo.defs
-
-moopython/pygtk/moo-mod.cpp: $(moo_override_files) moopython/pygtk/moo.defs $(codegen_files) \
-				$(srcdir)/moopython/pygtk/codebefore.c \
-				$(srcdir)/moopython/pygtk/codeafter.c
-	$(AM_V_at)$(MKDIR_P) moopython/pygtk
-	$(AM_V_GEN)$(codegen) --prefix _moo \
-		--load-types $(srcdir)/moopython/codegen/argtypes_m.py \
-		--register $(PYGOBJECT_DEFS_DIR)/gio-types.defs \
-		--register $(PYGTK_DEFS_DIR)/gtk-types.defs \
-		--register $(PYGTK_DEFS_DIR)/gdk-types.defs \
-		--override $(srcdir)/moopython/pygtk/moo.override \
-		--outfilename moopython/pygtk/moo-mod.c \
-		moopython/pygtk/moo.defs > $@.tmp && \
-		mv $@.tmp $@
-
-moopython/pygtk/moo-mod.h: moopython/pygtk/moo.py $(top_srcdir)/tools/xml2h.py
-	$(AM_V_at)$(MKDIR_P) moopython/pygtk
-	$(AM_V_GEN)$(MOO_PYTHON) $(top_srcdir)/tools/xml2h.py $(srcdir)/moopython/pygtk/moo.py moopython/pygtk/moo-mod.h MOO_PY
-
-@MOO_ENABLE_PYTHON_TRUE@moopython/plugins/%.ini: $(srcdir)/moopython/plugins/%.ini.in $(top_builddir)/config.status
-@MOO_ENABLE_PYTHON_TRUE@	$(AM_V_at)$(MKDIR_P) moopython/plugins
-@MOO_ENABLE_PYTHON_TRUE@	$(AM_V_GEN)cd $(top_builddir) && ./config.status --silent --file=$(subdir)/$@
-moopython/medit-python-init.h: moopython/medit-python-init.py $(top_srcdir)/tools/xml2h.py
-	$(AM_V_at)$(MKDIR_P) moopython
-	$(AM_V_GEN)$(MOO_PYTHON) $(top_srcdir)/tools/xml2h.py $(srcdir)/moopython/medit-python-init.py \
-		moopython/medit-python-init.h.tmp MEDIT_PYTHON_INIT_PY \
-		&& mv moopython/medit-python-init.h.tmp moopython/medit-python-init.h
 plugins/usertools/lua-tool-setup.h: plugins/usertools/lua-tool-setup.lua $(top_srcdir)/tools/xml2h.py
 	$(AM_V_at)$(MKDIR_P) plugins/usertools
 	$(AM_V_GEN)$(MOO_PYTHON) $(top_srcdir)/tools/xml2h.py $(srcdir)/plugins/usertools/lua-tool-setup.lua \
 		plugins/usertools/lua-tool-setup.h.tmp LUA_TOOL_SETUP_LUA \
 		&& mv plugins/usertools/lua-tool-setup.h.tmp plugins/usertools/lua-tool-setup.h
-@MOO_ENABLE_PYTHON_TRUE@plugins/usertools/python-tool-setup.h: plugins/usertools/python-tool-setup.py $(top_srcdir)/tools/xml2h.py
-@MOO_ENABLE_PYTHON_TRUE@	$(AM_V_at)$(MKDIR_P) plugins/usertools
-@MOO_ENABLE_PYTHON_TRUE@	$(AM_V_GEN)$(MOO_PYTHON) $(top_srcdir)/tools/xml2h.py $(srcdir)/plugins/usertools/python-tool-setup.py \
-@MOO_ENABLE_PYTHON_TRUE@		plugins/usertools/python-tool-setup.h.tmp PYTHON_TOOL_SETUP_PY \
-@MOO_ENABLE_PYTHON_TRUE@		&& mv plugins/usertools/python-tool-setup.h.tmp plugins/usertools/python-tool-setup.h
 plugins/usertools/%.xml: plugins/usertools/%-tmpl.xml plugins/usertools/genplatxml.py
 	$(AM_V_at)$(MKDIR_P) plugins/usertools
 	$(AM_V_GEN)$(MOO_PYTHON) $(srcdir)/plugins/usertools/genplatxml.py $(genplatxml_args) \

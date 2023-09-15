@@ -16,16 +16,12 @@
 #include <config.h>
 #include "moocommand-script.h"
 #include "plugins/usertools/lua-tool-setup.h"
-#ifdef MOO_ENABLE_PYTHON
-#include "plugins/usertools/python-tool-setup.h"
-#endif
 #include "mooedit/mooeditor.h"
 #include "mooutils/mooi18n.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mootype-macros.h"
 #include "plugins/usertools/mooedittools-script-gxml.h"
 #include "moolua/medit-lua.h"
-#include "moopython/medit-python.h"
 #include <string.h>
 
 struct MooCommandFactoryScript
@@ -95,44 +91,6 @@ moo_command_script_run_lua (MooCommandScript  *cmd,
 }
 
 static void
-moo_command_script_run_python (MooCommandScript  *cmd,
-                               MooCommandContext *ctx)
-{
-#ifdef MOO_ENABLE_PYTHON
-    GtkTextBuffer *buffer = NULL;
-    MooPythonState *state;
-
-    g_return_if_fail (cmd->code != NULL);
-
-    state = moo_python_state_new (TRUE);
-    g_return_if_fail (state != NULL);
-
-    if (!moo_python_run_string (state, PYTHON_TOOL_SETUP_PY))
-    {
-        moo_python_state_free (state);
-        return;
-    }
-
-    if (moo_command_context_get_doc (ctx))
-        buffer = moo_edit_get_buffer (moo_command_context_get_doc (ctx));
-
-    if (buffer)
-        gtk_text_buffer_begin_user_action (buffer);
-
-    moo_python_run_string (state, cmd->code);
-
-    if (buffer)
-        gtk_text_buffer_end_user_action (buffer);
-
-    moo_python_state_free (state);
-#else
-    g_return_if_reached ();
-    (void) cmd;
-    (void) ctx;
-#endif
-}
-
-static void
 moo_command_script_run (MooCommand        *cmd_base,
                         MooCommandContext *ctx)
 {
@@ -142,9 +100,6 @@ moo_command_script_run (MooCommand        *cmd_base,
     {
         case MOO_SCRIPT_LUA:
             moo_command_script_run_lua (cmd, ctx);
-            break;
-        case MOO_SCRIPT_PYTHON:
-            moo_command_script_run_python (cmd, ctx);
             break;
         default:
             g_return_if_reached ();
@@ -197,9 +152,6 @@ script_factory_create_widget (MooCommandFactory *factory_base)
     {
         case MOO_SCRIPT_LUA:
             moo_text_view_set_lang_by_id (xml->textview, "lua");
-            break;
-        case MOO_SCRIPT_PYTHON:
-            moo_text_view_set_lang_by_id (xml->textview, "python");
             break;
     }
 
@@ -278,13 +230,6 @@ _moo_command_script_class_init (MooCommandScriptClass *klass)
     factory->type = MOO_SCRIPT_LUA;
     moo_command_factory_register ("lua", _("Lua script"), MOO_COMMAND_FACTORY (factory), NULL, ".lua");
     g_object_unref (factory);
-
-#ifdef MOO_ENABLE_PYTHON
-    factory = (MooCommandFactoryScript*) g_object_new (_moo_command_factory_script_get_type (), (const char*) NULL);
-    factory->type = MOO_SCRIPT_PYTHON;
-    moo_command_factory_register ("python", _("Python script"), MOO_COMMAND_FACTORY (factory), NULL, ".py");
-    g_object_unref (factory);
-#endif
 }
 
 static void

@@ -37,14 +37,6 @@ plugins/usertools/lua-tool-setup.h: plugins/usertools/lua-tool-setup.lua $(top_s
 
 EXTRA_DIST +=						\
 	plugins/usertools/python-tool-setup.py
-if MOO_ENABLE_PYTHON
-built_plugins_sources += plugins/usertools/python-tool-setup.h
-plugins/usertools/python-tool-setup.h: plugins/usertools/python-tool-setup.py $(top_srcdir)/tools/xml2h.py
-	$(AM_V_at)$(MKDIR_P) plugins/usertools
-	$(AM_V_GEN)$(MOO_PYTHON) $(top_srcdir)/tools/xml2h.py $(srcdir)/plugins/usertools/python-tool-setup.py \
-		plugins/usertools/python-tool-setup.h.tmp PYTHON_TOOL_SETUP_PY \
-		&& mv plugins/usertools/python-tool-setup.h.tmp plugins/usertools/python-tool-setup.h
-endif
 
 cfgdir = $(MOO_DATA_DIR)
 cfg_DATA =					\
@@ -64,10 +56,6 @@ genplatxml_args += --enable=win32
 else !MOO_OS_WIN32
 genplatxml_args += --enable=unix
 endif !MOO_OS_WIN32
-
-if MOO_ENABLE_PYTHON
-genplatxml_args += --enable=python
-endif
 
 built_plugins_sources += plugins/usertools/menu.xml plugins/usertools/context.xml
 plugins/usertools/%.xml: plugins/usertools/%-tmpl.xml plugins/usertools/genplatxml.py

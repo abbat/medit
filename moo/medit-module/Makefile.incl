@@ -9,8 +9,6 @@ if MOO_OS_WIN32
 _moo_la_LDFLAGS += -no-undefined -shrext .pyd
 endif
 
-python_DATA = moopython/pygtk/moo.py
-
 _moo_la_SOURCES =			\
 	medit-module/medit-module.cpp	\
 	$(moo_sources)			\
