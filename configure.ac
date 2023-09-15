@@ -108,27 +108,9 @@ AC_DEFINE_UNQUOTED(MOO_WEBSITE,["$MOO_WEBSITE"],MOO_WEBSITE)
 AC_DEFINE_UNQUOTED(MOO_WEB_CONTACT,["$MOO_WEB_CONTACT"],MOO_WEB_CONTACT)
 
 MOO_AC_CHECK_OS
-MOO_AC_PYTHON
 
 MOO_BUILD_APP=true
-MOO_BUILD_MODULE=false
-AC_ARG_ENABLE(moo-module,
-  AS_HELP_STRING([--enable-moo-module],[build standalone python module instead of medit, default NO (you must also use --enable-shared with this option)]),[
-  if test "$enable_moo_module" = "yes"; then
-    MOO_BUILD_APP=false
-    MOO_BUILD_MODULE=true
-  fi
-])
-if $MOO_BUILD_MODULE; then
-  if ! $MOO_ENABLE_PYTHON; then
-    AC_MSG_ERROR([Python bindings are not enabled, can't build python module])
-  elif test "$enable_shared" != "yes"; then
-    AC_MSG_ERROR([Python module can't be built without --enable-shared option])
-  fi
-fi
-
 AM_CONDITIONAL(MOO_BUILD_APP, [$MOO_BUILD_APP])
-AM_CONDITIONAL(MOO_BUILD_MODULE, [$MOO_BUILD_MODULE])
 
 AC_SUBST(MOO_TOP_SRCDIR,`cd $srcdir && pwd`)
 if test x"$MOO_TOP_SRCDIR" = x"`pwd`"; then

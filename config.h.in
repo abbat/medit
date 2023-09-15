@@ -116,9 +116,6 @@
 /* enable code coverage testing */
 #undef MOO_ENABLE_COVERAGE
 
-/* build python bindings and plugin */
-#undef MOO_ENABLE_PYTHON
-
 /* MOO_MAJOR_VERSION */
 #undef MOO_MAJOR_VERSION
 

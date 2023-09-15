@@ -47,7 +47,6 @@ include mooapp/Makefile.incl
 include moolua/Makefile.incl
 include plugins/Makefile.incl
 include medit-app/Makefile.incl
-include medit-module/Makefile.incl
 include moocpp/Makefile.incl
 
 BUILT_SOURCES += $(built_moo_sources) $(built_plugins_sources)
