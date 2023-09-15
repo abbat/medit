@@ -27,9 +27,7 @@ moo_sources +=				\
 EXTRA_DIST +=                           \
 	mooglib/moo-glib.cpp
 
-if !MOO_OS_WIN32
 moo_sources += mooglib/moo-glib.cpp
-endif
 
 EXTRA_DIST += marshals.list
 built_moo_sources += marshals.h

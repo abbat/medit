@@ -25,11 +25,7 @@
 #include "mooutils/mooi18n.h"
 #include <string.h>
 
-#ifdef __WIN32__
-#define DEFAULT_FONT "Monospace 10"
-#else
 #define DEFAULT_FONT "Monospace"
-#endif
 
 static void _moo_edit_init_prefs (void);
 

@@ -29,11 +29,6 @@
 #include <errno.h>
 #include "mem-debug.h"
 #include "run-tests.h"
-#ifdef GDK_WINDOWING_WIN32
-#include <gdk/gdkwin32.h>
-#include <windows.h>
-#include <windowsx.h>
-#endif
 
 struct MeditOpts
 {
@@ -251,10 +246,6 @@ parse_args (int argc, char *argv[])
 				"File to write coverage data to", NULL },
 		{ "ut-list", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_NONE, &medit_opts.ut_list,
 				"List unit tests", NULL },
-	#ifdef __WIN32__
-		{ "portable", 0, G_OPTION_ARG_NONE, G_OPTION_ARG_NONE, &medit_opts.portable,
-				"Run medit in portable mode", NULL },
-	#endif
 		{ G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_FILENAME_ARRAY, &medit_opts.filesp,
 				NULL, /* "FILES" part in "medit [OPTION...] [FILES]" */ N_("FILES") },
 		{ NULL, 0, 0, G_OPTION_ARG_NONE, NULL, NULL, NULL }
@@ -317,31 +308,6 @@ get_time_stamp (void)
 #endif
 }
 
-static void
-push_appdir_to_path (void)
-{
-#ifdef __WIN32__
-    char *appdir;
-    const char *path;
-    char *new_path;
-
-    appdir = moo_win32_get_app_dir ();
-    g_return_if_fail (appdir != NULL);
-
-    path = g_getenv ("Path");
-
-    if (path)
-        new_path = g_strdup_printf ("%s;%s", appdir, path);
-    else
-        new_path = g_strdup (appdir);
-
-    g_setenv ("Path", new_path, TRUE);
-
-    g_free (new_path);
-    g_free (appdir);
-#endif
-}
-
 #ifdef MOO_ENABLE_PROJECT
 static void
 project_mode (const char *file)
@@ -366,205 +332,6 @@ project_mode (const char *file)
     moo_plugin_set_enabled (plugin, TRUE);
 }
 #endif
-
-#undef WANT_SYNAPTICS_FIX
-#if defined(GDK_WINDOWING_WIN32) && !GTK_CHECK_VERSION(2,24,8)
-#define WANT_SYNAPTICS_FIX 1
-#endif
-
-#ifdef WANT_SYNAPTICS_FIX
-
-static GdkWindow *
-_moo_get_toplevel_window_at_pointer (void)
-{
-    GList *list, *l;
-    GSList *windows = NULL;
-    GtkWidget *top;
-    POINT point;
-
-    GetCursorPos (&point);
-
-    list = gtk_window_list_toplevels ();
-
-    for (l = list; l != NULL; l = l->next)
-    {
-        HWND hwnd;
-        RECT rect = { 0 };
-        GdkWindow *window = GTK_WIDGET (l->data)->window;
-
-        if (!window)
-            continue;
-
-        hwnd = GDK_WINDOW_HWND (window);
-        GetWindowRect(hwnd, &rect);
-        if (IsWindowVisible(hwnd) && PtInRect(&rect, point))
-            windows = g_slist_prepend (windows, l->data);
-    }
-
-    top = windows ? GTK_WIDGET (_moo_get_top_window (windows)) : NULL;
-
-    g_list_free (list);
-    g_slist_free (windows);
-    return top ? top->window : NULL;
-}
-
-// stolen from gdkwindow-win32.c
-static GdkModifierType
-get_current_mask (void)
-{
-    GdkModifierType mask = 0;
-    BYTE kbd[256];
-
-    GetKeyboardState (kbd);
-
-    if (kbd[VK_SHIFT] & 0x80)
-        mask |= GDK_SHIFT_MASK;
-    if (kbd[VK_CAPITAL] & 0x80)
-        mask |= GDK_LOCK_MASK;
-    if (kbd[VK_CONTROL] & 0x80)
-        mask |= GDK_CONTROL_MASK;
-    if (kbd[VK_MENU] & 0x80)
-        mask |= GDK_MOD1_MASK;
-    if (kbd[VK_LBUTTON] & 0x80)
-        mask |= GDK_BUTTON1_MASK;
-    if (kbd[VK_MBUTTON] & 0x80)
-        mask |= GDK_BUTTON2_MASK;
-    if (kbd[VK_RBUTTON] & 0x80)
-        mask |= GDK_BUTTON3_MASK;
-
-    return mask;
-}
-
-// stolen from gdkwindow-win32.c
-static GdkWindow *
-get_pointer (GdkWindow *window,
-             gint      *x,
-             gint      *y)
-{
-    POINT point;
-    HWND hwnd, hwndc;
-    GdkWindow *retval = window;
-    GdkWindow *child = NULL;
-
-    hwnd = GDK_WINDOW_HWND (window);
-    GetCursorPos (&point);
-    ScreenToClient (hwnd, &point);
-
-    *x = point.x;
-    *y = point.y;
-
-    hwndc = ChildWindowFromPointEx (hwnd, point, CWP_SKIPINVISIBLE);
-    if (hwndc != NULL && hwndc != hwnd)
-        child = gdk_win32_handle_table_lookup ((GdkNativeWindow) hwndc);
-    if (child != NULL)
-        retval = child;
-
-    return retval;
-}
-
-static GdkWindow *
-get_youngest_child_at_pointer (GdkWindow *window,
-                               int       *x,
-                               int       *y)
-{
-    gboolean first_time = TRUE;
-
-    while (TRUE)
-    {
-        int tmp_x, tmp_y;
-        GdkWindow *child_window = get_pointer (window, &tmp_x, &tmp_y);
-
-        if (first_time)
-        {
-            *x = tmp_x;
-            *y = tmp_y;
-        }
-
-        if (!child_window || child_window == window)
-            return window;
-        else
-            window = child_window;
-    }
-}
-
-static gboolean
-fill_scroll_event (GdkEvent  *event,
-                   const MSG *msg)
-{
-    GdkWindow *window, *child_window;
-    int x, y;
-
-    if (!(window = _moo_get_toplevel_window_at_pointer ()))
-        return FALSE;
-
-    child_window = get_youngest_child_at_pointer (window, &x, &y);
-
-    if (child_window && child_window != window)
-    {
-        int origin_x, origin_y;
-        int origin_child_x, origin_child_y;
-        gdk_window_get_origin (window, &origin_x, &origin_y);
-        gdk_window_get_origin (child_window, &origin_child_x, &origin_child_y);
-        x -= (origin_child_x - origin_x);
-        y -= (origin_child_y - origin_y);
-        window = child_window;
-    }
-
-    event->type = GDK_SCROLL;
-    event->scroll.window = window;
-    event->scroll.direction = (((short) HIWORD (msg->wParam)) > 0) ? GDK_SCROLL_UP : GDK_SCROLL_DOWN;
-    event->scroll.time = 0;
-    event->scroll.x = x;
-    event->scroll.y = y;
-    event->scroll.x_root = GET_X_LPARAM (msg->lParam);
-    event->scroll.y_root = GET_Y_LPARAM (msg->lParam);
-    event->scroll.state = get_current_mask ();
-    event->scroll.device = gdk_device_get_core_pointer ();
-
-    return TRUE;
-}
-
-/* Synaptics touchpad is smart: it doesn't generate normal scroll events
- * for some miraculous reason if the window doesn't have fancy scrolling
- * window styles; instead it creates its own window to draw neat image
- * of a scrollbar under the mouse; and sends a scroll event to the gdk
- * window underneath. Now, gdk is smart too, it checks what window is
- * under the mouse and does nothing if that window isn't gdk's. That window
- * isn't gdk's because it's that neat image of a scrollbar. Thank you very
- * much Synaptics. */
-static GdkFilterReturn
-touchpad_filter_func (GdkXEvent *xevent,
-                      GdkEvent  *event,
-                      G_GNUC_UNUSED gpointer data)
-{
-    const MSG *msg = (MSG*) xevent;
-    wchar_t class_name[256];
-    HWND mouse_hwnd;
-    POINT point;
-
-    if (msg->message != WM_MOUSEWHEEL)
-        return GDK_FILTER_CONTINUE;
-
-    point.x = GET_X_LPARAM (msg->lParam);
-    point.y = GET_Y_LPARAM (msg->lParam);
-
-    if ((mouse_hwnd = WindowFromPoint (point)) == NULL)
-        return GDK_FILTER_CONTINUE;
-
-    if (GetClassName (mouse_hwnd, class_name, G_N_ELEMENTS (class_name)) == 0 ||
-        wcscmp (class_name, L"SynTrackCursorWindowClass") != 0)
-            return GDK_FILTER_CONTINUE;
-
-    return fill_scroll_event (event, msg) ? GDK_FILTER_TRANSLATE : GDK_FILTER_CONTINUE;
-}
-
-static void
-hookup_synaptics_touchpad (void)
-{
-    gdk_window_add_filter (NULL, touchpad_filter_func, NULL);
-}
-
-#endif // WANT_SYNAPTICS_FIX
 
 static void
 unit_test_func (void)
@@ -595,87 +362,7 @@ install_log_handlers (void)
         moo_set_log_func_file (medit_opts.log_file);
     else if (medit_opts.log_window)
         moo_set_log_func_window (TRUE);
-#ifdef __WIN32__
-    // this will install do-nothing log and print handlers plus
-    // a fatal error win32 message handler (it will also turn off
-    // console output, but that is not visible anyway)
-    else
-        moo_set_log_func_silent ();
-#endif
 }
-
-#ifdef __WIN32__
-static void
-setup_portable_mode (void)
-{
-    char *appdir = NULL;
-    char *share = NULL;
-    char *datadir = NULL;
-    char *cachedir = NULL;
-    char *tmp = NULL;
-
-    appdir = moo_win32_get_app_dir ();
-    g_return_if_fail (appdir != NULL);
-
-    share = g_build_filename (appdir, "..", "share", NULL);
-    g_return_if_fail (share != NULL);
-
-    if (g_file_test (share, G_FILE_TEST_IS_DIR))
-    {
-        datadir = g_build_filename (share, MEDIT_PORTABLE_DATA_DIR, NULL);
-        cachedir = g_build_filename (share, MEDIT_PORTABLE_CACHE_DIR, NULL);
-    }
-    else
-    {
-        datadir = g_build_filename (appdir, MEDIT_PORTABLE_DATA_DIR, NULL);
-        cachedir = g_build_filename (appdir, MEDIT_PORTABLE_CACHE_DIR, NULL);
-    }
-
-    g_return_if_fail (datadir != NULL && cachedir != NULL);
-
-    tmp = _moo_normalize_file_path (datadir);
-    moo_set_user_data_dir (tmp);
-    g_free (tmp);
-    tmp = NULL;
-
-    tmp = _moo_normalize_file_path (cachedir);
-    moo_set_user_cache_dir (tmp);
-    g_free (tmp);
-    tmp = NULL;
-
-    g_free (cachedir);
-    g_free (datadir);
-    g_free (share);
-    g_free (appdir);
-}
-
-static void
-check_portable_mode (void)
-{
-    gboolean portable = FALSE;
-    char *appdir = NULL;
-    char *magic_file = NULL;
-
-    if (medit_opts.portable)
-        portable = TRUE;
-
-    if (!portable)
-    {
-        appdir = moo_win32_get_app_dir ();
-        g_return_if_fail (appdir != NULL);
-        magic_file = g_build_filename (appdir, MEDIT_PORTABLE_MAGIC_FILE_NAME, NULL);
-        g_return_if_fail (magic_file != NULL);
-        if (g_file_test (magic_file, G_FILE_TEST_EXISTS))
-            portable = TRUE;
-    }
-
-    if (portable)
-        setup_portable_mode ();
-
-    g_free (magic_file);
-    g_free (appdir);
-}
-#endif // __WIN32__
 
 static int
 medit_main (int argc, char *argv[])
@@ -691,10 +378,6 @@ medit_main (int argc, char *argv[])
     GOptionContext *ctx;
     MooOpenInfoArray *files;
 
-#ifdef __WIN32__
-    CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
-#endif // __WIN32__
-
     init_mem_stuff ();
     moo_thread_init ();
     g_set_prgname ("medit");
@@ -703,20 +386,12 @@ medit_main (int argc, char *argv[])
 
     stamp = get_time_stamp ();
 
-#ifdef WANT_SYNAPTICS_FIX
-    hookup_synaptics_touchpad ();
-#endif
-
 #if 0
     gdk_window_set_debug_updates (TRUE);
 #endif
 
 #if 0
     g_idle_add_full (G_PRIORITY_LOW, (GSourceFunc) exit, NULL, NULL);
-#endif
-
-#ifdef __WIN32__
-    check_portable_mode ();
 #endif
 
     if (medit_opts.new_app || medit_opts.project_mode)
@@ -780,8 +455,6 @@ medit_main (int argc, char *argv[])
         exit (0);
     }
 
-    push_appdir_to_path ();
-
     gtk_init (NULL, NULL);
 
     install_log_handlers ();
@@ -833,10 +506,6 @@ medit_main (int argc, char *argv[])
 
     g_object_unref (app);
 
-#ifdef __WIN32__
-    CoUninitialize();
-#endif // __WIN32__
-
     return retval;
 }
 
@@ -845,18 +514,3 @@ main (int argc, char *argv[])
 {
     return medit_main (argc, argv);
 }
-
-#if defined(__WIN32__) && !defined(__GNUC__)
-
-#include <windows.h>
-
-int WINAPI
-WinMain (HINSTANCE hInstance,
-         HINSTANCE hPrevInstance,
-         char     *lpszCmdLine,
-         int       nCmdShow)
-{
-    return main (__argc, __argv);
-}
-
-#endif

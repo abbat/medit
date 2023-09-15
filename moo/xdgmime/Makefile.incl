@@ -15,8 +15,4 @@ xdgmime_sources =		\
 	xdgmime/xdgmimeparent.c	\
 	xdgmime/xdgmimeparent.h
 
-#if MOO_OS_WIN32
-#EXTRA_DIST += $(xdgmime_sources)
-#else
 moo_sources += $(xdgmime_sources)
-#endif

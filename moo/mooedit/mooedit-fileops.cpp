@@ -1036,14 +1036,6 @@ moo_file_get_display_basename (GFile *file)
 
     slash = strrchr (name, '/');
 
-#ifdef G_OS_WIN32
-    {
-        const char *backslash = strrchr (name, '\\');
-        if (backslash && (!slash || backslash > slash))
-            slash = backslash;
-    }
-#endif
-
     if (slash)
         memmove (name, slash + 1, strlen (slash + 1) + 1);
 
@@ -1053,19 +1045,8 @@ moo_file_get_display_basename (GFile *file)
 char *
 _moo_edit_normalize_filename_for_comparison (const char *filename)
 {
-#ifdef __WIN32__
-    /* XXX */
-    char *tmp;
-    char *ret;
-    g_return_val_if_fail (filename != NULL, NULL);
-    tmp = g_utf8_normalize (filename, -1, G_NORMALIZE_ALL_COMPOSE);
-    ret = g_utf8_strdown (tmp, -1);
-    g_free (tmp);
-    return ret;
-#else
     g_return_val_if_fail (filename != NULL, NULL);
     return g_strdup (filename);
-#endif
 }
 
 char *_moo_edit_normalize_uri_for_comparison (const char *uri)

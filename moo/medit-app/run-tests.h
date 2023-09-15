@@ -14,13 +14,7 @@ add_tests (MooTestOptions opts)
     moo_test_moo_file_writer ();
     moo_test_mooutils_misc ();
     moo_test_i18n (opts);
-
-#ifdef __WIN32__
-    moo_test_mooutils_win32 ();
-#endif
-
     moo_test_lua (opts);
-
     moo_test_editor ();
 }
 

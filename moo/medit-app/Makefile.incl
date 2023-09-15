@@ -53,19 +53,6 @@ nodist_medit_SOURCES =			\
 	$(built_plugins_sources)
 
 medit_LDFLAGS =
-if MOO_OS_WIN32
-medit_LDFLAGS += -mwindows
-endif
-
-if MOO_OS_WIN32
-CLEANFILES += medit-app/medit.rc medit-app/medit.res
-medit-app/medit.rc: medit-app/medit.rc.in $(top_builddir)/config.status
-	$(AM_V_at)$(MKDIR_P) medit-app
-	$(AM_V_GEN)cd $(top_builddir) && ./config.status --silent --file=moo/medit-app/medit.rc
-medit-app/medit.res: medit-app/medit.rc
-	$(AM_V_GEN)$(WINDRES) -i medit-app/medit.rc --input-format=rc -o medit-app/medit.res -O coff
-medit_LDADD += medit-app/medit.res
-endif
 
 if MOO_OS_UNIX
 desktopdir = $(datadir)/applications

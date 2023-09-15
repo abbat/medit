@@ -1144,14 +1144,12 @@ _moo_folder_get_file_info (MooFolder      *folder,
         g_ptr_array_add (array, g_strdup ("broken symbolic link"));
     }
 
-#ifndef __WIN32__
     if ((file->info & MOO_FILE_INFO_IS_LINK) &&
          _moo_file_link_get_target (file))
     {
         g_ptr_array_add (array, g_strdup ("Points to:"));
         g_ptr_array_add (array, g_strdup (_moo_file_link_get_target (file)));
     }
-#endif
 
     list = g_slist_append (NULL, _moo_file_ref (file));
     g_object_ref (folder);

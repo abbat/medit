@@ -53,9 +53,6 @@
 #include <gmodule.h>
 #include <gobject/gvaluecollector.h>
 
-#ifdef __WIN32__
-#include <windows.h>
-#endif
 
 #define PLUGIN_PREFS_ENABLED "enabled"
 

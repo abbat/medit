@@ -2,7 +2,6 @@
 #define EGG_SM_CLIENT_MANGLE_H
 
 #define egg_sm_client_xsmp_get_type _moo_egg_sm_client_xsmp_get_type
-#define egg_sm_client_win32_get_type _moo_egg_sm_client_win32_get_type
 #define egg_sm_client_osx_get_type _moo_egg_sm_client_osx_get_type
 
 #define egg_sm_client_get_type _moo_egg_sm_client_get_type
@@ -21,7 +20,6 @@
 #define egg_sm_client_quit _moo_egg_sm_client_quit
 #define egg_sm_client_xsmp_new _moo_egg_sm_client_xsmp_new
 #define egg_sm_client_dbus_new _moo_egg_sm_client_dbus_new
-#define egg_sm_client_win32_new _moo_egg_sm_client_win32_new
 #define egg_sm_client_osx_new _moo_egg_sm_client_osx_new
 #define egg_sm_client_dummy_new _moo_egg_sm_client_dummy_new
 #define egg_sm_client_get_mode _moo_egg_sm_client_get_mode

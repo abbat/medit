@@ -233,9 +233,6 @@ moo_edit_filter_new_regex (const char  *string,
     moo_return_error_if_fail_p (string != NULL);
 
     regex = g_regex_new (string, G_REGEX_OPTIMIZE
-#ifdef __WIN32__
-                                | G_REGEX_CASELESS
-#endif
                          , GRegexMatchFlags (0), error);
 
     if (!regex)

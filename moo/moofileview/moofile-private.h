@@ -24,14 +24,9 @@ G_BEGIN_DECLS
 
 #define MOO_TYPE_FILE               (_moo_file_get_type ())
 
-#ifdef __WIN32__
-/* FILETIME */
-typedef guint64 MooFileTime;
-#else
 /* time_t */
 /* XXX it's not time_t! */
 typedef GTime MooFileTime;
-#endif
 
 typedef gint64 MooFileSize;
 typedef struct MooCollationKey MooCollationKey;
@@ -76,10 +71,6 @@ int          _moo_collation_key_cmp     (const MooCollationKey *key1,
 const MooCollationKey *_moo_file_collation_key (const MooFile *file);
 
 const char  *_moo_file_case_display_name(const MooFile  *file);
-
-#ifndef __WIN32__
-const char  *_moo_file_link_get_target  (const MooFile  *file);
-#endif
 
 guint8       _moo_file_icon_blank       (void);
 guint8       _moo_file_get_icon_type    (MooFile        *file,

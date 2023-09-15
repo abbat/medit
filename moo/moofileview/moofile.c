@@ -522,13 +522,11 @@ _moo_file_get_icon (const MooFile  *file,
 }
 
 
-#ifndef __WIN32__
 const char *
 _moo_file_link_get_target (const MooFile *file)
 {
     return file->link_target;
 }
-#endif
 
 
 #if 0

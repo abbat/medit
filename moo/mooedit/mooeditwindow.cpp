@@ -1482,11 +1482,7 @@ create_doc_line_end_action (MooEditWindow *window, gpointer)
                          _("_Windows (CR+LF)"), nullptr, MOO_MENU_ITEM_RADIO,
                          GINT_TO_POINTER (MOO_LE_WIN32), nullptr);
     moo_menu_mgr_insert (mgr, nullptr,
-#ifdef MOO_OS_WIN32
-                         1,
-#else
                          0,
-#endif
                          line_end_menu_items[MOO_LE_UNIX],
                          _("_Unix (LF)"), nullptr, MOO_MENU_ITEM_RADIO,
                          GINT_TO_POINTER (MOO_LE_UNIX), nullptr);
@@ -2151,24 +2147,6 @@ copy_full_path_activated (GtkWidget     *item,
 }
 
 
-#ifdef __WIN32__
-
-static void
-open_containing_folder_activated (GtkWidget     *item,
-                                  G_GNUC_UNUSED MooEditWindow *window)
-{
-	MooEdit *doc = widget_doc.get(item);
-	char **argv = g_new0(char*, 4);
-	argv[0] = g_strdup("explorer");
-	argv[1] = g_strdup("/select,");
-	argv[2] = moo_edit_get_filename(doc);
-	g_spawn_async(nullptr, argv, nullptr, G_SPAWN_SEARCH_PATH, nullptr, nullptr, nullptr, nullptr);
-	g_strfreev(argv);
-}
-
-#endif // __WIN32__
-
-
 /****************************************************************************/
 /* Documents
  */
@@ -2340,14 +2318,6 @@ notebook_populate_popup (MooEditWindow      *window,
                       doc, window, menu, MOO_EDIT_TAB (child),
                       G_CALLBACK(copy_full_path_activated),
                       !moo_edit_is_untitled (doc));
-
-#ifdef __WIN32__
-    /* Item in document tab context menu */
-    add_tab_menu_item(C_("tab-context-menu", "Open Containing Folder"),
-                      doc, window, menu, MOO_EDIT_TAB (child),
-                      G_CALLBACK(open_containing_folder_activated),
-                      !moo_edit_is_untitled(doc));
-#endif // __WIN32__
 
     if (moo_edit_window_get_n_tabs (window) > 1)
     {

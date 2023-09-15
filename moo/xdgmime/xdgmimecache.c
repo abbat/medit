@@ -47,7 +47,7 @@
 
 #ifdef HAVE_MMAP
 #include <sys/mman.h>
-#elif !defined(__WIN32__)
+#else
 #warning Building xdgmime without MMAP support. Binary "mime.info" cache files will not be used.
 #endif
 
@@ -664,9 +664,6 @@ const char *
 _xdg_mime_cache_get_mime_type_for_file (const char  *file_name,
 					int         *is_regular)
 {
-#ifdef __WIN32__
-  return XDG_MIME_TYPE_UNKNOWN;
-#else
   const char *mime_type;
   const char *mime_types[10];
   FILE *file;
@@ -733,7 +730,6 @@ _xdg_mime_cache_get_mime_type_for_file (const char  *file_name,
   fclose (file);
 
   return mime_type;
-#endif // !__WIN32__
 }
 
 const char *

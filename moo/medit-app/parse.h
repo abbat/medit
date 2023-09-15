@@ -14,9 +14,6 @@ parse_filename (const char *filename)
     filename = freeme1;
 
     if (g_str_has_suffix (filename, "/") ||
-#ifdef G_OS_WIN32
-        g_str_has_suffix (filename, "\\") ||
-#endif
         g_file_test (filename, G_FILE_TEST_IS_DIR))
     {
         g_free (freeme1);

@@ -56,12 +56,8 @@
 #include <signal.h>
 #endif
 
-#define MOO_UI_XML_FILE     "ui.xml"
-#ifdef __WIN32__
-#define MOO_ACTIONS_FILE    "actions.ini"
-#else
-#define MOO_ACTIONS_FILE    "actions"
-#endif
+#define MOO_UI_XML_FILE  "ui.xml"
+#define MOO_ACTIONS_FILE "actions"
 
 #define SESSION_VERSION "1.0"
 
@@ -87,9 +83,7 @@ struct _MooAppPrivate {
     gboolean    in_after_close_window;
     int         exit_status;
 
-#ifndef __WIN32__
     EggSMClient *sm_client;
-#endif
 
     int         use_session;
     char       *session_file;
@@ -768,8 +762,6 @@ emit_started (MooApp *app)
     return FALSE;
 }
 
-#ifndef __WIN32__
-
 static void
 sm_quit_requested (MooApp *app)
 {
@@ -789,8 +781,6 @@ sm_quit (MooApp *app)
     if (!moo_app_quit (app))
         moo_app_do_quit (app);
 }
-
-#endif // __WIN32__
 
 
 void
@@ -833,10 +823,8 @@ moo_app_do_quit (MooApp *app)
 
     g_signal_emit (app, signals[QUIT], 0);
 
-#ifndef __WIN32__
     g_object_unref (app->priv->sm_client);
     app->priv->sm_client = NULL;
-#endif
 
     _moo_editor_close_all (app->priv->editor);
 
@@ -913,7 +901,6 @@ moo_app_run (MooApp *app)
 
     g_timeout_add (100, (GSourceFunc) check_signal, NULL);
 
-#ifndef __WIN32__
     app->priv->sm_client = egg_sm_client_get ();
     /* make it install log handler */
     g_option_group_free (egg_sm_client_get_option_group ());
@@ -924,7 +911,6 @@ moo_app_run (MooApp *app)
 
     if (EGG_SM_CLIENT_GET_CLASS (app->priv->sm_client)->startup)
         EGG_SM_CLIENT_GET_CLASS (app->priv->sm_client)->startup (app->priv->sm_client, NULL);
-#endif // __WIN32__
 
     g_idle_add_full(G_PRIORITY_DEFAULT_IDLE + 1, (GSourceFunc) emit_started, app, NULL);
 

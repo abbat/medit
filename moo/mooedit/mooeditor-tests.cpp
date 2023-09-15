@@ -9,12 +9,7 @@ static struct {
     gstr encodings_dir;
 } test_data;
 
-#ifdef __WIN32__
-#define LE "\r\n"
-#else
-#define LE "\n"
-#endif
-
+#define LE  "\n"
 #define TT1 "blah blah blah"
 #define TT2 "blah blah blah" LE "blah blah blah"
 #define TT3 LE LE LE LE
@@ -144,11 +139,6 @@ test_encodings_1 (const char *name,
         encoding.steal(g_strndup (name, dot - name));
     else
         encoding.copy(name);
-
-#ifdef MOO_OS_WIN32
-    if (encoding == "UTF-16" || encoding == "UCS-4")
-        return;
-#endif
 
     gstr filename = g::build_filename (test_data.encodings_dir, name);
     gstr filename2 = g::build_filename (working_dir, name);
