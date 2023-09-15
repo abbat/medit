@@ -72,6 +72,8 @@ const MooCollationKey *_moo_file_collation_key (const MooFile *file);
 
 const char  *_moo_file_case_display_name(const MooFile  *file);
 
+const char  *_moo_file_link_get_target  (const MooFile  *file);
+
 guint8       _moo_file_icon_blank       (void);
 guint8       _moo_file_get_icon_type    (MooFile        *file,
                                          const char     *dirname);
