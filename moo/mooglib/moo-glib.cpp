@@ -11,10 +11,6 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-#ifdef __WIN32__
-#include <io.h>
-#endif // __WIN32__
-
 const mgw_errno_t MGW_E_NOERROR = { MGW_ENOERROR };
 const mgw_errno_t MGW_E_EXIST   = { MGW_EEXIST };
 
@@ -141,19 +137,6 @@ mgw_localtime (const mgw_time_t *timep)
     return localtime(&t);
 }
 
-#ifdef __WIN32__
-static struct tm *
-localtime_r (const time_t *timep,
-             struct tm *result)
-{
-    struct tm *res;
-    res = localtime (timep);
-    if (res)
-        *result = *res;
-    return res;
-}
-#endif
-
 const struct tm *
 mgw_localtime_r (const mgw_time_t *timep, struct tm *result, mgw_errno_t *err)
 {
@@ -257,11 +240,7 @@ mgw_pipe (MgwFd *fds)
 {
     int t[2];
 
-#ifndef __WIN32__
     int result = pipe (t);
-#else
-    int result = _pipe(t, 4096, O_BINARY);
-#endif
 
     fds[0].value = t[0];
     fds[1].value = t[1];
@@ -355,11 +334,3 @@ mgw_io_channel_unix_new (MgwFd fd)
 {
     return g_io_channel_unix_new (fd.value);
 }
-
-#ifdef __WIN32__
-GIOChannel *
-mgw_io_channel_win32_new_fd (MgwFd fd)
-{
-    return g_io_channel_win32_new_fd (fd.value);
-}
-#endif // __WIN32__

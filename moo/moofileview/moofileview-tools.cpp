@@ -334,11 +334,7 @@ _moo_file_view_tools_load (MooFileView *fileview)
     {
         /* Translators: this is a context menu item label in the file selector, remove the part before and including | */
         GtkAction *action = tool_action_new (fileview, Q_("Open with|Default Application"), "*", NULL,
-#ifndef __WIN32__
                                              "xdg-open %f"
-#else
-                                             "cmd /c start %f"
-#endif
                                             );
         info->actions = g_slist_prepend (info->actions, action);
     }

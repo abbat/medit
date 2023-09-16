@@ -23,13 +23,7 @@
 #include "marshals.h"
 #include <gio/gio.h>
 #include <stdio.h>
-#ifndef __WIN32__
 #include <sys/wait.h>
-#else
-#include <windows.h>
-#include <io.h>
-#include <shellapi.h>
-#endif
 
 #if 0 && MOO_DEBUG
 #define DEBUG_MESSAGE g_message
@@ -83,7 +77,6 @@ static gboolean     move_file_unix          (MooFileSystem  *fs,
                                              const char     *new_path,
                                              GError        **error);
 
-#ifndef __WIN32__
 static MooFolder   *get_root_folder_unix    (MooFileSystem  *fs,
                                              MooFileFlags    wanted);
 static char        *normalize_path_unix     (MooFileSystem  *fs,
@@ -104,36 +97,6 @@ static char        *get_absolute_path_unix  (MooFileSystem  *fs,
                                              const char     *display_name,
                                              const char     *current_dir);
 
-#else /* __WIN32__ */
-
-static MooFolder   *get_root_folder_win32   (MooFileSystem  *fs,
-                                             MooFileFlags    wanted);
-#if 0
-static gboolean     move_file_win32         (MooFileSystem  *fs,
-                                             const char     *old_path,
-                                             const char     *new_path,
-                                             GError        **error);
-#endif
-static char        *normalize_path_win32    (MooFileSystem  *fs,
-                                             const char     *path,
-                                             gboolean        is_folder,
-                                             GError        **error);
-static char        *make_path_win32         (MooFileSystem  *fs,
-                                             const char     *base_path,
-                                             const char     *display_name,
-                                             GError        **error);
-static gboolean     parse_path_win32        (MooFileSystem  *fs,
-                                             const char     *path_utf8,
-                                             char          **dirname,
-                                             char          **display_dirname,
-                                             char          **display_basename,
-                                             GError        **error);
-static char        *get_absolute_path_win32 (MooFileSystem  *fs,
-                                             const char     *display_name,
-                                             const char     *current_dir);
-#endif /* __WIN32__ */
-
-
 /* MOO_TYPE_FILE_SYSTEM */
 G_DEFINE_TYPE (MooFileSystem, _moo_file_system, G_TYPE_OBJECT)
 
@@ -150,21 +113,12 @@ _moo_file_system_class_init (MooFileSystemClass *klass)
     klass->get_parent_folder = get_parent_folder;
     klass->delete_file = delete_file;
 
-#ifdef __WIN32__
-    klass->get_root_folder = get_root_folder_win32;
-    klass->move_file = move_file_unix;
-    klass->normalize_path = normalize_path_win32;
-    klass->make_path = make_path_win32;
-    klass->parse_path = parse_path_win32;
-    klass->get_absolute_path = get_absolute_path_win32;
-#else /* !__WIN32__ */
     klass->get_root_folder = get_root_folder_unix;
     klass->move_file = move_file_unix;
     klass->normalize_path = normalize_path_unix;
     klass->make_path = make_path_unix;
     klass->parse_path = parse_path_unix;
     klass->get_absolute_path = get_absolute_path_unix;
-#endif /* !__WIN32__ */
 }
 
 
@@ -462,11 +416,6 @@ get_folder (MooFileSystem  *fs,
 
     g_return_val_if_fail (path != NULL, NULL);
 
-#ifdef __WIN32__
-    if (!*path)
-        return get_root_folder_win32 (fs, wanted);
-#endif /* __WIN32__ */
-
     /* XXX check the caller */
     if (!_moo_path_is_absolute (path))
     {
@@ -557,11 +506,7 @@ create_folder (G_GNUC_UNUSED MooFileSystem *fs,
     }
 
     /* TODO mkdir must (?) adjust permissions according to umask */
-#ifndef __WIN32__
     if (mgw_mkdir (path, S_IRWXU | S_IRWXG | S_IRWXO, &err))
-#else
-    if (_moo_mkdir (path, &err))
-#endif
     {
         g_set_error (error, MOO_FILE_ERROR,
                      _moo_file_error_from_errno (err),

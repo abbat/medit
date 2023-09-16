@@ -50,12 +50,7 @@ EXTRA_DIST +=					\
 	plugins/usertools/genplatxml.py
 
 genplatxml_args =
-
-if MOO_OS_WIN32
-genplatxml_args += --enable=win32
-else !MOO_OS_WIN32
 genplatxml_args += --enable=unix
-endif !MOO_OS_WIN32
 
 built_plugins_sources += plugins/usertools/menu.xml plugins/usertools/context.xml
 plugins/usertools/%.xml: plugins/usertools/%-tmpl.xml plugins/usertools/genplatxml.py

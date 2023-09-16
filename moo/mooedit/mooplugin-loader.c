@@ -25,10 +25,6 @@
 #include <stdlib.h>
 #include <gmodule.h>
 
-#ifdef __WIN32__
-#include <windows.h>
-#endif
-
 #define GROUP_MODULE    "module"
 #define GROUP_PLUGIN    "plugin"
 #define KEY_LOADER      "type"

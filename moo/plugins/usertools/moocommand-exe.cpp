@@ -35,17 +35,8 @@
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#ifdef __WIN32__
-#include <io.h>
-#endif
-
-#ifndef __WIN32__
 #define RUN_CMD_FLAGS ((GSpawnFlags)0)
 #define SCRIPT_EXTENSION ".sh"
-#else
-#define RUN_CMD_FLAGS G_SPAWN_SEARCH_PATH
-#define SCRIPT_EXTENSION ".bat"
-#endif
 
 #define MOO_COMMAND_EXE_MAX_INPUT       (MOO_COMMAND_EXE_INPUT_DOC_COPY + 1)
 #define MOO_COMMAND_EXE_MAX_OUTPUT      (MOO_COMMAND_EXE_OUTPUT_NEW_DOC + 1)
@@ -65,9 +56,6 @@ typedef enum
 {
     MOO_COMMAND_EXE_OUTPUT_NONE,
     MOO_COMMAND_EXE_OUTPUT_NONE_ASYNC,
-#ifdef __WIN32__
-    MOO_COMMAND_EXE_OUTPUT_CONSOLE,
-#endif
     MOO_COMMAND_EXE_OUTPUT_PANE,
     MOO_COMMAND_EXE_OUTPUT_INSERT,
     MOO_COMMAND_EXE_OUTPUT_NEW_DOC
@@ -76,9 +64,6 @@ typedef enum
 static const char *output_strings[] = {
     "none",
     "async",
-#ifdef __WIN32__
-    "console",
-#endif
     "pane",
     "insert",
     "new-doc"
@@ -89,10 +74,6 @@ static const char *output_names[] = {
     N_("Output|None"),
     /* Translators: this is an action for output of a shell command, remove the part before and including | */
     N_("Output|None, asynchronous"),
-#ifdef __WIN32__
-    /* Translators: this is an action for output of a shell command, remove the part before and including | */
-    N_("Output|Console"),
-#endif
     /* Translators: this is an action for output of a shell command, remove the part before and including | */
     N_("Output|Output pane"),
     /* Translators: this is an action for output of a shell command, remove the part before and including | */
@@ -285,15 +266,11 @@ make_argv (const char  *cmd_line,
 {
     char **argv = NULL;
 
-#ifndef __WIN32__
     argv = g_new (char*, 4);
     argv[0] = g_strdup ("/bin/sh");
     argv[1] = g_strdup ("-c");
     argv[2] = g_strdup (cmd_line);
     argv[3] = NULL;
-#else
-    argv = _moo_win32_lame_parse_cmd_line (cmd_line, error);
-#endif
 
     return argv;
 }
@@ -730,11 +707,6 @@ moo_command_exe_run (MooCommand        *cmd_base,
         case MOO_COMMAND_EXE_OUTPUT_NONE_ASYNC:
             run_command_async (cmd, ctx, working_dir, envp);
             goto out;
-#ifdef __WIN32__
-        case MOO_COMMAND_EXE_OUTPUT_CONSOLE:
-            run_command_async (cmd, ctx, working_dir, envp);
-            goto out;
-#endif
         default:
             break;
     }
@@ -789,9 +761,6 @@ moo_command_exe_check_sensitive (MooCommand *cmd_base,
     {
         case MOO_COMMAND_EXE_OUTPUT_NONE:
         case MOO_COMMAND_EXE_OUTPUT_NONE_ASYNC:
-#ifdef __WIN32__
-        case MOO_COMMAND_EXE_OUTPUT_CONSOLE:
-#endif
         case MOO_COMMAND_EXE_OUTPUT_NEW_DOC:
         case MOO_COMMAND_EXE_OUTPUT_PANE:
             break;
@@ -894,10 +863,6 @@ parse_output (const char *string,
         *output = MOO_COMMAND_EXE_OUTPUT_NONE;
     else if (!strcmp (string, "async"))
         *output = MOO_COMMAND_EXE_OUTPUT_NONE_ASYNC;
-#ifdef __WIN32__
-    else if (!strcmp (string, "console"))
-        *output = MOO_COMMAND_EXE_OUTPUT_CONSOLE;
-#endif
     else if (!strcmp (string, "pane"))
         *output = MOO_COMMAND_EXE_OUTPUT_PANE;
     else if (!strcmp (string, "insert"))
@@ -1074,11 +1039,7 @@ unx_factory_create_widget (G_GNUC_UNUSED MooCommandFactory *factory)
     xml = exe_page_xml_new ();
 
     moo_text_view_set_font_from_string (xml->textview, "Monospace");
-#ifndef __WIN32__
     moo_text_view_set_lang_by_id (xml->textview, "sh");
-#else
-    moo_text_view_set_lang_by_id (xml->textview, "dosbatch");
-#endif
 
     init_combo (xml->input, input_names, G_N_ELEMENTS (input_names));
     init_combo (xml->output, output_names, G_N_ELEMENTS (output_names));

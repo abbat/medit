@@ -18,15 +18,10 @@
 #include "mooutils/mooutils-misc.h"
 #include <string.h>
 
-#ifndef __WIN32__
 #include <sys/wait.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include <signal.h>
-#else
-#include <windows.h>
-#endif
-
 
 typedef struct {
     MooCmd *cmd;
@@ -70,19 +65,6 @@ static gboolean moo_cmd_run_command     (MooCmd     *cmd,
                                          GSpawnChildSetupFunc child_setup,
                                          gpointer    user_data,
                                          GError    **error);
-
-#if 0 && defined(__WIN32__)
-static gboolean moo_win32_spawn_async_with_pipes (const gchar *working_directory,
-                                                  gchar **argv,
-                                                  gchar **envp,
-                                                  GSpawnFlags flags,
-                                                  GPid *child_pid,
-                                                  gint *standard_input,
-                                                  gint *standard_output,
-                                                  gint *standard_error,
-                                                  GError **error);
-#endif
-
 
 enum {
     ABORT,
@@ -445,7 +427,6 @@ stderr_watch_removed (MooCmd *cmd)
 }
 
 
-#ifndef __WIN32__
 static void
 real_child_setup (gpointer user_data)
 {
@@ -459,7 +440,6 @@ real_child_setup (gpointer user_data)
     if (data->child_setup)
         data->child_setup (data->user_data);
 }
-#endif
 
 
 char **
@@ -508,25 +488,15 @@ moo_cmd_run_command (MooCmd     *cmd,
     char **new_env;
     ChildWatchData *child_watch_data;
 
-#ifndef __WIN32__
     struct {
         GSpawnChildSetupFunc child_setup;
         gpointer user_data;
     } data;
-#endif
 
     g_return_val_if_fail (MOO_IS_CMD (cmd), FALSE);
     g_return_val_if_fail (argv && argv[0], FALSE);
     g_return_val_if_fail (!cmd->priv->running, FALSE);
 
-#ifdef __WIN32__
-    if (cmd_flags & MOO_CMD_OPEN_CONSOLE)
-    {
-        outp = NULL;
-        errp = NULL;
-    }
-    else
-#endif
     {
         flags |= MOO_SPAWN_WIN32_HIDDEN_CONSOLE;
 
@@ -543,28 +513,13 @@ moo_cmd_run_command (MooCmd     *cmd,
 
     new_env = _moo_env_add (envp);
 
-#ifndef __WIN32__
     data.child_setup = child_setup;
     data.user_data = user_data;
-#endif
 
-#if 0 && defined(__WIN32__)
-    if (!(cmd_flags & MOO_CMD_OPEN_CONSOLE))
-        result = moo_win32_spawn_async_with_pipes (working_dir,
-                                                   argv, new_env,
-                                                   flags | G_SPAWN_DO_NOT_REAP_CHILD,
-                                                   &cmd->priv->pid,
-                                                   NULL, outp, errp, error);
-    else
-#endif
     result = mgw_spawn_async_with_pipes (working_dir,
                                          argv, new_env,
                                          flags | G_SPAWN_DO_NOT_REAP_CHILD,
-#ifndef __WIN32__
                                          real_child_setup, &data,
-#else
-                                         NULL, NULL,
-#endif
                                          &cmd->priv->pid,
                                          NULL, outp, errp, error);
 
@@ -660,11 +615,7 @@ moo_cmd_cleanup (MooCmd *cmd)
 
     if (cmd->priv->pid)
     {
-#ifndef __WIN32__
         kill (-cmd->priv->pid, SIGHUP);
-#else
-        TerminateProcess (cmd->priv->pid, 1);
-#endif
     }
 
     cmd->priv->pid = 0;
@@ -688,11 +639,7 @@ moo_cmd_abort_real (MooCmd *cmd)
 
     /* TODO: on windows it gets exit status of 0 for some reason */
 
-#ifndef __WIN32__
     kill (-cmd->priv->pid, SIGHUP);
-#else
-    TerminateProcess (cmd->priv->pid, 1);
-#endif
 
     if (cmd->priv->stdout_watch)
     {

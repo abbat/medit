@@ -410,48 +410,6 @@ moo_window_class_init (MooWindowClass *klass)
 }
 
 
-#ifdef __WIN32__
-// Workaround for maximized vertically state bug: in that case the window size is
-// exactly the vertical size of the monitor (minus task bar), and when the window
-// is shown, it gets shown below the top edge, so the bottom piece of the window
-// is covered by the task bar. To work that around, we save and restore the window
-// position as well.
-// Note, this is only a partial workaround, consequent windows still will not be
-// positioned correctly.
-static void
-move_first_window (MooWindow *window)
-{
-    GList *l;
-    GList *toplevels;
-    gboolean first;
-    int x, y;
-
-    x = moo_prefs_get_int (setting (window, PREFS_X));
-    y = moo_prefs_get_int (setting (window, PREFS_Y));
-
-    if (x == DEFAULT_X || y == DEFAULT_Y)
-        return;
-
-    // Do this only for the first window
-    first = TRUE;
-    toplevels = gtk_window_list_toplevels ();
-    for (l = toplevels; l != NULL; l = l->next)
-    {
-        if (window != l->data && MOO_IS_WINDOW (l->data))
-        {
-            first = FALSE;
-            break;
-        }
-    }
-    g_list_free (toplevels);
-    toplevels = NULL;
-
-    if (first)
-        gtk_window_move (GTK_WINDOW (window), x, y);
-}
-#endif // __WIN32__
-
-
 static GObject *
 moo_window_constructor (GType                  type,
                         guint                  n_props,
@@ -513,10 +471,6 @@ moo_window_constructor (GType                  type,
         int height = moo_prefs_get_int (setting (window, PREFS_HEIGHT));
 
         gtk_window_set_default_size (GTK_WINDOW (window), width, height);
-
-#ifdef __WIN32__
-        move_first_window (window);
-#endif // __WIN32__
 
         if (moo_prefs_get_bool (setting (window, PREFS_MAXIMIZED)))
             gtk_window_maximize (GTK_WINDOW (window));
@@ -833,20 +787,6 @@ save_size (MooWindow *window)
             gtk_window_get_size (GTK_WINDOW (window), &width, &height);
             moo_prefs_set_int (setting (window, PREFS_WIDTH), width);
             moo_prefs_set_int (setting (window, PREFS_HEIGHT), height);
-
-#ifdef __WIN32__
-            // see move_first_window()
-            {
-                int x, y;
-                gtk_window_get_position (GTK_WINDOW (window), &x, &y);
-                // It refuses to restore a window snapped to the left,
-                // move it one pixel to the right.
-                if (x == 0 && y == 0)
-                    x = 1;
-                moo_prefs_set_int (setting (window, PREFS_X), x);
-                moo_prefs_set_int (setting (window, PREFS_Y), y);
-            }
-#endif // __WIN32__
         }
     }
 

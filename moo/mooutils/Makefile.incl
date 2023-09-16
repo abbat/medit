@@ -162,10 +162,6 @@ mooutils/mooutils-enums.c.stamp: $(moo_utils_enum_headers) Makefile mooutils/moo
 	$(AM_V_at)echo stamp > mooutils/mooutils-enums.c.stamp
 endif
 
-mooutils_win32_sources =		\
-	mooutils/mooutils-win32.cpp	\
-	mooutils/mooappinput-win32.cpp
-
 mooutils_unix_sources =			\
 	mooutils/mooappinput-unix.c
 
@@ -175,16 +171,10 @@ mooutils_unittest_sources =		\
 	mooutils/moo-test-macros.h
 
 EXTRA_DIST += 				\
-	$(mooutils_win32_sources)	\
 	$(mooutils_unix_sources)	\
 	$(mooutils_unittest_sources)
 
-if MOO_OS_WIN32
-moo_sources += $(mooutils_win32_sources)
-else
 moo_sources += $(mooutils_unix_sources)
-endif
-
 moo_sources += $(mooutils_unittest_sources)
 
 EXTRA_DIST +=					\

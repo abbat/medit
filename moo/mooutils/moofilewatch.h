@@ -13,8 +13,7 @@
  *   License along with medit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* Files and directory monitor. Uses stat().
-   On win32 does FindFirstChangeNotification and ReadDirectoryChangesW. */
+/* Files and directory monitor. Uses stat(). */
 
 #ifndef MOO_FILE_WATCH_H
 #define MOO_FILE_WATCH_H

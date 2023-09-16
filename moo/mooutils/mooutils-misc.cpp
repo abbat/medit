@@ -47,12 +47,6 @@
 #include <gdk/gdkquartz.h>
 #endif
 
-#ifdef __WIN32__
-#include <windows.h>
-#include <shellapi.h>
-#include <shlobj.h>
-#endif
-
 MOO_DEFINE_OBJECT_ARRAY_FULL (MooObjectArray, moo_object_array, GObject)
 MOO_DEFINE_QUARK (moo-error, moo_error_quark)
 
@@ -82,17 +76,6 @@ moo_is_main_thread ()
     return main_thread == g_thread_self ();
 }
 
-#ifdef __WIN32__
-
-static gboolean
-open_uri (const char *uri,
-          G_GNUC_UNUSED gboolean email)
-{
-    return _moo_win32_open_uri (uri);
-}
-
-#else /* ! __WIN32__ */
-
 static gboolean
 open_uri (const char *uri,
           G_GNUC_UNUSED gboolean email)
@@ -108,9 +91,6 @@ open_uri (const char *uri,
 
     return TRUE;
 }
-
-#endif /* ! __WIN32__ */
-
 
 gboolean
 moo_open_email (const char *address,
@@ -399,95 +379,7 @@ _moo_window_is_hidden (GtkWindow  *window)
 }
 #endif
 
-
-#elif defined(__WIN32__)
-
-#include <windows.h>
-#include <gdk/gdkwin32.h>
-
-
-#define get_handle(w) \
-    ((HWND) gdk_win32_drawable_get_handle (GTK_WIDGET(w)->window))
-
-static gboolean
-_moo_window_is_hidden (GtkWindow  *window)
-{
-    HWND h;
-    WINDOWPLACEMENT info;
-
-    g_return_val_if_fail (GTK_IS_WINDOW (window), FALSE);
-
-    h = get_handle (window);
-    g_return_val_if_fail (h != NULL, FALSE);
-
-    memset (&info, 0, sizeof (info));
-    info.length = sizeof (WINDOWPLACEMENT);
-
-    if (!GetWindowPlacement (h, &info))
-    {
-        DWORD err = GetLastError ();
-        char *msg = g_win32_error_message (err);
-        g_return_val_if_fail (msg != NULL, FALSE);
-        g_warning ("%s", msg);
-        g_free (msg);
-        return FALSE;
-    }
-
-    return info.showCmd == SW_MINIMIZE ||
-            info.showCmd == SW_HIDE ||
-            info.showCmd == SW_SHOWMINIMIZED;
-}
-
-
-GtkWindow *
-_moo_get_top_window (GSList *windows)
-{
-    GSList *l;
-    HWND top = NULL;
-    HWND current = NULL;
-
-    g_return_val_if_fail (windows != NULL, NULL);
-
-    if (!windows->next)
-        return reinterpret_cast<GtkWindow*> (windows->data);
-
-    for (l = windows; l != NULL; l = l->next)
-    {
-        g_return_val_if_fail (GTK_IS_WINDOW (l->data), NULL);
-
-        if (!_moo_window_is_hidden (GTK_WINDOW (l->data)))
-            break;
-    }
-
-    if (!l)
-        return GTK_WINDOW (windows->data);
-
-    top = get_handle (windows->data);
-    current = top;
-
-    while (TRUE)
-    {
-        current = GetNextWindow (current, GW_HWNDPREV);
-        if (!current)
-            break;
-
-        for (l = windows; l != NULL; l = l->next)
-            if (current == get_handle (l->data))
-                break;
-
-        if (l != NULL)
-            top = get_handle (l->data);
-    }
-
-    for (l = windows; l != NULL; l = l->next)
-        if (top == get_handle (l->data))
-            break;
-
-    g_return_val_if_fail (l != NULL, GTK_WINDOW (windows->data));
-    return GTK_WINDOW (l->data);
-}
-
-#else /* neither X nor WIN32 */
+#else /* neither X */
 
 /* XXX implement me */
 
@@ -761,27 +653,6 @@ moo_reset_log_func (void)
  * Display log messages in a window
  */
 
-#ifdef __WIN32__
-static void
-win32_filter_fatal_errors (const gchar    *log_domain,
-                           GLogLevelFlags  flags,
-                           const gchar    *message)
-{
-    if (flags & (G_LOG_LEVEL_ERROR | G_LOG_FLAG_FATAL | G_LOG_FLAG_RECURSION))
-    {
-        _moo_win32_show_fatal_error (log_domain, message);
-        return;
-    }
-}
-#else /* __WIN32__ */
-static void
-win32_filter_fatal_errors (G_GNUC_UNUSED const gchar    *log_domain,
-                           G_GNUC_UNUSED GLogLevelFlags  flags,
-                           G_GNUC_UNUSED const gchar    *message)
-{
-}
-#endif /* __WIN32__ */
-
 static char *
 format_log_message (const char *log_domain,
                     const char *message)
@@ -808,8 +679,6 @@ log_func_window (const gchar    *log_domain,
                  G_GNUC_UNUSED gpointer dummy)
 {
     char *text;
-
-    win32_filter_fatal_errors (log_domain, flags, message);
 
     if (!moo_is_main_thread ())
     {
@@ -957,7 +826,7 @@ print_func_file (const char *string)
 
 static void
 log_func_file (const char       *log_domain,
-               GLogLevelFlags    flags,
+               G_GNUC_UNUSED GLogLevelFlags flags,
                const char       *message,
                G_GNUC_UNUSED gpointer dummy)
 {
@@ -969,8 +838,6 @@ log_func_file (const char       *log_domain,
         string = g_strdup_printf ("%s\n", message);
 
     print_func_file (string);
-
-    win32_filter_fatal_errors (log_domain, flags, message);
 
     g_free (string);
 }
@@ -992,12 +859,11 @@ moo_set_log_func_file (const char *log_file)
  */
 
 static void
-log_func_silent (const gchar    *log_domain,
-                 GLogLevelFlags  flags,
-                 const gchar    *message,
+log_func_silent (G_GNUC_UNUSED const gchar    *log_domain,
+                 G_GNUC_UNUSED GLogLevelFlags  flags,
+                 G_GNUC_UNUSED const gchar    *message,
                  G_GNUC_UNUSED gpointer data_unused)
 {
-    win32_filter_fatal_errors (log_domain, flags, message);
 }
 
 static void
@@ -1159,11 +1025,7 @@ _moo_get_pid_string (void)
 
     MOO_DO_ONCE_BEGIN
 
-#ifdef __WIN32__
-    moo_pid_string = g_strdup_printf ("%ld", GetCurrentProcessId ());
-#else
     moo_pid_string = g_strdup_printf ("%ld", (long) getpid ());
-#endif
 
     MOO_DO_ONCE_END
 
@@ -1204,48 +1066,6 @@ moo_set_user_cache_dir (const char *path)
     moo_user_cache_dir = g_strdup (path);
 }
 
-#ifdef __WIN32__
-// get_special_folder() from glib
-static gchar *
-get_special_folder (int csidl)
-{
-    wchar_t path[MAX_PATH+1];
-    HRESULT hr;
-    LPITEMIDLIST pidl = NULL;
-    BOOL b;
-    gchar *retval = NULL;
-
-    hr = SHGetSpecialFolderLocation (NULL, csidl, &pidl);
-    if (hr == S_OK)
-    {
-        b = SHGetPathFromIDListW (pidl, path);
-        if (b)
-            retval = g_utf16_to_utf8 ((const gunichar2*) path, -1, NULL, NULL, NULL);
-        CoTaskMemFree (pidl);
-    }
-
-    return retval;
-}
-
-// This is what g_get_user_config_dir() used to return in glib-2.26 and older.
-// Workaround for the change done in https://bugzilla.gnome.org/show_bug.cgi?id=620710
-static char *
-get_user_config_dir (void)
-{
-    char *retval = NULL;
-
-    retval = get_special_folder (CSIDL_APPDATA);
-
-    if (!retval)
-    {
-        g_critical ("oops");
-        retval = g_strdup (g_get_user_config_dir ());
-    }
-
-    return retval;
-}
-#endif // __WIN32__
-
 /**
  * moo_get_user_data_dir: (moo.private 1)
  *
@@ -1261,11 +1081,7 @@ moo_get_user_data_dir (void)
         char *freeme = NULL;
         const char *basedir = NULL;
 
-#ifdef __WIN32__
-        basedir = freeme = get_user_config_dir ();
-#else
         basedir = g_get_user_data_dir ();
-#endif
 
         moo_user_data_dir = g_build_filename (basedir,
                                               MOO_PACKAGE_NAME,
@@ -1369,14 +1185,7 @@ add_dir_list_from_env (GPtrArray  *list,
 {
     char **dirs, **p;
 
-#ifdef __WIN32__
-    dirs = g_strsplit (var, ";", 0);
-    p = moo_filenames_from_locale (dirs);
-    g_strfreev (dirs);
-    dirs = p;
-#else
     dirs = g_strsplit (var, ":", 0);
-#endif
 
     for (p = dirs; p && *p; ++p)
         g_ptr_array_add (list, *p);
@@ -1412,9 +1221,6 @@ enumerate_data_dirs (MooDataDirType  type,
     }
     else
     {
-#ifdef __WIN32__
-        _moo_win32_add_data_dirs (dirs, type == MOO_DATA_SHARE ? "share" : "lib");
-#else
         if (type == MOO_DATA_SHARE)
         {
             const char* const *p;
@@ -1428,7 +1234,6 @@ enumerate_data_dirs (MooDataDirType  type,
         {
             g_ptr_array_add (dirs, g_strdup (MOO_LIB_DIR));
         }
-#endif
     }
 }
 
@@ -1543,12 +1348,8 @@ moo_get_lib_dirs (void)
 const char *
 moo_get_locale_dir (void)
 {
-#ifdef __WIN32__
-    return _moo_win32_get_locale_dir ();
-#else
     const char *dir = g_getenv ("MOO_LOCALE_DIR");
     return dir && dir[0] ? dir : MOO_LOCALE_DIR;
-#endif
 }
 
 
@@ -2070,24 +1871,14 @@ _moo_strv_reverse (char **str_array)
 }
 
 
-#if defined(__WIN32__) && !defined(MOO_DEBUG)
-static guint saved_win32_error_mode;
-#endif
-
 void
 moo_disable_win32_error_message (void)
 {
-#if defined(__WIN32__) && !defined(MOO_DEBUG)
-    saved_win32_error_mode = SetErrorMode (SEM_NOOPENFILEERRORBOX | SEM_FAILCRITICALERRORS);
-#endif
 }
 
 void
 moo_enable_win32_error_message (void)
 {
-#if defined(__WIN32__) && !defined(MOO_DEBUG)
-    SetErrorMode (saved_win32_error_mode);
-#endif
 }
 
 

@@ -32,12 +32,8 @@ moo_file_icon_for_file (MooFileIcon *icon,
 
     g_return_if_fail (icon != NULL);
 
-#ifndef __WIN32__
     if (path)
         mime_type = moo_get_mime_type_for_file (path, NULL);
-#else
-    MOO_IMPLEMENT_ME
-#endif
 
     if (!mime_type || !mime_type[0])
         mime_type = MOO_MIME_TYPE_UNKNOWN;

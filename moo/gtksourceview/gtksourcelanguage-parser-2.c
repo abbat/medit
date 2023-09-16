@@ -38,9 +38,6 @@
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#ifdef G_OS_WIN32
-#include <io.h>
-#endif
 #include <libxml/xmlreader.h>
 #include <mooglib/moo-glib.h>
 #include "gtksourceview-i18n.h"

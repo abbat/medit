@@ -215,7 +215,6 @@ TEST_EXPECT_WARNING_ (int         howmany,
 G_GNUC_UNUSED static void
 TEST_CHECK_WARNING (void)
 {
-#ifndef __WIN32__
     TEST_G_ASSERT (test_warnings_info != NULL);
 
     moo_test_assert_msg (test_warnings_info->count == 0,
@@ -237,7 +236,6 @@ TEST_CHECK_WARNING (void)
                        g_log_default_handler, test_warnings_info);
     g_log_set_handler (G_LOG_DOMAIN, (GLogLevelFlags) (G_LOG_LEVEL_WARNING | G_LOG_FLAG_FATAL | G_LOG_FLAG_RECURSION),
                        g_log_default_handler, test_warnings_info);
-#endif // __WIN32__
 }
 
 /*
@@ -332,13 +330,9 @@ G_STMT_START {                                                      \
 #define TEST_STR_NEQ(s1,s2)  (!TEST_STR_EQ ((s1), (s2)))
 #define TEST_STRV_NEQ(s1,s2) (!TEST_STRV_EQ ((s1), (s2)))
 
-#ifndef __WIN32__
 #define TEST_EXPECT_WARNING(howmany,fmt,...)            \
     TEST_EXPECT_WARNING_ (howmany, __LINE__, __FILE__,  \
                           fmt, __VA_ARGS__)
-#else // !__WIN32__
-#define TEST_EXPECT_WARNING(howmany,fmt,...)
-#endif // __WIN32__
 
 G_END_DECLS
 

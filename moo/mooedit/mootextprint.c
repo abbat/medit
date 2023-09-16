@@ -29,11 +29,6 @@
 #include <sys/types.h>
 #include <string.h>
 
-#ifdef __WIN32__
-#include <windows.h>
-#include <cairo-win32.h>
-#endif
-
 MOO_DEBUG_INIT (printing, FALSE)
 
 #define SEPARATOR_POINTS 1.
@@ -1411,38 +1406,6 @@ moo_print_operation_draw_page (GtkPrintOperation *operation,
     {
         gtk_text_buffer_get_end_iter (op->priv->buffer, &end);
     }
-
-#if 0 && defined(__WIN32__)
-    if (page == 0)
-    {
-        HDC dc = cairo_win32_surface_get_dc (cairo_get_target (cr));
-
-        if (dc)
-        {
-            int dpi_x = GetDeviceCaps (dc, LOGPIXELSX);
-            int dpi_y = GetDeviceCaps (dc, LOGPIXELSY);
-            g_print ("dpi: %d, %d\n", dpi_x, dpi_y);
-        }
-    }
-#endif
-
-#if 0 && defined(MOO_DEBUG) && !defined(__WIN32__)
-    cairo_save (cr);
-    cairo_set_line_width (cr, 1.);
-    cairo_set_source_rgb (cr, 1., 0., 0.);
-    cairo_rectangle (cr,
-                     op->priv->page.x,
-                     op->priv->page.y,
-                     op->priv->page.width,
-                     op->priv->page.height);
-    cairo_stroke (cr);
-    cairo_set_source_rgb (cr, 0., 1., 0.);
-    cairo_rectangle (cr, 0, 0,
-                     gtk_print_context_get_width (context),
-                     gtk_print_context_get_height (context));
-    cairo_stroke (cr);
-    cairo_restore (cr);
-#endif
 
     timer = g_timer_new ();
 

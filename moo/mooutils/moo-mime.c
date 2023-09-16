@@ -139,9 +139,7 @@ _moo_get_mime_data_dirs (void)
 
         sys_dirs = g_get_system_data_dirs ();
 
-#ifndef __WIN32__
         dirs = g_slist_prepend (NULL, _moo_normalize_file_path (g_get_user_data_dir ()));
-#endif
 
         for (i = 0; sys_dirs[i] && sys_dirs[i][0]; ++i)
         {

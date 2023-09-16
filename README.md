@@ -35,6 +35,10 @@ Second life for `medit` (also known as `mooedit`) text editor in modern linux di
 I'm not sure we need it:
 
 * keep compatibility with gtk-2
-* keep compatibility with windows
-* fix python bindings
 * migrate to mordern build system instead autotools (CMake?)
+* migrate from glade to native code (remove python preprocessor from xml to c)
+
+### remove
+
+* keep compatibility with windows / darwin - I can not test & support it
+* python bindings - EOL & removed with python2

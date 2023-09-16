@@ -3,9 +3,7 @@
 #include <glib.h>
 #include <glib/gstdio.h>
 #include <config.h>
-#ifndef __WIN32__
 #include <errno.h>
-#endif
 
 G_BEGIN_DECLS
 
@@ -19,32 +17,7 @@ typedef struct MGW_FILE MGW_FILE;
 typedef struct MgwFd MgwFd;
 typedef struct mgw_access_mode_t mgw_access_mode_t;
 
-#ifndef __WIN32__
 #define MGW_ERROR_IF_NOT_SHARED_LIBC
-#else
-#define MGW_ERROR_IF_NOT_SHARED_LIBC \
-    #error "C libraries may not be shared between medit and glib"
-#endif
-
-#ifdef __WIN32__
-
-enum mgw_errno_value_t
-{
-    MGW_ENOERROR = 0,
-    MGW_EACCES,
-    MGW_EPERM,
-    MGW_EEXIST,
-    MGW_ELOOP,
-    MGW_ENAMETOOLONG,
-    MGW_ENOENT,
-    MGW_ENOTDIR,
-    MGW_EROFS,
-    MGW_EXDEV,
-};
-
-typedef enum mgw_errno_value_t mgw_errno_value_t;
-
-#else
 
 typedef int mgw_errno_value_t;
 
@@ -59,8 +32,6 @@ typedef int mgw_errno_value_t;
 #define MGW_EROFS EROFS
 #define MGW_EXDEV EXDEV
 
-#endif
-
 struct mgw_errno_t
 {
     mgw_errno_value_t value;
@@ -71,15 +42,7 @@ struct MgwFd
     int value;
 };
 
-#if defined(__WIN32__) && !MOO_BUILTIN_MOO_GLIB
-#  ifdef MOO_GLIB_LIBRARY
-#    define MOO_GLIB_VAR __declspec(dllexport)
-#  else
-#    define MOO_GLIB_VAR extern __declspec(dllimport)
-#  endif
-#else
-#  define MOO_GLIB_VAR extern
-#endif
+#define MOO_GLIB_VAR extern
 
 MOO_GLIB_VAR const mgw_errno_t MGW_E_NOERROR;
 MOO_GLIB_VAR const mgw_errno_t MGW_E_EXIST;
@@ -123,10 +86,6 @@ mgw_spawn_async_with_pipes (const gchar *working_directory,
                             MgwFd *standard_error,
                             GError **error);
 GIOChannel *mgw_io_channel_unix_new (MgwFd fd);
-
-#ifdef __WIN32__
-GIOChannel *mgw_io_channel_win32_new_fd (MgwFd fd);
-#endif
 
 enum mgw_access_mode_value_t
 {

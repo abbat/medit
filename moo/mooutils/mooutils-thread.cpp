@@ -256,11 +256,7 @@ init_queue (void)
         queue.pipe_in = fds[1];
         queue.pipe_out = fds[0];
 
-#ifdef __WIN32__
-        queue.io = mgw_io_channel_win32_new_fd (queue.pipe_out);
-#else
         queue.io = mgw_io_channel_unix_new (queue.pipe_out);
-#endif
 
         if (!queue.io)
         {

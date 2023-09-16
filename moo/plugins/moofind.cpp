@@ -38,9 +38,7 @@
 #endif
 #include <gtk/gtk.h>
 #include <string.h>
-#ifndef __WIN32__
 #include <sys/wait.h>
-#endif
 #include <signal.h>
 
 #define FIND_PLUGIN_ID "Find"
@@ -257,7 +255,6 @@ find_plugin_init (FindPlugin *plugin)
                                  "closure-callback", find_in_files_cb,
                                  nullptr);
 
-#ifndef __WIN32__
     moo_window_class_new_action (klass, "FindFile", NULL,
                                  "display-name", _("Find File"),
                                  "label", _("Find File"),
@@ -265,7 +262,6 @@ find_plugin_init (FindPlugin *plugin)
                                  "stock-id", MOO_STOCK_FIND_FILE,
                                  "closure-callback", find_file_cb,
                                  nullptr);
-#endif
 
     if (xml)
     {
@@ -273,11 +269,9 @@ find_plugin_init (FindPlugin *plugin)
         moo_ui_xml_add_item (xml, plugin->ui_merge_id,
                              "Editor/Menubar/Search",
                              "FindInFiles", "FindInFiles", -1);
-#ifndef __WIN32__
         moo_ui_xml_add_item (xml, plugin->ui_merge_id,
                              "Editor/Menubar/Search",
                              "FindFile", "FindFile", -1);
-#endif
     }
 
     g_type_class_unref (klass);
@@ -293,9 +287,7 @@ find_plugin_deinit (FindPlugin *plugin)
     MooUiXml *xml = moo_editor_get_ui_xml (editor);
 
     moo_window_class_remove_action (klass, "FindInFiles");
-#ifndef __WIN32__
     moo_window_class_remove_action (klass, "FindFile");
-#endif
 
     if (plugin->ui_merge_id)
         moo_ui_xml_remove_ui (xml, plugin->ui_merge_id);
@@ -713,15 +705,6 @@ process_grep_line (MooLineView *view,
     if (!(colon = strchr (p, ':')))
         goto parse_error;
 
-#ifdef __WIN32__
-    /* Absolute filename 'C:\foobar\blah.txt:100:lalala' */
-    if (g_ascii_isalpha(p[0]) && p[1] == ':')
-    {
-        if (!(colon = strchr (colon + 1, ':')))
-            goto parse_error;
-    }
-#endif
-
     if (!colon[1])
         goto parse_error;
 
@@ -1050,7 +1033,6 @@ command_exit (MooLineView *view,
 
     finish_group(stuff);
 
-#ifndef __WIN32__
     if (WIFEXITED (status))
     {
         char *msg = NULL;
@@ -1078,30 +1060,6 @@ command_exit (MooLineView *view,
         g_free (msg);
         return TRUE;
     }
-#else
-    if (status == 0 || status == 1)
-    {
-        char *msg = NULL;
-
-        if (cmd == CMD_GREP)
-            msg = g_strdup_printf (dngettext (GETTEXT_PACKAGE,
-                                              "*** %u match found ***",
-                                              "*** %u matches found ***",
-                                              stuff->match_count),
-                                   stuff->match_count);
-        else
-            msg = g_strdup_printf (dngettext (GETTEXT_PACKAGE,
-                                              "*** %u file found ***",
-                                              "*** %u files found ***",
-                                              stuff->match_count),
-                                   stuff->match_count);
-
-        moo_line_view_write_line (view, msg, -1,
-                                  stuff->message_tag);
-        g_free (msg);
-        return TRUE;
-    }
-#endif
 
     return FALSE;
 }

@@ -24,11 +24,9 @@
 #include "mooutils/mooutils-misc.h"
 #include "plugins/usertools/moocommand.h"
 
-#ifndef __WIN32__
 #include <sys/wait.h>
 #include <unistd.h>
 #include <signal.h>
-#endif /* !__WIN32__ */
 
 
 struct _MooCmdViewPrivate {
@@ -416,22 +414,11 @@ moo_cmd_view_run_command_full (MooCmdView  *view,
                               view->priv->message_tag);
     g_free (display_cmd_line);
 
-#ifdef __WIN32__
-    if (!(argv = _moo_win32_lame_parse_cmd_line (cmd, &error)))
-    {
-        moo_line_view_write_line (MOO_LINE_VIEW (view),
-                                  moo_error_message (error),
-                                  -1, view->priv->error_tag);
-        g_error_free (error);
-        goto out;
-    }
-#else
     argv = g_new (char*, 4);
     argv[0] = g_strdup ("/bin/sh");
     argv[1] = g_strdup ("-c");
     argv[2] = g_strdup (cmd);
     argv[3] = NULL;
-#endif
 
     view->priv->cmd = _moo_cmd_new (working_dir, argv, envp,
                                     (GSpawnFlags) (G_SPAWN_SEARCH_PATH | G_SPAWN_DO_NOT_REAP_CHILD),
@@ -473,7 +460,6 @@ moo_cmd_view_running (MooCmdView *view)
 }
 
 
-#ifndef __WIN32__
 static char *
 get_signal_message (int sig)
 {
@@ -540,32 +526,6 @@ moo_cmd_view_cmd_exit (MooCmdView *view,
 
     return FALSE;
 }
-#else /* __WIN32__ */
-static gboolean
-moo_cmd_view_cmd_exit (MooCmdView *view,
-                       int         status)
-{
-    if (view->priv->filter && moo_output_filter_cmd_exit (view->priv->filter, status))
-        return TRUE;
-
-    if (!status)
-    {
-        moo_line_view_write_line (MOO_LINE_VIEW (view),
-                                  "*** Done ***", -1,
-                                  view->priv->message_tag);
-    }
-    else
-    {
-        char *msg = g_strdup_printf ("*** Exited with status %d ***", status);
-        moo_line_view_write_line (MOO_LINE_VIEW (view),
-                                  msg, -1,
-                                  view->priv->error_tag);
-        g_free (msg);
-    }
-
-    return FALSE;
-}
-#endif /* __WIN32__ */
 
 
 static gboolean

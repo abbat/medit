@@ -671,7 +671,6 @@ get_icons_a_bit (MooFolderImpl *impl)
 
         impl->files_copy = g_slist_remove_link (impl->files_copy, changed);
 
-#ifndef __WIN32__
         if (file->info & MOO_FILE_INFO_EXISTS &&
             !(file->flags & MOO_FILE_HAS_MIME_TYPE))
         {
@@ -684,7 +683,6 @@ get_icons_a_bit (MooFolderImpl *impl)
             folder_emit_files (impl, FILES_CHANGED, changed);
             g_free (path);
         }
-#endif
 
         _moo_file_free_statbuf (file);
         _moo_file_unref (file);
@@ -932,7 +930,6 @@ file_created (MooFolderImpl *impl,
     file->icon = _moo_file_get_icon_type (file, impl->path);
     _moo_file_stat (file, impl->path);
 
-#ifndef __WIN32__
     if (file->info & MOO_FILE_INFO_EXISTS &&
         !(file->flags & MOO_FILE_HAS_MIME_TYPE))
     {
@@ -944,7 +941,6 @@ file_created (MooFolderImpl *impl,
         file->icon = _moo_file_get_icon_type (file, impl->path);
         g_free (path);
     }
-#endif
 
     _moo_file_free_statbuf (file);
 
@@ -1058,11 +1054,6 @@ moo_file_get_mtime_string (MooFile *file)
 
     if (!MOO_FILE_EXISTS (file))
         return NULL;
-
-#ifdef __WIN32__
-    if (MOO_FILE_IS_DIR (file))
-        return NULL;
-#endif
 
     g_return_val_if_fail (file->statbuf != NULL, NULL);
 

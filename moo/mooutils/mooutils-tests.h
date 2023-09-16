@@ -27,10 +27,6 @@ void    moo_test_moo_file_writer    (void);
 void    moo_test_mooutils_misc      (void);
 void    moo_test_i18n               (MooTestOptions opts);
 
-#ifdef __WIN32__
-void    moo_test_mooutils_win32     (void);
-#endif
-
 G_END_DECLS
 
 #endif /* MOO_UTILS_TESTS_H */

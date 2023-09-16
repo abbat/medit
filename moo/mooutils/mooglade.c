@@ -2804,11 +2804,8 @@ get_type_by_name (const char *name)
         add_type ("GtkWidgetHelpType", gtk_widget_help_type_get_type);
         add_type ("GtkWindow", gtk_window_get_type);
         add_type ("GtkWindowGroup", gtk_window_group_get_type);
-
-#ifndef __WIN32__
         add_type ("GtkPlug", gtk_plug_get_type);
         add_type ("GtkSocket", gtk_socket_get_type);
-#endif
 
 #undef add_type
     }

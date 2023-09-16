@@ -49,13 +49,8 @@
 #include <gtk/gtk.h>
 
 
-#ifndef __WIN32__
 #define TYPEAHEAD_CASE_SENSITIVE_DEFAULT    FALSE
 #define COMPLETION_CASE_SENSITIVE_DEFAULT   TRUE
-#else /* __WIN32__ */
-#define TYPEAHEAD_CASE_SENSITIVE_DEFAULT    FALSE
-#define COMPLETION_CASE_SENSITIVE_DEFAULT   FALSE
-#endif /* __WIN32__ */
 
 #define SORT_FLAG_SET(flag) ((fileview->priv->sort_flags & (flag)) != 0)
 
@@ -2454,12 +2449,6 @@ moo_file_view_get_home_dir (MooFileView *fileview)
     {
         const char *dir = NULL;
 
-#ifdef __WIN32__
-        dir = g_get_user_special_dir (G_USER_DIRECTORY_DOCUMENTS);
-        if (!dir)
-            dir = g_get_user_special_dir (G_USER_DIRECTORY_DESKTOP);
-#endif
-
         if (!dir)
             dir = g_get_home_dir ();
 
@@ -4658,10 +4647,6 @@ looks_like_path (const char *text)
 {
     if (strchr (text, '/'))
         return TRUE;
-#ifdef __WIN32__
-    else if (strchr (text, '\\'))
-        return TRUE;
-#endif
     else
         return FALSE;
 }
@@ -5672,8 +5657,6 @@ sync_dest_targets (MooFileView *fileview)
 /* Dropping stuff
  */
 
-#ifndef __WIN32__
-
 static void
 run_command_on_files (MooFileView *fileview,
                       GList       *filenames,
@@ -5763,70 +5746,6 @@ link_files (MooFileView *fileview,
     run_command_on_files (fileview, filenames, destdir,
                           args, G_N_ELEMENTS (args));
 }
-
-#endif /* __WIN32__ */
-
-
-#ifdef __WIN32__
-
-static void
-copy_or_move_files (MooFileView *fileview,
-                    GList       *filenames,
-                    const char  *destdir,
-                    gboolean     copy)
-{
-    gboolean single_file;
-
-    g_return_if_fail (filenames != NULL);
-
-    single_file = filenames->next == NULL;
-
-    if (copy)
-        _moo_copy_files_ui (filenames, destdir, GTK_WIDGET (fileview));
-    else
-        _moo_move_files_ui (filenames, destdir, GTK_WIDGET (fileview));
-
-    /* XXX strcmp */
-    if (single_file &&
-        fileview->priv->current_dir &&
-        strcmp (destdir, _moo_folder_get_path (fileview->priv->current_dir)) == 0)
-    {
-        char *basename = g_path_get_basename (filenames->data);
-
-        if (basename)
-            _moo_file_view_select_name (fileview, basename);
-
-        g_free (basename);
-    }
-}
-
-static void
-copy_files (MooFileView *fileview,
-            GList       *filenames,
-            const char  *destdir)
-{
-    copy_or_move_files (fileview, filenames, destdir, TRUE);
-}
-
-
-static void
-move_files (MooFileView *fileview,
-            GList       *filenames,
-            const char  *destdir)
-{
-    copy_or_move_files (fileview, filenames, destdir, FALSE);
-}
-
-static void
-link_files (G_GNUC_UNUSED MooFileView *fileview,
-            G_GNUC_UNUSED GList       *filenames,
-            G_GNUC_UNUSED const char  *destdir)
-{
-    g_return_if_reached ();
-}
-
-#endif /* __WIN32__ */
-
 
 static void
 free_string_list (GList *list)

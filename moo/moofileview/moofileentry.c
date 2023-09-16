@@ -30,14 +30,8 @@
 
 #define MOD_MASK() (gtk_accelerator_get_default_mod_mask ())
 
-#define COMPLETION_POPUP_LEN 15
-
-#ifndef __WIN32__
-#define CASE_SENSITIVE_DEFAULT   TRUE
-#else /* __WIN32__ */
-#define CASE_SENSITIVE_DEFAULT   FALSE
-#endif /* __WIN32__ */
-
+#define COMPLETION_POPUP_LEN   15
+#define CASE_SENSITIVE_DEFAULT TRUE
 
 struct _MooFileEntryCompletionPrivate {
     MooFileSystem *fs;

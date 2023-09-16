@@ -205,48 +205,10 @@ gboolean     moo_is_main_thread             (void);
 
 G_END_DECLS
 
-
-#ifdef G_OS_WIN32
-#include <gtk/gtk.h>
-#include <string.h>
-
-G_BEGIN_DECLS
-
-
-char        *moo_win32_get_app_dir          (void);
-char        *moo_win32_get_dll_dir          (const char     *dll);
-
-void        _moo_win32_add_data_dirs        (GPtrArray      *list,
-                                             const char     *prefix);
-
-const char *_moo_win32_get_locale_dir       (void);
-
-gboolean    _moo_win32_open_uri             (const char     *uri);
-void        _moo_win32_show_fatal_error     (const char     *domain,
-                                             const char     *logmsg);
-
-char      **_moo_win32_lame_parse_cmd_line  (const char     *cmd_line,
-                                             GError        **error);
-
-int         _moo_win32_message_box          (GtkWidget      *parent,
-                                             guint           type,
-                                             const char     *title,
-                                             const char     *format,
-                                             ...) G_GNUC_PRINTF (4, 5);
-
-
-G_END_DECLS
-
-#endif /* G_OS_WIN32 */
-
 static inline gboolean
 moo_os_win32 (void)
 {
-#ifdef __WIN32__
-    return TRUE;
-#else
     return FALSE;
-#endif
 }
 
 #endif /* MOO_UTILS_MISC_H */

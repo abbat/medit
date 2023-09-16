@@ -816,7 +816,6 @@ get_options_from_contents (MooCommandFactory *factory,
     g_free (opt_string);
 }
 
-#ifndef __WIN32__
 static void
 get_options_from_file (MooCommandFactory *factory,
                        MooCommandData    *cmd_data,
@@ -849,7 +848,6 @@ get_options_from_file (MooCommandFactory *factory,
 
     mgw_fclose (file);
 }
-#endif /* !__WIN32__ */
 
 MooCommandData *
 _moo_command_parse_file (const char         *filename,
@@ -898,7 +896,6 @@ _moo_command_parse_file (const char         *filename,
         get_options_from_contents (factory, cmd_data, contents, &array, filename);
     }
 
-#ifndef __WIN32__
     if (!factory)
     {
         if (g_file_test (filename, G_FILE_TEST_IS_EXECUTABLE))
@@ -911,7 +908,6 @@ _moo_command_parse_file (const char         *filename,
             get_options_from_file (factory, cmd_data, filename, &array);
         }
     }
-#endif
 
     if (!factory)
         g_warning ("%s: unknown file type: %s", G_STRFUNC, filename);

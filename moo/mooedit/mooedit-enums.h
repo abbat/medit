@@ -44,11 +44,7 @@ typedef enum {
     MOO_EDIT_STATUS_CLEAN            = 1 << 4
 } MooEditStatus;
 
-#ifdef __WIN32__
-#define MOO_LE_NATIVE_VALUE MOO_LE_WIN32
-#else
 #define MOO_LE_NATIVE_VALUE MOO_LE_UNIX
-#endif
 
 /**
  * enum:MooLineEndType

@@ -31,14 +31,6 @@
 #include <errno.h>
 #include <sys/types.h>
 
-#ifdef __WIN32__
-#include <windows.h>
-#include <io.h>
-#include <direct.h>
-#include <shellapi.h>
-#include <gdk/gdkwin32.h>
-#endif
-
 #ifndef S_IRWXU
 #define S_IRWXU 0
 #endif
@@ -93,113 +85,6 @@ _moo_save_file_utf8 (const char *name,
     return TRUE;
 }
 
-
-#ifdef __WIN32__
-
-static wchar_t *
-filename_to_double_null_terminated_string (const char *filename)
-{
-    long len;
-    gunichar2 *ret;
-
-    ret = g_utf8_to_utf16 (filename, -1, NULL, &len, NULL);
-
-    if (!ret)
-        return NULL;
-
-    ret = g_renew (gunichar2, ret, len + 2);
-    ret[len + 1] = 0;
-
-    return (wchar_t*) ret;
-}
-
-static wchar_t *
-filename_list_to_double_null_terminated_string (GList *filenames)
-{
-    GArray *ret;
-    gunichar2 wzero = 0;
-
-    ret = g_array_new (FALSE, FALSE, sizeof (gunichar2));
-
-    while (filenames)
-    {
-        guint old_len;
-        long len;
-        gunichar2 *wstr;
-
-        wstr = g_utf8_to_utf16 ((const char*) filenames->data, -1, NULL, &len, NULL);
-        filenames = filenames->next;
-
-        if (!wstr)
-        {
-            g_array_free (ret, TRUE);
-            return NULL;
-        }
-
-        old_len = ret->len;
-        g_array_set_size (ret, old_len + len + 1);
-        memcpy (ret->data + old_len * sizeof (gunichar2), wstr, (len + 1) * sizeof (gunichar2));
-
-        g_free (wstr);
-    }
-
-    g_array_append_val (ret, wzero);
-    return (wchar_t*) g_array_free (ret, FALSE);
-}
-
-static gboolean
-move_or_copy_files_ui (GList      *filenames,
-                       const char *destdir,
-                       gboolean    copy,
-                       GtkWidget  *parent)
-{
-    SHFILEOPSTRUCT shop = {0};
-    gboolean ret;
-    wchar_t *from, *to;
-
-    from = filename_list_to_double_null_terminated_string (filenames);
-    to = filename_to_double_null_terminated_string (destdir);
-
-    if (!from || !to)
-    {
-        g_free (from);
-        g_free (to);
-        return FALSE;
-    }
-
-    shop.hwnd = parent && parent->window ? (HWND) GDK_WINDOW_HWND (parent->window) : NULL;
-    shop.wFunc = copy ? FO_COPY : FO_MOVE;
-    shop.pFrom = from;
-    shop.pTo = to;
-    shop.fFlags = FOF_ALLOWUNDO;
-
-    ret = SHFileOperation(&shop) == 0 && !shop.fAnyOperationsAborted;
-
-    g_free (from);
-    g_free (to);
-    return ret;
-}
-
-gboolean
-_moo_copy_files_ui (GList      *filenames,
-                    const char *destdir,
-                    GtkWidget  *parent)
-{
-    return move_or_copy_files_ui (filenames, destdir, TRUE, parent);
-}
-
-gboolean
-_moo_move_files_ui (GList      *filenames,
-                    const char *destdir,
-                    GtkWidget  *parent)
-{
-    return move_or_copy_files_ui (filenames, destdir, FALSE, parent);
-}
-
-#endif /* __WIN32__ */
-
-
-#ifndef __WIN32__
 static gboolean
 rm_fr (const char *path,
        GError    **error)
@@ -251,71 +136,6 @@ rm_fr (const char *path,
         return TRUE;
     }
 }
-#endif /* __WIN32__ */
-
-
-#ifdef __WIN32__
-static gboolean
-rm_r (const char *path,
-      GError    **error)
-{
-    GDir *dir;
-    const char *file;
-    gboolean success = TRUE;
-
-    g_return_val_if_fail (path != NULL, FALSE);
-
-    dir = g_dir_open (path, 0, error);
-
-    if (!dir)
-        return FALSE;
-
-    while (success && (file = g_dir_read_name (dir)))
-    {
-        char *file_path = g_build_filename (path, file, NULL);
-
-        if (g_file_test (file_path, G_FILE_TEST_IS_DIR))
-        {
-            if (!rm_r (file_path, error))
-                success = FALSE;
-        }
-        else
-        {
-            mgw_errno_t err;
-
-            if (mgw_remove (file_path, &err) != 0)
-            {
-                success = FALSE;
-                g_set_error (error, MOO_FILE_ERROR,
-                             _moo_file_error_from_errno (err),
-                             _("Could not remove %s: %s"), file_path,
-                             mgw_strerror (err));
-            }
-        }
-
-        g_free (file_path);
-    }
-
-    g_dir_close (dir);
-
-    if (success)
-    {
-        mgw_errno_t err;
-
-        if (mgw_remove (path, &err) != 0)
-        {
-            success = FALSE;
-            g_set_error (error, MOO_FILE_ERROR,
-                         _moo_file_error_from_errno (err),
-                         _("Could not remove %s: %s"), path,
-                         mgw_strerror (err));
-        }
-    }
-
-    return success;
-}
-#endif
-
 
 gboolean
 _moo_remove_dir (const char *path,
@@ -344,11 +164,7 @@ _moo_remove_dir (const char *path,
         }
     }
 
-#ifndef __WIN32__
     return rm_fr (path, error);
-#else
-    return rm_r (path, error);
-#endif
 }
 
 
@@ -452,16 +268,11 @@ _moo_file_error_from_errno (mgw_errno_t code)
 {
     switch (code.value)
     {
-#ifdef __WIN32__
-        case MGW_EACCES:
-#endif
         case MGW_EPERM:
             return MOO_FILE_ERROR_ACCESS_DENIED;
         case MGW_EEXIST:
             return MOO_FILE_ERROR_ALREADY_EXISTS;
-#ifndef __WIN32__
         case MGW_ELOOP:
-#endif
         case MGW_ENAMETOOLONG:
             return MOO_FILE_ERROR_BAD_FILENAME;
         case MGW_ENOENT:
@@ -507,11 +318,7 @@ char *
 moo_filename_from_locale (const char *file)
 {
     g_return_val_if_fail (file != NULL, NULL);
-#ifdef __WIN32__
-    return g_locale_to_utf8 (file, -1, NULL, NULL, NULL);
-#else
     return g_strdup (file);
-#endif
 }
 
 char *
@@ -536,8 +343,6 @@ _moo_filename_to_uri (const char *file,
     return uri;
 }
 
-
-#ifndef __WIN32__
 
 static char *
 normalize_path_string (const char *path)
@@ -641,8 +446,6 @@ normalize_full_path_unix (const char *path)
 
     return normpath;
 }
-
-#endif /* !__WIN32__ */
 
 static char *
 normalize_full_path_win32 (const char *fullpath)
@@ -769,11 +572,7 @@ normalize_path (const char *filename)
         g_free (working_dir);
     }
 
-#ifdef __WIN32__
-    norm_filename = normalize_full_path_win32 (filename);
-#else
     norm_filename = normalize_full_path_unix (filename);
-#endif
 
     g_free (freeme);
     return norm_filename;
@@ -793,13 +592,6 @@ _moo_path_is_absolute (const char *path)
 {
     g_return_val_if_fail (path != NULL, FALSE);
     return g_path_is_absolute (path)
-#ifdef __WIN32__
-        /* 'C:' is an absolute path even if glib doesn't like it */
-        /* This will match nonsense like 1:23:23 too, but that's not
-         * a valid path, and it's better to have "1:23:23" in the error
-         * message than "c:\some\silly\current\dir\1:23:23" */
-        || path[1] == ':'
-#endif
         ;
 }
 
@@ -878,24 +670,9 @@ make_cases (gboolean unix_paths)
         "foobar/./../", NULL,
     };
 
-#ifndef __WIN32__
     const char *rel_files_unix[] = {
         "foobar/com", "foobar/com",
     };
-#endif
-
-#ifdef __WIN32__
-    const char *rel_files_win32[] = {
-        "foobar/com", "foobar\\com",
-        ".\\.\\.\\.\\\\", NULL,
-        "foobar\\", "foobar",
-        "foobar\\\\", "foobar",
-        "foobar\\..", NULL,
-        "foobar\\.\\..", NULL,
-        "foobar\\..\\", NULL,
-        "foobar\\.\\..\\", NULL,
-    };
-#endif
 
     for (i = 0; i < G_N_ELEMENTS (abs_files_common); i += 2)
     {
@@ -918,9 +695,7 @@ make_cases (gboolean unix_paths)
 
     current_dir = g_get_current_dir ();
 
-#ifndef __WIN32__
     if (unix_paths)
-#endif
         for (i = 0; i < G_N_ELEMENTS (rel_files_common); i += 2)
         {
             g_ptr_array_add (paths, g_strdup (rel_files_common[i]));
@@ -930,7 +705,6 @@ make_cases (gboolean unix_paths)
                 g_ptr_array_add (paths, g_strdup (current_dir));
         }
 
-#ifndef __WIN32__
     if (unix_paths)
         for (i = 0; i < G_N_ELEMENTS (rel_files_unix); i += 2)
         {
@@ -940,22 +714,8 @@ make_cases (gboolean unix_paths)
             else
                 g_ptr_array_add (paths, g_strdup (current_dir));
         }
-#endif
 
-#ifdef __WIN32__
-    for (i = 0; i < G_N_ELEMENTS (rel_files_win32); i += 2)
-    {
-        g_ptr_array_add (paths, g_strdup (rel_files_win32[i]));
-        if (rel_files_win32[i+1])
-            g_ptr_array_add (paths, g_build_filename (current_dir, rel_files_win32[i+1], NULL));
-        else
-            g_ptr_array_add (paths, g_strdup (current_dir));
-    }
-#endif
-
-#ifndef __WIN32__
     if (unix_paths)
-#endif
     {
         char *parent_dir = g_path_get_dirname (current_dir);
         g_ptr_array_add (paths, g_strdup (".."));
@@ -968,16 +728,6 @@ make_cases (gboolean unix_paths)
         g_ptr_array_add (paths, g_strdup (parent_dir));
         g_ptr_array_add (paths, g_strdup ("..//"));
         g_ptr_array_add (paths, g_strdup (parent_dir));
-#ifdef __WIN32__
-        g_ptr_array_add (paths, g_strdup ("..\\"));
-        g_ptr_array_add (paths, g_strdup (parent_dir));
-        g_ptr_array_add (paths, g_strdup ("..\\."));
-        g_ptr_array_add (paths, g_strdup (parent_dir));
-        g_ptr_array_add (paths, g_strdup ("..\\.\\"));
-        g_ptr_array_add (paths, g_strdup (parent_dir));
-        g_ptr_array_add (paths, g_strdup ("..\\\\"));
-        g_ptr_array_add (paths, g_strdup (parent_dir));
-#endif
         g_free (parent_dir);
     }
 
@@ -991,11 +741,7 @@ test_normalize_file_path (void)
     GPtrArray *paths;
     guint i;
 
-#ifndef __WIN32__
     paths = make_cases (TRUE);
-#else
-    paths = make_cases (FALSE);
-#endif
 
     for (i = 0; i < paths->len; i += 2)
     {
@@ -1009,7 +755,6 @@ test_normalize_file_path (void)
     g_ptr_array_free (paths, TRUE);
 }
 
-#ifndef __WIN32__
 static void
 test_normalize_file_path_win32 (void)
 {
@@ -1030,7 +775,6 @@ test_normalize_file_path_win32 (void)
 
     g_ptr_array_free (paths, TRUE);
 }
-#endif
 
 void
 moo_test_mooutils_fs (void)
@@ -1039,21 +783,15 @@ moo_test_mooutils_fs (void)
 
     moo_test_suite_add_test (suite, "_moo_normalize_file_path", "test of _moo_normalize_file_path()",
                              (MooTestFunc) test_normalize_file_path, NULL);
-#ifndef __WIN32__
     moo_test_suite_add_test (suite, "normalize_full_path_win32", "test of normalize_full_path_win32()",
                              (MooTestFunc) test_normalize_file_path_win32, NULL);
-#endif
 }
 
 
 int
 _moo_mkdir (const char *path, mgw_errno_t *err)
 {
-#ifndef __WIN32__
     return mgw_mkdir (path, S_IRWXU, err);
-#else
-    return mgw_mkdir (path, 0, err);
-#endif
 }
 
 
@@ -1178,10 +916,6 @@ _moo_glob_new (const char *pattern)
     GError *error = NULL;
 
     g_return_val_if_fail (pattern != NULL, NULL);
-
-#ifdef __WIN32__
-    flags = G_REGEX_CASELESS;
-#endif
 
     if (!(re_pattern = glob_to_re (pattern)))
         return NULL;

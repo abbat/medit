@@ -93,18 +93,16 @@ host_triplet = @host@
 bin_PROGRAMS = $(am__EXEEXT_1)
 @MOO_DEV_MODE_TRUE@am__append_1 = mooedit/mooedit-enum-types.h.stamp mooedit/mooedit-enum-types.c.stamp
 @MOO_DEV_MODE_TRUE@am__append_2 = mooutils/mooutils-enums.h.stamp mooutils/mooutils-enums.c.stamp
-@MOO_OS_WIN32_TRUE@am__append_3 = $(mooutils_win32_sources)
-@MOO_OS_WIN32_FALSE@am__append_4 = $(mooutils_unix_sources)
-@MOO_OS_DARWIN_TRUE@am__append_5 = eggsmclient/eggsmclient-dummy.c
-@MOO_OS_DARWIN_FALSE@am__append_6 = -DEGG_SM_CLIENT_BACKEND_XSMP
-@MOO_OS_DARWIN_FALSE@am__append_7 = eggsmclient/eggsmclient-xsmp.c eggsmclient/eggdesktopfile.h eggsmclient/eggdesktopfile.c
+@MOO_OS_DARWIN_TRUE@am__append_3 = eggsmclient/eggsmclient-dummy.c
+@MOO_OS_DARWIN_FALSE@am__append_4 = -DEGG_SM_CLIENT_BACKEND_XSMP
+@MOO_OS_DARWIN_FALSE@am__append_5 = eggsmclient/eggsmclient-xsmp.c eggsmclient/eggdesktopfile.h eggsmclient/eggdesktopfile.c
 # -I$(moo_srcdir)/moolua/lua
-@MOO_OS_DARWIN_TRUE@am__append_8 = -DLUA_USE_MACOSX
-@MOO_OS_DARWIN_FALSE@@MOO_OS_WIN32_FALSE@am__append_9 = -DLUA_USE_POSIX -DLUA_USE_DLOPEN
-@MOO_OS_DARWIN_FALSE@@MOO_OS_WIN32_FALSE@am__append_10 = -ldl
-@MOO_DEV_MODE_TRUE@am__append_11 = moolua/moo-lua-api.cpp \
+@MOO_OS_DARWIN_TRUE@am__append_6 = -DLUA_USE_MACOSX
+@MOO_OS_DARWIN_FALSE@@MOO_OS_WIN32_FALSE@am__append_7 = -DLUA_USE_POSIX -DLUA_USE_DLOPEN
+@MOO_OS_DARWIN_FALSE@@MOO_OS_WIN32_FALSE@am__append_8 = -ldl
+@MOO_DEV_MODE_TRUE@am__append_9 = moolua/moo-lua-api.cpp \
 @MOO_DEV_MODE_TRUE@	moolua/gtk-lua-api.cpp
-@MOO_BUILD_CTAGS_TRUE@am__append_12 = \
+@MOO_BUILD_CTAGS_TRUE@am__append_10 = \
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/readtags.c	\
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/readtags.h	\
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/readtags-mangle.h	\
@@ -114,12 +112,10 @@ bin_PROGRAMS = $(am__EXEEXT_1)
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/ctags-view.c	\
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/ctags-view.h
 
-@MOO_OS_WIN32_TRUE@am__append_13 = --enable=win32
-@MOO_OS_WIN32_FALSE@am__append_14 = --enable=unix
-@MOO_BUILD_APP_TRUE@am__append_15 = medit
-@MOO_BUILD_APP_TRUE@@MOO_ENABLE_COVERAGE_FALSE@am__append_16 = IGNORE_COVERAGE=1
-@MOO_BUILD_APP_TRUE@@MOO_OS_UNIX_TRUE@am__append_17 = -DMOO_UNIT_TEST_DATA_DIR=\"${MOO_TOP_SRCDIR}/moo/medit-app/data\"
-@MOO_BUILD_APP_TRUE@@MOO_OS_UNIX_TRUE@am__append_18 = medit-app/medit.desktop
+@MOO_BUILD_APP_TRUE@am__append_11 = medit
+@MOO_BUILD_APP_TRUE@@MOO_ENABLE_COVERAGE_FALSE@am__append_12 = IGNORE_COVERAGE=1
+@MOO_BUILD_APP_TRUE@@MOO_OS_UNIX_TRUE@am__append_13 = -DMOO_UNIT_TEST_DATA_DIR=\"${MOO_TOP_SRCDIR}/moo/medit-app/data\"
+@MOO_BUILD_APP_TRUE@@MOO_OS_UNIX_TRUE@am__append_14 = medit-app/medit.desktop
 subdir = moo
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -258,8 +254,7 @@ am__medit_SOURCES_DIST = medit-app/mem-debug.h medit-app/run-tests.h \
 	mooutils/mooutils-tests.h mooutils/mooutils-treeview.cpp \
 	mooutils/mooutils-treeview.h mooutils/moowindow.c \
 	mooutils/stock-file-24.h mooutils/stock-file-selector-24.h \
-	mooutils/stock-terminal-24.h mooutils/mooutils-win32.cpp \
-	mooutils/mooappinput-win32.cpp mooutils/mooappinput-unix.c \
+	mooutils/stock-terminal-24.h mooutils/mooappinput-unix.c \
 	mooutils/moo-test-utils.cpp mooutils/moo-test-utils.h \
 	mooutils/moo-test-macros.h moofileview/moobookmarkmgr.c \
 	moofileview/moobookmarkmgr.h moofileview/moobookmarkview.c \
@@ -361,18 +356,14 @@ am__objects_2 = xdgmime/xdgmimealias.$(OBJEXT) \
 	xdgmime/xdgmime.$(OBJEXT) xdgmime/xdgmimecache.$(OBJEXT) \
 	xdgmime/xdgmimeglob.$(OBJEXT) xdgmime/xdgmimeicon.$(OBJEXT) \
 	xdgmime/xdgmimemagic.$(OBJEXT) xdgmime/xdgmimeparent.$(OBJEXT)
-am__objects_3 = mooutils/mooutils-win32.$(OBJEXT) \
-	mooutils/mooappinput-win32.$(OBJEXT)
-@MOO_OS_WIN32_TRUE@am__objects_4 = $(am__objects_3)
-am__objects_5 = mooutils/mooappinput-unix.$(OBJEXT)
-@MOO_OS_WIN32_FALSE@am__objects_6 = $(am__objects_5)
-am__objects_7 = mooutils/moo-test-utils.$(OBJEXT)
-@MOO_OS_DARWIN_TRUE@am__objects_8 =  \
+am__objects_3 = mooutils/mooappinput-unix.$(OBJEXT)
+am__objects_4 = mooutils/moo-test-utils.$(OBJEXT)
+@MOO_OS_DARWIN_TRUE@am__objects_5 =  \
 @MOO_OS_DARWIN_TRUE@	eggsmclient/eggsmclient-dummy.$(OBJEXT)
-@MOO_OS_DARWIN_FALSE@am__objects_9 =  \
+@MOO_OS_DARWIN_FALSE@am__objects_6 =  \
 @MOO_OS_DARWIN_FALSE@	eggsmclient/eggsmclient-xsmp.$(OBJEXT) \
 @MOO_OS_DARWIN_FALSE@	eggsmclient/eggdesktopfile.$(OBJEXT)
-am__objects_10 = mooglib/moo-glib.$(OBJEXT) $(am__objects_1) \
+am__objects_7 = mooglib/moo-glib.$(OBJEXT) $(am__objects_1) \
 	mooedit/mooeditview.$(OBJEXT) \
 	mooedit/mooeditview-script.$(OBJEXT) \
 	mooedit/mooeditaction.$(OBJEXT) \
@@ -437,8 +428,8 @@ am__objects_10 = mooglib/moo-glib.$(OBJEXT) $(am__objects_1) \
 	mooutils/mooutils-misc.$(OBJEXT) \
 	mooutils/mooutils-script.$(OBJEXT) \
 	mooutils/mooutils-treeview.$(OBJEXT) \
-	mooutils/moowindow.$(OBJEXT) $(am__objects_4) $(am__objects_6) \
-	$(am__objects_7) moofileview/moobookmarkmgr.$(OBJEXT) \
+	mooutils/moowindow.$(OBJEXT) $(am__objects_3) $(am__objects_4) \
+	moofileview/moobookmarkmgr.$(OBJEXT) \
 	moofileview/moobookmarkview.$(OBJEXT) \
 	moofileview/moofile.$(OBJEXT) \
 	moofileview/moofileentry.$(OBJEXT) \
@@ -462,8 +453,8 @@ am__objects_10 = mooglib/moo-glib.$(OBJEXT) $(am__objects_1) \
 	gtksourceview/gtksourcestyleschememanager.$(OBJEXT) \
 	gtksourceview/gtksourceview-utils.$(OBJEXT) \
 	gtksourceview/gtktextregion.$(OBJEXT) \
-	eggsmclient/eggsmclient.$(OBJEXT) $(am__objects_8) \
-	$(am__objects_9) mooapp/mooappabout.$(OBJEXT) \
+	eggsmclient/eggsmclient.$(OBJEXT) $(am__objects_5) \
+	$(am__objects_6) mooapp/mooappabout.$(OBJEXT) \
 	mooapp/mooapp.$(OBJEXT) mooapp/moohtml.$(OBJEXT) \
 	mooapp/moolinklabel.$(OBJEXT) moolua/medit-lua.$(OBJEXT) \
 	moolua/mooluaplugin.$(OBJEXT) moolua/moolua-tests.$(OBJEXT) \
@@ -472,16 +463,16 @@ am__objects_10 = mooglib/moo-glib.$(OBJEXT) $(am__objects_1) \
 	moolua/lua/moolua.$(OBJEXT) moolua/lua/luaall.$(OBJEXT) \
 	moocpp/fileutils.$(OBJEXT) moocpp/gstr.$(OBJEXT) \
 	moocpp/regex.$(OBJEXT)
-@MOO_BUILD_CTAGS_TRUE@am__objects_11 =  \
+@MOO_BUILD_CTAGS_TRUE@am__objects_8 =  \
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/readtags.$(OBJEXT) \
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/ctags-plugin.$(OBJEXT) \
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/ctags-doc.$(OBJEXT) \
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/ctags-view.$(OBJEXT)
-am__objects_12 = plugins/moofileselector-prefs.$(OBJEXT) \
+am__objects_9 = plugins/moofileselector-prefs.$(OBJEXT) \
 	plugins/moofileselector.$(OBJEXT) \
 	plugins/mooplugin-builtin.$(OBJEXT) \
 	plugins/moofilelist.$(OBJEXT) plugins/moofind.$(OBJEXT) \
-	$(am__objects_11) plugins/usertools/moousertools.$(OBJEXT) \
+	$(am__objects_8) plugins/usertools/moousertools.$(OBJEXT) \
 	plugins/usertools/moousertools-prefs.$(OBJEXT) \
 	plugins/usertools/moocommand.$(OBJEXT) \
 	plugins/usertools/moocommanddisplay.$(OBJEXT) \
@@ -494,9 +485,9 @@ am__objects_12 = plugins/moofileselector-prefs.$(OBJEXT) \
 	plugins/support/moolineview.$(OBJEXT) \
 	plugins/support/moooutputfilter.$(OBJEXT)
 @MOO_BUILD_APP_TRUE@am_medit_OBJECTS = medit-app/main.$(OBJEXT) \
-@MOO_BUILD_APP_TRUE@	$(am__objects_10) $(am__objects_12)
-am__objects_13 = $(am__objects_1) marshals.$(OBJEXT) $(am__objects_1)
-@MOO_BUILD_APP_TRUE@nodist_medit_OBJECTS = $(am__objects_13) \
+@MOO_BUILD_APP_TRUE@	$(am__objects_7) $(am__objects_9)
+am__objects_10 = $(am__objects_1) marshals.$(OBJEXT) $(am__objects_1)
+@MOO_BUILD_APP_TRUE@nodist_medit_OBJECTS = $(am__objects_10) \
 @MOO_BUILD_APP_TRUE@	$(am__objects_1)
 medit_OBJECTS = $(am_medit_OBJECTS) $(nodist_medit_OBJECTS)
 am__DEPENDENCIES_1 =
@@ -613,7 +604,6 @@ am__depfiles_remade = ./$(DEPDIR)/dummy.Po ./$(DEPDIR)/marshals.Po \
 	mooutils/$(DEPDIR)/mooapp-ipc.Po \
 	mooutils/$(DEPDIR)/mooappinput-common.Po \
 	mooutils/$(DEPDIR)/mooappinput-unix.Po \
-	mooutils/$(DEPDIR)/mooappinput-win32.Po \
 	mooutils/$(DEPDIR)/moobigpaned.Po \
 	mooutils/$(DEPDIR)/mooclosure.Po \
 	mooutils/$(DEPDIR)/moocombo.Po \
@@ -651,7 +641,6 @@ am__depfiles_remade = ./$(DEPDIR)/dummy.Po ./$(DEPDIR)/marshals.Po \
 	mooutils/$(DEPDIR)/mooutils-script.Po \
 	mooutils/$(DEPDIR)/mooutils-thread.Po \
 	mooutils/$(DEPDIR)/mooutils-treeview.Po \
-	mooutils/$(DEPDIR)/mooutils-win32.Po \
 	mooutils/$(DEPDIR)/moowindow.Po \
 	plugins/$(DEPDIR)/moofilelist.Po \
 	plugins/$(DEPDIR)/moofileselector-prefs.Po \
@@ -1190,8 +1179,8 @@ EXTRA_DIST = mooglib/moo-glib.cpp marshals.list \
 	mooedit/glade/mootextgotoline.glade \
 	mooedit/glade/mooquicksearch.glade \
 	mooedit/glade/moostatusbar.glade mooedit/medit.xml \
-	mooedit/mooedit.xml $(langs_DATA) $(mooutils_win32_sources) \
-	$(mooutils_unix_sources) $(mooutils_unittest_sources) \
+	mooedit/mooedit.xml $(langs_DATA) $(mooutils_unix_sources) \
+	$(mooutils_unittest_sources) \
 	mooutils/glade/mooaccelprefs.glade \
 	mooutils/glade/mooaccelbutton.glade \
 	mooutils/glade/moologwindow.glade $(PIXMAPS) \
@@ -1240,16 +1229,16 @@ EXTRA_DIST = mooglib/moo-glib.cpp marshals.list \
 	medit-app/run-tests-installed.sh \
 	medit-app/run-tests-uninstalled.sh medit-app/medit.rc.in \
 	medit-app/medit.desktop.in
-BUILT_SOURCES = $(am__append_11) $(built_moo_sources) \
+BUILT_SOURCES = $(am__append_9) $(built_moo_sources) \
 	$(built_plugins_sources)
-CLEANFILES = $(am__append_18) $(built_moo_sources) \
+CLEANFILES = $(am__append_14) $(built_moo_sources) \
 	$(built_plugins_sources)
 noinst_LIBRARIES = 
 AM_CPPFLAGS = $(MOO_CPPFLAGS) -I$(top_srcdir)/doc/built \
 	-Imooutils/glade -Imoofileview -Imoofileview/glade \
-	-DLUA_USE_APICHECK $(am__append_8) $(am__append_9) \
+	-DLUA_USE_APICHECK $(am__append_6) $(am__append_7) \
 	-I$(srcdir)/plugins/support
-AM_CFLAGS = $(MOO_CFLAGS) $(am__append_6) $(am__append_17)
+AM_CFLAGS = $(MOO_CFLAGS) $(am__append_4) $(am__append_13)
 AM_CXXFLAGS = $(MOO_CXXFLAGS)
 moo_sources = moo-config.h mooglib/moo-glib.h mooglib/moo-stat.h \
 	mooglib/moo-time.h mooglib/moo-glib.cpp \
@@ -1360,7 +1349,7 @@ moo_sources = moo-config.h mooglib/moo-glib.h mooglib/moo-stat.h \
 	mooutils/mooutils-tests.h mooutils/mooutils-treeview.cpp \
 	mooutils/mooutils-treeview.h mooutils/moowindow.c \
 	mooutils/stock-file-24.h mooutils/stock-file-selector-24.h \
-	mooutils/stock-terminal-24.h $(am__append_3) $(am__append_4) \
+	mooutils/stock-terminal-24.h $(mooutils_unix_sources) \
 	$(mooutils_unittest_sources) moofileview/moobookmarkmgr.c \
 	moofileview/moobookmarkmgr.h moofileview/moobookmarkview.c \
 	moofileview/moobookmarkview.h moofileview/moofile.c \
@@ -1408,8 +1397,8 @@ moo_sources = moo-config.h mooglib/moo-glib.h mooglib/moo-stat.h \
 	gtksourceview/gtksourcebuffer.h gtksourceview/gtksourceview.h \
 	eggsmclient/eggsmclient.c eggsmclient/eggsmclient.h \
 	eggsmclient/eggsmclient-mangle.h \
-	eggsmclient/eggsmclient-private.h $(am__append_5) \
-	$(am__append_7) mooapp/mooappabout.cpp mooapp/mooappabout.h \
+	eggsmclient/eggsmclient-private.h $(am__append_3) \
+	$(am__append_5) mooapp/mooappabout.cpp mooapp/mooappabout.h \
 	mooapp/mooapp.cpp mooapp/mooapp.h mooapp/mooapp-accels.h \
 	mooapp/mooapp-info.h mooapp/mooapp-private.h mooapp/moohtml.h \
 	mooapp/moohtml.cpp mooapp/moolinklabel.h \
@@ -1446,11 +1435,11 @@ built_moo_sources = marshals.h mooedit/moopluginprefs-gxml.h \
 	mooapp/mooappabout-credits-gxml.h mooapp-credits.h \
 	moolua/lua-default-init.h moolua/lua-module-init.h \
 	moolua/lua-plugin-init.h
-moo_libadd = $(am__append_10)
+moo_libadd = $(am__append_8)
 plugins_sources = plugins/moofileselector-prefs.cpp \
 	plugins/moofileselector.cpp plugins/moofileselector.h \
 	plugins/mooplugin-builtin.h plugins/mooplugin-builtin.cpp \
-	plugins/moofilelist.cpp plugins/moofind.cpp $(am__append_12) \
+	plugins/moofilelist.cpp plugins/moofind.cpp $(am__append_10) \
 	plugins/usertools/moousertools.cpp \
 	plugins/usertools/moousertools.h \
 	plugins/usertools/moousertools-prefs.cpp \
@@ -1657,10 +1646,6 @@ moo_utils_enum_headers = \
 	mooutils/moouixml.h		\
 	mooutils/moowindow.h
 
-mooutils_win32_sources = \
-	mooutils/mooutils-win32.cpp	\
-	mooutils/mooappinput-win32.cpp
-
 mooutils_unix_sources = \
 	mooutils/mooappinput-unix.c
 
@@ -1693,13 +1678,13 @@ cfg_DATA = \
 	plugins/usertools/menu.xml		\
 	plugins/usertools/context.xml
 
-genplatxml_args = $(am__append_13) $(am__append_14)
+genplatxml_args = --enable=unix
 @MOO_BUILD_APP_TRUE@TESTS = medit-app/run-tests-uninstalled.sh
 @MOO_BUILD_APP_TRUE@TESTS_ENVIRONMENT = EXEEXT=$(EXEEXT) \
 @MOO_BUILD_APP_TRUE@	top_srcdir=$(top_srcdir) bindir=$(bindir) \
 @MOO_BUILD_APP_TRUE@	PYTHON=$(MOO_PYTHON) \
 @MOO_BUILD_APP_TRUE@	print_functions=$(srcdir)/medit-app/print-functions.py \
-@MOO_BUILD_APP_TRUE@	$(am__append_16)
+@MOO_BUILD_APP_TRUE@	$(am__append_12)
 @MOO_BUILD_APP_TRUE@medit_SOURCES = \
 @MOO_BUILD_APP_TRUE@	medit-app/mem-debug.h		\
 @MOO_BUILD_APP_TRUE@	medit-app/run-tests.h		\
@@ -2038,10 +2023,6 @@ mooutils/mooutils-script.$(OBJEXT): mooutils/$(am__dirstamp) \
 mooutils/mooutils-treeview.$(OBJEXT): mooutils/$(am__dirstamp) \
 	mooutils/$(DEPDIR)/$(am__dirstamp)
 mooutils/moowindow.$(OBJEXT): mooutils/$(am__dirstamp) \
-	mooutils/$(DEPDIR)/$(am__dirstamp)
-mooutils/mooutils-win32.$(OBJEXT): mooutils/$(am__dirstamp) \
-	mooutils/$(DEPDIR)/$(am__dirstamp)
-mooutils/mooappinput-win32.$(OBJEXT): mooutils/$(am__dirstamp) \
 	mooutils/$(DEPDIR)/$(am__dirstamp)
 mooutils/mooappinput-unix.$(OBJEXT): mooutils/$(am__dirstamp) \
 	mooutils/$(DEPDIR)/$(am__dirstamp)
@@ -2389,7 +2370,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@mooutils/$(DEPDIR)/mooapp-ipc.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@mooutils/$(DEPDIR)/mooappinput-common.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@mooutils/$(DEPDIR)/mooappinput-unix.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@mooutils/$(DEPDIR)/mooappinput-win32.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@mooutils/$(DEPDIR)/moobigpaned.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@mooutils/$(DEPDIR)/mooclosure.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@mooutils/$(DEPDIR)/moocombo.Po@am__quote@ # am--include-marker
@@ -2432,7 +2412,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@mooutils/$(DEPDIR)/mooutils-script.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@mooutils/$(DEPDIR)/mooutils-thread.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@mooutils/$(DEPDIR)/mooutils-treeview.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@mooutils/$(DEPDIR)/mooutils-win32.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@mooutils/$(DEPDIR)/moowindow.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@plugins/$(DEPDIR)/moofilelist.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@plugins/$(DEPDIR)/moofileselector-prefs.Po@am__quote@ # am--include-marker
@@ -3044,7 +3023,6 @@ distclean: distclean-am
 	-rm -f mooutils/$(DEPDIR)/mooapp-ipc.Po
 	-rm -f mooutils/$(DEPDIR)/mooappinput-common.Po
 	-rm -f mooutils/$(DEPDIR)/mooappinput-unix.Po
-	-rm -f mooutils/$(DEPDIR)/mooappinput-win32.Po
 	-rm -f mooutils/$(DEPDIR)/moobigpaned.Po
 	-rm -f mooutils/$(DEPDIR)/mooclosure.Po
 	-rm -f mooutils/$(DEPDIR)/moocombo.Po
@@ -3087,7 +3065,6 @@ distclean: distclean-am
 	-rm -f mooutils/$(DEPDIR)/mooutils-script.Po
 	-rm -f mooutils/$(DEPDIR)/mooutils-thread.Po
 	-rm -f mooutils/$(DEPDIR)/mooutils-treeview.Po
-	-rm -f mooutils/$(DEPDIR)/mooutils-win32.Po
 	-rm -f mooutils/$(DEPDIR)/moowindow.Po
 	-rm -f plugins/$(DEPDIR)/moofilelist.Po
 	-rm -f plugins/$(DEPDIR)/moofileselector-prefs.Po
@@ -3262,7 +3239,6 @@ maintainer-clean: maintainer-clean-am
 	-rm -f mooutils/$(DEPDIR)/mooapp-ipc.Po
 	-rm -f mooutils/$(DEPDIR)/mooappinput-common.Po
 	-rm -f mooutils/$(DEPDIR)/mooappinput-unix.Po
-	-rm -f mooutils/$(DEPDIR)/mooappinput-win32.Po
 	-rm -f mooutils/$(DEPDIR)/moobigpaned.Po
 	-rm -f mooutils/$(DEPDIR)/mooclosure.Po
 	-rm -f mooutils/$(DEPDIR)/moocombo.Po
@@ -3305,7 +3281,6 @@ maintainer-clean: maintainer-clean-am
 	-rm -f mooutils/$(DEPDIR)/mooutils-script.Po
 	-rm -f mooutils/$(DEPDIR)/mooutils-thread.Po
 	-rm -f mooutils/$(DEPDIR)/mooutils-treeview.Po
-	-rm -f mooutils/$(DEPDIR)/mooutils-win32.Po
 	-rm -f mooutils/$(DEPDIR)/moowindow.Po
 	-rm -f plugins/$(DEPDIR)/moofilelist.Po
 	-rm -f plugins/$(DEPDIR)/moofileselector-prefs.Po

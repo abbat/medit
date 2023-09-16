@@ -511,56 +511,7 @@ static gboolean
 uri_is_valid (G_GNUC_UNUSED const char *uri,
               G_GNUC_UNUSED char      **msg)
 {
-#ifndef __WIN32__
     return TRUE;
-#else
-    struct name {
-        const char *name;
-        guint len;
-    } names[] = {
-        { "con", 3 }, { "aux", 3 }, { "prn", 3 }, { "nul", 3 },
-        { "com1", 4 }, { "com2", 4 }, { "com3", 4 }, { "com4", 4 },
-        { "lpt1", 4 }, { "lpt2", 4 }, { "lpt3", 4 }
-    };
-    guint i;
-    char *filename;
-    const char *basename;
-    gboolean invalid = FALSE;
-
-    if (!(filename = g_filename_from_uri (uri, NULL, NULL)))
-        return TRUE;
-
-    basename = strrchr (filename, '\\');
-
-    if (!basename)
-        basename = strrchr (filename, '/');
-
-    if (!basename)
-        basename = filename;
-    else
-        basename += 1;
-
-    for (i = 0; i < G_N_ELEMENTS (names); ++i)
-    {
-        if (!g_ascii_strncasecmp (basename, names[i].name, names[i].len))
-        {
-            if (!basename[names[i].len] || basename[names[i].len] == '.')
-                invalid = TRUE;
-            break;
-        }
-    }
-
-    if (invalid)
-    {
-        char *base = g_path_get_basename (filename);
-        *msg = g_strdup_printf ("Filename '%s' is a reserved device name.\n"
-                                "Please choose another name", base);
-        g_free (base);
-    }
-
-    g_free (filename);
-    return !invalid;
-#endif
 }
 
 

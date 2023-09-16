@@ -380,22 +380,6 @@ moo_local_file_writer_write (MooFileWriter *fwriter,
         gsize chunk_len = len;
         gsize next_chunk = len;
         gsize bytes_written;
-#ifdef __WIN32__
-        gboolean need_le = FALSE;
-#endif
-
-#ifdef __WIN32__
-        if (writer->flags & MOO_FILE_WRITER_TEXT_MODE)
-        {
-            gsize le_start, le_len;
-            if (moo_find_line_end (data, len, &le_start, &le_len))
-            {
-                need_le = TRUE;
-                chunk_len = le_start;
-                next_chunk = le_start + le_len;
-            }
-        }
-#endif
 
         if (!g_output_stream_write_all (writer->stream,
                                         data, chunk_len,
@@ -405,14 +389,6 @@ moo_local_file_writer_write (MooFileWriter *fwriter,
 
         data += next_chunk;
         len -= next_chunk;
-
-#ifdef __WIN32__
-        if (need_le && !g_output_stream_write_all (writer->stream,
-                                                   "\r\n", 2,
-                                                   &bytes_written, NULL,
-                                                   &writer->error))
-            return FALSE;
-#endif
     }
 
     return TRUE;
@@ -655,11 +631,7 @@ test_moo_file_writer (void)
             error = NULL;
         }
 
-#ifdef __WIN32__
-#define LE "\r\n"
-#else
 #define LE "\n"
-#endif
 
         TEST_ASSERT (g_file_test (filename, G_FILE_TEST_EXISTS));
         TEST_ASSERT (!g_file_test (bak_filename, G_FILE_TEST_EXISTS));
@@ -693,11 +665,8 @@ test_moo_file_writer (void)
 
     TEST_ASSERT (_moo_remove_dir (my_dir, TRUE, NULL));
 
-#ifndef __WIN32__
     writer = moo_config_writer_new ("/usr/test-mooutils-fs", TRUE, &error);
-#else
-    writer = moo_config_writer_new ("K:\\nowayyouhaveit\\file.ini", TRUE, &error);
-#endif
+
     TEST_ASSERT (writer == NULL);
     TEST_ASSERT (error != NULL);
 

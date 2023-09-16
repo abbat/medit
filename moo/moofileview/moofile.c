@@ -281,10 +281,8 @@ _moo_file_new (const char *dirname,
     g_free (path);
     g_free (display_name);
 
-#ifndef __WIN32__
     if (basename[0] == '.')
         file->info = MOO_FILE_INFO_IS_HIDDEN;
-#endif
 
     return file;
 }
@@ -367,7 +365,6 @@ _moo_file_stat (MooFile    *file,
     }
     else
     {
-#ifndef __WIN32__
         if (file->statbuf->islnk)
         {
             static char buf[1024];
@@ -417,7 +414,6 @@ _moo_file_stat (MooFile    *file,
                 file->link_target = g_strndup (buf, len);
             }
         }
-#endif // !__WIN32__
     }
 
     if ((file->info & MOO_FILE_INFO_EXISTS) &&
@@ -544,7 +540,6 @@ _moo_file_get_size (const MooFile *file)
     return file->statbuf.st_size;
 }
 
-#ifndef __WIN32__
 const struct stat *
 _moo_file_get_stat (const MooFile *file)
 {
@@ -554,7 +549,6 @@ _moo_file_get_stat (const MooFile *file)
     else
         return NULL;
 }
-#endif
 #endif
 
 
