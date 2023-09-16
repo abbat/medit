@@ -664,13 +664,6 @@ LTLIBOBJS
 LIBOBJS
 MOO_ENABLE_INSTALL_HOOKS_FALSE
 MOO_ENABLE_INSTALL_HOOKS_TRUE
-MEDIT_SETUP_NAME
-MEDIT_INNO_COMPILER
-MEDIT_INNO_INSTDIR
-MEDIT_INNO_TOP_BUILDDIR
-MEDIT_INNO_TOP_SRCDIR
-MEDIT_WIN32_APP_UID
-MOO_WIN32_CONFIG
 MOO_ENABLE_COVERAGE_FALSE
 MOO_ENABLE_COVERAGE_TRUE
 MOO_BUILD_CTAGS_FALSE
@@ -703,8 +696,6 @@ GLIB_MKENUMS
 GLIB_GENMARSHAL
 GDK_QUARTZ_FALSE
 GDK_QUARTZ_TRUE
-GDK_WIN32_FALSE
-GDK_WIN32_TRUE
 GDK_X11_FALSE
 GDK_X11_TRUE
 XML_LIBS
@@ -743,8 +734,6 @@ MOO_OS_DARWIN_FALSE
 MOO_OS_DARWIN_TRUE
 MOO_OS_MINGW_FALSE
 MOO_OS_MINGW_TRUE
-MOO_OS_WIN32_FALSE
-MOO_OS_WIN32_TRUE
 MOO_OS_CYGWIN_FALSE
 MOO_OS_CYGWIN_TRUE
 MOO_PYTHON
@@ -965,8 +954,7 @@ XML_CFLAGS
 XML_LIBS
 GDK_PIXBUF_CSOURCE
 X_CFLAGS
-X_LIBS
-MOO_WIN32_CONFIG'
+X_LIBS'
 
 
 # Initialize some variables set by options.
@@ -1667,8 +1655,6 @@ Some influential environment variables:
               gdk-pixbuf-csource
   X_CFLAGS    C compiler flags for X, overriding pkg-config
   X_LIBS      linker flags for X, overriding pkg-config
-  MOO_WIN32_CONFIG
-              $_moo_win32_config
 
 Use these variables to override the choices made by `configure' or to help
 it to find libraries and programs with nonstandard names/locations.
@@ -19099,7 +19085,6 @@ fi
 
 
   MOO_OS_CYGWIN=false
-MOO_OS_WIN32=false
 MOO_OS_MINGW=false
 MOO_OS_DARWIN=false
 MOO_OS_UNIX=false
@@ -19110,10 +19095,6 @@ MOO_OS_FDO=false
 
 
   case $host in
-    *-*-mingw32*)
-      MOO_OS_WIN32=true
-      MOO_OS_NAME="Win32"
-      ;;
     *-*-cygwin*)
       MOO_OS_CYGWIN=true
       MOO_OS_NAME="CygWin"
@@ -19136,7 +19117,7 @@ MOO_OS_FDO=false
       ;;
   esac
 
-  if $MOO_OS_WIN32; then : ; else MOO_OS_UNIX=true; fi
+  MOO_OS_UNIX=true
   if $MOO_OS_DARWIN; then MOO_OS_BSD=true; fi
   if $MOO_OS_FREEBSD; then MOO_OS_BSD=true; fi
 
@@ -19146,14 +19127,6 @@ MOO_OS_FDO=false
 else
   MOO_OS_CYGWIN_TRUE='#'
   MOO_OS_CYGWIN_FALSE=
-fi
-
- if $MOO_OS_WIN32; then
-  MOO_OS_WIN32_TRUE=
-  MOO_OS_WIN32_FALSE='#'
-else
-  MOO_OS_WIN32_TRUE='#'
-  MOO_OS_WIN32_FALSE=
 fi
 
  if $MOO_OS_MINGW; then
@@ -19982,7 +19955,6 @@ fi
 gdk_target=`$PKG_CONFIG --variable=target gdk-2.0`
 
 GDK_X11=false
-GDK_WIN32=false
 GDK_QUARTZ=false
 
 case $gdk_target in
@@ -19992,9 +19964,6 @@ x11)
 quartz)
   GDK_QUARTZ=true
   ;;
-win32)
-  GDK_WIN32=true
-  ;;
 esac
 
  if $GDK_X11; then
@@ -20003,14 +19972,6 @@ esac
 else
   GDK_X11_TRUE='#'
   GDK_X11_FALSE=
-fi
-
- if $GDK_WIN32; then
-  GDK_WIN32_TRUE=
-  GDK_WIN32_FALSE='#'
-else
-  GDK_WIN32_TRUE='#'
-  GDK_WIN32_FALSE=
 fi
 
  if $GDK_QUARTZ; then
@@ -21055,19 +21016,6 @@ fi
     fi
   fi
 
-  if $MOO_OS_WIN32; then
-    MOO_CPPFLAGS="$MOO_CPPFLAGS -DUNICODE -D_UNICODE -DSTRICT -DWIN32_LEAN_AND_MEAN -I$moo_top_src_dir/moo/mooutils/moowin32/mingw"
-
-    # work around bug in i586-mingw32msvc-gcc-4.2.1-sjlj
-    # it defines __STRICT_ANSI__ for some reason and that
-    # breaks compilation:
-    # /usr/lib/gcc/i586-mingw32msvc/4.2.1-sjlj/include/c++/cwchar:164: error: ‘::swprintf’ has not been declared
-    # /usr/lib/gcc/i586-mingw32msvc/4.2.1-sjlj/include/c++/cwchar:171: error: ‘::vswprintf’ has not been declared
-    MOO_CPPFLAGS="$MOO_CPPFLAGS -U__STRICT_ANSI__"
-
-    MOO_LIBS="$MOO_LIBS -lmooglib"
-  fi
-
   if $MOO_OS_UNIX; then
     MOO_CPPFLAGS="$MOO_CPPFLAGS -DMOO_DATA_DIR=\\\"${MOO_DATA_DIR}\\\" -DMOO_LIB_DIR=\\\"${MOO_LIB_DIR}\\\""
     MOO_CPPFLAGS="$MOO_CPPFLAGS -DMOO_LOCALE_DIR=\\\"${localedir}\\\" -DMOO_HELP_DIR=\\\"${MOO_HELP_DIR}\\\""
@@ -21081,20 +21029,6 @@ fi
 
 
 
-
-#   MOO_INI_IN_IN_RULE='%.ini.desktop.in: %.ini.desktop.in.in $(top_builddir)/config.status ; cd $(top_builddir) && $(SHELL) ./config.status --file=$(subdir)/[$]@'
-#   MOO_INI_IN_RULE='%.ini: %.ini.in $(top_builddir)/config.status ; cd $(top_builddir) && $(SHELL) ./config.status --file=$(subdir)/[$]@'
-#   MOO_WIN32_RC_RULE='%.res: %.rc.in $(top_builddir)/config.status ; cd $(top_builddir) && $(SHELL) ./config.status --file=$(subdir)/[$]*.rc && cd $(subdir) && $(WINDRES) -i [$]*.rc --input-format=rc -o [$]@ -O coff && rm [$]*.rc'
-#   AC_SUBST(MOO_INI_IN_IN_RULE)
-#   AC_SUBST(MOO_INI_IN_RULE)
-#   AC_SUBST(MOO_WIN32_RC_RULE)
-
-#   MOO_XML2H='$(top_srcdir)/moo/mooutils/xml2h.sh'
-#   MOO_GLADE_SUBDIR_RULE='%-glade.h: glade/%.glade $(MOO_XML2H) ; $(SHELL) $(top_srcdir)/moo/mooutils/xml2h.sh `basename "[$]*" | sed -e "s/-/_/"`_glade_xml [$]< > [$]@.tmp && mv [$]@.tmp [$]@'
-#   MOO_GLADE_RULE='%-glade.h: %.glade $(MOO_XML2H) ; $(SHELL) $(top_srcdir)/moo/mooutils/xml2h.sh `basename "[$]*" | sed -e "s/-/_/"`_glade_xml [$]< > [$]@.tmp && mv [$]@.tmp [$]@'
-#   AC_SUBST(MOO_XML2H)
-#   AC_SUBST(MOO_GLADE_SUBDIR_RULE)
-#   AC_SUBST(MOO_GLADE_RULE)
 
 
 
@@ -21399,7 +21333,6 @@ printf "%s\n" "#define MOO_WEB_CONTACT \"$MOO_WEB_CONTACT\"" >>confdefs.h
 
 
   MOO_OS_CYGWIN=false
-MOO_OS_WIN32=false
 MOO_OS_MINGW=false
 MOO_OS_DARWIN=false
 MOO_OS_UNIX=false
@@ -21410,10 +21343,6 @@ MOO_OS_FDO=false
 
 
   case $host in
-    *-*-mingw32*)
-      MOO_OS_WIN32=true
-      MOO_OS_NAME="Win32"
-      ;;
     *-*-cygwin*)
       MOO_OS_CYGWIN=true
       MOO_OS_NAME="CygWin"
@@ -21436,7 +21365,7 @@ MOO_OS_FDO=false
       ;;
   esac
 
-  if $MOO_OS_WIN32; then : ; else MOO_OS_UNIX=true; fi
+  MOO_OS_UNIX=true
   if $MOO_OS_DARWIN; then MOO_OS_BSD=true; fi
   if $MOO_OS_FREEBSD; then MOO_OS_BSD=true; fi
 
@@ -21446,14 +21375,6 @@ MOO_OS_FDO=false
 else
   MOO_OS_CYGWIN_TRUE='#'
   MOO_OS_CYGWIN_FALSE=
-fi
-
- if $MOO_OS_WIN32; then
-  MOO_OS_WIN32_TRUE=
-  MOO_OS_WIN32_FALSE='#'
-else
-  MOO_OS_WIN32_TRUE='#'
-  MOO_OS_WIN32_FALSE=
 fi
 
  if $MOO_OS_MINGW; then
@@ -21578,83 +21499,6 @@ if test "x$MOO_ENABLE_COVERAGE" = "xyes"; then
 
 printf "%s\n" "#define MOO_ENABLE_COVERAGE 1" >>confdefs.h
 
-fi
-
-if $MOO_OS_WIN32; then
-  _moo_cygwin=false
-  if test "$OSTYPE" = "cygwin"; then
-    _moo_cygwin=true
-  fi
-
-  if $_moo_cygwin; then
-    MEDIT_INNO_COMPILER='"/cygdrive/c/Program Files (x86)/Inno Setup 5/ISCC.exe"'
-  elif test -d $HOME/.wine/drive_c/windows/syswow64 -o -d "/cygdrive/c/Program Files (x86)"; then
-    MEDIT_INNO_COMPILER='wine "c:\\program files (x86)\\inno setup 5\\ISCC.exe"'
-  else
-    MEDIT_INNO_COMPILER='wine "c:\\program files\\inno setup 5\\ISCC.exe"'
-  fi
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking Inno compiler" >&5
-printf %s "checking Inno compiler... " >&6; }
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $MEDIT_INNO_COMPILER" >&5
-printf "%s\n" "$MEDIT_INNO_COMPILER" >&6; }
-
-  _moo_win32_config=release
-  if test "$MOO_DEBUG_ENABLED" = "yes"; then
-    _moo_win32_config="debug"
-  fi
-  if test -n "$mgwconfig"; then
-    _moo_win32_config="$mgwconfig"
-  fi
-
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking Win32 build configuration" >&5
-printf %s "checking Win32 build configuration... " >&6; }
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $MOO_WIN32_CONFIG" >&5
-printf "%s\n" "$MOO_WIN32_CONFIG" >&6; }
-
-  MEDIT_WIN32_APP_UID="7F9F899F-EE8A-47F0-9981-8C525AF78E4D"
-
-
-  if $_moo_cygwin; then
-    MEDIT_INNO_TOP_SRCDIR="`cygpath -m $MOO_TOP_SRCDIR`"
-
-    _moo_this_dir=`pwd`
-    MEDIT_INNO_TOP_BUILDDIR="`cygpath -m $_moo_this_dir`"
-
-    MEDIT_INNO_INSTDIR="`cygpath -m $prefix`"
-
-  else
-    MEDIT_INNO_TOP_SRCDIR="Z:$MOO_TOP_SRCDIR"
-
-    MEDIT_INNO_TOP_BUILDDIR="Z:`pwd`"
-
-    MEDIT_INNO_INSTDIR="Z:`cd $prefix && pwd`"
-
-  fi
-
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking MEDIT_INNO_TOP_SRCDIR" >&5
-printf %s "checking MEDIT_INNO_TOP_SRCDIR... " >&6; }
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $MEDIT_INNO_TOP_SRCDIR" >&5
-printf "%s\n" "$MEDIT_INNO_TOP_SRCDIR" >&6; }
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking MEDIT_INNO_TOP_BUILDDIR" >&5
-printf %s "checking MEDIT_INNO_TOP_BUILDDIR... " >&6; }
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $MEDIT_INNO_TOP_BUILDDIR" >&5
-printf "%s\n" "$MEDIT_INNO_TOP_BUILDDIR" >&6; }
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking MEDIT_INNO_INSTDIR" >&5
-printf %s "checking MEDIT_INNO_INSTDIR... " >&6; }
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $MEDIT_INNO_INSTDIR" >&5
-printf "%s\n" "$MEDIT_INNO_INSTDIR" >&6; }
-
-
-  MEDIT_INNO_INSTALLER_SUFFIX=""
-  if test -n "$MOO_WIN32_CONFIG" -a "$MOO_WIN32_CONFIG" != "release"; then
-    MEDIT_INNO_INSTALLER_SUFFIX="-$MOO_WIN32_CONFIG"
-  fi
-  MEDIT_SETUP_NAME="medit-$MOO_DISPLAY_VERSION$MEDIT_INNO_INSTALLER_SUFFIX"
-
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking Win32 setup name" >&5
-printf %s "checking Win32 setup name... " >&6; }
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $MEDIT_SETUP_NAME" >&5
-printf "%s\n" "$MEDIT_SETUP_NAME" >&6; }
 fi
 
 # Check whether --enable-install-hooks was given.
@@ -21825,10 +21669,6 @@ if test -z "${MOO_OS_CYGWIN_TRUE}" && test -z "${MOO_OS_CYGWIN_FALSE}"; then
   as_fn_error $? "conditional \"MOO_OS_CYGWIN\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
-if test -z "${MOO_OS_WIN32_TRUE}" && test -z "${MOO_OS_WIN32_FALSE}"; then
-  as_fn_error $? "conditional \"MOO_OS_WIN32\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
-fi
 if test -z "${MOO_OS_MINGW_TRUE}" && test -z "${MOO_OS_MINGW_FALSE}"; then
   as_fn_error $? "conditional \"MOO_OS_MINGW\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
@@ -21865,10 +21705,6 @@ if test -z "${GDK_X11_TRUE}" && test -z "${GDK_X11_FALSE}"; then
   as_fn_error $? "conditional \"GDK_X11\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
-if test -z "${GDK_WIN32_TRUE}" && test -z "${GDK_WIN32_FALSE}"; then
-  as_fn_error $? "conditional \"GDK_WIN32\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
-fi
 if test -z "${GDK_QUARTZ_TRUE}" && test -z "${GDK_QUARTZ_FALSE}"; then
   as_fn_error $? "conditional \"GDK_QUARTZ\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
@@ -21891,10 +21727,6 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${MOO_OS_CYGWIN_TRUE}" && test -z "${MOO_OS_CYGWIN_FALSE}"; then
   as_fn_error $? "conditional \"MOO_OS_CYGWIN\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
-fi
-if test -z "${MOO_OS_WIN32_TRUE}" && test -z "${MOO_OS_WIN32_FALSE}"; then
-  as_fn_error $? "conditional \"MOO_OS_WIN32\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${MOO_OS_MINGW_TRUE}" && test -z "${MOO_OS_MINGW_FALSE}"; then

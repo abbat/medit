@@ -256,11 +256,6 @@ source_files = \
     ../moo/mooutils/mooutils-thread.h\
     ../moo/mooutils/mooutils-treeview.cpp\
     ../moo/mooutils/mooutils-treeview.h\
-    ../moo/mooutils/mooutils-win32.cpp\
-    ../moo/mooutils/moowin32/mingw/fnmatch.h\
-    ../moo/mooutils/moowin32/mingw/netinet/in.h\
-    ../moo/mooutils/moowin32/ms/sys/time.h\
-    ../moo/mooutils/moowin32/ms/unistd.h\
     ../moo/mooutils/moowindow.c\
     ../moo/mooutils/moowindow.h\
     ../moo/plugins/support/moocmdview.cpp\

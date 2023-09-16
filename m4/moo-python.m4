@@ -137,9 +137,5 @@ AC_DEFUN([MOO_AM_PYTHON_DEVEL_CROSS_MINGW],[
 #
 AC_DEFUN([MOO_AC_CHECK_PYTHON],[
   AC_REQUIRE([MOO_AC_CHECK_OS])
-  if test "$cross_compiling" = yes -a "$MOO_OS_WIN32" = true; then
-    MOO_AM_PYTHON_DEVEL_CROSS_MINGW([$2],[$3])
-  else
-    MOO_AC_CHECK_PYTHON_NATIVE([$1],[$2],[$3])
-  fi
+  MOO_AC_CHECK_PYTHON_NATIVE([$1],[$2],[$3])
 ])

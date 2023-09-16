@@ -137,63 +137,6 @@ if test "x$MOO_ENABLE_COVERAGE" = "xyes"; then
   AC_DEFINE(MOO_ENABLE_COVERAGE, 1, [enable code coverage testing])
 fi
 
-if $MOO_OS_WIN32; then
-  _moo_cygwin=false
-  if test "$OSTYPE" = "cygwin"; then
-    _moo_cygwin=true
-  fi
-
-  if $_moo_cygwin; then
-    MEDIT_INNO_COMPILER='"/cygdrive/c/Program Files (x86)/Inno Setup 5/ISCC.exe"'
-  elif test -d $HOME/.wine/drive_c/windows/syswow64 -o -d "/cygdrive/c/Program Files (x86)"; then
-    MEDIT_INNO_COMPILER='wine "c:\\program files (x86)\\inno setup 5\\ISCC.exe"'
-  else
-    MEDIT_INNO_COMPILER='wine "c:\\program files\\inno setup 5\\ISCC.exe"'
-  fi
-  AC_MSG_CHECKING([Inno compiler])
-  AC_MSG_RESULT([$MEDIT_INNO_COMPILER])
-
-  _moo_win32_config=release
-  if test "$MOO_DEBUG_ENABLED" = "yes"; then
-    _moo_win32_config="debug"
-  fi
-  if test -n "$mgwconfig"; then
-    _moo_win32_config="$mgwconfig"
-  fi
-  AC_ARG_VAR([MOO_WIN32_CONFIG], [$_moo_win32_config])
-  AC_MSG_CHECKING([Win32 build configuration])
-  AC_MSG_RESULT([$MOO_WIN32_CONFIG])
-
-  AC_SUBST(MEDIT_WIN32_APP_UID,"7F9F899F-EE8A-47F0-9981-8C525AF78E4D")
-
-  if $_moo_cygwin; then
-    AC_SUBST(MEDIT_INNO_TOP_SRCDIR,"`cygpath -m $MOO_TOP_SRCDIR`")
-    _moo_this_dir=`pwd`
-    AC_SUBST(MEDIT_INNO_TOP_BUILDDIR,"`cygpath -m $_moo_this_dir`")
-    AC_SUBST(MEDIT_INNO_INSTDIR,"`cygpath -m $prefix`")
-  else
-    AC_SUBST(MEDIT_INNO_TOP_SRCDIR,"Z:$MOO_TOP_SRCDIR")
-    AC_SUBST(MEDIT_INNO_TOP_BUILDDIR,"Z:`pwd`")
-    AC_SUBST(MEDIT_INNO_INSTDIR,"Z:`cd $prefix && pwd`")
-  fi
-
-  AC_MSG_CHECKING([MEDIT_INNO_TOP_SRCDIR])
-  AC_MSG_RESULT([$MEDIT_INNO_TOP_SRCDIR])
-  AC_MSG_CHECKING([MEDIT_INNO_TOP_BUILDDIR])
-  AC_MSG_RESULT([$MEDIT_INNO_TOP_BUILDDIR])
-  AC_MSG_CHECKING([MEDIT_INNO_INSTDIR])
-  AC_MSG_RESULT([$MEDIT_INNO_INSTDIR])
-
-  AC_SUBST(MEDIT_INNO_COMPILER)
-  MEDIT_INNO_INSTALLER_SUFFIX=""
-  if test -n "$MOO_WIN32_CONFIG" -a "$MOO_WIN32_CONFIG" != "release"; then
-    MEDIT_INNO_INSTALLER_SUFFIX="-$MOO_WIN32_CONFIG"
-  fi
-  AC_SUBST(MEDIT_SETUP_NAME, "medit-$MOO_DISPLAY_VERSION$MEDIT_INNO_INSTALLER_SUFFIX")
-  AC_MSG_CHECKING([Win32 setup name])
-  AC_MSG_RESULT([$MEDIT_SETUP_NAME])
-fi
-
 AC_ARG_ENABLE(install-hooks,
   AS_HELP_STRING([--enable-install-hooks],[run gtk-update-icon-cache during 'make install']),[
   MOO_ENABLE_INSTALL_HOOKS="$enable_install_hooks"

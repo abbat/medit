@@ -226,19 +226,6 @@ AC_DEFUN_ONCE([MOO_AC_FLAGS],[
     fi
   fi
 
-  if $MOO_OS_WIN32; then
-    MOO_CPPFLAGS="$MOO_CPPFLAGS -DUNICODE -D_UNICODE -DSTRICT -DWIN32_LEAN_AND_MEAN -I$moo_top_src_dir/moo/mooutils/moowin32/mingw"
-
-    # work around bug in i586-mingw32msvc-gcc-4.2.1-sjlj
-    # it defines __STRICT_ANSI__ for some reason and that
-    # breaks compilation:
-    # /usr/lib/gcc/i586-mingw32msvc/4.2.1-sjlj/include/c++/cwchar:164: error: ‘::swprintf’ has not been declared
-    # /usr/lib/gcc/i586-mingw32msvc/4.2.1-sjlj/include/c++/cwchar:171: error: ‘::vswprintf’ has not been declared
-    MOO_CPPFLAGS="$MOO_CPPFLAGS -U__STRICT_ANSI__"
-
-    MOO_LIBS="$MOO_LIBS -lmooglib"
-  fi
-
   if $MOO_OS_UNIX; then
     MOO_CPPFLAGS="$MOO_CPPFLAGS -DMOO_DATA_DIR=\\\"${MOO_DATA_DIR}\\\" -DMOO_LIB_DIR=\\\"${MOO_LIB_DIR}\\\""
     MOO_CPPFLAGS="$MOO_CPPFLAGS -DMOO_LOCALE_DIR=\\\"${localedir}\\\" -DMOO_HELP_DIR=\\\"${MOO_HELP_DIR}\\\""
@@ -252,18 +239,4 @@ AC_DEFUN_ONCE([MOO_AC_FLAGS],[
   AC_SUBST(MOO_CFLAGS)
   AC_SUBST(MOO_CXXFLAGS)
   AC_SUBST(MOO_LIBS)
-
-#   MOO_INI_IN_IN_RULE='%.ini.desktop.in: %.ini.desktop.in.in $(top_builddir)/config.status ; cd $(top_builddir) && $(SHELL) ./config.status --file=$(subdir)/[$]@'
-#   MOO_INI_IN_RULE='%.ini: %.ini.in $(top_builddir)/config.status ; cd $(top_builddir) && $(SHELL) ./config.status --file=$(subdir)/[$]@'
-#   MOO_WIN32_RC_RULE='%.res: %.rc.in $(top_builddir)/config.status ; cd $(top_builddir) && $(SHELL) ./config.status --file=$(subdir)/[$]*.rc && cd $(subdir) && $(WINDRES) -i [$]*.rc --input-format=rc -o [$]@ -O coff && rm [$]*.rc'
-#   AC_SUBST(MOO_INI_IN_IN_RULE)
-#   AC_SUBST(MOO_INI_IN_RULE)
-#   AC_SUBST(MOO_WIN32_RC_RULE)
-
-#   MOO_XML2H='$(top_srcdir)/moo/mooutils/xml2h.sh'
-#   MOO_GLADE_SUBDIR_RULE='%-glade.h: glade/%.glade $(MOO_XML2H) ; $(SHELL) $(top_srcdir)/moo/mooutils/xml2h.sh `basename "[$]*" | sed -e "s/-/_/"`_glade_xml [$]< > [$]@.tmp && mv [$]@.tmp [$]@'
-#   MOO_GLADE_RULE='%-glade.h: %.glade $(MOO_XML2H) ; $(SHELL) $(top_srcdir)/moo/mooutils/xml2h.sh `basename "[$]*" | sed -e "s/-/_/"`_glade_xml [$]< > [$]@.tmp && mv [$]@.tmp [$]@'
-#   AC_SUBST(MOO_XML2H)
-#   AC_SUBST(MOO_GLADE_SUBDIR_RULE)
-#   AC_SUBST(MOO_GLADE_RULE)
 ])

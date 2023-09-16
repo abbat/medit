@@ -10,7 +10,6 @@ add_tests (MooTestOptions opts)
 {
     moo_test_gobject ();
     moo_test_mooaccel ();
-    moo_test_mooutils_fs ();
     moo_test_moo_file_writer ();
     moo_test_mooutils_misc ();
     moo_test_i18n (opts);

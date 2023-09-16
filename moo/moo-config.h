@@ -23,8 +23,6 @@
 #  endif
 #endif
 
-#undef MOO_OS_WIN32
-#undef MOO_OS_WIN64
 #undef MOO_OS_UNIX
 #undef MOO_OS_DARWIN
 
@@ -32,34 +30,7 @@
 #  define MOO_OS_DARWIN 1
 #endif
 
-#if defined(_WIN32)
-#  if !defined(UNICODE) || !defined(_UNICODE)
-#    error "UNICODE and _UNICODE must be defined on windows"
-#  endif
-#  ifndef __WIN32__
-#    error "__WIN32__ must be defined on windows"
-#  endif
-#  define MOO_OS_WIN32 1
-#else
-#  ifdef __WIN32__
-#    error "__WIN32__ defined but _WIN32 is not"
-#  endif
-#endif
-#if defined(_WIN64)
-#  ifndef _WIN32
-#    error "_WIN64 defined but _WIN32 is not"
-#  endif
-#  define MOO_OS_WIN64 1
-#endif
+#define MOO_OS_UNIX 1
 
-#ifndef MOO_OS_WIN32
-#  define MOO_OS_UNIX 1
-#endif
-
-#ifndef MOO_OS_WIN32
-#  define MOO_CDECL
-#  define MOO_STDCALL
-#else
-#  define MOO_CDECL __cdecl
-#  define MOO_STDCALL __stdcall
-#endif
+#define MOO_CDECL
+#define MOO_STDCALL

@@ -89,7 +89,6 @@ build_triplet = @build@
 host_triplet = @host@
 @MOO_DEV_MODE_TRUE@am__append_1 = MAKEFLAGS=-j3
 @MOO_STRICT_MODE_TRUE@am__append_2 = --enable-strict
-@MOO_OS_WIN32_TRUE@am__append_3 = plat/win32/installer.iss
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -162,10 +161,9 @@ am__define_uniq_tagged_files = \
     if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
   done | $(am__uniquify_input)`
 DIST_SUBDIRS = $(SUBDIRS)
-am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/config.h.in \
-	$(srcdir)/plat/win32/Makefile.incl AUTHORS COPYING INSTALL \
-	NEWS README THANKS compile config.guess config.sub depcomp \
-	install-sh ltmain.sh missing
+am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/config.h.in AUTHORS \
+	COPYING INSTALL NEWS README THANKS compile config.guess \
+	config.sub depcomp install-sh ltmain.sh missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -287,13 +285,7 @@ LT_SYS_LIBRARY_PATH = @LT_SYS_LIBRARY_PATH@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
 MANIFEST_TOOL = @MANIFEST_TOOL@
-MEDIT_INNO_COMPILER = @MEDIT_INNO_COMPILER@
-MEDIT_INNO_INSTDIR = @MEDIT_INNO_INSTDIR@
-MEDIT_INNO_TOP_BUILDDIR = @MEDIT_INNO_TOP_BUILDDIR@
-MEDIT_INNO_TOP_SRCDIR = @MEDIT_INNO_TOP_SRCDIR@
 MEDIT_PORTABLE_MAGIC_FILE_NAME = @MEDIT_PORTABLE_MAGIC_FILE_NAME@
-MEDIT_SETUP_NAME = @MEDIT_SETUP_NAME@
-MEDIT_WIN32_APP_UID = @MEDIT_WIN32_APP_UID@
 MKDIR_P = @MKDIR_P@
 MKINSTALLDIRS = @MKINSTALLDIRS@
 MOO_CFLAGS = @MOO_CFLAGS@
@@ -326,7 +318,6 @@ MOO_TOP_SRCDIR = @MOO_TOP_SRCDIR@
 MOO_VERSION = @MOO_VERSION@
 MOO_WEBSITE = @MOO_WEBSITE@
 MOO_WEB_CONTACT = @MOO_WEB_CONTACT@
-MOO_WIN32_CONFIG = @MOO_WIN32_CONFIG@
 MSGFMT = @MSGFMT@
 MSGFMT_OPTS = @MSGFMT_OPTS@
 NM = @NM@
@@ -421,22 +412,20 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 ACLOCAL_AMFLAGS = -I m4 $(ACLOCAL_FLAGS)
 SUBDIRS = po po-gsv api doc moo
-EXTRA_DIST = tools/genenums.py tools/glade2c.py tools/xml2h.py \
-	plat/win32/installer.iss.in plat/win32/istrans.sh \
-	plat/win32/mingw-configure
+EXTRA_DIST = \
+	tools/genenums.py		\
+	tools/glade2c.py		\
+	tools/xml2h.py
+
 DISTCHECK_CONFIGURE_FLAGS = $(am__append_1) $(am__append_2)
-CLEANFILES = $(am__append_3)
-@MOO_OS_WIN32_TRUE@bd_tmpdir = medit-win-dist-tmp
-@MOO_OS_WIN32_TRUE@bd_distdir = $(PACKAGE)-$(VERSION)
-@MOO_OS_WIN32_TRUE@bd_pzip = $(PACKAGE)-portable-$(VERSION)
-@MOO_OS_WIN32_TRUE@bd_zip = $(PACKAGE)-$(VERSION)
+CLEANFILES = 
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
 .SUFFIXES:
 am--refresh: Makefile
 	@:
-$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(srcdir)/plat/win32/Makefile.incl $(am__configure_deps)
+$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -458,7 +447,6 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	    echo ' cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__maybe_remake_depfiles)'; \
 	    cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__maybe_remake_depfiles);; \
 	esac;
-$(srcdir)/plat/win32/Makefile.incl $(am__empty):
 
 $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 	$(SHELL) ./config.status --recheck
@@ -921,23 +909,6 @@ uninstall-am:
 
 .PRECIOUS: Makefile
 
-@MOO_OS_WIN32_TRUE@plat/win32/installer.iss: $(top_srcdir)/plat/win32/installer.iss.in $(top_builddir)/config.status
-@MOO_OS_WIN32_TRUE@	$(AM_V_at)$(MKDIR_P) plat/win32
-@MOO_OS_WIN32_TRUE@	$(AM_V_GEN)cd $(top_builddir) && ./config.status --silent --file=plat/win32/installer.iss
-@MOO_OS_WIN32_TRUE@installer: plat/win32/installer.iss install
-@MOO_OS_WIN32_TRUE@	$(MEDIT_INNO_COMPILER) plat/win32/installer.iss
-@MOO_OS_WIN32_TRUE@copy:
-@MOO_OS_WIN32_TRUE@	cp moo/medit.exe "/win/Program Files (x86)/medit/bin/"
-@MOO_OS_WIN32_TRUE@portable: install
-@MOO_OS_WIN32_TRUE@	rm -fr $(bd_tmpdir)
-@MOO_OS_WIN32_TRUE@	mkdir $(bd_tmpdir)
-@MOO_OS_WIN32_TRUE@	cp -lR ${prefix} $(bd_tmpdir)/$(bd_distdir)
-@MOO_OS_WIN32_TRUE@	cd $(bd_tmpdir) && zip -r9 $(bd_zip).zip $(bd_distdir)
-@MOO_OS_WIN32_TRUE@	echo "This file enables portable mode for medit" > $(bd_tmpdir)/$(bd_distdir)/bin/$(MEDIT_PORTABLE_MAGIC_FILE_NAME)
-@MOO_OS_WIN32_TRUE@	cd $(bd_tmpdir) && zip -r9 $(bd_pzip).zip $(bd_distdir)
-@MOO_OS_WIN32_TRUE@	mv $(bd_tmpdir)/$(bd_pzip).zip $(bd_tmpdir)/$(bd_zip).zip .
-@MOO_OS_WIN32_TRUE@	rm -fr $(bd_tmpdir)
-@MOO_OS_WIN32_TRUE@bdist: installer portable
 
 test:
 	$(MAKE) $(AM_MAKEFLAGS) all

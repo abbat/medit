@@ -202,13 +202,7 @@ LT_SYS_LIBRARY_PATH = @LT_SYS_LIBRARY_PATH@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
 MANIFEST_TOOL = @MANIFEST_TOOL@
-MEDIT_INNO_COMPILER = @MEDIT_INNO_COMPILER@
-MEDIT_INNO_INSTDIR = @MEDIT_INNO_INSTDIR@
-MEDIT_INNO_TOP_BUILDDIR = @MEDIT_INNO_TOP_BUILDDIR@
-MEDIT_INNO_TOP_SRCDIR = @MEDIT_INNO_TOP_SRCDIR@
 MEDIT_PORTABLE_MAGIC_FILE_NAME = @MEDIT_PORTABLE_MAGIC_FILE_NAME@
-MEDIT_SETUP_NAME = @MEDIT_SETUP_NAME@
-MEDIT_WIN32_APP_UID = @MEDIT_WIN32_APP_UID@
 MKDIR_P = @MKDIR_P@
 MKINSTALLDIRS = @MKINSTALLDIRS@
 MOO_CFLAGS = @MOO_CFLAGS@
@@ -241,7 +235,6 @@ MOO_TOP_SRCDIR = @MOO_TOP_SRCDIR@
 MOO_VERSION = @MOO_VERSION@
 MOO_WEBSITE = @MOO_WEBSITE@
 MOO_WEB_CONTACT = @MOO_WEB_CONTACT@
-MOO_WIN32_CONFIG = @MOO_WIN32_CONFIG@
 MSGFMT = @MSGFMT@
 MSGFMT_OPTS = @MSGFMT_OPTS@
 NM = @NM@
@@ -628,11 +621,6 @@ BUILT_SOURCES = $(am__append_1)
 @MOO_DEV_MODE_TRUE@    ../moo/mooutils/mooutils-thread.h\
 @MOO_DEV_MODE_TRUE@    ../moo/mooutils/mooutils-treeview.cpp\
 @MOO_DEV_MODE_TRUE@    ../moo/mooutils/mooutils-treeview.h\
-@MOO_DEV_MODE_TRUE@    ../moo/mooutils/mooutils-win32.cpp\
-@MOO_DEV_MODE_TRUE@    ../moo/mooutils/moowin32/mingw/fnmatch.h\
-@MOO_DEV_MODE_TRUE@    ../moo/mooutils/moowin32/mingw/netinet/in.h\
-@MOO_DEV_MODE_TRUE@    ../moo/mooutils/moowin32/ms/sys/time.h\
-@MOO_DEV_MODE_TRUE@    ../moo/mooutils/moowin32/ms/unistd.h\
 @MOO_DEV_MODE_TRUE@    ../moo/mooutils/moowindow.c\
 @MOO_DEV_MODE_TRUE@    ../moo/mooutils/moowindow.h\
 @MOO_DEV_MODE_TRUE@    ../moo/plugins/support/moocmdview.cpp\
