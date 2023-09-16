@@ -319,7 +319,7 @@ setup_file_combo (MooHistoryCombo *hist_combo)
     completion = MOO_FILE_ENTRY_COMPLETION (
         g_object_new (MOO_TYPE_FILE_ENTRY_COMPLETION,
                       "directories-only", TRUE,
-                      "case-sensitive", !moo_os_win32 (),
+                      "case-sensitive", TRUE,
                       "show-hidden", FALSE,
                       (const char*) NULL));
     _moo_file_entry_completion_set_entry (completion, GTK_ENTRY (entry));

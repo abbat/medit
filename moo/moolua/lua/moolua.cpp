@@ -23,9 +23,6 @@
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#ifdef __WIN32__
-#include <io.h>
-#endif
 #include <mooglib/moo-glib.h>
 
 void
@@ -105,11 +102,7 @@ cfunc__execute (lua_State *L)
     GError *error = NULL;
     int exit_status;
 
-#ifdef __WIN32__
-    argv = _moo_win32_lame_parse_cmd_line (command, &error);
-#else
     g_shell_parse_argv (command, NULL, &argv, &error);
-#endif
 
     if (!argv)
     {
@@ -120,7 +113,7 @@ cfunc__execute (lua_State *L)
     }
 
     if (!g_spawn_sync (NULL, argv, NULL,
-                       (GSpawnFlags) (G_SPAWN_SEARCH_PATH | MOO_SPAWN_WIN32_HIDDEN_CONSOLE),
+                       (GSpawnFlags) (G_SPAWN_SEARCH_PATH | G_SPAWN_DEFAULT),
                        NULL, NULL, NULL, NULL,
                        &exit_status, &error))
     {

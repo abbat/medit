@@ -119,7 +119,6 @@ int mgw_access (const char *path, mgw_access_mode_t mode);
 #undef g_open
 #undef g_spawn_async_with_pipes
 #undef g_io_channel_unix_new
-#undef g_io_channel_win32_new_fd
 
 #define g_stat DO_NOT_USE_THIS_DIRECTLY_USE_MGW_WRAPPERS_INSTEAD
 #define g_rename DO_NOT_USE_THIS_DIRECTLY_USE_MGW_WRAPPERS_INSTEAD
@@ -136,7 +135,6 @@ int mgw_access (const char *path, mgw_access_mode_t mode);
 #define g_open DO_NOT_USE_THIS_DIRECTLY_USE_MGW_WRAPPERS_INSTEAD
 #define g_spawn_async_with_pipes DO_NOT_USE_THIS_DIRECTLY_USE_MGW_WRAPPERS_INSTEAD
 #define g_io_channel_unix_new DO_NOT_USE_THIS_DIRECTLY_USE_MGW_WRAPPERS_INSTEAD
-#define g_io_channel_win32_new_fd DO_NOT_USE_THIS_DIRECTLY_USE_MGW_WRAPPERS_INSTEAD
 
 #endif // MOO_DO_NOT_MANGLE_GLIB_FUNCTIONS
 

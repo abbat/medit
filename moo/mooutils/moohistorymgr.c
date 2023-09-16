@@ -27,7 +27,6 @@
 #include "mooutils/mooutils-treeview.h"
 #include "mooutils/mooprefs.h"
 #include "mooutils/moomarkup.h"
-#include "mooutils/mooutils-thread.h"
 #include "mooutils/moolist.h"
 #include "mooutils/mootype-macros.h"
 #include "marshals.h"

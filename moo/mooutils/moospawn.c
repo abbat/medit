@@ -498,7 +498,7 @@ moo_cmd_run_command (MooCmd     *cmd,
     g_return_val_if_fail (!cmd->priv->running, FALSE);
 
     {
-        flags |= MOO_SPAWN_WIN32_HIDDEN_CONSOLE;
+        flags |= G_SPAWN_DEFAULT;
 
         if ((flags & G_SPAWN_STDOUT_TO_DEV_NULL) || (cmd_flags & MOO_CMD_STDOUT_TO_PARENT))
             outp = NULL;

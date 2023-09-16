@@ -98,8 +98,8 @@ bin_PROGRAMS = $(am__EXEEXT_1)
 @MOO_OS_DARWIN_FALSE@am__append_5 = eggsmclient/eggsmclient-xsmp.c eggsmclient/eggdesktopfile.h eggsmclient/eggdesktopfile.c
 # -I$(moo_srcdir)/moolua/lua
 @MOO_OS_DARWIN_TRUE@am__append_6 = -DLUA_USE_MACOSX
-@MOO_OS_DARWIN_FALSE@@MOO_OS_WIN32_FALSE@am__append_7 = -DLUA_USE_POSIX -DLUA_USE_DLOPEN
-@MOO_OS_DARWIN_FALSE@@MOO_OS_WIN32_FALSE@am__append_8 = -ldl
+@MOO_OS_DARWIN_FALSE@am__append_7 = -DLUA_USE_POSIX -DLUA_USE_DLOPEN
+@MOO_OS_DARWIN_FALSE@am__append_8 = -ldl
 @MOO_DEV_MODE_TRUE@am__append_9 = moolua/moo-lua-api.cpp \
 @MOO_DEV_MODE_TRUE@	moolua/gtk-lua-api.cpp
 @MOO_BUILD_CTAGS_TRUE@am__append_10 = \
@@ -195,7 +195,6 @@ am__medit_SOURCES_DIST = medit-app/mem-debug.h medit-app/run-tests.h \
 	xdgmime/xdgmimeparent.c xdgmime/xdgmimeparent.h \
 	mooutils/moodialogs.h mooutils/moofiledialog.h \
 	mooutils/moouixml.h mooutils/moowindow.h mooutils/mooarray.h \
-	mooutils/mooutils-thread.cpp mooutils/mooutils-thread.h \
 	mooutils/moohistorymgr.c mooutils/moohistorymgr.h \
 	mooutils/moo-environ.h mooutils/mooaccel.cpp \
 	mooutils/mooaccel.h mooutils/mooaccelbutton.c \
@@ -393,7 +392,6 @@ am__objects_7 = mooglib/moo-glib.$(OBJEXT) $(am__objects_1) \
 	mooedit/mootextview-input.$(OBJEXT) \
 	mooedit/mooeditor.$(OBJEXT) mooedit/mooeditor-tests.$(OBJEXT) \
 	$(am__objects_2) $(am__objects_1) \
-	mooutils/mooutils-thread.$(OBJEXT) \
 	mooutils/moohistorymgr.$(OBJEXT) mooutils/mooaccel.$(OBJEXT) \
 	mooutils/mooaccelbutton.$(OBJEXT) \
 	mooutils/mooaccelprefs.$(OBJEXT) mooutils/mooaction.$(OBJEXT) \
@@ -639,7 +637,6 @@ am__depfiles_remade = ./$(DEPDIR)/dummy.Po ./$(DEPDIR)/marshals.Po \
 	mooutils/$(DEPDIR)/mooutils-gobject.Po \
 	mooutils/$(DEPDIR)/mooutils-misc.Po \
 	mooutils/$(DEPDIR)/mooutils-script.Po \
-	mooutils/$(DEPDIR)/mooutils-thread.Po \
 	mooutils/$(DEPDIR)/mooutils-treeview.Po \
 	mooutils/$(DEPDIR)/moowindow.Po \
 	plugins/$(DEPDIR)/moofilelist.Po \
@@ -1290,7 +1287,6 @@ moo_sources = moo-config.h mooglib/moo-glib.h mooglib/moo-stat.h \
 	mooedit/mooeditor-tests.cpp mooedit/mooeditor-tests.h \
 	mooedit/mooeditor-tests.h $(xdgmime_sources) \
 	$(moo_utils_enum_headers) mooutils/mooarray.h \
-	mooutils/mooutils-thread.cpp mooutils/mooutils-thread.h \
 	mooutils/moohistorymgr.c mooutils/moohistorymgr.h \
 	mooutils/moo-environ.h mooutils/mooaccel.cpp \
 	mooutils/mooaccel.h mooutils/mooaccelbutton.c \
@@ -1916,8 +1912,6 @@ mooutils/$(am__dirstamp):
 mooutils/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) mooutils/$(DEPDIR)
 	@: > mooutils/$(DEPDIR)/$(am__dirstamp)
-mooutils/mooutils-thread.$(OBJEXT): mooutils/$(am__dirstamp) \
-	mooutils/$(DEPDIR)/$(am__dirstamp)
 mooutils/moohistorymgr.$(OBJEXT): mooutils/$(am__dirstamp) \
 	mooutils/$(DEPDIR)/$(am__dirstamp)
 mooutils/mooaccel.$(OBJEXT): mooutils/$(am__dirstamp) \
@@ -2410,7 +2404,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@mooutils/$(DEPDIR)/mooutils-gobject.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@mooutils/$(DEPDIR)/mooutils-misc.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@mooutils/$(DEPDIR)/mooutils-script.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@mooutils/$(DEPDIR)/mooutils-thread.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@mooutils/$(DEPDIR)/mooutils-treeview.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@mooutils/$(DEPDIR)/moowindow.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@plugins/$(DEPDIR)/moofilelist.Po@am__quote@ # am--include-marker
@@ -3063,7 +3056,6 @@ distclean: distclean-am
 	-rm -f mooutils/$(DEPDIR)/mooutils-gobject.Po
 	-rm -f mooutils/$(DEPDIR)/mooutils-misc.Po
 	-rm -f mooutils/$(DEPDIR)/mooutils-script.Po
-	-rm -f mooutils/$(DEPDIR)/mooutils-thread.Po
 	-rm -f mooutils/$(DEPDIR)/mooutils-treeview.Po
 	-rm -f mooutils/$(DEPDIR)/moowindow.Po
 	-rm -f plugins/$(DEPDIR)/moofilelist.Po
@@ -3279,7 +3271,6 @@ maintainer-clean: maintainer-clean-am
 	-rm -f mooutils/$(DEPDIR)/mooutils-gobject.Po
 	-rm -f mooutils/$(DEPDIR)/mooutils-misc.Po
 	-rm -f mooutils/$(DEPDIR)/mooutils-script.Po
-	-rm -f mooutils/$(DEPDIR)/mooutils-thread.Po
 	-rm -f mooutils/$(DEPDIR)/mooutils-treeview.Po
 	-rm -f mooutils/$(DEPDIR)/moowindow.Po
 	-rm -f plugins/$(DEPDIR)/moofilelist.Po

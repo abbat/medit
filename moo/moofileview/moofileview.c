@@ -4578,7 +4578,6 @@ stop_path_entry (MooFileView    *fileview,
 }
 
 
-/* WIN32_XXX */
 static void
 file_view_activate_filename (MooFileView    *fileview,
                              const char     *display_name)

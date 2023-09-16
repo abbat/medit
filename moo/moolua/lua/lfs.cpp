@@ -23,18 +23,11 @@
 #include <time.h>
 #include <sys/stat.h>
 
-#ifdef _WIN32
-#include <direct.h>
-#include <io.h>
-#include <sys/locking.h>
-#include <sys/utime.h>
-#else
 #include <unistd.h>
 #include <dirent.h>
 #include <fcntl.h>
 #include <sys/types.h>
 #include <utime.h>
-#endif
 
 #include "lua.h"
 #include "lauxlib.h"
@@ -58,12 +51,7 @@
 #define MAX_DIR_LENGTH 1023
 typedef struct dir_data {
 	int  closed;
-#ifdef _WIN32
-	long hFile;
-	char pattern[MAX_DIR_LENGTH+1];
-#else
 	DIR *dir;
-#endif
 } dir_data;
 
 
@@ -122,32 +110,6 @@ static int get_dir (lua_State *L) {
 // */
 // static int _file_lock (lua_State *L, FILE *fh, const char *mode, const long start, long len, const char *funcname) {
 // 	int code;
-// #ifdef _WIN32
-// 	/* lkmode valid values are:
-// 	   LK_LOCK    Locks the specified bytes. If the bytes cannot be locked, the program immediately tries again after 1 second. If, after 10 attempts, the bytes cannot be locked, the constant returns an error.
-// 	   LK_NBLCK   Locks the specified bytes. If the bytes cannot be locked, the constant returns an error.
-// 	   LK_NBRLCK  Same as _LK_NBLCK.
-// 	   LK_RLCK    Same as _LK_LOCK.
-// 	   LK_UNLCK   Unlocks the specified bytes, which must have been previously locked.
-//
-// 	   Regions should be locked only briefly and should be unlocked before closing a file or exiting the program.
-//
-// 	   http://msdn.microsoft.com/library/default.asp?url=/library/en-us/vclib/html/_crt__locking.asp
-// 	*/
-// 	int lkmode;
-// 	switch (*mode) {
-// 		case 'r': lkmode = LK_NBLCK; break;
-// 		case 'w': lkmode = LK_NBLCK; break;
-// 		case 'u': lkmode = LK_UNLCK; break;
-// 		default : return luaL_error (L, "%s: invalid mode", funcname);
-// 	}
-// 	if (!len) {
-// 		fseek (fh, 0L, SEEK_END);
-// 		len = ftell (fh);
-// 	}
-// 	fseek (fh, start, SEEK_SET);
-// 	code = _locking (fileno(fh), lkmode, len);
-// #else
 // 	struct flock f;
 // 	switch (*mode) {
 // 		case 'w': f.l_type = F_WRLCK; break;
@@ -159,7 +121,6 @@ static int get_dir (lua_State *L) {
 // 	f.l_start = (off_t)start;
 // 	f.l_len = (off_t)len;
 // 	code = fcntl (fileno(fh), F_SETLK, &f);
-// #endif
 // 	return (code != -1);
 // }
 //
@@ -211,14 +172,9 @@ static int get_dir (lua_State *L) {
 static int make_dir (lua_State *L) {
 	const char *path = luaL_checkstring (L, 1);
 	int fail;
-#ifdef _WIN32
-	int oldmask = umask (0);
-	fail = _mkdir (path);
-#else
 	mode_t oldmask = umask( (mode_t)0 );
 	fail =  mkdir (path, S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP |
 	                     S_IWGRP | S_IXGRP | S_IROTH | S_IXOTH );
-#endif
 	if (fail) {
 		lua_pushnil (L);
         lua_pushfstring (L, "%s", strerror(errno));
@@ -252,33 +208,8 @@ static int remove_dir (lua_State *L) {
 ** Directory iterator
 */
 static int dir_iter (lua_State *L) {
-#ifdef _WIN32
-	struct _finddata_t c_file;
-#endif
 	dir_data *d = (dir_data *)lua_touserdata (L, lua_upvalueindex (1));
 	luaL_argcheck (L, !d->closed, 1, "closed directory");
-#ifdef _WIN32
-	if (d->hFile == 0L) { /* first entry */
-		if ((d->hFile = _findfirst (d->pattern, &c_file)) == -1L) {
-			lua_pushnil (L);
-			lua_pushstring (L, strerror (errno));
-			return 2;
-		} else {
-			lua_pushstring (L, c_file.name);
-			return 1;
-		}
-	} else { /* next entry */
-		if (_findnext (d->hFile, &c_file) == -1L) {
-			/* no more entries => close directory */
-			_findclose (d->hFile);
-			d->closed = 1;
-			return 0;
-		} else {
-			lua_pushstring (L, c_file.name);
-			return 1;
-		}
-	}
-#else
 	struct dirent *entry;
 	if ((entry = readdir (d->dir)) != NULL) {
 		lua_pushstring (L, entry->d_name);
@@ -289,7 +220,6 @@ static int dir_iter (lua_State *L) {
 		d->closed = 1;
 		return 0;
 	}
-#endif
 }
 
 
@@ -298,17 +228,10 @@ static int dir_iter (lua_State *L) {
 */
 static int dir_close (lua_State *L) {
 	dir_data *d = (dir_data *)lua_touserdata (L, 1);
-#ifdef _WIN32
-	if (!d->closed && d->hFile) {
-		_findclose (d->hFile);
-		d->closed = 1;
-	}
-#else
 	if (!d->closed && d->dir) {
 		closedir (d->dir);
 		d->closed = 1;
 	}
-#endif
 	return 0;
 }
 
@@ -320,21 +243,11 @@ static int dir_iter_factory (lua_State *L) {
 	const char *path = luaL_checkstring (L, 1);
 	dir_data *d = (dir_data *) lua_newuserdata (L, sizeof(dir_data));
 	d->closed = 0;
-#ifdef _WIN32
-	d->hFile = 0L;
-	luaL_getmetatable (L, DIR_METATABLE);
-	lua_setmetatable (L, -2);
-	if (strlen(path) > MAX_DIR_LENGTH)
-		luaL_error (L, "path too long: %s", path);
-	else
-		sprintf (d->pattern, "%s/*", path);
-#else
 	luaL_getmetatable (L, DIR_METATABLE);
 	lua_setmetatable (L, -2);
 	d->dir = opendir (path);
 	if (d->dir == NULL)
 		luaL_error (L, "cannot open %s: %s", path, strerror (errno));
-#endif
 	lua_pushcclosure (L, dir_iter, 1);
 	return 1;
 }
@@ -353,38 +266,10 @@ static int dir_create_meta (lua_State *L) {
 	return 1;
 }
 
-
-#ifdef _WIN32
- #ifndef S_ISDIR
-   #define S_ISDIR(mode)  (mode&_S_IFDIR)
- #endif
- #ifndef S_ISREG
-   #define S_ISREG(mode)  (mode&_S_IFREG)
- #endif
- #ifndef S_ISLNK
-   #define S_ISLNK(mode)  (0)
- #endif
- #ifndef S_ISSOCK
-   #define S_ISSOCK(mode)  (0)
- #endif
- #ifndef S_ISFIFO
-   #define S_ISFIFO(mode)  (0)
- #endif
- #ifndef S_ISCHR
-   #define S_ISCHR(mode)  (mode&_S_IFCHR)
- #endif
- #ifndef S_ISBLK
-   #define S_ISBLK(mode)  (0)
- #endif
-#endif
 /*
 ** Convert the inode protection mode to a string.
 */
-#ifdef _WIN32
-static const char *mode2string (unsigned short mode) {
-#else
 static const char *mode2string (mode_t mode) {
-#endif
   if ( S_ISREG(mode) )
     return "file";
   else if ( S_ISDIR(mode) )
@@ -472,7 +357,7 @@ static void push_st_ctime (lua_State *L, struct stat *info) {
 static void push_st_size (lua_State *L, struct stat *info) {
 	lua_pushnumber (L, (lua_Number)info->st_size);
 }
-#ifndef _WIN32
+
 /* blocks allocated for file */
 static void push_st_blocks (lua_State *L, struct stat *info) {
 	lua_pushnumber (L, (lua_Number)info->st_blocks);
@@ -481,7 +366,6 @@ static void push_st_blocks (lua_State *L, struct stat *info) {
 static void push_st_blksize (lua_State *L, struct stat *info) {
 	lua_pushnumber (L, (lua_Number)info->st_blksize);
 }
-#endif
 
 typedef void (*_push_function) (lua_State *L, struct stat *info);
 
@@ -502,10 +386,8 @@ static struct _stat_members members[] = {
 	{ "modification", push_st_mtime },
 	{ "change",       push_st_ctime },
 	{ "size",         push_st_size },
-#ifndef _WIN32
 	{ "blocks",       push_st_blocks },
 	{ "blksize",      push_st_blksize },
-#endif
 	{ NULL, NULL }
 };
 
@@ -526,9 +408,7 @@ static int file_info (lua_State *L) {
 		int v;
 		const char *member = lua_tostring (L, 2);
 		if (strcmp (member, "mode") == 0) v = 0;
-#ifndef _WIN32
 		else if (strcmp (member, "blksize") == 0) v = 12;
-#endif
 		else /* look for member */
 			for (v = 1; members[v].name; v++)
 				if (*members[v].name == *member)

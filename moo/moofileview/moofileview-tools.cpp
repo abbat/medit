@@ -91,7 +91,7 @@ run_command (const char *command_template,
         error = NULL;
     }
 
-    if (command && !moo_spawn_command_line_async_with_flags (command, MOO_SPAWN_WIN32_HIDDEN_CONSOLE, &error))
+    if (command && !moo_spawn_command_line_async_with_flags (command, G_SPAWN_DEFAULT, &error))
     {
         g_warning ("%s", moo_error_message (error));
         g_error_free (error);

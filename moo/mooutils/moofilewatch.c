@@ -28,7 +28,6 @@
 #include "mooutils/moofilewatch.h"
 #include "mooutils/mootype-macros.h"
 #include "marshals.h"
-#include "mooutils/mooutils-thread.h"
 #include "mooutils/moolist.h"
 
 #if 1

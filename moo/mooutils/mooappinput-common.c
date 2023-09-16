@@ -23,7 +23,6 @@
 #include "mooappinput.h"
 #include "mooapp-ipc.h"
 #include "mooutils-misc.h"
-#include "mooutils-thread.h"
 #include "mooutils-debug.h"
 
 MOO_DEBUG_INIT(input, FALSE)

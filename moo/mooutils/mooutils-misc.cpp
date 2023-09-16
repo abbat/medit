@@ -1871,17 +1871,6 @@ _moo_strv_reverse (char **str_array)
 }
 
 
-void
-moo_disable_win32_error_message (void)
-{
-}
-
-void
-moo_enable_win32_error_message (void)
-{
-}
-
-
 GdkAtom
 moo_atom_uri_list (void)
 {

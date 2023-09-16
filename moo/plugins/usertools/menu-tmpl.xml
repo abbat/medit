@@ -21,29 +21,6 @@ end
 sort | uniq
 ]]></exe:code>
   </command>
-  <command id="SortLinesUniq"><!-- ###win32### -->
-    <name>Sort | Uniq</name>
-    <options>need-doc</options>
-    <type>lua</type>
-    <lua:code><![CDATA[
-lines = doc.get_selected_lines()
-if #lines == 1 then
-  return
-end
-uniq_lines = {}
-for _, line in pairs(lines) do
-  if (#line ~= 0) then
-    uniq_lines[line] = true
-  end
-end
-lines = {}
-for line, _ in pairs(uniq_lines) do
-  table.insert(lines, line)
-end
-table.sort(lines)
-doc.replace_selected_lines(lines)
-]]></lua:code>
-  </command>
   <command id="DiffToDisk"><!-- ###unix### -->
     <name>Diff to Disk</name>
     <options>need-file</options>

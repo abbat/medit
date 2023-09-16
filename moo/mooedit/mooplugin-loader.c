@@ -393,10 +393,7 @@ static GModule *
 module_open (const char *path)
 {
     GModule *module;
-
-    moo_disable_win32_error_message ();
     module = g_module_open (path, G_MODULE_BIND_LAZY);
-    moo_enable_win32_error_message ();
 
     if (!module)
         g_warning ("could not open module '%s': %s", path, g_module_error ());

@@ -57,9 +57,6 @@ seriously_ignore_return_value_p (G_GNUC_UNUSED void *p)
 {
 }
 
-void        moo_disable_win32_error_message (void);
-void        moo_enable_win32_error_message  (void);
-
 void       _moo_set_app_instance_name       (const char     *name);
 void        moo_set_user_data_dir           (const char     *path);
 void        moo_set_user_cache_dir          (const char     *path);
@@ -204,11 +201,5 @@ void         moo_thread_init                (void);
 gboolean     moo_is_main_thread             (void);
 
 G_END_DECLS
-
-static inline gboolean
-moo_os_win32 (void)
-{
-    return FALSE;
-}
 
 #endif /* MOO_UTILS_MISC_H */

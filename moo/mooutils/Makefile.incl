@@ -7,8 +7,6 @@ moo_utils_enum_headers =		\
 moo_sources +=				\
 	$(moo_utils_enum_headers)	\
 	mooutils/mooarray.h		\
-	mooutils/mooutils-thread.cpp	\
-	mooutils/mooutils-thread.h	\
 	mooutils/moohistorymgr.c	\
 	mooutils/moohistorymgr.h	\
 	mooutils/moo-environ.h		\

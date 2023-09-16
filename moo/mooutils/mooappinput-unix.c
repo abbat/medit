@@ -34,7 +34,6 @@ MGW_ERROR_IF_NOT_SHARED_LIBC
 #include <string.h>
 #include "mooapp-ipc.h"
 #include "mooutils-misc.h"
-#include "mooutils-thread.h"
 #include "mooutils-debug.h"
 
 #define INPUT_PREFIX "in-"
