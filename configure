@@ -730,8 +730,6 @@ MOO_OS_FREEBSD_FALSE
 MOO_OS_FREEBSD_TRUE
 MOO_OS_UNIX_FALSE
 MOO_OS_UNIX_TRUE
-MOO_OS_DARWIN_FALSE
-MOO_OS_DARWIN_TRUE
 MOO_OS_MINGW_FALSE
 MOO_OS_MINGW_TRUE
 MOO_OS_CYGWIN_FALSE
@@ -19086,7 +19084,6 @@ fi
 
   MOO_OS_CYGWIN=false
 MOO_OS_MINGW=false
-MOO_OS_DARWIN=false
 MOO_OS_UNIX=false
 MOO_OS_FREEBSD=false
 MOO_OS_BSD=false
@@ -19098,10 +19095,6 @@ MOO_OS_FDO=false
     *-*-cygwin*)
       MOO_OS_CYGWIN=true
       MOO_OS_NAME="CygWin"
-      ;;
-    *-*-darwin*)
-      MOO_OS_DARWIN=true
-      MOO_OS_NAME="Darwin"
       ;;
     *-*-freebsd*)
       MOO_OS_FREEBSD=true
@@ -19118,7 +19111,6 @@ MOO_OS_FDO=false
   esac
 
   MOO_OS_UNIX=true
-  if $MOO_OS_DARWIN; then MOO_OS_BSD=true; fi
   if $MOO_OS_FREEBSD; then MOO_OS_BSD=true; fi
 
    if $MOO_OS_CYGWIN; then
@@ -19135,14 +19127,6 @@ fi
 else
   MOO_OS_MINGW_TRUE='#'
   MOO_OS_MINGW_FALSE=
-fi
-
- if $MOO_OS_DARWIN; then
-  MOO_OS_DARWIN_TRUE=
-  MOO_OS_DARWIN_FALSE='#'
-else
-  MOO_OS_DARWIN_TRUE='#'
-  MOO_OS_DARWIN_FALSE=
 fi
 
  if $MOO_OS_UNIX; then
@@ -21158,7 +21142,7 @@ ac_config_headers="$ac_config_headers config.h"
 
 LIBM=
 case $host in
-*-*-beos* | *-*-cegcc* | *-*-cygwin* | *-*-haiku* | *-*-pw32* | *-*-darwin*)
+*-*-beos* | *-*-cegcc* | *-*-cygwin* | *-*-haiku* | *-*-pw32* )
   # These system don't have libm, or don't need it
   ;;
 *-ncr-sysv4.3*)
@@ -21334,7 +21318,6 @@ printf "%s\n" "#define MOO_WEB_CONTACT \"$MOO_WEB_CONTACT\"" >>confdefs.h
 
   MOO_OS_CYGWIN=false
 MOO_OS_MINGW=false
-MOO_OS_DARWIN=false
 MOO_OS_UNIX=false
 MOO_OS_FREEBSD=false
 MOO_OS_BSD=false
@@ -21346,10 +21329,6 @@ MOO_OS_FDO=false
     *-*-cygwin*)
       MOO_OS_CYGWIN=true
       MOO_OS_NAME="CygWin"
-      ;;
-    *-*-darwin*)
-      MOO_OS_DARWIN=true
-      MOO_OS_NAME="Darwin"
       ;;
     *-*-freebsd*)
       MOO_OS_FREEBSD=true
@@ -21366,7 +21345,6 @@ MOO_OS_FDO=false
   esac
 
   MOO_OS_UNIX=true
-  if $MOO_OS_DARWIN; then MOO_OS_BSD=true; fi
   if $MOO_OS_FREEBSD; then MOO_OS_BSD=true; fi
 
    if $MOO_OS_CYGWIN; then
@@ -21383,14 +21361,6 @@ fi
 else
   MOO_OS_MINGW_TRUE='#'
   MOO_OS_MINGW_FALSE=
-fi
-
- if $MOO_OS_DARWIN; then
-  MOO_OS_DARWIN_TRUE=
-  MOO_OS_DARWIN_FALSE='#'
-else
-  MOO_OS_DARWIN_TRUE='#'
-  MOO_OS_DARWIN_FALSE=
 fi
 
  if $MOO_OS_UNIX; then
@@ -21673,10 +21643,6 @@ if test -z "${MOO_OS_MINGW_TRUE}" && test -z "${MOO_OS_MINGW_FALSE}"; then
   as_fn_error $? "conditional \"MOO_OS_MINGW\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
-if test -z "${MOO_OS_DARWIN_TRUE}" && test -z "${MOO_OS_DARWIN_FALSE}"; then
-  as_fn_error $? "conditional \"MOO_OS_DARWIN\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
-fi
 if test -z "${MOO_OS_UNIX_TRUE}" && test -z "${MOO_OS_UNIX_FALSE}"; then
   as_fn_error $? "conditional \"MOO_OS_UNIX\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
@@ -21731,10 +21697,6 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${MOO_OS_MINGW_TRUE}" && test -z "${MOO_OS_MINGW_FALSE}"; then
   as_fn_error $? "conditional \"MOO_OS_MINGW\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
-fi
-if test -z "${MOO_OS_DARWIN_TRUE}" && test -z "${MOO_OS_DARWIN_FALSE}"; then
-  as_fn_error $? "conditional \"MOO_OS_DARWIN\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${MOO_OS_UNIX_TRUE}" && test -z "${MOO_OS_UNIX_FALSE}"; then

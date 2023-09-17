@@ -1,12 +1,8 @@
 AM_CPPFLAGS += -DLUA_USE_APICHECK
 # -I$(moo_srcdir)/moolua/lua
 
-if MOO_OS_DARWIN
-AM_CPPFLAGS += -DLUA_USE_MACOSX
-else !MOO_OS_DARWIN
 AM_CPPFLAGS += -DLUA_USE_POSIX -DLUA_USE_DLOPEN
 moo_libadd += -ldl
-endif !MOO_OS_DARWIN
 
 moo_sources +=				\
 	moolua/lua/lfs.h		\

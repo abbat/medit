@@ -93,16 +93,9 @@ host_triplet = @host@
 bin_PROGRAMS = $(am__EXEEXT_1)
 @MOO_DEV_MODE_TRUE@am__append_1 = mooedit/mooedit-enum-types.h.stamp mooedit/mooedit-enum-types.c.stamp
 @MOO_DEV_MODE_TRUE@am__append_2 = mooutils/mooutils-enums.h.stamp mooutils/mooutils-enums.c.stamp
-@MOO_OS_DARWIN_TRUE@am__append_3 = eggsmclient/eggsmclient-dummy.c
-@MOO_OS_DARWIN_FALSE@am__append_4 = -DEGG_SM_CLIENT_BACKEND_XSMP
-@MOO_OS_DARWIN_FALSE@am__append_5 = eggsmclient/eggsmclient-xsmp.c eggsmclient/eggdesktopfile.h eggsmclient/eggdesktopfile.c
-# -I$(moo_srcdir)/moolua/lua
-@MOO_OS_DARWIN_TRUE@am__append_6 = -DLUA_USE_MACOSX
-@MOO_OS_DARWIN_FALSE@am__append_7 = -DLUA_USE_POSIX -DLUA_USE_DLOPEN
-@MOO_OS_DARWIN_FALSE@am__append_8 = -ldl
-@MOO_DEV_MODE_TRUE@am__append_9 = moolua/moo-lua-api.cpp \
+@MOO_DEV_MODE_TRUE@am__append_3 = moolua/moo-lua-api.cpp \
 @MOO_DEV_MODE_TRUE@	moolua/gtk-lua-api.cpp
-@MOO_BUILD_CTAGS_TRUE@am__append_10 = \
+@MOO_BUILD_CTAGS_TRUE@am__append_4 = \
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/readtags.c	\
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/readtags.h	\
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/readtags-mangle.h	\
@@ -112,10 +105,10 @@ bin_PROGRAMS = $(am__EXEEXT_1)
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/ctags-view.c	\
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/ctags-view.h
 
-@MOO_BUILD_APP_TRUE@am__append_11 = medit
-@MOO_BUILD_APP_TRUE@@MOO_ENABLE_COVERAGE_FALSE@am__append_12 = IGNORE_COVERAGE=1
-@MOO_BUILD_APP_TRUE@@MOO_OS_UNIX_TRUE@am__append_13 = -DMOO_UNIT_TEST_DATA_DIR=\"${MOO_TOP_SRCDIR}/moo/medit-app/data\"
-@MOO_BUILD_APP_TRUE@@MOO_OS_UNIX_TRUE@am__append_14 = medit-app/medit.desktop
+@MOO_BUILD_APP_TRUE@am__append_5 = medit
+@MOO_BUILD_APP_TRUE@@MOO_ENABLE_COVERAGE_FALSE@am__append_6 = IGNORE_COVERAGE=1
+@MOO_BUILD_APP_TRUE@@MOO_OS_UNIX_TRUE@am__append_7 = -DMOO_UNIT_TEST_DATA_DIR=\"${MOO_TOP_SRCDIR}/moo/medit-app/data\"
+@MOO_BUILD_APP_TRUE@@MOO_OS_UNIX_TRUE@am__append_8 = medit-app/medit.desktop
 subdir = moo
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -303,10 +296,10 @@ am__medit_SOURCES_DIST = medit-app/mem-debug.h medit-app/run-tests.h \
 	eggsmclient/eggsmclient.c eggsmclient/eggsmclient.h \
 	eggsmclient/eggsmclient-mangle.h \
 	eggsmclient/eggsmclient-private.h \
-	eggsmclient/eggsmclient-dummy.c eggsmclient/eggsmclient-xsmp.c \
-	eggsmclient/eggdesktopfile.h eggsmclient/eggdesktopfile.c \
-	mooapp/mooappabout.cpp mooapp/mooappabout.h mooapp/mooapp.cpp \
-	mooapp/mooapp.h mooapp/mooapp-accels.h mooapp/mooapp-info.h \
+	eggsmclient/eggsmclient-xsmp.c eggsmclient/eggdesktopfile.h \
+	eggsmclient/eggdesktopfile.c mooapp/mooappabout.cpp \
+	mooapp/mooappabout.h mooapp/mooapp.cpp mooapp/mooapp.h \
+	mooapp/mooapp-accels.h mooapp/mooapp-info.h \
 	mooapp/mooapp-private.h mooapp/moohtml.h mooapp/moohtml.cpp \
 	mooapp/moolinklabel.h mooapp/moolinklabel.cpp \
 	moolua/medit-lua.h moolua/medit-lua.cpp \
@@ -357,12 +350,7 @@ am__objects_2 = xdgmime/xdgmimealias.$(OBJEXT) \
 	xdgmime/xdgmimemagic.$(OBJEXT) xdgmime/xdgmimeparent.$(OBJEXT)
 am__objects_3 = mooutils/mooappinput-unix.$(OBJEXT)
 am__objects_4 = mooutils/moo-test-utils.$(OBJEXT)
-@MOO_OS_DARWIN_TRUE@am__objects_5 =  \
-@MOO_OS_DARWIN_TRUE@	eggsmclient/eggsmclient-dummy.$(OBJEXT)
-@MOO_OS_DARWIN_FALSE@am__objects_6 =  \
-@MOO_OS_DARWIN_FALSE@	eggsmclient/eggsmclient-xsmp.$(OBJEXT) \
-@MOO_OS_DARWIN_FALSE@	eggsmclient/eggdesktopfile.$(OBJEXT)
-am__objects_7 = mooglib/moo-glib.$(OBJEXT) $(am__objects_1) \
+am__objects_5 = mooglib/moo-glib.$(OBJEXT) $(am__objects_1) \
 	mooedit/mooeditview.$(OBJEXT) \
 	mooedit/mooeditview-script.$(OBJEXT) \
 	mooedit/mooeditaction.$(OBJEXT) \
@@ -451,26 +439,28 @@ am__objects_7 = mooglib/moo-glib.$(OBJEXT) $(am__objects_1) \
 	gtksourceview/gtksourcestyleschememanager.$(OBJEXT) \
 	gtksourceview/gtksourceview-utils.$(OBJEXT) \
 	gtksourceview/gtktextregion.$(OBJEXT) \
-	eggsmclient/eggsmclient.$(OBJEXT) $(am__objects_5) \
-	$(am__objects_6) mooapp/mooappabout.$(OBJEXT) \
-	mooapp/mooapp.$(OBJEXT) mooapp/moohtml.$(OBJEXT) \
-	mooapp/moolinklabel.$(OBJEXT) moolua/medit-lua.$(OBJEXT) \
-	moolua/mooluaplugin.$(OBJEXT) moolua/moolua-tests.$(OBJEXT) \
+	eggsmclient/eggsmclient.$(OBJEXT) \
+	eggsmclient/eggsmclient-xsmp.$(OBJEXT) \
+	eggsmclient/eggdesktopfile.$(OBJEXT) \
+	mooapp/mooappabout.$(OBJEXT) mooapp/mooapp.$(OBJEXT) \
+	mooapp/moohtml.$(OBJEXT) mooapp/moolinklabel.$(OBJEXT) \
+	moolua/medit-lua.$(OBJEXT) moolua/mooluaplugin.$(OBJEXT) \
+	moolua/moolua-tests.$(OBJEXT) \
 	moolua/moo-lua-api-util.$(OBJEXT) moolua/moo-lua-api.$(OBJEXT) \
 	moolua/gtk-lua-api.$(OBJEXT) moolua/lua/lfs.$(OBJEXT) \
 	moolua/lua/moolua.$(OBJEXT) moolua/lua/luaall.$(OBJEXT) \
 	moocpp/fileutils.$(OBJEXT) moocpp/gstr.$(OBJEXT) \
 	moocpp/regex.$(OBJEXT)
-@MOO_BUILD_CTAGS_TRUE@am__objects_8 =  \
+@MOO_BUILD_CTAGS_TRUE@am__objects_6 =  \
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/readtags.$(OBJEXT) \
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/ctags-plugin.$(OBJEXT) \
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/ctags-doc.$(OBJEXT) \
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/ctags-view.$(OBJEXT)
-am__objects_9 = plugins/moofileselector-prefs.$(OBJEXT) \
+am__objects_7 = plugins/moofileselector-prefs.$(OBJEXT) \
 	plugins/moofileselector.$(OBJEXT) \
 	plugins/mooplugin-builtin.$(OBJEXT) \
 	plugins/moofilelist.$(OBJEXT) plugins/moofind.$(OBJEXT) \
-	$(am__objects_8) plugins/usertools/moousertools.$(OBJEXT) \
+	$(am__objects_6) plugins/usertools/moousertools.$(OBJEXT) \
 	plugins/usertools/moousertools-prefs.$(OBJEXT) \
 	plugins/usertools/moocommand.$(OBJEXT) \
 	plugins/usertools/moocommanddisplay.$(OBJEXT) \
@@ -483,15 +473,14 @@ am__objects_9 = plugins/moofileselector-prefs.$(OBJEXT) \
 	plugins/support/moolineview.$(OBJEXT) \
 	plugins/support/moooutputfilter.$(OBJEXT)
 @MOO_BUILD_APP_TRUE@am_medit_OBJECTS = medit-app/main.$(OBJEXT) \
-@MOO_BUILD_APP_TRUE@	$(am__objects_7) $(am__objects_9)
-am__objects_10 = $(am__objects_1) marshals.$(OBJEXT) $(am__objects_1)
-@MOO_BUILD_APP_TRUE@nodist_medit_OBJECTS = $(am__objects_10) \
+@MOO_BUILD_APP_TRUE@	$(am__objects_5) $(am__objects_7)
+am__objects_8 = $(am__objects_1) marshals.$(OBJEXT) $(am__objects_1)
+@MOO_BUILD_APP_TRUE@nodist_medit_OBJECTS = $(am__objects_8) \
 @MOO_BUILD_APP_TRUE@	$(am__objects_1)
 medit_OBJECTS = $(am_medit_OBJECTS) $(nodist_medit_OBJECTS)
 am__DEPENDENCIES_1 =
-am__DEPENDENCIES_2 = $(am__DEPENDENCIES_1)
 @MOO_BUILD_APP_TRUE@medit_DEPENDENCIES = $(am__DEPENDENCIES_1) \
-@MOO_BUILD_APP_TRUE@	$(am__DEPENDENCIES_2)
+@MOO_BUILD_APP_TRUE@	$(am__DEPENDENCIES_1)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
@@ -516,7 +505,6 @@ depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/dummy.Po ./$(DEPDIR)/marshals.Po \
 	eggsmclient/$(DEPDIR)/eggdesktopfile.Po \
-	eggsmclient/$(DEPDIR)/eggsmclient-dummy.Po \
 	eggsmclient/$(DEPDIR)/eggsmclient-xsmp.Po \
 	eggsmclient/$(DEPDIR)/eggsmclient.Po \
 	gtksourceview/$(DEPDIR)/gtksourcecontextengine.Po \
@@ -1219,16 +1207,17 @@ EXTRA_DIST = mooglib/moo-glib.cpp marshals.list \
 	medit-app/run-tests-installed.sh \
 	medit-app/run-tests-uninstalled.sh medit-app/medit.rc.in \
 	medit-app/medit.desktop.in
-BUILT_SOURCES = $(am__append_9) $(built_moo_sources) \
+BUILT_SOURCES = $(am__append_3) $(built_moo_sources) \
 	$(built_plugins_sources)
-CLEANFILES = $(am__append_14) $(built_moo_sources) \
+CLEANFILES = $(am__append_8) $(built_moo_sources) \
 	$(built_plugins_sources)
 noinst_LIBRARIES = 
+# -I$(moo_srcdir)/moolua/lua
 AM_CPPFLAGS = $(MOO_CPPFLAGS) -I$(top_srcdir)/doc/built \
 	-Imooutils/glade -Imoofileview -Imoofileview/glade \
-	-DLUA_USE_APICHECK $(am__append_6) $(am__append_7) \
+	-DLUA_USE_APICHECK -DLUA_USE_POSIX -DLUA_USE_DLOPEN \
 	-I$(srcdir)/plugins/support
-AM_CFLAGS = $(MOO_CFLAGS) $(am__append_4) $(am__append_13)
+AM_CFLAGS = $(MOO_CFLAGS) -DEGG_SM_CLIENT_BACKEND_XSMP $(am__append_7)
 AM_CXXFLAGS = $(MOO_CXXFLAGS)
 moo_sources = moo-config.h mooglib/moo-glib.h mooglib/moo-stat.h \
 	mooglib/moo-time.h mooglib/moo-glib.cpp \
@@ -1386,18 +1375,20 @@ moo_sources = moo-config.h mooglib/moo-glib.h mooglib/moo-stat.h \
 	gtksourceview/gtksourcebuffer.h gtksourceview/gtksourceview.h \
 	eggsmclient/eggsmclient.c eggsmclient/eggsmclient.h \
 	eggsmclient/eggsmclient-mangle.h \
-	eggsmclient/eggsmclient-private.h $(am__append_3) \
-	$(am__append_5) mooapp/mooappabout.cpp mooapp/mooappabout.h \
-	mooapp/mooapp.cpp mooapp/mooapp.h mooapp/mooapp-accels.h \
-	mooapp/mooapp-info.h mooapp/mooapp-private.h mooapp/moohtml.h \
-	mooapp/moohtml.cpp mooapp/moolinklabel.h \
-	mooapp/moolinklabel.cpp moolua/medit-lua.h \
-	moolua/medit-lua.cpp moolua/mooluaplugin.cpp \
-	moolua/moolua-tests.h moolua/moolua-tests.cpp \
-	moolua/moo-lua-api-util.h moolua/moo-lua-api-util.cpp \
-	moolua/moo-lua-api.cpp moolua/moo-lua-api.h \
-	moolua/gtk-lua-api.cpp moolua/gtk-lua-api.h moolua/lua/lfs.h \
-	moolua/lua/lfs.cpp moolua/lua/moolua.h moolua/lua/moolua.cpp \
+	eggsmclient/eggsmclient-private.h \
+	eggsmclient/eggsmclient-xsmp.c eggsmclient/eggdesktopfile.h \
+	eggsmclient/eggdesktopfile.c mooapp/mooappabout.cpp \
+	mooapp/mooappabout.h mooapp/mooapp.cpp mooapp/mooapp.h \
+	mooapp/mooapp-accels.h mooapp/mooapp-info.h \
+	mooapp/mooapp-private.h mooapp/moohtml.h mooapp/moohtml.cpp \
+	mooapp/moolinklabel.h mooapp/moolinklabel.cpp \
+	moolua/medit-lua.h moolua/medit-lua.cpp \
+	moolua/mooluaplugin.cpp moolua/moolua-tests.h \
+	moolua/moolua-tests.cpp moolua/moo-lua-api-util.h \
+	moolua/moo-lua-api-util.cpp moolua/moo-lua-api.cpp \
+	moolua/moo-lua-api.h moolua/gtk-lua-api.cpp \
+	moolua/gtk-lua-api.h moolua/lua/lfs.h moolua/lua/lfs.cpp \
+	moolua/lua/moolua.h moolua/lua/moolua.cpp \
 	moolua/lua/luaall.cpp moocpp/fileutils.h moocpp/fileutils.cpp \
 	moocpp/gobjptr.h moocpp/gstr.h moocpp/gstr.cpp moocpp/moocpp.h \
 	moocpp/regex.h moocpp/regex.cpp moocpp/util.h
@@ -1424,11 +1415,11 @@ built_moo_sources = marshals.h mooedit/moopluginprefs-gxml.h \
 	mooapp/mooappabout-credits-gxml.h mooapp-credits.h \
 	moolua/lua-default-init.h moolua/lua-module-init.h \
 	moolua/lua-plugin-init.h
-moo_libadd = $(am__append_8)
+moo_libadd = -ldl
 plugins_sources = plugins/moofileselector-prefs.cpp \
 	plugins/moofileselector.cpp plugins/moofileselector.h \
 	plugins/mooplugin-builtin.h plugins/mooplugin-builtin.cpp \
-	plugins/moofilelist.cpp plugins/moofind.cpp $(am__append_10) \
+	plugins/moofilelist.cpp plugins/moofind.cpp $(am__append_4) \
 	plugins/usertools/moousertools.cpp \
 	plugins/usertools/moousertools.h \
 	plugins/usertools/moousertools-prefs.cpp \
@@ -1673,7 +1664,7 @@ genplatxml_args = --enable=unix
 @MOO_BUILD_APP_TRUE@	top_srcdir=$(top_srcdir) bindir=$(bindir) \
 @MOO_BUILD_APP_TRUE@	PYTHON=$(MOO_PYTHON) \
 @MOO_BUILD_APP_TRUE@	print_functions=$(srcdir)/medit-app/print-functions.py \
-@MOO_BUILD_APP_TRUE@	$(am__append_12)
+@MOO_BUILD_APP_TRUE@	$(am__append_6)
 @MOO_BUILD_APP_TRUE@medit_SOURCES = \
 @MOO_BUILD_APP_TRUE@	medit-app/mem-debug.h		\
 @MOO_BUILD_APP_TRUE@	medit-app/run-tests.h		\
@@ -2093,8 +2084,6 @@ eggsmclient/$(DEPDIR)/$(am__dirstamp):
 	@: > eggsmclient/$(DEPDIR)/$(am__dirstamp)
 eggsmclient/eggsmclient.$(OBJEXT): eggsmclient/$(am__dirstamp) \
 	eggsmclient/$(DEPDIR)/$(am__dirstamp)
-eggsmclient/eggsmclient-dummy.$(OBJEXT): eggsmclient/$(am__dirstamp) \
-	eggsmclient/$(DEPDIR)/$(am__dirstamp)
 eggsmclient/eggsmclient-xsmp.$(OBJEXT): eggsmclient/$(am__dirstamp) \
 	eggsmclient/$(DEPDIR)/$(am__dirstamp)
 eggsmclient/eggdesktopfile.$(OBJEXT): eggsmclient/$(am__dirstamp) \
@@ -2262,7 +2251,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dummy.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/marshals.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@eggsmclient/$(DEPDIR)/eggdesktopfile.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@eggsmclient/$(DEPDIR)/eggsmclient-dummy.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@eggsmclient/$(DEPDIR)/eggsmclient-xsmp.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@eggsmclient/$(DEPDIR)/eggsmclient.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@gtksourceview/$(DEPDIR)/gtksourcecontextengine.Po@am__quote@ # am--include-marker
@@ -2914,7 +2902,6 @@ distclean: distclean-am
 		-rm -f ./$(DEPDIR)/dummy.Po
 	-rm -f ./$(DEPDIR)/marshals.Po
 	-rm -f eggsmclient/$(DEPDIR)/eggdesktopfile.Po
-	-rm -f eggsmclient/$(DEPDIR)/eggsmclient-dummy.Po
 	-rm -f eggsmclient/$(DEPDIR)/eggsmclient-xsmp.Po
 	-rm -f eggsmclient/$(DEPDIR)/eggsmclient.Po
 	-rm -f gtksourceview/$(DEPDIR)/gtksourcecontextengine.Po
@@ -3129,7 +3116,6 @@ maintainer-clean: maintainer-clean-am
 		-rm -f ./$(DEPDIR)/dummy.Po
 	-rm -f ./$(DEPDIR)/marshals.Po
 	-rm -f eggsmclient/$(DEPDIR)/eggdesktopfile.Po
-	-rm -f eggsmclient/$(DEPDIR)/eggsmclient-dummy.Po
 	-rm -f eggsmclient/$(DEPDIR)/eggsmclient-xsmp.Po
 	-rm -f eggsmclient/$(DEPDIR)/eggsmclient.Po
 	-rm -f gtksourceview/$(DEPDIR)/gtksourcecontextengine.Po

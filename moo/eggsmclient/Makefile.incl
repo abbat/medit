@@ -4,11 +4,7 @@ moo_sources +=					\
 	eggsmclient/eggsmclient-mangle.h	\
 	eggsmclient/eggsmclient-private.h
 
-if MOO_OS_DARWIN
-moo_sources += eggsmclient/eggsmclient-dummy.c
-else !MOO_OS_DARWIN
 AM_CFLAGS += -DEGG_SM_CLIENT_BACKEND_XSMP
 moo_sources += eggsmclient/eggsmclient-xsmp.c eggsmclient/eggdesktopfile.h eggsmclient/eggdesktopfile.c
-endif !MOO_OS_DARWIN
 
 # -%- strip:true -%-

@@ -24,11 +24,6 @@
 #endif
 
 #undef MOO_OS_UNIX
-#undef MOO_OS_DARWIN
-
-#if defined(__APPLE__)
-#  define MOO_OS_DARWIN 1
-#endif
 
 #define MOO_OS_UNIX 1
 

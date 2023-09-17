@@ -18,11 +18,6 @@
 
 #include <config.h>
 
-#if defined(MOO_OS_DARWIN)
-#include <crt_externs.h>
-#define environ (*_NSGetEnviron())
-#else
 extern char **environ;
-#endif
 
 #endif /* MOO_ENVIRON_H */
