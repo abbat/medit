@@ -20195,7 +20195,7 @@ ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
-  for opt in -Wall -Wextra -fexceptions -fno-strict-aliasing -Wno-missing-field-initializers -Wno-format-y2k -Wno-overlength-strings -Wno-deprecated-declarations ; do
+  for opt in -std=gnu17 -Wall -Wextra -fexceptions -fno-strict-aliasing -Wno-missing-field-initializers -Wno-format-y2k -Wno-overlength-strings -Wno-deprecated-declarations ; do
     save_CFLAGS="$CFLAGS"
     CFLAGS="$CFLAGS $opt"
     if test "x$MOO_STRICT_MODE" = "xyes"; then
@@ -20235,7 +20235,7 @@ ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 
-  for opt in -Wall -Wextra -fexceptions -fno-strict-aliasing -Wno-missing-field-initializers -Wno-format-y2k -Wno-overlength-strings -Wno-deprecated-declarations ; do
+  for opt in -std=gnu17 -Wall -Wextra -fexceptions -fno-strict-aliasing -Wno-missing-field-initializers -Wno-format-y2k -Wno-overlength-strings -Wno-deprecated-declarations ; do
     save_CXXFLAGS="$CXXFLAGS"
     CXXFLAGS="$CXXFLAGS $opt"
     if test "x$MOO_STRICT_MODE" = "xyes"; then
