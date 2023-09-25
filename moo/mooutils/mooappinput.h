@@ -31,7 +31,6 @@ void         _moo_app_input_start       (const char     *name,
                                          MooAppInputCallback callback,
                                          gpointer        callback_data);
 void         _moo_app_input_shutdown    (void);
-gboolean     _moo_app_input_running     (void);
 
 gboolean     _moo_app_input_send_msg    (const char     *name,
                                          const char     *data,
@@ -39,8 +38,6 @@ gboolean     _moo_app_input_send_msg    (const char     *name,
 void         _moo_app_input_broadcast   (const char     *header,
                                          const char     *data,
                                          gssize          len);
-const char  *_moo_app_input_get_path    (void);
-
 
 G_END_DECLS
 

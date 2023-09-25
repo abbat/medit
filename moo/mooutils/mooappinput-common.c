@@ -111,19 +111,6 @@ _moo_app_input_shutdown (void)
 }
 
 
-const char *
-_moo_app_input_get_path (void)
-{
-    return _moo_app_input_instance ? _moo_app_input_instance->main_path : NULL;
-}
-
-gboolean
-_moo_app_input_running (void)
-{
-    return _moo_app_input_instance != NULL;
-}
-
-
 void
 _moo_app_input_channel_commit (GString **buffer)
 {
