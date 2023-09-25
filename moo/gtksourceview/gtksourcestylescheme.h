@@ -54,9 +54,6 @@ struct _GtkSourceStyleSchemeClass
 
 GType			 gtk_source_style_scheme_get_type	(void) G_GNUC_CONST;
 
-GtkSourceStyleScheme	*_gtk_source_style_scheme_new		(const gchar          *id,
-								 const gchar          *name);
-
 const gchar             *gtk_source_style_scheme_get_id         (GtkSourceStyleScheme *scheme);
 const gchar             *gtk_source_style_scheme_get_name       (GtkSourceStyleScheme *scheme);
 const gchar             *gtk_source_style_scheme_get_description(GtkSourceStyleScheme *scheme);
@@ -68,7 +65,6 @@ const gchar             *gtk_source_style_scheme_get_filename	(GtkSourceStyleSch
 GtkSourceStyle		*gtk_source_style_scheme_get_style	(GtkSourceStyleScheme *scheme,
 								 const gchar          *style_id);
 GtkSourceStyleScheme	*_gtk_source_style_scheme_new_from_file (const gchar          *filename);
-GtkSourceStyleScheme	*_gtk_source_style_scheme_get_default	(void);
 const gchar		*_gtk_source_style_scheme_get_parent_id	(GtkSourceStyleScheme *scheme);
 void			 _gtk_source_style_scheme_set_parent	(GtkSourceStyleScheme *scheme,
 								 GtkSourceStyleScheme *parent_scheme);
@@ -76,13 +72,6 @@ void			 _gtk_source_style_scheme_set_parent	(GtkSourceStyleScheme *scheme,
 /* private */
 void			 _gtk_source_style_scheme_apply		(GtkSourceStyleScheme *scheme,
 								 GtkWidget            *widget);
-GtkSourceStyle		*_gtk_source_style_scheme_get_matching_brackets_style
-								(GtkSourceStyleScheme *scheme);
-GtkSourceStyle		*_gtk_source_style_scheme_get_right_margin_style
-								(GtkSourceStyleScheme *scheme);
-gboolean		 _gtk_source_style_scheme_get_current_line_color
-								(GtkSourceStyleScheme *scheme,
-								 GdkColor             *color);
 G_END_DECLS
 
 #endif  /* __GTK_SOURCE_STYLE_SCHEME_H__ */

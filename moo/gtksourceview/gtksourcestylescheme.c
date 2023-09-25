@@ -316,30 +316,6 @@ gtk_source_style_scheme_get_filename (GtkSourceStyleScheme *scheme)
 }
 
 /**
- * _gtk_source_style_scheme_new:
- * @id: scheme id.
- * @name: scheme name.
- *
- * Returns: new empty #GtkSourceStyleScheme.
- *
- * Since: 2.0
- */
-GtkSourceStyleScheme *
-_gtk_source_style_scheme_new (const gchar *id,
-			      const gchar *name)
-{
-	GtkSourceStyleScheme *scheme;
-
-	g_return_val_if_fail (id != NULL, NULL);
-	g_return_val_if_fail (name != NULL, NULL);
-
-	scheme = g_object_new (GTK_TYPE_SOURCE_STYLE_SCHEME,
-			       "id", id, "name", name, NULL);
-
-	return scheme;
-}
-
-/**
  * get_color_by_name:
  * @scheme: a #GtkSourceStyleScheme.
  * @name: color name to find.
@@ -503,20 +479,6 @@ gtk_source_style_scheme_set_style (GtkSourceStyleScheme *scheme,
 }
 #endif
 
-GtkSourceStyle *
-_gtk_source_style_scheme_get_matching_brackets_style (GtkSourceStyleScheme *scheme)
-{
-	g_return_val_if_fail (GTK_IS_SOURCE_STYLE_SCHEME (scheme), NULL);
-	return gtk_source_style_scheme_get_style (scheme, STYLE_BRACKET_MATCH);
-}
-
-GtkSourceStyle *
-_gtk_source_style_scheme_get_right_margin_style (GtkSourceStyleScheme *scheme)
-{
-	g_return_val_if_fail (GTK_IS_SOURCE_STYLE_SCHEME (scheme), NULL);
-	return gtk_source_style_scheme_get_style (scheme, STYLE_RIGHT_MARGIN);
-}
-
 static gboolean
 get_color (GtkSourceStyle *style,
 	   gboolean        foreground,
@@ -552,23 +514,6 @@ get_color (GtkSourceStyle *style,
 	}
 
 	return FALSE;
-}
-
-/*
- * Returns TRUE if the style for current-line set in the scheme
- */
-gboolean
-_gtk_source_style_scheme_get_current_line_color (GtkSourceStyleScheme *scheme,
-						 GdkColor             *color)
-{
-	GtkSourceStyle *style;
-
-	g_return_val_if_fail (GTK_IS_SOURCE_STYLE_SCHEME (scheme), FALSE);
-	g_return_val_if_fail (color != NULL, FALSE);
-
-	style = gtk_source_style_scheme_get_style (scheme, STYLE_CURRENT_LINE);
-
-	return get_color (style, FALSE, color);
 }
 
 static void
@@ -1184,23 +1129,4 @@ _gtk_source_style_scheme_set_parent (GtkSourceStyleScheme *scheme,
 	if (parent_scheme)
 		g_object_ref (parent_scheme);
 	scheme->priv->parent = parent_scheme;
-}
-
-/**
- * _gtk_source_style_scheme_get_default:
- *
- * Returns: default style scheme to be used when user didn't set
- * style scheme explicitly.
- *
- * Since: 2.0
- */
-GtkSourceStyleScheme *
-_gtk_source_style_scheme_get_default (void)
-{
-	GtkSourceStyleSchemeManager *manager;
-
-	manager = gtk_source_style_scheme_manager_get_default ();
-
-	return gtk_source_style_scheme_manager_get_scheme (manager,
-							   DEFAULT_STYLE_SCHEME);
 }
