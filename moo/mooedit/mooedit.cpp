@@ -836,13 +836,6 @@ _moo_edit_get_normalized_name (MooEdit *edit)
     return g_strdup (edit->priv->norm_name);
 }
 
-char *
-_moo_edit_get_utf8_filename (MooEdit *edit)
-{
-    g_return_val_if_fail (MOO_IS_EDIT (edit), NULL);
-    return edit->priv->filename ? g_strdup (edit->priv->display_filename) : NULL;
-}
-
 /**
  * moo_edit_get_display_name:
  *

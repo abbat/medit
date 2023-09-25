@@ -41,26 +41,6 @@ struct MooCommandExeClass : public MooCommandClass {
 
 GType   _moo_command_exe_get_type   (void) G_GNUC_CONST;
 
-void    _moo_edit_run_in_pane       (const char     *cmd_line,
-                                     const char     *working_dir,
-                                     char          **envp,
-                                     MooEditWindow  *window,
-                                     MooEdit        *doc);
-void    _moo_edit_run_async         (const char     *cmd_line,
-                                     const char     *working_dir,
-                                     char          **envp,
-                                     MooEditWindow  *window,
-                                     MooEdit        *doc);
-void    _moo_edit_run_sync          (const char     *cmd_line,
-                                     const char     *working_dir,
-                                     char          **envp,
-                                     MooEditWindow  *window,
-                                     MooEdit        *doc,
-                                     const char     *input,
-                                     int            *exit_status,
-                                     char          **output,
-                                     char          **output_err);
-
 
 G_END_DECLS
 

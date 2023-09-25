@@ -48,8 +48,6 @@ void             _moo_edit_set_state                (MooEdit        *doc,
 char            *_moo_file_get_normalized_name      (GFile          *file);
 char            *_moo_edit_get_normalized_name      (MooEdit        *edit);
 
-char            *_moo_edit_get_utf8_filename        (MooEdit        *edit);
-
 void             _moo_edit_add_class_actions        (MooEdit        *edit);
 void             _moo_edit_check_actions            (MooEdit        *edit,
                                                      MooEditView    *view);

@@ -325,42 +325,6 @@ run_in_pane (MooEditWindow     *window,
     }
 }
 
-static char *
-get_working_dir_for_doc (MooEditWindow *window,
-                         MooEdit       *doc)
-{
-    char *filename = NULL;
-    char *dirname = NULL;
-
-    if (!doc && window)
-        doc = moo_edit_window_get_active_doc (window);
-
-    if (doc)
-        filename = moo_edit_get_filename (doc);
-
-    if (filename)
-        dirname = g_path_get_dirname (filename);
-
-    g_free (filename);
-    return dirname;
-}
-
-void
-_moo_edit_run_in_pane (const char     *cmd_line,
-                       const char     *working_dir,
-                       char          **envp,
-                       MooEditWindow  *window,
-                       MooEdit        *doc)
-{
-    char *freeme = NULL;
-
-    if (!working_dir || !working_dir[0])
-        working_dir = freeme = get_working_dir_for_doc (window, doc);
-
-    run_in_pane (window, NULL, NULL, cmd_line, NULL, working_dir, envp);
-
-    g_free (freeme);
-}
 
 static void
 run_command_in_pane (MooCommandExe     *cmd,
@@ -552,26 +516,6 @@ run_sync (const char  *base_cmd_line,
     return result;
 }
 
-void
-_moo_edit_run_sync (const char    *cmd_line,
-                    const char    *working_dir,
-                    char         **envp,
-                    MooEditWindow *window,
-                    MooEdit       *doc,
-                    const char    *input,
-                    int           *exit_status,
-                    char         **output,
-                    char         **output_err)
-{
-    char *freeme = NULL;
-
-    if (!working_dir || !working_dir[0])
-        working_dir = freeme = get_working_dir_for_doc (window, doc);
-
-    run_sync (cmd_line, working_dir, envp, input, exit_status, output, output_err);
-
-    g_free (freeme);
-}
 
 static gboolean
 run_command (MooCommandExe     *cmd,
@@ -642,23 +586,6 @@ run_async (const char     *cmd_line,
 
     g_strfreev (argv);
     return result;
-}
-
-void
-_moo_edit_run_async (const char     *cmd_line,
-                     const char     *working_dir,
-                     char          **envp,
-                     MooEditWindow  *window,
-                     MooEdit        *doc)
-{
-    char *freeme = NULL;
-
-    if (!working_dir || !working_dir[0])
-        working_dir = freeme = get_working_dir_for_doc (window, doc);
-
-    run_async (cmd_line, working_dir, envp, window);
-
-    g_free (freeme);
 }
 
 static gboolean
