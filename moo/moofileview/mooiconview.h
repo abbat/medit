@@ -114,11 +114,6 @@ void        _moo_icon_view_widget_to_abs_coords (MooIconView        *view,
                                                  int                 wy,
                                                  int                *absx,
                                                  int                *absy);
-void        _moo_icon_view_abs_to_widget_coords (MooIconView        *view,
-                                                 int                 absx,
-                                                 int                 absy,
-                                                 int                *wx,
-                                                 int                *wy);
 
 gboolean    _moo_icon_view_get_path_at_pos      (MooIconView        *view,
                                                  int                 x,

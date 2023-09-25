@@ -712,21 +712,3 @@ _moo_tree_view_widget_to_abs_coords (gpointer        view,
     else
         g_return_if_reached ();
 }
-
-
-#if 0
-void
-_moo_tree_view_abs_to_widget_coords (gpointer        view,
-                                     int             absx,
-                                     int             absy,
-                                     int            *wx,
-                                     int            *wy)
-{
-    if (GTK_IS_TREE_VIEW (view))
-        gtk_tree_view_tree_to_widget_coords (view, absx, absy, wx, wy);
-    else if (MOO_IS_ICON_VIEW (view))
-        _moo_icon_view_abs_to_widget_coords (view, absx, absy, wx, wy);
-    else
-        g_return_if_reached ();
-}
-#endif

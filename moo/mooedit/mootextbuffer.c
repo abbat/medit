@@ -2098,26 +2098,6 @@ moo_text_buffer_delete_fold (MooTextBuffer *buffer,
 }
 
 
-#if 0
-GSList *
-moo_text_buffer_get_folds_in_range (MooTextBuffer *buffer,
-                                    int            first_line,
-                                    int            last_line)
-{
-    g_return_val_if_fail (MOO_IS_TEXT_BUFFER (buffer), NULL);
-    g_return_val_if_fail (first_line >= 0, NULL);
-
-    if (last_line < 0)
-        last_line = gtk_text_buffer_get_line_count (GTK_TEXT_BUFFER (buffer)) - 1;
-
-    g_return_val_if_fail (last_line >= first_line, NULL);
-    g_return_val_if_fail (last_line < gtk_text_buffer_get_line_count (GTK_TEXT_BUFFER (buffer)), NULL);
-
-    return _moo_fold_tree_get (buffer->priv->fold_tree, first_line, last_line);
-}
-#endif
-
-
 MooFold *
 moo_text_buffer_get_fold_at_line (MooTextBuffer *buffer,
                                   int            line)

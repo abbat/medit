@@ -2887,23 +2887,6 @@ _moo_icon_view_widget_to_abs_coords (MooIconView        *view,
 }
 
 
-void
-_moo_icon_view_abs_to_widget_coords (MooIconView        *view,
-                                     int                 absx,
-                                     int                 absy,
-                                     int                *wx,
-                                     int                *wy)
-{
-    g_return_if_fail (MOO_IS_ICON_VIEW (view));
-
-    if (wx)
-        *wx = absx - view->priv->xoffset;
-
-    if (wy)
-        *wy = absy;
-}
-
-
 /**************************************************************************/
 /* Selection and cursor
  */

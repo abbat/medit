@@ -69,9 +69,6 @@ void         _moo_encodings_menu_action_set_current (GtkAction      *action,
                                              const char             *enc);
 
 const char  *_moo_encoding_locale           (void);
-gboolean     _moo_encodings_equal           (const char             *enc1,
-                                             const char             *enc2);
-const char  *_moo_encoding_get_display_name (const char             *enc);
 
 
 G_END_DECLS

@@ -301,22 +301,6 @@ get_enc_mgr (void)
 }
 
 
-const char *
-_moo_encoding_get_display_name (const char *enc_name)
-{
-    EncodingsManager *mgr;
-    Encoding *enc;
-
-    g_return_val_if_fail (enc_name != NULL, NULL);
-
-    mgr = get_enc_mgr ();
-    enc = get_encoding (mgr, enc_name);
-    g_return_val_if_fail (enc != NULL, enc_name);
-
-    return enc->display_name;
-}
-
-
 static void
 enc_mgr_save (EncodingsManager *enc_mgr)
 {
@@ -923,28 +907,6 @@ _moo_encoding_locale (void)
     mgr = get_enc_mgr ();
 
     return mgr->locale_encoding->name;
-}
-
-
-gboolean
-_moo_encodings_equal (const char *enc1_name,
-                      const char *enc2_name)
-{
-    Encoding *enc1, *enc2;
-    EncodingsManager *mgr;
-
-    enc1_name = enc1_name && enc1_name[0] ? enc1_name : MOO_ENCODING_UTF8;
-    enc2_name = enc2_name && enc2_name[0] ? enc2_name : MOO_ENCODING_UTF8;
-
-    mgr = get_enc_mgr ();
-
-    enc1 = lookup_encoding (mgr, enc1_name);
-    enc2 = lookup_encoding (mgr, enc2_name);
-
-    if (!enc1 || !enc2)
-        return !strcmp (enc1_name, enc2_name);
-
-    return enc1 == enc2;
 }
 
 

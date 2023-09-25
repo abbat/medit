@@ -795,20 +795,3 @@ get_folds_in_range (MooFoldTree    *tree,
 
     return list;
 }
-
-
-GSList *
-_moo_fold_tree_get (MooFoldTree    *tree,
-                    int             first_line,
-                    int             last_line)
-{
-    GSList *list;
-
-    g_assert (tree != NULL);
-    g_assert (first_line >= 0 && first_line < get_line_count (tree));
-    g_assert (last_line >= 0 && last_line < get_line_count (tree));
-    g_assert (last_line >= first_line);
-
-    list = get_folds_in_range (tree, NULL, first_line, last_line, NULL);
-    return g_slist_reverse (list);
-}
