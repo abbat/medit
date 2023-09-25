@@ -1915,15 +1915,7 @@ moo_signal_accumulator_continue_cancel (G_GNUC_UNUSED GSignalInvocationHint *ihi
 
 
 static char *debug_domains;
-void _moo_set_debug (const char *domains);
 gboolean moo_debug_enabled (const char *domain, gboolean def_enabled);
-
-void
-_moo_set_debug (const char *domains)
-{
-    g_free (debug_domains);
-    debug_domains = g_strdup (domains);
-}
 
 gboolean
 moo_debug_enabled (const char *domain,

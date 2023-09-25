@@ -106,7 +106,6 @@ static void moo_dprint (const char *format, ...) G_GNUC_PRINTF(1,2)
 
 gboolean moo_debug_enabled  (const char *var,
                              gboolean    def_enabled);
-void     _moo_set_debug     (const char *domains);
 
 G_END_DECLS
 
