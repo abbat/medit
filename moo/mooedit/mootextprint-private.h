@@ -66,9 +66,6 @@ typedef struct {
 
 GType   _moo_print_settings_get_type            (void) G_GNUC_CONST;
 
-GtkWindow *_moo_print_operation_get_parent      (MooPrintOperation  *print);
-int     _moo_print_operation_get_n_pages        (MooPrintOperation  *print);
-
 
 G_END_DECLS
 

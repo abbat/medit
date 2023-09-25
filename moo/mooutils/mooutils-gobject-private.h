@@ -25,7 +25,6 @@ G_BEGIN_DECLS
 /* GType type
  */
 
-#define MOO_TYPE_PARAM_GTYPE            (_moo_param_gtype_get_type())
 #define MOO_IS_PARAM_SPEC_GTYPE(pspec)  (G_TYPE_CHECK_INSTANCE_TYPE ((pspec), MOO_TYPE_PARAM_GTYPE))
 #define MOO_PARAM_SPEC_GTYPE(pspec)     (G_TYPE_CHECK_INSTANCE_CAST ((pspec), MOO_TYPE_PARAM_GTYPE, MooParamSpecGType))
 
@@ -36,8 +35,6 @@ struct _MooParamSpecGType
     GParamSpec parent;
     GType base;
 };
-
-GType           _moo_param_gtype_get_type   (void) G_GNUC_CONST;
 
 /*****************************************************************************/
 /* Property watch

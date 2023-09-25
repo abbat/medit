@@ -175,37 +175,6 @@ _moo_mkdir_with_parents (const char *path, mgw_errno_t* err)
 }
 
 
-gboolean
-_moo_rename_file (const char *path,
-                  const char *new_path,
-                  GError    **error)
-{
-    // Do not break this for directories!
-    mgw_errno_t err;
-
-    g_return_val_if_fail (path != NULL, FALSE);
-    g_return_val_if_fail (new_path != NULL, FALSE);
-
-    if (mgw_rename (path, new_path, &err) != 0)
-    {
-        char *utf8_path = g_filename_display_name (path);
-        char *utf8_new_path = g_filename_display_name (new_path);
-
-        g_set_error (error,
-                     MOO_FILE_ERROR,
-                     _moo_file_error_from_errno (err),
-                     _("Could not rename file %s to %s: %s"),
-                     utf8_path, utf8_new_path, mgw_strerror (err));
-
-        g_free (utf8_path);
-        g_free (utf8_new_path);
-        return FALSE;
-    }
-
-    return TRUE;
-}
-
-
 MooFileError
 _moo_file_error_from_errno (mgw_errno_t code)
 {

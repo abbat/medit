@@ -110,112 +110,11 @@ _moo_gtype_get_type (void)
 }
 
 
-static void
-_moo_value_set_gtype (GValue *value,
-                      GType   v_gtype)
-{
-    MOO_GTYPE_PEEK(value) = (gpointer) v_gtype;
-}
-
-
 GType
 _moo_value_get_gtype (const GValue *value)
 {
     return (GType) MOO_GTYPE_PEEK(value);
 }
-
-
-static void
-param_gtype_set_default (GParamSpec *pspec,
-                         GValue     *value)
-{
-    MooParamSpecGType *mspec = MOO_PARAM_SPEC_GTYPE (pspec);
-    _moo_value_set_gtype (value, mspec->base);
-}
-
-
-static gboolean
-param_gtype_validate (GParamSpec   *pspec,
-                      GValue       *value)
-{
-    MooParamSpecGType *mspec = MOO_PARAM_SPEC_GTYPE (pspec);
-    GType t = _moo_value_get_gtype (value);
-    gboolean changed = FALSE;
-
-    if (G_TYPE_IS_DERIVABLE (mspec->base))
-    {
-        if (!g_type_is_a (t, mspec->base))
-        {
-            _moo_value_set_gtype (value, mspec->base);
-            changed = TRUE;
-        }
-    }
-    else if (!g_type_name (t))
-    {
-        _moo_value_set_gtype (value, mspec->base);
-        changed = TRUE;
-    }
-
-    return changed;
-}
-
-
-static int
-param_gtype_cmp (G_GNUC_UNUSED GParamSpec *pspec,
-                 const GValue *value1,
-                 const GValue *value2)
-{
-    GType t1 = _moo_value_get_gtype (value1);
-    GType t2 = _moo_value_get_gtype (value2);
-    return t1 == t2 ? 0 : (t1 < t2 ? -1 : 1);
-}
-
-
-GType
-_moo_param_gtype_get_type (void)
-{
-    static GType type = 0;
-
-    if (G_UNLIKELY (!type))
-    {
-        static GParamSpecTypeInfo info = {
-            sizeof (MooParamSpecGType), /* instance_size */
-            16,                         /* n_preallocs */
-            NULL,                       /* instance_init */
-            0,							/* value_type */
-            NULL,                       /* finalize */
-            param_gtype_set_default,    /* value_set_default */
-            param_gtype_validate,       /* value_validate */
-            param_gtype_cmp,            /* values_cmp */
-        };
-
-        info.value_type = MOO_TYPE_GTYPE;
-        type = g_param_type_register_static ("MooParamGType", &info);
-    }
-
-    return type;
-}
-
-
-#if 0
-GParamSpec*
-_moo_param_spec_gtype (const char     *name,
-                       const char     *nick,
-                       const char     *blurb,
-                       GType           base,
-                       GParamFlags     flags)
-{
-    MooParamSpecGType *pspec;
-
-    g_return_val_if_fail (g_type_name (base) != NULL, NULL);
-
-    pspec = g_param_spec_internal (MOO_TYPE_PARAM_GTYPE,
-                                   name, nick, blurb, flags);
-    pspec->base = base;
-
-    return G_PARAM_SPEC (pspec);
-}
-#endif
 
 
 /*****************************************************************************/

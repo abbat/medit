@@ -1807,22 +1807,6 @@ _moo_edit_export_pdf (GtkTextView *view,
 }
 
 
-GtkWindow *
-_moo_print_operation_get_parent (MooPrintOperation *op)
-{
-    g_return_val_if_fail (MOO_IS_PRINT_OPERATION (op), NULL);
-    return op->priv->parent;
-}
-
-
-int
-_moo_print_operation_get_n_pages (MooPrintOperation *op)
-{
-    g_return_val_if_fail (MOO_IS_PRINT_OPERATION (op), -1);
-    return op->priv->pages ? (int) op->priv->pages->len : -1;
-}
-
-
 /*****************************************************************************/
 /* Header/footer gui
  */
