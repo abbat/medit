@@ -173,28 +173,6 @@ gtk_source_language_manager_new (void)
 	return g_object_new (GTK_TYPE_SOURCE_LANGUAGE_MANAGER, NULL);
 }
 
-/**
- * gtk_source_language_manager_get_default:
- *
- * Returns the default #GtkSourceLanguageManager instance.
- *
- * Returns: a #GtkSourceLanguageManager. Return value is owned
- * by GtkSourceView library and must not be unref'ed.
- */
-GtkSourceLanguageManager *
-gtk_source_language_manager_get_default (void)
-{
-	static GtkSourceLanguageManager *instance;
-
-	if (instance == NULL)
-	{
-		instance = gtk_source_language_manager_new ();
-		g_object_add_weak_pointer (G_OBJECT (instance),
-					   (gpointer) &instance);
-	}
-
-	return instance;
-}
 
 static void
 notify_search_path (GtkSourceLanguageManager *mgr)

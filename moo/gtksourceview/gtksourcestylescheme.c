@@ -263,57 +263,6 @@ gtk_source_style_scheme_get_name (GtkSourceStyleScheme *scheme)
 	return scheme->priv->name;
 }
 
-/**
- * gtk_source_style_scheme_get_description:
- * @scheme: a #GtkSourceStyleScheme.
- *
- * Returns: @scheme description (if defined) or NULL.
- *
- * Since: 2.0
- */
-const gchar *
-gtk_source_style_scheme_get_description (GtkSourceStyleScheme *scheme)
-{
-	g_return_val_if_fail (GTK_IS_SOURCE_STYLE_SCHEME (scheme), NULL);
-	return scheme->priv->description;
-}
-
-/**
- * gtk_source_style_scheme_get_authors:
- * @scheme: a #GtkSourceStyleScheme.
- *
- * Returns: a %NULL-terminated array containing the @scheme authors or
- * %NULL if no author is specified by the style
- * scheme.
- *
- * Since: 2.0
- */
-const gchar* const *
-gtk_source_style_scheme_get_authors (GtkSourceStyleScheme *scheme)
-{
-	g_return_val_if_fail (GTK_IS_SOURCE_STYLE_SCHEME (scheme), NULL);
-
-	if (scheme->priv->authors == NULL)
-		return NULL;
-
-	return (const gchar* const *)scheme->priv->authors->pdata;
-}
-
-/**
- * gtk_source_style_scheme_get_filename:
- * @scheme: a #GtkSourceStyleScheme.
- *
- * Returns: @scheme file name if the scheme was created parsing a
- * style scheme file or NULL in the other cases.
- *
- * Since: 2.0
- */
-const gchar *
-gtk_source_style_scheme_get_filename (GtkSourceStyleScheme *scheme)
-{
-	g_return_val_if_fail (GTK_IS_SOURCE_STYLE_SCHEME (scheme), NULL);
-	return scheme->priv->filename;
-}
 
 /**
  * get_color_by_name:

@@ -60,8 +60,6 @@ GType			  gtk_source_language_manager_get_type			(void) G_GNUC_CONST;
 
 GtkSourceLanguageManager *gtk_source_language_manager_new			(void);
 
-GtkSourceLanguageManager *gtk_source_language_manager_get_default		(void);
-
 const gchar* const *
 			  gtk_source_language_manager_get_search_path		(GtkSourceLanguageManager *lm);
 

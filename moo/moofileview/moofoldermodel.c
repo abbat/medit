@@ -306,14 +306,6 @@ static void     model_remove_moo_file   (MooFile        *file,
                                          MooFolderModel *model);
 
 
-inline static gboolean
-model_contains_file (MooFolderModel *model,
-                     MooFile        *file)
-{
-    return file_list_contains (model->priv->files, file);
-}
-
-
 #define ITER_MODEL(ip)      ((ip)->user_data)
 #define ITER_FILE(ip)       ((ip)->user_data2)
 #define ITER_GET_MODEL(ip)  ((MooFolderModel*) ITER_MODEL (ip))
@@ -746,36 +738,6 @@ _moo_folder_model_get_folder (MooFolderModel *model)
     g_return_val_if_fail (MOO_IS_FOLDER_MODEL (model), NULL);
     return model->priv->folder;
 }
-
-
-#if 0
-static gboolean
-_moo_folder_model_get_iter (MooFolderModel *model,
-                            MooFile        *file,
-                            GtkTreeIter    *iter)
-{
-    g_return_val_if_fail (MOO_IS_FOLDER_MODEL (model), FALSE);
-    g_return_val_if_fail (file != NULL, FALSE);
-
-    if (file_list_contains (model->priv->dirs, file))
-    {
-        ITER_INIT (iter, model, file, TRUE);
-        CHECK_ITER (model, iter);
-        return TRUE;
-    }
-    else if (file_list_contains (model->priv->files, file))
-    {
-        ITER_INIT (iter, model, file, FALSE);
-        CHECK_ITER (model, iter);
-        return TRUE;
-    }
-    else
-    {
-        ITER_INIT (iter, NULL, NULL, FALSE);
-        return FALSE;
-    }
-}
-#endif
 
 
 gboolean

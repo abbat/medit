@@ -49,8 +49,6 @@ static int       file_list_remove       (FileList   *flist,
 
 static MooFile  *file_list_nth          (FileList   *flist,
                                          int         index_);
-static gboolean  file_list_contains     (FileList   *flist,
-                                         MooFile    *file);
 static int       file_list_position     (FileList   *flist,
                                          MooFile    *file);
 
@@ -187,13 +185,6 @@ static int       file_list_remove       (FileList   *flist,
 
     _moo_file_unref (file);
     return index_;
-}
-
-
-static gboolean  file_list_contains     (FileList   *flist,
-                                         MooFile    *file)
-{
-    return g_hash_table_lookup (flist->file_to_link, file) != NULL;
 }
 
 

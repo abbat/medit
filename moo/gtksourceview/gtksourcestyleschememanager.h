@@ -67,16 +67,8 @@ GtkSourceStyleSchemeManager *
 void			 gtk_source_style_scheme_manager_set_search_path	(GtkSourceStyleSchemeManager	*manager,
 						    				 gchar			       **path);
 
-void 			 gtk_source_style_scheme_manager_append_search_path    (GtkSourceStyleSchemeManager	*manager,
-						    				 const gchar			*path);
-
-void 			 gtk_source_style_scheme_manager_prepend_search_path   (GtkSourceStyleSchemeManager	*manager,
-						    				 const gchar			*path);
-
 const gchar* const *
 			 gtk_source_style_scheme_manager_get_search_path	(GtkSourceStyleSchemeManager	*manager);
-
-void			 gtk_source_style_scheme_manager_force_rescan		(GtkSourceStyleSchemeManager	*manager);
 
 const gchar* const *
 			 gtk_source_style_scheme_manager_get_scheme_ids		(GtkSourceStyleSchemeManager	*manager);
