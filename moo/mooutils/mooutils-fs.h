@@ -50,8 +50,6 @@ gboolean        _moo_save_file_utf8         (const char *name,
 gboolean        _moo_remove_dir             (const char *path,
                                              gboolean    recursive,
                                              GError    **error);
-gboolean        _moo_create_dir             (const char *path,
-                                             GError    **error);
 int             _moo_mkdir_with_parents     (const char *path,
                                              mgw_errno_t* err); /* S_IRWXU on unix */
 gboolean        _moo_rename_file            (const char *path,

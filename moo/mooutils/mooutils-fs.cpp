@@ -176,63 +176,6 @@ _moo_mkdir_with_parents (const char *path, mgw_errno_t* err)
 
 
 gboolean
-_moo_create_dir (const char *path,
-                 GError    **error)
-{
-    MgwStatBuf buf;
-    char *utf8_path;
-    mgw_errno_t err;
-
-    g_return_val_if_fail (path != NULL, FALSE);
-
-    if (mgw_stat (path, &buf, &err) != 0 && err.value != MGW_ENOENT)
-    {
-        utf8_path = g_filename_display_name (path);
-
-        g_set_error (error,
-                     MOO_FILE_ERROR,
-                     _moo_file_error_from_errno (err),
-                     _("Could not create folder %s: %s"),
-                     utf8_path, mgw_strerror (err));
-
-        g_free (utf8_path);
-        return FALSE;
-    }
-
-    if (mgw_errno_is_set (err))
-    {
-        if (_moo_mkdir (path, &err) == -1)
-        {
-            utf8_path = g_filename_display_name (path);
-
-            g_set_error (error,
-                         MOO_FILE_ERROR,
-                         _moo_file_error_from_errno (err),
-                         _("Could not create folder %s: %s"),
-                         utf8_path, mgw_strerror (err));
-
-            g_free (utf8_path);
-            return FALSE;
-        }
-
-        return TRUE;
-    }
-
-    if (buf.isdir)
-        return TRUE;
-
-    utf8_path = g_filename_display_name (path);
-    g_set_error (error, MOO_FILE_ERROR,
-                 MOO_FILE_ERROR_ALREADY_EXISTS,
-                 _("Could not create folder %s: %s"),
-                 utf8_path, mgw_strerror (MGW_E_EXIST));
-    g_free (utf8_path);
-
-    return FALSE;
-}
-
-
-gboolean
 _moo_rename_file (const char *path,
                   const char *new_path,
                   GError    **error)

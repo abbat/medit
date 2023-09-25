@@ -932,18 +932,6 @@ _moo_convert_bool_to_string (gboolean value)
 }
 
 
-const char *
-_moo_convert_int_to_string (int value)
-{
-    GValue int_val = {0};
-
-    g_value_init (&int_val, G_TYPE_INT);
-    g_value_set_int (&int_val, value);
-
-    return _moo_value_convert_to_string (&int_val);
-}
-
-
 gboolean
 _moo_value_change_type (GValue *val,
                         GType   new_type)

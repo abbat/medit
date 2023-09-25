@@ -69,7 +69,6 @@ guint       _moo_add_property_watch         (gpointer        target,
  */
 
 #define MOO_TYPE_PTR    (_moo_ptr_get_type ())
-#define MOO_TYPE_DATA   (_moo_data_get_type ())
 
 typedef struct _MooPtr MooPtr;
 
@@ -80,9 +79,6 @@ struct _MooPtr {
 };
 
 GType    _moo_ptr_get_type          (void) G_GNUC_CONST;
-GType    _moo_data_get_type         (void) G_GNUC_CONST;
-
-
 
 G_END_DECLS
 
