@@ -493,7 +493,6 @@ typedef struct {
 
 
 static MooLogWindow *moo_log_window             (void);
-static GtkWidget    *moo_log_window_get_widget  (void);
 
 
 static MooLogWindow*
@@ -547,27 +546,6 @@ moo_log_window (void)
     }
 
     return (MooLogWindow*) log;
-}
-
-
-static GtkWidget*
-moo_log_window_get_widget (void)
-{
-    MooLogWindow *log = moo_log_window ();
-    return log->window;
-}
-
-
-void
-moo_log_window_show (void)
-{
-    gtk_window_present (GTK_WINDOW (moo_log_window_get_widget ()));
-}
-
-void
-moo_log_window_hide (void)
-{
-    gtk_widget_hide (moo_log_window_get_widget ());
 }
 
 

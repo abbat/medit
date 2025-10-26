@@ -173,13 +173,6 @@ moo_line_view_parent_set (GtkWidget *widget,
 }
 
 
-GtkWidget *
-moo_line_view_new (void)
-{
-    return GTK_WIDGET (g_object_new (MOO_TYPE_LINE_VIEW, (const char*) NULL));
-}
-
-
 /**
  * moo_line_view_clear:
  */

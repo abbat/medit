@@ -50,8 +50,6 @@ struct MooLineViewClass
 GType       moo_line_view_get_type      (void) G_GNUC_CONST;
 GType       moo_line_view_data_get_type (void) G_GNUC_CONST;
 
-GtkWidget  *moo_line_view_new           (void);
-
 void        moo_line_view_set_data      (MooLineView    *view,
                                          int             line,
                                          gpointer        data,

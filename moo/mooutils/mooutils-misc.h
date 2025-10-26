@@ -36,9 +36,6 @@ GtkWindow  *_moo_get_top_window             (GSList     *windows);
 void        _moo_window_set_icon_from_stock (GtkWindow  *window,
                                              const char *name);
 
-void        moo_log_window_show             (void);
-void        moo_log_window_hide             (void);
-
 void        moo_set_log_func_window         (gboolean        show_now);
 void        moo_set_log_func_file           (const char     *log_file);
 

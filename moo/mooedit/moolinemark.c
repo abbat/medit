@@ -537,14 +537,6 @@ moo_line_mark_set_pixbuf (MooLineMark    *mark,
 }
 
 
-const char *
-moo_line_mark_get_stock_id (MooLineMark *mark)
-{
-    g_return_val_if_fail (MOO_IS_LINE_MARK (mark), NULL);
-    return mark->priv->stock_id;
-}
-
-
 GdkPixbuf *
 moo_line_mark_get_pixbuf (MooLineMark *mark)
 {
