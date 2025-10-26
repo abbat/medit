@@ -62,10 +62,7 @@ int mgw_ferror (MGW_FILE *file);
 char *mgw_fgets(char *s, int size, MGW_FILE *stream);
 
 MgwFd mgw_open (const char *filename, int flags, int mode);
-gssize mgw_write(MgwFd fd, const void *buf, gsize count);
 int mgw_close (MgwFd fd);
-int mgw_pipe (MgwFd *fds);
-void mgw_perror (const char *s);
 
 int mgw_unlink (const char *path, mgw_errno_t *err);
 int mgw_remove (const char *path, mgw_errno_t *err);

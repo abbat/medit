@@ -77,15 +77,11 @@ typedef GtkAction *(*MooWindowActionFunc) (MooWindow *window,
 
 GType       moo_window_get_type             (void) G_GNUC_CONST;
 
-gboolean    moo_window_close                (MooWindow  *window);
 void        moo_window_message              (MooWindow  *window,
                                              const char *text);
 
 void        moo_window_set_title            (MooWindow  *window,
                                              const char *title);
-
-void        moo_window_set_edit_ops_widget  (MooWindow  *window,
-                                             GtkWidget  *widget);
 
 /*****************************************************************************/
 /* Actions
@@ -135,9 +131,6 @@ void        moo_window_set_ui_xml           (MooWindow          *window,
 MooActionCollection *moo_window_get_actions (MooWindow          *window);
 GtkAction  *moo_window_get_action           (MooWindow          *window,
                                              const char         *action);
-
-void        moo_window_set_global_accels    (MooWindow          *window,
-                                             gboolean            global);
 
 void        moo_window_set_default_geometry (const char         *geometry);
 

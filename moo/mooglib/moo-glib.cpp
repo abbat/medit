@@ -229,31 +229,6 @@ mgw_close (MgwFd fd)
     return close (fd.value);
 }
 
-gssize
-mgw_write(MgwFd fd, const void *buf, gsize count)
-{
-    return write (fd.value, buf, count);
-}
-
-int
-mgw_pipe (MgwFd *fds)
-{
-    int t[2];
-
-    int result = pipe (t);
-
-    fds[0].value = t[0];
-    fds[1].value = t[1];
-    return result;
-}
-
-void
-mgw_perror (const char *s)
-{
-    perror (s);
-}
-
-
 int
 mgw_unlink (const char *path, mgw_errno_t *err)
 {

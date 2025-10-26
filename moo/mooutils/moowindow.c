@@ -760,15 +760,6 @@ moo_window_key_press_event (GtkWidget   *widget,
 }
 
 
-void
-moo_window_set_global_accels (MooWindow *window,
-                              gboolean   global)
-{
-    g_return_if_fail (MOO_IS_WINDOW (window));
-    window->priv->global_accels_mode = global != 0;
-}
-
-
 static gboolean
 save_size (MooWindow *window)
 {
@@ -808,24 +799,6 @@ static MooCloseResponse
 moo_window_close_handler (G_GNUC_UNUSED MooWindow *window)
 {
     return MOO_CLOSE_RESPONSE_CONTINUE;
-}
-
-gboolean
-moo_window_close (MooWindow *window)
-{
-    MooCloseResponse response = MOO_CLOSE_RESPONSE_CONTINUE;
-
-    g_signal_emit_by_name (window, "close", &response);
-
-    if (response == MOO_CLOSE_RESPONSE_CANCEL)
-    {
-        return FALSE;
-    }
-    else
-    {
-        gtk_widget_destroy (GTK_WIDGET (window));
-        return TRUE;
-    }
 }
 
 
@@ -2234,28 +2207,6 @@ _moo_window_class_new_action_callback (MooWindowClass *klass,
 /*************************************************************************/
 /* MooEditOps
  */
-
-void
-moo_window_set_edit_ops_widget (MooWindow *window,
-                                GtkWidget *widget)
-{
-    g_return_if_fail (MOO_IS_WINDOW (window));
-    g_return_if_fail (!widget || GTK_IS_WIDGET (widget));
-
-    if (widget == window->priv->default_eo_widget)
-        return;
-
-    if (widget)
-    {
-        GtkWidget *toplevel = gtk_widget_get_toplevel (widget);
-        g_return_if_fail (toplevel == GTK_WIDGET (window));
-        g_return_if_fail (_moo_edit_ops_check (G_OBJECT (widget)));
-    }
-
-    /* XXX remove it when it's removed from the window or destroyed */
-    window->priv->default_eo_widget = widget;
-}
-
 
 static void
 moo_window_action_cut (MooWindow *window)
