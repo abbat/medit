@@ -155,14 +155,6 @@ gtk_text_region_destroy (GtkTextRegion *region, gboolean delete_marks)
 	g_free (region);
 }
 
-GtkTextBuffer *
-gtk_text_region_get_buffer (GtkTextRegion *region)
-{
-	g_return_val_if_fail (region != NULL, NULL);
-
-	return region->buffer;
-}
-
 static void
 gtk_text_region_clear_zero_length_subregions (GtkTextRegion *region)
 {
@@ -400,36 +392,6 @@ gtk_text_region_subtract (GtkTextRegion     *region,
 	gtk_text_region_clear_zero_length_subregions (region);
 
 	DEBUG (gtk_text_region_debug_print (region));
-}
-
-gint
-gtk_text_region_subregions (GtkTextRegion *region)
-{
-	g_return_val_if_fail (region != NULL, 0);
-
-	return g_list_length (region->subregions);
-}
-
-gboolean
-gtk_text_region_nth_subregion (GtkTextRegion *region,
-			       guint          subregion,
-			       GtkTextIter   *start,
-			       GtkTextIter   *end)
-{
-	Subregion *sr;
-
-	g_return_val_if_fail (region != NULL, FALSE);
-
-	sr = g_list_nth_data (region->subregions, subregion);
-	if (sr == NULL)
-		return FALSE;
-
-	if (start)
-		gtk_text_buffer_get_iter_at_mark (region->buffer, start, sr->start);
-	if (end)
-		gtk_text_buffer_get_iter_at_mark (region->buffer, end, sr->end);
-
-	return TRUE;
 }
 
 GtkTextRegion *

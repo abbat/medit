@@ -46,8 +46,6 @@ GtkTextRegion *gtk_text_region_new                          (GtkTextBuffer *buff
 void           gtk_text_region_destroy                      (GtkTextRegion *region,
 							     gboolean       delete_marks);
 
-GtkTextBuffer *gtk_text_region_get_buffer                   (GtkTextRegion *region);
-
 void           gtk_text_region_add                          (GtkTextRegion     *region,
 							     const GtkTextIter *_start,
 							     const GtkTextIter *_end);
@@ -55,13 +53,6 @@ void           gtk_text_region_add                          (GtkTextRegion     *
 void           gtk_text_region_subtract                     (GtkTextRegion     *region,
 							     const GtkTextIter *_start,
 							     const GtkTextIter *_end);
-
-gint           gtk_text_region_subregions                   (GtkTextRegion *region);
-
-gboolean       gtk_text_region_nth_subregion                (GtkTextRegion *region,
-							     guint          subregion,
-							     GtkTextIter   *start,
-							     GtkTextIter   *end);
 
 GtkTextRegion *gtk_text_region_intersect                    (GtkTextRegion     *region,
 							     const GtkTextIter *_start,
