@@ -124,13 +124,6 @@ moo_open_info_dup (MooOpenInfo *info)
     return copy;
 }
 
-void
-moo_open_info_free (MooOpenInfo *info)
-{
-    if (info)
-        g_object_unref (info);
-}
-
 
 /**
  * moo_open_info_get_filename: (moo.private 1)

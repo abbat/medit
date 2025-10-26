@@ -65,10 +65,6 @@ GType           moo_combo_get_type          (void) G_GNUC_CONST;
 
 GtkWidget      *moo_combo_new               (void);
 
-GtkWidget      *moo_combo_new_text          (void);
-void            moo_combo_add_text          (MooCombo       *combo,
-                                             const char     *text);
-
 void            moo_combo_popup             (MooCombo       *combo);
 void            moo_combo_popdown           (MooCombo       *combo);
 gboolean        moo_combo_popup_shown       (MooCombo       *combo);
@@ -81,7 +77,6 @@ gboolean        moo_combo_get_active_iter   (MooCombo       *combo,
 void            moo_combo_set_active        (MooCombo       *combo,
                                              int             row);
 
-GtkTreeModel   *moo_combo_get_model         (MooCombo       *combo);
 void            moo_combo_set_model         (MooCombo       *combo,
                                              GtkTreeModel   *model);
 
@@ -91,7 +86,6 @@ void            moo_combo_set_row_separator_func (MooCombo  *combo,
 
 void            moo_combo_set_text_column   (MooCombo       *combo,
                                              int             column);
-int             moo_combo_get_text_column   (MooCombo       *combo);
 
 void            moo_combo_set_get_text_func (MooCombo       *combo,
                                              MooComboGetTextFunc func,
@@ -107,16 +101,7 @@ void            moo_combo_set_use_button    (MooCombo       *combo,
 /* GtkEntry and GtkEditable interface
  */
 
-void        moo_combo_entry_set_text                (MooCombo       *combo,
-                                                     const char     *text);
 const char *moo_combo_entry_get_text                (MooCombo       *combo);
-
-void        moo_combo_select_region                 (MooCombo       *combo,
-                                                     int             start,
-                                                     int             end);
-void        moo_combo_entry_set_activates_default   (MooCombo       *combo,
-                                                     gboolean        setting);
-
 
 G_END_DECLS
 

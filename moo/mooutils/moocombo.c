@@ -1033,14 +1033,6 @@ list_button_press (MooCombo       *combo,
 }
 
 
-GtkTreeModel*
-moo_combo_get_model (MooCombo       *combo)
-{
-    g_return_val_if_fail (MOO_IS_COMBO (combo), NULL);
-    return combo->priv->model;
-}
-
-
 void
 moo_combo_set_model (MooCombo       *combo,
                      GtkTreeModel   *model)
@@ -1101,14 +1093,6 @@ moo_combo_set_text_column (MooCombo       *combo,
 }
 
 
-int
-moo_combo_get_text_column (MooCombo       *combo)
-{
-    g_return_val_if_fail (MOO_IS_COMBO (combo), -1);
-    return combo->priv->text_column;
-}
-
-
 void
 moo_combo_set_get_text_func (MooCombo       *combo,
                              MooComboGetTextFunc func,
@@ -1138,38 +1122,6 @@ default_get_text_func (GtkTreeModel   *model,
     MooCombo *combo = MOO_COMBO (data);
     gtk_tree_model_get (model, iter, combo->priv->text_column, &text, -1);
     return text;
-}
-
-
-GtkWidget*
-moo_combo_new_text (void)
-{
-    GtkWidget *combo;
-    GtkListStore *store;
-
-    store = gtk_list_store_new (1, G_TYPE_STRING);
-    combo = moo_combo_new ();
-    moo_combo_set_model (MOO_COMBO (combo), GTK_TREE_MODEL (store));
-    moo_combo_set_text_column (MOO_COMBO (combo), 0);
-
-    g_object_unref (store);
-    return combo;
-}
-
-
-void
-moo_combo_add_text (MooCombo   *combo,
-                    const char *text)
-{
-    GtkTreeIter iter;
-
-    g_return_if_fail (MOO_IS_COMBO (combo));
-    g_return_if_fail (text != NULL);
-    g_return_if_fail (GTK_IS_LIST_STORE (combo->priv->model));
-
-    gtk_list_store_append (GTK_LIST_STORE (combo->priv->model), &iter);
-    gtk_list_store_set (GTK_LIST_STORE (combo->priv->model), &iter,
-                        combo->priv->text_column, text, -1);
 }
 
 
@@ -1209,40 +1161,11 @@ moo_combo_unrealize (GtkWidget      *widget)
 }
 
 
-void
-moo_combo_entry_set_text (MooCombo       *combo,
-                          const char     *text)
-{
-    g_return_if_fail (MOO_IS_COMBO (combo));
-    g_return_if_fail (text != NULL);
-    gtk_entry_set_text (GTK_ENTRY (combo->entry), text);
-}
-
-
 const char*
 moo_combo_entry_get_text (MooCombo       *combo)
 {
     g_return_val_if_fail (MOO_IS_COMBO (combo), NULL);
     return gtk_entry_get_text (GTK_ENTRY (combo->entry));
-}
-
-
-void
-moo_combo_select_region (MooCombo       *combo,
-                         int             start,
-                         int             end)
-{
-    g_return_if_fail (MOO_IS_COMBO (combo));
-    gtk_editable_select_region (GTK_EDITABLE (combo->entry), start, end);
-}
-
-
-void
-moo_combo_entry_set_activates_default (MooCombo *combo,
-                                       gboolean  setting)
-{
-    g_return_if_fail (MOO_IS_COMBO (combo));
-    g_object_set (combo, "activates-default", setting, NULL);
 }
 
 
