@@ -90,11 +90,13 @@ AM_CONDITIONAL(MOO_STRICT_MODE, test x$MOO_STRICT_MODE = "xyes")
 MOO_COMPILER
 
 _MOO_AC_CHECK_COMPILER_OPTIONS([dnl
--std=gnu17 dnl
 -Wall -Wextra -fexceptions -fno-strict-aliasing dnl
 -Wno-missing-field-initializers dnl
 -Wno-format-y2k -Wno-overlength-strings dnl
 -Wno-deprecated-declarations dnl
+])
+_MOO_AC_CHECK_C_COMPILER_OPTIONS([dnl
+-std=gnu17 dnl
 ])
 _MOO_AC_CHECK_CXX_COMPILER_OPTIONS([dnl
 -std=c++11 -fno-rtti dnl
