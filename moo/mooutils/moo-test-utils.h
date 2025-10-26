@@ -72,7 +72,6 @@ void             moo_test_assert_msg        (gboolean            passed,
                                              ...) G_GNUC_PRINTF(4, 5);
 
 char            *moo_test_load_data_file    (const char         *basename);
-gstr             moo_test_find_data_file    (const char         *basename);
 void             moo_test_set_data_dir      (const char         *dir);
 const gstr&      moo_test_get_data_dir      (void);
 const char      *moo_test_get_working_dir   (void);

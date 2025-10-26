@@ -398,17 +398,6 @@ moo_test_get_working_dir (void)
     return "test-working-dir";
 }
 
-gstr
-moo_test_find_data_file (const char *basename)
-{
-    g_return_val_if_fail(!registry.data_dir.empty(), gstr());
-
-    if (!_moo_path_is_absolute(basename))
-        return gstr::take(g_build_filename(registry.data_dir.get(), basename, nullptr));
-    else
-        return gstr(basename);
-}
-
 char **
 moo_test_list_data_files (const char *dir)
 {

@@ -671,9 +671,6 @@ file_line_pair_free (FileLinePair *pair)
 static void
 finish_group(WindowStuff *stuff)
 {
-//     if (stuff->group_start_line >= 0 && stuff->group_end_line > stuff->group_start_line)
-//         moo_text_buffer_add_fold (MOO_TEXT_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (stuff->output))),
-//                                   stuff->group_start_line, stuff->group_end_line);
     stuff->group_start_line = -1;
     stuff->group_end_line = -1;
 }

@@ -121,8 +121,6 @@ void        moo_window_class_new_group      (MooWindowClass     *klass,
                                              const char         *display_name);
 gboolean    moo_window_class_find_group     (MooWindowClass     *klass,
                                              const char         *name);
-void        moo_window_class_remove_group   (MooWindowClass     *klass,
-                                             const char         *name);
 
 MooUiXml   *moo_window_get_ui_xml           (MooWindow          *window);
 void        moo_window_set_ui_xml           (MooWindow          *window,

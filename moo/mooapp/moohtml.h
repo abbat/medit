@@ -87,9 +87,6 @@ gboolean        _moo_html_load_file         (GtkTextView    *view,
                                              const char     *file,
                                              const char     *encoding);
 
-void            moo_text_view_set_markup    (GtkTextView    *view,
-                                             const char     *markup);
-
 
 G_END_DECLS
 

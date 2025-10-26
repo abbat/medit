@@ -84,12 +84,8 @@ struct MooTextViewClass
 
 GType        moo_text_view_get_type                 (void) G_GNUC_CONST;
 
-void         moo_text_view_set_buffer_type          (MooTextView        *view,
-                                                     GType               type);
-
 void         moo_text_view_select_all               (MooTextView        *view);
 
-char        *moo_text_view_get_selection            (GtkTextView        *view);
 char        *moo_text_view_get_text                 (GtkTextView        *view);
 gboolean     moo_text_view_has_selection            (MooTextView        *view);
 gboolean     moo_text_view_has_text                 (MooTextView        *view);
@@ -102,7 +98,6 @@ gboolean     moo_text_view_undo                     (MooTextView        *view);
 void         moo_text_view_set_font_from_string     (MooTextView        *view,
                                                      const char         *font);
 
-MooIndenter *moo_text_view_get_indenter             (MooTextView        *view);
 void         moo_text_view_set_indenter             (MooTextView        *view,
                                                      MooIndenter        *indenter);
 

@@ -1672,36 +1672,6 @@ moo_window_class_find_group (MooWindowClass *klass,
 }
 
 
-void
-moo_window_class_remove_group (MooWindowClass *klass,
-                               const char     *name)
-{
-    ActionStore *store;
-    GType type;
-    GSList *l;
-
-    g_return_if_fail (MOO_IS_WINDOW_CLASS (klass));
-    g_return_if_fail (name != NULL);
-
-    type = G_OBJECT_CLASS_TYPE (klass);
-    store = type_get_store (type);
-
-    if (store)
-        g_hash_table_remove (store->groups, name);
-
-    for (l = window_instances; l != NULL; l = l->next)
-    {
-        if (g_type_is_a (G_OBJECT_TYPE (l->data), type))
-        {
-            MooWindow *window = l->data;
-            GtkActionGroup *group = moo_action_collection_get_group (window->priv->actions, name);
-            if (group)
-                moo_action_collection_remove_group (window->priv->actions, group);
-        }
-    }
-}
-
-
 MooUiXml*
 moo_window_get_ui_xml (MooWindow          *window)
 {

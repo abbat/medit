@@ -629,16 +629,6 @@ moo_html_clear (GtkTextView *view)
 }
 
 
-void
-moo_text_view_set_markup (GtkTextView *view,
-                          const char  *markup)
-{
-    g_return_if_fail (GTK_IS_TEXT_VIEW (view));
-    g_return_if_fail (markup != nullptr);
-    _moo_html_load_memory (view, markup, -1, nullptr, nullptr);
-}
-
-
 gboolean
 _moo_html_load_memory (GtkTextView *view,
                        const char  *buffer,

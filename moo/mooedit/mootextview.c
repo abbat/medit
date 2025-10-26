@@ -701,17 +701,6 @@ moo_text_view_init (MooTextView *view)
 }
 
 
-void
-moo_text_view_set_buffer_type (MooTextView *view,
-                               GType        type)
-{
-    g_return_if_fail (MOO_IS_TEXT_VIEW (view));
-    g_return_if_fail (g_type_is_a (type, MOO_TYPE_TEXT_BUFFER));
-
-    if (!g_type_is_a (view->priv->buffer_type, type))
-        view->priv->buffer_type = type;
-}
-
 static void
 connect_buffer (MooTextView *view)
 {
@@ -1303,23 +1292,6 @@ moo_text_view_get_property (GObject        *object,
 }
 
 
-char *
-moo_text_view_get_selection (GtkTextView *view)
-{
-    GtkTextBuffer *buf;
-    GtkTextIter start, end;
-
-    g_return_val_if_fail (GTK_IS_TEXT_VIEW (view), NULL);
-
-    buf = gtk_text_view_get_buffer (view);
-
-    if (gtk_text_buffer_get_selection_bounds (buf, &start, &end))
-        return gtk_text_buffer_get_slice (buf, &start, &end, TRUE);
-    else
-        return NULL;
-}
-
-
 gboolean
 moo_text_view_has_selection (MooTextView *view)
 {
@@ -1501,14 +1473,6 @@ proxy_notify_can_undo_redo (MooTextView *view,
         moo_undo_ops_can_redo_changed (G_OBJECT (view));
 
     g_object_notify (G_OBJECT (view), pspec->name);
-}
-
-
-MooIndenter*
-moo_text_view_get_indenter (MooTextView *view)
-{
-    g_return_val_if_fail (MOO_IS_TEXT_VIEW (view), NULL);
-    return view->priv->indenter;
 }
 
 

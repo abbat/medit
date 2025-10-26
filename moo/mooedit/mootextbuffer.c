@@ -452,15 +452,6 @@ moo_text_buffer_dispose (GObject *object)
 }
 
 
-GtkTextBuffer *
-moo_text_buffer_new (GtkTextTagTable *table)
-{
-    return GTK_TEXT_BUFFER (g_object_new (MOO_TYPE_TEXT_BUFFER,
-                                          "tag-table", table,
-                                          (const char*) NULL));
-}
-
-
 gpointer
 _moo_text_buffer_get_undo_stack (MooTextBuffer *buffer)
 {
@@ -2035,17 +2026,6 @@ moo_text_buffer_move_line_mark (MooTextBuffer *buffer,
 
 
 GSList *
-moo_text_buffer_get_line_marks_in_range (MooTextBuffer *buffer,
-                                         int            first_line,
-                                         int            last_line)
-{
-    g_return_val_if_fail (MOO_IS_TEXT_BUFFER (buffer), NULL);
-    g_return_val_if_fail (first_line >= 0, NULL);
-    return _moo_line_buffer_get_marks_in_range (buffer->priv->line_buf, first_line, last_line);
-}
-
-
-GSList *
 moo_text_buffer_get_line_marks_at_line (MooTextBuffer *buffer,
                                         int            line)
 {
@@ -2055,46 +2035,11 @@ moo_text_buffer_get_line_marks_at_line (MooTextBuffer *buffer,
 }
 
 
-MooFold *
-moo_text_buffer_add_fold (MooTextBuffer *buffer,
-                          int            first_line,
-                          int            last_line)
-{
-    MooFold *fold;
-
-    g_return_val_if_fail (MOO_IS_TEXT_BUFFER (buffer), NULL);
-    g_return_val_if_fail (first_line >= 0, NULL);
-    g_return_val_if_fail (last_line > first_line, NULL);
-    g_return_val_if_fail (last_line < gtk_text_buffer_get_line_count (GTK_TEXT_BUFFER (buffer)), NULL);
-
-    fold = _moo_fold_tree_add (buffer->priv->fold_tree, first_line, last_line);
-    g_return_val_if_fail (fold != NULL, NULL);
-
-    g_object_ref (fold);
-    g_signal_emit (buffer, signals[FOLD_ADDED], 0, fold);
-
-    return fold;
-}
-
-
 static void
 fold_deleted (MooTextBuffer *buffer,
               MooFold       *fold)
 {
     g_signal_emit (buffer, signals[FOLD_DELETED], 0, fold);
-}
-
-void
-moo_text_buffer_delete_fold (MooTextBuffer *buffer,
-                             MooFold       *fold)
-{
-    g_return_if_fail (MOO_IS_TEXT_BUFFER (buffer));
-    g_return_if_fail (MOO_IS_FOLD (fold));
-    g_return_if_fail (!_moo_fold_is_deleted (fold));
-
-    _moo_fold_tree_remove (buffer->priv->fold_tree, fold);
-    fold_deleted (buffer, fold);
-    g_object_unref (fold);
 }
 
 

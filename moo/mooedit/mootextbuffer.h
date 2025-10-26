@@ -70,8 +70,6 @@ struct MooTextBufferClass
 
 GType       moo_text_buffer_get_type                    (void) G_GNUC_CONST;
 
-GtkTextBuffer *moo_text_buffer_new                      (GtkTextTagTable    *table);
-
 void        moo_text_buffer_set_lang                    (MooTextBuffer      *buffer,
                                                          MooLang            *lang);
 MooLang    *moo_text_buffer_get_lang                    (MooTextBuffer      *buffer);
@@ -104,17 +102,9 @@ void        moo_text_buffer_delete_line_mark            (MooTextBuffer      *buf
 void        moo_text_buffer_move_line_mark              (MooTextBuffer      *buffer,
                                                          MooLineMark        *mark,
                                                          int                 line);
-GSList     *moo_text_buffer_get_line_marks_in_range     (MooTextBuffer      *buffer,
-                                                         int                 first_line,
-                                                         int                 last_line);
 GSList     *moo_text_buffer_get_line_marks_at_line      (MooTextBuffer      *buffer,
                                                          int                 line);
 
-MooFold    *moo_text_buffer_add_fold                    (MooTextBuffer      *buffer,
-                                                         int                 first_line,
-                                                         int                 end_line);
-void        moo_text_buffer_delete_fold                 (MooTextBuffer      *buffer,
-                                                         MooFold            *fold);
 MooFold    *moo_text_buffer_get_fold_at_line            (MooTextBuffer      *buffer,
                                                          int                 line);
 void        moo_text_buffer_toggle_fold                 (MooTextBuffer      *buffer,
