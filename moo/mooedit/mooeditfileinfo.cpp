@@ -423,14 +423,6 @@ moo_reload_info_dup (MooReloadInfo *info)
     return copy;
 }
 
-void
-moo_reload_info_free (MooReloadInfo *info)
-{
-    if (info)
-        g_object_unref (info);
-}
-
-
 /**
  * moo_reload_info_get_line:
  *

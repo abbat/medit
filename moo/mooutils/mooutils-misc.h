@@ -41,8 +41,6 @@ void        moo_log_window_hide             (void);
 
 void        moo_set_log_func_window         (gboolean        show_now);
 void        moo_set_log_func_file           (const char     *log_file);
-void        moo_set_log_func_silent         (void);
-void        moo_reset_log_func              (void);
 
 void MOO_NORETURN moo_abort                 (void);
 
@@ -58,8 +56,6 @@ seriously_ignore_return_value_p (G_GNUC_UNUSED void *p)
 }
 
 void       _moo_set_app_instance_name       (const char     *name);
-void        moo_set_user_data_dir           (const char     *path);
-void        moo_set_user_cache_dir          (const char     *path);
 void        moo_set_display_app_name        (const char     *name);
 const char *moo_get_display_app_name        (void);
 
@@ -67,16 +63,8 @@ gboolean    moo_make_user_data_dir          (const char     *path);
 char       *moo_get_user_data_dir           (void);
 char       *moo_get_user_data_file          (const char     *basename);
 char       *moo_get_named_user_data_file    (const char     *basename);
-gboolean    moo_save_user_data_file         (const char     *basename,
-                                             const char     *content,
-                                             gssize          len,
-                                             GError        **error);
 char       *moo_get_user_cache_dir          (void);
 char       *moo_get_user_cache_file         (const char     *basename);
-gboolean    moo_save_user_cache_file        (const char     *basename,
-                                             const char     *content,
-                                             gssize          len,
-                                             GError        **error);
 gboolean    moo_save_config_file            (const char     *filename,
                                              const char     *content,
                                              gssize          len,

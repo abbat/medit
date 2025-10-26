@@ -525,27 +525,6 @@ moo_string_writer_init (MooStringWriter *writer)
     writer->string = g_string_new (NULL);
 }
 
-MooFileWriter *
-moo_string_writer_new (void)
-{
-    return (MooFileWriter*) g_object_new (MOO_TYPE_STRING_WRITER, (const char*) NULL);
-}
-
-const char *
-moo_string_writer_get_string (MooFileWriter *fwriter,
-                              gsize         *len)
-{
-    MooStringWriter *writer = (MooStringWriter*) fwriter;
-
-    g_return_val_if_fail (G_TYPE_CHECK_INSTANCE_TYPE ((writer), MOO_TYPE_STRING_WRITER), NULL);
-    g_return_val_if_fail (writer->string != NULL, NULL);
-
-    if (len)
-        *len = writer->string->len;
-
-    return writer->string->str;
-}
-
 
 static gboolean
 same_content (const char *filename1,

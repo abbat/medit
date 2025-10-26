@@ -84,7 +84,6 @@ void                 moo_open_info_add_flags    (MooOpenInfo        *info,
 MooReloadInfo       *moo_reload_info_new        (const char         *encoding,
                                                  int                 line);
 MooReloadInfo       *moo_reload_info_dup        (MooReloadInfo      *info);
-void                 moo_reload_info_free       (MooReloadInfo      *info);
 
 int                  moo_reload_info_get_line   (MooReloadInfo      *info);
 void                 moo_reload_info_set_line   (MooReloadInfo      *info,

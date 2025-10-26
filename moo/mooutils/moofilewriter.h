@@ -52,7 +52,6 @@ MooFileWriter  *moo_file_writer_new_for_file    (GFile          *file,
 MooFileWriter  *moo_config_writer_new           (const char     *filename,
                                                  gboolean        save_backup,
                                                  GError        **error);
-MooFileWriter  *moo_string_writer_new           (void);
 
 gboolean        moo_file_writer_write           (MooFileWriter  *writer,
                                                  const char     *data,
@@ -65,9 +64,6 @@ gboolean        moo_file_writer_printf_markup   (MooFileWriter  *writer,
                                                  ...) G_GNUC_PRINTF (2, 3);
 gboolean        moo_file_writer_close           (MooFileWriter  *writer,
                                                  GError        **error);
-
-const char     *moo_string_writer_get_string    (MooFileWriter  *writer,
-                                                 gsize          *len);
 
 
 G_END_DECLS

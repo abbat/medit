@@ -624,31 +624,6 @@ set_print_funcs (GLogFunc   log_func,
 }
 
 
-/* it doesn't care about encoding, but well, noone cares */
-static void
-default_print (const char *string)
-{
-    fputs (string, stdout);
-    fflush (stdout);
-}
-
-static void
-default_printerr (const char *string)
-{
-    fputs (string, stderr);
-    fflush (stderr);
-}
-
-void
-moo_reset_log_func (void)
-{
-    if (moo_log_handlers_set)
-        set_print_funcs (moo_log_func, moo_print_func, moo_printerr_func);
-    else
-        set_print_funcs (g_log_default_handler, default_print, default_printerr);
-}
-
-
 /*
  * Display log messages in a window
  */
@@ -854,32 +829,6 @@ moo_set_log_func_file (const char *log_file)
 }
 
 
-/*
- * Do nothing
- */
-
-static void
-log_func_silent (G_GNUC_UNUSED const gchar    *log_domain,
-                 G_GNUC_UNUSED GLogLevelFlags  flags,
-                 G_GNUC_UNUSED const gchar    *message,
-                 G_GNUC_UNUSED gpointer data_unused)
-{
-}
-
-static void
-print_func_silent (G_GNUC_UNUSED const char *s)
-{
-}
-
-void
-moo_set_log_func_silent (void)
-{
-    set_print_funcs ((GLogFunc) log_func_silent,
-                      (GPrintFunc) print_func_silent,
-                      (GPrintFunc) print_func_silent);
-}
-
-
 /***************************************************************************/
 /* Very useful function
  */
@@ -1054,18 +1003,6 @@ moo_get_user_cache_dir (void)
     return g_strdup (moo_user_cache_dir);
 }
 
-void
-moo_set_user_cache_dir (const char *path)
-{
-    g_return_if_fail (moo_is_main_thread ());
-
-    if (moo_user_cache_dir)
-        g_critical ("user cache dir already set");
-
-    g_free (moo_user_cache_dir);
-    moo_user_cache_dir = g_strdup (path);
-}
-
 /**
  * moo_get_user_data_dir: (moo.private 1)
  *
@@ -1093,18 +1030,6 @@ moo_get_user_data_dir (void)
     G_UNLOCK (moo_user_data_dir);
 
     return g_strdup (moo_user_data_dir);
-}
-
-void
-moo_set_user_data_dir (const char *path)
-{
-    g_return_if_fail (moo_is_main_thread ());
-
-    if (moo_user_data_dir)
-        g_critical ("user data dir already set");
-
-    g_free (moo_user_data_dir);
-    moo_user_data_dir = g_strdup (path);
 }
 
 void
@@ -1524,47 +1449,6 @@ save_config_file (const char     *filename,
     return retval;
 }
 
-static gboolean
-save_user_data_file (const char     *basename,
-                     gboolean        cache,
-                     const char     *content,
-                     gssize          len,
-                     GError        **error)
-{
-    char *file;
-    gboolean result;
-
-    g_return_val_if_fail (basename != NULL, FALSE);
-    g_return_val_if_fail (content != NULL, FALSE);
-
-    if (cache)
-        file = moo_get_user_cache_file (basename);
-    else
-        file = moo_get_user_data_file (basename);
-
-    result = save_config_file (file, content, len, error);
-
-    g_free (file);
-    return result;
-}
-
-gboolean
-moo_save_user_data_file (const char  *basename,
-                         const char  *content,
-                         gssize       len,
-                         GError     **error)
-{
-    return save_user_data_file (basename, FALSE, content, len, error);
-}
-
-gboolean
-moo_save_user_cache_file (const char  *basename,
-                          const char  *content,
-                          gssize       len,
-                          GError     **error)
-{
-    return save_user_data_file (basename, TRUE, content, len, error);
-}
 
 gboolean
 moo_save_config_file (const char   *filename,
