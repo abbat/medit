@@ -83,29 +83,6 @@ moo_pgettext (const char *msgctxtid, G_GNUC_UNUSED gsize msgidoffset)
 }
 
 const char *
-moo_pgettext2 (G_GNUC_UNUSED const char *context, const char *msgctxtid)
-{
-#ifdef ENABLE_NLS
-    char *tmp;
-    const char *translation;
-
-    g_return_val_if_fail (msgctxtid != NULL, NULL);
-    init_gettext ();
-
-    tmp = g_strjoin (context, "\004", msgctxtid, nullptr);
-    translation = dgettext (GETTEXT_PACKAGE, tmp);
-
-    if (translation == tmp)
-        translation = msgctxtid;
-
-    g_free (tmp);
-    return translation;
-#else /* !ENABLE_NLS */
-    return msgctxtid;
-#endif /* !ENABLE_NLS */
-}
-
-const char *
 moo_dpgettext (const char *domain, const char *msgctxtid, gsize msgidoffset)
 {
     g_return_val_if_fail (domain != NULL, NULL);

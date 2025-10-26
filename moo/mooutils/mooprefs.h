@@ -52,8 +52,6 @@ const GValue   *moo_prefs_get           (const char     *key);
 const GValue   *moo_prefs_get_default   (const char     *key);
 void            moo_prefs_set           (const char     *key,
                                          const GValue   *value);
-void            moo_prefs_set_default   (const char     *key,
-                                         const GValue   *value);
 
 void            moo_prefs_new_key_bool  (const char     *key,
                                          gboolean        default_val);

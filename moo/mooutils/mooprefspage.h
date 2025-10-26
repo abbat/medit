@@ -68,9 +68,6 @@ void            moo_prefs_page_bind_setting (MooPrefsPage   *page,
                                              GtkWidget      *widget,
                                              const char     *setting);
 
-void            moo_prefs_page_add_page     (MooPrefsPage   *page,
-                                             MooPrefsPage   *child_page);
-
 
 G_END_DECLS
 

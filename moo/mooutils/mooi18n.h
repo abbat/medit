@@ -24,7 +24,6 @@ G_BEGIN_DECLS
 
 const char *moo_gettext (const char *string) G_GNUC_FORMAT (1);
 const char *moo_pgettext (const char *msgctxtid, gsize msgidoffset) G_GNUC_FORMAT (1);
-const char *moo_pgettext2 (const char *context, const char *msgctxtid) G_GNUC_FORMAT (2);
 const char *moo_dpgettext (const char *domain, const char *msgctxtid, gsize msgidoffset) G_GNUC_FORMAT (2);
 const char *_moo_gsv_gettext (const char *string) G_GNUC_FORMAT (1);
 char *_moo_gsv_dgettext (const char *domain, const char *string) G_GNUC_FORMAT (2);

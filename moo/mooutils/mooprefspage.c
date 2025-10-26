@@ -239,16 +239,6 @@ moo_prefs_page_new (const char *label,
 
 
 void
-moo_prefs_page_add_page (MooPrefsPage *page,
-                         MooPrefsPage *child_page)
-{
-    g_return_if_fail (MOO_IS_PREFS_PAGE (page));
-    g_return_if_fail (MOO_IS_PREFS_PAGE (child_page));
-    page->priv->children = g_slist_prepend (page->priv->children, child_page);
-}
-
-
-void
 moo_prefs_page_set_callbacks (MooPrefsPage      *page,
                               MooPrefsPageInitUi init_ui,
                               MooPrefsPageInit   init,

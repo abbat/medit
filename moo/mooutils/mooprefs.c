@@ -264,22 +264,6 @@ moo_prefs_set (const char     *key,
 }
 
 
-void
-moo_prefs_set_default (const char     *key,
-                       const GValue   *value)
-{
-    PrefsItem *item;
-
-    g_return_if_fail (key != NULL);
-    g_return_if_fail (G_IS_VALUE (value));
-
-    item = prefs_get_item (key);
-    g_return_if_fail (item != NULL);
-
-    item_set_default (item, value);
-}
-
-
 static void
 moo_prefs_set_modified (gboolean modified)
 {
