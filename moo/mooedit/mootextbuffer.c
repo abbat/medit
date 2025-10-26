@@ -2035,14 +2035,6 @@ moo_text_buffer_get_line_marks_at_line (MooTextBuffer *buffer,
 }
 
 
-static void
-fold_deleted (MooTextBuffer *buffer,
-              MooFold       *fold)
-{
-    g_signal_emit (buffer, signals[FOLD_DELETED], 0, fold);
-}
-
-
 MooFold *
 moo_text_buffer_get_fold_at_line (MooTextBuffer *buffer,
                                   int            line)
