@@ -693,13 +693,6 @@ moo_notebook_finalize (GObject *object)
 }
 
 
-GtkWidget *
-moo_notebook_new (void)
-{
-    return g_object_new (MOO_TYPE_NOTEBOOK, (const char*) NULL);
-}
-
-
 static void
 labels_size_request (MooNotebook    *nb,
                      GtkRequisition *requisition)
@@ -1930,18 +1923,6 @@ moo_notebook_set_action_widget (MooNotebook *notebook,
 }
 
 
-GtkWidget *
-moo_notebook_get_action_widget (MooNotebook *notebook,
-                                gboolean     right)
-{
-    g_return_val_if_fail (MOO_IS_NOTEBOOK (notebook), NULL);
-    if (right)
-        return notebook->priv->action_widgets[RIGHT];
-    else
-        return notebook->priv->action_widgets[LEFT];
-}
-
-
 static void
 moo_notebook_check_action_widgets (MooNotebook *nb)
 {
@@ -1996,34 +1977,6 @@ moo_notebook_get_tab_label (MooNotebook *notebook,
     g_return_val_if_fail (page != NULL, NULL);
 
     return page->label->widget;
-}
-
-
-void
-moo_notebook_set_tab_label (MooNotebook *notebook,
-                            GtkWidget   *child,
-                            GtkWidget   *tab_label)
-{
-    Page *page;
-
-    g_return_if_fail (MOO_IS_NOTEBOOK (notebook));
-    g_return_if_fail (GTK_IS_WIDGET (child));
-    g_return_if_fail (GTK_IS_WIDGET (tab_label));
-    g_return_if_fail (gtk_widget_get_parent (tab_label) == NULL);
-
-    page = find_child (notebook, child);
-    g_return_if_fail (page != NULL);
-
-    gtk_widget_unparent (page->label->widget);
-    g_object_unref (page->label->widget);
-
-    page->label->widget = tab_label;
-    g_object_ref_sink (tab_label);
-
-    if (GTK_WIDGET_REALIZED (notebook))
-        gtk_widget_set_parent_window (tab_label, notebook->priv->tab_window);
-
-    gtk_widget_set_parent (tab_label, GTK_WIDGET (notebook));
 }
 
 

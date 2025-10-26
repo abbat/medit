@@ -53,8 +53,6 @@ struct _MooNotebookClass
 
 GType       moo_notebook_get_type          (void) G_GNUC_CONST;
 
-GtkWidget  *moo_notebook_new                (void);
-
 gint        moo_notebook_insert_page        (MooNotebook    *notebook,
                                              GtkWidget      *child,
                                              GtkWidget      *tab_label,
@@ -66,9 +64,6 @@ void        moo_notebook_remove_page        (MooNotebook    *notebook,
 void        moo_notebook_set_action_widget  (MooNotebook    *notebook,
                                              GtkWidget      *widget,
                                              gboolean        right);
-GtkWidget  *moo_notebook_get_action_widget  (MooNotebook    *notebook,
-                                             gboolean        right);
-
 
 gint        moo_notebook_get_current_page   (MooNotebook    *notebook);
 GtkWidget*  moo_notebook_get_nth_page       (MooNotebook    *notebook,
@@ -90,9 +85,6 @@ gboolean    moo_notebook_get_show_tabs      (MooNotebook    *notebook);
 
 GtkWidget  *moo_notebook_get_tab_label      (MooNotebook    *notebook,
                                              GtkWidget      *child);
-void        moo_notebook_set_tab_label      (MooNotebook    *notebook,
-                                             GtkWidget      *child,
-                                             GtkWidget      *tab_label);
 void        moo_notebook_set_tab_label_text (MooNotebook    *notebook,
                                              GtkWidget      *child,
                                              const char     *tab_text);
