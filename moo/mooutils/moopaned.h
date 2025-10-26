@@ -79,8 +79,6 @@ struct _MooPanedClass
 GType           moo_paned_get_type          (void) G_GNUC_CONST;
 GType           moo_pane_position_get_type  (void) G_GNUC_CONST;
 
-GtkWidget      *moo_paned_new               (MooPanePosition pane_position);
-
 MooPane        *moo_paned_insert_pane       (MooPaned       *paned,
                                              GtkWidget      *pane_widget,
                                              MooPaneLabel   *pane_label,
@@ -89,7 +87,6 @@ gboolean        moo_paned_remove_pane       (MooPaned       *paned,
                                              GtkWidget      *pane_widget);
 
 guint           moo_paned_n_panes           (MooPaned       *paned);
-GSList         *moo_paned_list_panes        (MooPaned       *paned);
 MooPane        *moo_paned_get_nth_pane      (MooPaned       *paned,
                                              guint           n);
 int             moo_paned_get_pane_num      (MooPaned       *paned,

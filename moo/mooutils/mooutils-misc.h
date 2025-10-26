@@ -59,7 +59,6 @@ void       _moo_set_app_instance_name       (const char     *name);
 void        moo_set_display_app_name        (const char     *name);
 const char *moo_get_display_app_name        (void);
 
-gboolean    moo_make_user_data_dir          (const char     *path);
 char       *moo_get_user_data_dir           (void);
 char       *moo_get_user_data_file          (const char     *basename);
 char       *moo_get_named_user_data_file    (const char     *basename);

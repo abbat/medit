@@ -61,11 +61,6 @@ void        moo_menu_action_set_mgr         (MooMenuAction  *action,
 void        moo_menu_action_set_func        (MooMenuAction  *action,
                                              MooMenuFunc     func);
 
-void        moo_menu_action_set_menu_data   (MooMenuAction  *action,
-                                             gpointer        data,
-                                             gboolean        is_object);
-
-
 G_END_DECLS
 
 #endif /* MOO_MENU_ACTION_H */

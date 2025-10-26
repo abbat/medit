@@ -126,8 +126,6 @@ struct MooMarkupText {
 };
 
 
-GType               moo_markup_doc_get_type         (void) G_GNUC_CONST;
-
 MooMarkupDoc       *moo_markup_doc_new              (const char         *name);
 
 MooMarkupDoc       *moo_markup_parse_file           (const char         *filename,
@@ -172,8 +170,6 @@ void                moo_markup_set_bool_prop        (MooMarkupNode      *node,
 void                moo_markup_set_content          (MooMarkupNode      *node,
                                                      const char         *text);
 const char         *moo_markup_get_content          (MooMarkupNode      *node);
-
-char               *moo_markup_element_get_path     (MooMarkupElement   *node);
 
 void                moo_markup_delete_node          (MooMarkupNode      *node);
 

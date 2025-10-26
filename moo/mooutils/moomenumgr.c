@@ -965,15 +965,6 @@ moo_menu_mgr_set_use_mnemonic (MooMenuMgr *mgr,
 }
 
 
-void
-moo_menu_mgr_set_show_tooltips (MooMenuMgr *mgr,
-                                gboolean    show)
-{
-    g_return_if_fail (MOO_IS_MENU_MGR (mgr));
-    mgr->priv->show_tooltips = show != 0;
-}
-
-
 int
 moo_menu_mgr_append (MooMenuMgr         *mgr,
                      const char         *parent_id,

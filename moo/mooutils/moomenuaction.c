@@ -249,24 +249,6 @@ data_destroyed (MooMenuAction      *action,
 
 
 void
-moo_menu_action_set_menu_data (MooMenuAction  *action,
-                               gpointer        data,
-                               gboolean        is_object)
-{
-    g_return_if_fail (MOO_IS_MENU_ACTION (action));
-
-    if (action->data && action->is_object)
-        g_object_weak_unref (G_OBJECT (action->data), (GWeakNotify) data_destroyed, action);
-
-    action->data = data;
-    action->is_object = is_object;
-
-    if (action->data && action->is_object)
-        g_object_weak_ref (G_OBJECT (action->data), (GWeakNotify) data_destroyed, action);
-}
-
-
-void
 moo_menu_action_set_func (MooMenuAction *action,
                           MooMenuFunc    func)
 {

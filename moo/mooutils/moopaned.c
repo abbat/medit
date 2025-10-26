@@ -585,15 +585,6 @@ moo_paned_destroy (GtkObject      *object)
 }
 
 
-GtkWidget*
-moo_paned_new (MooPanePosition pane_position)
-{
-    return GTK_WIDGET (g_object_new (MOO_TYPE_PANED,
-                       "pane-position", pane_position,
-                       (const char*) NULL));
-}
-
-
 MooPanePosition
 _moo_paned_get_position (MooPaned *paned)
 {
@@ -3066,14 +3057,6 @@ moo_pane_position_get_type (void)
     }
 
     return type;
-}
-
-
-GSList *
-moo_paned_list_panes (MooPaned *paned)
-{
-    g_return_val_if_fail (MOO_IS_PANED (paned), NULL);
-    return g_slist_copy (paned->priv->panes);
 }
 
 

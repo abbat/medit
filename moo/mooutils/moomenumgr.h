@@ -107,9 +107,6 @@ GtkWidget  *moo_menu_mgr_create_item        (MooMenuMgr         *mgr,
 
 void        moo_menu_mgr_set_use_mnemonic   (MooMenuMgr         *mgr,
                                              gboolean            use);
-void        moo_menu_mgr_set_show_tooltips  (MooMenuMgr         *mgr,
-                                             gboolean            show);
-
 
 G_END_DECLS
 

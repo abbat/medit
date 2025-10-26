@@ -888,28 +888,6 @@ moo_markup_get_root_element (MooMarkupDoc       *doc,
 }
 
 
-char*
-moo_markup_element_get_path (MooMarkupElement *elm)
-{
-    GString *path;
-    MooMarkupNode *node;
-
-    g_return_val_if_fail (elm != NULL, NULL);
-
-    path = g_string_new (elm->name);
-
-    for (node = elm->parent;
-         node != NULL && MOO_MARKUP_IS_ELEMENT (node);
-         node = node->parent)
-    {
-        g_string_prepend (path, "/");
-        g_string_prepend (path, node->name);
-    }
-
-    return g_string_free (path, FALSE);
-}
-
-
 void
 moo_markup_delete_node (MooMarkupNode *node)
 {
