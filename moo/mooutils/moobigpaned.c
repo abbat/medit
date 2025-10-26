@@ -347,13 +347,6 @@ moo_big_paned_finalize (GObject *object)
 }
 
 
-GtkWidget *
-moo_big_paned_new (void)
-{
-    return GTK_WIDGET (g_object_new (MOO_TYPE_BIG_PANED, (const char*) NULL));
-}
-
-
 static void
 config_changed (MooBigPaned *paned)
 {
@@ -734,15 +727,6 @@ moo_big_paned_add_child (MooBigPaned *paned,
 }
 
 
-void
-moo_big_paned_remove_child (MooBigPaned *paned)
-{
-    g_return_if_fail (MOO_IS_BIG_PANED (paned));
-    gtk_container_remove (GTK_CONTAINER (paned->priv->inner),
-                          gtk_bin_get_child (GTK_BIN (paned->priv->inner)));
-}
-
-
 GtkWidget *
 moo_big_paned_get_child (MooBigPaned *paned)
 {
@@ -807,32 +791,6 @@ PROXY_FUNC (attach_pane)
 PROXY_FUNC (detach_pane)
 
 #undef PROXY_FUNC
-
-void
-moo_big_paned_hide_pane (MooBigPaned *paned,
-                         GtkWidget   *widget)
-{
-    MooPaned *child = NULL;
-
-    g_return_if_fail (MOO_IS_BIG_PANED (paned));
-    g_return_if_fail (GTK_IS_WIDGET (widget));
-
-    moo_big_paned_find_pane (paned, widget, &child);
-    g_return_if_fail (child != NULL);
-
-    moo_paned_hide_pane (child);
-}
-
-
-MooPaned *
-moo_big_paned_get_paned (MooBigPaned    *paned,
-                         MooPanePosition position)
-{
-    g_return_val_if_fail (MOO_IS_BIG_PANED (paned), NULL);
-    g_return_val_if_fail (position < 4, NULL);
-    return MOO_PANED (paned->paned[position]);
-}
-
 
 MooPane *
 moo_big_paned_find_pane (MooBigPaned    *paned,
@@ -933,17 +891,6 @@ moo_big_paned_get_property (GObject    *object,
         default:
             G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
-}
-
-
-GtkWidget *
-moo_big_paned_get_pane (MooBigPaned    *paned,
-                        MooPanePosition position,
-                        int             index_)
-{
-    g_return_val_if_fail (MOO_IS_BIG_PANED (paned), NULL);
-    g_return_val_if_fail (position < 4, NULL);
-    return moo_pane_get_child (moo_paned_get_nth_pane (MOO_PANED (paned->paned[position]), index_));
 }
 
 
