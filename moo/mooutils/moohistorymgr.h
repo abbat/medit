@@ -57,8 +57,6 @@ void        moo_history_mgr_add_file            (MooHistoryMgr  *mgr,
                                                  MooHistoryItem *item);
 void        moo_history_mgr_update_file         (MooHistoryMgr  *mgr,
                                                  MooHistoryItem *item);
-void        moo_history_mgr_add_uri             (MooHistoryMgr  *mgr,
-                                                 const char     *uri);
 void        moo_history_mgr_remove_uri          (MooHistoryMgr  *mgr,
                                                  const char     *uri);
 MooHistoryItem  *moo_history_mgr_find_uri       (MooHistoryMgr  *mgr,
@@ -89,9 +87,6 @@ void            moo_history_item_set            (MooHistoryItem *item,
 const char     *moo_history_item_get            (MooHistoryItem *item,
                                                  const char     *key);
 const char     *moo_history_item_get_uri        (MooHistoryItem *item);
-void            moo_history_item_foreach        (MooHistoryItem *item,
-                                                 GDataForeachFunc func,
-                                                 gpointer        user_data);
 
 char          *_moo_history_mgr_get_filename    (MooHistoryMgr  *mgr);
 

@@ -1047,29 +1047,6 @@ moo_app_get_ui_xml (MooApp *app)
 }
 
 
-void
-moo_app_set_ui_xml (MooApp     *app,
-                    MooUiXml   *xml)
-{
-    g_return_if_fail (MOO_IS_APP (app));
-
-    if (app->priv->ui_xml == xml)
-        return;
-
-    if (app->priv->ui_xml)
-        g_object_unref (app->priv->ui_xml);
-
-    app->priv->ui_xml = xml;
-
-    if (xml)
-        g_object_ref (app->priv->ui_xml);
-
-    if (app->priv->editor)
-        moo_editor_set_ui_xml (app->priv->editor, xml);
-}
-
-
-
 static void
 moo_app_do_load_session (MooApp        *app,
                          MooMarkupNode *xml)

@@ -874,27 +874,6 @@ moo_history_mgr_get_n_items (MooHistoryMgr *mgr)
 }
 
 
-void
-moo_history_mgr_add_uri (MooHistoryMgr *mgr,
-                        const char   *uri)
-{
-    MooHistoryItem *freeme = NULL;
-    MooHistoryItem *item;
-
-    g_return_if_fail (MOO_IS_HISTORY_MGR (mgr));
-    g_return_if_fail (uri && uri[0]);
-
-    if (!(item = moo_history_mgr_find_uri (mgr, uri)))
-    {
-        freeme = moo_history_item_new (uri, NULL);
-        item = freeme;
-    }
-
-    moo_history_mgr_add_file (mgr, item);
-
-    moo_history_item_free (freeme);
-}
-
 static void
 moo_history_mgr_add_file_real (MooHistoryMgr  *mgr,
                               MooHistoryItem *item,
@@ -1848,16 +1827,6 @@ moo_history_item_format (MooHistoryItem *item,
     }
 
     g_free (uri_escaped);
-}
-
-void
-moo_history_item_foreach (MooHistoryItem    *item,
-                          GDataForeachFunc  func,
-                          gpointer          user_data)
-{
-    g_return_if_fail (item != NULL);
-    g_return_if_fail (func != NULL);
-    g_datalist_foreach (&item->data, func, user_data);
 }
 
 

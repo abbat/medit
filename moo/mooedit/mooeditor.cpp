@@ -703,14 +703,6 @@ _moo_editor_get_history_mgr (MooEditor *editor)
     return editor->priv->history;
 }
 
-// static void
-// add_recent_uri (MooEditor  *editor,
-//                 const char *uri)
-// {
-//     if (!is_embedded (editor))
-//         moo_history_mgr_add_uri (editor->priv->history, uri);
-// }
-
 static void
 recent_item_activated (GSList   *items,
                        gpointer  data)

@@ -296,16 +296,6 @@ moo_cmd_view_set_filter_by_id (MooCmdView *view,
         g_object_unref (filter);
 }
 
-void
-moo_cmd_view_add_filter_dirs (MooCmdView  *view,
-                              char       **dirs)
-{
-    g_return_if_fail (MOO_IS_CMD_VIEW (view));
-
-    if (view->priv->filter)
-        moo_output_filter_add_active_dirs (view->priv->filter, dirs);
-}
-
 
 static gboolean
 cmd_exit_cb (MooCmd     *cmd,

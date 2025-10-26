@@ -464,19 +464,6 @@ init_dir_entry (MooHistoryCombo *hist_combo,
         g_free (filename);
         g_object_unref (file);
     }
-
-#if 0
-//     moo_history_list_remove (list, "CURRENT_DOC_DIR");
-//
-//     if (doc && moo_edit_get_filename (doc))
-//     {
-//         char *dir = g_path_get_dirname (moo_edit_get_filename (doc));
-//         char *display = g_filename_display_name ();
-//
-//         moo_history_list_add_builtin (list, "CURRENT_DOC_DIR",
-//                                       moo_edit_);
-//     }
-#endif
 }
 
 

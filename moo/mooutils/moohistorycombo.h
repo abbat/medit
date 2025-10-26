@@ -52,8 +52,6 @@ typedef gboolean (*MooHistoryComboFilterFunc)   (const char    *text,
 
 GType           moo_history_combo_get_type  (void) G_GNUC_CONST;
 
-GtkWidget      *moo_history_combo_new       (const char         *user_id);
-
 void            moo_history_combo_set_list  (MooHistoryCombo    *combo,
                                              MooHistoryList     *list);
 MooHistoryList *moo_history_combo_get_list  (MooHistoryCombo    *combo);

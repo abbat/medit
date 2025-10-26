@@ -78,8 +78,6 @@ void             moo_app_about_dialog           (GtkWidget              *parent)
 char            *moo_app_get_system_info        (MooApp                 *app);
 
 MooUiXml        *moo_app_get_ui_xml             (MooApp                 *app);
-void             moo_app_set_ui_xml             (MooApp                 *app,
-                                                 MooUiXml               *xml);
 
 gboolean         moo_app_send_msg               (const char             *pid,
                                                  const char             *data,

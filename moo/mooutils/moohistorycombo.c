@@ -498,23 +498,6 @@ default_filter_func (const char         *entry_text,
 }
 
 
-GtkWidget*
-moo_history_combo_new (const char *user_id)
-{
-    MooHistoryCombo *combo;
-
-    combo = MOO_HISTORY_COMBO (g_object_new (MOO_TYPE_HISTORY_COMBO, (const char*) NULL));
-
-    if (user_id)
-    {
-        MooHistoryList *list = moo_history_list_get (user_id);
-        moo_history_combo_set_list (combo, list);
-    }
-
-    return GTK_WIDGET (combo);
-}
-
-
 void
 moo_history_combo_add_text (MooHistoryCombo *combo,
                             const char      *text)

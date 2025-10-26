@@ -368,42 +368,6 @@ list_get_tip (MooHistoryList     *list,
 
 
 void
-moo_history_list_add_builtin (MooHistoryList *list,
-                              const char     *item,
-                              const char     *display_item)
-{
-    Item *new_item;
-    GtkTreeIter iter;
-
-    g_return_if_fail (MOO_IS_HISTORY_LIST (list));
-
-    new_item = moo_history_list_item_new (item, display_item, TRUE);
-    g_return_if_fail (new_item != NULL);
-
-    if (moo_history_list_find (list, item, &iter))
-    {
-        Item *old = moo_history_list_get_item (list, &iter);
-        if (!old->builtin)
-            _list_remove (list, &iter);
-        moo_history_list_item_free (old);
-    }
-
-    _list_insert (list, list->priv->num_builtin++, new_item);
-
-    if (!list->priv->has_separator &&
-         list->priv->use_separator &&
-         list->priv->num_user)
-    {
-        _list_insert (list, list->priv->num_builtin, NULL);
-        list->priv->has_separator = TRUE;
-    }
-
-    g_signal_emit (list, signals[CHANGED], 0);
-    g_object_notify (G_OBJECT (list), "empty");
-}
-
-
-void
 moo_history_list_add (MooHistoryList *list,
                       const char     *entry)
 {
@@ -416,28 +380,6 @@ moo_history_list_add (MooHistoryList *list,
     g_return_if_fail (display != NULL);
 
     moo_history_list_add_full (list, entry, display);
-
-    g_free (display);
-}
-
-
-void
-moo_history_list_add_filename (MooHistoryList *list,
-                               const char     *filename)
-{
-    char *display;
-
-    g_return_if_fail (MOO_IS_HISTORY_LIST (list));
-    g_return_if_fail (filename != NULL);
-
-    if (list->priv->display_func)
-        display = list->priv->display_func (filename, list->priv->display_data);
-    else
-        display = g_filename_display_name (filename);
-
-    g_return_if_fail (display != NULL);
-
-    moo_history_list_add_full (list, filename, display);
 
     g_free (display);
 }
@@ -537,117 +479,6 @@ moo_history_list_get_last_item (MooHistoryList *list)
 }
 
 
-void
-moo_history_list_remove (MooHistoryList *list,
-                         const char     *entry)
-{
-    Item *item;
-    GtkTreeIter iter;
-    int separator;
-
-    g_return_if_fail (MOO_IS_HISTORY_LIST (list));
-    g_return_if_fail (entry != NULL);
-
-    if (!moo_history_list_find (list, entry, &iter))
-        return;
-
-    item = moo_history_list_get_item (list, &iter);
-    _list_remove (list, &iter);
-
-    separator = list->priv->num_builtin;
-
-    if (item->builtin)
-        list->priv->num_builtin--;
-    else
-        list->priv->num_user--;
-
-    if (list->priv->has_separator &&
-        (!list->priv->num_builtin || !list->priv->num_user))
-    {
-        gtk_tree_model_iter_nth_child (list->priv->model, &iter, NULL, separator);
-        _list_remove (list, &iter);
-        list->priv->has_separator = FALSE;
-    }
-
-    list_save_recent (list);
-
-    if (moo_history_list_is_empty (list))
-        g_object_notify (G_OBJECT (list), "empty");
-
-    moo_history_list_item_free (item);
-    return;
-}
-
-
-void
-moo_history_list_set_display_func (MooHistoryList *list,
-                                   MooHistoryDisplayFunc func,
-                                   gpointer        data)
-{
-    g_return_if_fail (MOO_IS_HISTORY_LIST (list));
-    list->priv->display_func = func;
-    list->priv->display_data = data;
-}
-
-
-void
-moo_history_list_set_tip_func (MooHistoryList *list,
-                               MooHistoryDisplayFunc func,
-                               gpointer        data)
-{
-    g_return_if_fail (MOO_IS_HISTORY_LIST (list));
-    list->priv->tip_func = func;
-    list->priv->tip_data = data;
-}
-
-
-void
-moo_history_list_set_compare_func  (MooHistoryList *list,
-                                    MooHistoryCompareFunc func,
-                                    gpointer        data)
-{
-    g_return_if_fail (MOO_IS_HISTORY_LIST (list));
-
-    if (func)
-    {
-        list->priv->compare_func = func;
-        list->priv->compare_data = data;
-    }
-    else
-    {
-        list->priv->compare_func = default_compare_func;
-        list->priv->compare_data = NULL;
-    }
-}
-
-
-char *
-moo_history_list_display_basename (const char     *filename,
-                                   G_GNUC_UNUSED gpointer data)
-{
-    char *basename, *display;
-
-    g_return_val_if_fail (filename != NULL, NULL);
-
-    basename = g_path_get_basename (filename);
-    g_return_val_if_fail (basename != NULL, NULL);
-
-    display = g_filename_display_name (basename);
-
-    g_free (basename);
-    return display;
-}
-
-
-char *
-moo_history_list_display_filename (const char *filename,
-                                   G_GNUC_UNUSED gpointer data)
-{
-    g_return_val_if_fail (filename != NULL, NULL);
-    return g_filename_display_name (filename);
-}
-
-
 gboolean
 moo_history_list_is_empty (MooHistoryList *list)
 {
@@ -661,14 +492,6 @@ moo_history_list_n_user_entries (MooHistoryList *list)
 {
     g_return_val_if_fail (MOO_IS_HISTORY_LIST (list), 0);
     return list->priv->num_user;
-}
-
-
-guint
-moo_history_list_get_max_entries (MooHistoryList *list)
-{
-    g_return_val_if_fail (MOO_IS_HISTORY_LIST (list), 0);
-    return list->priv->max_items;
 }
 
 
@@ -753,15 +576,6 @@ menu_item_activated (MooHistoryList     *list,
                      gpointer            menu_data)
 {
     g_signal_emit (list, signals[ACTIVATE_ITEM], 0, entry, menu_data);
-}
-
-
-MooMenuMgr*
-moo_history_list_get_menu_mgr (MooHistoryList *list)
-{
-    g_return_val_if_fail (MOO_IS_HISTORY_LIST (list), NULL);
-    _moo_history_list_load (list);
-    return list->priv->mgr;
 }
 
 

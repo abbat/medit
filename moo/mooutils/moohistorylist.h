@@ -77,30 +77,11 @@ GtkTreeModel    *moo_history_list_get_model         (MooHistoryList *list);
 
 void             moo_history_list_add               (MooHistoryList *list,
                                                      const char     *item);
-void             moo_history_list_add_filename      (MooHistoryList *list,
-                                                     const char     *filename);
 void             moo_history_list_add_full          (MooHistoryList *list,
                                                      const char     *item,
                                                      const char     *display_item);
 
 char            *moo_history_list_get_last_item     (MooHistoryList *list);
-
-void             moo_history_list_remove            (MooHistoryList *list,
-                                                     const char     *item);
-
-void             moo_history_list_set_display_func  (MooHistoryList *list,
-                                                     MooHistoryDisplayFunc func,
-                                                     gpointer        data);
-void             moo_history_list_set_tip_func      (MooHistoryList *list,
-                                                     MooHistoryDisplayFunc func,
-                                                     gpointer        data);
-void             moo_history_list_set_compare_func  (MooHistoryList *list,
-                                                     MooHistoryCompareFunc func,
-                                                     gpointer        data);
-char            *moo_history_list_display_basename  (const char     *entry,
-                                                     gpointer        data);
-char            *moo_history_list_display_filename  (const char     *entry,
-                                                     gpointer        data);
 
 /* must free the result */
 MooHistoryListItem *moo_history_list_get_item       (MooHistoryList *list,
@@ -111,17 +92,10 @@ gboolean         moo_history_list_find              (MooHistoryList *list,
 
 gboolean         moo_history_list_is_empty          (MooHistoryList *list);
 guint            moo_history_list_n_user_entries    (MooHistoryList *list);
-guint            moo_history_list_get_max_entries   (MooHistoryList *list);
 void             moo_history_list_set_max_entries   (MooHistoryList *list,
                                                      guint           num);
 
 void             _moo_history_list_load             (MooHistoryList *list);
-
-void             moo_history_list_add_builtin       (MooHistoryList *list,
-                                                     const char     *item,
-                                                     const char     *display_item);
-
-MooMenuMgr      *moo_history_list_get_menu_mgr      (MooHistoryList *list);
 
 MooHistoryListItem *moo_history_list_item_new       (const char     *data,
                                                      const char     *display,
