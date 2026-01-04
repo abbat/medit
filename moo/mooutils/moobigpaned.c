@@ -1374,6 +1374,46 @@ moo_big_paned_expose (GtkWidget      *widget,
     return FALSE;
 }
 
+#if GTK_CHECK_VERSION(3,0,0)
+static cairo_region_t *
+create_rect_mask (int           width,
+                  int           height,
+                  GdkRectangle *rect)
+{
+    /* FIXME: This code was written by AI and needs review */
+
+    /* Create rectangles for the mask */
+    cairo_rectangle_int_t outer_rect = {0, 0, width, height};
+    cairo_rectangle_int_t inner_rect = {1, 1, width - 2, height - 2};
+    cairo_rectangle_int_t rect_outer = {rect->x, rect->y, rect->width, rect->height};
+    cairo_rectangle_int_t rect_inner = {rect->x + 1, rect->y + 1,
+                                       rect->width - 2, rect->height - 2};
+    cairo_region_t *region;
+    cairo_region_t *temp_region;
+
+    /* Create region for the outer border */
+    region = cairo_region_create_rectangle (&outer_rect);
+
+    /* Subtract the inner area, leaving only a 1-pixel wide border */
+    temp_region = cairo_region_create_rectangle (&inner_rect);
+    cairo_region_subtract (region, temp_region);
+    cairo_region_destroy (temp_region);
+
+    /* Add the rectangle from the rect parameter */
+    temp_region = cairo_region_create_rectangle (&rect_outer);
+    cairo_region_union (region, temp_region);
+    cairo_region_destroy (temp_region);
+
+    /* Add the inner border of the rect rectangle */
+    if (rect->width > 2 && rect->height > 2) {
+        temp_region = cairo_region_create_rectangle (&rect_inner);
+        cairo_region_union (region, temp_region);
+        cairo_region_destroy (temp_region);
+    }
+
+    return region;
+}
+#else
 static GdkBitmap *
 create_rect_mask (int           width,
                   int           height,
@@ -1407,14 +1447,20 @@ create_rect_mask (int           width,
     g_object_unref (gc);
     return bitmap;
 }
+#endif
 
 static void
 create_drop_outline (MooBigPaned *paned)
 {
     static GdkWindowAttr attributes;
     int attributes_mask;
-    GdkBitmap *mask;
     GdkRectangle button_rect;
+
+#if GTK_CHECK_VERSION(3, 0, 0)
+    cairo_region_t *mask;
+#else
+    GdkBitmap *mask;
+#endif
 
     g_return_if_fail (paned->priv->drop_outline == NULL);
 
@@ -1440,7 +1486,13 @@ create_drop_outline (MooBigPaned *paned)
     mask = create_rect_mask (paned->priv->drop_rect.width,
                              paned->priv->drop_rect.height,
                              &button_rect);
+
+#if GTK_CHECK_VERSION(3, 0, 0)
+    gdk_window_shape_combine_region (paned->priv->drop_outline, mask, 0, 0);
+#else
     gdk_window_shape_combine_mask (paned->priv->drop_outline, mask, 0, 0);
+#endif
+
     g_object_unref (mask);
 
     gdk_window_show (paned->priv->drop_outline);
