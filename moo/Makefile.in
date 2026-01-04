@@ -230,14 +230,15 @@ am__medit_SOURCES_DIST = medit-app/mem-debug.h medit-app/run-tests.h \
 	mooutils/mooprefs.c mooutils/mooprefs.h \
 	mooutils/mooprefsdialog.c mooutils/mooprefsdialog.h \
 	mooutils/mooprefspage.c mooutils/mooprefspage.h \
-	mooutils/moospawn.c mooutils/moospawn.h mooutils/moostock.c \
-	mooutils/moostock.h mooutils/mootype-macros.h \
-	mooutils/moouixml.c mooutils/mooundo.c mooutils/mooundo.h \
-	mooutils/mooutils.h mooutils/mooutils-cpp.h \
-	mooutils/mooutils-debug.h mooutils/mooutils-enums.c \
-	mooutils/mooutils-enums.h mooutils/mooutils-file.c \
-	mooutils/mooutils-file.h mooutils/mooutils-fs.cpp \
-	mooutils/mooutils-fs.h mooutils/mooutils-gobject-private.h \
+	mooutils/mooregion.c mooutils/mooregion.h mooutils/moospawn.c \
+	mooutils/moospawn.h mooutils/moostock.c mooutils/moostock.h \
+	mooutils/mootype-macros.h mooutils/moouixml.c \
+	mooutils/mooundo.c mooutils/mooundo.h mooutils/mooutils.h \
+	mooutils/mooutils-cpp.h mooutils/mooutils-debug.h \
+	mooutils/mooutils-enums.c mooutils/mooutils-enums.h \
+	mooutils/mooutils-file.c mooutils/mooutils-file.h \
+	mooutils/mooutils-fs.cpp mooutils/mooutils-fs.h \
+	mooutils/mooutils-gobject-private.h \
 	mooutils/mooutils-gobject.cpp mooutils/mooutils-gobject.h \
 	mooutils/mooutils-gpp.h mooutils/mooutils-macros.h \
 	mooutils/mooutils-mem.h mooutils/mooutils-messages.h \
@@ -405,9 +406,10 @@ am__objects_5 = mooglib/moo-glib.$(OBJEXT) $(am__objects_1) \
 	mooutils/moo-mime.$(OBJEXT) mooutils/moonotebook.$(OBJEXT) \
 	mooutils/moopane.$(OBJEXT) mooutils/moopaned.$(OBJEXT) \
 	mooutils/mooprefs.$(OBJEXT) mooutils/mooprefsdialog.$(OBJEXT) \
-	mooutils/mooprefspage.$(OBJEXT) mooutils/moospawn.$(OBJEXT) \
-	mooutils/moostock.$(OBJEXT) mooutils/moouixml.$(OBJEXT) \
-	mooutils/mooundo.$(OBJEXT) mooutils/mooutils-enums.$(OBJEXT) \
+	mooutils/mooprefspage.$(OBJEXT) mooutils/mooregion.$(OBJEXT) \
+	mooutils/moospawn.$(OBJEXT) mooutils/moostock.$(OBJEXT) \
+	mooutils/moouixml.$(OBJEXT) mooutils/mooundo.$(OBJEXT) \
+	mooutils/mooutils-enums.$(OBJEXT) \
 	mooutils/mooutils-file.$(OBJEXT) \
 	mooutils/mooutils-fs.$(OBJEXT) \
 	mooutils/mooutils-gobject.$(OBJEXT) \
@@ -617,8 +619,9 @@ am__depfiles_remade = ./$(DEPDIR)/dummy.Po ./$(DEPDIR)/marshals.Po \
 	mooutils/$(DEPDIR)/mooprefs.Po \
 	mooutils/$(DEPDIR)/mooprefsdialog.Po \
 	mooutils/$(DEPDIR)/mooprefspage.Po \
-	mooutils/$(DEPDIR)/moospawn.Po mooutils/$(DEPDIR)/moostock.Po \
-	mooutils/$(DEPDIR)/moouixml.Po mooutils/$(DEPDIR)/mooundo.Po \
+	mooutils/$(DEPDIR)/mooregion.Po mooutils/$(DEPDIR)/moospawn.Po \
+	mooutils/$(DEPDIR)/moostock.Po mooutils/$(DEPDIR)/moouixml.Po \
+	mooutils/$(DEPDIR)/mooundo.Po \
 	mooutils/$(DEPDIR)/mooutils-enums.Po \
 	mooutils/$(DEPDIR)/mooutils-file.Po \
 	mooutils/$(DEPDIR)/mooutils-fs.Po \
@@ -1311,14 +1314,15 @@ moo_sources = moo-config.h mooglib/moo-glib.h mooglib/moo-stat.h \
 	mooutils/mooprefs.c mooutils/mooprefs.h \
 	mooutils/mooprefsdialog.c mooutils/mooprefsdialog.h \
 	mooutils/mooprefspage.c mooutils/mooprefspage.h \
-	mooutils/moospawn.c mooutils/moospawn.h mooutils/moostock.c \
-	mooutils/moostock.h mooutils/mootype-macros.h \
-	mooutils/moouixml.c mooutils/mooundo.c mooutils/mooundo.h \
-	mooutils/mooutils.h mooutils/mooutils-cpp.h \
-	mooutils/mooutils-debug.h mooutils/mooutils-enums.c \
-	mooutils/mooutils-enums.h mooutils/mooutils-file.c \
-	mooutils/mooutils-file.h mooutils/mooutils-fs.cpp \
-	mooutils/mooutils-fs.h mooutils/mooutils-gobject-private.h \
+	mooutils/mooregion.c mooutils/mooregion.h mooutils/moospawn.c \
+	mooutils/moospawn.h mooutils/moostock.c mooutils/moostock.h \
+	mooutils/mootype-macros.h mooutils/moouixml.c \
+	mooutils/mooundo.c mooutils/mooundo.h mooutils/mooutils.h \
+	mooutils/mooutils-cpp.h mooutils/mooutils-debug.h \
+	mooutils/mooutils-enums.c mooutils/mooutils-enums.h \
+	mooutils/mooutils-file.c mooutils/mooutils-file.h \
+	mooutils/mooutils-fs.cpp mooutils/mooutils-fs.h \
+	mooutils/mooutils-gobject-private.h \
 	mooutils/mooutils-gobject.cpp mooutils/mooutils-gobject.h \
 	mooutils/mooutils-gpp.h mooutils/mooutils-macros.h \
 	mooutils/mooutils-mem.h mooutils/mooutils-messages.h \
@@ -1978,6 +1982,8 @@ mooutils/mooprefsdialog.$(OBJEXT): mooutils/$(am__dirstamp) \
 	mooutils/$(DEPDIR)/$(am__dirstamp)
 mooutils/mooprefspage.$(OBJEXT): mooutils/$(am__dirstamp) \
 	mooutils/$(DEPDIR)/$(am__dirstamp)
+mooutils/mooregion.$(OBJEXT): mooutils/$(am__dirstamp) \
+	mooutils/$(DEPDIR)/$(am__dirstamp)
 mooutils/moospawn.$(OBJEXT): mooutils/$(am__dirstamp) \
 	mooutils/$(DEPDIR)/$(am__dirstamp)
 mooutils/moostock.$(OBJEXT): mooutils/$(am__dirstamp) \
@@ -2375,6 +2381,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@mooutils/$(DEPDIR)/mooprefs.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@mooutils/$(DEPDIR)/mooprefsdialog.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@mooutils/$(DEPDIR)/mooprefspage.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@mooutils/$(DEPDIR)/mooregion.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@mooutils/$(DEPDIR)/moospawn.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@mooutils/$(DEPDIR)/moostock.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@mooutils/$(DEPDIR)/moouixml.Po@am__quote@ # am--include-marker
@@ -3026,6 +3033,7 @@ distclean: distclean-am
 	-rm -f mooutils/$(DEPDIR)/mooprefs.Po
 	-rm -f mooutils/$(DEPDIR)/mooprefsdialog.Po
 	-rm -f mooutils/$(DEPDIR)/mooprefspage.Po
+	-rm -f mooutils/$(DEPDIR)/mooregion.Po
 	-rm -f mooutils/$(DEPDIR)/moospawn.Po
 	-rm -f mooutils/$(DEPDIR)/moostock.Po
 	-rm -f mooutils/$(DEPDIR)/moouixml.Po
@@ -3240,6 +3248,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f mooutils/$(DEPDIR)/mooprefs.Po
 	-rm -f mooutils/$(DEPDIR)/mooprefsdialog.Po
 	-rm -f mooutils/$(DEPDIR)/mooprefspage.Po
+	-rm -f mooutils/$(DEPDIR)/mooregion.Po
 	-rm -f mooutils/$(DEPDIR)/moospawn.Po
 	-rm -f mooutils/$(DEPDIR)/moostock.Po
 	-rm -f mooutils/$(DEPDIR)/moouixml.Po

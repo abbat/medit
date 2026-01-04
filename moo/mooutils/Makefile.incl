@@ -97,6 +97,8 @@ moo_sources +=				\
 	mooutils/mooprefsdialog.h	\
 	mooutils/mooprefspage.c		\
 	mooutils/mooprefspage.h		\
+	mooutils/mooregion.c		\
+	mooutils/mooregion.h		\
 	mooutils/moospawn.c		\
 	mooutils/moospawn.h		\
 	mooutils/moostock.c		\
