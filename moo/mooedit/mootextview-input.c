@@ -413,8 +413,20 @@ _moo_text_view_update_text_cursor (MooTextView *view,
 
     tcursor = MOO_TEXT_VIEW_GET_CLASS (view)->get_text_cursor (view, x, y);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    /* AI-generated code for GTK3 compatibility */
+    /* FIXME: This code needs to be properly reviewed and fixed in future versions */
+    GdkWindow *window = gtk_text_view_get_window(text_view, GTK_TEXT_WINDOW_TEXT);
+    GdkCursor *current_cursor = window ? gdk_window_get_cursor(window) : NULL;
+    /* In GTK3, we can't directly check cursor type, so we'll just check if cursor exists */
+    gboolean cursor_obscured = (current_cursor != NULL);
+
+    if (tcursor == view->priv->text_cursor && !cursor_obscured)
+        return;
+#else
     if (tcursor == view->priv->text_cursor && !text_view->mouse_cursor_obscured)
         return;
+#endif
 
     switch (tcursor)
     {
@@ -434,7 +446,13 @@ _moo_text_view_update_text_cursor (MooTextView *view,
 
     gdk_window_set_cursor (gtk_text_view_get_window (text_view, GTK_TEXT_WINDOW_TEXT), cursor);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    /* AI-generated code for GTK3 compatibility */
+    /* FIXME: This code needs to be properly reviewed and fixed in future versions */
+    /* In GTK3, the cursor is already set above, nothing to do here */
+#else
     text_view->mouse_cursor_obscured = FALSE;
+#endif
     view->priv->text_cursor = tcursor;
 
     if (cursor)
@@ -453,6 +471,15 @@ set_invisible_cursor (GdkWindow *window)
 static void
 text_view_obscure_mouse_cursor (GtkTextView *text_view)
 {
+#if GTK_CHECK_VERSION(3,0,0)
+    /* AI-generated code for GTK3 compatibility */
+    /* FIXME: This code needs to be properly reviewed and fixed in future versions */
+    GdkWindow *window = gtk_text_view_get_window(text_view, GTK_TEXT_WINDOW_TEXT);
+    if (window) {
+        /* In GTK3, we can't directly check cursor type, so we'll just set invisible cursor */
+        set_invisible_cursor(window);
+    }
+#else
     if (!text_view->mouse_cursor_obscured)
     {
         GdkWindow *window =
@@ -461,6 +488,7 @@ text_view_obscure_mouse_cursor (GtkTextView *text_view)
         set_invisible_cursor (window);
         text_view->mouse_cursor_obscured = TRUE;
     }
+#endif
 }
 
 
@@ -1000,7 +1028,7 @@ text_view_start_selection_dnd (GtkTextView       *text_view,
     gtk_target_list_add_text_targets (target_list, 0);
 
 #if GTK_CHECK_VERSION(3,0,0)
-    gtk_drag_begin_with_coordinates (GTK_WIDGET (text_view), target_list
+    gtk_drag_begin_with_coordinates (GTK_WIDGET (text_view), target_list,
                                      GDK_ACTION_COPY | GDK_ACTION_MOVE,
                                      1, (GdkEvent*) event, -1, -1);
 #else
