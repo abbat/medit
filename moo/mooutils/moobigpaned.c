@@ -78,9 +78,15 @@ static void     moo_big_paned_get_property  (GObject        *object,
                                              GValue         *value,
                                              GParamSpec     *pspec);
 
+#if GTK_CHECK_VERSION(3,0,0)
+static gboolean moo_big_paned_draw          (GtkWidget      *widget,
+                                             cairo_t        *cr,
+                                             MooBigPaned    *paned);
+#else
 static gboolean moo_big_paned_expose        (GtkWidget      *widget,
                                              GdkEventExpose *event,
                                              MooBigPaned    *paned);
+#endif
 
 static void     child_set_pane_size         (GtkWidget      *child,
                                              int             size,
@@ -1062,8 +1068,13 @@ handle_drag_start (G_GNUC_UNUSED MooPaned *child,
 {
     g_return_if_fail (gtk_widget_get_realized (paned->priv->outer));
 
+#if GTK_CHECK_VERSION (3, 0, 0)
+    g_signal_connect (paned->priv->outer, "draw",
+                      G_CALLBACK (moo_big_paned_draw), paned);
+#else
     g_signal_connect (paned->priv->outer, "expose-event",
                       G_CALLBACK (moo_big_paned_expose), paned);
+#endif
 
     paned->priv->drop_pos = -1;
     get_drop_zones (paned);
@@ -1217,9 +1228,15 @@ cleanup_drag (MooBigPaned *paned)
     paned->priv->drop_pos = -1;
     paned->priv->drop_region = NULL;
 
+#if GTK_CHECK_VERSION(3,0,0)
+    g_signal_handlers_disconnect_by_func (paned->priv->outer,
+                                          (gpointer) moo_big_paned_draw,
+                                          paned);
+#else
     g_signal_handlers_disconnect_by_func (paned->priv->outer,
                                           (gpointer) moo_big_paned_expose,
                                           paned);
+#endif
 
     for (pos = 0; pos < 4; ++pos)
     {
@@ -1349,6 +1366,47 @@ get_drop_area (MooBigPaned    *paned,
                                  x >= (rect)->x && y >= (rect)->y)
 
 
+#if GTK_CHECK_VERSION(3,0,0)
+static gboolean
+moo_big_paned_draw (GtkWidget   *widget,
+                    cairo_t     *cr,
+                    MooBigPaned *paned)
+{
+    /* FIXME: This code was written by AI and needs review */
+
+    /* Call parent draw handler */
+    GTK_WIDGET_CLASS(G_OBJECT_GET_CLASS (widget))->draw (widget, cr);
+
+    if (paned->priv->drop_pos >= 0)
+    {
+        GtkStyleContext *context;
+        GdkRGBA color;
+
+        g_return_val_if_fail (paned->priv->drop_outline != NULL, FALSE);
+
+        /* Get the style context and foreground color */
+        context = gtk_widget_get_style_context (widget);
+        gtk_style_context_get_color (context, GTK_STATE_FLAG_NORMAL, &color);
+
+        /* Set the color for drawing */
+        gdk_cairo_set_source_rgba (cr, &color);
+
+        /* Draw the outer rectangle */
+        cairo_rectangle (cr, 0, 0,
+                         paned->priv->drop_rect.width - 1,
+                         paned->priv->drop_rect.height - 1);
+        cairo_stroke (cr);
+
+        /* Draw the inner rectangle */
+        cairo_rectangle (cr, 1, 1,
+                         paned->priv->drop_rect.width - 3,
+                         paned->priv->drop_rect.height - 3);
+        cairo_stroke (cr);
+    }
+
+    return FALSE;
+}
+#else
 static gboolean
 moo_big_paned_expose (GtkWidget      *widget,
                       GdkEventExpose *event,
@@ -1373,6 +1431,7 @@ moo_big_paned_expose (GtkWidget      *widget,
 
     return FALSE;
 }
+#endif
 
 #if GTK_CHECK_VERSION(3,0,0)
 static cairo_region_t *
@@ -1471,10 +1530,14 @@ create_drop_outline (MooBigPaned *paned)
     attributes.window_type = GDK_WINDOW_CHILD;
 
     attributes.visual = gtk_widget_get_visual (paned->priv->outer);
-    attributes.colormap = gtk_widget_get_colormap (paned->priv->outer);
     attributes.wclass = GDK_INPUT_OUTPUT;
 
+#if GTK_CHECK_VERSION(3, 0, 0)
+    attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL;
+#else
     attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL | GDK_WA_COLORMAP;
+    attributes.colormap = gtk_widget_get_colormap (paned->priv->outer);
+#endif
 
     paned->priv->drop_outline = gdk_window_new (gtk_widget_get_window (paned->priv->outer),
                                                 &attributes, attributes_mask);
