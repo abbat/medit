@@ -816,7 +816,13 @@ _moo_encodings_attach_combo (GtkWidget  *dialog,
     gtk_widget_show (label);
     gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    // TODO: Deprecated since: 4.10
+    // Use GtkDropDown <https://docs.gtk.org/gtk4/class.DropDown.html>
+    combo = gtk_combo_box_new_with_entry ();
+#else
     combo = gtk_combo_box_entry_new ();
+#endif
     gtk_widget_show (combo);
     gtk_box_pack_start (GTK_BOX (hbox), combo, TRUE, TRUE, 0);
 
