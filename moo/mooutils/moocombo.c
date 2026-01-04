@@ -771,8 +771,8 @@ popup_button_press (MooCombo       *combo,
     if (event->window == gtk_widget_get_window (combo->priv->popup))
     {
         gint width, height;
-        gdk_drawable_get_size (GDK_DRAWABLE (event->window),
-                               &width, &height);
+        width = gdk_window_get_width (GDK_WINDOW (event->window));
+        height = gdk_window_get_height (GDK_WINDOW (event->window));
         if (event->x < 0 || event->x >= width ||
             event->y < 0 || event->y >= height)
         {
