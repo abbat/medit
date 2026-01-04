@@ -517,8 +517,16 @@ entry_get_borders (GtkEntry *entry,
 
     if (gtk_entry_get_has_frame (entry))
     {
+#if GTK_CHECK_VERSION(3,0,0)
+        GtkBorder border;
+        gtk_style_context_get_border(gtk_widget_get_style_context(widget),
+                                     GTK_STATE_FLAG_NORMAL, &border);
+        *xborder = border.left;
+        *yborder = border.top;
+#else
         *xborder = widget->style->xthickness;
         *yborder = widget->style->ythickness;
+#endif
     }
     else
     {
