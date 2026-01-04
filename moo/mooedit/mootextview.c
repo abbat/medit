@@ -93,6 +93,17 @@ static void     moo_text_view_style_set     (GtkWidget          *widget,
                                              GtkStyle           *previous_style);
 static void     moo_text_view_size_request  (GtkWidget          *widget,
                                              GtkRequisition     *requisition);
+
+#if GTK_CHECK_VERSION(3,0,0)
+static void     moo_text_view_get_preferred_width  (GtkWidget          *widget,
+                                                    gint               *minimum_width,
+                                                    gint               *natural_width);
+static void     moo_text_view_get_preferred_height (GtkWidget          *widget,
+                                                    gint               *minimum_height,
+                                                    gint               *natural_height);
+#endif
+
+
 static void     moo_text_view_size_allocate (GtkWidget          *widget,
                                              GtkAllocation      *allocation);
 
@@ -292,12 +303,14 @@ static void moo_text_view_class_init (MooTextViewClass *klass)
 
 #if GTK_CHECK_VERSION(3,0,0)
     widget_class->draw = moo_text_view_draw;
+    widget_class->get_preferred_width = moo_text_view_get_preferred_width;
+    widget_class->get_preferred_height = moo_text_view_get_preferred_height;
 #else
     widget_class->expose_event = moo_text_view_expose;
+    widget_class->size_request = moo_text_view_size_request;
 #endif
 
     widget_class->style_set = moo_text_view_style_set;
-    widget_class->size_request = moo_text_view_size_request;
     widget_class->size_allocate = moo_text_view_size_allocate;
 
     container_class->remove = moo_text_view_remove;
@@ -3685,7 +3698,11 @@ moo_text_view_size_request (GtkWidget      *widget,
         GtkRequisition child_req;
 
         if (child && gtk_widget_get_visible (child))
+#if GTK_CHECK_VERSION(3,0,0)
+            gtk_widget_get_preferred_size (child, &child_req, NULL);
+#else
             gtk_widget_size_request (child, &child_req);
+#endif
         else
             child_req.width = child_req.height = 0;
 
@@ -3708,15 +3725,53 @@ moo_text_view_size_request (GtkWidget      *widget,
             old_size = get_border_window_size (text_view,
                                                window_types[i]);
             gtk_text_view_set_border_window_size (text_view,
-                                                  window_types[i],
-                                                  border_size);
+                                                   window_types[i],
+                                                   border_size);
             if (!old_size)
                 lower_border_window (GTK_TEXT_VIEW (view), i);
         }
     }
 
+#if GTK_CHECK_VERSION(3,0,0)
+    GTK_WIDGET_CLASS(moo_text_view_parent_class)->get_preferred_width (widget, &requisition->width, NULL);
+    GTK_WIDGET_CLASS(moo_text_view_parent_class)->get_preferred_height (widget, &requisition->height, NULL);
+#else
     GTK_WIDGET_CLASS(moo_text_view_parent_class)->size_request (widget, requisition);
+#endif
 }
+
+#if GTK_CHECK_VERSION(3,0,0)
+static void
+moo_text_view_get_preferred_width (GtkWidget *widget,
+                                   gint      *minimum_width,
+                                   gint      *natural_width)
+{
+    GtkRequisition requisition;
+
+    moo_text_view_size_request (widget, &requisition);
+
+    if (minimum_width)
+        *minimum_width = requisition.width;
+    if (natural_width)
+        *natural_width = requisition.width;
+}
+
+
+static void
+moo_text_view_get_preferred_height (GtkWidget *widget,
+                                    gint      *minimum_height,
+                                    gint      *natural_height)
+{
+    GtkRequisition requisition;
+
+    moo_text_view_size_request (widget, &requisition);
+
+    if (minimum_height)
+        *minimum_height = requisition.height;
+    if (natural_height)
+        *natural_height = requisition.height;
+}
+#endif
 
 
 static void
