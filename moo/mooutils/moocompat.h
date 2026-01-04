@@ -5,18 +5,6 @@
 #include <gtk/gtk.h>
 
 
-#if defined(GTK_DISABLE_DEPRECATED)
-
-inline static void
-_moo_noop_gtk_toolbar_set_tooltips (G_GNUC_UNUSED GtkToolbar *toolbar,
-                                    G_GNUC_UNUSED gboolean    enable)
-{
-}
-
-#define gtk_toolbar_set_tooltips _moo_noop_gtk_toolbar_set_tooltips
-
-#endif /* GTK_DISABLE_DEPRECATED */
-
 
 #if defined(GTK_DISABLE_DEPRECATED)
 

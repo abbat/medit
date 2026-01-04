@@ -599,13 +599,6 @@ set_special_props (MooGladeXML    *xml,
     if (props->mask & PROP_TOOLTIP)
         _moo_widget_set_tooltip (widget, props->tooltip);
 
-    if (props->mask & PROP_ENABLE_TOOLTIPS)
-    {
-        if (GTK_IS_TOOLBAR (widget))
-            gtk_toolbar_set_tooltips (GTK_TOOLBAR (widget), TRUE);
-        else
-            g_warning ("oops");
-    }
 
     if (props->mask & PROP_HISTORY)
     {

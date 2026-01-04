@@ -2324,7 +2324,6 @@ create_toolbar (MooUiXml       *xml,
     g_return_val_if_fail (toplevel->node != NULL, FALSE);
 
     toplevel->widget = gtk_toolbar_new ();
-    gtk_toolbar_set_tooltips (GTK_TOOLBAR (toplevel->widget), TRUE);
     xml_connect_toplevel (xml, toplevel);
 
     return fill_toolbar (xml, toplevel,
