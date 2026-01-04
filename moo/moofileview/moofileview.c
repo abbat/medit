@@ -2717,7 +2717,7 @@ file_view_cut_or_copy_clipboard (MooFileView *fileview,
     gboolean result;
     GtkClipboard *clipboard;
 
-    g_return_if_fail (GTK_WIDGET_REALIZED (fileview));
+    g_return_if_fail (gtk_widget_get_realized (GTK_WIDGET (fileview)));
 
     folder = fileview->priv->current_dir;
     files = file_view_get_selected_files (fileview);
@@ -4523,7 +4523,7 @@ moo_file_view_key_press (MooFileView    *fileview,
         GtkWidget *entry = GTK_WIDGET (fileview->priv->entry);
 
         g_return_val_if_fail (event != NULL, FALSE);
-        g_return_val_if_fail (GTK_WIDGET_REALIZED (entry), FALSE);
+        g_return_val_if_fail (gtk_widget_get_realized (entry), FALSE);
 
         copy = gdk_event_copy ((GdkEvent*) event);
         g_object_unref (copy->key.window);

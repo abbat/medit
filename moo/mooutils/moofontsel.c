@@ -259,7 +259,7 @@ list_row_activated (GtkWidget *widget)
   if (window
       && widget != gtk_window_get_default_widget(window)
       && !(widget == gtk_window_get_focus(window) &&
-      (!gtk_window_get_default_widget(window) || !GTK_WIDGET_SENSITIVE(gtk_window_get_default_widget(window)))))
+      (!gtk_window_get_default_widget(window) || !gtk_widget_get_sensitive(gtk_window_get_default_widget(window)))))
     {
       gtk_window_activate_default (window);
     }
@@ -2180,7 +2180,7 @@ moo_font_button_clicked (GtkButton *button)
                                 G_CALLBACK (dialog_destroy), font_button);
     }
 
-  if (!GTK_WIDGET_VISIBLE (font_button->priv->font_dialog))
+  if (!gtk_widget_get_visible (font_button->priv->font_dialog))
     {
       font_dialog = MOO_FONT_SELECTION_DIALOG (font_button->priv->font_dialog);
 
@@ -2253,7 +2253,7 @@ moo_font_button_create_inside (MooFontButton *font_button)
 static void
 moo_font_button_update_inside (MooFontButton *font_button)
 {
-  if (GTK_WIDGET_REALIZED (font_button))
+  if (gtk_widget_get_realized (GTK_WIDGET (font_button)))
     {
       if (font_button->priv->inside)
         gtk_container_remove (GTK_CONTAINER (font_button), font_button->priv->inside);
@@ -2292,7 +2292,7 @@ moo_font_button_update_font_info (MooFontButton *font_button)
   gchar *style;
   gchar *family_style;
 
-  if (!GTK_WIDGET_REALIZED (font_button))
+  if (!gtk_widget_get_realized (GTK_WIDGET (font_button)))
     return;
 
   if (!font_button->priv->inside)

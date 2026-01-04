@@ -765,7 +765,7 @@ save_size (MooWindow *window)
 {
     window->priv->save_size_id = 0;
 
-    if (MOO_IS_WINDOW (window) && GTK_WIDGET_REALIZED (window))
+    if (MOO_IS_WINDOW (window) && gtk_widget_get_realized (GTK_WIDGET(window)))
     {
         GdkWindowState state;
         state = gdk_window_get_state (gtk_widget_get_window (GTK_WIDGET(window)));

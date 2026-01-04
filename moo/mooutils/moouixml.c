@@ -1983,7 +1983,7 @@ check_empty (Node           *parent,
         {
             GtkWidget *nw = toplevel_get_widget (toplevel, node);
 
-            if (nw && GTK_WIDGET_VISIBLE (nw))
+            if (nw && gtk_widget_get_visible (nw))
             {
                 has_children = TRUE;
                 break;
@@ -2025,7 +2025,7 @@ check_separators (Node           *parent,
             case MOO_UI_NODE_ITEM:
                 widget = toplevel_get_widget (toplevel, node);
 
-                if (!widget || !GTK_WIDGET_VISIBLE (widget))
+                if (!widget || !gtk_widget_get_visible (widget))
                     continue;
 
                 if (!first)

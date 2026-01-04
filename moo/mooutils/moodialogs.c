@@ -152,7 +152,7 @@ moo_position_window_real (GtkWidget  *window,
     if (toplevel && gtk_window_get_group (GTK_WINDOW(toplevel)))
         gtk_window_group_add_window (gtk_window_get_group (GTK_WINDOW(toplevel)), GTK_WINDOW (window));
 
-    if (!at_mouse && !at_coords && parent && GTK_WIDGET_REALIZED (parent))
+    if (!at_mouse && !at_coords && parent && gtk_widget_get_realized (parent))
     {
         if (GTK_IS_WINDOW (parent))
         {
@@ -183,7 +183,7 @@ moo_position_window_real (GtkWidget  *window,
         gtk_window_set_position (GTK_WINDOW (window), GTK_WIN_POS_NONE);
         g_object_set_data_full (G_OBJECT (window), "moo-coords", coord, g_free);
 
-        if (!GTK_WIDGET_REALIZED (window))
+        if (!gtk_widget_get_realized (window))
         {
             g_signal_handlers_disconnect_by_func (window, (gpointer) position_window, NULL);
             g_signal_connect (window, "realize",
@@ -478,7 +478,7 @@ save_size (GtkWindow *window)
 
     pinfo->save_size_idle = 0;
 
-    if (!GTK_WIDGET_REALIZED (window))
+    if (!gtk_widget_get_realized (GTK_WIDGET (window)))
         return FALSE;
 
     state = gdk_window_get_state (gtk_widget_get_window (GTK_WIDGET(window)));

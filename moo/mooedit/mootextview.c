@@ -1761,7 +1761,7 @@ moo_text_view_set_color (MooTextView      *view,
 
     invalidate_gcs (view);
 
-    if (GTK_WIDGET_DRAWABLE (view) && view->priv->color_settings[color_num])
+    if (gtk_widget_is_drawable (GTK_WIDGET (view)) && view->priv->color_settings[color_num])
         gtk_widget_queue_draw (GTK_WIDGET (view));
 
     g_object_notify (G_OBJECT (view), propname);
@@ -1854,7 +1854,7 @@ selection_changed (MooTextView   *view,
 {
     GtkClipboard *clipboard;
 
-    if (!GTK_WIDGET_REALIZED (view) || !GTK_WIDGET_HAS_FOCUS (view) || !view->priv->manage_clipboard)
+    if (!gtk_widget_get_realized (GTK_WIDGET (view)) || !gtk_widget_has_focus (GTK_WIDGET (view)) || !view->priv->manage_clipboard)
         return;
 
     clipboard = gtk_widget_get_clipboard (GTK_WIDGET (view),
@@ -1877,7 +1877,7 @@ set_manage_clipboard (MooTextView    *view,
 
     view->priv->manage_clipboard = manage;
 
-    if (GTK_WIDGET_REALIZED (view))
+    if (gtk_widget_get_realized (GTK_WIDGET (view)))
     {
         if (manage)
         {
@@ -2069,7 +2069,7 @@ moo_text_view_realize (GtkWidget *widget)
     /* workaround for http://bugzilla.gnome.org/show_bug.cgi?id=336796 */
     for (i = 0; i < 4; ++i)
     {
-        if (view->priv->children[i] && GTK_WIDGET_VISIBLE (view->priv->children[i]))
+        if (view->priv->children[i] && gtk_widget_get_visible (view->priv->children[i]))
             lower_border_window (GTK_TEXT_VIEW (view), i);
     }
 
@@ -2136,7 +2136,7 @@ update_gc (MooTextView     *view,
     GtkWidget *widget = GTK_WIDGET (view);
     GdkWindow *window;
 
-    if (!GTK_WIDGET_REALIZED (widget))
+    if (!gtk_widget_get_realized (widget))
         return;
 
     g_return_if_fail (color_num < MOO_TEXT_VIEW_N_COLORS);
@@ -2379,10 +2379,10 @@ moo_text_view_expose (GtkWidget      *widget,
     if (view->priv->update_n_lines_idle)
         update_n_lines_idle (view);
 
-    if (GTK_WIDGET_SENSITIVE (view) &&
+    if (gtk_widget_get_sensitive (GTK_WIDGET(view)) &&
         event->window == text_window)
     {
-        if ((GTK_WIDGET_HAS_FOCUS (view) ||
+        if ((gtk_widget_has_focus (GTK_WIDGET (view)) ||
              view->priv->highlight_current_line_unfocused)
             && view->priv->color_settings[MOO_TEXT_VIEW_COLOR_CURRENT_LINE]
             && view->priv->gcs[MOO_TEXT_VIEW_COLOR_CURRENT_LINE])
@@ -2390,7 +2390,7 @@ moo_text_view_expose (GtkWidget      *widget,
             moo_text_view_draw_current_line (text_view, event);
         }
 
-        if (GTK_WIDGET_HAS_FOCUS (view) &&
+        if (gtk_widget_has_focus (GTK_WIDGET (view)) &&
             view->priv->color_settings[MOO_TEXT_VIEW_COLOR_RIGHT_MARGIN] &&
             view->priv->gcs[MOO_TEXT_VIEW_COLOR_RIGHT_MARGIN])
                 moo_text_view_draw_right_margin (text_view, event);
@@ -2464,7 +2464,7 @@ highlight_updated (GtkTextView       *text_view,
     int y, height;
     MooTextView *view = MOO_TEXT_VIEW (text_view);
 
-    if (!GTK_WIDGET_DRAWABLE (text_view))
+    if (!gtk_widget_is_drawable (GTK_WIDGET (text_view)))
         return;
 
     gtk_text_view_get_visible_rect (text_view, &visible);
@@ -2522,7 +2522,7 @@ set_draw_whitespace (MooTextView    *view,
     view->priv->draw_whitespace = flags;
     g_object_notify (G_OBJECT (view), "draw-whitespace");
 
-    if (GTK_WIDGET_DRAWABLE (view))
+    if (gtk_widget_is_drawable (GTK_WIDGET (view)))
         gtk_widget_queue_draw (GTK_WIDGET (view));
 }
 
@@ -2737,7 +2737,7 @@ update_line_mark_icons (MooTextView *view)
     GtkSettings *settings;
     PangoLayout *layout;
 
-    g_return_if_fail (GTK_WIDGET_REALIZED (view));
+    g_return_if_fail (gtk_widget_get_realized (GTK_WIDGET (view)));
 
     settings = gtk_widget_get_settings (GTK_WIDGET (view));
 
@@ -2797,7 +2797,7 @@ update_left_margin (MooTextView *view)
     int old_size;
     GtkTextView *text_view = GTK_TEXT_VIEW (view);
 
-    if (!GTK_WIDGET_REALIZED (view))
+    if (!gtk_widget_get_realized (GTK_WIDGET (view)))
         return;
 
     margin_size = 0;
@@ -2860,7 +2860,7 @@ update_n_lines_idle (MooTextView *view)
 static void
 buffer_changed (MooTextView *view)
 {
-    if (GTK_WIDGET_REALIZED (view) &&
+    if (gtk_widget_get_realized (GTK_WIDGET (view)) &&
         view->priv->lm.show_numbers &&
         !view->priv->update_n_lines_idle)
     {
@@ -2925,7 +2925,7 @@ draw_marks (MooTextView    *view,
             y = line_y;
 
             gdk_draw_layout (event->window,
-                             GTK_WIDGET(view)->style->fg_gc[GTK_WIDGET_STATE(view)],
+                             GTK_WIDGET(view)->style->fg_gc[gtk_widget_get_state(GTK_WIDGET(view))],
                              x, y, layout);
 
             g_object_unref (layout);
@@ -2943,7 +2943,7 @@ draw_fold_mark (MooTextView    *view,
 {
     gtk_paint_expander (GTK_WIDGET(view)->style,
                         event->window,
-                        GTK_WIDGET_STATE (view),
+                        gtk_widget_get_state (GTK_WIDGET (view)),
                         &event->area,
                         GTK_WIDGET(view),
                         "fold",
@@ -3018,7 +3018,7 @@ draw_left_margin (MooTextView    *view,
 
             gtk_paint_layout (GTK_WIDGET (view)->style,
                               event->window,
-                              GTK_WIDGET_STATE (view),
+                              gtk_widget_get_state (GTK_WIDGET (view)),
                               FALSE, &event->area,
                               GTK_WIDGET(view), NULL,
                               x, y, layout);
@@ -3271,7 +3271,7 @@ update_tab_width (MooTextView *view)
     int tab_width;
     char *string;
 
-    if (!GTK_WIDGET_REALIZED (view))
+    if (!gtk_widget_get_realized (GTK_WIDGET (view)))
         return;
 
     g_return_if_fail (view->priv->tab_width > 0);
@@ -3322,7 +3322,7 @@ update_right_margin (MooTextView *view)
     char *string;
 
     if (view->priv->right_margin_pixel_offset > 0 ||
-        !GTK_WIDGET_REALIZED (view))
+        !gtk_widget_get_realized (GTK_WIDGET (view)))
             return;
 
     g_return_if_fail (view->priv->right_margin_offset > 0 &&
@@ -3386,7 +3386,7 @@ invalidate_line (MooTextView *view,
     GtkTextIter iter;
     GdkRectangle rect = {0, 0, 0, 0};
 
-    if (!GTK_WIDGET_DRAWABLE (view))
+    if (!gtk_widget_is_drawable (GTK_WIDGET (view)))
         return;
 
     gtk_text_buffer_get_iter_at_line (get_buffer (view), &iter, line);
@@ -3485,7 +3485,7 @@ line_mark_added (MooTextView *view,
 
     _moo_line_mark_set_pretty (mark, TRUE);
 
-    if (GTK_WIDGET_REALIZED (view))
+    if (gtk_widget_get_realized (GTK_WIDGET (view)))
         _moo_line_mark_realize (mark, GTK_WIDGET (view));
 
     invalidate_line (view, moo_line_mark_get_line (mark), TRUE, TRUE);
@@ -3532,7 +3532,7 @@ static int
 get_border_window_size (GtkTextView      *text_view,
                         GtkTextWindowType type)
 {
-    if (GTK_WIDGET_REALIZED (text_view) && gtk_text_view_get_window (text_view, type))
+    if (gtk_widget_get_realized (GTK_WIDGET (text_view)) && gtk_text_view_get_window (text_view, type))
         return gtk_text_view_get_border_window_size (text_view, type);
     else
         return 0;
@@ -3580,7 +3580,7 @@ moo_text_view_add_child_in_border (MooTextView        *view,
 
     *child = widget;
 
-    if (GTK_WIDGET_VISIBLE (widget))
+    if (gtk_widget_get_visible (widget))
     {
         gtk_widget_size_request (widget, &child_req);
 
@@ -3625,7 +3625,7 @@ moo_text_view_size_request (GtkWidget      *widget,
         GtkWidget *child = view->priv->children[i];
         GtkRequisition child_req;
 
-        if (child && GTK_WIDGET_VISIBLE (child))
+        if (child && gtk_widget_get_visible (child))
             gtk_widget_size_request (child, &child_req);
         else
             child_req.width = child_req.height = 0;
@@ -3687,7 +3687,7 @@ moo_text_view_size_allocate (GtkWidget     *widget,
         GtkAllocation child_alloc = {0, 0, 0, 0};
         GtkRequisition child_req;
 
-        if (!child || !GTK_WIDGET_VISIBLE (child))
+        if (!child || !gtk_widget_get_visible (child))
             continue;
 
         child_alloc.x = left + border_width;

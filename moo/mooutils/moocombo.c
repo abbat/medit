@@ -673,7 +673,7 @@ resize_popup (MooCombo *combo)
     int separator_height = 0, vert_separator = 0;
     int selected;
 
-    g_return_val_if_fail (GTK_WIDGET_REALIZED (combo->entry), FALSE);
+    g_return_val_if_fail (gtk_widget_get_realized (combo->entry), FALSE);
 
     gdk_window_get_origin (gtk_widget_get_window (widget), &x, &y);
     /* XXX */
@@ -1139,7 +1139,7 @@ gboolean
 moo_combo_popup_shown (MooCombo       *combo)
 {
     g_return_val_if_fail (MOO_IS_COMBO (combo), FALSE);
-    return combo->priv->popup && GTK_WIDGET_MAPPED (combo->priv->popup);
+    return combo->priv->popup && gtk_widget_get_mapped (combo->priv->popup);
 }
 
 

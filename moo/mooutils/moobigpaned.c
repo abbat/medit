@@ -1059,7 +1059,7 @@ handle_drag_start (G_GNUC_UNUSED MooPaned *child,
                    G_GNUC_UNUSED GtkWidget *pane_widget,
                    MooBigPaned *paned)
 {
-    g_return_if_fail (GTK_WIDGET_REALIZED (paned->priv->outer));
+    g_return_if_fail (gtk_widget_get_realized (paned->priv->outer));
 
     g_signal_connect (paned->priv->outer, "expose-event",
                       G_CALLBACK (moo_big_paned_expose), paned);
@@ -1175,7 +1175,7 @@ handle_drag_motion (MooPaned       *child,
 {
     int x, y;
 
-    g_return_if_fail (GTK_WIDGET_REALIZED (paned->priv->outer));
+    g_return_if_fail (gtk_widget_get_realized (paned->priv->outer));
 
     gdk_window_get_pointer (gtk_widget_get_window (paned->priv->outer), &x, &y, NULL);
 
@@ -1240,7 +1240,7 @@ handle_drag_end (MooPaned    *child,
     MooPanePosition new_pos;
     int new_index;
 
-    g_return_if_fail (GTK_WIDGET_REALIZED (paned->priv->outer));
+    g_return_if_fail (gtk_widget_get_realized (paned->priv->outer));
 
     if (!drop)
     {

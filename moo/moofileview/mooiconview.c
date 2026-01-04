@@ -918,9 +918,9 @@ moo_icon_view_style_set (GtkWidget *widget,
 {
     MooIconView *view = MOO_ICON_VIEW (widget);
 
-    if (GTK_WIDGET_REALIZED (widget))
+    if (gtk_widget_get_realized (widget))
         gdk_window_set_background (gtk_widget_get_window (widget),
-                                   &widget->style->base[GTK_WIDGET_STATE (widget)]);
+                                   &widget->style->base[gtk_widget_get_state (widget)]);
 
     if (view->priv->sel_gc)
     {
@@ -934,11 +934,11 @@ static void
 moo_icon_view_state_changed (GtkWidget *widget,
                              G_GNUC_UNUSED GtkStateType previous_state)
 {
-    if (GTK_WIDGET_REALIZED (widget))
+    if (gtk_widget_get_realized (widget))
         gdk_window_set_background (gtk_widget_get_window (widget),
-                                   &widget->style->base[GTK_WIDGET_STATE (widget)]);
+                                   &widget->style->base[gtk_widget_get_state (widget)]);
 
-    if (!GTK_WIDGET_IS_SENSITIVE (widget))
+    if (!gtk_widget_is_sensitive (widget))
         _moo_icon_view_unselect_all (MOO_ICON_VIEW (widget));
 
     gtk_widget_queue_draw (widget);
@@ -1023,7 +1023,7 @@ moo_icon_view_size_allocate (GtkWidget     *widget,
     gboolean height_changed = FALSE;
     MooIconView *view = MOO_ICON_VIEW (widget);
 
-    if (GTK_WIDGET_REALIZED (widget))
+    if (gtk_widget_get_realized (widget))
     {
         if (gtk_widget_get_allocated_height (widget) < 0 ||
             view->priv->layout->row_height == 0)
@@ -1040,7 +1040,7 @@ moo_icon_view_size_allocate (GtkWidget     *widget,
 
     gtk_widget_set_allocation (widget, allocation); // or we need gtk_widget_size_allocate (widget, allocation); ???
 
-    if (GTK_WIDGET_REALIZED (widget))
+    if (gtk_widget_get_realized (widget))
     {
         gdk_window_move_resize (gtk_widget_get_window (widget),
                                 allocation->x,
@@ -1278,7 +1278,7 @@ static void     draw_entry                  (MooIconView    *view,
     {
         GdkGC *selection_gc;
 
-        if (GTK_WIDGET_HAS_FOCUS (widget) || drop)
+        if (gtk_widget_has_focus (widget) || drop)
         {
             selection_gc = widget->style->base_gc [GTK_STATE_SELECTED];
             state = GTK_CELL_RENDERER_SELECTED | GTK_CELL_RENDERER_FOCUSED;
@@ -1419,8 +1419,8 @@ static gboolean moo_icon_view_update_layout     (MooIconView    *view)
     layout->pixbuf_height = 0;
     layout->text_height = 0;
 
-    if (!GTK_WIDGET_REALIZED (view) ||
-         !GTK_WIDGET_MAPPED (view) ||
+    if (!gtk_widget_get_realized (GTK_WIDGET (view)) ||
+         !gtk_widget_get_mapped (GTK_WIDGET (view)) ||
          !view->priv->model ||
          model_empty (view->priv->model))
     {
@@ -1679,8 +1679,8 @@ static void     row_changed                 (G_GNUC_UNUSED GtkTreeModel *model,
                                              G_GNUC_UNUSED GtkTreeIter *iter,
                                              MooIconView    *view)
 {
-    if (!GTK_WIDGET_REALIZED (view) ||
-         !GTK_WIDGET_MAPPED (view))
+    if (!gtk_widget_get_realized (GTK_WIDGET (view)) ||
+         !gtk_widget_get_mapped (GTK_WIDGET (view)))
             return;
 
     if (gtk_tree_path_get_depth (path) != 1)
@@ -1701,8 +1701,8 @@ static void     row_deleted                 (G_GNUC_UNUSED GtkTreeModel *model,
     selection_row_deleted (view);
     cursor_row_deleted (view);
 
-    if (!GTK_WIDGET_REALIZED (view) ||
-         !GTK_WIDGET_MAPPED (view))
+    if (!gtk_widget_get_realized (GTK_WIDGET (view)) ||
+         !gtk_widget_get_mapped (GTK_WIDGET (view)))
             return;
 
     drag_scroll_stop (view);
@@ -1715,8 +1715,8 @@ static void     row_inserted                (G_GNUC_UNUSED GtkTreeModel *model,
                                              G_GNUC_UNUSED GtkTreeIter *iter,
                                              MooIconView    *view)
 {
-    if (!GTK_WIDGET_REALIZED (view) ||
-         !GTK_WIDGET_MAPPED (view))
+    if (!gtk_widget_get_realized (GTK_WIDGET (view)) ||
+         !gtk_widget_get_mapped (GTK_WIDGET (view)))
             return;
 
     if (gtk_tree_path_get_depth (path) != 1)
@@ -1733,8 +1733,8 @@ static void     rows_reordered              (G_GNUC_UNUSED GtkTreeModel *model,
                                              G_GNUC_UNUSED gpointer whatever,
                                              MooIconView    *view)
 {
-    if (!GTK_WIDGET_REALIZED (view) ||
-         !GTK_WIDGET_MAPPED (view))
+    if (!gtk_widget_get_realized (GTK_WIDGET (view)) ||
+         !gtk_widget_get_mapped (GTK_WIDGET (view)))
             return;
 
     if (gtk_tree_path_get_depth (path) != 0)
@@ -1751,7 +1751,7 @@ static void     invalidate_cell_rect        (MooIconView    *view,
 {
     GdkRectangle rect;
 
-    if (!GTK_WIDGET_REALIZED (view) || view->priv->update_idle)
+    if (!gtk_widget_get_realized (GTK_WIDGET (view)) || view->priv->update_idle)
         return;
 
     rect.x = column->offset - view->priv->xoffset;
@@ -1844,7 +1844,7 @@ _moo_icon_view_set_adjustment (MooIconView    *view,
                               G_CALLBACK (value_changed),
                               view);
 
-    if (GTK_WIDGET_REALIZED (view) && GTK_WIDGET_MAPPED (view))
+    if (gtk_widget_get_realized (GTK_WIDGET (view)) && gtk_widget_get_mapped (GTK_WIDGET (view)))
         moo_icon_view_update_adjustment (view);
 }
 
@@ -1960,7 +1960,7 @@ drag_select_finish (MooIconView *view)
 {
     if (view->priv->drag_select)
     {
-        if (GTK_WIDGET_DRAWABLE (view))
+        if (gtk_widget_is_drawable (GTK_WIDGET (view)))
         {
             GdkRectangle rect;
             get_drag_select_rect (view, &rect);
@@ -2209,7 +2209,7 @@ static void invalidate_path_rectangle       (MooIconView    *view,
     Column *column;
     int index_ = 0;
 
-    if (!GTK_WIDGET_REALIZED (view) || view->priv->update_idle)
+    if (!gtk_widget_get_realized (GTK_WIDGET (view)) || view->priv->update_idle)
         return;
 
     if (check_empty (view))
@@ -2573,7 +2573,7 @@ static void     move_cursor_end             (MooIconView    *view,
 static void     moo_icon_view_scroll_to     (MooIconView    *view,
                                              int             offset)
 {
-    if (!GTK_WIDGET_REALIZED (view))
+    if (!gtk_widget_get_realized (GTK_WIDGET (view)))
         return;
 
     offset = clamp_offset (view, offset);
@@ -3422,7 +3422,7 @@ _moo_icon_view_scroll_to_cell (MooIconView *view,
     g_return_if_fail (view->priv->model != NULL);
     g_return_if_fail (!model_empty (view->priv->model));
 
-    if (!GTK_WIDGET_REALIZED (view) || view->priv->update_idle)
+    if (!gtk_widget_get_realized (GTK_WIDGET (view)) || view->priv->update_idle)
     {
         if (view->priv->scroll_to)
             gtk_tree_row_reference_free (view->priv->scroll_to);

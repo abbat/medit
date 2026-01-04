@@ -420,7 +420,7 @@ moo_history_combo_changed (MooCombo *combo)
 {
     MooHistoryCombo *hist_combo = MOO_HISTORY_COMBO (combo);
 
-    if (!GTK_WIDGET_MAPPED (combo))
+    if (!gtk_widget_get_mapped (GTK_WIDGET (combo)))
         return;
 
     if (!hist_combo->priv->enable_completion &&

@@ -1647,7 +1647,7 @@ get_pixbuf (MooIconWidget *icon)
         }
     }
 
-    return icon->pixbufs[GTK_WIDGET_STATE (icon)];
+    return icon->pixbufs[gtk_widget_get_state (GTK_WIDGET (icon))];
 }
 
 static void
@@ -1710,7 +1710,7 @@ draw_arrow (GtkWidget      *widget,
 
     gtk_paint_arrow (widget->style,
                      event->window,
-                     GTK_WIDGET_STATE (widget),
+                     gtk_widget_get_state (widget),
                      GTK_SHADOW_IN,
                      &event->area,
                      widget,

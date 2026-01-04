@@ -408,7 +408,7 @@ _moo_text_view_update_text_cursor (MooTextView *view,
     GtkTextView *text_view = GTK_TEXT_VIEW (view);
 
     g_return_if_fail (MOO_IS_TEXT_VIEW (view));
-    g_return_if_fail (GTK_WIDGET_REALIZED (view));
+    g_return_if_fail (gtk_widget_get_realized (GTK_WIDGET (view)));
     g_return_if_fail (MOO_TEXT_VIEW_GET_CLASS (view)->get_text_cursor != NULL);
 
     tcursor = MOO_TEXT_VIEW_GET_CLASS (view)->get_text_cursor (view, x, y);

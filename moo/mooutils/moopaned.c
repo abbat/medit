@@ -974,7 +974,7 @@ moo_paned_size_request (GtkWidget      *widget,
     requisition->width = 0;
     requisition->height = 0;
 
-    if (gtk_bin_get_child (bin) && GTK_WIDGET_VISIBLE (gtk_bin_get_child (bin)))
+    if (gtk_bin_get_child (bin) && gtk_widget_get_visible (gtk_bin_get_child (bin)))
     {
         gtk_widget_size_request (gtk_bin_get_child (bin), &child_requisition);
         requisition->width += child_requisition.width;
@@ -1320,7 +1320,7 @@ moo_paned_size_allocate (GtkWidget     *widget,
     if (!paned->priv->pane_widget_visible)
         paned->priv->pane_widget_size = 0;
 
-    if (gtk_bin_get_child (bin) && GTK_WIDGET_VISIBLE (gtk_bin_get_child (bin)))
+    if (gtk_bin_get_child (bin) && gtk_widget_get_visible (gtk_bin_get_child (bin)))
         gtk_widget_get_child_requisition (gtk_bin_get_child (bin), &child_requisition);
 
     if (paned->priv->handle_visible)
@@ -1337,7 +1337,7 @@ moo_paned_size_allocate (GtkWidget     *widget,
         paned->priv->position = paned->priv->pane_widget_size;
     }
 
-    if (GTK_WIDGET_REALIZED (widget))
+    if (gtk_widget_get_realized (widget))
         gdk_window_move_resize (paned->priv->bin_window,
                                 allocation->x,
                                 allocation->y,
@@ -1356,7 +1356,7 @@ moo_paned_size_allocate (GtkWidget     *widget,
         gtk_widget_size_allocate (gtk_bin_get_child (bin), &child_allocation);
     }
 
-    if (GTK_WIDGET_REALIZED (widget))
+    if (gtk_widget_get_realized (widget))
     {
         GdkRectangle rect = { 0 };
 
@@ -1461,7 +1461,7 @@ moo_paned_expose (GtkWidget      *widget,
         gtk_container_propagate_expose (GTK_CONTAINER (paned),
                                         paned->button_box, event);
 
-    if (gtk_bin_get_child (GTK_BIN(paned)) && GTK_WIDGET_DRAWABLE (gtk_bin_get_child (GTK_BIN(paned))))
+    if (gtk_bin_get_child (GTK_BIN(paned)) && gtk_widget_is_drawable (gtk_bin_get_child (GTK_BIN(paned))))
         gtk_container_propagate_expose (GTK_CONTAINER (paned),
                                         gtk_bin_get_child (GTK_BIN(paned)),
                                         event);
@@ -1583,7 +1583,7 @@ draw_handle (MooPaned       *paned,
     else if (paned->priv->handle_prelit)
         state = GTK_STATE_PRELIGHT;
     else
-        state = GTK_WIDGET_STATE (widget);
+        state = gtk_widget_get_state (widget);
 
     gtk_paint_handle (widget->style,
                       paned->priv->handle_window,
@@ -1722,7 +1722,7 @@ moo_paned_set_sticky_pane (MooPaned   *paned,
     {
         paned->priv->sticky = sticky;
 
-        if (GTK_WIDGET_REALIZED (paned))
+        if (gtk_widget_get_realized (GTK_WIDGET (paned)))
             gtk_widget_queue_resize (GTK_WIDGET (paned));
 
         g_object_notify (G_OBJECT (paned), "sticky-pane");
@@ -2160,7 +2160,7 @@ moo_paned_set_pane_size_real (MooPaned   *paned,
 
     g_return_if_fail (MOO_IS_PANED (paned));
 
-    if (!GTK_WIDGET_REALIZED (paned))
+    if (!gtk_widget_get_realized (GTK_WIDGET (paned)))
     {
         paned->priv->position = size;
         return;
@@ -2239,7 +2239,7 @@ moo_paned_set_pane_size (MooPaned       *paned,
 static void
 button_box_visible_notify (MooPaned *paned)
 {
-    gboolean visible = GTK_WIDGET_VISIBLE (paned->button_box);
+    gboolean visible = gtk_widget_get_visible (paned->button_box);
 
     if (paned->priv->button_box_visible == visible)
         return;
@@ -2247,7 +2247,7 @@ button_box_visible_notify (MooPaned *paned)
     if (paned->priv->panes)
         paned->priv->button_box_visible = visible;
 
-    if (GTK_WIDGET_REALIZED (paned))
+    if (gtk_widget_get_realized (GTK_WIDGET (paned)))
         gtk_widget_queue_resize (GTK_WIDGET (paned));
 }
 
@@ -2296,7 +2296,7 @@ _moo_paned_insert_pane (MooPaned *paned,
     gtk_widget_show (paned->button_box);
     paned->priv->button_box_visible = TRUE;
 
-    if (GTK_WIDGET_VISIBLE (paned))
+    if (gtk_widget_get_visible (GTK_WIDGET (paned)))
         gtk_widget_queue_resize (GTK_WIDGET (paned));
 }
 
@@ -2873,7 +2873,7 @@ moo_paned_open_pane_real (MooPaned *paned,
         gtk_widget_hide (_moo_pane_get_frame (old_pane));
     }
 
-    if (GTK_WIDGET_MAPPED (paned))
+    if (gtk_widget_get_mapped (GTK_WIDGET (paned)))
     {
         gdk_window_show (paned->priv->pane_window);
         gdk_window_show (paned->priv->handle_window);
@@ -2929,7 +2929,7 @@ moo_paned_hide_pane_real (MooPaned *paned)
 
     gtk_widget_hide (_moo_pane_get_frame (paned->priv->current_pane));
 
-    if (GTK_WIDGET_REALIZED (paned))
+    if (gtk_widget_get_realized (GTK_WIDGET (paned)))
     {
         gdk_window_hide (paned->priv->handle_window);
         gdk_window_hide (paned->priv->pane_window);
@@ -2952,7 +2952,7 @@ moo_paned_hide_pane_real (MooPaned *paned)
         else if (!gtk_bin_get_child (GTK_BIN(paned)) ||
                   !gtk_widget_child_focus (gtk_bin_get_child (GTK_BIN(paned)), GTK_DIR_TAB_FORWARD))
         {
-            if (GTK_WIDGET_VISIBLE (button))
+            if (gtk_widget_get_visible (button))
                 gtk_widget_grab_focus (button);
         }
         else

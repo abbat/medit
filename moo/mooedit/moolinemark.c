@@ -556,7 +556,7 @@ update_pixbuf (MooLineMark *mark)
 
     g_assert (mark->priv->widget != NULL);
     g_return_if_fail (GTK_IS_WIDGET (mark->priv->widget));
-    g_return_if_fail (GTK_WIDGET_REALIZED (mark->priv->widget));
+    g_return_if_fail (gtk_widget_get_realized (mark->priv->widget));
 
     cache = g_object_get_data (G_OBJECT (mark->priv->widget),
                                "moo-line-mark-icons");
@@ -592,7 +592,7 @@ _moo_line_mark_realize (MooLineMark *mark,
 {
     g_assert (MOO_IS_LINE_MARK (mark));
     g_assert (GTK_IS_WIDGET (widget));
-    g_assert (GTK_WIDGET_REALIZED (widget));
+    g_assert (gtk_widget_get_realized (widget));
     g_assert (!mark->priv->realized);
 
     mark->priv->realized = TRUE;

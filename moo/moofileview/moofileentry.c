@@ -739,7 +739,7 @@ completion_set_case_sensitive (MooFileEntryCompletion *cmpl,
 static gboolean
 completion_popup_shown (MooFileEntryCompletion *cmpl)
 {
-    return cmpl->priv->popup && GTK_WIDGET_MAPPED (cmpl->priv->popup);
+    return cmpl->priv->popup && gtk_widget_get_mapped (cmpl->priv->popup);
 }
 
 
@@ -811,7 +811,7 @@ completion_entry_focus_out (G_GNUC_UNUSED GtkEntry *entry,
 static void
 completion_popdown (MooFileEntryCompletion *cmpl)
 {
-    if (!GTK_WIDGET_MAPPED (cmpl->priv->popup))
+    if (!gtk_widget_get_mapped (cmpl->priv->popup))
         return;
 
     DELETE_MEM (cmpl->priv->real_text);
@@ -1128,7 +1128,7 @@ completion_popup_key_press (G_GNUC_UNUSED GtkWidget *popup,
 static gboolean
 resize_popup_idle (MooFileEntryCompletion *cmpl)
 {
-    if (cmpl->priv->popup && GTK_WIDGET_MAPPED (cmpl->priv->popup))
+    if (cmpl->priv->popup && gtk_widget_get_mapped (cmpl->priv->popup))
         completion_resize_popup (cmpl);
     cmpl->priv->resize_popup_idle = 0;
     return FALSE;
@@ -1347,7 +1347,7 @@ completion_resize_popup (MooFileEntryCompletion *cmpl)
     gboolean above;
     gint width, vert_separator = 0;
 
-    g_return_val_if_fail (GTK_WIDGET_REALIZED (cmpl->priv->entry), FALSE);
+    g_return_val_if_fail (gtk_widget_get_realized (GTK_WIDGET (cmpl->priv->entry)), FALSE);
 
     if (cmpl->priv->resize_popup_idle)
         g_source_remove (cmpl->priv->resize_popup_idle);

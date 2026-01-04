@@ -334,14 +334,14 @@ setting_apply (GtkWidget *widget, gpointer)
 
     g_return_if_fail (prefs_key != NULL);
 
-    if (!GTK_WIDGET_SENSITIVE (widget))
+    if (!gtk_widget_get_sensitive (widget))
         return;
 
     if (set_or_not)
     {
         gboolean unset;
 
-        if (!GTK_WIDGET_SENSITIVE (set_or_not))
+        if (!gtk_widget_get_sensitive (set_or_not))
             return;
 
         unset = !gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (set_or_not));
