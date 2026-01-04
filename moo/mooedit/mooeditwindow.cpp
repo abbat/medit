@@ -1251,7 +1251,7 @@ set_title_format (MooEditWindow* window,
     window->priv->title_format = std::move(format);
     window->priv->title_format_no_doc = std::move(format_no_doc);
 
-    if (GTK_WIDGET_REALIZED (window))
+    if (gtk_widget_get_realized (GTK_WIDGET (window)))
         update_window_title (window);
 }
 
@@ -1679,7 +1679,7 @@ action_focus_doc (MooEditWindow *window)
     active_view = ACTIVE_VIEW (window);
     g_return_if_fail (active_view != nullptr);
 
-    if (!GTK_WIDGET_HAS_FOCUS (active_view))
+    if (!gtk_widget_has_focus (GTK_WIDGET (active_view)))
     {
         gtk_widget_grab_focus (GTK_WIDGET (active_view));
     }
@@ -2427,9 +2427,9 @@ get_active_notebook (MooEditWindow *window)
     g_return_val_if_fail (nb2 != nullptr, nb1);
     g_return_val_if_fail (nb1 != nullptr, nb2);
 
-    if (!GTK_WIDGET_VISIBLE (nb2))
+    if (!gtk_widget_get_visible (GTK_WIDGET (nb2)))
         return nb1;
-    else if (!GTK_WIDGET_VISIBLE (nb1))
+    else if (!gtk_widget_get_visible (GTK_WIDGET (nb1)))
         return nb2;
 
     if (window->priv->active_tab)
@@ -2448,8 +2448,8 @@ static gboolean
 both_notebooks_visible (MooEditWindow *window)
 {
     return window->priv->notebooks.size() == 2 &&
-           GTK_WIDGET_VISIBLE (window->priv->notebooks[0].get()) &&
-           GTK_WIDGET_VISIBLE (window->priv->notebooks[1].get());
+           gtk_widget_get_visible (GTK_WIDGET (window->priv->notebooks[0].get())) &&
+           gtk_widget_get_visible (GTK_WIDGET (window->priv->notebooks[1].get()));
 }
 
 static void
@@ -2468,7 +2468,7 @@ static void
 show_notebook (MooEditWindow *window,
                MooNotebook   *notebook)
 {
-    if (!GTK_WIDGET_VISIBLE (notebook))
+    if (!gtk_widget_get_visible (GTK_WIDGET (notebook)))
     {
         gtk_widget_show (GTK_WIDGET (notebook));
         if (both_notebooks_visible (window))
@@ -3163,7 +3163,7 @@ _moo_edit_window_remove_doc (MooEditWindow *window,
     for (i = 0; i < views->n_elms; ++i)
     {
         MooEditView *view = views->elms[i];
-        had_focus = had_focus || GTK_WIDGET_HAS_FOCUS (view);
+        had_focus = had_focus || gtk_widget_has_focus (GTK_WIDGET (view));
     }
 
     g_signal_emit (window, signals[CLOSE_DOC], 0, doc);

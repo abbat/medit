@@ -4,29 +4,6 @@
 #include <mooglib/moo-glib.h>
 #include <gtk/gtk.h>
 
-#ifndef GTK_WIDGET_REALIZED
-#define GTK_WIDGET_REALIZED(w) (gtk_widget_get_realized (GTK_WIDGET (w)))
-#endif
-
-#ifndef GTK_WIDGET_MAPPED
-#define GTK_WIDGET_MAPPED(w) (gtk_widget_get_mapped (GTK_WIDGET (w)))
-#endif
-
-#ifndef GTK_WIDGET_VISIBLE
-#define GTK_WIDGET_VISIBLE(w) (gtk_widget_get_visible (GTK_WIDGET (w)))
-#endif
-
-#ifndef GTK_WIDGET_DRAWABLE
-#define GTK_WIDGET_DRAWABLE(w) (gtk_widget_is_drawable (GTK_WIDGET (w)))
-#endif
-
-#ifndef GTK_WIDGET_SENSITIVE
-#define GTK_WIDGET_SENSITIVE(w) (gtk_widget_get_sensitive (GTK_WIDGET (w)))
-#endif
-
-#ifndef GTK_WIDGET_HAS_FOCUS
-#define GTK_WIDGET_HAS_FOCUS(w) (gtk_widget_has_focus (GTK_WIDGET (w)))
-#endif
 
 #ifndef GTK_WIDGET_CAN_FOCUS
 #define GTK_WIDGET_CAN_FOCUS(w) (gtk_widget_get_can_focus (GTK_WIDGET (w)))
@@ -70,10 +47,6 @@ _moo_gtk_action_connect_proxy (GtkAction *action,
 
 #endif /* GTK_DISABLE_DEPRECATED */
 
-#if GTK_CHECK_VERSION(2,24,0)
-#undef GTK_WIDGET_REALIZED
-#define GTK_WIDGET_REALIZED(w) gtk_widget_get_realized (GTK_WIDGET (w))
-#endif // GTK_CHECK_VERSION(2,24,0)
 
 #if GTK_CHECK_VERSION(2,22,0) && defined(GTK_DISABLE_DEPRECATED)
 

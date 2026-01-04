@@ -1294,7 +1294,7 @@ moo_html_size_allocate_real (GtkWidget *widget,
     GdkWindow *window;
     MooHtmlData *data = moo_html_get_data (GTK_TEXT_VIEW (widget));
 
-    if (!GTK_WIDGET_REALIZED (widget))
+    if (!gtk_widget_get_realized (GTK_WIDGET (widget)))
         return;
 
     window = gtk_text_view_get_window (GTK_TEXT_VIEW (widget), GTK_TEXT_WINDOW_TEXT);

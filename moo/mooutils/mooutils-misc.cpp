@@ -403,7 +403,7 @@ static void
 present_window_x11 (GtkWindow *window,
                      guint32   stamp)
 {
-    if (!GTK_WIDGET_REALIZED (window))
+    if (!gtk_widget_get_realized (GTK_WIDGET (window)))
         gtk_widget_realize (GTK_WIDGET (window));
 
     gdk_x11_window_move_to_current_desktop (gtk_widget_get_window (GTK_WIDGET(window)));
@@ -867,7 +867,7 @@ _moo_get_modifiers (GtkWidget *widget)
     GdkDisplay *display;
 
     g_return_val_if_fail (GTK_IS_WIDGET (widget), GdkModifierType (0));
-    g_return_val_if_fail (GTK_WIDGET_REALIZED (widget), GdkModifierType (0));
+    g_return_val_if_fail (gtk_widget_get_realized (widget), GdkModifierType (0));
 
     display = gtk_widget_get_display (widget);
     g_return_val_if_fail (display != NULL, GdkModifierType (0));

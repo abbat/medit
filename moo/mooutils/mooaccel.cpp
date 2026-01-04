@@ -484,7 +484,7 @@ moo_accel_translate_event (GtkWidget       *widget,
     if (mods)
         *mods = (GdkModifierType) 0;
 
-    if (widget && GTK_WIDGET_REALIZED (widget))
+    if (widget && gtk_widget_get_realized (GTK_WIDGET (widget)))
         keymap = gdk_keymap_get_for_display (gtk_widget_get_display (widget));
     else
         keymap = gdk_keymap_get_default ();

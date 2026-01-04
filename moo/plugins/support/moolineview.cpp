@@ -495,7 +495,7 @@ check_if_scrolled (MooLineView *view)
     GtkTextIter iter;
     int line;
 
-    if (!GTK_WIDGET_REALIZED (view))
+    if (!gtk_widget_get_realized (GTK_WIDGET (view)))
     {
         view->priv->scrolled = FALSE;
         return;
@@ -520,14 +520,14 @@ check_if_scrolled (MooLineView *view)
 
     delta = 10;
 
-    if (view->priv->hscrollbar && GTK_WIDGET_VISIBLE (view->priv->hscrollbar))
+    if (view->priv->hscrollbar && gtk_widget_get_visible (view->priv->hscrollbar))
     {
         int space;
         gtk_widget_style_get (GTK_WIDGET (view)->parent, "scrollbar-spacing", &space, nullptr);
         delta = MAX (delta - 1, space + gtk_widget_get_allocated_height (view->priv->hscrollbar)) + 1;
     }
 
-    view->priv->scrolled = adj && GTK_WIDGET_REALIZED (view) &&
+    view->priv->scrolled = adj && gtk_widget_get_realized (GTK_WIDGET (view)) &&
                            ABS (gtk_adjustment_get_value (adj) - (gtk_adjustment_get_upper (adj) - gtk_adjustment_get_page_size (adj))) > delta;
 }
 #endif

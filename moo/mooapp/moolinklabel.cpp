@@ -57,7 +57,7 @@ set_cursor (GtkWidget *widget,
 {
     MooLinkLabel *label = MOO_LINK_LABEL (widget);
 
-    if (!GTK_WIDGET_REALIZED (widget))
+    if (!gtk_widget_get_realized (widget))
         return;
 
     if (hand)
