@@ -2204,7 +2204,7 @@ create_tool_item (MooUiXml       *xml,
         if (_moo_action_get_has_submenu (action))
         {
             tool_item = GTK_WIDGET (gtk_menu_tool_button_new (NULL, NULL));
-            gtk_action_connect_proxy (action, tool_item);
+            gtk_activatable_set_related_action (GTK_ACTIVATABLE (tool_item), action);
         }
         else
         {

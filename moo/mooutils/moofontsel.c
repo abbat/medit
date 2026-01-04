@@ -1305,7 +1305,6 @@ moo_font_selection_dialog_init (MooFontSelectionDialog *fontseldiag)
 {
   GtkDialog *dialog = GTK_DIALOG (fontseldiag);
 
-  gtk_dialog_set_has_separator (dialog, FALSE);
   gtk_container_set_border_width (GTK_CONTAINER (dialog), 5);
   gtk_box_set_spacing (GTK_BOX (dialog->vbox), 2); /* 2 * 5 + 2 = 12 */
   gtk_container_set_border_width (GTK_CONTAINER (gtk_dialog_get_action_area (dialog)), 5);
@@ -1351,7 +1350,6 @@ moo_font_selection_dialog_init (MooFontSelectionDialog *fontseldiag)
 
   gtk_widget_pop_composite_child ();
 
-  gtk_dialog_set_has_separator (dialog, FALSE);
 }
 
 GtkWidget*

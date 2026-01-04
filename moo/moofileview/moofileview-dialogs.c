@@ -70,7 +70,6 @@ _moo_file_props_dialog_init (MooFilePropsDialog *dialog)
     dialog->table = GTK_WIDGET (dialog->xml->table);
 
     gtk_container_add (GTK_CONTAINER(GTK_DIALOG(dialog)->vbox), dialog->notebook);
-    gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
 
     gtk_dialog_add_buttons (GTK_DIALOG (dialog),
                             GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,

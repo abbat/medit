@@ -366,7 +366,7 @@ moo_paned_class_init (MooPanedClass *klass)
 static void
 moo_paned_init (MooPaned *paned)
 {
-    GTK_WIDGET_SET_NO_WINDOW (paned);
+    gtk_widget_set_has_window(GTK_WIDGET(paned), FALSE);
 
     paned->priv = (MooPanedPrivate*) moo_paned_get_instance_private (paned);
 
@@ -651,7 +651,7 @@ moo_paned_realize (GtkWidget *widget)
     widget->style = gtk_style_attach (widget->style, gtk_widget_get_window (widget));
     gtk_style_set_background (widget->style, paned->priv->bin_window, GTK_STATE_NORMAL);
 
-    GTK_WIDGET_SET_REALIZED (widget);
+    gtk_widget_set_realized(GTK_WIDGET(widget), TRUE);
 
     realize_pane (paned);
 

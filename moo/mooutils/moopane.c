@@ -1562,7 +1562,7 @@ G_DEFINE_TYPE (MooIconWidget, _moo_icon_widget, GTK_TYPE_WIDGET)
 static void
 _moo_icon_widget_init (MooIconWidget *icon)
 {
-    GTK_WIDGET_SET_NO_WINDOW (icon);
+    gtk_widget_set_has_window (GTK_WIDGET (icon), FALSE);
     icon->pixbufs = NULL;
     icon->data = NULL;
     icon->type = ICON_PIXBUFS;

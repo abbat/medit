@@ -498,8 +498,8 @@ _moo_icon_view_init (MooIconView *view)
     widget->allocation.width = -1;
     widget->allocation.height = -1;
 
-    GTK_WIDGET_UNSET_NO_WINDOW (view);
-    GTK_WIDGET_SET_CAN_FOCUS (view);
+    gtk_widget_set_has_window (GTK_WIDGET (view), TRUE);
+    gtk_widget_set_can_focus (GTK_WIDGET (view), TRUE);
 
     view->priv = (MooIconViewPrivate*) _moo_icon_view_get_instance_private(view);
 
@@ -955,7 +955,7 @@ moo_icon_view_realize (GtkWidget *widget)
 
     view = MOO_ICON_VIEW (widget);
 
-    GTK_WIDGET_SET_REALIZED (widget);
+    gtk_widget_set_realized (GTK_WIDGET (widget), TRUE);
 
     gtk_widget_get_allocation (widget, &allocation);
 
@@ -997,7 +997,7 @@ moo_icon_view_unrealize (GtkWidget *widget)
     gdk_window_set_user_data (gtk_widget_get_window (widget), NULL);
     gdk_window_destroy (gtk_widget_get_window (widget));
     gtk_widget_set_window (widget, NULL);
-    GTK_WIDGET_UNSET_REALIZED (widget);
+    gtk_widget_set_realized (GTK_WIDGET (widget), FALSE);
 
     if (view->priv->sel_gc)
     {

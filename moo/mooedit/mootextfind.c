@@ -136,9 +136,6 @@ moo_find_init (MooFind *find)
     gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG(find))),
                        GTK_WIDGET (find->xml->MooFindBox));
 
-#if !GTK_CHECK_VERSION(3,0,0)
-    gtk_dialog_set_has_separator (GTK_DIALOG (find), FALSE);
-#endif
 
     search = MOO_COMBO (find->xml->search_entry);
     replace = MOO_COMBO (find->xml->replace_entry);

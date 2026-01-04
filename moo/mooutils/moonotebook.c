@@ -469,8 +469,8 @@ static void moo_notebook_class_init (MooNotebookClass *klass)
 static void
 moo_notebook_init (MooNotebook *notebook)
 {
-    GTK_WIDGET_SET_CAN_FOCUS (notebook);
-    GTK_WIDGET_SET_NO_WINDOW (notebook);
+    gtk_widget_set_can_focus (GTK_WIDGET (notebook), TRUE);
+    gtk_widget_set_has_window (GTK_WIDGET (notebook), FALSE);
 
     notebook->priv = g_new0 (MooNotebookPrivate, 1);
 
@@ -1031,7 +1031,7 @@ moo_notebook_realize (GtkWidget *widget)
     GSList *l;
     int border_width = get_border_width (nb);
 
-    GTK_WIDGET_SET_REALIZED (widget);
+    gtk_widget_set_realized (GTK_WIDGET (widget), TRUE);
 
     gtk_widget_set_window (widget, gtk_widget_get_parent_window (widget));
     g_object_ref (gtk_widget_get_window (widget));
@@ -1122,7 +1122,7 @@ moo_notebook_map (GtkWidget *widget)
     if (gtk_widget_get_mapped (widget))
         return;
 
-    GTK_WIDGET_SET_MAPPED (widget);
+    gtk_widget_set_mapped (GTK_WIDGET (widget), TRUE);
 
     if (nb->priv->tabs_visible)
     {
@@ -1179,7 +1179,7 @@ moo_notebook_unmap (GtkWidget *widget)
 
     gdk_window_hide (nb->priv->tab_window);
 
-    GTK_WIDGET_UNSET_MAPPED (widget);
+    gtk_widget_set_mapped (GTK_WIDGET (widget), FALSE);
 }
 
 
@@ -1423,7 +1423,7 @@ child_visible_notify (GtkWidget      *child,
             if (nb->priv->show_tabs)
             {
                 gtk_widget_show (page->label->widget);
-                GTK_WIDGET_SET_CAN_FOCUS (nb);
+                gtk_widget_set_can_focus (GTK_WIDGET (nb), TRUE);
             }
 
             if (!nb->priv->current_page)
@@ -1440,7 +1440,7 @@ child_visible_notify (GtkWidget      *child,
                 if (n >= 0)
                     moo_notebook_set_current_page (nb, n);
                 else
-                    GTK_WIDGET_UNSET_CAN_FOCUS (nb);
+                    gtk_widget_set_can_focus (GTK_WIDGET (nb), FALSE);
             }
         }
     }
@@ -1574,7 +1574,7 @@ moo_notebook_insert_page (MooNotebook *nb,
     if (gtk_widget_get_visible (child) && nb->priv->tabs_visible)
     {
         /* XXX do something about tabs */
-        GTK_WIDGET_SET_CAN_FOCUS (nb);
+        gtk_widget_set_can_focus (GTK_WIDGET (nb), TRUE);
         gtk_widget_show (label);
     }
 
