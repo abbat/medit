@@ -253,7 +253,7 @@ list_row_activated (GtkWidget *widget)
   GtkWindow *window;
 
   window = GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (widget)));
-  if (!GTK_WIDGET_TOPLEVEL (window))
+  if (!gtk_widget_is_toplevel (GTK_WIDGET (window)))
     window = NULL;
 
   if (window
@@ -2163,7 +2163,7 @@ moo_font_button_clicked (GtkButton *button)
       moo_font_selection_set_filter_visible (MOO_FONT_SELECTION (font_dialog->fontsel),
                                              font_button->priv->filter_visible);
 
-      if (GTK_WIDGET_TOPLEVEL (parent) && GTK_IS_WINDOW (parent))
+      if (gtk_widget_is_toplevel (GTK_WIDGET (parent)) && GTK_IS_WINDOW (parent))
         {
           if (GTK_WINDOW (parent) != gtk_window_get_transient_for (GTK_WINDOW (font_dialog)))
             gtk_window_set_transient_for (GTK_WINDOW (font_dialog), GTK_WINDOW (parent));

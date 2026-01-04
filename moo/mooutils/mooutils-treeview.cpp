@@ -1049,7 +1049,7 @@ moo_expander_cell_render (GtkCellRenderer      *cell,
         !gdk_rectangle_intersect (expose_area, &draw_rect, &draw_rect))
             return;
 
-    state = (GtkStateType) GTK_WIDGET_STATE (widget);
+    state = (GtkStateType) gtk_widget_get_state (GTK_WIDGET (widget));
 
     if (!gtk_cell_renderer_get_sensitive (cell))
     {

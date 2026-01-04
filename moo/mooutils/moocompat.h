@@ -5,22 +5,6 @@
 #include <gtk/gtk.h>
 
 
-#ifndef GTK_WIDGET_CAN_FOCUS
-#define GTK_WIDGET_CAN_FOCUS(w) (gtk_widget_get_can_focus (GTK_WIDGET (w)))
-#endif
-
-#ifndef GTK_WIDGET_IS_SENSITIVE
-#define GTK_WIDGET_IS_SENSITIVE(w) (gtk_widget_is_sensitive (GTK_WIDGET (w)))
-#endif
-
-#ifndef GTK_WIDGET_TOPLEVEL
-#define GTK_WIDGET_TOPLEVEL(w) (gtk_widget_is_toplevel (GTK_WIDGET (w)))
-#endif
-
-#ifndef GTK_WIDGET_STATE
-#define GTK_WIDGET_STATE(w) (gtk_widget_get_state (GTK_WIDGET (w)))
-#endif
-
 #if defined(GTK_DISABLE_DEPRECATED)
 
 inline static void

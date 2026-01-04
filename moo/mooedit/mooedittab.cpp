@@ -202,7 +202,7 @@ moo_edit_tab_get_window (MooEditTab *tab)
     GtkWidget *toplevel;
     g_return_val_if_fail (MOO_IS_EDIT_TAB (tab), NULL);
     toplevel = gtk_widget_get_toplevel (GTK_WIDGET (tab));
-    if (!toplevel || !GTK_WIDGET_TOPLEVEL (toplevel))
+    if (!toplevel || !gtk_widget_is_toplevel (GTK_WIDGET (toplevel)))
         return NULL;
     g_return_val_if_fail (MOO_IS_EDIT_WINDOW (toplevel), NULL);
     return MOO_EDIT_WINDOW (toplevel);

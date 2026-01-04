@@ -2987,7 +2987,7 @@ moo_notebook_button_press (GtkWidget      *widget,
             {
                 moo_notebook_set_current_page (nb, page_index (nb, page));
                 g_assert (page == nb->priv->current_page);
-                if (page->focus_child && GTK_WIDGET_CAN_FOCUS (page->focus_child))
+                if (page->focus_child && gtk_widget_get_can_focus (GTK_WIDGET (page->focus_child)))
                     gtk_widget_grab_focus (page->focus_child);
                 else if (!gtk_widget_child_focus (page->child, GTK_DIR_TAB_FORWARD))
                     focus_label = TRUE;

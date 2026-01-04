@@ -136,7 +136,7 @@ _moo_accel_prefs_page_class_init (MooAccelPrefsPageClass *klass)
 static void
 row_activated (MooAccelPrefsPage *page)
 {
-    if (GTK_WIDGET_IS_SENSITIVE (page->gxml->shortcut))
+    if (gtk_widget_is_sensitive (GTK_WIDGET (page->gxml->shortcut)))
         gtk_button_clicked (GTK_BUTTON (page->gxml->shortcut));
 }
 
