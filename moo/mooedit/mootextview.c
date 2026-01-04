@@ -80,8 +80,15 @@ static void     moo_text_view_get_property  (GObject            *object,
 
 static void     moo_text_view_realize       (GtkWidget          *widget);
 static void     moo_text_view_unrealize     (GtkWidget          *widget);
+
+#if GTK_CHECK_VERSION(3,0,0)
+static gboolean moo_text_view_draw          (GtkWidget          *widget,
+                                             cairo_t            *cr);
+#else
 static gboolean moo_text_view_expose        (GtkWidget          *widget,
                                              GdkEventExpose     *event);
+#endif
+
 static void     moo_text_view_style_set     (GtkWidget          *widget,
                                              GtkStyle           *previous_style);
 static void     moo_text_view_size_request  (GtkWidget          *widget,
@@ -165,7 +172,8 @@ static void     draw_left_margin            (MooTextView        *view,
                                              GdkRectangle       *window_area);
 static void     draw_marks_background       (MooTextView        *view,
                                              GdkWindow          *window,
-                                             GdkRectangle       *window_area);
+                                             GdkRectangle       *window_area,
+                                             cairo_t            *cr);
 static gboolean update_n_lines_idle         (MooTextView        *view);
 
 static void     add_line_mark               (MooTextView        *view,
@@ -281,7 +289,13 @@ static void moo_text_view_class_init (MooTextViewClass *klass)
     widget_class->key_press_event = _moo_text_view_key_press_event;
     widget_class->realize = moo_text_view_realize;
     widget_class->unrealize = moo_text_view_unrealize;
+
+#if GTK_CHECK_VERSION(3,0,0)
+    widget_class->draw = moo_text_view_draw;
+#else
     widget_class->expose_event = moo_text_view_expose;
+#endif
+
     widget_class->style_set = moo_text_view_style_set;
     widget_class->size_request = moo_text_view_size_request;
     widget_class->size_allocate = moo_text_view_size_allocate;
@@ -2189,10 +2203,10 @@ update_gcs (MooTextView *view)
 
 static void
 moo_text_view_draw_right_margin (GtkTextView    *text_view,
-                                 GdkWindow      *window)
+                                 GdkWindow      *window,
+                                 cairo_t        *cr)
 {
     int x, y;
-    cairo_t *cr;
     MooTextView *view = MOO_TEXT_VIEW (text_view);
 
     update_right_margin (view);
@@ -2202,11 +2216,9 @@ moo_text_view_draw_right_margin (GtkTextView    *text_view,
     if (gtk_text_view_get_hadjustment (text_view)) // DEPRECATED:
         x -= gtk_adjustment_get_value (gtk_text_view_get_hadjustment (text_view));
 
-    cr = gdk_cairo_create(window);
     gdk_cairo_set_source_color(cr, view->priv->gcs[MOO_TEXT_VIEW_COLOR_RIGHT_MARGIN]);
     cairo_rectangle(cr, x, 0, 1, y);
     cairo_fill(cr);
-    cairo_destroy(cr);
 }
 
 static void
@@ -2360,17 +2372,53 @@ moo_text_view_draw_whitespace (GtkTextView       *text_view,
 }
 
 
+static inline cairo_t* moo_cairo_create(cairo_t *cr, GdkWindow *window)
+{
+    if (cr)
+        return cr;
+
+    return gdk_cairo_create (window);
+}
+
+#if GTK_CHECK_VERSION(3,0,0)
+static gboolean
+moo_text_view_draw (GtkWidget *widget,
+                    cairo_t   *cr);
+#else
 static gboolean
 moo_text_view_expose (GtkWidget      *widget,
                       GdkEventExpose *event)
+#endif
 {
     gboolean handled;
     MooTextView *view = MOO_TEXT_VIEW (widget);
     GtkTextView *text_view = GTK_TEXT_VIEW (widget);
-    GdkWindow *event_window = event->window;
     GdkWindow *text_window = gtk_text_view_get_window (text_view, GTK_TEXT_WINDOW_TEXT);
     GdkWindow *left_window = gtk_text_view_get_window (text_view, GTK_TEXT_WINDOW_LEFT);
     GtkTextIter start, end;
+    GdkWindow *event_window;
+    GdkRectangle *event_area;
+
+#if GTK_CHECK_VERSION(3,22,0)
+    cairo_region_t *region;
+    cairo_rectangle_int_t rectangle;
+
+    drawing_context = gdk_cairo_get_drawing_context(cr);
+    if (!drawing_context)
+        return GTK_WIDGET_CLASS(moo_text_view_parent_class)->draw (widget, cr);
+
+    event_window = gdk_drawing_context_get_window (drawing_context);
+
+    *region = gdk_drawing_context_get_clip (drawing_context);
+    cairo_region_get_extents (region, &rectangle);
+
+    event_area = (GdkRectangle*)&rectangle;
+#else
+    cairo_t *cr = NULL;
+
+    event_window = event->window;
+    event_area = &event->area;
+#endif
 
     update_gcs (view);
 
@@ -2387,21 +2435,26 @@ moo_text_view_expose (GtkWidget      *widget,
             && view->priv->color_settings[MOO_TEXT_VIEW_COLOR_CURRENT_LINE]
             && view->priv->gcs[MOO_TEXT_VIEW_COLOR_CURRENT_LINE])
         {
-            cairo_t *cr = gdk_cairo_create (event_window);
+            cr = moo_cairo_create (cr, event_window);
             moo_text_view_draw_current_line (text_view, cr);
-            cairo_destroy (cr);
         }
 
         if (gtk_widget_has_focus (GTK_WIDGET (view)) &&
             view->priv->color_settings[MOO_TEXT_VIEW_COLOR_RIGHT_MARGIN] &&
             view->priv->gcs[MOO_TEXT_VIEW_COLOR_RIGHT_MARGIN])
-                moo_text_view_draw_right_margin (text_view, event_window);
+        {
+            cr = moo_cairo_create (cr, event_window);
+            moo_text_view_draw_right_margin (text_view, event_window, cr);
+        }
     }
 
     if (event_window == left_window)
-        draw_left_margin (view, event_window, &event->area);
+        draw_left_margin (view, event_window, event_area);
     else if (event_window == text_window)
-        draw_marks_background (view, event_window, &event->area);
+    {
+        cr = moo_cairo_create (cr, event_window);
+        draw_marks_background (view, event_window, event_area, cr);
+    }
 
     if (event_window == text_window)
     {
@@ -2416,7 +2469,14 @@ moo_text_view_expose (GtkWidget      *widget,
         _moo_text_buffer_update_highlight (get_moo_buffer (view), &start, &end, FALSE);
     }
 
+#if GTK_CHECK_VERSION(3,22,0)
+    handled = GTK_WIDGET_CLASS(moo_text_view_parent_class)->draw (widget, cr);
+#else
     handled = GTK_WIDGET_CLASS(moo_text_view_parent_class)->expose_event (widget, event);
+
+    if (cr)
+        cairo_destroy (cr);
+#endif
 
     if (event_window == text_window)
     {
@@ -3075,13 +3135,13 @@ draw_fold_background (MooTextView    *view,
 static void
 draw_marks_background (MooTextView    *view,
                        GdkWindow      *window,
-                       GdkRectangle   *window_area)
+                       GdkRectangle   *window_area,
+                       cairo_t        *cr)
 {
     GtkTextView *text_view;
     int line, window_width;
     GdkRectangle area;
     GtkTextIter iter;
-    cairo_t* cr = NULL;
 
     text_view = GTK_TEXT_VIEW (view);
 
@@ -3141,9 +3201,6 @@ draw_marks_background (MooTextView    *view,
                 /* XXX compose colors */
                 if (color)
                 {
-                    if (!cr)
-                        cr = gdk_cairo_create(window);
-
                     gdk_cairo_set_source_color (cr, color);
                     cairo_rectangle(cr, gtk_text_view_get_left_margin(text_view),
                                         y,
@@ -3159,9 +3216,6 @@ draw_marks_background (MooTextView    *view,
         if (!text_iter_forward_visible_line (view, &iter, &line))
             break;
     }
-
-    if (cr)
-        cairo_destroy(cr);
 }
 
 
