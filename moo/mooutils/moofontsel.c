@@ -1077,7 +1077,13 @@ moo_font_selection_update_preview (MooFontSelection *fontsel)
   gtk_widget_size_request (preview_entry, NULL);
 
   /* We don't ever want to be over MAX_PREVIEW_HEIGHT pixels high. */
-  new_height = CLAMP (preview_entry->requisition.height, INITIAL_PREVIEW_HEIGHT, MAX_PREVIEW_HEIGHT);
+#if GTK_CHECK_VERSION(3,0,0)
+  GtkRequisition req;
+  gtk_widget_get_preferred_size(preview_entry, NULL, &req);
+  new_height = CLAMP(req.height, INITIAL_PREVIEW_HEIGHT, MAX_PREVIEW_HEIGHT);
+#else
+  new_height = CLAMP(preview_entry->requisition.height, INITIAL_PREVIEW_HEIGHT, MAX_PREVIEW_HEIGHT);
+#endif
 
   if (new_height > old_requisition.height || new_height < old_requisition.height - 30)
     gtk_widget_set_size_request (preview_entry, -1, new_height);
@@ -1306,7 +1312,13 @@ moo_font_selection_dialog_init (MooFontSelectionDialog *fontseldiag)
   GtkDialog *dialog = GTK_DIALOG (fontseldiag);
 
   gtk_container_set_border_width (GTK_CONTAINER (dialog), 5);
+
+#if GTK_CHECK_VERSION(3,0,0)
+  gtk_box_set_spacing (GTK_BOX (gtk_dialog_get_content_area (dialog)), 2); /* 2 * 5 + 2 = 12 */
+#else
   gtk_box_set_spacing (GTK_BOX (dialog->vbox), 2); /* 2 * 5 + 2 = 12 */
+#endif
+
   gtk_container_set_border_width (GTK_CONTAINER (gtk_dialog_get_action_area (dialog)), 5);
   gtk_box_set_spacing (GTK_BOX (gtk_dialog_get_action_area (dialog)), 6);
 
@@ -1314,7 +1326,11 @@ moo_font_selection_dialog_init (MooFontSelectionDialog *fontseldiag)
 
   gtk_window_set_resizable (GTK_WINDOW (fontseldiag), TRUE);
 
+#if GTK_CHECK_VERSION(3,0,0)
+  fontseldiag->main_vbox = gtk_dialog_get_content_area (dialog);
+#else
   fontseldiag->main_vbox = dialog->vbox;
+#endif
 
   fontseldiag->fontsel = moo_font_selection_new ();
   gtk_container_set_border_width (GTK_CONTAINER (fontseldiag->fontsel), 5);
