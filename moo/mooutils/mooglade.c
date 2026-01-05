@@ -17,6 +17,10 @@
  * class:MooGladeXml: (parent GObject) (moo.private 1)
  **/
 
+/**
+ * FIXME: may be gtk-2 widget types which not supported in gtk-3 (see FIXME in code)
+ **/
+
 #ifdef GTK_DISABLE_DEPRECATED
 #undef GTK_DISABLE_DEPRECATED
 #include <gtk/gtkcombo.h>
@@ -602,9 +606,20 @@ set_special_props (MooGladeXML    *xml,
 
     if (props->mask & PROP_HISTORY)
     {
+#if GTK_CHECK_VERSION(3,0,0)
+        if (GTK_IS_COMBO_BOX (widget))
+            gtk_combo_box_set_active (GTK_COMBO_BOX (widget),
+                                       props->history);
+        /* TODO: gkt-4
+        else if (GTK_IS_DROP_DOWN (widget))
+            gtk_drop_down_set_selected (GTK_DROP_DOWN (widget),
+                                       props->history);
+        */
+#else
         if (GTK_IS_OPTION_MENU (widget))
             gtk_option_menu_set_history (GTK_OPTION_MENU (widget),
                                          props->history);
+#endif
         else
             g_warning ("oops");
     }
@@ -721,13 +736,16 @@ moo_glade_xml_create_widget (MooGladeXML *xml,
                 else
                     widget = gtk_radio_button_new_with_label (NULL, props->label);
             }
+#if !GTK_CHECK_VERSION(3,0,0)
+            // FIXME: gtk-3
             else if (type == GTK_TYPE_LIST_ITEM)
             {
                 widget = gtk_list_item_new_with_label (props->label);
             }
+#endif
             else
             {
-                g_warning ("oops");
+                g_warning ("Unsupported widget type: %s", g_type_name(type));
             }
         }
     }
@@ -804,7 +822,11 @@ create_child (MooGladeXML    *xml,
 
         if (!strcmp (child->internal_child, "vbox") && GTK_IS_DIALOG (real_parent))
         {
+#if GTK_CHECK_VERSION(3,0,0)
+            widget = gtk_dialog_get_content_area (GTK_DIALOG (real_parent));
+#else
             widget = GTK_DIALOG (real_parent)->vbox;
+#endif
         }
         else if (!strcmp (child->internal_child, "action_area") && GTK_IS_DIALOG (real_parent))
         {
@@ -814,6 +836,9 @@ create_child (MooGladeXML    *xml,
         {
             widget = gtk_bin_get_child (GTK_BIN (real_parent));
         }
+#if !GTK_CHECK_VERSION(3,0,0)
+        // FIXME: GTK_IS_COMBO used in gtk-1 for GtkEntry or GtkList
+        // must be replaced to GtkComboBox or GtkComboBoxEntry in gtk-2
         else if (!strcmp (child->internal_child, "entry") && GTK_IS_COMBO (real_parent))
         {
             widget = GTK_COMBO (real_parent)->entry;
@@ -822,6 +847,7 @@ create_child (MooGladeXML    *xml,
         {
             widget = GTK_COMBO (real_parent)->list;
         }
+#endif
         else if (!strcmp (child->internal_child, "image") && GTK_IS_IMAGE_MENU_ITEM (real_parent))
         {
             g_object_get (real_parent, "image", &widget, NULL);
@@ -935,11 +961,15 @@ pack_children (MooGladeXML    *xml,
             gtk_menu_item_set_submenu (GTK_MENU_ITEM (parent_widget), widget);
             packed = TRUE;
         }
+#if GTK_CHECK_VERSION(3,0,0)
+        // FIXME: gtk-3
+#else
         else if (GTK_IS_OPTION_MENU (parent_widget) && GTK_IS_MENU (widget))
         {
             gtk_option_menu_set_menu (GTK_OPTION_MENU (parent_widget), widget);
             packed = TRUE;
         }
+#endif
         else if (child->widget->props->mask & PROP_RESPONSE_ID)
         {
             Child *parent = child->parent_node->parent_node;
@@ -1294,16 +1324,20 @@ child_new (MooGladeXML    *xml,
         {
             parent_types[0] = GTK_TYPE_DIALOG;
         }
+#if GTK_CHECK_VERSION(3,0,0)
+        // FIXME: gtk-1 combo
+#else
         else if (!strcmp (internal_child, "entry"))
         {
-            parent_types[0] = GTK_TYPE_COMBO;
-            parent_types[1] = GTK_TYPE_COMBO_BOX;
+            parent_types[0] = GTK_TYPE_COMBO;     /* gtk-1, GtkEntry + GtkList */
+            parent_types[1] = GTK_TYPE_COMBO_BOX; /* gtk-2 */
             n_parent_types = 2;
         }
         else if (!strcmp (internal_child, "list"))
         {
             parent_types[0] = GTK_TYPE_COMBO;
         }
+#endif
         else if (!strcmp (internal_child, "image"))
         {
             parent_types[0] = GTK_TYPE_IMAGE_MENU_ITEM;
@@ -1436,8 +1470,13 @@ widget_props_add (WidgetProps  *props,
     }
     else if (!strcmp (name, "label") &&
               (GTK_IS_MENU_ITEM_CLASS (klass) ||
-                      GTK_IS_CHECK_BUTTON_CLASS (klass) ||
-                      GTK_IS_LIST_ITEM_CLASS (klass)))
+                    GTK_IS_CHECK_BUTTON_CLASS (klass)
+#if GTK_CHECK_VERSION(3,0,0)
+                    // FIXME: deprecated widgets must be replaced
+#else
+                    || GTK_IS_LIST_ITEM_CLASS (klass)
+#endif
+    ))
     {
         props->label = g_strdup (value);
         props->mask |= PROP_LABEL;
@@ -1458,7 +1497,12 @@ widget_props_add (WidgetProps  *props,
         props->mask |= PROP_ENABLE_TOOLTIPS;
     }
     else if (!strcmp (name, "history") &&
-              GTK_IS_OPTION_MENU_CLASS (klass))
+#if GTK_CHECK_VERSION(3,0,0)
+        GTK_IS_COMBO_BOX (klass)
+#else
+        GTK_IS_OPTION_MENU_CLASS (klass)
+#endif
+    )
     {
         props->mask |= PROP_HISTORY;
         props->history = parse_int (value);
@@ -2657,7 +2701,6 @@ get_type_by_name (const char *name)
         add_type ("GtkAction", gtk_action_get_type);
         add_type ("GtkActionGroup", gtk_action_group_get_type);
         add_type ("GtkComboBox", gtk_combo_box_get_type);
-        add_type ("GtkComboBoxEntry", gtk_combo_box_entry_get_type);
         add_type ("GtkExpander", gtk_expander_get_type);
         add_type ("GtkFileChooser", gtk_file_chooser_get_type);
         add_type ("GtkFileChooserDialog", gtk_file_chooser_dialog_get_type);
@@ -2695,9 +2738,7 @@ get_type_by_name (const char *name)
         add_type ("GtkColorButton", gtk_color_button_get_type);
         add_type ("GtkColorSelection", gtk_color_selection_get_type);
         add_type ("GtkColorSelectionDialog", gtk_color_selection_dialog_get_type);
-        add_type ("GtkCombo", gtk_combo_get_type);
         add_type ("GtkContainer", gtk_container_get_type);
-        add_type ("GtkCurve", gtk_curve_get_type);
         add_type ("GtkDialog", gtk_dialog_get_type);
         add_type ("GtkDrawingArea", gtk_drawing_area_get_type);
         add_type ("GtkEditable", gtk_editable_get_type);
@@ -2708,11 +2749,9 @@ get_type_by_name (const char *name)
         add_type ("GtkFontSelection", gtk_font_selection_get_type);
         add_type ("GtkFontSelectionDialog", gtk_font_selection_dialog_get_type);
         add_type ("GtkFrame", gtk_frame_get_type);
-        add_type ("GtkGammaCurve", gtk_gamma_curve_get_type);
         add_type ("GtkHBox", gtk_hbox_get_type);
         add_type ("GtkHButtonBox", gtk_hbutton_box_get_type);
         add_type ("GtkHPaned", gtk_hpaned_get_type);
-        add_type ("GtkHRuler", gtk_hruler_get_type);
         add_type ("GtkHScale", gtk_hscale_get_type);
         add_type ("GtkHScrollbar", gtk_hscrollbar_get_type);
         add_type ("GtkHSeparator", gtk_hseparator_get_type);
@@ -2725,12 +2764,9 @@ get_type_by_name (const char *name)
         add_type ("GtkImMulticontext", gtk_im_multicontext_get_type);
         add_type ("GtkImage", gtk_image_get_type);
         add_type ("GtkImageMenuItem", gtk_image_menu_item_get_type);
-        add_type ("GtkInputDialog", gtk_input_dialog_get_type);
         add_type ("GtkInvisible", gtk_invisible_get_type);
-        add_type ("GtkItem", gtk_item_get_type);
         add_type ("GtkLabel", gtk_label_get_type);
         add_type ("GtkLayout", gtk_layout_get_type);
-        add_type ("GtkList", gtk_list_get_type);
         add_type ("GtkListStore", gtk_list_store_get_type);
         add_type ("GtkMenu", gtk_menu_get_type);
         add_type ("GtkMenuBar", gtk_menu_bar_get_type);
@@ -2739,18 +2775,11 @@ get_type_by_name (const char *name)
         add_type ("GtkMessageDialog", gtk_message_dialog_get_type);
         add_type ("GtkMisc", gtk_misc_get_type);
         add_type ("GtkNotebook", gtk_notebook_get_type);
-
-#if !GTK_CHECK_VERSION(3,0,0)
-        add_type ("GtkObject", gtk_object_get_type);
-#endif
-
-        add_type ("GtkOptionMenu", gtk_option_menu_get_type);
         add_type ("GtkPaned", gtk_paned_get_type);
         add_type ("GtkProgressBar", gtk_progress_bar_get_type);
         add_type ("GtkRadioButton", gtk_radio_button_get_type);
         add_type ("GtkRadioMenuItem", gtk_radio_menu_item_get_type);
         add_type ("GtkRange", gtk_range_get_type);
-        add_type ("GtkRuler", gtk_ruler_get_type);
         add_type ("GtkScale", gtk_scale_get_type);
         add_type ("GtkScrollbar", gtk_scrollbar_get_type);
         add_type ("GtkScrolledWindow", gtk_scrolled_window_get_type);
@@ -2783,22 +2812,37 @@ get_type_by_name (const char *name)
         add_type ("GtkTreeStore", gtk_tree_store_get_type);
         add_type ("GtkTreeView", gtk_tree_view_get_type);
         add_type ("GtkTreeViewColumn", gtk_tree_view_column_get_type);
-        add_type ("GtkTreeViewMode", gtk_tree_view_mode_get_type);
         add_type ("GtkVBox", gtk_vbox_get_type);
         add_type ("GtkVButtonBox", gtk_vbutton_box_get_type);
         add_type ("GtkViewport", gtk_viewport_get_type);
         add_type ("GtkVPaned", gtk_vpaned_get_type);
-        add_type ("GtkVRuler", gtk_vruler_get_type);
         add_type ("GtkVScale", gtk_vscale_get_type);
         add_type ("GtkVScrollbar", gtk_vscrollbar_get_type);
         add_type ("GtkVSeparator", gtk_vseparator_get_type);
         add_type ("GtkWidget", gtk_widget_get_type);
-        add_type ("GtkWidgetFlags", gtk_widget_flags_get_type);
         add_type ("GtkWidgetHelpType", gtk_widget_help_type_get_type);
         add_type ("GtkWindow", gtk_window_get_type);
         add_type ("GtkWindowGroup", gtk_window_group_get_type);
+
+#if !GTK_CHECK_VERSION(3,0,0)
+        // FIXME: gtk-3 analogue
+        add_type ("GtkObject", gtk_object_get_type);
+        add_type ("GtkComboBoxEntry", gtk_combo_box_entry_get_type);
+        add_type ("GtkCombo", gtk_combo_get_type);
+        add_type ("GtkCurve", gtk_curve_get_type);
+        add_type ("GtkGammaCurve", gtk_gamma_curve_get_type);
+        add_type ("GtkHRuler", gtk_hruler_get_type);
+        add_type ("GtkInputDialog", gtk_input_dialog_get_type);
+        add_type ("GtkItem", gtk_item_get_type);
+        add_type ("GtkList", gtk_list_get_type);
+        add_type ("GtkOptionMenu", gtk_option_menu_get_type);
+        add_type ("GtkRuler", gtk_ruler_get_type);
+        add_type ("GtkTreeViewMode", gtk_tree_view_mode_get_type);
+        add_type ("GtkVRuler", gtk_vruler_get_type);
+        add_type ("GtkWidgetFlags", gtk_widget_flags_get_type);
         add_type ("GtkPlug", gtk_plug_get_type);
         add_type ("GtkSocket", gtk_socket_get_type);
+#endif
 
 #undef add_type
     }
