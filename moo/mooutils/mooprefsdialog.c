@@ -163,7 +163,12 @@ moo_prefs_dialog_init (MooPrefsDialog *dialog)
 
     hbox = gtk_hbox_new (FALSE, 0);
     gtk_widget_show (GTK_WIDGET (hbox));
+#if GTK_CHECK_VERSION(3,0,0)
+    /* FIXME: This code was written by AI and requires review */
+    gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG(dialog))), hbox, TRUE, TRUE, 0);
+#else
     gtk_box_pack_start (GTK_BOX (GTK_DIALOG(dialog)->vbox), hbox, TRUE, TRUE, 0);
+#endif
 
     scrolledwindow = gtk_scrolled_window_new (NULL, NULL);
     gtk_widget_show (scrolledwindow);
