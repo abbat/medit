@@ -546,7 +546,12 @@ moo_filter_mgr_attach (MooFilterMgr   *mgr,
     gtk_widget_show (label);
     gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    combo = gtk_combo_box_text_new ();
+#else
     combo = gtk_combo_box_entry_new ();
+#endif
+
     moo_filter_mgr_init_filter_combo (mgr, GTK_COMBO_BOX (combo), user_id);
     gtk_widget_show (combo);
     gtk_box_pack_start (GTK_BOX (hbox), combo, TRUE, TRUE, 0);
