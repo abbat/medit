@@ -968,6 +968,17 @@ moo_expander_cell_init (MooExpanderCell *cell)
     cell->expanded = FALSE;
 }
 
+#if GTK_CHECK_VERSION(3,0,0)
+/* FIXME: This code was written by AI and requires review */
+static void
+moo_expander_cell_get_size (GtkCellRenderer      *cell,
+                            GtkWidget            *widget,
+                            const GdkRectangle   *cell_area,
+                            int                  *x_offset,
+                            int                  *y_offset,
+                            int                  *width_p,
+                            int                  *height_p)
+#else
 static void
 moo_expander_cell_get_size (GtkCellRenderer      *cell,
                             GtkWidget            *widget,
@@ -976,6 +987,7 @@ moo_expander_cell_get_size (GtkCellRenderer      *cell,
                             int                  *y_offset,
                             int                  *width_p,
                             int                  *height_p)
+#endif
 {
     gfloat xalign, yalign;
     int width, height;
@@ -1017,22 +1029,39 @@ moo_expander_cell_get_size (GtkCellRenderer      *cell,
 }
 
 static void
+#if GTK_CHECK_VERSION(3,0,0)
+moo_expander_cell_render (GtkCellRenderer     *cell,
+                         cairo_t              *cr,
+                         GtkWidget            *widget,
+                         const GdkRectangle   *background_area,
+                         const GdkRectangle   *cell_area,
+                         GtkCellRendererState  flags)
+#else
 moo_expander_cell_render (GtkCellRenderer      *cell,
-    #if GTK_CHECK_VERSION(3,0,0)
-                          cairo_t              *window,
-    #else
                           GdkDrawable          *window,
-    #endif
                           GtkWidget            *widget,
-                          G_GNUC_UNUSED GdkRectangle *background_area,
+                          GdkRectangle         *background_area,
                           GdkRectangle         *cell_area,
                           GdkRectangle         *expose_area,
                           GtkCellRendererState  flags)
+#endif
 {
     MooExpanderCell *exp_cell = MOO_EXPANDER_CELL (cell);
     GdkRectangle pix_rect;
     GdkRectangle draw_rect;
     GtkStateType state;
+
+#if GTK_CHECK_VERSION(3,0,0)
+    GdkRectangle  area;
+    GdkRectangle *expose_area = &area;
+
+    // unused
+    (void)(background_area);
+
+    if (!gdk_cairo_get_clip_rectangle(cr, &area)) {
+        memset(&area, 0, sizeof(GdkRectangle));
+    }
+#endif
 
     moo_expander_cell_get_size (cell, widget, cell_area,
                                 &pix_rect.x,
@@ -1067,6 +1096,47 @@ moo_expander_cell_render (GtkCellRenderer      *cell,
         state = GTK_STATE_PRELIGHT;
     }
 
+#if GTK_CHECK_VERSION(3,0,0)
+    /* FIXME: This code was written by AI and requires review */
+    /* GTK-3 code - use Cairo for drawing instead of gdk_draw_* functions */
+    cairo_save (cr);
+
+    /* Set the color based on the widget state */
+    GdkRGBA color;
+    GtkStyleContext *context = gtk_widget_get_style_context (widget);
+    GtkStateFlags state_flags = GTK_STATE_FLAG_NORMAL;
+
+    if (state == GTK_STATE_PRELIGHT)
+        state_flags = GTK_STATE_FLAG_PRELIGHT;
+    else if (state == GTK_STATE_SELECTED)
+        state_flags = GTK_STATE_FLAG_SELECTED;
+    else if (state == GTK_STATE_ACTIVE)
+        state_flags = GTK_STATE_FLAG_ACTIVE;
+    else if (state == GTK_STATE_INSENSITIVE)
+        state_flags = GTK_STATE_FLAG_INSENSITIVE;
+
+    gtk_style_context_get_color (context, state_flags, &color);
+    gdk_cairo_set_source_rgba (cr, &color);
+
+    /* Draw rectangle */
+    cairo_rectangle (cr, pix_rect.x, pix_rect.y, pix_rect.width, pix_rect.height);
+    cairo_stroke (cr);
+
+    /* Draw horizontal line */
+    cairo_move_to (cr, pix_rect.x + 2, pix_rect.y + pix_rect.height / 2);
+    cairo_line_to (cr, pix_rect.x + pix_rect.width - 2, pix_rect.y + pix_rect.height / 2);
+    cairo_stroke (cr);
+
+    /* Draw vertical line if not expanded */
+    if (!exp_cell->expanded) {
+        cairo_move_to (cr, pix_rect.x + pix_rect.width / 2, pix_rect.y + 2);
+        cairo_line_to (cr, pix_rect.x + pix_rect.width / 2, pix_rect.y + pix_rect.height - 2);
+        cairo_stroke (cr);
+    }
+
+    cairo_restore (cr);
+#else
+    /* GTK-2 code - use gdk_draw_* functions */
     gdk_draw_rectangle (window, widget->style->text_gc[state], FALSE,
                         pix_rect.x, pix_rect.y,
                         pix_rect.width, pix_rect.height);
@@ -1077,6 +1147,7 @@ moo_expander_cell_render (GtkCellRenderer      *cell,
         gdk_draw_line (window, widget->style->text_gc[state],
                        pix_rect.x + pix_rect.width / 2, pix_rect.y + 2,
                        pix_rect.x + pix_rect.width / 2, pix_rect.y + pix_rect.height - 2);
+#endif
 }
 
 static void
