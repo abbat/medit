@@ -1391,8 +1391,13 @@ static void combo_label_data_func   (GtkCellLayout      *cell_layout,
                                      GtkCellRenderer    *cell,
                                      GtkTreeModel       *model,
                                      GtkTreeIter        *iter, gpointer);
+#if GTK_CHECK_VERSION(3,0,0)
+static void fill_icon_store         (GtkListStore       *store,
+                                     GtkStyleContext    *context);
+#else
 static void fill_icon_store         (GtkListStore       *store,
                                      GtkStyle           *style);
+#endif
 static void icon_store_find_pixbuf  (GtkListStore       *store,
                                      GtkTreeIter        *iter,
                                      GdkPixbuf          *pixbuf);
@@ -1415,9 +1420,17 @@ init_icon_combo (GtkComboBox *combo,
     {
         GtkWidget *dialog = GTK_WIDGET (xml->BkEditor);
         gtk_widget_ensure_style (dialog);
+
         icon_store = gtk_list_store_new (3, GDK_TYPE_PIXBUF,
                                          G_TYPE_STRING, G_TYPE_STRING);
+
+#if GTK_CHECK_VERSION(3,0,0)
+        /* FIXME: This code was written by AI and requires review */
+        GtkStyleContext *context = gtk_widget_get_style_context (dialog);
+        fill_icon_store (icon_store, context);
+#else
         fill_icon_store (icon_store, dialog->style);
+#endif
     }
 
     gtk_cell_layout_clear (GTK_CELL_LAYOUT (combo));
@@ -1523,8 +1536,13 @@ combo_label_data_func (G_GNUC_UNUSED GtkCellLayout *cell_layout,
 
 
 static void
-fill_icon_store (GtkListStore       *store,
-                 GtkStyle           *style)
+fill_icon_store (GtkListStore   *store,
+#if GTK_CHECK_VERSION(3,0,0)
+                GtkStyleContext *context
+#else
+                 GtkStyle       *style
+#endif
+)
 {
     GtkTreeIter iter;
     GSList *stock_ids, *l;
@@ -1534,8 +1552,17 @@ fill_icon_store (GtkListStore       *store,
     for (l = stock_ids; l != NULL; l = l->next)
     {
         GtkStockItem item;
+        GtkIconSet* set;
 
-        if (!gtk_style_lookup_icon_set (style, l->data))
+#if GTK_CHECK_VERSION(3,0,0)
+        // Deprecated since: 3.10
+        // Use gtk_icon_theme_lookup_icon() instead.
+        set = gtk_style_context_lookup_icon_set(context, l->data);
+#else
+        set = gtk_style_lookup_icon_set (style, l->data)
+#endif
+
+        if (!set)
             continue;
 
         gtk_list_store_append (store, &iter);
