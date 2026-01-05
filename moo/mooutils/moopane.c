@@ -1628,7 +1628,20 @@ get_pixbuf (MooIconWidget *icon)
             g_assert (n_channels == 4);
             rowstride = gdk_pixbuf_get_rowstride (pixbuf);
 
+#if GTK_CHECK_VERSION(3,0,0)
+            /* FIXME: This code was written by AI and requires review */
+            GtkStyleContext *context = gtk_widget_get_style_context(widget);
+            GdkRGBA rgba_color;
+            GdkColor color_struct;
+            color = &color_struct;
+            gtk_style_context_get_color(context, gtk_widget_get_state_flags(widget), &rgba_color);
+            /* Convert GdkRGBA to GdkColor for compatibility with the rest of the code */
+            color->red = rgba_color.red * 65535;
+            color->green = rgba_color.green * 65535;
+            color->blue = rgba_color.blue * 65535;
+#else
             color = &widget->style->fg[state];
+#endif
 
             for (x = 0; x < width; ++x)
             {
@@ -1652,7 +1665,12 @@ get_pixbuf (MooIconWidget *icon)
 
 static void
 draw_pixbuf (GtkWidget      *widget,
-             GdkEventExpose *event)
+#if GTK_CHECK_VERSION(3,0,0)
+             cairo_t        *cr
+#else
+             GdkEventExpose *event
+#endif
+)
 {
     GtkAllocation allocation;
     GdkPixbuf *pixbuf;
@@ -1669,16 +1687,27 @@ draw_pixbuf (GtkWidget      *widget,
     x = allocation.x + (allocation.width - pixbuf_width) / 2;
     y = allocation.y + (allocation.height - pixbuf_height) / 2;
 
+#if GTK_CHECK_VERSION(3,0,0)
+    /* FIXME: This code was written by AI and requires review */
+    gdk_cairo_set_source_pixbuf(cr, pixbuf, x, y);
+    cairo_paint(cr);
+#else
     gdk_draw_pixbuf (event->window,
                      widget->style->black_gc,
                      pixbuf,
                      0, 0, x, y, pixbuf_width, pixbuf_height,
                      GDK_RGB_DITHER_NORMAL, 0, 0);
+#endif
 }
 
 static void
 draw_arrow (GtkWidget      *widget,
-            GdkEventExpose *event)
+#if GTK_CHECK_VERSION(3,0,0)
+            cairo_t        *cr
+#else
+            GdkEventExpose *event
+#endif
+)
 {
     GtkAllocation allocation;
     GtkArrowType arrow_type;
@@ -1708,6 +1737,32 @@ draw_arrow (GtkWidget      *widget,
     x = allocation.x + width / 6;
     y = allocation.y + height / 6;
 
+#if GTK_CHECK_VERSION(3,0,0)
+    /* FIXME: This code was written by AI and requires review */
+    GtkStyleContext *context = gtk_widget_get_style_context(widget);
+    gtk_style_context_set_state(context, gtk_widget_get_state_flags(widget));
+
+    /* Convert arrow type to angle for gtk_render_arrow */
+    gdouble angle = 0;
+    switch (arrow_type) {
+        case GTK_ARROW_UP:
+            angle = 0;
+            break;
+        case GTK_ARROW_DOWN:
+            angle = G_PI;
+            break;
+        case GTK_ARROW_LEFT:
+            angle = G_PI * 1.5;
+            break;
+        case GTK_ARROW_RIGHT:
+            angle = G_PI * 0.5;
+            break;
+        default:
+            g_return_if_reached();
+    }
+
+    gtk_render_arrow(context, cr, angle, x, y, MIN(width, height));
+#else
     gtk_paint_arrow (widget->style,
                      event->window,
                      gtk_widget_get_state (widget),
@@ -1718,24 +1773,38 @@ draw_arrow (GtkWidget      *widget,
                      arrow_type,
                      TRUE,
                      x, y, width, height);
+#endif
 }
 
 static gboolean
+#if GTK_CHECK_VERSION(3,0,0)
+moo_icon_widget_draw_event (GtkWidget      *widget,
+                            cairo_t        *cr)
+#else
 moo_icon_widget_expose_event (GtkWidget      *widget,
                               GdkEventExpose *event)
+#endif
 {
     MooIconWidget *icon = (MooIconWidget*) widget;
 
     switch (icon->type)
     {
         case ICON_PIXBUFS:
+#if GTK_CHECK_VERSION(3,0,0)
+            draw_pixbuf (widget, cr);
+#else
             draw_pixbuf (widget, event);
+#endif
             break;
         case ICON_ARROW_UP:
         case ICON_ARROW_DOWN:
         case ICON_ARROW_LEFT:
         case ICON_ARROW_RIGHT:
+#if GTK_CHECK_VERSION(3,0,0)
+            draw_arrow (widget, cr);
+#else
             draw_arrow (widget, event);
+#endif
             break;
     }
 
@@ -1751,7 +1820,12 @@ _moo_icon_widget_class_init (MooIconWidgetClass *klass)
     object_class->dispose = moo_icon_widget_dispose;
 
     widget_class->style_set = moo_icon_widget_style_set;
+
+#if GTK_CHECK_VERSION(3,0,0)
+    widget_class->draw = moo_icon_widget_draw_event;
+#else
     widget_class->expose_event = moo_icon_widget_expose_event;
+#endif
 }
 
 GtkWidget *
