@@ -1601,7 +1601,13 @@ create_filter_combo (G_GNUC_UNUSED MooFileView *fileview)
     gtk_widget_show (button);
     gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    /* FIXME: This code was written by AI and requires review */
+    combo = gtk_combo_box_new_with_entry ();
+#else
     combo = gtk_combo_box_entry_new ();
+#endif
+
     gtk_widget_show (combo);
     gtk_box_pack_start (GTK_BOX (hbox), combo, TRUE, TRUE, 0);
 
@@ -5371,7 +5377,7 @@ moo_file_view_drop_data_received (MooFileView    *fileview,
     {
         char *text = (char*) gtk_selection_data_get_text (data);
 
-        delete = context->suggested_action & GDK_ACTION_MOVE;
+        delete = gdk_drag_context_get_suggested_action(context) & GDK_ACTION_MOVE;
 
         if (text)
             success = moo_file_view_drop_text (fileview, text, path, widget,
@@ -5517,8 +5523,8 @@ drag_motion (GtkWidget      *widget,
         _moo_tree_view_set_drag_dest_row (widget, NULL);
 
     if (can_drop)
-        gdk_drag_status (context, context->actions & GDK_ACTION_MOVE ?
-                GDK_ACTION_MOVE : context->suggested_action, time);
+        gdk_drag_status (context, gdk_drag_context_get_actions(context) & GDK_ACTION_MOVE ?
+                GDK_ACTION_MOVE : gdk_drag_context_get_suggested_action(context), time);
     else
         gdk_drag_status (context, 0, time);
 
@@ -5619,7 +5625,7 @@ button_drag_motion (MooFileView    *fileview,
                                fileview);
     }
 
-    gdk_drag_status (context, context->suggested_action, time);
+    gdk_drag_status (context, gdk_drag_context_get_suggested_action(context), time);
     return TRUE;
 }
 
@@ -5919,7 +5925,7 @@ moo_file_view_drop_uris (MooFileView    *fileview,
 #endif
 
     if (mask & (GDK_SHIFT_MASK | GDK_CONTROL_MASK | GDK_MOD1_MASK))
-        action = context->suggested_action;
+        action = gdk_drag_context_get_suggested_action(context);
     else
         action = GDK_ACTION_ASK;
 

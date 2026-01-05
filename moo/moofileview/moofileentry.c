@@ -769,10 +769,35 @@ completion_popup (MooFileEntryCompletion *cmpl)
     gtk_widget_show (cmpl->priv->popup);
 
     gtk_widget_ensure_style (GTK_WIDGET (cmpl->priv->treeview));
+
+#if GTK_CHECK_VERSION(3,0,0)
+    /* FIXME: This code was written by AI and requires review */
+    GtkStyleContext *context = gtk_widget_get_style_context(GTK_WIDGET(cmpl->priv->treeview));
+    GtkCssProvider *provider = gtk_css_provider_new();
+    GdkRGBA color;
+
+    /* Get the selected background color from the default theme */
+    gtk_style_context_get_background_color(context, GTK_STATE_FLAG_SELECTED, &color);
+
+    /* Create CSS to set the background color for the active state */
+    char *css = g_strdup_printf("treeview { background-color: rgba(%d,%d,%d,%f); }",
+                               (int)(color.red * 255),
+                               (int)(color.green * 255),
+                               (int)(color.blue * 255),
+                               color.alpha);
+
+    gtk_css_provider_load_from_data(provider, css, -1, NULL);
+    gtk_style_context_add_provider(context, GTK_STYLE_PROVIDER(provider),
+                                  GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+
+    g_free(css);
+    g_object_unref(provider);
+#else
     gtk_widget_modify_bg (GTK_WIDGET (cmpl->priv->treeview), GTK_STATE_ACTIVE,
                           &GTK_WIDGET(cmpl->priv->treeview)->style->base[GTK_STATE_SELECTED]);
     gtk_widget_modify_base (GTK_WIDGET (cmpl->priv->treeview), GTK_STATE_ACTIVE,
                             &GTK_WIDGET(cmpl->priv->treeview)->style->base[GTK_STATE_SELECTED]);
+#endif
 
     gtk_grab_add (cmpl->priv->popup);
     gdk_pointer_grab (gtk_widget_get_window (cmpl->priv->popup), TRUE,
@@ -1315,8 +1340,17 @@ entry_get_borders (GtkEntry *entry,
 
     if (gtk_entry_get_has_frame (entry))
     {
+#if GTK_CHECK_VERSION(3,0,0)
+        /* FIXME: This code was written by AI and requires review */
+        GtkBorder border;
+        GtkStyleContext *context = gtk_widget_get_style_context(widget);
+        gtk_style_context_get_border(context, GTK_STATE_FLAG_NORMAL, &border);
+        *xborder = border.left;
+        *yborder = border.top;
+#else
         *xborder = widget->style->xthickness;
         *yborder = widget->style->ythickness;
+#endif
     }
     else
     {
