@@ -87,7 +87,13 @@ struct _MooNotebookPrivate {
     gboolean     button_pressed;
     gboolean     in_drag;
     gboolean     want_snapshot;
+
+#if GTK_CHECK_VERSION(3,0,0)
+    cairo_surface_t *snapshot_pixmap;
+#else
     GdkPixmap   *snapshot_pixmap;
+#endif
+
     GdkPixbuf   *snapshot_pixbuf;
     Page        *drag_page;
     int          drag_page_index;
@@ -200,17 +206,48 @@ static gboolean moo_notebook_focus_in       (GtkWidget      *widget,
                                              GdkEventFocus  *event);
 static gboolean moo_notebook_focus_out      (GtkWidget      *widget,
                                              GdkEventFocus  *event);
+#if GTK_CHECK_VERSION(3,0,0)
+static gboolean moo_notebook_draw           (GtkWidget      *widget,
+                                             cairo_t        *cr);
+#else
 static gboolean moo_notebook_expose         (GtkWidget      *widget,
                                              GdkEventExpose *event);
+#endif
+
 static void     moo_notebook_draw_labels    (MooNotebook    *nb,
-                                             GdkEventExpose *event);
+#if GTK_CHECK_VERSION(3,0,0)
+                                             cairo_t        *cr
+#else
+                                             GdkRectangle   *area
+#endif
+                                            );
+
 static void     moo_notebook_draw_label     (MooNotebook    *nb,
                                              Page           *page,
-                                             GdkEventExpose *event);
+#if GTK_CHECK_VERSION(3,0,0)
+                                             cairo_t        *cr
+#else
+                                             GdkRectangle   *area
+#endif
+                                            );
+
 static void     moo_notebook_draw_dragged_label (MooNotebook    *nb,
-                                             GdkEventExpose *event);
-static void     moo_notebook_draw_child_border (MooNotebook *nb,
-                                             GdkEventExpose *event);
+#if GTK_CHECK_VERSION (3, 0, 0)
+                                                 cairo_t        *cr,
+                                                 GdkRectangle   *area
+#else
+                                                 GdkEventExpose *event
+#endif
+                                                );
+
+static void     moo_notebook_draw_child_border (MooNotebook  *nb,
+#if GTK_CHECK_VERSION(3,0,0)
+                                                cairo_t      *cr
+#else
+                                                GdkWindow    *window,
+                                                GdkRectangle *area
+#endif
+                                                );
 
 static gboolean moo_notebook_button_press   (GtkWidget      *widget,
                                              GdkEventButton *event);
@@ -358,12 +395,13 @@ static void moo_notebook_class_init (MooNotebookClass *klass)
     widget_class->unmap = moo_notebook_unmap;
     widget_class->focus_in_event = moo_notebook_focus_in;
     widget_class->focus_out_event = moo_notebook_focus_out;
-    widget_class->expose_event = moo_notebook_expose;
 #if GTK_CHECK_VERSION(3,0,0)
     /* FIXME: This code was written by AI and requires review */
+    widget_class->draw = moo_notebook_draw;
     widget_class->get_preferred_width = moo_notebook_get_preferred_width;
     widget_class->get_preferred_height = moo_notebook_get_preferred_height;
 #else
+    widget_class->expose_event = moo_notebook_expose;
     widget_class->size_request = moo_notebook_size_request;
 #endif
     widget_class->size_allocate = moo_notebook_size_allocate;
@@ -1131,7 +1169,13 @@ moo_notebook_realize (GtkWidget *widget)
     gtk_widget_set_window (widget, gtk_widget_get_parent_window (widget));
     g_object_ref (gtk_widget_get_window (widget));
 
+#if GTK_CHECK_VERSION(3,0,0)
+    /* FIXME: This code was written by AI and requires review */
+    /* In GTK+3, style handling is done through GtkStyleContext and styles are automatically attached */
+    /* No explicit style attachment needed in GTK+3 */
+#else
     widget->style = gtk_style_attach (widget->style, gtk_widget_get_window (widget));
+#endif
 
     /* Tabs window */
     gtk_widget_get_allocation (widget, &allocation);
@@ -1154,10 +1198,16 @@ moo_notebook_realize (GtkWidget *widget)
             GDK_SCROLL_MASK;
 
     attributes.visual = gtk_widget_get_visual (widget);
-    attributes.colormap = gtk_widget_get_colormap (widget);
     attributes.wclass = GDK_INPUT_OUTPUT;
 
+#if GTK_CHECK_VERSION(3,0,0)
+    /* FIXME: This code was written by AI and requires review */
+    /* In GTK+3, colormap is no longer used in GdkWindowAttr */
+    attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL;
+#else
+    attributes.colormap = gtk_widget_get_colormap (widget);
     attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL | GDK_WA_COLORMAP;
+#endif
 
     nb->priv->tab_window = gdk_window_new (gtk_widget_get_window (widget), &attributes, attributes_mask);
     gdk_window_set_user_data (nb->priv->tab_window, widget);
@@ -1165,7 +1215,15 @@ moo_notebook_realize (GtkWidget *widget)
 #if 0
     update_notebook_style (widget);
 #endif
+#if GTK_CHECK_VERSION(3,0,0)
+    /* FIXME: This code was written by AI and requires review */
+    /* In GTK+3, background is handled through GtkStyleContext */
+    GtkStyleContext *context = gtk_widget_get_style_context(widget);
+    gtk_style_context_add_region(context, GTK_STYLE_REGION_TAB, GTK_REGION_ONLY);
+    gtk_style_context_set_background(context, nb->priv->tab_window);
+#else
     gtk_style_set_background (widget->style, nb->priv->tab_window, GTK_STATE_NORMAL);
+#endif
 
     for (l = nb->priv->pages; l != NULL; l = l->next)
     {
@@ -1182,9 +1240,19 @@ moo_notebook_style_set (GtkWidget *widget,
     MooNotebook *nb = MOO_NOTEBOOK (widget);
 
     if (nb->priv->tab_window)
+#if GTK_CHECK_VERSION(3,0,0)
+        /* FIXME: This code was written by AI and requires review */
+        /* In GTK+3, background is handled through GtkStyleContext */
+    {
+        GtkStyleContext *context = gtk_widget_get_style_context(widget);
+        gtk_style_context_add_region(context, GTK_STYLE_REGION_TAB, GTK_REGION_ONLY);
+        gtk_style_context_set_background(context, nb->priv->tab_window);
+    }
+#else
         gtk_style_set_background (widget->style,
                                   nb->priv->tab_window,
                                   GTK_STATE_NORMAL);
+#endif
 
     if (GTK_WIDGET_CLASS(moo_notebook_grand_parent_class)->style_set)
         GTK_WIDGET_CLASS(moo_notebook_grand_parent_class)->style_set (widget, prev_style);
@@ -1307,8 +1375,14 @@ moo_notebook_forall (GtkContainer *container,
 
 
 static void
-moo_notebook_draw_child_border (MooNotebook    *nb,
-                                GdkEventExpose *event)
+moo_notebook_draw_child_border (MooNotebook  *nb,
+#if GTK_CHECK_VERSION(3,0,0)
+                                cairo_t      *cr
+#else
+                                GdkWindow    *window,
+                                GdkRectangle *area
+#endif
+)
 {
     GtkAllocation allocation;
     GtkWidget *widget = GTK_WIDGET (nb);
@@ -1359,11 +1433,33 @@ moo_notebook_draw_child_border (MooNotebook    *nb,
     gtk_widget_get_allocation (widget, &allocation);
     if (draw_gap)
     {
+#if GTK_CHECK_VERSION(3,0,0)
+        /* FIXME: This code was written by AI and requires review */
+        GtkStyleContext *context = gtk_widget_get_style_context(widget);
+        gtk_style_context_save(context);
+
+        /* Set the state for rendering */
+        gtk_style_context_set_state(context, GTK_STATE_FLAG_NORMAL);
+
+        /* Create a rectangle for the frame */
+        GdkRectangle frame_rect;
+        frame_rect.x = allocation.x + border_width;
+        frame_rect.y = allocation.y + border_width + nb->priv->tabs_height;
+        frame_rect.width = allocation.width - 2*border_width;
+        frame_rect.height = nb->priv->child_height;
+
+        /* Render the frame - themes can create gaps by omitting borders via CSS */
+        gtk_render_frame(context, cr,
+                        frame_rect.x, frame_rect.y,
+                        frame_rect.width, frame_rect.height);
+
+        gtk_style_context_restore(context);
+#else
         gtk_paint_box_gap (widget->style,
-                           event->window,
+                           window,
                            GTK_STATE_NORMAL,
                            GTK_SHADOW_OUT,
-                           &event->area,
+                           area,
                            widget,
                            DETAIL_NOTEBOOK,
                            allocation.x + border_width,
@@ -1372,45 +1468,108 @@ moo_notebook_draw_child_border (MooNotebook    *nb,
                            nb->priv->child_height,
                            GTK_POS_TOP,
                            gap_x, gap_width);
+#endif
     }
     else
     {
+#if GTK_CHECK_VERSION(3,0,0)
+        /* FIXME: This code was written by AI and requires review */
+        GtkStyleContext *context = gtk_widget_get_style_context(widget);
+        gtk_style_context_save(context);
+
+        /* Set the state for rendering */
+        gtk_style_context_set_state(context, GTK_STATE_FLAG_NORMAL);
+
+        /* Render the frame */
+        gtk_render_frame(context, cr,
+                        allocation.x + border_width,
+                        allocation.y + border_width + nb->priv->tabs_height,
+                        allocation.width - 2*border_width,
+                        nb->priv->child_height);
+
+        gtk_style_context_restore(context);
+#else
         gtk_paint_box (widget->style,
-                       event->window,
+                       window,
                        GTK_STATE_NORMAL,
                        GTK_SHADOW_OUT,
-                       &event->area,
+                       area,
                        widget,
                        DETAIL_NOTEBOOK,
                        allocation.x + border_width,
                        allocation.y + border_width + nb->priv->tabs_height,
                        allocation.width - 2*border_width,
                        nb->priv->child_height);
+#endif
     }
 }
 
-
+// TODO: refactor it for gtk-2,3 compatibility
 static gboolean
+#if GTK_CHECK_VERSION (3,0,0)
+moo_notebook_draw (GtkWidget *widget,
+                   cairo_t   *cr)
+#else
 moo_notebook_expose (GtkWidget      *widget,
                      GdkEventExpose *event)
+#endif
 {
+    GdkWindow *event_window;
+    GdkRectangle *event_area;
+
+#if GTK_CHECK_VERSION (3,22,0)
+    // TODO: extract to function for other units
+    cairo_region_t *region;
+    cairo_rectangle_int_t rectangle;
+    GdkDrawingContext *drawing_context;
+
+    drawing_context = gdk_cairo_get_drawing_context(cr);
+    if (!drawing_context)
+        return GTK_WIDGET_CLASS(moo_notebook_grand_parent_class)->draw (widget, cr);
+
+    event_window = gdk_drawing_context_get_window (drawing_context);
+
+    region = gdk_drawing_context_get_clip (drawing_context);
+    cairo_region_get_extents (region, &rectangle);
+
+    event_area = (GdkRectangle*)&rectangle;
+#else
+    event_window = event->window;
+    event_area = &event->area;
+#endif
+
     MooNotebook *nb = MOO_NOTEBOOK (widget);
 
-    if (event->window == nb->priv->tab_window)
-        moo_notebook_draw_labels (nb, event);
+    if (event_window == nb->priv->tab_window)
+#if GTK_CHECK_VERSION (3,0,0)
+        moo_notebook_draw_labels (nb, cr);
+#else
+        moo_notebook_draw_labels (nb, event_area);
+#endif
 
-    if (event->window == gtk_widget_get_window (widget) && nb->priv->tabs_visible)
-        moo_notebook_draw_child_border (nb, event);
+    if (event_window == gtk_widget_get_window (widget) && nb->priv->tabs_visible)
+#if GTK_CHECK_VERSION (3,0,0)
+        moo_notebook_draw_child_border (nb, cr);
+#else
+        moo_notebook_draw_child_border (nb, event_window, event_area);
+#endif
 
     /* do not let GtkNotebook try to draw */
+#if GTK_CHECK_VERSION (3,0,0)
+    GTK_WIDGET_CLASS(moo_notebook_grand_parent_class)->draw (widget, cr);
+#else
     GTK_WIDGET_CLASS(moo_notebook_grand_parent_class)->expose_event (widget, event);
+#endif
 
-    if (nb->priv->in_drag && event->window == nb->priv->tab_window)
+    if (nb->priv->in_drag && event_window == nb->priv->tab_window)
+#if GTK_CHECK_VERSION (3,0,0)
+        moo_notebook_draw_dragged_label (nb, cr, event_area);
+#else
         moo_notebook_draw_dragged_label (nb, event);
+#endif
 
     return FALSE;
 }
-
 
 static gboolean
 moo_notebook_focus_in (GtkWidget      *widget,
@@ -2263,13 +2422,21 @@ labels_size_allocate (MooNotebook   *nb,
 static void
 moo_notebook_draw_label (MooNotebook    *nb,
                          Page           *page,
-                         GdkEventExpose *event)
+#if GTK_CHECK_VERSION(3,0,0)
+                         cairo_t        *cr
+#else
+                         GdkRectangle   *area
+#endif
+)
 {
     GtkAllocation allocation;
     GtkWidget *widget = GTK_WIDGET (nb);
-    GdkWindow *window = nb->priv->tab_window;
     int x, y, height;
     GtkStateType state;
+
+#if !GTK_CHECK_VERSION(3,0,0)
+    GdkWindow *window = nb->priv->tab_window;
+#endif
 
     if (page == nb->priv->current_page)
     {
@@ -2285,17 +2452,39 @@ moo_notebook_draw_label (MooNotebook    *nb,
     x = page->label->offset - nb->priv->labels_offset;
     height = nb->priv->tabs_height - y;
 
+#if GTK_CHECK_VERSION(3,0,0)
+    /* FIXME: This code was written by AI and requires review */
+    /* GTK3 equivalent of gtk_paint_extension */
+    GtkStyleContext *context = gtk_widget_get_style_context(widget);
+    gtk_style_context_save(context);
+
+    /* Set the state for rendering */
+    GtkStateFlags state_flags = state == GTK_STATE_NORMAL ? GTK_STATE_FLAG_NORMAL : GTK_STATE_FLAG_ACTIVE;
+    gtk_style_context_set_state(context, state_flags);
+
+    /* Add tab region for proper styling */
+    gtk_style_context_add_region(context, GTK_STYLE_REGION_TAB, GTK_REGION_ONLY);
+
+    /* Render the extension (tab) background */
+    gtk_render_background(context, cr, x, y, page->label->width, height);
+
+    /* Render the extension (tab) frame */
+    gtk_render_frame(context, cr, x, y, page->label->width, height);
+
+    gtk_style_context_restore(context);
+#else
     gtk_paint_extension (widget->style,
                          window,
                          state,
                          GTK_SHADOW_OUT,
-                         &event->area,
+                         area,
                          widget,
                          DETAIL_TAB,
                          x, y,
                          page->label->width,
                          height,
                          GTK_POS_BOTTOM);
+#endif
 
     if (gtk_widget_has_focus (GTK_WIDGET (nb)) &&
         page == nb->priv->focus_page)
@@ -2304,22 +2493,51 @@ moo_notebook_draw_label (MooNotebook    *nb,
 
         gtk_widget_style_get (widget, "focus-line-width", &focus_width, NULL);
         gtk_widget_get_allocation (page->label->widget, &allocation);
+
+#if GTK_CHECK_VERSION(3,0,0)
+        /* FIXME: This code was written by AI and requires review */
+        /* GTK3 equivalent of gtk_paint_focus */
+        GtkStyleContext *context = gtk_widget_get_style_context(widget);
+        gtk_style_context_save(context);
+
+        /* Set the state for rendering */
+        GtkStateFlags state_flags = state == GTK_STATE_NORMAL ? GTK_STATE_FLAG_NORMAL : GTK_STATE_FLAG_ACTIVE;
+        gtk_style_context_set_state(context, state_flags);
+
+        /* Add tab region for proper styling */
+        gtk_style_context_add_region(context, GTK_STYLE_REGION_TAB, GTK_REGION_ONLY);
+
+        /* Render the focus rectangle */
+        gtk_render_focus(context, cr,
+                        allocation.x - focus_width,
+                        allocation.y - focus_width,
+                        allocation.width + 2 * focus_width,
+                        allocation.height + 2 * focus_width);
+
+        gtk_style_context_restore(context);
+#else
         gtk_paint_focus (widget->style,
                          window,
                          state,
-                         &event->area,
+                         area,
                          widget,
                          DETAIL_TAB,
                          allocation.x - focus_width,
                          allocation.y - focus_width,
                          allocation.width + 2 * focus_width,
                          allocation.height + 2 * focus_width);
+#endif
     }
 }
 
 static void
 moo_notebook_draw_labels (MooNotebook    *nb,
-                          GdkEventExpose *event)
+#if GTK_CHECK_VERSION(3,0,0)
+                          cairo_t        *cr
+#else
+                          GdkRectangle   *area
+#endif
+)
 {
     if (!nb->priv->current_page)
         return;
@@ -2327,21 +2545,38 @@ moo_notebook_draw_labels (MooNotebook    *nb,
     VISIBLE_FOREACH_START (nb, page)
     {
         if (page != nb->priv->current_page)
-            moo_notebook_draw_label (nb, page, event);
+#if GTK_CHECK_VERSION(3,0,0)
+            moo_notebook_draw_label (nb, page, cr);
+#else
+            moo_notebook_draw_label (nb, page, area);
+#endif
     }
     VISIBLE_FOREACH_END;
 
     if (!nb->priv->in_drag)
-        moo_notebook_draw_label (nb, nb->priv->current_page, event);
+#if GTK_CHECK_VERSION(3,0,0)
+        moo_notebook_draw_label (nb, nb->priv->current_page, cr);
+#else
+        moo_notebook_draw_label (nb, nb->priv->current_page, area);
+#endif
 }
 
 
 static void
 moo_notebook_draw_dragged_label (MooNotebook    *nb,
-                                 GdkEventExpose *event)
+#if GTK_CHECK_VERSION (3, 0, 0)
+                                 cairo_t        *cr,
+                                 GdkRectangle   *area
+#else
+                                 GdkEventExpose *event
+#endif
+)
 {
-    GtkWidget *widget = GTK_WIDGET (nb);
     int width, height;
+#if !GTK_CHECK_VERSION (3, 0, 0)
+    GtkWidget *widget = GTK_WIDGET (nb);
+    GdkRectangle *area = &event->area;
+#endif
 
     g_return_if_fail (nb->priv->drag_page != NULL);
 
@@ -2358,37 +2593,83 @@ moo_notebook_draw_dragged_label (MooNotebook    *nb,
                 nb->priv->snapshot_pixbuf == NULL);
 
         /* TODO: this event may not cover whole label area */
-        moo_notebook_draw_label (nb, nb->priv->drag_page, event);
+#if GTK_CHECK_VERSION(3,0,0)
+        moo_notebook_draw_label (nb, nb->priv->drag_page, cr);
+#else
+        moo_notebook_draw_label (nb, nb->priv->drag_page, area);
+#endif
+
+#if GTK_CHECK_VERSION (3, 0, 0)
+        gtk_container_propagate_draw (GTK_CONTAINER (nb),
+                                      nb->priv->drag_page->label->widget,
+                                      cr);
+#else
         gtk_container_propagate_expose (GTK_CONTAINER (nb),
                                         nb->priv->drag_page->label->widget,
                                         event);
+#endif
 
         nb->priv->want_snapshot = FALSE;
 
         pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE,
                                  8, width, height);
 
+#if GTK_CHECK_VERSION(3,0,0)
+        /* FIXME: This code was written by AI and requires review */
+        /* GTK3 equivalent of gdk_pixbuf_get_from_drawable */
+        cairo_surface_t *surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, width, height);
+        cairo_t *cr = cairo_create (surface);
+        gdk_cairo_set_source_window (cr, nb->priv->tab_window,
+                                    nb->priv->drag_page->label->offset - nb->priv->labels_offset, 0);
+        cairo_rectangle (cr, 0, 0, width, height);
+        cairo_fill (cr);
+        cairo_destroy (cr);
+
+        /* Convert cairo surface to pixbuf */
+        GdkPixbuf *temp_pixbuf = gdk_pixbuf_get_from_surface (surface, 0, 0, width, height);
+        cairo_surface_destroy (surface);
+
+        if (!temp_pixbuf)
+#else
         if (!gdk_pixbuf_get_from_drawable (pixbuf, nb->priv->tab_window,
                                            gdk_drawable_get_colormap (nb->priv->tab_window),
                                            nb->priv->drag_page->label->offset - nb->priv->labels_offset,
                                            0, 0, 0,
                                            width, height))
+#endif
         {
             g_critical ("could not create pixbuf");
             g_object_unref (pixbuf);
 
+#if GTK_CHECK_VERSION(3,0,0)
+            /* FIXME: This code was written by AI and requires review */
+            /* GTK3 equivalent of gdk_pixmap_new and gdk_draw_drawable */
+            cairo_surface_t *surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, width, height);
+            cairo_t *cr = cairo_create (surface);
+            gdk_cairo_set_source_window (cr, nb->priv->tab_window,
+                                        nb->priv->drag_page->label->offset - nb->priv->labels_offset, 0);
+            cairo_rectangle (cr, 0, 0, width, height);
+            cairo_fill (cr);
+            cairo_destroy (cr);
+#else
             nb->priv->snapshot_pixmap =
                     gdk_pixmap_new (nb->priv->tab_window,
                                     width, height, -1);
+
             gdk_draw_drawable (nb->priv->snapshot_pixmap,
                                widget->style->bg_gc[GTK_STATE_NORMAL],
                                nb->priv->tab_window,
                                nb->priv->drag_page->label->offset - nb->priv->labels_offset,
                                0, 0, 0,
                                width, height);
+#endif
         }
         else
         {
+#if GTK_CHECK_VERSION(3,0,0)
+            g_object_unref (temp_pixbuf);
+#endif
+
             nb->priv->snapshot_pixbuf = pixbuf;
 
             pixels = gdk_pixbuf_get_pixels (pixbuf);
@@ -2401,39 +2682,59 @@ moo_notebook_draw_dragged_label (MooNotebook    *nb,
     }
     else
     {
-        GdkRectangle area;
+        GdkRectangle intersect_area;
 
-        area.x = nb->priv->drag_tab_x - nb->priv->labels_offset;
-        area.y = 0;
-        area.width = width;
-        area.height = height;
+        intersect_area.x = nb->priv->drag_tab_x - nb->priv->labels_offset;
+        intersect_area.y = 0;
+        intersect_area.width = width;
+        intersect_area.height = height;
 
-        if (!gdk_rectangle_intersect (&area, &event->area, &area))
+        if (!gdk_rectangle_intersect (&intersect_area, area, &intersect_area))
             return;
 
         g_return_if_fail (nb->priv->snapshot_pixmap != NULL || nb->priv->snapshot_pixbuf != NULL);
 
         if (nb->priv->snapshot_pixbuf)
+#if GTK_CHECK_VERSION(3,0,0)
+        {
+            /* FIXME: This code was written by AI and requires review */
+            /* GTK3 equivalent of gdk_draw_pixbuf */
+            gdk_cairo_set_source_pixbuf (cr, nb->priv->snapshot_pixbuf,
+                                        intersect_area.x - nb->priv->drag_tab_x + nb->priv->labels_offset,
+                                        intersect_area.y);
+            cairo_rectangle (cr, intersect_area.x, intersect_area.y,
+                            intersect_area.width, intersect_area.height);
+            cairo_fill (cr);
+        }
+#else
             gdk_draw_pixbuf (nb->priv->tab_window,
                              widget->style->bg_gc[GTK_STATE_NORMAL],
                              nb->priv->snapshot_pixbuf,
-                             area.x - nb->priv->drag_tab_x + nb->priv->labels_offset,
-                             area.y,
-                             area.x,
-                             area.y,
-                             area.width,
-                             area.height,
+                             intersect_area.x - nb->priv->drag_tab_x + nb->priv->labels_offset,
+                             intersect_area.y,
+                             intersect_area.x,
+                             intersect_area.y,
+                             intersect_area.width,
+                             intersect_area.height,
                              GDK_RGB_DITHER_NONE, 0, 0);
+#endif
         else
+#if GTK_CHECK_VERSION(3,0,0)
+        {
+            /* FIXME: */
+            g_warning("Unimplemented FIXME");
+        }
+#else
             gdk_draw_drawable (nb->priv->tab_window,
                                widget->style->bg_gc[GTK_STATE_NORMAL],
                                nb->priv->snapshot_pixmap,
-                               event->area.x - nb->priv->drag_tab_x + nb->priv->labels_offset,
-                               event->area.y,
-                               event->area.x,
-                               event->area.y,
-                               event->area.width,
-                               event->area.height);
+                               area->x - nb->priv->drag_tab_x + nb->priv->labels_offset,
+                               area->y,
+                               area->x,
+                               area->y,
+                               area->width,
+                               area->height);
+#endif
     }
 }
 
@@ -3167,6 +3468,12 @@ moo_notebook_scroll_event (GtkWidget      *widget,
         case GDK_SCROLL_RIGHT:
             labels_scroll (nb, GTK_DIR_RIGHT);
             return TRUE;
+
+#if GTK_CHECK_VERSION(3,0,0)
+        case GDK_SCROLL_SMOOTH:
+            // TODO: implement smooth scrolling
+            break;
+#endif
     }
 
     return FALSE;
