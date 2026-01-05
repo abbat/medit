@@ -43,8 +43,12 @@ struct _MooEntryPrivate {
 static guint INSERT_ACTION_TYPE;
 static guint DELETE_ACTION_TYPE;
 
-
+#if GTK_CHECK_VERSION(3,0,0)
+static void     moo_entry_editable_init     (GtkEditableInterface *klass);
+#else
 static void     moo_entry_editable_init     (GtkEditableClass   *klass);
+#endif
+
 static void     moo_entry_undo_ops_init     (MooUndoOpsIface    *iface);
 static void     moo_entry_finalize          (GObject            *object);
 static void     moo_entry_set_property      (GObject            *object,
@@ -123,7 +127,12 @@ enum {
 };
 
 static guint signals[NUM_SIGNALS];
+
+#if GTK_CHECK_VERSION(3,0,0)
+static GtkEditableInterface *parent_editable_iface;
+#else
 static GtkEditableClass *parent_editable_iface;
+#endif
 
 static void
 moo_entry_class_init (MooEntryClass *klass)
@@ -150,7 +159,12 @@ moo_entry_class_init (MooEntryClass *klass)
     klass->redo = moo_entry_redo;
 
     moo_entry_parent_class = g_type_class_peek_parent (klass);
+
+#if GTK_CHECK_VERSION(3,0,0)
+    parent_editable_iface = reinterpret_cast<GtkEditableInterface*> (g_type_interface_peek(moo_entry_parent_class, GTK_TYPE_EDITABLE));
+#else
     parent_editable_iface = reinterpret_cast<GtkEditableClass*> (g_type_interface_peek(moo_entry_parent_class, GTK_TYPE_EDITABLE));
+#endif
 
     g_object_class_install_property (gobject_class,
                                      PROP_ENABLE_UNDO,
@@ -239,7 +253,11 @@ moo_entry_class_init (MooEntryClass *klass)
 
 
 static void
-moo_entry_editable_init (GtkEditableClass   *klass)
+#if GTK_CHECK_VERSION(3,0,0)
+moo_entry_editable_init (GtkEditableInterface *klass)
+#else
+moo_entry_editable_init (GtkEditableClass *klass)
+#endif
 {
     klass->do_insert_text = moo_entry_do_insert_text;
     klass->do_delete_text = moo_entry_do_delete_text;
