@@ -21,7 +21,6 @@
 #include "mooutils/moonotebook.h"
 #include "mooutils/mooundo.h"
 #include "mooutils/mooutils-script.h"
-#include "mooutils/moo-test-utils.h"
 
 #include "moofileview/moofileview.h"
 

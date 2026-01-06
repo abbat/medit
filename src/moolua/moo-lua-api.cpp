@@ -17,9 +17,6 @@ void moo_test_coverage_record (const char *lang, const char *function);
 static int
 cfunc_MooApp_get_editor (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_app_get_editor");
-#endif
     MooLuaCurrentFunc cur_func ("MooApp.get_editor");
     MooApp *self = (MooApp*) pself;
     gpointer ret = moo_app_get_editor (self);
@@ -29,9 +26,6 @@ cfunc_MooApp_get_editor (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUS
 static int
 cfunc_MooApp_quit (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_app_quit");
-#endif
     MooLuaCurrentFunc cur_func ("MooApp.quit");
     MooApp *self = (MooApp*) pself;
     gboolean ret = moo_app_quit (self);
@@ -41,9 +35,6 @@ cfunc_MooApp_quit (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int
 static int
 cfunc_MooApp_instance (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_app_instance");
-#endif
     MooLuaCurrentFunc cur_func ("MooApp.instance");
     gpointer ret = moo_app_instance ();
     return moo_lua_push_object (L, (GObject*) ret, TRUE);
@@ -56,9 +47,6 @@ cfunc_MooApp_instance (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_MooCmdView_run_command (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_cmd_view_run_command");
-#endif
     MooLuaCurrentFunc cur_func ("MooCmdView.run_command");
     MooCmdView *self = (MooCmdView*) pself;
     const char* arg0 = moo_lua_get_arg_filename (L, first_arg + 0, "cmd", FALSE);
@@ -71,9 +59,6 @@ cfunc_MooCmdView_run_command (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC
 static int
 cfunc_MooCmdView_set_filter_by_id (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_cmd_view_set_filter_by_id");
-#endif
     MooLuaCurrentFunc cur_func ("MooCmdView.set_filter_by_id");
     MooCmdView *self = (MooCmdView*) pself;
     const char* arg0 = moo_lua_get_arg_utf8 (L, first_arg + 0, "id", FALSE);
@@ -84,9 +69,6 @@ cfunc_MooCmdView_set_filter_by_id (gpointer pself, G_GNUC_UNUSED lua_State *L, G
 static int
 cfunc_MooCmdView_write_with_filter (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_cmd_view_write_with_filter");
-#endif
     MooLuaCurrentFunc cur_func ("MooCmdView.write_with_filter");
     MooCmdView *self = (MooCmdView*) pself;
     const char* arg0 = moo_lua_get_arg_utf8 (L, first_arg + 0, "text", FALSE);
@@ -102,9 +84,6 @@ cfunc_MooCmdView_write_with_filter (gpointer pself, G_GNUC_UNUSED lua_State *L, 
 static int
 cfunc_MooEdit_append_text (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_append_text");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.append_text");
     MooEdit *self = (MooEdit*) pself;
     const char* arg0 = moo_lua_get_arg_utf8 (L, first_arg + 0, "text", FALSE);
@@ -115,9 +94,6 @@ cfunc_MooEdit_append_text (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UN
 static int
 cfunc_MooEdit_begin_non_undoable_action (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_begin_non_undoable_action");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.begin_non_undoable_action");
     MooEdit *self = (MooEdit*) pself;
     moo_edit_begin_non_undoable_action (self);
@@ -127,9 +103,6 @@ cfunc_MooEdit_begin_non_undoable_action (gpointer pself, G_GNUC_UNUSED lua_State
 static int
 cfunc_MooEdit_begin_user_action (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_begin_user_action");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.begin_user_action");
     MooEdit *self = (MooEdit*) pself;
     moo_edit_begin_user_action (self);
@@ -139,9 +112,6 @@ cfunc_MooEdit_begin_user_action (gpointer pself, G_GNUC_UNUSED lua_State *L, G_G
 static int
 cfunc_MooEdit_can_redo (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_can_redo");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.can_redo");
     MooEdit *self = (MooEdit*) pself;
     gboolean ret = moo_edit_can_redo (self);
@@ -151,9 +121,6 @@ cfunc_MooEdit_can_redo (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSE
 static int
 cfunc_MooEdit_can_undo (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_can_undo");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.can_undo");
     MooEdit *self = (MooEdit*) pself;
     gboolean ret = moo_edit_can_undo (self);
@@ -163,9 +130,6 @@ cfunc_MooEdit_can_undo (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSE
 static int
 cfunc_MooEdit_clear (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_clear");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.clear");
     MooEdit *self = (MooEdit*) pself;
     moo_edit_clear (self);
@@ -175,9 +139,6 @@ cfunc_MooEdit_clear (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED i
 static int
 cfunc_MooEdit_close (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_close");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.close");
     MooEdit *self = (MooEdit*) pself;
     gboolean ret = moo_edit_close (self);
@@ -187,9 +148,6 @@ cfunc_MooEdit_close (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED i
 static int
 cfunc_MooEdit_comment_selection (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_comment_selection");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.comment_selection");
     MooEdit *self = (MooEdit*) pself;
     moo_edit_comment_selection (self);
@@ -199,9 +157,6 @@ cfunc_MooEdit_comment_selection (gpointer pself, G_GNUC_UNUSED lua_State *L, G_G
 static int
 cfunc_MooEdit_copy (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_copy");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.copy");
     MooEdit *self = (MooEdit*) pself;
     moo_edit_copy (self);
@@ -211,9 +166,6 @@ cfunc_MooEdit_copy (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED in
 static int
 cfunc_MooEdit_cut (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_cut");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.cut");
     MooEdit *self = (MooEdit*) pself;
     moo_edit_cut (self);
@@ -223,9 +175,6 @@ cfunc_MooEdit_cut (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int
 static int
 cfunc_MooEdit_delete_selected_lines (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_delete_selected_lines");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.delete_selected_lines");
     MooEdit *self = (MooEdit*) pself;
     moo_edit_delete_selected_lines (self);
@@ -235,9 +184,6 @@ cfunc_MooEdit_delete_selected_lines (gpointer pself, G_GNUC_UNUSED lua_State *L,
 static int
 cfunc_MooEdit_delete_selected_text (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_delete_selected_text");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.delete_selected_text");
     MooEdit *self = (MooEdit*) pself;
     moo_edit_delete_selected_text (self);
@@ -247,9 +193,6 @@ cfunc_MooEdit_delete_selected_text (gpointer pself, G_GNUC_UNUSED lua_State *L, 
 static int
 cfunc_MooEdit_delete_text (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_delete_text");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.delete_text");
     MooEdit *self = (MooEdit*) pself;
     GtkTextIter arg0_iter;
@@ -265,9 +208,6 @@ cfunc_MooEdit_delete_text (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UN
 static int
 cfunc_MooEdit_end_non_undoable_action (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_end_non_undoable_action");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.end_non_undoable_action");
     MooEdit *self = (MooEdit*) pself;
     moo_edit_end_non_undoable_action (self);
@@ -277,9 +217,6 @@ cfunc_MooEdit_end_non_undoable_action (gpointer pself, G_GNUC_UNUSED lua_State *
 static int
 cfunc_MooEdit_end_user_action (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_end_user_action");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.end_user_action");
     MooEdit *self = (MooEdit*) pself;
     moo_edit_end_user_action (self);
@@ -289,9 +226,6 @@ cfunc_MooEdit_end_user_action (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNU
 static int
 cfunc_MooEdit_get_buffer (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_get_buffer");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.get_buffer");
     MooEdit *self = (MooEdit*) pself;
     gpointer ret = moo_edit_get_buffer (self);
@@ -301,9 +235,6 @@ cfunc_MooEdit_get_buffer (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNU
 static int
 cfunc_MooEdit_get_char_at_pos (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_get_char_at_pos");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.get_char_at_pos");
     MooEdit *self = (MooEdit*) pself;
     GtkTextIter arg0_iter;
@@ -316,9 +247,6 @@ cfunc_MooEdit_get_char_at_pos (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNU
 static int
 cfunc_MooEdit_get_char_count (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_get_char_count");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.get_char_count");
     MooEdit *self = (MooEdit*) pself;
     int ret = moo_edit_get_char_count (self);
@@ -328,9 +256,6 @@ cfunc_MooEdit_get_char_count (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC
 static int
 cfunc_MooEdit_get_clean (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_get_clean");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.get_clean");
     MooEdit *self = (MooEdit*) pself;
     gboolean ret = moo_edit_get_clean (self);
@@ -340,9 +265,6 @@ cfunc_MooEdit_get_clean (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUS
 static int
 cfunc_MooEdit_get_cursor_pos (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_get_cursor_pos");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.get_cursor_pos");
     MooEdit *self = (MooEdit*) pself;
     gpointer ret = moo_edit_get_cursor_pos (self);
@@ -352,9 +274,6 @@ cfunc_MooEdit_get_cursor_pos (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC
 static int
 cfunc_MooEdit_get_display_basename (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_get_display_basename");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.get_display_basename");
     MooEdit *self = (MooEdit*) pself;
     const char *ret = moo_edit_get_display_basename (self);
@@ -364,9 +283,6 @@ cfunc_MooEdit_get_display_basename (gpointer pself, G_GNUC_UNUSED lua_State *L, 
 static int
 cfunc_MooEdit_get_display_name (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_get_display_name");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.get_display_name");
     MooEdit *self = (MooEdit*) pself;
     const char *ret = moo_edit_get_display_name (self);
@@ -376,9 +292,6 @@ cfunc_MooEdit_get_display_name (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GN
 static int
 cfunc_MooEdit_get_editor (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_get_editor");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.get_editor");
     MooEdit *self = (MooEdit*) pself;
     gpointer ret = moo_edit_get_editor (self);
@@ -388,9 +301,6 @@ cfunc_MooEdit_get_editor (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNU
 static int
 cfunc_MooEdit_get_encoding (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_get_encoding");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.get_encoding");
     MooEdit *self = (MooEdit*) pself;
     const char *ret = moo_edit_get_encoding (self);
@@ -400,9 +310,6 @@ cfunc_MooEdit_get_encoding (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_U
 static int
 cfunc_MooEdit_get_end_pos (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_get_end_pos");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.get_end_pos");
     MooEdit *self = (MooEdit*) pself;
     gpointer ret = moo_edit_get_end_pos (self);
@@ -412,9 +319,6 @@ cfunc_MooEdit_get_end_pos (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UN
 static int
 cfunc_MooEdit_get_file (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_get_file");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.get_file");
     MooEdit *self = (MooEdit*) pself;
     gpointer ret = moo_edit_get_file (self);
@@ -424,9 +328,6 @@ cfunc_MooEdit_get_file (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSE
 static int
 cfunc_MooEdit_get_filename (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_get_filename");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.get_filename");
     MooEdit *self = (MooEdit*) pself;
     char *ret = moo_edit_get_filename (self);
@@ -436,9 +337,6 @@ cfunc_MooEdit_get_filename (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_U
 static int
 cfunc_MooEdit_get_lang_id (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_get_lang_id");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.get_lang_id");
     MooEdit *self = (MooEdit*) pself;
     char *ret = moo_edit_get_lang_id (self);
@@ -448,9 +346,6 @@ cfunc_MooEdit_get_lang_id (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UN
 static int
 cfunc_MooEdit_get_line_at_cursor (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_get_line_at_cursor");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.get_line_at_cursor");
     MooEdit *self = (MooEdit*) pself;
     int ret = moo_edit_get_line_at_cursor (self);
@@ -460,9 +355,6 @@ cfunc_MooEdit_get_line_at_cursor (gpointer pself, G_GNUC_UNUSED lua_State *L, G_
 static int
 cfunc_MooEdit_get_line_at_pos (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_get_line_at_pos");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.get_line_at_pos");
     MooEdit *self = (MooEdit*) pself;
     GtkTextIter arg0_iter;
@@ -475,9 +367,6 @@ cfunc_MooEdit_get_line_at_pos (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNU
 static int
 cfunc_MooEdit_get_line_count (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_get_line_count");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.get_line_count");
     MooEdit *self = (MooEdit*) pself;
     int ret = moo_edit_get_line_count (self);
@@ -487,9 +376,6 @@ cfunc_MooEdit_get_line_count (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC
 static int
 cfunc_MooEdit_get_line_end_type (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_get_line_end_type");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.get_line_end_type");
     MooEdit *self = (MooEdit*) pself;
     MooLineEndType ret = moo_edit_get_line_end_type (self);
@@ -499,9 +385,6 @@ cfunc_MooEdit_get_line_end_type (gpointer pself, G_GNUC_UNUSED lua_State *L, G_G
 static int
 cfunc_MooEdit_get_line_text (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_get_line_text");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.get_line_text");
     MooEdit *self = (MooEdit*) pself;
     int arg0 = moo_lua_get_arg_index_opt (L, first_arg + 0, "line", -1);
@@ -512,9 +395,6 @@ cfunc_MooEdit_get_line_text (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_
 static int
 cfunc_MooEdit_get_line_text_at_pos (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_get_line_text_at_pos");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.get_line_text_at_pos");
     MooEdit *self = (MooEdit*) pself;
     GtkTextIter arg0_iter;
@@ -527,9 +407,6 @@ cfunc_MooEdit_get_line_text_at_pos (gpointer pself, G_GNUC_UNUSED lua_State *L, 
 static int
 cfunc_MooEdit_get_n_views (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_get_n_views");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.get_n_views");
     MooEdit *self = (MooEdit*) pself;
     int ret = moo_edit_get_n_views (self);
@@ -539,9 +416,6 @@ cfunc_MooEdit_get_n_views (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UN
 static int
 cfunc_MooEdit_get_pos_at_line (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_get_pos_at_line");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.get_pos_at_line");
     MooEdit *self = (MooEdit*) pself;
     int arg0 = moo_lua_get_arg_index (L, first_arg + 0, "line");
@@ -552,9 +426,6 @@ cfunc_MooEdit_get_pos_at_line (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNU
 static int
 cfunc_MooEdit_get_pos_at_line_end (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_get_pos_at_line_end");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.get_pos_at_line_end");
     MooEdit *self = (MooEdit*) pself;
     int arg0 = moo_lua_get_arg_index (L, first_arg + 0, "line");
@@ -565,9 +436,6 @@ cfunc_MooEdit_get_pos_at_line_end (gpointer pself, G_GNUC_UNUSED lua_State *L, G
 static int
 cfunc_MooEdit_get_selected_lines (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_get_selected_lines");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.get_selected_lines");
     MooEdit *self = (MooEdit*) pself;
     char **ret = moo_edit_get_selected_lines (self);
@@ -577,9 +445,6 @@ cfunc_MooEdit_get_selected_lines (gpointer pself, G_GNUC_UNUSED lua_State *L, G_
 static int
 cfunc_MooEdit_get_selected_text (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_get_selected_text");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.get_selected_text");
     MooEdit *self = (MooEdit*) pself;
     char *ret = moo_edit_get_selected_text (self);
@@ -589,9 +454,6 @@ cfunc_MooEdit_get_selected_text (gpointer pself, G_GNUC_UNUSED lua_State *L, G_G
 static int
 cfunc_MooEdit_get_selection_end_pos (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_get_selection_end_pos");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.get_selection_end_pos");
     MooEdit *self = (MooEdit*) pself;
     gpointer ret = moo_edit_get_selection_end_pos (self);
@@ -601,9 +463,6 @@ cfunc_MooEdit_get_selection_end_pos (gpointer pself, G_GNUC_UNUSED lua_State *L,
 static int
 cfunc_MooEdit_get_selection_start_pos (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_get_selection_start_pos");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.get_selection_start_pos");
     MooEdit *self = (MooEdit*) pself;
     gpointer ret = moo_edit_get_selection_start_pos (self);
@@ -613,9 +472,6 @@ cfunc_MooEdit_get_selection_start_pos (gpointer pself, G_GNUC_UNUSED lua_State *
 static int
 cfunc_MooEdit_get_start_pos (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_get_start_pos");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.get_start_pos");
     MooEdit *self = (MooEdit*) pself;
     gpointer ret = moo_edit_get_start_pos (self);
@@ -625,9 +481,6 @@ cfunc_MooEdit_get_start_pos (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_
 static int
 cfunc_MooEdit_get_status (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_get_status");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.get_status");
     MooEdit *self = (MooEdit*) pself;
     MooEditStatus ret = moo_edit_get_status (self);
@@ -637,9 +490,6 @@ cfunc_MooEdit_get_status (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNU
 static int
 cfunc_MooEdit_get_tab (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_get_tab");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.get_tab");
     MooEdit *self = (MooEdit*) pself;
     gpointer ret = moo_edit_get_tab (self);
@@ -649,9 +499,6 @@ cfunc_MooEdit_get_tab (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED
 static int
 cfunc_MooEdit_get_text (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_get_text");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.get_text");
     MooEdit *self = (MooEdit*) pself;
     GtkTextIter arg0_iter;
@@ -665,9 +512,6 @@ cfunc_MooEdit_get_text (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSE
 static int
 cfunc_MooEdit_get_uri (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_get_uri");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.get_uri");
     MooEdit *self = (MooEdit*) pself;
     char *ret = moo_edit_get_uri (self);
@@ -677,9 +521,6 @@ cfunc_MooEdit_get_uri (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED
 static int
 cfunc_MooEdit_get_view (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_get_view");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.get_view");
     MooEdit *self = (MooEdit*) pself;
     gpointer ret = moo_edit_get_view (self);
@@ -689,9 +530,6 @@ cfunc_MooEdit_get_view (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSE
 static int
 cfunc_MooEdit_get_views (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_get_views");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.get_views");
     MooEdit *self = (MooEdit*) pself;
     MooObjectArray *ret = (MooObjectArray*) moo_edit_get_views (self);
@@ -701,9 +539,6 @@ cfunc_MooEdit_get_views (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUS
 static int
 cfunc_MooEdit_get_window (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_get_window");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.get_window");
     MooEdit *self = (MooEdit*) pself;
     gpointer ret = moo_edit_get_window (self);
@@ -713,9 +548,6 @@ cfunc_MooEdit_get_window (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNU
 static int
 cfunc_MooEdit_has_selection (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_has_selection");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.has_selection");
     MooEdit *self = (MooEdit*) pself;
     gboolean ret = moo_edit_has_selection (self);
@@ -725,9 +557,6 @@ cfunc_MooEdit_has_selection (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_
 static int
 cfunc_MooEdit_insert_text (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_insert_text");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.insert_text");
     MooEdit *self = (MooEdit*) pself;
     const char* arg0 = moo_lua_get_arg_utf8 (L, first_arg + 0, "text", FALSE);
@@ -740,9 +569,6 @@ cfunc_MooEdit_insert_text (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UN
 static int
 cfunc_MooEdit_is_empty (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_is_empty");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.is_empty");
     MooEdit *self = (MooEdit*) pself;
     gboolean ret = moo_edit_is_empty (self);
@@ -752,9 +578,6 @@ cfunc_MooEdit_is_empty (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSE
 static int
 cfunc_MooEdit_is_modified (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_is_modified");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.is_modified");
     MooEdit *self = (MooEdit*) pself;
     gboolean ret = moo_edit_is_modified (self);
@@ -764,9 +587,6 @@ cfunc_MooEdit_is_modified (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UN
 static int
 cfunc_MooEdit_is_untitled (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_is_untitled");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.is_untitled");
     MooEdit *self = (MooEdit*) pself;
     gboolean ret = moo_edit_is_untitled (self);
@@ -776,9 +596,6 @@ cfunc_MooEdit_is_untitled (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UN
 static int
 cfunc_MooEdit_paste (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_paste");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.paste");
     MooEdit *self = (MooEdit*) pself;
     moo_edit_paste (self);
@@ -788,9 +605,6 @@ cfunc_MooEdit_paste (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED i
 static int
 cfunc_MooEdit_redo (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_redo");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.redo");
     MooEdit *self = (MooEdit*) pself;
     gboolean ret = moo_edit_redo (self);
@@ -800,9 +614,6 @@ cfunc_MooEdit_redo (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED in
 static int
 cfunc_MooEdit_reload (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_reload");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.reload");
     MooEdit *self = (MooEdit*) pself;
     MooReloadInfo *arg0 = (MooReloadInfo*) moo_lua_get_arg_instance_opt (L, first_arg + 0, "info", MOO_TYPE_RELOAD_INFO, TRUE);
@@ -816,9 +627,6 @@ cfunc_MooEdit_reload (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED 
 static int
 cfunc_MooEdit_replace_selected_lines (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_replace_selected_lines");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.replace_selected_lines");
     MooEdit *self = (MooEdit*) pself;
     char **arg0 = moo_lua_get_arg_strv (L, first_arg + 0, "replacement", TRUE);
@@ -830,9 +638,6 @@ cfunc_MooEdit_replace_selected_lines (gpointer pself, G_GNUC_UNUSED lua_State *L
 static int
 cfunc_MooEdit_replace_selected_text (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_replace_selected_text");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.replace_selected_text");
     MooEdit *self = (MooEdit*) pself;
     const char* arg0 = moo_lua_get_arg_utf8 (L, first_arg + 0, "replacement", FALSE);
@@ -843,9 +648,6 @@ cfunc_MooEdit_replace_selected_text (gpointer pself, G_GNUC_UNUSED lua_State *L,
 static int
 cfunc_MooEdit_replace_text (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_replace_text");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.replace_text");
     MooEdit *self = (MooEdit*) pself;
     GtkTextIter arg0_iter;
@@ -862,9 +664,6 @@ cfunc_MooEdit_replace_text (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_U
 static int
 cfunc_MooEdit_save (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_save");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.save");
     MooEdit *self = (MooEdit*) pself;
     GError *error = NULL;
@@ -877,9 +676,6 @@ cfunc_MooEdit_save (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED in
 static int
 cfunc_MooEdit_save_as (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_save_as");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.save_as");
     MooEdit *self = (MooEdit*) pself;
     MooSaveInfo *arg0 = (MooSaveInfo*) moo_lua_get_arg_instance (L, first_arg + 0, "info", MOO_TYPE_SAVE_INFO, TRUE);
@@ -893,9 +689,6 @@ cfunc_MooEdit_save_as (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED
 static int
 cfunc_MooEdit_save_copy (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_save_copy");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.save_copy");
     MooEdit *self = (MooEdit*) pself;
     MooSaveInfo *arg0 = (MooSaveInfo*) moo_lua_get_arg_instance (L, first_arg + 0, "info", MOO_TYPE_SAVE_INFO, FALSE);
@@ -909,9 +702,6 @@ cfunc_MooEdit_save_copy (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUS
 static int
 cfunc_MooEdit_select_all (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_select_all");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.select_all");
     MooEdit *self = (MooEdit*) pself;
     moo_edit_select_all (self);
@@ -921,9 +711,6 @@ cfunc_MooEdit_select_all (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNU
 static int
 cfunc_MooEdit_select_lines (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_select_lines");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.select_lines");
     MooEdit *self = (MooEdit*) pself;
     int arg0 = moo_lua_get_arg_index (L, first_arg + 0, "start");
@@ -935,9 +722,6 @@ cfunc_MooEdit_select_lines (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_U
 static int
 cfunc_MooEdit_select_lines_at_pos (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_select_lines_at_pos");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.select_lines_at_pos");
     MooEdit *self = (MooEdit*) pself;
     GtkTextIter arg0_iter;
@@ -952,9 +736,6 @@ cfunc_MooEdit_select_lines_at_pos (gpointer pself, G_GNUC_UNUSED lua_State *L, G
 static int
 cfunc_MooEdit_select_range (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_select_range");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.select_range");
     MooEdit *self = (MooEdit*) pself;
     GtkTextIter arg0_iter;
@@ -970,9 +751,6 @@ cfunc_MooEdit_select_range (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_U
 static int
 cfunc_MooEdit_set_clean (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_set_clean");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.set_clean");
     MooEdit *self = (MooEdit*) pself;
     gboolean arg0 = moo_lua_get_arg_bool (L, first_arg + 0, "clean");
@@ -983,9 +761,6 @@ cfunc_MooEdit_set_clean (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUS
 static int
 cfunc_MooEdit_set_cursor_pos (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_set_cursor_pos");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.set_cursor_pos");
     MooEdit *self = (MooEdit*) pself;
     GtkTextIter arg0_iter;
@@ -998,9 +773,6 @@ cfunc_MooEdit_set_cursor_pos (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC
 static int
 cfunc_MooEdit_set_encoding (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_set_encoding");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.set_encoding");
     MooEdit *self = (MooEdit*) pself;
     const char* arg0 = moo_lua_get_arg_utf8 (L, first_arg + 0, "encoding", FALSE);
@@ -1011,9 +783,6 @@ cfunc_MooEdit_set_encoding (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_U
 static int
 cfunc_MooEdit_set_line_end_type (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_set_line_end_type");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.set_line_end_type");
     MooEdit *self = (MooEdit*) pself;
     MooLineEndType arg0 = (MooLineEndType) moo_lua_get_arg_enum (L, first_arg + 0, "le", MOO_TYPE_LINE_END_TYPE);
@@ -1024,9 +793,6 @@ cfunc_MooEdit_set_line_end_type (gpointer pself, G_GNUC_UNUSED lua_State *L, G_G
 static int
 cfunc_MooEdit_set_modified (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_set_modified");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.set_modified");
     MooEdit *self = (MooEdit*) pself;
     gboolean arg0 = moo_lua_get_arg_bool (L, first_arg + 0, "modified");
@@ -1037,9 +803,6 @@ cfunc_MooEdit_set_modified (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_U
 static int
 cfunc_MooEdit_set_text (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_set_text");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.set_text");
     MooEdit *self = (MooEdit*) pself;
     const char* arg0 = moo_lua_get_arg_utf8 (L, first_arg + 0, "text", FALSE);
@@ -1050,9 +813,6 @@ cfunc_MooEdit_set_text (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSE
 static int
 cfunc_MooEdit_uncomment_selection (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_uncomment_selection");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.uncomment_selection");
     MooEdit *self = (MooEdit*) pself;
     moo_edit_uncomment_selection (self);
@@ -1062,9 +822,6 @@ cfunc_MooEdit_uncomment_selection (gpointer pself, G_GNUC_UNUSED lua_State *L, G
 static int
 cfunc_MooEdit_undo (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_undo");
-#endif
     MooLuaCurrentFunc cur_func ("MooEdit.undo");
     MooEdit *self = (MooEdit*) pself;
     gboolean ret = moo_edit_undo (self);
@@ -1080,9 +837,6 @@ cfunc_MooEdit_undo (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED in
 static int
 cfunc_MooEditTab_get_active_view (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_tab_get_active_view");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditTab.get_active_view");
     MooEditTab *self = (MooEditTab*) pself;
     gpointer ret = moo_edit_tab_get_active_view (self);
@@ -1092,9 +846,6 @@ cfunc_MooEditTab_get_active_view (gpointer pself, G_GNUC_UNUSED lua_State *L, G_
 static int
 cfunc_MooEditTab_get_doc (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_tab_get_doc");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditTab.get_doc");
     MooEditTab *self = (MooEditTab*) pself;
     gpointer ret = moo_edit_tab_get_doc (self);
@@ -1104,9 +855,6 @@ cfunc_MooEditTab_get_doc (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNU
 static int
 cfunc_MooEditTab_get_views (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_tab_get_views");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditTab.get_views");
     MooEditTab *self = (MooEditTab*) pself;
     MooObjectArray *ret = (MooObjectArray*) moo_edit_tab_get_views (self);
@@ -1116,9 +864,6 @@ cfunc_MooEditTab_get_views (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_U
 static int
 cfunc_MooEditTab_get_window (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_tab_get_window");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditTab.get_window");
     MooEditTab *self = (MooEditTab*) pself;
     gpointer ret = moo_edit_tab_get_window (self);
@@ -1130,9 +875,6 @@ cfunc_MooEditTab_get_window (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_
 static int
 cfunc_MooEditView_get_doc (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_view_get_doc");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditView.get_doc");
     MooEditView *self = (MooEditView*) pself;
     gpointer ret = moo_edit_view_get_doc (self);
@@ -1142,9 +884,6 @@ cfunc_MooEditView_get_doc (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UN
 static int
 cfunc_MooEditView_get_editor (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_view_get_editor");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditView.get_editor");
     MooEditView *self = (MooEditView*) pself;
     gpointer ret = moo_edit_view_get_editor (self);
@@ -1154,9 +893,6 @@ cfunc_MooEditView_get_editor (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC
 static int
 cfunc_MooEditView_get_tab (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_view_get_tab");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditView.get_tab");
     MooEditView *self = (MooEditView*) pself;
     gpointer ret = moo_edit_view_get_tab (self);
@@ -1166,9 +902,6 @@ cfunc_MooEditView_get_tab (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UN
 static int
 cfunc_MooEditView_get_window (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_view_get_window");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditView.get_window");
     MooEditView *self = (MooEditView*) pself;
     gpointer ret = moo_edit_view_get_window (self);
@@ -1180,9 +913,6 @@ cfunc_MooEditView_get_window (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC
 static int
 cfunc_MooEditWindow_close (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_window_close");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditWindow.close");
     MooEditWindow *self = (MooEditWindow*) pself;
     gboolean ret = moo_edit_window_close (self);
@@ -1192,9 +922,6 @@ cfunc_MooEditWindow_close (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UN
 static int
 cfunc_MooEditWindow_close_all (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_window_close_all");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditWindow.close_all");
     MooEditWindow *self = (MooEditWindow*) pself;
     gboolean ret = moo_edit_window_close_all (self);
@@ -1204,9 +931,6 @@ cfunc_MooEditWindow_close_all (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNU
 static int
 cfunc_MooEditWindow_get_active_doc (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_window_get_active_doc");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditWindow.get_active_doc");
     MooEditWindow *self = (MooEditWindow*) pself;
     gpointer ret = moo_edit_window_get_active_doc (self);
@@ -1216,9 +940,6 @@ cfunc_MooEditWindow_get_active_doc (gpointer pself, G_GNUC_UNUSED lua_State *L, 
 static int
 cfunc_MooEditWindow_get_active_tab (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_window_get_active_tab");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditWindow.get_active_tab");
     MooEditWindow *self = (MooEditWindow*) pself;
     gpointer ret = moo_edit_window_get_active_tab (self);
@@ -1228,9 +949,6 @@ cfunc_MooEditWindow_get_active_tab (gpointer pself, G_GNUC_UNUSED lua_State *L, 
 static int
 cfunc_MooEditWindow_get_active_view (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_window_get_active_view");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditWindow.get_active_view");
     MooEditWindow *self = (MooEditWindow*) pself;
     gpointer ret = moo_edit_window_get_active_view (self);
@@ -1240,9 +958,6 @@ cfunc_MooEditWindow_get_active_view (gpointer pself, G_GNUC_UNUSED lua_State *L,
 static int
 cfunc_MooEditWindow_get_docs (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_window_get_docs");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditWindow.get_docs");
     MooEditWindow *self = (MooEditWindow*) pself;
     MooObjectArray *ret = (MooObjectArray*) moo_edit_window_get_docs (self);
@@ -1252,9 +967,6 @@ cfunc_MooEditWindow_get_docs (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC
 static int
 cfunc_MooEditWindow_get_editor (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_window_get_editor");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditWindow.get_editor");
     MooEditWindow *self = (MooEditWindow*) pself;
     gpointer ret = moo_edit_window_get_editor (self);
@@ -1264,9 +976,6 @@ cfunc_MooEditWindow_get_editor (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GN
 static int
 cfunc_MooEditWindow_get_n_tabs (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_window_get_n_tabs");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditWindow.get_n_tabs");
     MooEditWindow *self = (MooEditWindow*) pself;
     int ret = moo_edit_window_get_n_tabs (self);
@@ -1276,9 +985,6 @@ cfunc_MooEditWindow_get_n_tabs (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GN
 static int
 cfunc_MooEditWindow_get_output (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_window_get_output");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditWindow.get_output");
     MooEditWindow *self = (MooEditWindow*) pself;
     gpointer ret = moo_edit_window_get_output (self);
@@ -1288,9 +994,6 @@ cfunc_MooEditWindow_get_output (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GN
 static int
 cfunc_MooEditWindow_get_tabs (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_window_get_tabs");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditWindow.get_tabs");
     MooEditWindow *self = (MooEditWindow*) pself;
     MooObjectArray *ret = (MooObjectArray*) moo_edit_window_get_tabs (self);
@@ -1300,9 +1003,6 @@ cfunc_MooEditWindow_get_tabs (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC
 static int
 cfunc_MooEditWindow_get_views (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_window_get_views");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditWindow.get_views");
     MooEditWindow *self = (MooEditWindow*) pself;
     MooObjectArray *ret = (MooObjectArray*) moo_edit_window_get_views (self);
@@ -1312,9 +1012,6 @@ cfunc_MooEditWindow_get_views (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNU
 static int
 cfunc_MooEditWindow_present_output (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_window_present_output");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditWindow.present_output");
     MooEditWindow *self = (MooEditWindow*) pself;
     moo_edit_window_present_output (self);
@@ -1324,9 +1021,6 @@ cfunc_MooEditWindow_present_output (gpointer pself, G_GNUC_UNUSED lua_State *L, 
 static int
 cfunc_MooEditWindow_set_active_doc (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_window_set_active_doc");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditWindow.set_active_doc");
     MooEditWindow *self = (MooEditWindow*) pself;
     MooEdit *arg0 = (MooEdit*) moo_lua_get_arg_instance (L, first_arg + 0, "doc", MOO_TYPE_EDIT, FALSE);
@@ -1337,9 +1031,6 @@ cfunc_MooEditWindow_set_active_doc (gpointer pself, G_GNUC_UNUSED lua_State *L, 
 static int
 cfunc_MooEditWindow_set_active_tab (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_window_set_active_tab");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditWindow.set_active_tab");
     MooEditWindow *self = (MooEditWindow*) pself;
     MooEditTab *arg0 = (MooEditTab*) moo_lua_get_arg_instance (L, first_arg + 0, "tab", MOO_TYPE_EDIT_TAB, FALSE);
@@ -1350,9 +1041,6 @@ cfunc_MooEditWindow_set_active_tab (gpointer pself, G_GNUC_UNUSED lua_State *L, 
 static int
 cfunc_MooEditWindow_set_active_view (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_edit_window_set_active_view");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditWindow.set_active_view");
     MooEditWindow *self = (MooEditWindow*) pself;
     MooEditView *arg0 = (MooEditView*) moo_lua_get_arg_instance (L, first_arg + 0, "view", MOO_TYPE_EDIT_VIEW, FALSE);
@@ -1365,9 +1053,6 @@ cfunc_MooEditWindow_set_active_view (gpointer pself, G_GNUC_UNUSED lua_State *L,
 static int
 cfunc_MooEditor_close_doc (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_editor_close_doc");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditor.close_doc");
     MooEditor *self = (MooEditor*) pself;
     MooEdit *arg0 = (MooEdit*) moo_lua_get_arg_instance (L, first_arg + 0, "doc", MOO_TYPE_EDIT, FALSE);
@@ -1378,9 +1063,6 @@ cfunc_MooEditor_close_doc (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UN
 static int
 cfunc_MooEditor_close_docs (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_editor_close_docs");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditor.close_docs");
     MooEditor *self = (MooEditor*) pself;
     MooEditArray* arg0 = (MooEditArray*) moo_lua_get_arg_object_array (L, first_arg + 0, "docs", MOO_TYPE_EDIT);
@@ -1392,9 +1074,6 @@ cfunc_MooEditor_close_docs (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_U
 static int
 cfunc_MooEditor_close_window (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_editor_close_window");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditor.close_window");
     MooEditor *self = (MooEditor*) pself;
     MooEditWindow *arg0 = (MooEditWindow*) moo_lua_get_arg_instance (L, first_arg + 0, "window", MOO_TYPE_EDIT_WINDOW, FALSE);
@@ -1405,9 +1084,6 @@ cfunc_MooEditor_close_window (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC
 static int
 cfunc_MooEditor_get_active_doc (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_editor_get_active_doc");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditor.get_active_doc");
     MooEditor *self = (MooEditor*) pself;
     gpointer ret = moo_editor_get_active_doc (self);
@@ -1417,9 +1093,6 @@ cfunc_MooEditor_get_active_doc (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GN
 static int
 cfunc_MooEditor_get_active_view (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_editor_get_active_view");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditor.get_active_view");
     MooEditor *self = (MooEditor*) pself;
     gpointer ret = moo_editor_get_active_view (self);
@@ -1429,9 +1102,6 @@ cfunc_MooEditor_get_active_view (gpointer pself, G_GNUC_UNUSED lua_State *L, G_G
 static int
 cfunc_MooEditor_get_active_window (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_editor_get_active_window");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditor.get_active_window");
     MooEditor *self = (MooEditor*) pself;
     gpointer ret = moo_editor_get_active_window (self);
@@ -1441,9 +1111,6 @@ cfunc_MooEditor_get_active_window (gpointer pself, G_GNUC_UNUSED lua_State *L, G
 static int
 cfunc_MooEditor_get_doc (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_editor_get_doc");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditor.get_doc");
     MooEditor *self = (MooEditor*) pself;
     const char* arg0 = moo_lua_get_arg_filename (L, first_arg + 0, "filename", FALSE);
@@ -1454,9 +1121,6 @@ cfunc_MooEditor_get_doc (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUS
 static int
 cfunc_MooEditor_get_doc_for_file (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_editor_get_doc_for_file");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditor.get_doc_for_file");
     MooEditor *self = (MooEditor*) pself;
     GFile *arg0 = (GFile*) moo_lua_get_arg_instance (L, first_arg + 0, "file", G_TYPE_FILE, FALSE);
@@ -1467,9 +1131,6 @@ cfunc_MooEditor_get_doc_for_file (gpointer pself, G_GNUC_UNUSED lua_State *L, G_
 static int
 cfunc_MooEditor_get_doc_for_uri (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_editor_get_doc_for_uri");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditor.get_doc_for_uri");
     MooEditor *self = (MooEditor*) pself;
     const char* arg0 = moo_lua_get_arg_utf8 (L, first_arg + 0, "uri", FALSE);
@@ -1480,9 +1141,6 @@ cfunc_MooEditor_get_doc_for_uri (gpointer pself, G_GNUC_UNUSED lua_State *L, G_G
 static int
 cfunc_MooEditor_get_doc_ui_xml (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_editor_get_doc_ui_xml");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditor.get_doc_ui_xml");
     MooEditor *self = (MooEditor*) pself;
     gpointer ret = moo_editor_get_doc_ui_xml (self);
@@ -1492,9 +1150,6 @@ cfunc_MooEditor_get_doc_ui_xml (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GN
 static int
 cfunc_MooEditor_get_docs (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_editor_get_docs");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditor.get_docs");
     MooEditor *self = (MooEditor*) pself;
     MooObjectArray *ret = (MooObjectArray*) moo_editor_get_docs (self);
@@ -1504,9 +1159,6 @@ cfunc_MooEditor_get_docs (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNU
 static int
 cfunc_MooEditor_get_ui_xml (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_editor_get_ui_xml");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditor.get_ui_xml");
     MooEditor *self = (MooEditor*) pself;
     gpointer ret = moo_editor_get_ui_xml (self);
@@ -1516,9 +1168,6 @@ cfunc_MooEditor_get_ui_xml (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_U
 static int
 cfunc_MooEditor_get_windows (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_editor_get_windows");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditor.get_windows");
     MooEditor *self = (MooEditor*) pself;
     MooObjectArray *ret = (MooObjectArray*) moo_editor_get_windows (self);
@@ -1528,9 +1177,6 @@ cfunc_MooEditor_get_windows (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_
 static int
 cfunc_MooEditor_new_doc (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_editor_new_doc");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditor.new_doc");
     MooEditor *self = (MooEditor*) pself;
     MooEditWindow *arg0 = (MooEditWindow*) moo_lua_get_arg_instance_opt (L, first_arg + 0, "window", MOO_TYPE_EDIT_WINDOW, TRUE);
@@ -1541,9 +1187,6 @@ cfunc_MooEditor_new_doc (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUS
 static int
 cfunc_MooEditor_new_file (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_editor_new_file");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditor.new_file");
     MooEditor *self = (MooEditor*) pself;
     MooOpenInfo *arg0 = (MooOpenInfo*) moo_lua_get_arg_instance (L, first_arg + 0, "info", MOO_TYPE_OPEN_INFO, FALSE);
@@ -1558,9 +1201,6 @@ cfunc_MooEditor_new_file (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNU
 static int
 cfunc_MooEditor_new_window (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_editor_new_window");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditor.new_window");
     MooEditor *self = (MooEditor*) pself;
     gpointer ret = moo_editor_new_window (self);
@@ -1570,9 +1210,6 @@ cfunc_MooEditor_new_window (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_U
 static int
 cfunc_MooEditor_open_file (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_editor_open_file");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditor.open_file");
     MooEditor *self = (MooEditor*) pself;
     MooOpenInfo *arg0 = (MooOpenInfo*) moo_lua_get_arg_instance (L, first_arg + 0, "info", MOO_TYPE_OPEN_INFO, FALSE);
@@ -1587,9 +1224,6 @@ cfunc_MooEditor_open_file (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UN
 static int
 cfunc_MooEditor_open_files (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_editor_open_files");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditor.open_files");
     MooEditor *self = (MooEditor*) pself;
     MooOpenInfoArray* arg0 = (MooOpenInfoArray*) moo_lua_get_arg_object_array (L, first_arg + 0, "files", MOO_TYPE_OPEN_INFO);
@@ -1605,9 +1239,6 @@ cfunc_MooEditor_open_files (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_U
 static int
 cfunc_MooEditor_open_path (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_editor_open_path");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditor.open_path");
     bool kwargs = moo_lua_check_kwargs (L, first_arg);
     MooEditor *self = (MooEditor*) pself;
@@ -1636,9 +1267,6 @@ cfunc_MooEditor_open_path (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UN
 static int
 cfunc_MooEditor_open_uri (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_editor_open_uri");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditor.open_uri");
     bool kwargs = moo_lua_check_kwargs (L, first_arg);
     MooEditor *self = (MooEditor*) pself;
@@ -1667,9 +1295,6 @@ cfunc_MooEditor_open_uri (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNU
 static int
 cfunc_MooEditor_reload (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_editor_reload");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditor.reload");
     MooEditor *self = (MooEditor*) pself;
     MooEdit *arg0 = (MooEdit*) moo_lua_get_arg_instance (L, first_arg + 0, "doc", MOO_TYPE_EDIT, FALSE);
@@ -1684,9 +1309,6 @@ cfunc_MooEditor_reload (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSE
 static int
 cfunc_MooEditor_save (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_editor_save");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditor.save");
     MooEditor *self = (MooEditor*) pself;
     MooEdit *arg0 = (MooEdit*) moo_lua_get_arg_instance (L, first_arg + 0, "doc", MOO_TYPE_EDIT, FALSE);
@@ -1700,9 +1322,6 @@ cfunc_MooEditor_save (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED 
 static int
 cfunc_MooEditor_save_as (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_editor_save_as");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditor.save_as");
     MooEditor *self = (MooEditor*) pself;
     MooEdit *arg0 = (MooEdit*) moo_lua_get_arg_instance (L, first_arg + 0, "doc", MOO_TYPE_EDIT, FALSE);
@@ -1717,9 +1336,6 @@ cfunc_MooEditor_save_as (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUS
 static int
 cfunc_MooEditor_save_copy (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_editor_save_copy");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditor.save_copy");
     MooEditor *self = (MooEditor*) pself;
     MooEdit *arg0 = (MooEdit*) moo_lua_get_arg_instance (L, first_arg + 0, "doc", MOO_TYPE_EDIT, FALSE);
@@ -1734,9 +1350,6 @@ cfunc_MooEditor_save_copy (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UN
 static int
 cfunc_MooEditor_set_active_doc (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_editor_set_active_doc");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditor.set_active_doc");
     MooEditor *self = (MooEditor*) pself;
     MooEdit *arg0 = (MooEdit*) moo_lua_get_arg_instance (L, first_arg + 0, "doc", MOO_TYPE_EDIT, FALSE);
@@ -1747,9 +1360,6 @@ cfunc_MooEditor_set_active_doc (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GN
 static int
 cfunc_MooEditor_set_active_view (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_editor_set_active_view");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditor.set_active_view");
     MooEditor *self = (MooEditor*) pself;
     MooEditView *arg0 = (MooEditView*) moo_lua_get_arg_instance (L, first_arg + 0, "view", MOO_TYPE_EDIT_VIEW, FALSE);
@@ -1760,9 +1370,6 @@ cfunc_MooEditor_set_active_view (gpointer pself, G_GNUC_UNUSED lua_State *L, G_G
 static int
 cfunc_MooEditor_set_active_window (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_editor_set_active_window");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditor.set_active_window");
     MooEditor *self = (MooEditor*) pself;
     MooEditWindow *arg0 = (MooEditWindow*) moo_lua_get_arg_instance (L, first_arg + 0, "window", MOO_TYPE_EDIT_WINDOW, FALSE);
@@ -1773,9 +1380,6 @@ cfunc_MooEditor_set_active_window (gpointer pself, G_GNUC_UNUSED lua_State *L, G
 static int
 cfunc_MooEditor_set_ui_xml (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_editor_set_ui_xml");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditor.set_ui_xml");
     MooEditor *self = (MooEditor*) pself;
     MooUiXml *arg0 = (MooUiXml*) moo_lua_get_arg_instance (L, first_arg + 0, "xml", MOO_TYPE_UI_XML, FALSE);
@@ -1786,9 +1390,6 @@ cfunc_MooEditor_set_ui_xml (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_U
 static int
 cfunc_MooEditor_instance (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_editor_instance");
-#endif
     MooLuaCurrentFunc cur_func ("MooEditor.instance");
     gpointer ret = moo_editor_instance ();
     return moo_lua_push_object (L, (GObject*) ret, TRUE);
@@ -1813,9 +1414,6 @@ cfunc_MooEditor_instance (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_MooLineView_clear (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_line_view_clear");
-#endif
     MooLuaCurrentFunc cur_func ("MooLineView.clear");
     MooLineView *self = (MooLineView*) pself;
     moo_line_view_clear (self);
@@ -1835,9 +1433,6 @@ cfunc_MooLineView_clear (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUS
 static int
 cfunc_MooOpenInfo_add_flags (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_open_info_add_flags");
-#endif
     MooLuaCurrentFunc cur_func ("MooOpenInfo.add_flags");
     MooOpenInfo *self = (MooOpenInfo*) pself;
     MooOpenFlags arg0 = (MooOpenFlags) moo_lua_get_arg_enum (L, first_arg + 0, "flags", MOO_TYPE_OPEN_FLAGS);
@@ -1848,9 +1443,6 @@ cfunc_MooOpenInfo_add_flags (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_
 static int
 cfunc_MooOpenInfo_dup (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_open_info_dup");
-#endif
     MooLuaCurrentFunc cur_func ("MooOpenInfo.dup");
     MooOpenInfo *self = (MooOpenInfo*) pself;
     gpointer ret = moo_open_info_dup (self);
@@ -1860,9 +1452,6 @@ cfunc_MooOpenInfo_dup (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED
 static int
 cfunc_MooOpenInfo_get_encoding (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_open_info_get_encoding");
-#endif
     MooLuaCurrentFunc cur_func ("MooOpenInfo.get_encoding");
     MooOpenInfo *self = (MooOpenInfo*) pself;
     const char *ret = moo_open_info_get_encoding (self);
@@ -1872,9 +1461,6 @@ cfunc_MooOpenInfo_get_encoding (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GN
 static int
 cfunc_MooOpenInfo_get_file (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_open_info_get_file");
-#endif
     MooLuaCurrentFunc cur_func ("MooOpenInfo.get_file");
     MooOpenInfo *self = (MooOpenInfo*) pself;
     gpointer ret = moo_open_info_get_file (self);
@@ -1884,9 +1470,6 @@ cfunc_MooOpenInfo_get_file (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_U
 static int
 cfunc_MooOpenInfo_get_filename (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_open_info_get_filename");
-#endif
     MooLuaCurrentFunc cur_func ("MooOpenInfo.get_filename");
     MooOpenInfo *self = (MooOpenInfo*) pself;
     char *ret = moo_open_info_get_filename (self);
@@ -1896,9 +1479,6 @@ cfunc_MooOpenInfo_get_filename (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GN
 static int
 cfunc_MooOpenInfo_get_flags (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_open_info_get_flags");
-#endif
     MooLuaCurrentFunc cur_func ("MooOpenInfo.get_flags");
     MooOpenInfo *self = (MooOpenInfo*) pself;
     MooOpenFlags ret = moo_open_info_get_flags (self);
@@ -1908,9 +1488,6 @@ cfunc_MooOpenInfo_get_flags (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_
 static int
 cfunc_MooOpenInfo_get_line (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_open_info_get_line");
-#endif
     MooLuaCurrentFunc cur_func ("MooOpenInfo.get_line");
     MooOpenInfo *self = (MooOpenInfo*) pself;
     int ret = moo_open_info_get_line (self);
@@ -1920,9 +1497,6 @@ cfunc_MooOpenInfo_get_line (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_U
 static int
 cfunc_MooOpenInfo_get_uri (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_open_info_get_uri");
-#endif
     MooLuaCurrentFunc cur_func ("MooOpenInfo.get_uri");
     MooOpenInfo *self = (MooOpenInfo*) pself;
     char *ret = moo_open_info_get_uri (self);
@@ -1932,9 +1506,6 @@ cfunc_MooOpenInfo_get_uri (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UN
 static int
 cfunc_MooOpenInfo_set_encoding (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_open_info_set_encoding");
-#endif
     MooLuaCurrentFunc cur_func ("MooOpenInfo.set_encoding");
     MooOpenInfo *self = (MooOpenInfo*) pself;
     const char* arg0 = moo_lua_get_arg_utf8 (L, first_arg + 0, "encoding", TRUE);
@@ -1945,9 +1516,6 @@ cfunc_MooOpenInfo_set_encoding (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GN
 static int
 cfunc_MooOpenInfo_set_flags (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_open_info_set_flags");
-#endif
     MooLuaCurrentFunc cur_func ("MooOpenInfo.set_flags");
     MooOpenInfo *self = (MooOpenInfo*) pself;
     MooOpenFlags arg0 = (MooOpenFlags) moo_lua_get_arg_enum (L, first_arg + 0, "flags", MOO_TYPE_OPEN_FLAGS);
@@ -1958,9 +1526,6 @@ cfunc_MooOpenInfo_set_flags (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_
 static int
 cfunc_MooOpenInfo_set_line (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_open_info_set_line");
-#endif
     MooLuaCurrentFunc cur_func ("MooOpenInfo.set_line");
     MooOpenInfo *self = (MooOpenInfo*) pself;
     int arg0 = moo_lua_get_arg_index (L, first_arg + 0, "line");
@@ -1971,9 +1536,6 @@ cfunc_MooOpenInfo_set_line (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_U
 static int
 cfunc_MooOpenInfo_new_file (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_open_info_new_file");
-#endif
     MooLuaCurrentFunc cur_func ("MooOpenInfo.new_file");
     bool kwargs = moo_lua_check_kwargs (L, 1);
     int arg_idx0 = 1 + 0;
@@ -2001,9 +1563,6 @@ cfunc_MooOpenInfo_new_file (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_MooOpenInfo_new_uri (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_open_info_new_uri");
-#endif
     MooLuaCurrentFunc cur_func ("MooOpenInfo.new_uri");
     bool kwargs = moo_lua_check_kwargs (L, 1);
     int arg_idx0 = 1 + 0;
@@ -2031,9 +1590,6 @@ cfunc_MooOpenInfo_new_uri (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_MooOpenInfo_new (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_open_info_new");
-#endif
     MooLuaCurrentFunc cur_func ("MooOpenInfo.new");
     bool kwargs = moo_lua_check_kwargs (L, 1);
     int arg_idx0 = 1 + 0;
@@ -2067,9 +1623,6 @@ cfunc_MooOpenInfo_new (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_MooReloadInfo_dup (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_reload_info_dup");
-#endif
     MooLuaCurrentFunc cur_func ("MooReloadInfo.dup");
     MooReloadInfo *self = (MooReloadInfo*) pself;
     gpointer ret = moo_reload_info_dup (self);
@@ -2079,9 +1632,6 @@ cfunc_MooReloadInfo_dup (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUS
 static int
 cfunc_MooReloadInfo_get_line (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_reload_info_get_line");
-#endif
     MooLuaCurrentFunc cur_func ("MooReloadInfo.get_line");
     MooReloadInfo *self = (MooReloadInfo*) pself;
     int ret = moo_reload_info_get_line (self);
@@ -2091,9 +1641,6 @@ cfunc_MooReloadInfo_get_line (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC
 static int
 cfunc_MooReloadInfo_set_line (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_reload_info_set_line");
-#endif
     MooLuaCurrentFunc cur_func ("MooReloadInfo.set_line");
     MooReloadInfo *self = (MooReloadInfo*) pself;
     int arg0 = moo_lua_get_arg_index (L, first_arg + 0, "line");
@@ -2104,9 +1651,6 @@ cfunc_MooReloadInfo_set_line (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC
 static int
 cfunc_MooReloadInfo_new (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_reload_info_new");
-#endif
     MooLuaCurrentFunc cur_func ("MooReloadInfo.new");
     const char* arg0 = moo_lua_get_arg_utf8_opt (L, 1 + 0, "encoding", NULL, TRUE);
     int arg1 = moo_lua_get_arg_index_opt (L, 1 + 1, "line", -1);
@@ -2119,9 +1663,6 @@ cfunc_MooReloadInfo_new (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_MooSaveInfo_dup (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_save_info_dup");
-#endif
     MooLuaCurrentFunc cur_func ("MooSaveInfo.dup");
     MooSaveInfo *self = (MooSaveInfo*) pself;
     gpointer ret = moo_save_info_dup (self);
@@ -2131,9 +1672,6 @@ cfunc_MooSaveInfo_dup (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED
 static int
 cfunc_MooSaveInfo_new_file (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_save_info_new_file");
-#endif
     MooLuaCurrentFunc cur_func ("MooSaveInfo.new_file");
     GFile *arg0 = (GFile*) moo_lua_get_arg_instance (L, 1 + 0, "file", G_TYPE_FILE, FALSE);
     const char* arg1 = moo_lua_get_arg_utf8_opt (L, 1 + 1, "encoding", NULL, TRUE);
@@ -2144,9 +1682,6 @@ cfunc_MooSaveInfo_new_file (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_MooSaveInfo_new_uri (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_save_info_new_uri");
-#endif
     MooLuaCurrentFunc cur_func ("MooSaveInfo.new_uri");
     const char* arg0 = moo_lua_get_arg_utf8 (L, 1 + 0, "uri", FALSE);
     const char* arg1 = moo_lua_get_arg_utf8_opt (L, 1 + 1, "encoding", NULL, TRUE);
@@ -2157,9 +1692,6 @@ cfunc_MooSaveInfo_new_uri (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_MooSaveInfo_new (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_save_info_new");
-#endif
     MooLuaCurrentFunc cur_func ("MooSaveInfo.new");
     const char* arg0 = moo_lua_get_arg_filename (L, 1 + 0, "path", FALSE);
     const char* arg1 = moo_lua_get_arg_utf8_opt (L, 1 + 1, "encoding", NULL, TRUE);
@@ -2174,9 +1706,6 @@ cfunc_MooSaveInfo_new (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_MooTextView_set_font_from_string (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_text_view_set_font_from_string");
-#endif
     MooLuaCurrentFunc cur_func ("MooTextView.set_font_from_string");
     MooTextView *self = (MooTextView*) pself;
     const char* arg0 = moo_lua_get_arg_utf8 (L, first_arg + 0, "font", FALSE);
@@ -2187,9 +1716,6 @@ cfunc_MooTextView_set_font_from_string (gpointer pself, G_GNUC_UNUSED lua_State 
 static int
 cfunc_MooTextView_set_lang_by_id (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_text_view_set_lang_by_id");
-#endif
     MooLuaCurrentFunc cur_func ("MooTextView.set_lang_by_id");
     MooTextView *self = (MooTextView*) pself;
     const char* arg0 = moo_lua_get_arg_utf8 (L, first_arg + 0, "lang_id", FALSE);
@@ -2202,9 +1728,6 @@ cfunc_MooTextView_set_lang_by_id (gpointer pself, G_GNUC_UNUSED lua_State *L, G_
 static int
 cfunc_MooUiXml_add_item (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_ui_xml_add_item");
-#endif
     MooLuaCurrentFunc cur_func ("MooUiXml.add_item");
     MooUiXml *self = (MooUiXml*) pself;
     guint arg0 = moo_lua_get_arg_uint (L, first_arg + 0, "merge_id");
@@ -2219,9 +1742,6 @@ cfunc_MooUiXml_add_item (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUS
 static int
 cfunc_MooUiXml_add_ui_from_string (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_ui_xml_add_ui_from_string");
-#endif
     MooLuaCurrentFunc cur_func ("MooUiXml.add_ui_from_string");
     MooUiXml *self = (MooUiXml*) pself;
     const char* arg0 = moo_lua_get_arg_utf8 (L, first_arg + 0, "buffer", FALSE);
@@ -2233,9 +1753,6 @@ cfunc_MooUiXml_add_ui_from_string (gpointer pself, G_GNUC_UNUSED lua_State *L, G
 static int
 cfunc_MooUiXml_create_widget (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_ui_xml_create_widget");
-#endif
     MooLuaCurrentFunc cur_func ("MooUiXml.create_widget");
     MooUiXml *self = (MooUiXml*) pself;
     MooUiWidgetType arg0 = (MooUiWidgetType) moo_lua_get_arg_enum (L, first_arg + 0, "type", MOO_TYPE_UI_WIDGET_TYPE);
@@ -2249,9 +1766,6 @@ cfunc_MooUiXml_create_widget (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC
 static int
 cfunc_MooUiXml_find_placeholder (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_ui_xml_find_placeholder");
-#endif
     MooLuaCurrentFunc cur_func ("MooUiXml.find_placeholder");
     MooUiXml *self = (MooUiXml*) pself;
     const char* arg0 = moo_lua_get_arg_utf8 (L, first_arg + 0, "name", FALSE);
@@ -2262,9 +1776,6 @@ cfunc_MooUiXml_find_placeholder (gpointer pself, G_GNUC_UNUSED lua_State *L, G_G
 static int
 cfunc_MooUiXml_get_node (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_ui_xml_get_node");
-#endif
     MooLuaCurrentFunc cur_func ("MooUiXml.get_node");
     MooUiXml *self = (MooUiXml*) pself;
     const char* arg0 = moo_lua_get_arg_utf8 (L, first_arg + 0, "path", FALSE);
@@ -2275,9 +1786,6 @@ cfunc_MooUiXml_get_node (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUS
 static int
 cfunc_MooUiXml_get_widget (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_ui_xml_get_widget");
-#endif
     MooLuaCurrentFunc cur_func ("MooUiXml.get_widget");
     MooUiXml *self = (MooUiXml*) pself;
     GtkWidget *arg0 = (GtkWidget*) moo_lua_get_arg_instance (L, first_arg + 0, "widget", GTK_TYPE_WIDGET, FALSE);
@@ -2289,9 +1797,6 @@ cfunc_MooUiXml_get_widget (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UN
 static int
 cfunc_MooUiXml_insert (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_ui_xml_insert");
-#endif
     MooLuaCurrentFunc cur_func ("MooUiXml.insert");
     MooUiXml *self = (MooUiXml*) pself;
     guint arg0 = moo_lua_get_arg_uint (L, first_arg + 0, "merge_id");
@@ -2305,9 +1810,6 @@ cfunc_MooUiXml_insert (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED
 static int
 cfunc_MooUiXml_insert_after (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_ui_xml_insert_after");
-#endif
     MooLuaCurrentFunc cur_func ("MooUiXml.insert_after");
     MooUiXml *self = (MooUiXml*) pself;
     guint arg0 = moo_lua_get_arg_uint (L, first_arg + 0, "merge_id");
@@ -2321,9 +1823,6 @@ cfunc_MooUiXml_insert_after (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_
 static int
 cfunc_MooUiXml_insert_before (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_ui_xml_insert_before");
-#endif
     MooLuaCurrentFunc cur_func ("MooUiXml.insert_before");
     MooUiXml *self = (MooUiXml*) pself;
     guint arg0 = moo_lua_get_arg_uint (L, first_arg + 0, "merge_id");
@@ -2337,9 +1836,6 @@ cfunc_MooUiXml_insert_before (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC
 static int
 cfunc_MooUiXml_insert_markup (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_ui_xml_insert_markup");
-#endif
     MooLuaCurrentFunc cur_func ("MooUiXml.insert_markup");
     MooUiXml *self = (MooUiXml*) pself;
     guint arg0 = moo_lua_get_arg_uint (L, first_arg + 0, "merge_id");
@@ -2353,9 +1849,6 @@ cfunc_MooUiXml_insert_markup (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC
 static int
 cfunc_MooUiXml_insert_markup_after (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_ui_xml_insert_markup_after");
-#endif
     MooLuaCurrentFunc cur_func ("MooUiXml.insert_markup_after");
     MooUiXml *self = (MooUiXml*) pself;
     guint arg0 = moo_lua_get_arg_uint (L, first_arg + 0, "merge_id");
@@ -2369,9 +1862,6 @@ cfunc_MooUiXml_insert_markup_after (gpointer pself, G_GNUC_UNUSED lua_State *L, 
 static int
 cfunc_MooUiXml_insert_markup_before (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_ui_xml_insert_markup_before");
-#endif
     MooLuaCurrentFunc cur_func ("MooUiXml.insert_markup_before");
     MooUiXml *self = (MooUiXml*) pself;
     guint arg0 = moo_lua_get_arg_uint (L, first_arg + 0, "merge_id");
@@ -2385,9 +1875,6 @@ cfunc_MooUiXml_insert_markup_before (gpointer pself, G_GNUC_UNUSED lua_State *L,
 static int
 cfunc_MooUiXml_new_merge_id (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_ui_xml_new_merge_id");
-#endif
     MooLuaCurrentFunc cur_func ("MooUiXml.new_merge_id");
     MooUiXml *self = (MooUiXml*) pself;
     guint ret = moo_ui_xml_new_merge_id (self);
@@ -2397,9 +1884,6 @@ cfunc_MooUiXml_new_merge_id (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_
 static int
 cfunc_MooUiXml_remove_node (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_ui_xml_remove_node");
-#endif
     MooLuaCurrentFunc cur_func ("MooUiXml.remove_node");
     MooUiXml *self = (MooUiXml*) pself;
     MooUiNode *arg0 = (MooUiNode*) moo_lua_get_arg_instance (L, first_arg + 0, "node", MOO_TYPE_UI_NODE, FALSE);
@@ -2410,9 +1894,6 @@ cfunc_MooUiXml_remove_node (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_U
 static int
 cfunc_MooUiXml_remove_ui (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_ui_xml_remove_ui");
-#endif
     MooLuaCurrentFunc cur_func ("MooUiXml.remove_ui");
     MooUiXml *self = (MooUiXml*) pself;
     guint arg0 = moo_lua_get_arg_uint (L, first_arg + 0, "merge_id");
@@ -2427,9 +1908,6 @@ cfunc_MooUiXml_remove_ui (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNU
 static int
 cfunc_MooUiNode_get_path (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_ui_node_get_path");
-#endif
     MooLuaCurrentFunc cur_func ("MooUiNode.get_path");
     MooUiNode *self = (MooUiNode*) pself;
     char *ret = moo_ui_node_get_path (self);
@@ -2439,9 +1917,6 @@ cfunc_MooUiNode_get_path (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNU
 static int
 cfunc_MooUiNode_get_child (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_ui_node_get_child");
-#endif
     MooLuaCurrentFunc cur_func ("MooUiNode.get_child");
     MooUiNode *self = (MooUiNode*) pself;
     const char* arg0 = moo_lua_get_arg_utf8 (L, first_arg + 0, "name", FALSE);
@@ -2452,9 +1927,6 @@ cfunc_MooUiNode_get_child (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UN
 static int
 cfunc_error_dialog (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_error_dialog");
-#endif
     MooLuaCurrentFunc cur_func ("error_dialog");
     const char* arg0 = moo_lua_get_arg_utf8 (L, 1 + 0, "text", FALSE);
     const char* arg1 = moo_lua_get_arg_utf8_opt (L, 1 + 1, "secondary_text", NULL, TRUE);
@@ -2466,9 +1938,6 @@ cfunc_error_dialog (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_get_data_and_lib_subdirs (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_get_data_and_lib_subdirs");
-#endif
     MooLuaCurrentFunc cur_func ("get_data_and_lib_subdirs");
     const char* arg0 = moo_lua_get_arg_utf8 (L, 1 + 0, "subdir", FALSE);
     char **ret = moo_get_data_and_lib_subdirs (arg0);
@@ -2478,9 +1947,6 @@ cfunc_get_data_and_lib_subdirs (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_get_data_dirs (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_get_data_dirs");
-#endif
     MooLuaCurrentFunc cur_func ("get_data_dirs");
     char **ret = moo_get_data_dirs ();
     return moo_lua_push_strv (L, ret);
@@ -2489,9 +1955,6 @@ cfunc_get_data_dirs (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_get_data_subdirs (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_get_data_subdirs");
-#endif
     MooLuaCurrentFunc cur_func ("get_data_subdirs");
     const char* arg0 = moo_lua_get_arg_utf8 (L, 1 + 0, "subdir", FALSE);
     char **ret = moo_get_data_subdirs (arg0);
@@ -2501,9 +1964,6 @@ cfunc_get_data_subdirs (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_get_lib_dirs (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_get_lib_dirs");
-#endif
     MooLuaCurrentFunc cur_func ("get_lib_dirs");
     char **ret = moo_get_lib_dirs ();
     return moo_lua_push_strv (L, ret);
@@ -2512,9 +1972,6 @@ cfunc_get_lib_dirs (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_get_lib_subdirs (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_get_lib_subdirs");
-#endif
     MooLuaCurrentFunc cur_func ("get_lib_subdirs");
     const char* arg0 = moo_lua_get_arg_utf8 (L, 1 + 0, "subdir", FALSE);
     char **ret = moo_get_lib_subdirs (arg0);
@@ -2524,9 +1981,6 @@ cfunc_get_lib_subdirs (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_get_named_user_data_file (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_get_named_user_data_file");
-#endif
     MooLuaCurrentFunc cur_func ("get_named_user_data_file");
     const char* arg0 = moo_lua_get_arg_utf8 (L, 1 + 0, "basename", FALSE);
     char *ret = moo_get_named_user_data_file (arg0);
@@ -2536,9 +1990,6 @@ cfunc_get_named_user_data_file (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_get_sys_data_subdirs (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_get_sys_data_subdirs");
-#endif
     MooLuaCurrentFunc cur_func ("get_sys_data_subdirs");
     const char* arg0 = moo_lua_get_arg_utf8 (L, 1 + 0, "subdir", FALSE);
     char **ret = moo_get_sys_data_subdirs (arg0);
@@ -2548,9 +1999,6 @@ cfunc_get_sys_data_subdirs (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_get_user_cache_file (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_get_user_cache_file");
-#endif
     MooLuaCurrentFunc cur_func ("get_user_cache_file");
     const char* arg0 = moo_lua_get_arg_utf8 (L, 1 + 0, "basename", FALSE);
     char *ret = moo_get_user_cache_file (arg0);
@@ -2560,9 +2008,6 @@ cfunc_get_user_cache_file (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_get_user_data_dir (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_get_user_data_dir");
-#endif
     MooLuaCurrentFunc cur_func ("get_user_data_dir");
     char *ret = moo_get_user_data_dir ();
     return moo_lua_push_filename (L, ret);
@@ -2571,9 +2016,6 @@ cfunc_get_user_data_dir (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_get_user_data_file (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_get_user_data_file");
-#endif
     MooLuaCurrentFunc cur_func ("get_user_data_file");
     const char* arg0 = moo_lua_get_arg_utf8 (L, 1 + 0, "basename", FALSE);
     char *ret = moo_get_user_data_file (arg0);
@@ -2583,9 +2025,6 @@ cfunc_get_user_data_file (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_info_dialog (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_info_dialog");
-#endif
     MooLuaCurrentFunc cur_func ("info_dialog");
     const char* arg0 = moo_lua_get_arg_utf8 (L, 1 + 0, "text", FALSE);
     const char* arg1 = moo_lua_get_arg_utf8_opt (L, 1 + 1, "secondary_text", NULL, TRUE);
@@ -2597,9 +2036,6 @@ cfunc_info_dialog (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_overwrite_file_dialog (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_overwrite_file_dialog");
-#endif
     MooLuaCurrentFunc cur_func ("overwrite_file_dialog");
     const char* arg0 = moo_lua_get_arg_utf8 (L, 1 + 0, "display_name", FALSE);
     const char* arg1 = moo_lua_get_arg_utf8 (L, 1 + 1, "display_dirname", FALSE);
@@ -2611,9 +2047,6 @@ cfunc_overwrite_file_dialog (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_prefs_get_bool (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_prefs_get_bool");
-#endif
     MooLuaCurrentFunc cur_func ("prefs_get_bool");
     const char* arg0 = moo_lua_get_arg_utf8 (L, 1 + 0, "key", FALSE);
     gboolean ret = moo_prefs_get_bool (arg0);
@@ -2623,9 +2056,6 @@ cfunc_prefs_get_bool (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_prefs_get_file (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_prefs_get_file");
-#endif
     MooLuaCurrentFunc cur_func ("prefs_get_file");
     const char* arg0 = moo_lua_get_arg_utf8 (L, 1 + 0, "key", FALSE);
     gpointer ret = moo_prefs_get_file (arg0);
@@ -2635,9 +2065,6 @@ cfunc_prefs_get_file (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_prefs_get_filename (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_prefs_get_filename");
-#endif
     MooLuaCurrentFunc cur_func ("prefs_get_filename");
     const char* arg0 = moo_lua_get_arg_utf8 (L, 1 + 0, "key", FALSE);
     const char *ret = moo_prefs_get_filename (arg0);
@@ -2647,9 +2074,6 @@ cfunc_prefs_get_filename (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_prefs_get_int (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_prefs_get_int");
-#endif
     MooLuaCurrentFunc cur_func ("prefs_get_int");
     const char* arg0 = moo_lua_get_arg_utf8 (L, 1 + 0, "key", FALSE);
     int ret = moo_prefs_get_int (arg0);
@@ -2659,9 +2083,6 @@ cfunc_prefs_get_int (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_prefs_get_string (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_prefs_get_string");
-#endif
     MooLuaCurrentFunc cur_func ("prefs_get_string");
     const char* arg0 = moo_lua_get_arg_utf8 (L, 1 + 0, "key", FALSE);
     const char *ret = moo_prefs_get_string (arg0);
@@ -2671,9 +2092,6 @@ cfunc_prefs_get_string (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_prefs_new_key_bool (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_prefs_new_key_bool");
-#endif
     MooLuaCurrentFunc cur_func ("prefs_new_key_bool");
     const char* arg0 = moo_lua_get_arg_utf8 (L, 1 + 0, "key", FALSE);
     gboolean arg1 = moo_lua_get_arg_bool_opt (L, 1 + 1, "default_val", FALSE);
@@ -2684,9 +2102,6 @@ cfunc_prefs_new_key_bool (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_prefs_new_key_int (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_prefs_new_key_int");
-#endif
     MooLuaCurrentFunc cur_func ("prefs_new_key_int");
     const char* arg0 = moo_lua_get_arg_utf8 (L, 1 + 0, "key", FALSE);
     int arg1 = moo_lua_get_arg_int_opt (L, 1 + 1, "default_val", 0);
@@ -2697,9 +2112,6 @@ cfunc_prefs_new_key_int (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_prefs_new_key_string (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_prefs_new_key_string");
-#endif
     MooLuaCurrentFunc cur_func ("prefs_new_key_string");
     const char* arg0 = moo_lua_get_arg_utf8 (L, 1 + 0, "key", FALSE);
     const char* arg1 = moo_lua_get_arg_string_opt (L, 1 + 1, "default_val", NULL, TRUE);
@@ -2710,9 +2122,6 @@ cfunc_prefs_new_key_string (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_prefs_set_bool (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_prefs_set_bool");
-#endif
     MooLuaCurrentFunc cur_func ("prefs_set_bool");
     const char* arg0 = moo_lua_get_arg_utf8 (L, 1 + 0, "key", FALSE);
     gboolean arg1 = moo_lua_get_arg_bool (L, 1 + 1, "val");
@@ -2723,9 +2132,6 @@ cfunc_prefs_set_bool (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_prefs_set_file (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_prefs_set_file");
-#endif
     MooLuaCurrentFunc cur_func ("prefs_set_file");
     const char* arg0 = moo_lua_get_arg_utf8 (L, 1 + 0, "key", FALSE);
     GFile *arg1 = (GFile*) moo_lua_get_arg_instance (L, 1 + 1, "val", G_TYPE_FILE, TRUE);
@@ -2736,9 +2142,6 @@ cfunc_prefs_set_file (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_prefs_set_filename (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_prefs_set_filename");
-#endif
     MooLuaCurrentFunc cur_func ("prefs_set_filename");
     const char* arg0 = moo_lua_get_arg_utf8 (L, 1 + 0, "key", FALSE);
     const char* arg1 = moo_lua_get_arg_filename (L, 1 + 1, "val", TRUE);
@@ -2749,9 +2152,6 @@ cfunc_prefs_set_filename (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_prefs_set_int (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_prefs_set_int");
-#endif
     MooLuaCurrentFunc cur_func ("prefs_set_int");
     const char* arg0 = moo_lua_get_arg_utf8 (L, 1 + 0, "key", FALSE);
     int arg1 = moo_lua_get_arg_int (L, 1 + 1, "val");
@@ -2762,9 +2162,6 @@ cfunc_prefs_set_int (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_prefs_set_string (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_prefs_set_string");
-#endif
     MooLuaCurrentFunc cur_func ("prefs_set_string");
     const char* arg0 = moo_lua_get_arg_utf8 (L, 1 + 0, "key", FALSE);
     const char* arg1 = moo_lua_get_arg_string (L, 1 + 1, "val", TRUE);
@@ -2775,9 +2172,6 @@ cfunc_prefs_set_string (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_question_dialog (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_question_dialog");
-#endif
     MooLuaCurrentFunc cur_func ("question_dialog");
     const char* arg0 = moo_lua_get_arg_utf8 (L, 1 + 0, "text", FALSE);
     const char* arg1 = moo_lua_get_arg_utf8_opt (L, 1 + 1, "secondary_text", NULL, TRUE);
@@ -2790,9 +2184,6 @@ cfunc_question_dialog (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_save_changes_dialog (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_save_changes_dialog");
-#endif
     MooLuaCurrentFunc cur_func ("save_changes_dialog");
     const char* arg0 = moo_lua_get_arg_utf8 (L, 1 + 0, "display_name", FALSE);
     GtkWidget *arg1 = (GtkWidget*) moo_lua_get_arg_instance_opt (L, 1 + 1, "parent", GTK_TYPE_WIDGET, TRUE);
@@ -2803,9 +2194,6 @@ cfunc_save_changes_dialog (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_spin_main_loop (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_spin_main_loop");
-#endif
     MooLuaCurrentFunc cur_func ("spin_main_loop");
     double arg0 = moo_lua_get_arg_double (L, 1 + 0, "sec");
     moo_spin_main_loop (arg0);
@@ -2815,9 +2203,6 @@ cfunc_spin_main_loop (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_tempdir (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_tempdir");
-#endif
     MooLuaCurrentFunc cur_func ("tempdir");
     char *ret = moo_tempdir ();
     return moo_lua_push_filename (L, ret);
@@ -2826,9 +2211,6 @@ cfunc_tempdir (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_tempnam (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_tempnam");
-#endif
     MooLuaCurrentFunc cur_func ("tempnam");
     const char* arg0 = moo_lua_get_arg_filename_opt (L, 1 + 0, "extension", NULL, TRUE);
     char *ret = moo_tempnam (arg0);
@@ -2836,38 +2218,8 @@ cfunc_tempnam (G_GNUC_UNUSED lua_State *L)
 }
 
 static int
-cfunc_test_assert_impl (G_GNUC_UNUSED lua_State *L)
-{
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_test_assert_impl");
-#endif
-    MooLuaCurrentFunc cur_func ("test_assert_impl");
-    gboolean arg0 = moo_lua_get_arg_bool (L, 1 + 0, "passed");
-    const char* arg1 = moo_lua_get_arg_utf8 (L, 1 + 1, "text", FALSE);
-    const char* arg2 = moo_lua_get_arg_utf8_opt (L, 1 + 2, "file", NULL, TRUE);
-    int arg3 = moo_lua_get_arg_int_opt (L, 1 + 3, "line", -1);
-    moo_test_assert_impl (arg0, arg1, arg2, arg3);
-    return 0;
-}
-
-static int
-cfunc_test_set_silent_messages (G_GNUC_UNUSED lua_State *L)
-{
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_test_set_silent_messages");
-#endif
-    MooLuaCurrentFunc cur_func ("test_set_silent_messages");
-    gboolean arg0 = moo_lua_get_arg_bool (L, 1 + 0, "silent");
-    gboolean ret = moo_test_set_silent_messages (arg0);
-    return moo_lua_push_bool (L, ret);
-}
-
-static int
 cfunc_warning_dialog (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "moo_warning_dialog");
-#endif
     MooLuaCurrentFunc cur_func ("warning_dialog");
     const char* arg0 = moo_lua_get_arg_utf8 (L, 1 + 0, "text", FALSE);
     const char* arg1 = moo_lua_get_arg_utf8_opt (L, 1 + 1, "secondary_text", NULL, TRUE);
@@ -2908,8 +2260,6 @@ static const luaL_Reg moo_lua_functions[] = {
     { "spin_main_loop", cfunc_spin_main_loop },
     { "tempdir", cfunc_tempdir },
     { "tempnam", cfunc_tempnam },
-    { "test_assert_impl", cfunc_test_assert_impl },
-    { "test_set_silent_messages", cfunc_test_set_silent_messages },
     { "warning_dialog", cfunc_warning_dialog },
     { NULL, NULL }
 };

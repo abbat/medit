@@ -222,9 +222,6 @@ source_files = \
     ../src/mooutils/moospawn.h\
     ../src/mooutils/moostock.c\
     ../src/mooutils/moostock.h\
-    ../src/mooutils/moo-test-macros.h\
-    ../src/mooutils/moo-test-utils.cpp\
-    ../src/mooutils/moo-test-utils.h\
     ../src/mooutils/mootypedecl-macros.h\
     ../src/mooutils/mootype-macros.h\
     ../src/mooutils/moouixml.c\

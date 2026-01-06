@@ -4,7 +4,6 @@
 #include "moolua/lua/lauxlib.h"
 #include "moolua/lua/ldo.h"
 #include "mooutils/mooutils.h"
-#include "mooutils/moo-test-utils.h"
 #include <vector>
 #include <string>
 #include <string.h>
@@ -693,9 +692,6 @@ struct MooLuaSignalClosure
     GClosure base;
     lua_State *L;
     int cb_ref;
-#ifdef MOO_ENABLE_COVERAGE
-    char *signal_full_name;
-#endif
 };
 } // extern "C"
 
@@ -710,10 +706,6 @@ static void signal_closure_finalize (G_GNUC_UNUSED gpointer dummy, GClosure *gcl
         luaL_unref (closure->L, LUA_REGISTRYINDEX, closure->cb_ref);
         medit_lua_unref (closure->L);
     }
-
-#ifdef MOO_ENABLE_COVERAGE
-    g_free (closure->signal_full_name);
-#endif
 }
 
 static int
@@ -909,10 +901,6 @@ signal_closure_marshal (MooLuaSignalClosure *closure,
         {
             if (return_value != NULL)
                 get_ret_gvalue (L, return_value);
-
-#ifdef MOO_ENABLE_COVERAGE
-            moo_test_coverage_record ("lua", closure->signal_full_name);
-#endif
         }
         else
         {
@@ -989,16 +977,6 @@ moo_signal_connect_closure (gpointer             instance,
 
     if (handler_id == 0)
         return 0;
-
-#ifdef MOO_ENABLE_COVERAGE
-    GSignalQuery query;
-    g_signal_query (g_signal_lookup (signal, G_OBJECT_TYPE (instance)), &query);
-    g_assert (query.signal_id != 0);
-    ((MooLuaSignalClosure*) closure)->signal_full_name =
-        g_strdup_printf ("%s::%s",
-                         g_type_name (query.itype),
-                         query.signal_name);
-#endif
 
     return handler_id;
 }

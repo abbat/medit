@@ -664,8 +664,6 @@ LTLIBOBJS
 LIBOBJS
 MOO_ENABLE_INSTALL_HOOKS_FALSE
 MOO_ENABLE_INSTALL_HOOKS_TRUE
-MOO_ENABLE_COVERAGE_FALSE
-MOO_ENABLE_COVERAGE_TRUE
 MOO_BUILD_CTAGS_FALSE
 MOO_BUILD_CTAGS_TRUE
 MOO_MV_TO_SRCDIR
@@ -915,7 +913,6 @@ enable_debug
 enable_dev_mode
 enable_strict
 enable_maintainer_mode
-enable_coverage
 enable_install_hooks
 '
       ac_precious_vars='build_alias
@@ -1595,7 +1592,6 @@ Optional Features:
   --disable-maintainer-mode
                           disable make rules and dependencies not useful (and
                           sometimes confusing) to the casual installer
-  --enable-coverage       check test coverage
   --enable-install-hooks  run gtk-update-icon-cache during 'make install'
 
 Optional Packages:
@@ -21350,32 +21346,6 @@ printf "%s\n" "#define MOO_BUILD_CTAGS 1" >>confdefs.h
 
 fi
 
-# Check whether --enable-coverage was given.
-if test ${enable_coverage+y}
-then :
-  enableval=$enable_coverage;
-  MOO_ENABLE_COVERAGE="$enable_coverage"
-
-else $as_nop
-
-  MOO_ENABLE_COVERAGE="no"
-
-fi
-
- if test "x$MOO_ENABLE_COVERAGE" = "xyes"; then
-  MOO_ENABLE_COVERAGE_TRUE=
-  MOO_ENABLE_COVERAGE_FALSE='#'
-else
-  MOO_ENABLE_COVERAGE_TRUE='#'
-  MOO_ENABLE_COVERAGE_FALSE=
-fi
-
-if test "x$MOO_ENABLE_COVERAGE" = "xyes"; then
-
-printf "%s\n" "#define MOO_ENABLE_COVERAGE 1" >>confdefs.h
-
-fi
-
 # Check whether --enable-install-hooks was given.
 if test ${enable_install_hooks+y}
 then :
@@ -21614,10 +21584,6 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${MOO_BUILD_CTAGS_TRUE}" && test -z "${MOO_BUILD_CTAGS_FALSE}"; then
   as_fn_error $? "conditional \"MOO_BUILD_CTAGS\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
-fi
-if test -z "${MOO_ENABLE_COVERAGE_TRUE}" && test -z "${MOO_ENABLE_COVERAGE_FALSE}"; then
-  as_fn_error $? "conditional \"MOO_ENABLE_COVERAGE\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${MOO_ENABLE_INSTALL_HOOKS_TRUE}" && test -z "${MOO_ENABLE_INSTALL_HOOKS_FALSE}"; then

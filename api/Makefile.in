@@ -587,9 +587,6 @@ BUILT_SOURCES = $(am__append_1)
 @MOO_DEV_MODE_TRUE@    ../src/mooutils/moospawn.h\
 @MOO_DEV_MODE_TRUE@    ../src/mooutils/moostock.c\
 @MOO_DEV_MODE_TRUE@    ../src/mooutils/moostock.h\
-@MOO_DEV_MODE_TRUE@    ../src/mooutils/moo-test-macros.h\
-@MOO_DEV_MODE_TRUE@    ../src/mooutils/moo-test-utils.cpp\
-@MOO_DEV_MODE_TRUE@    ../src/mooutils/moo-test-utils.h\
 @MOO_DEV_MODE_TRUE@    ../src/mooutils/mootypedecl-macros.h\
 @MOO_DEV_MODE_TRUE@    ../src/mooutils/mootype-macros.h\
 @MOO_DEV_MODE_TRUE@    ../src/mooutils/moouixml.c\

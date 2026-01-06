@@ -135,17 +135,6 @@ if $MOO_OS_UNIX; then
   AC_DEFINE(MOO_BUILD_CTAGS, 1, [build ctags plugin])
 fi
 
-AC_ARG_ENABLE(coverage,
-  AS_HELP_STRING([--enable-coverage],[check test coverage]),[
-  MOO_ENABLE_COVERAGE="$enable_coverage"
-  ],[
-  MOO_ENABLE_COVERAGE="no"
-])
-AM_CONDITIONAL(MOO_ENABLE_COVERAGE, test "x$MOO_ENABLE_COVERAGE" = "xyes")
-if test "x$MOO_ENABLE_COVERAGE" = "xyes"; then
-  AC_DEFINE(MOO_ENABLE_COVERAGE, 1, [enable code coverage testing])
-fi
-
 AC_ARG_ENABLE(install-hooks,
   AS_HELP_STRING([--enable-install-hooks],[run gtk-update-icon-cache during 'make install']),[
   MOO_ENABLE_INSTALL_HOOKS="$enable_install_hooks"

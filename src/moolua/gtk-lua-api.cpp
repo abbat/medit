@@ -13,9 +13,6 @@ void moo_test_coverage_record (const char *lang, const char *function);
 static int
 cfunc_GFile_dup (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "g_file_dup");
-#endif
     MooLuaCurrentFunc cur_func ("GFile.dup");
     GFile *self = (GFile*) pself;
     gpointer ret = g_file_dup (self);
@@ -25,9 +22,6 @@ cfunc_GFile_dup (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int f
 static int
 cfunc_GFile_equal (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "g_file_equal");
-#endif
     MooLuaCurrentFunc cur_func ("GFile.equal");
     GFile *self = (GFile*) pself;
     GFile *arg0 = (GFile*) moo_lua_get_arg_instance (L, first_arg + 0, "file2", G_TYPE_FILE, FALSE);
@@ -38,9 +32,6 @@ cfunc_GFile_equal (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int
 static int
 cfunc_GFile_get_basename (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "g_file_get_basename");
-#endif
     MooLuaCurrentFunc cur_func ("GFile.get_basename");
     GFile *self = (GFile*) pself;
     char *ret = g_file_get_basename (self);
@@ -50,9 +41,6 @@ cfunc_GFile_get_basename (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNU
 static int
 cfunc_GFile_get_child (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "g_file_get_child");
-#endif
     MooLuaCurrentFunc cur_func ("GFile.get_child");
     GFile *self = (GFile*) pself;
     const char* arg0 = moo_lua_get_arg_filename (L, first_arg + 0, "name", FALSE);
@@ -63,9 +51,6 @@ cfunc_GFile_get_child (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED
 static int
 cfunc_GFile_get_child_for_display_name (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "g_file_get_child_for_display_name");
-#endif
     MooLuaCurrentFunc cur_func ("GFile.get_child_for_display_name");
     GFile *self = (GFile*) pself;
     const char* arg0 = moo_lua_get_arg_utf8 (L, first_arg + 0, "display_name", FALSE);
@@ -79,9 +64,6 @@ cfunc_GFile_get_child_for_display_name (gpointer pself, G_GNUC_UNUSED lua_State 
 static int
 cfunc_GFile_get_parent (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "g_file_get_parent");
-#endif
     MooLuaCurrentFunc cur_func ("GFile.get_parent");
     GFile *self = (GFile*) pself;
     gpointer ret = g_file_get_parent (self);
@@ -91,9 +73,6 @@ cfunc_GFile_get_parent (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSE
 static int
 cfunc_GFile_get_parse_name (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "g_file_get_parse_name");
-#endif
     MooLuaCurrentFunc cur_func ("GFile.get_parse_name");
     GFile *self = (GFile*) pself;
     char *ret = g_file_get_parse_name (self);
@@ -103,9 +82,6 @@ cfunc_GFile_get_parse_name (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_U
 static int
 cfunc_GFile_get_path (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "g_file_get_path");
-#endif
     MooLuaCurrentFunc cur_func ("GFile.get_path");
     GFile *self = (GFile*) pself;
     char *ret = g_file_get_path (self);
@@ -115,9 +91,6 @@ cfunc_GFile_get_path (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED 
 static int
 cfunc_GFile_get_relative_path (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "g_file_get_relative_path");
-#endif
     MooLuaCurrentFunc cur_func ("GFile.get_relative_path");
     GFile *self = (GFile*) pself;
     GFile *arg0 = (GFile*) moo_lua_get_arg_instance (L, first_arg + 0, "descendant", G_TYPE_FILE, FALSE);
@@ -128,9 +101,6 @@ cfunc_GFile_get_relative_path (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNU
 static int
 cfunc_GFile_get_uri (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "g_file_get_uri");
-#endif
     MooLuaCurrentFunc cur_func ("GFile.get_uri");
     GFile *self = (GFile*) pself;
     char *ret = g_file_get_uri (self);
@@ -140,9 +110,6 @@ cfunc_GFile_get_uri (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED i
 static int
 cfunc_GFile_get_uri_scheme (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "g_file_get_uri_scheme");
-#endif
     MooLuaCurrentFunc cur_func ("GFile.get_uri_scheme");
     GFile *self = (GFile*) pself;
     char *ret = g_file_get_uri_scheme (self);
@@ -152,9 +119,6 @@ cfunc_GFile_get_uri_scheme (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_U
 static int
 cfunc_GFile_has_parent (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "g_file_has_parent");
-#endif
     MooLuaCurrentFunc cur_func ("GFile.has_parent");
     GFile *self = (GFile*) pself;
     GFile *arg0 = (GFile*) moo_lua_get_arg_instance_opt (L, first_arg + 0, "parent", G_TYPE_FILE, TRUE);
@@ -165,9 +129,6 @@ cfunc_GFile_has_parent (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSE
 static int
 cfunc_GFile_has_prefix (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "g_file_has_prefix");
-#endif
     MooLuaCurrentFunc cur_func ("GFile.has_prefix");
     GFile *self = (GFile*) pself;
     GFile *arg0 = (GFile*) moo_lua_get_arg_instance (L, first_arg + 0, "prefix", G_TYPE_FILE, FALSE);
@@ -178,9 +139,6 @@ cfunc_GFile_has_prefix (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSE
 static int
 cfunc_GFile_has_uri_scheme (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "g_file_has_uri_scheme");
-#endif
     MooLuaCurrentFunc cur_func ("GFile.has_uri_scheme");
     GFile *self = (GFile*) pself;
     const char* arg0 = moo_lua_get_arg_utf8 (L, first_arg + 0, "uri_scheme", FALSE);
@@ -191,9 +149,6 @@ cfunc_GFile_has_uri_scheme (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_U
 static int
 cfunc_GFile_hash (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "g_file_hash");
-#endif
     MooLuaCurrentFunc cur_func ("GFile.hash");
     GFile *self = (GFile*) pself;
     guint ret = g_file_hash (self);
@@ -203,9 +158,6 @@ cfunc_GFile_hash (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int 
 static int
 cfunc_GFile_is_native (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "g_file_is_native");
-#endif
     MooLuaCurrentFunc cur_func ("GFile.is_native");
     GFile *self = (GFile*) pself;
     gboolean ret = g_file_is_native (self);
@@ -215,9 +167,6 @@ cfunc_GFile_is_native (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED
 static int
 cfunc_GFile_resolve_relative_path (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "g_file_resolve_relative_path");
-#endif
     MooLuaCurrentFunc cur_func ("GFile.resolve_relative_path");
     GFile *self = (GFile*) pself;
     const char* arg0 = moo_lua_get_arg_filename (L, first_arg + 0, "relative_path", FALSE);
@@ -228,9 +177,6 @@ cfunc_GFile_resolve_relative_path (gpointer pself, G_GNUC_UNUSED lua_State *L, G
 static int
 cfunc_GFile_new_for_path (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "g_file_new_for_path");
-#endif
     MooLuaCurrentFunc cur_func ("GFile.new_for_path");
     const char* arg0 = moo_lua_get_arg_filename (L, 1 + 0, "path", FALSE);
     gpointer ret = g_file_new_for_path (arg0);
@@ -240,9 +186,6 @@ cfunc_GFile_new_for_path (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_GFile_new_for_uri (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "g_file_new_for_uri");
-#endif
     MooLuaCurrentFunc cur_func ("GFile.new_for_uri");
     const char* arg0 = moo_lua_get_arg_utf8 (L, 1 + 0, "uri", FALSE);
     gpointer ret = g_file_new_for_uri (arg0);
@@ -252,9 +195,6 @@ cfunc_GFile_new_for_uri (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_GFile_parse_name (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "g_file_parse_name");
-#endif
     MooLuaCurrentFunc cur_func ("GFile.parse_name");
     const char* arg0 = moo_lua_get_arg_utf8 (L, 1 + 0, "parse_name", FALSE);
     gpointer ret = g_file_parse_name (arg0);
@@ -266,9 +206,6 @@ cfunc_GFile_parse_name (G_GNUC_UNUSED lua_State *L)
 static int
 cfunc_GObject_connect (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "g_object_connect");
-#endif
     MooLuaCurrentFunc cur_func ("GObject.connect");
     GObject *self = (GObject*) pself;
     const char* arg0 = moo_lua_get_arg_utf8 (L, first_arg + 0, "signal", FALSE);
@@ -281,9 +218,6 @@ cfunc_GObject_connect (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED
 static int
 cfunc_GObject_connect_after (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "g_object_connect_after");
-#endif
     MooLuaCurrentFunc cur_func ("GObject.connect_after");
     GObject *self = (GObject*) pself;
     const char* arg0 = moo_lua_get_arg_utf8 (L, first_arg + 0, "signal", FALSE);
@@ -296,9 +230,6 @@ cfunc_GObject_connect_after (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_
 static int
 cfunc_GObject_disconnect (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "g_object_disconnect");
-#endif
     MooLuaCurrentFunc cur_func ("GObject.disconnect");
     GObject *self = (GObject*) pself;
     gulong arg0 = moo_lua_get_arg_ulong (L, first_arg + 0, "handler_id");
@@ -309,9 +240,6 @@ cfunc_GObject_disconnect (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNU
 static int
 cfunc_GObject_signal_handler_block (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "g_object_signal_handler_block");
-#endif
     MooLuaCurrentFunc cur_func ("GObject.signal_handler_block");
     GObject *self = (GObject*) pself;
     gulong arg0 = moo_lua_get_arg_ulong (L, first_arg + 0, "handler_id");
@@ -322,9 +250,6 @@ cfunc_GObject_signal_handler_block (gpointer pself, G_GNUC_UNUSED lua_State *L, 
 static int
 cfunc_GObject_signal_handler_unblock (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "g_object_signal_handler_unblock");
-#endif
     MooLuaCurrentFunc cur_func ("GObject.signal_handler_unblock");
     GObject *self = (GObject*) pself;
     gulong arg0 = moo_lua_get_arg_ulong (L, first_arg + 0, "handler_id");
@@ -361,9 +286,6 @@ cfunc_GObject_signal_handler_unblock (gpointer pself, G_GNUC_UNUSED lua_State *L
 static int
 cfunc_GtkTextIter_get_buffer (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "gtk_text_iter_get_buffer");
-#endif
     MooLuaCurrentFunc cur_func ("GtkTextIter.get_buffer");
     GtkTextIter *self = (GtkTextIter*) pself;
     gpointer ret = gtk_text_iter_get_buffer (self);
@@ -373,9 +295,6 @@ cfunc_GtkTextIter_get_buffer (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC
 static int
 cfunc_GtkTextIter_copy (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "gtk_text_iter_copy");
-#endif
     MooLuaCurrentFunc cur_func ("GtkTextIter.copy");
     GtkTextIter *self = (GtkTextIter*) pself;
     gpointer ret = gtk_text_iter_copy (self);
@@ -385,9 +304,6 @@ cfunc_GtkTextIter_copy (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSE
 static int
 cfunc_GtkTextIter_get_offset (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "gtk_text_iter_get_offset");
-#endif
     MooLuaCurrentFunc cur_func ("GtkTextIter.get_offset");
     GtkTextIter *self = (GtkTextIter*) pself;
     int ret = gtk_text_iter_get_offset (self);
@@ -397,9 +313,6 @@ cfunc_GtkTextIter_get_offset (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC
 static int
 cfunc_GtkTextIter_get_line (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "gtk_text_iter_get_line");
-#endif
     MooLuaCurrentFunc cur_func ("GtkTextIter.get_line");
     GtkTextIter *self = (GtkTextIter*) pself;
     int ret = gtk_text_iter_get_line (self);
@@ -409,9 +322,6 @@ cfunc_GtkTextIter_get_line (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_U
 static int
 cfunc_GtkTextIter_get_line_offset (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "gtk_text_iter_get_line_offset");
-#endif
     MooLuaCurrentFunc cur_func ("GtkTextIter.get_line_offset");
     GtkTextIter *self = (GtkTextIter*) pself;
     int ret = gtk_text_iter_get_line_offset (self);
@@ -421,9 +331,6 @@ cfunc_GtkTextIter_get_line_offset (gpointer pself, G_GNUC_UNUSED lua_State *L, G
 static int
 cfunc_GtkTextIter_get_line_index (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "gtk_text_iter_get_line_index");
-#endif
     MooLuaCurrentFunc cur_func ("GtkTextIter.get_line_index");
     GtkTextIter *self = (GtkTextIter*) pself;
     int ret = gtk_text_iter_get_line_index (self);
@@ -433,9 +340,6 @@ cfunc_GtkTextIter_get_line_index (gpointer pself, G_GNUC_UNUSED lua_State *L, G_
 static int
 cfunc_GtkTextIter_get_char (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "gtk_text_iter_get_char");
-#endif
     MooLuaCurrentFunc cur_func ("GtkTextIter.get_char");
     GtkTextIter *self = (GtkTextIter*) pself;
     gunichar ret = gtk_text_iter_get_char (self);
@@ -445,9 +349,6 @@ cfunc_GtkTextIter_get_char (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_U
 static int
 cfunc_GtkTextIter_get_text (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "gtk_text_iter_get_text");
-#endif
     MooLuaCurrentFunc cur_func ("GtkTextIter.get_text");
     GtkTextIter *self = (GtkTextIter*) pself;
     GtkTextIter arg0_iter;
@@ -460,9 +361,6 @@ cfunc_GtkTextIter_get_text (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_U
 static int
 cfunc_GtkTextIter_starts_line (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "gtk_text_iter_starts_line");
-#endif
     MooLuaCurrentFunc cur_func ("GtkTextIter.starts_line");
     GtkTextIter *self = (GtkTextIter*) pself;
     gboolean ret = gtk_text_iter_starts_line (self);
@@ -472,9 +370,6 @@ cfunc_GtkTextIter_starts_line (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNU
 static int
 cfunc_GtkTextIter_ends_line (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "gtk_text_iter_ends_line");
-#endif
     MooLuaCurrentFunc cur_func ("GtkTextIter.ends_line");
     GtkTextIter *self = (GtkTextIter*) pself;
     gboolean ret = gtk_text_iter_ends_line (self);
@@ -484,9 +379,6 @@ cfunc_GtkTextIter_ends_line (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_
 static int
 cfunc_GtkTextIter_is_cursor_position (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "gtk_text_iter_is_cursor_position");
-#endif
     MooLuaCurrentFunc cur_func ("GtkTextIter.is_cursor_position");
     GtkTextIter *self = (GtkTextIter*) pself;
     gboolean ret = gtk_text_iter_is_cursor_position (self);
@@ -496,9 +388,6 @@ cfunc_GtkTextIter_is_cursor_position (gpointer pself, G_GNUC_UNUSED lua_State *L
 static int
 cfunc_GtkTextIter_get_chars_in_line (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "gtk_text_iter_get_chars_in_line");
-#endif
     MooLuaCurrentFunc cur_func ("GtkTextIter.get_chars_in_line");
     GtkTextIter *self = (GtkTextIter*) pself;
     int ret = gtk_text_iter_get_chars_in_line (self);
@@ -508,9 +397,6 @@ cfunc_GtkTextIter_get_chars_in_line (gpointer pself, G_GNUC_UNUSED lua_State *L,
 static int
 cfunc_GtkTextIter_get_bytes_in_line (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "gtk_text_iter_get_bytes_in_line");
-#endif
     MooLuaCurrentFunc cur_func ("GtkTextIter.get_bytes_in_line");
     GtkTextIter *self = (GtkTextIter*) pself;
     int ret = gtk_text_iter_get_bytes_in_line (self);
@@ -520,9 +406,6 @@ cfunc_GtkTextIter_get_bytes_in_line (gpointer pself, G_GNUC_UNUSED lua_State *L,
 static int
 cfunc_GtkTextIter_is_end (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "gtk_text_iter_is_end");
-#endif
     MooLuaCurrentFunc cur_func ("GtkTextIter.is_end");
     GtkTextIter *self = (GtkTextIter*) pself;
     gboolean ret = gtk_text_iter_is_end (self);
@@ -532,9 +415,6 @@ cfunc_GtkTextIter_is_end (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNU
 static int
 cfunc_GtkTextIter_is_start (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "gtk_text_iter_is_start");
-#endif
     MooLuaCurrentFunc cur_func ("GtkTextIter.is_start");
     GtkTextIter *self = (GtkTextIter*) pself;
     gboolean ret = gtk_text_iter_is_start (self);
@@ -544,9 +424,6 @@ cfunc_GtkTextIter_is_start (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_U
 static int
 cfunc_GtkTextIter_forward_char (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "gtk_text_iter_forward_char");
-#endif
     MooLuaCurrentFunc cur_func ("GtkTextIter.forward_char");
     GtkTextIter *self = (GtkTextIter*) pself;
     gboolean ret = gtk_text_iter_forward_char (self);
@@ -556,9 +433,6 @@ cfunc_GtkTextIter_forward_char (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GN
 static int
 cfunc_GtkTextIter_backward_char (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "gtk_text_iter_backward_char");
-#endif
     MooLuaCurrentFunc cur_func ("GtkTextIter.backward_char");
     GtkTextIter *self = (GtkTextIter*) pself;
     gboolean ret = gtk_text_iter_backward_char (self);
@@ -568,9 +442,6 @@ cfunc_GtkTextIter_backward_char (gpointer pself, G_GNUC_UNUSED lua_State *L, G_G
 static int
 cfunc_GtkTextIter_forward_chars (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "gtk_text_iter_forward_chars");
-#endif
     MooLuaCurrentFunc cur_func ("GtkTextIter.forward_chars");
     GtkTextIter *self = (GtkTextIter*) pself;
     int arg0 = moo_lua_get_arg_int (L, first_arg + 0, "count");
@@ -581,9 +452,6 @@ cfunc_GtkTextIter_forward_chars (gpointer pself, G_GNUC_UNUSED lua_State *L, G_G
 static int
 cfunc_GtkTextIter_backward_chars (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "gtk_text_iter_backward_chars");
-#endif
     MooLuaCurrentFunc cur_func ("GtkTextIter.backward_chars");
     GtkTextIter *self = (GtkTextIter*) pself;
     int arg0 = moo_lua_get_arg_int (L, first_arg + 0, "count");
@@ -594,9 +462,6 @@ cfunc_GtkTextIter_backward_chars (gpointer pself, G_GNUC_UNUSED lua_State *L, G_
 static int
 cfunc_GtkTextIter_forward_line (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "gtk_text_iter_forward_line");
-#endif
     MooLuaCurrentFunc cur_func ("GtkTextIter.forward_line");
     GtkTextIter *self = (GtkTextIter*) pself;
     gboolean ret = gtk_text_iter_forward_line (self);
@@ -606,9 +471,6 @@ cfunc_GtkTextIter_forward_line (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GN
 static int
 cfunc_GtkTextIter_backward_line (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "gtk_text_iter_backward_line");
-#endif
     MooLuaCurrentFunc cur_func ("GtkTextIter.backward_line");
     GtkTextIter *self = (GtkTextIter*) pself;
     gboolean ret = gtk_text_iter_backward_line (self);
@@ -618,9 +480,6 @@ cfunc_GtkTextIter_backward_line (gpointer pself, G_GNUC_UNUSED lua_State *L, G_G
 static int
 cfunc_GtkTextIter_forward_lines (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "gtk_text_iter_forward_lines");
-#endif
     MooLuaCurrentFunc cur_func ("GtkTextIter.forward_lines");
     GtkTextIter *self = (GtkTextIter*) pself;
     int arg0 = moo_lua_get_arg_int (L, first_arg + 0, "count");
@@ -631,9 +490,6 @@ cfunc_GtkTextIter_forward_lines (gpointer pself, G_GNUC_UNUSED lua_State *L, G_G
 static int
 cfunc_GtkTextIter_backward_lines (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "gtk_text_iter_backward_lines");
-#endif
     MooLuaCurrentFunc cur_func ("GtkTextIter.backward_lines");
     GtkTextIter *self = (GtkTextIter*) pself;
     int arg0 = moo_lua_get_arg_int (L, first_arg + 0, "count");
@@ -644,9 +500,6 @@ cfunc_GtkTextIter_backward_lines (gpointer pself, G_GNUC_UNUSED lua_State *L, G_
 static int
 cfunc_GtkTextIter_forward_cursor_position (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "gtk_text_iter_forward_cursor_position");
-#endif
     MooLuaCurrentFunc cur_func ("GtkTextIter.forward_cursor_position");
     GtkTextIter *self = (GtkTextIter*) pself;
     gboolean ret = gtk_text_iter_forward_cursor_position (self);
@@ -656,9 +509,6 @@ cfunc_GtkTextIter_forward_cursor_position (gpointer pself, G_GNUC_UNUSED lua_Sta
 static int
 cfunc_GtkTextIter_backward_cursor_position (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "gtk_text_iter_backward_cursor_position");
-#endif
     MooLuaCurrentFunc cur_func ("GtkTextIter.backward_cursor_position");
     GtkTextIter *self = (GtkTextIter*) pself;
     gboolean ret = gtk_text_iter_backward_cursor_position (self);
@@ -668,9 +518,6 @@ cfunc_GtkTextIter_backward_cursor_position (gpointer pself, G_GNUC_UNUSED lua_St
 static int
 cfunc_GtkTextIter_forward_cursor_positions (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "gtk_text_iter_forward_cursor_positions");
-#endif
     MooLuaCurrentFunc cur_func ("GtkTextIter.forward_cursor_positions");
     GtkTextIter *self = (GtkTextIter*) pself;
     int arg0 = moo_lua_get_arg_int (L, first_arg + 0, "count");
@@ -681,9 +528,6 @@ cfunc_GtkTextIter_forward_cursor_positions (gpointer pself, G_GNUC_UNUSED lua_St
 static int
 cfunc_GtkTextIter_backward_cursor_positions (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "gtk_text_iter_backward_cursor_positions");
-#endif
     MooLuaCurrentFunc cur_func ("GtkTextIter.backward_cursor_positions");
     GtkTextIter *self = (GtkTextIter*) pself;
     int arg0 = moo_lua_get_arg_int (L, first_arg + 0, "count");
@@ -694,9 +538,6 @@ cfunc_GtkTextIter_backward_cursor_positions (gpointer pself, G_GNUC_UNUSED lua_S
 static int
 cfunc_GtkTextIter_set_offset (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "gtk_text_iter_set_offset");
-#endif
     MooLuaCurrentFunc cur_func ("GtkTextIter.set_offset");
     GtkTextIter *self = (GtkTextIter*) pself;
     int arg0 = moo_lua_get_arg_index (L, first_arg + 0, "char_offset");
@@ -707,9 +548,6 @@ cfunc_GtkTextIter_set_offset (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC
 static int
 cfunc_GtkTextIter_set_line (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "gtk_text_iter_set_line");
-#endif
     MooLuaCurrentFunc cur_func ("GtkTextIter.set_line");
     GtkTextIter *self = (GtkTextIter*) pself;
     int arg0 = moo_lua_get_arg_index (L, first_arg + 0, "line_number");
@@ -720,9 +558,6 @@ cfunc_GtkTextIter_set_line (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_U
 static int
 cfunc_GtkTextIter_set_line_offset (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "gtk_text_iter_set_line_offset");
-#endif
     MooLuaCurrentFunc cur_func ("GtkTextIter.set_line_offset");
     GtkTextIter *self = (GtkTextIter*) pself;
     int arg0 = moo_lua_get_arg_index (L, first_arg + 0, "char_on_line");
@@ -733,9 +568,6 @@ cfunc_GtkTextIter_set_line_offset (gpointer pself, G_GNUC_UNUSED lua_State *L, G
 static int
 cfunc_GtkTextIter_set_line_index (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "gtk_text_iter_set_line_index");
-#endif
     MooLuaCurrentFunc cur_func ("GtkTextIter.set_line_index");
     GtkTextIter *self = (GtkTextIter*) pself;
     int arg0 = moo_lua_get_arg_index (L, first_arg + 0, "byte_on_line");
@@ -746,9 +578,6 @@ cfunc_GtkTextIter_set_line_index (gpointer pself, G_GNUC_UNUSED lua_State *L, G_
 static int
 cfunc_GtkTextIter_forward_to_end (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "gtk_text_iter_forward_to_end");
-#endif
     MooLuaCurrentFunc cur_func ("GtkTextIter.forward_to_end");
     GtkTextIter *self = (GtkTextIter*) pself;
     gtk_text_iter_forward_to_end (self);
@@ -758,9 +587,6 @@ cfunc_GtkTextIter_forward_to_end (gpointer pself, G_GNUC_UNUSED lua_State *L, G_
 static int
 cfunc_GtkTextIter_forward_to_line_end (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "gtk_text_iter_forward_to_line_end");
-#endif
     MooLuaCurrentFunc cur_func ("GtkTextIter.forward_to_line_end");
     GtkTextIter *self = (GtkTextIter*) pself;
     gboolean ret = gtk_text_iter_forward_to_line_end (self);
@@ -770,9 +596,6 @@ cfunc_GtkTextIter_forward_to_line_end (gpointer pself, G_GNUC_UNUSED lua_State *
 static int
 cfunc_GtkTextIter_equal (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "gtk_text_iter_equal");
-#endif
     MooLuaCurrentFunc cur_func ("GtkTextIter.equal");
     GtkTextIter *self = (GtkTextIter*) pself;
     GtkTextIter arg0_iter;
@@ -785,9 +608,6 @@ cfunc_GtkTextIter_equal (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUS
 static int
 cfunc_GtkTextIter_compare (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "gtk_text_iter_compare");
-#endif
     MooLuaCurrentFunc cur_func ("GtkTextIter.compare");
     GtkTextIter *self = (GtkTextIter*) pself;
     GtkTextIter arg0_iter;
@@ -800,9 +620,6 @@ cfunc_GtkTextIter_compare (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UN
 static int
 cfunc_GtkTextIter_in_range (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "gtk_text_iter_in_range");
-#endif
     MooLuaCurrentFunc cur_func ("GtkTextIter.in_range");
     GtkTextIter *self = (GtkTextIter*) pself;
     GtkTextIter arg0_iter;
@@ -818,9 +635,6 @@ cfunc_GtkTextIter_in_range (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_U
 static int
 cfunc_GtkTextIter_order (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "gtk_text_iter_order");
-#endif
     MooLuaCurrentFunc cur_func ("GtkTextIter.order");
     GtkTextIter *self = (GtkTextIter*) pself;
     GtkTextIter arg0_iter;

@@ -164,10 +164,7 @@ endif
 mooutils_unix_sources =			\
 	mooutils/mooappinput-unix.c
 
-mooutils_unittest_sources =		\
-	mooutils/moo-test-utils.cpp	\
-	mooutils/moo-test-utils.h	\
-	mooutils/moo-test-macros.h
+mooutils_unittest_sources =
 
 EXTRA_DIST += 				\
 	$(mooutils_unix_sources)	\

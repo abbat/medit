@@ -758,29 +758,3 @@ _moo_accel_normalize (const char *accel)
         return NULL;
     }
 }
-
-
-/* "Because Gtk cares about Mac (and screw compatibility)" */
-#if GTK_CHECK_VERSION(2,24,7)
-#define CONTROL_MOD "<Primary>"
-#define SHIFT_CONTROL "<Primary><Shift>"
-#else
-#define CONTROL_MOD "<Control>"
-#define SHIFT_CONTROL "<Shift><Control>"
-#endif
-
-static void
-delete_prefs_keys (void)
-{
-    GSList *keys = moo_prefs_list_keys (MOO_PREFS_RC);
-    while (keys)
-    {
-        char *key = (char*) keys->data;
-
-        if (g_str_has_prefix (key, "Shortcuts/Foobar/"))
-            moo_prefs_delete_key (key);
-
-        g_free (key);
-        keys = g_slist_delete_link (keys, keys);
-    }
-}

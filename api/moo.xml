@@ -1264,16 +1264,6 @@
     <retval transfer_mode="full" type="filename" />
     <doc>Generate a unique filename for a temporary file. Generated filename is located inside directory returned by moo_tempdir(), and it will be automatically removed on exit. </doc>
   </function>
-  <function c_name="moo_test_assert_impl" moo.private="1" name="test_assert_impl">
-    <param name="passed" type="gboolean" />
-    <param name="text" type="const-utf8" />
-    <param allow_none="1" default_value="NULL" name="file" type="const-utf8" />
-    <param default_value="-1" name="line" type="int" />
-  </function>
-  <function c_name="moo_test_set_silent_messages" moo.private="1" name="test_set_silent_messages">
-    <param name="silent" type="gboolean" />
-    <retval type="gboolean" />
-  </function>
   <function c_name="moo_warning_dialog" name="warning_dialog">
     <param name="text" type="const-utf8" />
     <param allow_none="1" default_value="NULL" name="secondary_text" type="const-utf8" />

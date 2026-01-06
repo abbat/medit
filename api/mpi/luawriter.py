@@ -17,9 +17,6 @@ tmpl_cfunc_method_start = """\
 static int
 %(cfunc)s (gpointer pself, G_GNUC_UNUSED lua_State *L, G_GNUC_UNUSED int first_arg)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "%(c_name)s");
-#endif
     MooLuaCurrentFunc cur_func ("%(current_function)s");
 %(check_kwargs)s    %(Class)s *self = (%(Class)s*) pself;
 """
@@ -28,9 +25,6 @@ tmpl_cfunc_func_start = """\
 static int
 %(cfunc)s (G_GNUC_UNUSED lua_State *L)
 {
-#ifdef MOO_ENABLE_COVERAGE
-    moo_test_coverage_record ("lua", "%(c_name)s");
-#endif
     MooLuaCurrentFunc cur_func ("%(current_function)s");
 %(check_kwargs)s"""
 
