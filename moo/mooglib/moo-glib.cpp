@@ -31,13 +31,8 @@ static void convert_g_stat_buf (const GStatBuf* gbuf, MgwStatBuf* mbuf)
 
     mbuf->size = gbuf->st_size;
 
-#ifdef _MSC_VER
-    mbuf->isreg = (gbuf->st_mode & _S_IFREG) != 0;
-    mbuf->isdir = (gbuf->st_mode & _S_IFDIR) != 0;
-#else
     mbuf->isreg = S_ISREG (gbuf->st_mode);
     mbuf->isdir = S_ISDIR (gbuf->st_mode);
-#endif
 
 #ifdef S_ISLNK
     mbuf->islnk = S_ISLNK (gbuf->st_mode);

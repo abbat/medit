@@ -10,9 +10,7 @@
 #undef MOO_CL_MSVC
 #define MOO_GCC_CHECK_VERSION(maj,min) (0)
 
-#if defined(_MSC_VER)
-#  define MOO_CL_MSVC 1
-#elif defined(__GNUC__)
+#if defined(__GNUC__)
 #  define MOO_CL_GCC 1
 #  ifdef __GNUC_MINOR__
 #    undef MOO_GCC_CHECK_VERSION
