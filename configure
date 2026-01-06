@@ -735,7 +735,7 @@ MOO_OS_MINGW_TRUE
 MOO_OS_CYGWIN_FALSE
 MOO_OS_CYGWIN_TRUE
 MOO_PYTHON
-WINDRES
+GTK_VERSION
 CXXCPP
 am__fastdepCXX_FALSE
 am__fastdepCXX_TRUE
@@ -935,7 +935,7 @@ CXX
 CXXFLAGS
 CCC
 CXXCPP
-WINDRES
+GTK_VERSION
 MOO_PYTHON
 PKG_CONFIG
 PKG_CONFIG_PATH
@@ -1628,7 +1628,7 @@ Some influential environment variables:
   CXX         C++ compiler command
   CXXFLAGS    C++ compiler flags
   CXXCPP      C++ preprocessor
-  WINDRES     windres
+  GTK_VERSION GTK version to compile with (2, 3, or 4) [default=2]
   MOO_PYTHON  Python executable, required to run build scripts
   PKG_CONFIG  path to pkg-config utility
   PKG_CONFIG_PATH
@@ -18921,108 +18921,21 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
-if test -n "$ac_tool_prefix"; then
-  # Extract the first word of "${ac_tool_prefix}windres", so it can be a program name with args.
-set dummy ${ac_tool_prefix}windres; ac_word=$2
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-printf %s "checking for $ac_word... " >&6; }
-if test ${ac_cv_prog_WINDRES+y}
-then :
-  printf %s "(cached) " >&6
-else $as_nop
-  if test -n "$WINDRES"; then
-  ac_cv_prog_WINDRES="$WINDRES" # Let the user override the test.
-else
-as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  case $as_dir in #(((
-    '') as_dir=./ ;;
-    */) ;;
-    *) as_dir=$as_dir/ ;;
-  esac
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir$ac_word$ac_exec_ext"; then
-    ac_cv_prog_WINDRES="${ac_tool_prefix}windres"
-    printf "%s\n" "$as_me:${as_lineno-$LINENO}: found $as_dir$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-fi
-fi
-WINDRES=$ac_cv_prog_WINDRES
-if test -n "$WINDRES"; then
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $WINDRES" >&5
-printf "%s\n" "$WINDRES" >&6; }
-else
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
-printf "%s\n" "no" >&6; }
+if test "x$GTK_VERSION" = "x"; then
+  GTK_VERSION=2
 fi
 
-
-fi
-if test -z "$ac_cv_prog_WINDRES"; then
-  ac_ct_WINDRES=$WINDRES
-  # Extract the first word of "windres", so it can be a program name with args.
-set dummy windres; ac_word=$2
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-printf %s "checking for $ac_word... " >&6; }
-if test ${ac_cv_prog_ac_ct_WINDRES+y}
-then :
-  printf %s "(cached) " >&6
-else $as_nop
-  if test -n "$ac_ct_WINDRES"; then
-  ac_cv_prog_ac_ct_WINDRES="$ac_ct_WINDRES" # Let the user override the test.
-else
-as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  case $as_dir in #(((
-    '') as_dir=./ ;;
-    */) ;;
-    *) as_dir=$as_dir/ ;;
-  esac
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir$ac_word$ac_exec_ext"; then
-    ac_cv_prog_ac_ct_WINDRES="windres"
-    printf "%s\n" "$as_me:${as_lineno-$LINENO}: found $as_dir$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-fi
-fi
-ac_ct_WINDRES=$ac_cv_prog_ac_ct_WINDRES
-if test -n "$ac_ct_WINDRES"; then
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_ct_WINDRES" >&5
-printf "%s\n" "$ac_ct_WINDRES" >&6; }
-else
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
-printf "%s\n" "no" >&6; }
-fi
-
-  if test "x$ac_ct_WINDRES" = x; then
-    WINDRES=":"
-  else
-    case $cross_compiling:$ac_tool_warned in
-yes:)
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: WARNING: using cross tools not prefixed with host triplet" >&5
-printf "%s\n" "$as_me: WARNING: using cross tools not prefixed with host triplet" >&2;}
-ac_tool_warned=yes ;;
+case $GTK_VERSION in #(
+  2) :
+    GTK_PACKAGE="gtk+-2.0" ;; #(
+  3) :
+    GTK_PACKAGE="gtk+-3.0" ;; #(
+  4) :
+    GTK_PACKAGE="gtk+-4.0" ;; #(
+  *) :
+    as_fn_error $? "Unsupported GTK version: $GTK_VERSION. Supported versions is 2, 3 or 4." "$LINENO" 5
+ ;;
 esac
-    WINDRES=$ac_ct_WINDRES
-  fi
-else
-  WINDRES="$ac_cv_prog_WINDRES"
-fi
-
 
 
 for ac_prog in python2 python2.7 python2.6 python2.5 python2.4 python2.3 python2.2 python2.1 python2.0 python
@@ -19431,19 +19344,19 @@ printf "%s\n" "$ac_cv_path_SED" >&6; }
 
 
 pkg_failed=no
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for gtk+-2.0" >&5
-printf %s "checking for gtk+-2.0... " >&6; }
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for $GTK_PACKAGE" >&5
+printf %s "checking for $GTK_PACKAGE... " >&6; }
 
 if test -n "$GTK_CFLAGS"; then
     pkg_cv_GTK_CFLAGS="$GTK_CFLAGS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gtk+-2.0") 2>&5
+    { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"\$GTK_PACKAGE\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "$GTK_PACKAGE") 2>&5
   ac_status=$?
   printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_GTK_CFLAGS=`$PKG_CONFIG --cflags "gtk+-2.0" 2>/dev/null`
+  pkg_cv_GTK_CFLAGS=`$PKG_CONFIG --cflags "$GTK_PACKAGE" 2>/dev/null`
 		      test "x$?" != "x0" && pkg_failed=yes
 else
   pkg_failed=yes
@@ -19455,12 +19368,12 @@ if test -n "$GTK_LIBS"; then
     pkg_cv_GTK_LIBS="$GTK_LIBS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gtk+-2.0") 2>&5
+    { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"\$GTK_PACKAGE\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "$GTK_PACKAGE") 2>&5
   ac_status=$?
   printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_GTK_LIBS=`$PKG_CONFIG --libs "gtk+-2.0" 2>/dev/null`
+  pkg_cv_GTK_LIBS=`$PKG_CONFIG --libs "$GTK_PACKAGE" 2>/dev/null`
 		      test "x$?" != "x0" && pkg_failed=yes
 else
   pkg_failed=yes
@@ -19481,14 +19394,14 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-                GTK_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "gtk+-2.0" 2>&1`
+                GTK_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "$GTK_PACKAGE" 2>&1`
         else
-                GTK_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "gtk+-2.0" 2>&1`
+                GTK_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "$GTK_PACKAGE" 2>&1`
         fi
         # Put the nasty error message in config.log where it belongs
         echo "$GTK_PKG_ERRORS" >&5
 
-        as_fn_error $? "Package requirements (gtk+-2.0) were not met:
+        as_fn_error $? "Package requirements ($GTK_PACKAGE) were not met:
 
 $GTK_PKG_ERRORS
 

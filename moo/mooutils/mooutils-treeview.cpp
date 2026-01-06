@@ -1051,12 +1051,12 @@ moo_expander_cell_render (GtkCellRenderer      *cell,
     GdkRectangle draw_rect;
     GtkStateType state;
 
+    // unused
+    (void)(background_area);
+
 #if GTK_CHECK_VERSION(3,0,0)
     GdkRectangle  area;
     GdkRectangle *expose_area = &area;
-
-    // unused
-    (void)(background_area);
 
     if (!gdk_cairo_get_clip_rectangle(cr, &area)) {
         memset(&area, 0, sizeof(GdkRectangle));

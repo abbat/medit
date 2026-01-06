@@ -1249,7 +1249,7 @@ moo_icon_view_expose (GtkWidget      *widget,
     GdkRegion *event_region;
 
     event_window = event->window;
-    event_region = &event->region;
+    event_region = event->region;
 #endif
 
     if (check_empty (view))

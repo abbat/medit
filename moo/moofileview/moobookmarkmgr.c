@@ -1559,7 +1559,7 @@ fill_icon_store (GtkListStore   *store,
         // Use gtk_icon_theme_lookup_icon() instead.
         set = gtk_style_context_lookup_icon_set(context, l->data);
 #else
-        set = gtk_style_lookup_icon_set (style, l->data)
+        set = gtk_style_lookup_icon_set (style, l->data);
 #endif
 
         if (!set)

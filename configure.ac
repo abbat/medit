@@ -61,6 +61,18 @@ AC_PROG_INSTALL
 AC_PROG_MKDIR_P
 AM_PROG_CC_C_O
 
+AC_ARG_VAR([GTK_VERSION], [GTK version to compile with (2, 3, or 4) [default=2]])
+if test "x$GTK_VERSION" = "x"; then
+  GTK_VERSION=2
+fi
+
+AS_CASE([$GTK_VERSION],
+  [2], [GTK_PACKAGE="gtk+-2.0"],
+  [3], [GTK_PACKAGE="gtk+-3.0"],
+  [4], [GTK_PACKAGE="gtk+-4.0"],
+  [AC_MSG_ERROR([Unsupported GTK version: $GTK_VERSION. Supported versions is 2, 3 or 4.])]
+)
+
 AC_ARG_VAR([MOO_PYTHON], [Python executable, required to run build scripts])
 AC_CHECK_PROGS(MOO_PYTHON, [python2 python2.7 python2.6 python2.5 python2.4 python2.3 python2.2 python2.1 python2.0 python], [none])
 if test "x$MOO_PYTHON" = "x"; then
