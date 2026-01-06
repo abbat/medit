@@ -128,10 +128,9 @@ am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(cfgdir)" \
 	"$(DESTDIR)$(langsdir)"
 PROGRAMS = $(bin_PROGRAMS)
 LIBRARIES = $(noinst_LIBRARIES)
-am__medit_SOURCES_DIST = medit-app/mem-debug.h medit-app/parse.h \
-	medit-app/main.h medit-app/main.cpp main.c moo-config.h \
-	sysheaders.h mooglib/moo-glib.h mooglib/moo-stat.h \
-	mooglib/moo-time.h mooglib/moo-glib.cpp \
+am__medit_SOURCES_DIST = medit-app/main.h medit-app/main.cpp main.c \
+	moo-config.h sysheaders.h mooglib/moo-glib.h \
+	mooglib/moo-stat.h mooglib/moo-time.h mooglib/moo-glib.cpp \
 	mooedit/mooedit-enums.h mooedit/mooeditor.h \
 	mooedit/mootextview.h mooedit/mootextprint.h \
 	mooedit/mooeditview.h mooedit/mooeditaction.h \
@@ -1460,8 +1459,6 @@ cfg_DATA = \
 
 genplatxml_args = --enable=unix
 @MOO_BUILD_APP_TRUE@medit_SOURCES = \
-@MOO_BUILD_APP_TRUE@	medit-app/mem-debug.h		\
-@MOO_BUILD_APP_TRUE@	medit-app/parse.h		\
 @MOO_BUILD_APP_TRUE@	medit-app/main.h		\
 @MOO_BUILD_APP_TRUE@	medit-app/main.cpp		\
 @MOO_BUILD_APP_TRUE@	$(moo_sources)			\

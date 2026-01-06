@@ -5,8 +5,6 @@ if MOO_BUILD_APP
 bin_PROGRAMS += medit
 
 medit_SOURCES =				\
-	medit-app/mem-debug.h		\
-	medit-app/parse.h		\
 	medit-app/main.h		\
 	medit-app/main.cpp		\
 	$(moo_sources)			\
