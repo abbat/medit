@@ -1,7 +1,8 @@
 /*
- *   medit-app.c
+ *   medit-app/main.cpp
  *
  *   Copyright (C) 2004-2010 by Yevgen Muntyan <emuntyan@users.sourceforge.net>
+ *                 2023-2026 by Anton Batenev <antonbatenev@yandex.ru>
  *
  *   This file is part of medit.  medit is free software; you can
  *   redistribute it and/or modify it under the terms of the
