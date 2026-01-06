@@ -8,7 +8,7 @@ AM_CPPFLAGS = $(MOO_CPPFLAGS) -I$(top_srcdir)/doc/built -Imooutils/glade
 AM_CFLAGS = $(MOO_CFLAGS)
 AM_CXXFLAGS = $(MOO_CXXFLAGS)
 
-moo_sources =
+moo_sources = main.c
 built_moo_sources =
 moo_libadd =
 
@@ -18,7 +18,7 @@ built_plugins_sources =
 moo_srcdir = $(srcdir)
 moo_builddir = .
 
-moo_sources += moo-config.h
+moo_sources += moo-config.h sysheaders.h
 
 moo_sources +=				\
 	mooglib/moo-glib.h		\

@@ -131,24 +131,24 @@ am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(cfgdir)" \
 PROGRAMS = $(bin_PROGRAMS)
 LIBRARIES = $(noinst_LIBRARIES)
 am__medit_SOURCES_DIST = medit-app/mem-debug.h medit-app/run-tests.h \
-	medit-app/parse.h medit-app/main.cpp moo-config.h \
-	mooglib/moo-glib.h mooglib/moo-stat.h mooglib/moo-time.h \
-	mooglib/moo-glib.cpp mooedit/mooedit-enums.h \
-	mooedit/mooeditor.h mooedit/mootextview.h \
-	mooedit/mootextprint.h mooedit/mooeditview.h \
-	mooedit/mooeditaction.h mooedit/mooeditbookmark.h \
-	mooedit/mooeditconfig.h mooedit/mooeditdialogs.h \
-	mooedit/mooeditfiltersettings.h mooedit/mooedit.h \
-	mooedit/mooedithistoryitem.h mooedit/mooeditprefs.h \
-	mooedit/mooedittypes.h mooedit/mooeditwindow.h \
-	mooedit/mooeditfileinfo.h mooedit/mooplugin.h \
-	mooedit/mootextbuffer.h mooedit/mootextfind.h \
-	mooedit/mootextiter.h mooedit/mootextsearch.h \
-	mooedit/mootextstylescheme.h mooedit/mooeditview.cpp \
-	mooedit/mooeditview-priv.h mooedit/mooeditview-impl.h \
-	mooedit/mooeditview-script.cpp mooedit/mooeditview-script.h \
-	mooedit/mooedit-accels.h mooedit/mooeditaction.cpp \
-	mooedit/mooeditaction-factory.cpp \
+	medit-app/parse.h medit-app/main.h medit-app/main.cpp main.c \
+	moo-config.h sysheaders.h mooglib/moo-glib.h \
+	mooglib/moo-stat.h mooglib/moo-time.h mooglib/moo-glib.cpp \
+	mooedit/mooedit-enums.h mooedit/mooeditor.h \
+	mooedit/mootextview.h mooedit/mootextprint.h \
+	mooedit/mooeditview.h mooedit/mooeditaction.h \
+	mooedit/mooeditbookmark.h mooedit/mooeditconfig.h \
+	mooedit/mooeditdialogs.h mooedit/mooeditfiltersettings.h \
+	mooedit/mooedit.h mooedit/mooedithistoryitem.h \
+	mooedit/mooeditprefs.h mooedit/mooedittypes.h \
+	mooedit/mooeditwindow.h mooedit/mooeditfileinfo.h \
+	mooedit/mooplugin.h mooedit/mootextbuffer.h \
+	mooedit/mootextfind.h mooedit/mootextiter.h \
+	mooedit/mootextsearch.h mooedit/mootextstylescheme.h \
+	mooedit/mooeditview.cpp mooedit/mooeditview-priv.h \
+	mooedit/mooeditview-impl.h mooedit/mooeditview-script.cpp \
+	mooedit/mooeditview-script.h mooedit/mooedit-accels.h \
+	mooedit/mooeditaction.cpp mooedit/mooeditaction-factory.cpp \
 	mooedit/mooeditaction-factory.h mooedit/mooeditbookmark.cpp \
 	mooedit/mooedit.cpp mooedit/mooeditconfig.cpp \
 	mooedit/mooeditdialogs.cpp mooedit/mooedit-enum-types.c \
@@ -350,8 +350,8 @@ am__objects_2 = xdgmime/xdgmimealias.$(OBJEXT) \
 	xdgmime/xdgmimemagic.$(OBJEXT) xdgmime/xdgmimeparent.$(OBJEXT)
 am__objects_3 = mooutils/mooappinput-unix.$(OBJEXT)
 am__objects_4 = mooutils/moo-test-utils.$(OBJEXT)
-am__objects_5 = mooglib/moo-glib.$(OBJEXT) $(am__objects_1) \
-	mooedit/mooeditview.$(OBJEXT) \
+am__objects_5 = main.$(OBJEXT) mooglib/moo-glib.$(OBJEXT) \
+	$(am__objects_1) mooedit/mooeditview.$(OBJEXT) \
 	mooedit/mooeditview-script.$(OBJEXT) \
 	mooedit/mooeditaction.$(OBJEXT) \
 	mooedit/mooeditaction-factory.$(OBJEXT) \
@@ -504,7 +504,8 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/dummy.Po ./$(DEPDIR)/marshals.Po \
+am__depfiles_remade = ./$(DEPDIR)/dummy.Po ./$(DEPDIR)/main.Po \
+	./$(DEPDIR)/marshals.Po \
 	eggsmclient/$(DEPDIR)/eggdesktopfile.Po \
 	eggsmclient/$(DEPDIR)/eggsmclient-xsmp.Po \
 	eggsmclient/$(DEPDIR)/eggsmclient.Po \
@@ -1220,8 +1221,8 @@ AM_CPPFLAGS = $(MOO_CPPFLAGS) -I$(top_srcdir)/doc/built \
 	-I$(srcdir)/plugins/support
 AM_CFLAGS = $(MOO_CFLAGS) -DEGG_SM_CLIENT_BACKEND_XSMP $(am__append_7)
 AM_CXXFLAGS = $(MOO_CXXFLAGS)
-moo_sources = moo-config.h mooglib/moo-glib.h mooglib/moo-stat.h \
-	mooglib/moo-time.h mooglib/moo-glib.cpp \
+moo_sources = main.c moo-config.h sysheaders.h mooglib/moo-glib.h \
+	mooglib/moo-stat.h mooglib/moo-time.h mooglib/moo-glib.cpp \
 	$(moo_edit_enum_headers) mooedit/mooeditor.h \
 	mooedit/mootextview.h mooedit/mootextprint.h \
 	mooedit/mooeditview.h mooedit/mooeditaction.h \
@@ -1670,6 +1671,7 @@ genplatxml_args = --enable=unix
 @MOO_BUILD_APP_TRUE@	medit-app/mem-debug.h		\
 @MOO_BUILD_APP_TRUE@	medit-app/run-tests.h		\
 @MOO_BUILD_APP_TRUE@	medit-app/parse.h		\
+@MOO_BUILD_APP_TRUE@	medit-app/main.h		\
 @MOO_BUILD_APP_TRUE@	medit-app/main.cpp		\
 @MOO_BUILD_APP_TRUE@	$(moo_sources)			\
 @MOO_BUILD_APP_TRUE@	$(plugins_sources)
@@ -2252,6 +2254,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dummy.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/marshals.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@eggsmclient/$(DEPDIR)/eggdesktopfile.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@eggsmclient/$(DEPDIR)/eggsmclient-xsmp.Po@am__quote@ # am--include-marker
@@ -2904,6 +2907,7 @@ clean-am: clean-binPROGRAMS clean-generic clean-libtool \
 
 distclean: distclean-am
 		-rm -f ./$(DEPDIR)/dummy.Po
+	-rm -f ./$(DEPDIR)/main.Po
 	-rm -f ./$(DEPDIR)/marshals.Po
 	-rm -f eggsmclient/$(DEPDIR)/eggdesktopfile.Po
 	-rm -f eggsmclient/$(DEPDIR)/eggsmclient-xsmp.Po
@@ -3119,6 +3123,7 @@ installcheck-am: installcheck-local
 
 maintainer-clean: maintainer-clean-am
 		-rm -f ./$(DEPDIR)/dummy.Po
+	-rm -f ./$(DEPDIR)/main.Po
 	-rm -f ./$(DEPDIR)/marshals.Po
 	-rm -f eggsmclient/$(DEPDIR)/eggdesktopfile.Po
 	-rm -f eggsmclient/$(DEPDIR)/eggsmclient-xsmp.Po

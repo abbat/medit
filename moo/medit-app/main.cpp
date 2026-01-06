@@ -13,7 +13,7 @@
  *   License along with medit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <config.h>
+#include "main.h"
 #include "mooapp/mooapp.h"
 #include "mooedit/mooplugin.h"
 #include "mooutils/mooi18n.h"
@@ -22,7 +22,6 @@
 #include "mooutils/mootype-macros.h"
 #include "moocpp/regex.h"
 #include "plugins/mooplugin-builtin.h"
-#include <gtk/gtk.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -364,8 +363,8 @@ install_log_handlers (void)
         moo_set_log_func_window (TRUE);
 }
 
-static int
-medit_main (int argc, char *argv[])
+int
+medit_app_main (int argc, char *argv[])
 {
     MooApp *app = NULL;
     MooEditor *editor;
@@ -507,10 +506,4 @@ medit_main (int argc, char *argv[])
     g_object_unref (app);
 
     return retval;
-}
-
-int
-main (int argc, char *argv[])
-{
-    return medit_main (argc, argv);
 }
