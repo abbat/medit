@@ -736,7 +736,9 @@ gboolean on_gtk_main_quit (MooApp *app)
     if (!moo_app_quit (app))
         moo_app_do_quit (app);
 
+#if !GTK_CHECK_VERSION(3,0,0)
     return FALSE;
+#endif
 }
 
 
