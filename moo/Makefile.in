@@ -1208,8 +1208,7 @@ EXTRA_DIST = mooglib/moo-glib.cpp marshals.list \
 	plugins/usertools/genplatxml.py medit-app/data \
 	medit-app/run-tests.sh medit-app/print-functions.py \
 	medit-app/run-tests-installed.sh \
-	medit-app/run-tests-uninstalled.sh medit-app/medit.rc.in \
-	medit-app/medit.desktop.in
+	medit-app/run-tests-uninstalled.sh medit-app/medit.desktop.in
 BUILT_SOURCES = $(am__append_3) $(built_moo_sources) \
 	$(built_plugins_sources)
 CLEANFILES = $(am__append_8) $(built_moo_sources) \

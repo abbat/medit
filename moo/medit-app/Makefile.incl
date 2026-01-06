@@ -9,7 +9,6 @@ EXTRA_DIST +=					\
 	medit-app/run-tests-installed.sh	\
 	medit-app/run-tests-uninstalled.sh
 
-EXTRA_DIST += medit-app/medit.rc.in
 EXTRA_DIST += medit-app/medit.desktop.in
 
 if MOO_BUILD_APP
