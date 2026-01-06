@@ -2,11 +2,11 @@ build/
 junk/
 plat/
 tools/
-moo/mooedit/langs/
-moo/gtksourceview/
-moo/eggsmclient/
+src/mooedit/langs/
+src/gtksourceview/
+src/eggsmclient/
 
 doc/txt2tags/txt2tags.py
-moo/mooutils/moofontsel.c
-moo/moopython/plugins/pyproject/
-moo/plugins/old/
+src/mooutils/moofontsel.c
+src/moopython/plugins/pyproject/
+src/plugins/old/

@@ -162,7 +162,7 @@ AC_CONFIG_FILES([
   Makefile
   api/Makefile
   doc/Makefile
-  moo/Makefile
+  src/Makefile
   po/Makefile
   po-gsv/Makefile
 ])

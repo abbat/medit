@@ -107,9 +107,9 @@ bin_PROGRAMS = $(am__EXEEXT_1)
 
 @MOO_BUILD_APP_TRUE@am__append_5 = medit
 @MOO_BUILD_APP_TRUE@@MOO_ENABLE_COVERAGE_FALSE@am__append_6 = IGNORE_COVERAGE=1
-@MOO_BUILD_APP_TRUE@@MOO_OS_UNIX_TRUE@am__append_7 = -DMOO_UNIT_TEST_DATA_DIR=\"${MOO_TOP_SRCDIR}/moo/medit-app/data\"
+@MOO_BUILD_APP_TRUE@@MOO_OS_UNIX_TRUE@am__append_7 = -DMOO_UNIT_TEST_DATA_DIR=\"${MOO_TOP_SRCDIR}/src/medit-app/data\"
 @MOO_BUILD_APP_TRUE@@MOO_OS_UNIX_TRUE@am__append_8 = medit-app/medit.desktop
-subdir = moo
+subdir = src
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
 	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
@@ -1704,9 +1704,9 @@ $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(srcdir)/mo
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign moo/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign src/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --foreign moo/Makefile
+	  $(AUTOMAKE) --foreign src/Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
 	  *config.status*) \

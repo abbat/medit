@@ -21401,7 +21401,7 @@ else
 fi
 
 
-ac_config_files="$ac_config_files Makefile api/Makefile doc/Makefile moo/Makefile po/Makefile po-gsv/Makefile"
+ac_config_files="$ac_config_files Makefile api/Makefile doc/Makefile src/Makefile po/Makefile po-gsv/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -22602,7 +22602,7 @@ do
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "api/Makefile") CONFIG_FILES="$CONFIG_FILES api/Makefile" ;;
     "doc/Makefile") CONFIG_FILES="$CONFIG_FILES doc/Makefile" ;;
-    "moo/Makefile") CONFIG_FILES="$CONFIG_FILES moo/Makefile" ;;
+    "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "po/Makefile") CONFIG_FILES="$CONFIG_FILES po/Makefile" ;;
     "po-gsv/Makefile") CONFIG_FILES="$CONFIG_FILES po-gsv/Makefile" ;;
 

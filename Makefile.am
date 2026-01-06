@@ -1,6 +1,6 @@
 ACLOCAL_AMFLAGS = -I m4 $(ACLOCAL_FLAGS)
 
-SUBDIRS = po po-gsv api doc moo
+SUBDIRS = po po-gsv api doc src
 
 EXTRA_DIST =				\
 	tools/genenums.py		\

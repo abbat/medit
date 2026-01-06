@@ -60,7 +60,7 @@ PROJECT_BRIEF          = "medit (also knows as mooedit)"
 # pixels and the maximum width should not exceed 200 pixels. Doxygen will copy
 # the logo to the output directory.
 
-PROJECT_LOGO           = moo/mooutils/pixmaps/medit.png
+PROJECT_LOGO           = src/mooutils/pixmaps/medit.png
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) path
 # into which the generated documentation will be written. If a relative path is

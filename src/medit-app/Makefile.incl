@@ -31,7 +31,7 @@ run-tests-installed:
 	@echo '==========='
 
 if MOO_OS_UNIX
-AM_CFLAGS += -DMOO_UNIT_TEST_DATA_DIR=\"${MOO_TOP_SRCDIR}/moo/medit-app/data\"
+AM_CFLAGS += -DMOO_UNIT_TEST_DATA_DIR=\"${MOO_TOP_SRCDIR}/src/medit-app/data\"
 endif
 
 medit_SOURCES =				\
