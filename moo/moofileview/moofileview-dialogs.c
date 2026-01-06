@@ -69,7 +69,12 @@ _moo_file_props_dialog_init (MooFilePropsDialog *dialog)
     dialog->entry = GTK_WIDGET (dialog->xml->entry);
     dialog->table = GTK_WIDGET (dialog->xml->table);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    /* FIXME: This code was written by AI and requires review */
+    gtk_container_add (GTK_CONTAINER(gtk_dialog_get_content_area(GTK_DIALOG(dialog))), dialog->notebook);
+#else
     gtk_container_add (GTK_CONTAINER(GTK_DIALOG(dialog)->vbox), dialog->notebook);
+#endif
 
     gtk_dialog_add_buttons (GTK_DIALOG (dialog),
                             GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
