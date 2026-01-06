@@ -1,17 +1,13 @@
 AC_DEFUN([MOO_AC_CHECK_OS],[
 AC_REQUIRE([AC_CANONICAL_HOST])
 
-  m4_define([_moo_oses_],[CYGWIN MINGW UNIX FREEBSD BSD LINUX FDO])
+  m4_define([_moo_oses_],[MINGW UNIX FREEBSD BSD LINUX FDO])
 
   m4_foreach_w([_moo_os_],_moo_oses_,[dnl
 MOO_OS_[]_moo_os_=false
 ])
 
   case $host in
-    *-*-cygwin*)
-      MOO_OS_CYGWIN=true
-      MOO_OS_NAME="CygWin"
-      ;;
     *-*-freebsd*)
       MOO_OS_FREEBSD=true
       MOO_OS_NAME="FreeBSD"
@@ -40,7 +36,7 @@ AC_DEFUN([MOO_LT_LIB_M],
 [AC_REQUIRE([AC_CANONICAL_HOST])dnl
 LIBM=
 case $host in
-*-*-beos* | *-*-cegcc* | *-*-cygwin* | *-*-haiku* | *-*-pw32* )
+*-*-beos* | *-*-cegcc* | *-*-haiku* | *-*-pw32* )
   # These system don't have libm, or don't need it
   ;;
 *-ncr-sysv4.3*)
