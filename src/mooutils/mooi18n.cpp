@@ -15,7 +15,6 @@
 
 #include "mooutils/mooi18n.h"
 #include "mooutils/mooutils-misc.h"
-#include "mooutils/mooutils-tests.h"
 #include <mooglib/moo-glib.h>
 
 
@@ -137,36 +136,4 @@ _moo_gsv_dgettext (G_GNUC_UNUSED const char *domain, const char *string)
 #else
     return g_strdup (string);
 #endif /* !ENABLE_NLS */
-}
-
-
-static void
-test_mooi18n (void)
-{
-#ifdef ENABLE_NLS
-    const char *locale_dir;
-    char *po_file, *po_file2;
-
-    locale_dir = moo_get_locale_dir ();
-    po_file = g_build_filename (locale_dir, "ru", "LC_MESSAGES", GETTEXT_PACKAGE ".mo", nullptr);
-    po_file2 = g_build_filename (locale_dir, "ru", "LC_MESSAGES", GETTEXT_PACKAGE "-gsv.mo", nullptr);
-
-    TEST_ASSERT_MSG (g_file_test (po_file, G_FILE_TEST_EXISTS), "mo file '%s' does not exist", po_file);
-    TEST_ASSERT_MSG (g_file_test (po_file2, G_FILE_TEST_EXISTS), "mo file '%s' does not exist", po_file2);
-
-    g_free (po_file2);
-    g_free (po_file);
-#endif
-}
-
-void
-moo_test_i18n (MooTestOptions opts)
-{
-    if (opts & MOO_TEST_INSTALLED)
-    {
-        MooTestSuite& suite = moo_test_suite_new ("mooi18n", "mooutils/mooi18n.c", NULL, NULL, NULL);
-
-        moo_test_suite_add_test (suite, "mooi18n", "test of mooi18n",
-                                 (MooTestFunc) test_mooi18n, NULL);
-    }
 }

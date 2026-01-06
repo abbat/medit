@@ -21,8 +21,8 @@
 #include "mooutils/mooutils-debug.h"
 #include "mooutils/mooutils-mem.h"
 #include "mooutils/mootype-macros.h"
+#include "mooutils/mooutils-misc.h"
 #include "mooutils/mooi18n.h"
-#include <mooutils/mooutils-tests.h>
 #include <mooglib/moo-stat.h>
 #include <mooglib/moo-glib.h>
 

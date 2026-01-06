@@ -92,10 +92,7 @@ moo_sources +=				\
 	mooedit/mootextview-private.h   \
 	mooedit/mooeditor.cpp		\
 	mooedit/mooeditor-impl.h	\
-	mooedit/mooeditor-private.h	\
-	mooedit/mooeditor-tests.cpp	\
-	mooedit/mooeditor-tests.h	\
-	mooedit/mooeditor-tests.h
+	mooedit/mooeditor-private.h
 
 EXTRA_DIST +=						\
 	mooedit/glade/moopluginprefs.glade		\

@@ -41,8 +41,6 @@ source_files = \
     ../src/mooedit/mooeditor.h\
     ../src/mooedit/mooeditor-impl.h\
     ../src/mooedit/mooeditor-private.h\
-    ../src/mooedit/mooeditor-tests.cpp\
-    ../src/mooedit/mooeditor-tests.h\
     ../src/mooedit/mooeditprefs.cpp\
     ../src/mooedit/mooeditprefs.h\
     ../src/mooedit/mooeditprefspage.cpp\
@@ -251,7 +249,6 @@ source_files = \
     ../src/mooutils/mooutils-misc.h\
     ../src/mooutils/mooutils-script.c\
     ../src/mooutils/mooutils-script.h\
-    ../src/mooutils/mooutils-tests.h\
     ../src/mooutils/mooutils-thread.cpp\
     ../src/mooutils/mooutils-thread.h\
     ../src/mooutils/mooutils-treeview.cpp\

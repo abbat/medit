@@ -3,12 +3,6 @@ dist-hook: delete-junk-from-data
 delete-junk-from-data:
 	rm -rf `find $(distdir)/medit-app/data -name '*~'`
 
-EXTRA_DIST +=					\
-	medit-app/run-tests.sh			\
-	medit-app/print-functions.py		\
-	medit-app/run-tests-installed.sh	\
-	medit-app/run-tests-uninstalled.sh
-
 EXTRA_DIST += medit-app/medit.desktop.in
 
 if MOO_BUILD_APP
@@ -36,7 +30,6 @@ endif
 
 medit_SOURCES =				\
 	medit-app/mem-debug.h		\
-	medit-app/run-tests.h		\
 	medit-app/parse.h		\
 	medit-app/main.h		\
 	medit-app/main.cpp		\

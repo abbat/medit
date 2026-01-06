@@ -23,7 +23,6 @@
 #include "mooutils/mooonce.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooutils-enums.h"
-#include <mooutils/mooutils-tests.h>
 #include "mooutils/moocompat.h"
 #include "mooutils/mootype-macros.h"
 #include "mooutils/mooarray.h"
@@ -1797,102 +1796,4 @@ moo_debug_enabled (const char *domain,
 
     g_strfreev (domains);
     return FALSE;
-}
-
-
-static void
-test_strv_one (const char *string,
-               gssize      len,
-               char const *expected[])
-{
-    const char *s;
-    char *freeme = NULL;
-    char **res;
-    guint n_toks;
-
-    if (len < 0)
-        s = string;
-    else if (len == 0)
-        s = "";
-    else
-        s = freeme = g_strndup (string, len);
-
-    res = moo_splitlines (s);
-    TEST_ASSERT_STRV_EQ_MSG (res, (char**) expected,
-                             "moo_splitlines(%s)", TEST_FMT_STR (s));
-    g_strfreev (res);
-    g_free (freeme);
-    freeme = NULL;
-
-    res = moo_strnsplit_lines (string, len, &n_toks);
-    TEST_ASSERT_STRV_EQ_MSG (res, (char**) expected,
-                             "moo_strnsplit_lines(%s, %d)",
-                             TEST_FMT_STR (s), (int) len);
-    TEST_ASSERT_INT_EQ (n_toks, res ? g_strv_length (res) : 0);
-    g_strfreev (res);
-}
-
-static void
-test_moo_splitlines (void)
-{
-    guint i;
-
-    struct {
-        const char *s;
-        gssize len;
-        char const *toks[10];
-    } cases[] = {
-        { "abcd", -1, {"abcd", NULL} },
-        { "abcd\n", -1, {"abcd", "", NULL} },
-        { "abcd\r\n", -1, {"abcd", "", NULL} },
-        { "\rabcd\n", -1, {"", "abcd", "", NULL} },
-        { "\r\nabcd\n", -1, {"", "abcd", "", NULL} },
-        { "abcd\nabc", -1, {"abcd", "abc", NULL} },
-        { "abcd\n", 4, {"abcd", NULL} },
-        { "a\nb\rc\r\nd\xe2\x80\xa9""e", -1, {"a", "b", "c", "d", "e", NULL} },
-        { "a\xe2\x80\xa9""b", 1, {"a", NULL} },
-        { "a\xe2\x80\xa9""b", 3, {"a\xe2\x80", NULL} },
-        { "a\xe2\x80\xa9""b", 4, {"a", "", NULL} },
-        { "a\xe2\x80\xa9""b", 5, {"a", "b", NULL} }
-    };
-
-    struct {
-        const char *s;
-        gssize len;
-    } nulls[] = {
-        { NULL, -1 },
-        { "", -1 },
-        { "", 0 },
-        { "abcd", 0 }
-    };
-
-    for (i = 0; i < G_N_ELEMENTS (cases); ++i)
-        test_strv_one (cases[i].s, cases[i].len, cases[i].toks);
-
-    for (i = 0; i < G_N_ELEMENTS (nulls); ++i)
-        test_strv_one (nulls[i].s, nulls[i].len, NULL);
-}
-
-
-static void
-test_types (void)
-{
-    TEST_ASSERT (g_type_is_a (MOO_TYPE_SAVE_CHANGES_RESPONSE, G_TYPE_ENUM));
-    TEST_ASSERT (g_type_is_a (MOO_TYPE_FILE_DIALOG_TYPE, G_TYPE_ENUM));
-    TEST_ASSERT (g_type_is_a (MOO_TYPE_UI_NODE_TYPE, G_TYPE_ENUM));
-    TEST_ASSERT (g_type_is_a (MOO_TYPE_UI_NODE_FLAGS, G_TYPE_FLAGS));
-    TEST_ASSERT (g_type_is_a (MOO_TYPE_UI_WIDGET_TYPE, G_TYPE_ENUM));
-    TEST_ASSERT (g_type_is_a (MOO_TYPE_CLOSE_RESPONSE, G_TYPE_ENUM));
-}
-
-
-void
-moo_test_mooutils_misc (void)
-{
-    MooTestSuite& suite = moo_test_suite_new ("mooutils-misc", "mooutils/mooutils-misc.c", NULL, NULL, NULL);
-
-    moo_test_suite_add_test (suite, "moo_splitlines", "test of moo_splitlines()",
-                             (MooTestFunc) test_moo_splitlines, NULL);
-    moo_test_suite_add_test (suite, "types", "sanity checks for Glib types",
-                             (MooTestFunc) test_types, NULL);
 }

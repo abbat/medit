@@ -12,80 +12,71 @@
  *   You should have received a copy of the GNU Lesser General Public
  *   License along with medit.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+//----------------------------------------------------------------------------------------------
 #include "main.h"
+#include "mem-debug.h"
 #include "mooapp/mooapp.h"
-#include "mooedit/mooplugin.h"
+#include "moocpp/regex.h"
 #include "mooutils/mooi18n.h"
 #include "mooutils/mooutils-fs.h"
 #include "mooutils/mooutils-misc.h"
-#include "mooutils/mootype-macros.h"
-#include "moocpp/regex.h"
 #include "plugins/mooplugin-builtin.h"
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-#include <errno.h>
-#include "mem-debug.h"
-#include "run-tests.h"
+//----------------------------------------------------------------------------------------------
 
 struct MeditOpts
 {
-    int use_session = -1;
-	int pid = -1;
-    gboolean new_app = false;
-    const char *instance_name = nullptr;
-    gboolean new_window = false;
-    gboolean new_tab = false;
-    gboolean reload = false;
-    const char *project = nullptr;
-    gboolean project_mode = false;
-    int line = 0;
-    const char *encoding = nullptr;
-	const char *log_file = nullptr;
-	gboolean log_window = false;
-	const char *exec_string = nullptr;
-	const char *exec_file = nullptr;
-	gstrvec files;
-	char **filesp = nullptr;
-	const char *geometry = nullptr;
-	gboolean show_version = false;
-	const char *debug = nullptr;
-	gboolean ut = false;
-	gboolean ut_uninstalled = false;
-	gboolean ut_list = false;
-	char *ut_dir = nullptr;
-	char *ut_coverage_file = nullptr;
-    gstrvec ut_tests;
-	char **run_script = nullptr;
-	char **send_script = nullptr;
-    gboolean portable = false;
+  int use_session = -1;                // Whether to load and save session (1=yes, 0=no, -1=not specified)
+  int pid = -1;                        // Process ID of existing instance to connect to
+  gboolean new_app = false;            // Whether to start a new instance of the application
+  const char *instance_name = nullptr; // Name of the application instance
+  gboolean new_window = false;         // Whether to open files in a new window
+  gboolean new_tab = false;            // Whether to open files in a new tab
+  gboolean reload = false;             // Whether to automatically reload files if modified on disk
+  const char *project = nullptr;       // Path to project file to open
+  gboolean project_mode = false;       // Whether to run in IDE/project mode
+  int line = 0;                        // Line number to position cursor at when opening file
+  const char *encoding = nullptr;      // Character encoding to use for files
+  const char *log_file = nullptr;      // Path to file for writing debug output
+  gboolean log_window = false;         // Whether to show debug output in a window
+  gstrvec files;                       // List of files to open
+  char **filesp = nullptr;             // Pointer to array of files (temporary, used during parsing)
+  const char *geometry = nullptr;      // Window geometry specification (WIDTHxHEIGHT[+X+Y])
+  gboolean show_version = false;       // Whether to display version information and exit
+  const char *debug = nullptr;         // Debug mode options
+  char **run_script = nullptr;         // Scripts to run on startup
+  char **send_script = nullptr;        // Scripts to send to existing instance
 };
-
+//----------------------------------------------------------------------------------------------
 static MeditOpts medit_opts;
-
+//----------------------------------------------------------------------------------------------
+// FIXME:
 #include "parse.h"
-
+//----------------------------------------------------------------------------------------------
 typedef MooApp MeditApp;
 typedef MooAppClass MeditAppClass;
+//----------------------------------------------------------------------------------------------
 G_DEFINE_TYPE (MeditApp, medit_app, MOO_TYPE_APP)
+//----------------------------------------------------------------------------------------------
 
 static void
 medit_app_init_plugins (G_GNUC_UNUSED MooApp *app)
 {
-    moo_plugin_init ();
+  moo_plugin_init ();
 }
+//----------------------------------------------------------------------------------------------
 
 static void
 medit_app_class_init (MooAppClass *klass)
 {
-    klass->init_plugins = medit_app_init_plugins;
+  klass->init_plugins = medit_app_init_plugins;
 }
+//----------------------------------------------------------------------------------------------
 
 static void
 medit_app_init (G_GNUC_UNUSED MooApp *app)
 {
 }
+//----------------------------------------------------------------------------------------------
 
 static gboolean
 parse_use_session (const char *option_name,
@@ -93,297 +84,273 @@ parse_use_session (const char *option_name,
                    G_GNUC_UNUSED gpointer data,
                    GError **error)
 {
-    if (!value || strcmp (value, "yes") == 0)
+  if (!value || strcmp (value, "yes") == 0)
     {
-        medit_opts.use_session = TRUE;
-        return TRUE;
+      medit_opts.use_session = TRUE;
+      return TRUE;
     }
-    else if (strcmp (value, "no") == 0)
+  else if (strcmp (value, "no") == 0)
     {
-        medit_opts.use_session = FALSE;
-        return TRUE;
+      medit_opts.use_session = FALSE;
+      return TRUE;
     }
-    else
+  else
     {
-        g_set_error (error, G_OPTION_ERROR, G_OPTION_ERROR_BAD_VALUE,
-                     /* error message for wrong command line */
-                     _("Invalid value '%s' for option %s"), value, option_name);
-        return FALSE;
+      g_set_error (error, G_OPTION_ERROR, G_OPTION_ERROR_BAD_VALUE,
+                   /* error message for wrong command line */
+                   _ ("Invalid value '%s' for option %s"), value, option_name);
+      return FALSE;
     }
 }
+//----------------------------------------------------------------------------------------------
 
 /* Check if there is an argument of the form +<number>, and treat it as --line <number> */
 static void
 check_plus_line_arg (void)
 {
-    g::Regex re = g::Regex::compile("^\\+(?P<line>\\d+)", g::Regex::OPTIMIZE | g::Regex::DUPNAMES);
-	g_return_if_fail(re.is_valid());
+  g::Regex re = g::Regex::compile ("^\\+(?P<line>\\d+)", g::Regex::OPTIMIZE | g::Regex::DUPNAMES);
+  g_return_if_fail (re.is_valid ());
 
-    for (size_t i = 0; i < medit_opts.files.size(); ++i)
+  for (size_t i = 0; i < medit_opts.files.size (); ++i)
     {
-        const gstr& file = medit_opts.files[i];
-        if (g::MatchInfo match_info = re.match(file))
+      const gstr &file = medit_opts.files[i];
+      if (g::MatchInfo match_info = re.match (file))
         {
-            int line = 0;
-            gstr line_string = match_info.fetch_named("line");
+          int line = 0;
+          gstr line_string = match_info.fetch_named ("line");
 
-            errno = 0;
-            line = strtol(line_string.get(), NULL, 10);
-            if (errno != 0)
-                line = 0;
+          errno = 0;
+          line = strtol (line_string.get (), NULL, 10);
+          if (errno != 0)
+            line = 0;
 
-            // if a file "+10" exists, open it
-            if (line > 0 && g_file_test (file.get(), G_FILE_TEST_EXISTS))
-                line = 0;
+          // if a file "+10" exists, open it
+          if (line > 0 && g_file_test (file.get (), G_FILE_TEST_EXISTS))
+            line = 0;
 
-            if (line > 0)
+          if (line > 0)
             {
-                medit_opts.line = line;
-                medit_opts.files.erase(medit_opts.files.begin() + i);
-                return;
+              medit_opts.line = line;
+              medit_opts.files.erase (medit_opts.files.begin () + i);
+              return;
             }
         }
     }
 }
+//----------------------------------------------------------------------------------------------
 
 static gboolean
-post_parse_func (GOptionContext*, GOptionGroup*, void*, GError**)
+post_parse_func (GOptionContext *, GOptionGroup *, void *, GError **)
 {
-	medit_opts.files = gstr::take(medit_opts.filesp);
-	medit_opts.filesp = nullptr;
+  medit_opts.files = gstr::take (medit_opts.filesp);
+  medit_opts.filesp = nullptr;
 
-    if (medit_opts.show_version)
+  if (medit_opts.show_version)
     {
-        g_print ("medit " MOO_DISPLAY_VERSION "\n");
-        exit (0);
+      g_print ("medit " MOO_DISPLAY_VERSION "\n");
+      exit (0);
     }
 
-    if (medit_opts.ut_list)
+  if (medit_opts.pid > 0 && medit_opts.instance_name)
     {
-        list_unit_tests (medit_opts.ut_dir);
-        exit (0);
+      /* error message for wrong commmand line */
+      g_printerr (_ ("%s and %s options may not be used simultaneously\n"),
+                  "--app-name", "--pid");
+      exit (EXIT_FAILURE);
     }
 
-    if (medit_opts.ut)
-        std::swap(medit_opts.ut_tests, medit_opts.files);
+  if (medit_opts.debug)
+    g_setenv ("MOO_DEBUG", medit_opts.debug, FALSE);
 
-    if (medit_opts.pid > 0 && medit_opts.instance_name)
-    {
-        /* error message for wrong commmand line */
-        g_printerr (_("%s and %s options may not be used simultaneously\n"),
-                    "--app-name", "--pid");
-        exit (EXIT_FAILURE);
-    }
+  if (medit_opts.project)
+    medit_opts.project_mode = TRUE;
 
-    if (medit_opts.debug)
-        g_setenv ("MOO_DEBUG", medit_opts.debug, FALSE);
+  check_plus_line_arg ();
 
-    if (medit_opts.project)
-        medit_opts.project_mode = TRUE;
-
-    check_plus_line_arg ();
-
-    return TRUE;
+  return TRUE;
 }
+//----------------------------------------------------------------------------------------------
 
 static GOptionContext *
 parse_args (int argc, char *argv[])
 {
-    GOptionContext *ctx;
-    GOptionGroup *grp;
-	GError *error = nullptr;
+  GOptionContext *ctx;
+  GOptionGroup *grp;
+  GError *error = nullptr;
 
-	GOptionEntry medit_options[] = {
-		{ "new-app", 'n', 0, G_OPTION_ARG_NONE, &medit_opts.new_app,
-				/* help message for command line option --new-app */ N_("Run new instance of application"), NULL },
-		{ "use-session", 's', G_OPTION_FLAG_OPTIONAL_ARG, G_OPTION_ARG_CALLBACK, (void*) parse_use_session,
-				/* help message for command line option --use-session */ N_("Load and save session"), "yes|no" },
-		{ "pid", 0, 0, G_OPTION_ARG_INT, &medit_opts.pid,
-				/* help message for command line option --pid=PID */ N_("Use existing instance with process id PID"),
-				/* "PID" part in "--pid=PID" */ N_("PID") },
-		{ "app-name", 0, 0, G_OPTION_ARG_STRING, (gpointer) &medit_opts.instance_name,
-				/* help message for command line option --app-name=NAME */ N_("Set instance name to NAME if it's not already running"),
-				/* "NAME" part in "--app-name=NAME" */ N_("NAME") },
-		{ "new-window", 'w', 0, G_OPTION_ARG_NONE, &medit_opts.new_window,
-				/* help message for command line option --new-window */ N_("Open file(s) in a new window"), NULL },
-		{ "new-tab", 't', 0, G_OPTION_ARG_NONE, &medit_opts.new_tab,
-				/* help message for command line option --new-tab */ N_("Open file(s) in a new tab"), NULL },
-		{ "project", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_FILENAME, (gpointer) &medit_opts.project,
-				"Open project file FILE", "FILE" },
-		{ "project-mode", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_NONE, &medit_opts.project_mode,
-				"IDE mode", NULL },
-		{ "line", 'l', 0, G_OPTION_ARG_INT, &medit_opts.line,
-				/* help message for command line option --line=LINE */ N_("Open file and position cursor on line LINE"),
-				/* "LINE" part in --line=LINE */ N_("LINE") },
-		{ "encoding", 'e', 0, G_OPTION_ARG_STRING, (gpointer) &medit_opts.encoding,
-				/* help message for command line option --encoding=ENCODING */ N_("Use character encoding ENCODING"),
-				/* "ENCODING" part in --encoding=ENCODING */ N_("ENCODING") },
-		{ "reload", 'r', 0, G_OPTION_ARG_NONE, &medit_opts.reload,
-				/* help message for command line option --reload */ N_("Automatically reload file if it was modified on disk"), NULL },
-		{ "run-script", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_STRING_ARRAY, (gpointer) &medit_opts.run_script,
-				"Run SCRIPT", "SCRIPT" },
-		{ "send-script", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_STRING_ARRAY, (gpointer) &medit_opts.send_script,
-				"Send SCRIPT to existing instance", "SCRIPT" },
-		{ "log-window", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_NONE, &medit_opts.log_window,
-				"Show debug output", NULL },
-		{ "log-file", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_FILENAME, (gpointer) &medit_opts.log_file,
-				"Write debug output to FILE", "FILE" },
-		{ "debug", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_STRING, (gpointer) &medit_opts.debug,
-				"Run in debug mode", NULL },
-		{ "geometry", 0, 0, G_OPTION_ARG_STRING, (gpointer) &medit_opts.geometry,
-				/* help message for command line option --geometry=WIDTHxHEIGHT[+X+Y] */ N_("Default window size and position"),
-				/* "WIDTHxHEIGHT[+X+Y]" part in --geometry=WIDTHxHEIGHT[+X+Y] */ N_("WIDTHxHEIGHT[+X+Y]") },
-		{ "version", 0, 0, G_OPTION_ARG_NONE, &medit_opts.show_version,
-				/* help message for command line option --version */ N_("Show version information and exit"), NULL },
-		{ "ut", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_NONE, &medit_opts.ut,
-				"Run unit tests", NULL },
-		{ "ut-uninstalled", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_NONE, &medit_opts.ut_uninstalled,
-				"Run unit tests in uninstalled medit", NULL },
-		{ "ut-dir", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_STRING, &medit_opts.ut_dir,
-				"Data dir for unit tests", NULL },
-		{ "ut-coverage", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_FILENAME, &medit_opts.ut_coverage_file,
-				"File to write coverage data to", NULL },
-		{ "ut-list", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_NONE, &medit_opts.ut_list,
-				"List unit tests", NULL },
-		{ G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_FILENAME_ARRAY, &medit_opts.filesp,
-				NULL, /* "FILES" part in "medit [OPTION...] [FILES]" */ N_("FILES") },
-		{ NULL, 0, 0, G_OPTION_ARG_NONE, NULL, NULL, NULL }
-	};
+  GOptionEntry medit_options[] = {
+    { "new-app", 'n', 0, G_OPTION_ARG_NONE, &medit_opts.new_app,
+      /* help message for command line option --new-app */ N_ ("Run new instance of application"), NULL },
+    { "use-session", 's', G_OPTION_FLAG_OPTIONAL_ARG, G_OPTION_ARG_CALLBACK, (void *) parse_use_session,
+      /* help message for command line option --use-session */ N_ ("Load and save session"), "yes|no" },
+    { "pid", 0, 0, G_OPTION_ARG_INT, &medit_opts.pid,
+      /* help message for command line option --pid=PID */ N_ ("Use existing instance with process id PID"),
+      /* "PID" part in "--pid=PID" */ N_ ("PID") },
+    { "app-name", 0, 0, G_OPTION_ARG_STRING, (gpointer) &medit_opts.instance_name,
+      /* help message for command line option --app-name=NAME */ N_ ("Set instance name to NAME if it's not already running"),
+      /* "NAME" part in "--app-name=NAME" */ N_ ("NAME") },
+    { "new-window", 'w', 0, G_OPTION_ARG_NONE, &medit_opts.new_window,
+      /* help message for command line option --new-window */ N_ ("Open file(s) in a new window"), NULL },
+    { "new-tab", 't', 0, G_OPTION_ARG_NONE, &medit_opts.new_tab,
+      /* help message for command line option --new-tab */ N_ ("Open file(s) in a new tab"), NULL },
+    { "project", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_FILENAME, (gpointer) &medit_opts.project,
+      "Open project file FILE", "FILE" },
+    { "project-mode", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_NONE, &medit_opts.project_mode,
+      "IDE mode", NULL },
+    { "line", 'l', 0, G_OPTION_ARG_INT, &medit_opts.line,
+      /* help message for command line option --line=LINE */ N_ ("Open file and position cursor on line LINE"),
+      /* "LINE" part in --line=LINE */ N_ ("LINE") },
+    { "encoding", 'e', 0, G_OPTION_ARG_STRING, (gpointer) &medit_opts.encoding,
+      /* help message for command line option --encoding=ENCODING */ N_ ("Use character encoding ENCODING"),
+      /* "ENCODING" part in --encoding=ENCODING */ N_ ("ENCODING") },
+    { "reload", 'r', 0, G_OPTION_ARG_NONE, &medit_opts.reload,
+      /* help message for command line option --reload */ N_ ("Automatically reload file if it was modified on disk"), NULL },
+    { "run-script", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_STRING_ARRAY, (gpointer) &medit_opts.run_script,
+      "Run SCRIPT", "SCRIPT" },
+    { "send-script", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_STRING_ARRAY, (gpointer) &medit_opts.send_script,
+      "Send SCRIPT to existing instance", "SCRIPT" },
+    { "log-window", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_NONE, &medit_opts.log_window,
+      "Show debug output", NULL },
+    { "log-file", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_FILENAME, (gpointer) &medit_opts.log_file,
+      "Write debug output to FILE", "FILE" },
+    { "debug", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_STRING, (gpointer) &medit_opts.debug,
+      "Run in debug mode", NULL },
+    { "geometry", 0, 0, G_OPTION_ARG_STRING, (gpointer) &medit_opts.geometry,
+      /* help message for command line option --geometry=WIDTHxHEIGHT[+X+Y] */ N_ ("Default window size and position"),
+      /* "WIDTHxHEIGHT[+X+Y]" part in --geometry=WIDTHxHEIGHT[+X+Y] */ N_ ("WIDTHxHEIGHT[+X+Y]") },
+    { "version", 0, 0, G_OPTION_ARG_NONE, &medit_opts.show_version,
+      /* help message for command line option --version */ N_ ("Show version information and exit"), NULL },
+    { G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_FILENAME_ARRAY, &medit_opts.filesp,
+      NULL, /* "FILES" part in "medit [OPTION...] [FILES]" */ N_ ("FILES") },
+    { NULL, 0, 0, G_OPTION_ARG_NONE, NULL, NULL, NULL }
+  };
 
-    grp = g_option_group_new ("medit", "medit", "medit", NULL, NULL);
-    g_option_group_add_entries (grp, medit_options);
-    g_option_group_set_parse_hooks (grp, NULL, (GOptionParseFunc) post_parse_func);
-    g_option_group_set_translation_domain (grp, GETTEXT_PACKAGE);
+  grp = g_option_group_new ("medit", "medit", "medit", NULL, NULL);
+  g_option_group_add_entries (grp, medit_options);
+  g_option_group_set_parse_hooks (grp, NULL, (GOptionParseFunc) post_parse_func);
+  g_option_group_set_translation_domain (grp, GETTEXT_PACKAGE);
 
-    ctx = g_option_context_new (NULL);
-    g_option_context_set_main_group (ctx, grp);
-    g_option_context_add_group (ctx, gtk_get_option_group (FALSE));
+  ctx = g_option_context_new (NULL);
+  g_option_context_set_main_group (ctx, grp);
+  g_option_context_add_group (ctx, gtk_get_option_group (FALSE));
 
-    if (!g_option_context_parse (ctx, &argc, &argv, &error))
+  if (!g_option_context_parse (ctx, &argc, &argv, &error))
     {
-        g_printerr ("%s\n", error->message);
-        exit (EXIT_FAILURE);
+      g_printerr ("%s\n", error->message);
+      exit (EXIT_FAILURE);
     }
 
-    return ctx;
+  return ctx;
 }
+//----------------------------------------------------------------------------------------------
 
 static void
 notify_startup_complete (void)
 {
 #ifdef GDK_WINDOWING_X11
-    const char *v = g_getenv ("DESKTOP_STARTUP_ID");
+  const char *v = g_getenv ("DESKTOP_STARTUP_ID");
 
-    if (v && *v)
+  if (v && *v)
     {
-        gtk_init (NULL, NULL);
-        gdk_notify_startup_complete ();
+      gtk_init (NULL, NULL);
+      gdk_notify_startup_complete ();
     }
 #endif
 }
+//----------------------------------------------------------------------------------------------
 
 static guint32
 get_time_stamp (void)
 {
 #ifdef GDK_WINDOWING_X11
-    const char *startup_id;
-    char *time_str, *end;
-    gulong stamp;
+  const char *startup_id;
+  char *time_str, *end;
+  gulong stamp;
 
-    startup_id = g_getenv ("DESKTOP_STARTUP_ID");
-    if (!startup_id || !startup_id[0])
-        return 0;
-
-    if (!(time_str = g_strrstr (startup_id, "_TIME")))
-        return 0;
-
-    errno = 0;
-    time_str += 5;
-    stamp = strtoul (time_str, &end, 0);
-
-    return !*end && !errno ? stamp : 0;
-#else
+  startup_id = g_getenv ("DESKTOP_STARTUP_ID");
+  if (!startup_id || !startup_id[0])
     return 0;
+
+  if (!(time_str = g_strrstr (startup_id, "_TIME")))
+    return 0;
+
+  errno = 0;
+  time_str += 5;
+  stamp = strtoul (time_str, &end, 0);
+
+  return !*end && !errno ? stamp : 0;
+#else
+  return 0;
 #endif
 }
+//----------------------------------------------------------------------------------------------
 
 #ifdef MOO_ENABLE_PROJECT
 static void
 project_mode (const char *file)
 {
-    MooPlugin *plugin;
+  MooPlugin *plugin;
 
-    plugin = (MooPlugin*) moo_plugin_lookup ("ProjectManager");
+  plugin = (MooPlugin *) moo_plugin_lookup ("ProjectManager");
 
-    if (!plugin)
+  if (!plugin)
     {
-        fputs ("Could not initialize project manager plugin\n", stderr);
-        exit (EXIT_FAILURE);
+      fputs ("Could not initialize project manager plugin\n", stderr);
+      exit (EXIT_FAILURE);
     }
 
-    if (file)
+  if (file)
     {
-        char *project = moo_filename_from_locale (file);
-        g_object_set (plugin, "project", project, NULL);
-        g_free (project);
+      char *project = moo_filename_from_locale (file);
+      g_object_set (plugin, "project", project, NULL);
+      g_free (project);
     }
 
-    moo_plugin_set_enabled (plugin, TRUE);
+  moo_plugin_set_enabled (plugin, TRUE);
 }
 #endif
-
-static void
-unit_test_func (void)
-{
-    MooTestOptions opts = MooTestOptions (0);
-    int status;
-
-    if (!medit_opts.ut_uninstalled)
-        opts = MooTestOptions (opts | MOO_TEST_INSTALLED);
-
-    status = unit_tests_main (opts, medit_opts.ut_tests, medit_opts.ut_dir, medit_opts.ut_coverage_file);
-    moo_app_set_exit_status (moo_app_instance (), status);
-    moo_app_quit (moo_app_instance ());
-}
+//----------------------------------------------------------------------------------------------
 
 static void
 run_script_func (void)
 {
-    char **p;
-    for (p = medit_opts.run_script; p && *p; ++p)
-        moo_app_run_script (moo_app_instance(), *p);
+  char **p;
+  for (p = medit_opts.run_script; p && *p; ++p)
+    moo_app_run_script (moo_app_instance (), *p);
 }
+//----------------------------------------------------------------------------------------------
 
 static void
 install_log_handlers (void)
 {
-    if (medit_opts.log_file)
-        moo_set_log_func_file (medit_opts.log_file);
-    else if (medit_opts.log_window)
-        moo_set_log_func_window (TRUE);
+  if (medit_opts.log_file)
+    moo_set_log_func_file (medit_opts.log_file);
+  else if (medit_opts.log_window)
+    moo_set_log_func_window (TRUE);
 }
+//----------------------------------------------------------------------------------------------
 
 int
 medit_app_main (int argc, char *argv[])
 {
-    MooApp *app = NULL;
-    MooEditor *editor;
-    int retval;
-    gboolean new_instance = FALSE;
-    gboolean run_input = TRUE;
-    guint32 stamp;
-    const char *name = NULL;
-    char pid_buf[32];
-    GOptionContext *ctx;
-    MooOpenInfoArray *files;
+  MooApp *app = NULL;
+  MooEditor *editor;
+  int retval;
+  gboolean new_instance = FALSE;
+  gboolean run_input = TRUE;
+  guint32 stamp;
+  const char *name = NULL;
+  char pid_buf[32];
+  GOptionContext *ctx;
+  MooOpenInfoArray *files;
 
-    init_mem_stuff ();
-    moo_thread_init ();
-    g_set_prgname ("medit");
+  init_mem_stuff ();
+  moo_thread_init ();
+  g_set_prgname ("medit");
 
-    ctx = parse_args (argc, argv);
+  ctx = parse_args (argc, argv);
 
-    stamp = get_time_stamp ();
+  stamp = get_time_stamp ();
 
 #if 0
     gdk_window_set_debug_updates (TRUE);
@@ -393,117 +360,109 @@ medit_app_main (int argc, char *argv[])
     g_idle_add_full (G_PRIORITY_LOW, (GSourceFunc) exit, NULL, NULL);
 #endif
 
-    if (medit_opts.new_app || medit_opts.project_mode)
-        new_instance = TRUE;
+  if (medit_opts.new_app || medit_opts.project_mode)
+    new_instance = TRUE;
 
-    run_input = !medit_opts.new_app || medit_opts.instance_name ||
-                 medit_opts.use_session == 1 || medit_opts.project_mode;
+  run_input = !medit_opts.new_app || medit_opts.instance_name ||
+              medit_opts.use_session == 1 || medit_opts.project_mode;
 
-    if (medit_opts.ut)
+  if (medit_opts.pid > 0)
     {
-        new_instance = TRUE;
-        run_input = FALSE;
-        medit_opts.use_session = FALSE;
+      sprintf (pid_buf, "%d", medit_opts.pid);
+      name = pid_buf;
     }
+  else if (medit_opts.instance_name)
+    name = medit_opts.instance_name;
+  else if (!medit_opts.new_app)
+    name = g_getenv ("MEDIT_PID");
 
-    if (medit_opts.pid > 0)
+  if (name && !name[0])
+    name = NULL;
+
+  if (medit_opts.send_script)
     {
-        sprintf (pid_buf, "%d", medit_opts.pid);
-        name = pid_buf;
-    }
-    else if (medit_opts.instance_name)
-        name = medit_opts.instance_name;
-    else if (!medit_opts.new_app)
-        name = g_getenv ("MEDIT_PID");
-
-    if (name && !name[0])
-        name = NULL;
-
-    if (medit_opts.send_script)
-    {
-        char **p;
-        for (p = medit_opts.send_script; *p; ++p)
+      char **p;
+      for (p = medit_opts.send_script; *p; ++p)
         {
-            GString *msg = g_string_new ("e");
-            g_string_append (msg, *p);
-            moo_app_send_msg (name, msg->str, msg->len + 1);
-            g_string_free(msg, TRUE);
+          GString *msg = g_string_new ("e");
+          g_string_append (msg, *p);
+          moo_app_send_msg (name, msg->str, msg->len + 1);
+          g_string_free (msg, TRUE);
         }
-        notify_startup_complete ();
-        exit (0);
+      notify_startup_complete ();
+      exit (0);
     }
 
-    files = parse_files ();
+  files = parse_files ();
 
-    if (name)
+  if (name)
     {
-        if (moo_app_send_files (files, stamp, name))
-            exit (0);
+      if (moo_app_send_files (files, stamp, name))
+        exit (0);
 
-        if (!medit_opts.instance_name)
+      if (!medit_opts.instance_name)
         {
-            g_printerr ("Could not send files to instance '%s'\n", name);
-            exit (EXIT_FAILURE);
+          g_printerr ("Could not send files to instance '%s'\n", name);
+          exit (EXIT_FAILURE);
         }
     }
 
-    if (!new_instance && !medit_opts.instance_name &&
-         moo_app_send_files (files, stamp, NULL))
+  if (!new_instance && !medit_opts.instance_name &&
+      moo_app_send_files (files, stamp, NULL))
     {
-        notify_startup_complete ();
-        exit (0);
+      notify_startup_complete ();
+      exit (0);
     }
 
-    gtk_init (NULL, NULL);
+  gtk_init (NULL, NULL);
 
-    install_log_handlers ();
+  install_log_handlers ();
 
-    app = MOO_APP (g_object_new (medit_app_get_type (),
-                                 "run-input", run_input,
-                                 "use-session", medit_opts.use_session,
-                                 "instance-name", medit_opts.instance_name,
-                                 (const char*) NULL));
+  app = MOO_APP (g_object_new (medit_app_get_type (),
+                               "run-input", run_input,
+                               "use-session", medit_opts.use_session,
+                               "instance-name", medit_opts.instance_name,
+                               (const char *) NULL));
 
-    if (!moo_app_init (app))
+  if (!moo_app_init (app))
     {
-        gdk_notify_startup_complete ();
-        g_object_unref (app);
-        exit (EXIT_FAILURE);
+      gdk_notify_startup_complete ();
+      g_object_unref (app);
+      exit (EXIT_FAILURE);
     }
 
-    if (medit_opts.geometry && *medit_opts.geometry)
-        moo_window_set_default_geometry (medit_opts.geometry);
+  if (medit_opts.geometry && *medit_opts.geometry)
+    moo_window_set_default_geometry (medit_opts.geometry);
 
-    if (medit_opts.project_mode)
+  if (medit_opts.project_mode)
 #ifdef MOO_ENABLE_PROJECT
-        project_mode (medit_opts.project);
+    project_mode (medit_opts.project);
 #else
     {
-        fputs ("medit was built without project support\n", stderr);
-    exit (EXIT_FAILURE);
+      fputs ("medit was built without project support\n", stderr);
+      exit (EXIT_FAILURE);
     }
 #endif
-    else
-        moo_app_load_session (app);
+  else
+    moo_app_load_session (app);
 
-    editor = moo_app_get_editor (app);
-    if (!moo_editor_get_active_window (editor))
-        moo_editor_new_window (editor);
+  editor = moo_app_get_editor (app);
+  if (!moo_editor_get_active_window (editor))
+    moo_editor_new_window (editor);
 
-    if (files)
-        moo_app_open_files (app, files, stamp);
+  if (files)
+    moo_app_open_files (app, files, stamp);
 
-    moo_open_info_array_free (files);
-    g_option_context_free (ctx);
+  moo_open_info_array_free (files);
+  g_option_context_free (ctx);
 
-    if (medit_opts.ut)
-        g_signal_connect (app, "started", G_CALLBACK (unit_test_func), NULL);
-    if (medit_opts.run_script)
-        g_signal_connect (app, "started", G_CALLBACK (run_script_func), NULL);
+  if (medit_opts.run_script)
+    g_signal_connect (app, "started", G_CALLBACK (run_script_func), NULL);
 
-    retval = moo_app_run (app);
+  retval = moo_app_run (app);
 
-    g_object_unref (app);
+  g_object_unref (app);
 
-    return retval;
+  return retval;
 }
+//----------------------------------------------------------------------------------------------

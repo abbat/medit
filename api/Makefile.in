@@ -406,8 +406,6 @@ BUILT_SOURCES = $(am__append_1)
 @MOO_DEV_MODE_TRUE@    ../src/mooedit/mooeditor.h\
 @MOO_DEV_MODE_TRUE@    ../src/mooedit/mooeditor-impl.h\
 @MOO_DEV_MODE_TRUE@    ../src/mooedit/mooeditor-private.h\
-@MOO_DEV_MODE_TRUE@    ../src/mooedit/mooeditor-tests.cpp\
-@MOO_DEV_MODE_TRUE@    ../src/mooedit/mooeditor-tests.h\
 @MOO_DEV_MODE_TRUE@    ../src/mooedit/mooeditprefs.cpp\
 @MOO_DEV_MODE_TRUE@    ../src/mooedit/mooeditprefs.h\
 @MOO_DEV_MODE_TRUE@    ../src/mooedit/mooeditprefspage.cpp\
@@ -616,7 +614,6 @@ BUILT_SOURCES = $(am__append_1)
 @MOO_DEV_MODE_TRUE@    ../src/mooutils/mooutils-misc.h\
 @MOO_DEV_MODE_TRUE@    ../src/mooutils/mooutils-script.c\
 @MOO_DEV_MODE_TRUE@    ../src/mooutils/mooutils-script.h\
-@MOO_DEV_MODE_TRUE@    ../src/mooutils/mooutils-tests.h\
 @MOO_DEV_MODE_TRUE@    ../src/mooutils/mooutils-thread.cpp\
 @MOO_DEV_MODE_TRUE@    ../src/mooutils/mooutils-thread.h\
 @MOO_DEV_MODE_TRUE@    ../src/mooutils/mooutils-treeview.cpp\

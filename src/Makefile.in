@@ -130,10 +130,10 @@ am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(cfgdir)" \
 	"$(DESTDIR)$(langsdir)"
 PROGRAMS = $(bin_PROGRAMS)
 LIBRARIES = $(noinst_LIBRARIES)
-am__medit_SOURCES_DIST = medit-app/mem-debug.h medit-app/run-tests.h \
-	medit-app/parse.h medit-app/main.h medit-app/main.cpp main.c \
-	moo-config.h sysheaders.h mooglib/moo-glib.h \
-	mooglib/moo-stat.h mooglib/moo-time.h mooglib/moo-glib.cpp \
+am__medit_SOURCES_DIST = medit-app/mem-debug.h medit-app/parse.h \
+	medit-app/main.h medit-app/main.cpp main.c moo-config.h \
+	sysheaders.h mooglib/moo-glib.h mooglib/moo-stat.h \
+	mooglib/moo-time.h mooglib/moo-glib.cpp \
 	mooedit/mooedit-enums.h mooedit/mooeditor.h \
 	mooedit/mootextview.h mooedit/mootextprint.h \
 	mooedit/mooeditview.h mooedit/mooeditaction.h \
@@ -178,7 +178,6 @@ am__medit_SOURCES_DIST = medit-app/mem-debug.h medit-app/run-tests.h \
 	mooedit/mootextview.c mooedit/mootextview-input.c \
 	mooedit/mootextview-private.h mooedit/mooeditor.cpp \
 	mooedit/mooeditor-impl.h mooedit/mooeditor-private.h \
-	mooedit/mooeditor-tests.cpp mooedit/mooeditor-tests.h \
 	xdgmime/xdgmimealias.c xdgmime/xdgmimealias.h \
 	xdgmime/xdgmime.c xdgmime/xdgmimecache.c \
 	xdgmime/xdgmimecache.h xdgmime/xdgmimeglob.c \
@@ -244,19 +243,19 @@ am__medit_SOURCES_DIST = medit-app/mem-debug.h medit-app/run-tests.h \
 	mooutils/mooutils-mem.h mooutils/mooutils-messages.h \
 	mooutils/mooutils-misc.cpp mooutils/mooutils-misc.h \
 	mooutils/mooutils-script.c mooutils/mooutils-script.h \
-	mooutils/mooutils-tests.h mooutils/mooutils-treeview.cpp \
-	mooutils/mooutils-treeview.h mooutils/moowindow.c \
-	mooutils/stock-file-24.h mooutils/stock-file-selector-24.h \
-	mooutils/stock-terminal-24.h mooutils/mooappinput-unix.c \
-	mooutils/moo-test-utils.cpp mooutils/moo-test-utils.h \
-	mooutils/moo-test-macros.h moofileview/moobookmarkmgr.c \
-	moofileview/moobookmarkmgr.h moofileview/moobookmarkview.c \
-	moofileview/moobookmarkview.h moofileview/moofile.c \
-	moofileview/moofile.h moofileview/moofile-private.h \
-	moofileview/moofileentry.c moofileview/moofileentry.h \
-	moofileview/moofilesystem.c moofileview/moofilesystem.h \
-	moofileview/moofileview.c moofileview/moofileview.h \
-	moofileview/moofileview-accels.h moofileview/moofileview-aux.h \
+	mooutils/mooutils-treeview.cpp mooutils/mooutils-treeview.h \
+	mooutils/moowindow.c mooutils/stock-file-24.h \
+	mooutils/stock-file-selector-24.h mooutils/stock-terminal-24.h \
+	mooutils/mooappinput-unix.c mooutils/moo-test-utils.cpp \
+	mooutils/moo-test-utils.h mooutils/moo-test-macros.h \
+	moofileview/moobookmarkmgr.c moofileview/moobookmarkmgr.h \
+	moofileview/moobookmarkview.c moofileview/moobookmarkview.h \
+	moofileview/moofile.c moofileview/moofile.h \
+	moofileview/moofile-private.h moofileview/moofileentry.c \
+	moofileview/moofileentry.h moofileview/moofilesystem.c \
+	moofileview/moofilesystem.h moofileview/moofileview.c \
+	moofileview/moofileview.h moofileview/moofileview-accels.h \
+	moofileview/moofileview-aux.h \
 	moofileview/moofileview-dialogs.c \
 	moofileview/moofileview-dialogs.h \
 	moofileview/moofileview-impl.h \
@@ -304,7 +303,6 @@ am__medit_SOURCES_DIST = medit-app/mem-debug.h medit-app/run-tests.h \
 	mooapp/mooapp-private.h mooapp/moohtml.h mooapp/moohtml.cpp \
 	mooapp/moolinklabel.h mooapp/moolinklabel.c moolua/medit-lua.h \
 	moolua/medit-lua.cpp moolua/mooluaplugin.cpp \
-	moolua/moolua-tests.h moolua/moolua-tests.cpp \
 	moolua/moo-lua-api-util.h moolua/moo-lua-api-util.cpp \
 	moolua/moo-lua-api.cpp moolua/moo-lua-api.h \
 	moolua/gtk-lua-api.cpp moolua/gtk-lua-api.h moolua/lua/lfs.h \
@@ -378,8 +376,7 @@ am__objects_5 = main.$(OBJEXT) mooglib/moo-glib.$(OBJEXT) \
 	mooedit/mootextstylescheme.$(OBJEXT) \
 	mooedit/mootextview.$(OBJEXT) \
 	mooedit/mootextview-input.$(OBJEXT) \
-	mooedit/mooeditor.$(OBJEXT) mooedit/mooeditor-tests.$(OBJEXT) \
-	$(am__objects_2) $(am__objects_1) \
+	mooedit/mooeditor.$(OBJEXT) $(am__objects_2) $(am__objects_1) \
 	mooutils/moohistorymgr.$(OBJEXT) mooutils/mooaccel.$(OBJEXT) \
 	mooutils/mooaccelbutton.$(OBJEXT) \
 	mooutils/mooaccelprefs.$(OBJEXT) mooutils/mooaction.$(OBJEXT) \
@@ -446,7 +443,6 @@ am__objects_5 = main.$(OBJEXT) mooglib/moo-glib.$(OBJEXT) \
 	mooapp/mooappabout.$(OBJEXT) mooapp/mooapp.$(OBJEXT) \
 	mooapp/moohtml.$(OBJEXT) mooapp/moolinklabel.$(OBJEXT) \
 	moolua/medit-lua.$(OBJEXT) moolua/mooluaplugin.$(OBJEXT) \
-	moolua/moolua-tests.$(OBJEXT) \
 	moolua/moo-lua-api-util.$(OBJEXT) moolua/moo-lua-api.$(OBJEXT) \
 	moolua/gtk-lua-api.$(OBJEXT) moolua/lua/lfs.$(OBJEXT) \
 	moolua/lua/moolua.$(OBJEXT) moolua/lua/luaall.$(OBJEXT) \
@@ -537,7 +533,6 @@ am__depfiles_remade = ./$(DEPDIR)/dummy.Po ./$(DEPDIR)/main.Po \
 	mooedit/$(DEPDIR)/mooeditfileinfo.Po \
 	mooedit/$(DEPDIR)/mooeditfiltersettings.Po \
 	mooedit/$(DEPDIR)/mooedithistoryitem.Po \
-	mooedit/$(DEPDIR)/mooeditor-tests.Po \
 	mooedit/$(DEPDIR)/mooeditor.Po \
 	mooedit/$(DEPDIR)/mooeditprefs.Po \
 	mooedit/$(DEPDIR)/mooeditprefspage.Po \
@@ -576,7 +571,6 @@ am__depfiles_remade = ./$(DEPDIR)/dummy.Po ./$(DEPDIR)/main.Po \
 	moolua/$(DEPDIR)/medit-lua.Po \
 	moolua/$(DEPDIR)/moo-lua-api-util.Po \
 	moolua/$(DEPDIR)/moo-lua-api.Po \
-	moolua/$(DEPDIR)/moolua-tests.Po \
 	moolua/$(DEPDIR)/mooluaplugin.Po moolua/lua/$(DEPDIR)/lfs.Po \
 	moolua/lua/$(DEPDIR)/luaall.Po moolua/lua/$(DEPDIR)/moolua.Po \
 	mooutils/$(DEPDIR)/moo-mime.Po \
@@ -1206,9 +1200,7 @@ EXTRA_DIST = mooglib/moo-glib.cpp marshals.list \
 	plugins/usertools/filters.xml plugins/usertools/menu-tmpl.xml \
 	plugins/usertools/context-tmpl.xml \
 	plugins/usertools/genplatxml.py medit-app/data \
-	medit-app/run-tests.sh medit-app/print-functions.py \
-	medit-app/run-tests-installed.sh \
-	medit-app/run-tests-uninstalled.sh medit-app/medit.desktop.in
+	medit-app/medit.desktop.in
 BUILT_SOURCES = $(am__append_3) $(built_moo_sources) \
 	$(built_plugins_sources)
 CLEANFILES = $(am__append_8) $(built_moo_sources) \
@@ -1268,46 +1260,44 @@ moo_sources = main.c moo-config.h sysheaders.h mooglib/moo-glib.h \
 	mooedit/mootextview.c mooedit/mootextview-input.c \
 	mooedit/mootextview-private.h mooedit/mooeditor.cpp \
 	mooedit/mooeditor-impl.h mooedit/mooeditor-private.h \
-	mooedit/mooeditor-tests.cpp mooedit/mooeditor-tests.h \
-	mooedit/mooeditor-tests.h $(xdgmime_sources) \
-	$(moo_utils_enum_headers) mooutils/mooarray.h \
-	mooutils/moohistorymgr.c mooutils/moohistorymgr.h \
-	mooutils/moo-environ.h mooutils/mooaccel.cpp \
-	mooutils/mooaccel.h mooutils/mooaccelbutton.c \
-	mooutils/mooaccelbutton.h mooutils/mooaccelprefs.cpp \
-	mooutils/mooaccelprefs.h mooutils/mooaction-private.h \
-	mooutils/mooaction.c mooutils/mooaction.h \
-	mooutils/mooactionbase-private.h mooutils/mooactionbase.c \
-	mooutils/mooactionbase.h mooutils/mooactioncollection.c \
-	mooutils/mooactioncollection.h mooutils/mooactionfactory.c \
-	mooutils/mooactionfactory.h mooutils/mooactiongroup.c \
-	mooutils/mooactiongroup.h mooutils/mooapp-ipc.c \
-	mooutils/mooapp-ipc.h mooutils/mooappinput-common.c \
-	mooutils/mooappinput.h mooutils/mooappinput-priv.h \
-	mooutils/mooatom.h mooutils/moobigpaned.c \
-	mooutils/moobigpaned.h mooutils/mooclosure.c \
-	mooutils/mooclosure.h mooutils/moocombo.c mooutils/moocombo.h \
-	mooutils/moocompat.h mooutils/moodialogs.c \
-	mooutils/mooeditops.c mooutils/mooeditops.h \
-	mooutils/mooencodings-data.h mooutils/mooencodings.cpp \
-	mooutils/mooencodings.h mooutils/mooentry.cpp \
-	mooutils/mooentry.h mooutils/moofiledialog.c \
-	mooutils/moofileicon.c mooutils/moofileicon.h \
-	mooutils/moofilewatch.c mooutils/moofilewatch.h \
-	mooutils/moofilewriter.cpp mooutils/moofilewriter.h \
-	mooutils/moofilewriter-private.h mooutils/moofiltermgr.c \
-	mooutils/moofiltermgr.h mooutils/moofontsel.c \
-	mooutils/moofontsel.h mooutils/mooglade.c mooutils/mooglade.h \
-	mooutils/moohelp.c mooutils/moohelp.h \
-	mooutils/moohistorycombo.c mooutils/moohistorycombo.h \
-	mooutils/moohistorylist.c mooutils/moohistorylist.h \
-	mooutils/mooi18n.cpp mooutils/mooi18n.h mooutils/moolist.h \
-	mooutils/moomarkup.c mooutils/moomarkup.h mooutils/moomenu.c \
-	mooutils/moomenu.h mooutils/moomenuaction.c \
-	mooutils/moomenuaction.h mooutils/moomenumgr.c \
-	mooutils/moomenumgr.h mooutils/moomenutoolbutton.c \
-	mooutils/moomenutoolbutton.h mooutils/moo-mime.c \
-	mooutils/moo-mime.h mooutils/moonotebook.c \
+	$(xdgmime_sources) $(moo_utils_enum_headers) \
+	mooutils/mooarray.h mooutils/moohistorymgr.c \
+	mooutils/moohistorymgr.h mooutils/moo-environ.h \
+	mooutils/mooaccel.cpp mooutils/mooaccel.h \
+	mooutils/mooaccelbutton.c mooutils/mooaccelbutton.h \
+	mooutils/mooaccelprefs.cpp mooutils/mooaccelprefs.h \
+	mooutils/mooaction-private.h mooutils/mooaction.c \
+	mooutils/mooaction.h mooutils/mooactionbase-private.h \
+	mooutils/mooactionbase.c mooutils/mooactionbase.h \
+	mooutils/mooactioncollection.c mooutils/mooactioncollection.h \
+	mooutils/mooactionfactory.c mooutils/mooactionfactory.h \
+	mooutils/mooactiongroup.c mooutils/mooactiongroup.h \
+	mooutils/mooapp-ipc.c mooutils/mooapp-ipc.h \
+	mooutils/mooappinput-common.c mooutils/mooappinput.h \
+	mooutils/mooappinput-priv.h mooutils/mooatom.h \
+	mooutils/moobigpaned.c mooutils/moobigpaned.h \
+	mooutils/mooclosure.c mooutils/mooclosure.h \
+	mooutils/moocombo.c mooutils/moocombo.h mooutils/moocompat.h \
+	mooutils/moodialogs.c mooutils/mooeditops.c \
+	mooutils/mooeditops.h mooutils/mooencodings-data.h \
+	mooutils/mooencodings.cpp mooutils/mooencodings.h \
+	mooutils/mooentry.cpp mooutils/mooentry.h \
+	mooutils/moofiledialog.c mooutils/moofileicon.c \
+	mooutils/moofileicon.h mooutils/moofilewatch.c \
+	mooutils/moofilewatch.h mooutils/moofilewriter.cpp \
+	mooutils/moofilewriter.h mooutils/moofilewriter-private.h \
+	mooutils/moofiltermgr.c mooutils/moofiltermgr.h \
+	mooutils/moofontsel.c mooutils/moofontsel.h \
+	mooutils/mooglade.c mooutils/mooglade.h mooutils/moohelp.c \
+	mooutils/moohelp.h mooutils/moohistorycombo.c \
+	mooutils/moohistorycombo.h mooutils/moohistorylist.c \
+	mooutils/moohistorylist.h mooutils/mooi18n.cpp \
+	mooutils/mooi18n.h mooutils/moolist.h mooutils/moomarkup.c \
+	mooutils/moomarkup.h mooutils/moomenu.c mooutils/moomenu.h \
+	mooutils/moomenuaction.c mooutils/moomenuaction.h \
+	mooutils/moomenumgr.c mooutils/moomenumgr.h \
+	mooutils/moomenutoolbutton.c mooutils/moomenutoolbutton.h \
+	mooutils/moo-mime.c mooutils/moo-mime.h mooutils/moonotebook.c \
 	mooutils/moonotebook.h mooutils/mooonce.h mooutils/moopane.c \
 	mooutils/moopane.h mooutils/moopaned.c mooutils/moopaned.h \
 	mooutils/mooprefs.c mooutils/mooprefs.h \
@@ -1327,18 +1317,18 @@ moo_sources = main.c moo-config.h sysheaders.h mooglib/moo-glib.h \
 	mooutils/mooutils-mem.h mooutils/mooutils-messages.h \
 	mooutils/mooutils-misc.cpp mooutils/mooutils-misc.h \
 	mooutils/mooutils-script.c mooutils/mooutils-script.h \
-	mooutils/mooutils-tests.h mooutils/mooutils-treeview.cpp \
-	mooutils/mooutils-treeview.h mooutils/moowindow.c \
-	mooutils/stock-file-24.h mooutils/stock-file-selector-24.h \
-	mooutils/stock-terminal-24.h $(mooutils_unix_sources) \
-	$(mooutils_unittest_sources) moofileview/moobookmarkmgr.c \
-	moofileview/moobookmarkmgr.h moofileview/moobookmarkview.c \
-	moofileview/moobookmarkview.h moofileview/moofile.c \
-	moofileview/moofile.h moofileview/moofile-private.h \
-	moofileview/moofileentry.c moofileview/moofileentry.h \
-	moofileview/moofilesystem.c moofileview/moofilesystem.h \
-	moofileview/moofileview.c moofileview/moofileview.h \
-	moofileview/moofileview-accels.h moofileview/moofileview-aux.h \
+	mooutils/mooutils-treeview.cpp mooutils/mooutils-treeview.h \
+	mooutils/moowindow.c mooutils/stock-file-24.h \
+	mooutils/stock-file-selector-24.h mooutils/stock-terminal-24.h \
+	$(mooutils_unix_sources) $(mooutils_unittest_sources) \
+	moofileview/moobookmarkmgr.c moofileview/moobookmarkmgr.h \
+	moofileview/moobookmarkview.c moofileview/moobookmarkview.h \
+	moofileview/moofile.c moofileview/moofile.h \
+	moofileview/moofile-private.h moofileview/moofileentry.c \
+	moofileview/moofileentry.h moofileview/moofilesystem.c \
+	moofileview/moofilesystem.h moofileview/moofileview.c \
+	moofileview/moofileview.h moofileview/moofileview-accels.h \
+	moofileview/moofileview-aux.h \
 	moofileview/moofileview-dialogs.c \
 	moofileview/moofileview-dialogs.h \
 	moofileview/moofileview-impl.h \
@@ -1386,7 +1376,6 @@ moo_sources = main.c moo-config.h sysheaders.h mooglib/moo-glib.h \
 	mooapp/mooapp-private.h mooapp/moohtml.h mooapp/moohtml.cpp \
 	mooapp/moolinklabel.h mooapp/moolinklabel.c moolua/medit-lua.h \
 	moolua/medit-lua.cpp moolua/mooluaplugin.cpp \
-	moolua/moolua-tests.h moolua/moolua-tests.cpp \
 	moolua/moo-lua-api-util.h moolua/moo-lua-api-util.cpp \
 	moolua/moo-lua-api.cpp moolua/moo-lua-api.h \
 	moolua/gtk-lua-api.cpp moolua/gtk-lua-api.h moolua/lua/lfs.h \
@@ -1669,7 +1658,6 @@ genplatxml_args = --enable=unix
 @MOO_BUILD_APP_TRUE@	$(am__append_6)
 @MOO_BUILD_APP_TRUE@medit_SOURCES = \
 @MOO_BUILD_APP_TRUE@	medit-app/mem-debug.h		\
-@MOO_BUILD_APP_TRUE@	medit-app/run-tests.h		\
 @MOO_BUILD_APP_TRUE@	medit-app/parse.h		\
 @MOO_BUILD_APP_TRUE@	medit-app/main.h		\
 @MOO_BUILD_APP_TRUE@	medit-app/main.cpp		\
@@ -1870,8 +1858,6 @@ mooedit/mootextview.$(OBJEXT): mooedit/$(am__dirstamp) \
 mooedit/mootextview-input.$(OBJEXT): mooedit/$(am__dirstamp) \
 	mooedit/$(DEPDIR)/$(am__dirstamp)
 mooedit/mooeditor.$(OBJEXT): mooedit/$(am__dirstamp) \
-	mooedit/$(DEPDIR)/$(am__dirstamp)
-mooedit/mooeditor-tests.$(OBJEXT): mooedit/$(am__dirstamp) \
 	mooedit/$(DEPDIR)/$(am__dirstamp)
 xdgmime/$(am__dirstamp):
 	@$(MKDIR_P) xdgmime
@@ -2117,8 +2103,6 @@ moolua/medit-lua.$(OBJEXT): moolua/$(am__dirstamp) \
 	moolua/$(DEPDIR)/$(am__dirstamp)
 moolua/mooluaplugin.$(OBJEXT): moolua/$(am__dirstamp) \
 	moolua/$(DEPDIR)/$(am__dirstamp)
-moolua/moolua-tests.$(OBJEXT): moolua/$(am__dirstamp) \
-	moolua/$(DEPDIR)/$(am__dirstamp)
 moolua/moo-lua-api-util.$(OBJEXT): moolua/$(am__dirstamp) \
 	moolua/$(DEPDIR)/$(am__dirstamp)
 moolua/moo-lua-api.$(OBJEXT): moolua/$(am__dirstamp) \
@@ -2291,7 +2275,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@mooedit/$(DEPDIR)/mooeditfileinfo.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@mooedit/$(DEPDIR)/mooeditfiltersettings.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@mooedit/$(DEPDIR)/mooedithistoryitem.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@mooedit/$(DEPDIR)/mooeditor-tests.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@mooedit/$(DEPDIR)/mooeditor.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@mooedit/$(DEPDIR)/mooeditprefs.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@mooedit/$(DEPDIR)/mooeditprefspage.Po@am__quote@ # am--include-marker
@@ -2333,7 +2316,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@moolua/$(DEPDIR)/medit-lua.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@moolua/$(DEPDIR)/moo-lua-api-util.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@moolua/$(DEPDIR)/moo-lua-api.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@moolua/$(DEPDIR)/moolua-tests.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@moolua/$(DEPDIR)/mooluaplugin.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@moolua/lua/$(DEPDIR)/lfs.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@moolua/lua/$(DEPDIR)/luaall.Po@am__quote@ # am--include-marker
@@ -2944,7 +2926,6 @@ distclean: distclean-am
 	-rm -f mooedit/$(DEPDIR)/mooeditfileinfo.Po
 	-rm -f mooedit/$(DEPDIR)/mooeditfiltersettings.Po
 	-rm -f mooedit/$(DEPDIR)/mooedithistoryitem.Po
-	-rm -f mooedit/$(DEPDIR)/mooeditor-tests.Po
 	-rm -f mooedit/$(DEPDIR)/mooeditor.Po
 	-rm -f mooedit/$(DEPDIR)/mooeditprefs.Po
 	-rm -f mooedit/$(DEPDIR)/mooeditprefspage.Po
@@ -2986,7 +2967,6 @@ distclean: distclean-am
 	-rm -f moolua/$(DEPDIR)/medit-lua.Po
 	-rm -f moolua/$(DEPDIR)/moo-lua-api-util.Po
 	-rm -f moolua/$(DEPDIR)/moo-lua-api.Po
-	-rm -f moolua/$(DEPDIR)/moolua-tests.Po
 	-rm -f moolua/$(DEPDIR)/mooluaplugin.Po
 	-rm -f moolua/lua/$(DEPDIR)/lfs.Po
 	-rm -f moolua/lua/$(DEPDIR)/luaall.Po
@@ -3160,7 +3140,6 @@ maintainer-clean: maintainer-clean-am
 	-rm -f mooedit/$(DEPDIR)/mooeditfileinfo.Po
 	-rm -f mooedit/$(DEPDIR)/mooeditfiltersettings.Po
 	-rm -f mooedit/$(DEPDIR)/mooedithistoryitem.Po
-	-rm -f mooedit/$(DEPDIR)/mooeditor-tests.Po
 	-rm -f mooedit/$(DEPDIR)/mooeditor.Po
 	-rm -f mooedit/$(DEPDIR)/mooeditprefs.Po
 	-rm -f mooedit/$(DEPDIR)/mooeditprefspage.Po
@@ -3202,7 +3181,6 @@ maintainer-clean: maintainer-clean-am
 	-rm -f moolua/$(DEPDIR)/medit-lua.Po
 	-rm -f moolua/$(DEPDIR)/moo-lua-api-util.Po
 	-rm -f moolua/$(DEPDIR)/moo-lua-api.Po
-	-rm -f moolua/$(DEPDIR)/moolua-tests.Po
 	-rm -f moolua/$(DEPDIR)/mooluaplugin.Po
 	-rm -f moolua/lua/$(DEPDIR)/lfs.Po
 	-rm -f moolua/lua/$(DEPDIR)/luaall.Po
