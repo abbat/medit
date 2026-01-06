@@ -165,8 +165,15 @@ moo_line_view_parent_set (GtkWidget *widget,
 
     view->priv->hscrollbar = NULL;
 
+#if GTK_CHECK_VERSION(3,0,0)
+    // FIXME: This code was written by AI and requires review
+    GtkWidget *parent = gtk_widget_get_parent(widget);
+    if (parent && GTK_IS_SCROLLED_WINDOW(parent))
+        view->priv->hscrollbar = gtk_scrolled_window_get_hscrollbar(GTK_SCROLLED_WINDOW(parent));
+#else
     if (widget->parent && GTK_IS_SCROLLED_WINDOW (widget->parent))
         view->priv->hscrollbar = GTK_SCROLLED_WINDOW(widget->parent)->hscrollbar;
+#endif
 
     if (GTK_WIDGET_CLASS (moo_line_view_parent_class)->parent_set)
         GTK_WIDGET_CLASS (moo_line_view_parent_class)->parent_set (widget, old_parent);
@@ -523,7 +530,16 @@ check_if_scrolled (MooLineView *view)
     if (view->priv->hscrollbar && gtk_widget_get_visible (view->priv->hscrollbar))
     {
         int space;
+
+#if GTK_CHECK_VERSION(3,0,0)
+        // FIXME: This code was written by AI and requires review
+        GtkWidget *parent = gtk_widget_get_parent(GTK_WIDGET(view));
+        if (parent)
+            gtk_widget_style_get (parent, "scrollbar-spacing", &space, nullptr);
+#else
         gtk_widget_style_get (GTK_WIDGET (view)->parent, "scrollbar-spacing", &space, nullptr);
+#endif
+
         delta = MAX (delta - 1, space + gtk_widget_get_allocated_height (view->priv->hscrollbar)) + 1;
     }
 
