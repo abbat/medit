@@ -61,9 +61,6 @@ AC_PROG_INSTALL
 AC_PROG_MKDIR_P
 AM_PROG_CC_C_O
 
-AC_ARG_VAR([WINDRES], [windres])
-AC_CHECK_TOOL(WINDRES, windres, :)
-
 AC_ARG_VAR([MOO_PYTHON], [Python executable, required to run build scripts])
 AC_CHECK_PROGS(MOO_PYTHON, [python2 python2.7 python2.6 python2.5 python2.4 python2.3 python2.2 python2.1 python2.0 python], [none])
 if test "x$MOO_PYTHON" = "x"; then
