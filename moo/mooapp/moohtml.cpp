@@ -1302,9 +1302,21 @@ moo_html_size_allocate_real (GtkWidget *widget,
 
     child_width = gdk_window_get_width (window);
     border_width = gtk_container_get_border_width (GTK_CONTAINER (widget));
+
+#if GTK_CHECK_VERSION(3, 0, 0)
+    /* FIXME: This code was written by AI and requires review */
+    GtkStyleContext *context = gtk_widget_get_style_context(widget);
+    GtkBorder border;
+    gtk_style_context_get_border(context, GTK_STATE_FLAG_NORMAL, &border);
+    child_width -= 2 * border_width + 2 * border.left +
+            gtk_text_view_get_left_margin(GTK_TEXT_VIEW(widget)) +
+            gtk_text_view_get_right_margin(GTK_TEXT_VIEW(widget));
+#else
     child_width -= 2 * border_width + 2 * widget->style->xthickness +
-            gtk_text_view_get_left_margin (GTK_TEXT_VIEW (widget)) +
-            gtk_text_view_get_right_margin (GTK_TEXT_VIEW (widget));
+            gtk_text_view_get_left_margin(GTK_TEXT_VIEW(widget)) +
+            gtk_text_view_get_right_margin(GTK_TEXT_VIEW(widget));
+#endif
+
     child_width = MAX (child_width, 0);
 
     for (l = data->rulers; l != nullptr; l = l->next)
