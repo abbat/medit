@@ -565,8 +565,29 @@ run_async (const char     *cmd_line,
 
         if (screen)
         {
+#if GTK_CHECK_VERSION(3, 0, 0)
+            /* FIXME: This code was written by AI and requires review */
+            /* In GTK3, gdk_spawn_on_screen was removed, use g_spawn_async with display setup */
+            const char *display_name = gdk_display_get_name(gdk_screen_get_display(screen));
+            const char *old_display = g_getenv("DISPLAY");
+
+            if (display_name) {
+                g_setenv("DISPLAY", display_name, TRUE);
+            }
+
+            result = g_spawn_async (working_dir, (char**) argv, real_env,
+                                    flags, NULL, NULL, NULL, &error);
+
+            /* Restore original DISPLAY if it existed */
+            if (old_display) {
+                g_setenv("DISPLAY", old_display, TRUE);
+            } else if (display_name) {
+                g_unsetenv("DISPLAY");
+            }
+#else
             result = gdk_spawn_on_screen (screen, working_dir, (char**) argv, real_env,
                                           flags, NULL, NULL, NULL, &error);
+#endif
         }
         else
         {
