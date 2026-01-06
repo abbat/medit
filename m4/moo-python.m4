@@ -105,32 +105,6 @@ AC_DEFUN([MOO_AC_CHECK_PYTHON_NATIVE],[
 ])
 
 
-AC_DEFUN([MOO_AM_PYTHON_DEVEL_CROSS_MINGW],[
-  if test x"$PYTHON_INCLUDES" = x -o x"$PYTHON_LIBS" = x -o x"$PYTHON_VERSION" = x; then
-    AC_MSG_ERROR([The following variables must be set: PYTHON_INCLUDES, PYTHON_LIBS, PYTHON_VERSION])
-  fi
-  AC_ARG_VAR([PYTHON_INCLUDES], [python preprocessor flags])
-  AC_ARG_VAR([PYTHON_LIBS], [python linker flags])
-  AC_ARG_VAR([PYTHON_VERSION], [python version])
-
-  AC_SUBST(PYTHON_INCLUDES)
-  AC_SUBST(PYTHON_LIBS)
-  AC_MSG_CHECKING([for Python include path])
-  AC_MSG_RESULT([$PYTHON_INCLUDES])
-  AC_MSG_CHECKING([for Python linker flags])
-  AC_MSG_RESULT([$PYTHON_LIBS])
-
-  AC_SUBST([PYTHON_VERSION],[$PYTHON_VERSION])
-  AC_SUBST([PYTHON_PREFIX], ['${prefix}'])
-  AC_SUBST([PYTHON_EXEC_PREFIX], ['${exec_prefix}'])
-  AC_SUBST([PYTHON_PLATFORM], [nt])
-  AC_SUBST([pythondir], [$PYTHON_PREFIX/lib/python$PYTHON_VERSION/site-packages])
-  AC_SUBST([pyexecdir], [$PYTHON_EXEC_PREFIX/lib/python$PYTHON_VERSION/site-packages])
-
-  $1
-])
-
-
 ##############################################################################
 # MOO_AC_CHECK_PYTHON(min-version,action-if-found,action-if-not-found)
 # checks for python, python includes and libs

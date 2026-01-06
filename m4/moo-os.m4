@@ -1,7 +1,7 @@
 AC_DEFUN([MOO_AC_CHECK_OS],[
 AC_REQUIRE([AC_CANONICAL_HOST])
 
-  m4_define([_moo_oses_],[MINGW UNIX FREEBSD BSD LINUX FDO])
+  m4_define([_moo_oses_],[UNIX FREEBSD BSD LINUX FDO])
 
   m4_foreach_w([_moo_os_],_moo_oses_,[dnl
 MOO_OS_[]_moo_os_=false

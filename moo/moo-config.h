@@ -6,7 +6,6 @@
 #endif
 
 #undef MOO_CL_GCC
-#undef MOO_CL_MINGW
 #undef MOO_CL_MSVC
 #define MOO_GCC_CHECK_VERSION(maj,min) (0)
 
@@ -15,9 +14,6 @@
 #  ifdef __GNUC_MINOR__
 #    undef MOO_GCC_CHECK_VERSION
 #    define MOO_GCC_CHECK_VERSION(maj,min) (((__GNUC__ << 16) + __GNUC_MINOR__) >= (((maj) << 16) + (min)))
-#  endif
-#  if defined(__MINGW32__)
-#    define MOO_CL_MINGW 1
 #  endif
 #endif
 

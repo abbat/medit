@@ -730,10 +730,6 @@ MOO_OS_FREEBSD_FALSE
 MOO_OS_FREEBSD_TRUE
 MOO_OS_UNIX_FALSE
 MOO_OS_UNIX_TRUE
-MOO_OS_MINGW_FALSE
-MOO_OS_MINGW_TRUE
-MOO_OS_CYGWIN_FALSE
-MOO_OS_CYGWIN_TRUE
 MOO_PYTHON
 GTK_VERSION
 CXXCPP
@@ -18995,9 +18991,7 @@ fi
 
 
 
-  MOO_OS_CYGWIN=false
-MOO_OS_MINGW=false
-MOO_OS_UNIX=false
+  MOO_OS_UNIX=false
 MOO_OS_FREEBSD=false
 MOO_OS_BSD=false
 MOO_OS_LINUX=false
@@ -19005,10 +18999,6 @@ MOO_OS_FDO=false
 
 
   case $host in
-    *-*-cygwin*)
-      MOO_OS_CYGWIN=true
-      MOO_OS_NAME="CygWin"
-      ;;
     *-*-freebsd*)
       MOO_OS_FREEBSD=true
       MOO_OS_NAME="FreeBSD"
@@ -19026,23 +19016,7 @@ MOO_OS_FDO=false
   MOO_OS_UNIX=true
   if $MOO_OS_FREEBSD; then MOO_OS_BSD=true; fi
 
-   if $MOO_OS_CYGWIN; then
-  MOO_OS_CYGWIN_TRUE=
-  MOO_OS_CYGWIN_FALSE='#'
-else
-  MOO_OS_CYGWIN_TRUE='#'
-  MOO_OS_CYGWIN_FALSE=
-fi
-
- if $MOO_OS_MINGW; then
-  MOO_OS_MINGW_TRUE=
-  MOO_OS_MINGW_FALSE='#'
-else
-  MOO_OS_MINGW_TRUE='#'
-  MOO_OS_MINGW_FALSE=
-fi
-
- if $MOO_OS_UNIX; then
+   if $MOO_OS_UNIX; then
   MOO_OS_UNIX_TRUE=
   MOO_OS_UNIX_FALSE='#'
 else
@@ -21095,7 +21069,7 @@ ac_config_headers="$ac_config_headers config.h"
 
 LIBM=
 case $host in
-*-*-beos* | *-*-cegcc* | *-*-cygwin* | *-*-haiku* | *-*-pw32* )
+*-*-beos* | *-*-cegcc* | *-*-haiku* | *-*-pw32* )
   # These system don't have libm, or don't need it
   ;;
 *-ncr-sysv4.3*)
@@ -21269,9 +21243,7 @@ printf "%s\n" "#define MOO_WEB_CONTACT \"$MOO_WEB_CONTACT\"" >>confdefs.h
 
 
 
-  MOO_OS_CYGWIN=false
-MOO_OS_MINGW=false
-MOO_OS_UNIX=false
+  MOO_OS_UNIX=false
 MOO_OS_FREEBSD=false
 MOO_OS_BSD=false
 MOO_OS_LINUX=false
@@ -21279,10 +21251,6 @@ MOO_OS_FDO=false
 
 
   case $host in
-    *-*-cygwin*)
-      MOO_OS_CYGWIN=true
-      MOO_OS_NAME="CygWin"
-      ;;
     *-*-freebsd*)
       MOO_OS_FREEBSD=true
       MOO_OS_NAME="FreeBSD"
@@ -21300,23 +21268,7 @@ MOO_OS_FDO=false
   MOO_OS_UNIX=true
   if $MOO_OS_FREEBSD; then MOO_OS_BSD=true; fi
 
-   if $MOO_OS_CYGWIN; then
-  MOO_OS_CYGWIN_TRUE=
-  MOO_OS_CYGWIN_FALSE='#'
-else
-  MOO_OS_CYGWIN_TRUE='#'
-  MOO_OS_CYGWIN_FALSE=
-fi
-
- if $MOO_OS_MINGW; then
-  MOO_OS_MINGW_TRUE=
-  MOO_OS_MINGW_FALSE='#'
-else
-  MOO_OS_MINGW_TRUE='#'
-  MOO_OS_MINGW_FALSE=
-fi
-
- if $MOO_OS_UNIX; then
+   if $MOO_OS_UNIX; then
   MOO_OS_UNIX_TRUE=
   MOO_OS_UNIX_FALSE='#'
 else
@@ -21588,14 +21540,6 @@ if test -z "${am__fastdepCXX_TRUE}" && test -z "${am__fastdepCXX_FALSE}"; then
   as_fn_error $? "conditional \"am__fastdepCXX\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
-if test -z "${MOO_OS_CYGWIN_TRUE}" && test -z "${MOO_OS_CYGWIN_FALSE}"; then
-  as_fn_error $? "conditional \"MOO_OS_CYGWIN\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
-fi
-if test -z "${MOO_OS_MINGW_TRUE}" && test -z "${MOO_OS_MINGW_FALSE}"; then
-  as_fn_error $? "conditional \"MOO_OS_MINGW\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
-fi
 if test -z "${MOO_OS_UNIX_TRUE}" && test -z "${MOO_OS_UNIX_FALSE}"; then
   as_fn_error $? "conditional \"MOO_OS_UNIX\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
@@ -21642,14 +21586,6 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${MAINTAINER_MODE_TRUE}" && test -z "${MAINTAINER_MODE_FALSE}"; then
   as_fn_error $? "conditional \"MAINTAINER_MODE\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
-fi
-if test -z "${MOO_OS_CYGWIN_TRUE}" && test -z "${MOO_OS_CYGWIN_FALSE}"; then
-  as_fn_error $? "conditional \"MOO_OS_CYGWIN\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
-fi
-if test -z "${MOO_OS_MINGW_TRUE}" && test -z "${MOO_OS_MINGW_FALSE}"; then
-  as_fn_error $? "conditional \"MOO_OS_MINGW\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${MOO_OS_UNIX_TRUE}" && test -z "${MOO_OS_UNIX_FALSE}"; then

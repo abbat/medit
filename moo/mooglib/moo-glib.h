@@ -8,9 +8,7 @@
 G_BEGIN_DECLS
 
 #undef MOO_BUILTIN_MOO_GLIB
-#ifndef MOO_BUILD_FROM_MINGW
 #define MOO_BUILTIN_MOO_GLIB 1
-#endif
 
 typedef struct mgw_errno_t mgw_errno_t;
 typedef struct MGW_FILE MGW_FILE;
