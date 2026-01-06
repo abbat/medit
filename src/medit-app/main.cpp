@@ -15,6 +15,7 @@
  */
 
 #include "main.h"
+
 #include "mooapp/mooapp.h"
 #include "moocpp/regex.h"
 #include "mooutils/mooi18n.h"
@@ -22,36 +23,36 @@
 #include "mooutils/mooutils-misc.h"
 #include "plugins/mooplugin-builtin.h"
 
-/**
- * @brief Structure to store medit command line options
+/*!
+ * \brief Structure to store medit command line options
  *
  * Contains all parameters that can be passed to the application
  * via command line or other methods.
  */
 struct MeditOpts
 {
-  int use_session = -1;                /**< Whether to load and save session (1=yes, 0=no, -1=not specified) */
-  int pid = -1;                        /**< Process ID of existing instance to connect to */
-  gboolean new_app = false;            /**< Whether to start a new instance of the application */
-  const char *instance_name = nullptr; /**< Name of the application instance */
-  gboolean new_window = false;         /**< Whether to open files in a new window */
-  gboolean new_tab = false;            /**< Whether to open files in a new tab */
-  gboolean reload = false;             /**< Whether to automatically reload files if modified on disk */
-  int line = 0;                        /**< Line number to position cursor at when opening file */
-  const char *encoding = nullptr;      /**< Character encoding to use for files */
-  const char *log_file = nullptr;      /**< Path to file for writing debug output */
-  gboolean log_window = false;         /**< Whether to show debug output in a window */
-  gstrvec files;                       /**< List of files to open */
-  char **filesp = nullptr;             /**< Pointer to array of files (temporary, used during parsing) */
-  const char *geometry = nullptr;      /**< Window geometry specification (WIDTHxHEIGHT[+X+Y]) */
-  gboolean show_version = false;       /**< Whether to display version information and exit */
-  const char *debug = nullptr;         /**< Debug mode options */
-  char **run_script = nullptr;         /**< Scripts to run on startup */
-  char **send_script = nullptr;        /**< Scripts to send to existing instance */
+  gstrvec files;                       /*!< \brief List of files to open */
+  const char *instance_name = nullptr; /*!< \brief Name of the application instance */
+  const char *encoding = nullptr;      /*!< \brief Character encoding to use for files */
+  const char *log_file = nullptr;      /*!< \brief Path to file for writing debug output */
+  const char *geometry = nullptr;      /*!< \brief Window geometry specification (WIDTHxHEIGHT[+X+Y]) */
+  const char *debug = nullptr;         /*!< \brief Debug mode options */
+  char **filesp = nullptr;             /*!< \brief Pointer to array of files (temporary, used during parsing) */
+  char **run_script = nullptr;         /*!< \brief Scripts to run on startup */
+  char **send_script = nullptr;        /*!< \brief Scripts to send to existing instance */
+  int use_session = -1;                /*!< \brief Whether to load and save session (1=yes, 0=no, -1=not specified) */
+  int pid = -1;                        /*!< \brief Process ID of existing instance to connect to */
+  int line = 0;                        /*!< \brief Line number to position cursor at when opening file */
+  gboolean new_app = false;            /*!< \brief Whether to start a new instance of the application */
+  gboolean new_window = false;         /*!< \brief Whether to open files in a new window */
+  gboolean new_tab = false;            /*!< \brief Whether to open files in a new tab */
+  gboolean reload = false;             /*!< \brief Whether to automatically reload files if modified on disk */
+  gboolean log_window = false;         /*!< \brief Whether to show debug output in a window */
+  gboolean show_version = false;       /*!< \brief Whether to display version information and exit */
 };
 
-/**
- * @brief Global instance of command line options
+/*!
+ * \brief Global instance of command line options
  *
  * Stores all command line parameters and options passed to the application.
  * This structure is initialized during argument parsing and used throughout
@@ -59,24 +60,24 @@ struct MeditOpts
  */
 static MeditOpts medit_opts;
 
-/**
- * @brief Type definition for MeditApp
+/*!
+ * \brief Type definition for MeditApp
  *
  * MeditApp is a typedef for MooApp, providing a type-safe way to reference
  * the application instance in medit-specific code.
  */
 typedef MooApp MeditApp;
 
-/**
- * @brief Type definition for MeditAppClass
+/*!
+ * \brief Type definition for MeditAppClass
  *
  * MeditAppClass is a typedef for MooAppClass, providing a type-safe way to reference
  * the application class in medit-specific code.
  */
 typedef MooAppClass MeditAppClass;
 
-/**
- * @brief Macro to define MeditApp type
+/*!
+ * \brief Macro to define MeditApp type
  *
  * This macro defines the MeditApp type system integration with GObject.
  * It creates the necessary type information for the MeditApp class,
@@ -84,10 +85,10 @@ typedef MooAppClass MeditAppClass;
  */
 G_DEFINE_TYPE (MeditApp, medit_app, MOO_TYPE_APP)
 
-/**
- * @brief Initialize application plugins
+/*!
+ * \brief Initialize application plugins
  *
- * @param app Pointer to the MooApp application object
+ * \param app Pointer to the MooApp application object
  */
 static void
 medit_app_init_plugins (MooApp *app)
@@ -97,12 +98,12 @@ medit_app_init_plugins (MooApp *app)
   moo_plugin_init ();
 }
 
-/**
- * @brief Initialize application class
+/*!
+ * \brief Initialize application class
  *
  * Sets the pointer to the plugin initialization function
  *
- * @param klass Pointer to the MooAppClass application class
+ * \param klass Pointer to the MooAppClass application class
  */
 static void
 medit_app_class_init (MooAppClass *klass)
@@ -110,10 +111,10 @@ medit_app_class_init (MooAppClass *klass)
   klass->init_plugins = medit_app_init_plugins;
 }
 
-/**
- * @brief Initialize application instance
+/*!
+ * \brief Initialize application instance
  *
- * @param app Pointer to the MooApp application object
+ * \param app Pointer to the MooApp application object
  */
 static void
 medit_app_init (MooApp *app)
@@ -121,16 +122,16 @@ medit_app_init (MooApp *app)
   (void) app;
 }
 
-/**
- * @brief Parser for the session usage option
+/*!
+ * \brief Parser for the session usage option
  *
  * Parses the value of the --use-session option and sets the corresponding flag
  *
- * @param option_name Name of the option
- * @param value Option value ("yes", "no" or NULL)
- * @param data User data (not used)
- * @param error Pointer to error structure to return error information
- * @return TRUE on success, FALSE on error
+ * \param option_name Name of the option
+ * \param value Option value ("yes", "no" or NULL)
+ * \param data User data (not used)
+ * \param error Pointer to error structure to return error information
+ * \return TRUE on success, FALSE on error
  */
 static gboolean
 parse_use_session (const char *option_name, const char *value, gpointer data, GError **error)
@@ -155,8 +156,8 @@ parse_use_session (const char *option_name, const char *value, gpointer data, GE
   return FALSE;
 }
 
-/**
- * @brief Check for +<number> argument
+/*!
+ * \brief Check for +<number> argument
  *
  * Looks for a command line argument in the format +<number> and interprets it
  * as the --line <number> option. If a file with such name exists, it is not processed.
@@ -202,8 +203,8 @@ check_plus_line_arg (void)
     }
 }
 
-/**
- * @brief Post-processing function for command line arguments
+/*!
+ * \brief Post-processing function for command line arguments
  *
  * Performs additional processing of arguments after the main parsing:
  * - Converts file array to vector
@@ -212,11 +213,11 @@ check_plus_line_arg (void)
  * - Sets environment variables for debugging
  * - Checks for filename +<line-number> arguments
  *
- * @param context Option context (not used)
- * @param group Option group (not used)
- * @param data User data (not used)
- * @param error Pointer to error structure (not used)
- * @return TRUE on success
+ * \param context Option context (not used)
+ * \param group Option group (not used)
+ * \param data User data (not used)
+ * \param error Pointer to error structure (not used)
+ * \return TRUE on success
  */
 static gboolean
 post_parse_func (GOptionContext *, GOptionGroup *, void *, GError **)
@@ -247,15 +248,15 @@ post_parse_func (GOptionContext *, GOptionGroup *, void *, GError **)
   return TRUE;
 }
 
-/**
- * @brief Parse command line arguments
+/*!
+ * \brief Parse command line arguments
  *
  * Creates option context, defines all available command line options,
  * sets callback functions and performs argument parsing.
  *
- * @param argc Number of arguments
- * @param argv Array of arguments
- * @return Pointer to option context
+ * \param argc Number of arguments
+ * \param argv Array of arguments
+ * \return Pointer to option context
  */
 static GOptionContext *
 parse_args (int argc, char *argv[])
@@ -303,8 +304,8 @@ parse_args (int argc, char *argv[])
   return ctx;
 }
 
-/**
- * @brief Notify about application startup completion
+/*!
+ * \brief Notify about application startup completion
  *
  * Sends notification to the desktop environment that the application
  * has finished starting up and is ready to work. Works only in X11 environment.
@@ -323,14 +324,14 @@ notify_startup_complete (void)
 #endif
 }
 
-/**
- * @brief Get startup timestamp
+/*!
+ * \brief Get startup timestamp
  *
  * Extracts timestamp from the DESKTOP_STARTUP_ID environment variable.
  * Used for synchronization with the desktop environment during startup.
  * Works only in X11 environment.
  *
- * @return Timestamp or 0 in case of error
+ * \return Timestamp or 0 in case of error
  */
 static guint32
 get_time_stamp (void)
@@ -358,8 +359,8 @@ get_time_stamp (void)
 #endif
 }
 
-/**
- * @brief Execute scripts on startup
+/*!
+ * \brief Execute scripts on startup
  *
  * Executes all scripts specified in the --run-script option.
  * Called as a callback after application startup.
@@ -372,8 +373,8 @@ run_script_func (void)
     moo_app_run_script (moo_app_instance (), *p);
 }
 
-/**
- * @brief Install logging handlers
+/*!
+ * \brief Install logging handlers
  *
  * Sets up handlers for outputting debug information
  * to a file or a separate window depending on command line options.
@@ -387,8 +388,8 @@ install_log_handlers (void)
     moo_set_log_func_window (TRUE);
 }
 
-/**
- * @brief Parse filename and create opening information
+/*!
+ * \brief Parse filename and create opening information
  *
  * Converts file path to URI and extracts line number from filename
  * if it contains "file:line" or "file(line)" format.
@@ -400,8 +401,8 @@ install_log_handlers (void)
  *   Input: "/home/user/source.c(100)"
  *   Result: Creates MooOpenInfo with URI "file:///home/user/source.c" and line 99
  *
- * @param filename Filename to parse
- * @return Pointer to MooOpenInfo structure or NULL on error
+ * \param filename Filename to parse
+ * \return Pointer to MooOpenInfo structure or NULL on error
  */
 static MooOpenInfo *
 parse_filename (const char *filename)
@@ -486,13 +487,13 @@ parse_filename (const char *filename)
   return info;
 }
 
-/**
- * @brief Parse options from URI
+/*!
+ * \brief Parse options from URI
  *
  * Extracts options (line number, opening flags) from URI parameter string.
  *
- * @param optstring String with options in format "option=value;option=value"
- * @param info Pointer to MooOpenInfo structure to update
+ * \param optstring String with options in format "option=value;option=value"
+ * \param info Pointer to MooOpenInfo structure to update
  */
 static void
 parse_options_from_uri (const char *optstring, MooOpenInfo *info)
@@ -527,15 +528,15 @@ parse_options_from_uri (const char *optstring, MooOpenInfo *info)
   g_strfreev (comps);
 }
 
-/**
- * @brief Parse URI and create opening information
+/*!
+ * \brief Parse URI and create opening information
  *
  * Parses URI, extracts options from query string and creates MooOpenInfo structure.
  * For schemes other than "file", creates a simple structure.
  *
- * @param scheme URI scheme (e.g., "file")
- * @param uri Full URI to parse
- * @return Pointer to MooOpenInfo structure
+ * \param scheme URI scheme (e.g., "file")
+ * \param uri Full URI to parse
+ * \return Pointer to MooOpenInfo structure
  */
 static MooOpenInfo *
 parse_uri (const char *scheme, const char *uri)
@@ -569,13 +570,13 @@ parse_uri (const char *scheme, const char *uri)
   return info;
 }
 
-/**
- * @brief Extract scheme from URI
+/*!
+ * \brief Extract scheme from URI
  *
  * Determines the URI scheme (part before the colon).
  *
- * @param string URI string to analyze
- * @return Extracted scheme or NULL if scheme not found
+ * \param string URI string to analyze
+ * \return Extracted scheme or NULL if scheme not found
  */
 static char *
 parse_uri_scheme (const char *string)
@@ -600,15 +601,15 @@ parse_uri_scheme (const char *string)
   return NULL;
 }
 
-/**
- * @brief Parse file path or URI
+/*!
+ * \brief Parse file path or URI
  *
  * Determines the type of the passed string (absolute path, relative path or URI)
  * and calls the appropriate function for parsing.
  *
- * @param string String with file path or URI
- * @param current_dir Pointer to current working directory (may be updated)
- * @return Pointer to MooOpenInfo structure or NULL on error
+ * \param string String with file path or URI
+ * \param current_dir Pointer to current working directory (may be updated)
+ * \return Pointer to MooOpenInfo structure or NULL on error
  */
 static MooOpenInfo *
 parse_file (const char *string, char **current_dir)
@@ -637,13 +638,13 @@ parse_file (const char *string, char **current_dir)
   return ret;
 }
 
-/**
- * @brief Parse all files from command line options
+/*!
+ * \brief Parse all files from command line options
  *
  * Processes the list of files from the command line, creates MooOpenInfo structure
  * for each and applies global options (encoding, line number, etc.).
  *
- * @return Pointer to MooOpenInfoArray or NULL if no files
+ * \return Pointer to MooOpenInfoArray or NULL if no files
  */
 static MooOpenInfoArray *
 parse_files (void)
@@ -687,15 +688,15 @@ parse_files (void)
   return files;
 }
 
-/**
- * @brief Main function of the medit application
+/*!
+ * \brief Main function of the medit application
  *
  * Performs application initialization, command line argument parsing,
  * file processing, launching a new instance or connecting to an existing one.
  *
- * @param argc Number of command line arguments
- * @param argv Array of command line arguments
- * @return Application exit code
+ * \param argc Number of command line arguments
+ * \param argv Array of command line arguments
+ * \return Application exit code
  */
 int
 medit_app_main (int argc, char *argv[])

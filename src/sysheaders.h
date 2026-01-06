@@ -19,9 +19,8 @@
 
 #include "config.h"
 
-#include <errno.h>
-
 #include <glib.h>
 #include <gtk/gtk.h>
+#include <sys/utsname.h>
 
 #endif // _medit_sysheaders_h_

@@ -17,7 +17,6 @@
 
 #define MOO_DO_NOT_MANGLE_GLIB_FUNCTIONS
 #include <mooglib/moo-glib.h>
-MGW_ERROR_IF_NOT_SHARED_LIBC
 
 #include "mooutils/mooappinput-priv.h"
 

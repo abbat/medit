@@ -159,6 +159,28 @@ moo_prefs_get_markup (MooPrefsKind prefs_kind)
 }
 
 
+/*!
+ * \brief Creates a new preference key with a default value
+ * \param key the name of the preference key
+ * \param prefs_kind the kind of preferences (MOO_PREFS_RC or MOO_PREFS_STATE)
+ * \param value_type the GType of the value (G_TYPE_STRING, G_TYPE_BOOLEAN, or G_TYPE_INT)
+ * \param ... the default value of the type specified by value_type
+ *
+ * This function creates a new preference key with the specified type and default value.
+ * The default value is provided as a varargs parameter and must match the specified type.
+ *
+ * Example usage:
+ * \code
+ * // Create a boolean preference with default value TRUE
+ * moo_prefs_create_key ("myapp/show_toolbar", MOO_PREFS_RC, G_TYPE_BOOLEAN, TRUE);
+ *
+ * // Create an integer preference with default value 42
+ * moo_prefs_create_key ("myapp/font_size", MOO_PREFS_RC, G_TYPE_INT, 42);
+ *
+ * // Create a string preference with default value "default"
+ * moo_prefs_create_key ("myapp/theme", MOO_PREFS_RC, G_TYPE_STRING, "default");
+ * \endcode
+ */
 void
 moo_prefs_create_key (const char   *key,
                       MooPrefsKind  prefs_kind,

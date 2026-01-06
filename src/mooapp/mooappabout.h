@@ -20,46 +20,15 @@
 #include "config.h"
 #endif
 
-#ifdef HAVE_SYS_UTSNAME_H
-#include <sys/utsname.h>
-#endif
-
-#include <mooglib/moo-glib.h>
 #include <errno.h>
 #include <gtk/gtk.h>
+#include <mooglib/moo-glib.h>
 
-#if defined(HAVE_SYS_UTSNAME_H)
+G_BEGIN_DECLS
 
-static char *
-get_system_name (void)
-{
-    struct utsname name;
+void
+moo_app_about_dialog (GtkWidget *parent);
 
-    if (uname (&name) != 0)
-    {
-        MGW_ERROR_IF_NOT_SHARED_LIBC
-        mgw_errno_t err = { errno };
-        g_critical ("%s", mgw_strerror (err));
-        return g_strdup ("unknown");
-    }
-
-    return g_strdup_printf ("%s %s (%s), %s", name.sysname,
-                            name.release, name.version, name.machine);
-}
-
-#else
-
-static char *
-get_system_name (void)
-{
-    char *string;
-
-    if (g_spawn_command_line_sync ("uname -s -r -v -m", &string, NULL, NULL, NULL))
-        return string;
-    else
-        return g_strdup ("unknown");
-}
-
-#endif
+G_END_DECLS
 
 #endif /* MOO_APP_ABOUT_H */

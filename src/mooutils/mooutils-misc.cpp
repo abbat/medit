@@ -42,10 +42,6 @@
 #include <gdk/gdkx.h>
 #endif
 
-#ifdef MOO_USE_QUARTZ
-#include <gdk/gdkquartz.h>
-#endif
-
 MOO_DEFINE_OBJECT_ARRAY_FULL (MooObjectArray, moo_object_array, GObject)
 MOO_DEFINE_QUARK (moo-error, moo_error_quark)
 
@@ -424,9 +420,6 @@ moo_window_present (GtkWindow *window,
 
 #if defined(GDK_WINDOWING_X11)
     present_window_x11 (window, stamp);
-#elif defined(MOO_USE_QUARTZ)
-    gtk_window_present (window);
-    [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
 #else
     gtk_window_present (window);
 #endif

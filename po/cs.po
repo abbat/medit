@@ -185,9 +185,7 @@ msgstr ""
 msgid ""
 "The following URL will be opened:\n"
 "\n"
-"%s\n"
-"\n"
-"It contains medit version and your operating system name (%s)"
+"%s"
 msgstr ""
 
 #: ../src/mooapp/mooapp.c:1363

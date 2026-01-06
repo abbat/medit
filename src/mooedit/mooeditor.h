@@ -16,6 +16,8 @@
 #ifndef MOO_EDITOR_H
 #define MOO_EDITOR_H
 
+#include "sysheaders.h"
+
 #include <mooedit/mooedit.h>
 #include <mooedit/mooeditview.h>
 #include <mooedit/mooeditwindow.h>

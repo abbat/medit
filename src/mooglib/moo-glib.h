@@ -15,8 +15,6 @@ typedef struct MGW_FILE MGW_FILE;
 typedef struct MgwFd MgwFd;
 typedef struct mgw_access_mode_t mgw_access_mode_t;
 
-#define MGW_ERROR_IF_NOT_SHARED_LIBC
-
 typedef int mgw_errno_value_t;
 
 #define MGW_ENOERROR 0
