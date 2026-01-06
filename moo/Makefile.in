@@ -298,18 +298,17 @@ am__medit_SOURCES_DIST = medit-app/mem-debug.h medit-app/run-tests.h \
 	eggsmclient/eggsmclient-mangle.h \
 	eggsmclient/eggsmclient-private.h \
 	eggsmclient/eggsmclient-xsmp.c eggsmclient/eggdesktopfile.h \
-	eggsmclient/eggdesktopfile.c mooapp/mooappabout.cpp \
-	mooapp/mooappabout.h mooapp/mooapp.cpp mooapp/mooapp.h \
+	eggsmclient/eggdesktopfile.c mooapp/mooappabout.c \
+	mooapp/mooappabout.h mooapp/mooapp.c mooapp/mooapp.h \
 	mooapp/mooapp-accels.h mooapp/mooapp-info.h \
 	mooapp/mooapp-private.h mooapp/moohtml.h mooapp/moohtml.cpp \
-	mooapp/moolinklabel.h mooapp/moolinklabel.cpp \
-	moolua/medit-lua.h moolua/medit-lua.cpp \
-	moolua/mooluaplugin.cpp moolua/moolua-tests.h \
-	moolua/moolua-tests.cpp moolua/moo-lua-api-util.h \
-	moolua/moo-lua-api-util.cpp moolua/moo-lua-api.cpp \
-	moolua/moo-lua-api.h moolua/gtk-lua-api.cpp \
-	moolua/gtk-lua-api.h moolua/lua/lfs.h moolua/lua/lfs.cpp \
-	moolua/lua/moolua.h moolua/lua/moolua.cpp \
+	mooapp/moolinklabel.h mooapp/moolinklabel.c moolua/medit-lua.h \
+	moolua/medit-lua.cpp moolua/mooluaplugin.cpp \
+	moolua/moolua-tests.h moolua/moolua-tests.cpp \
+	moolua/moo-lua-api-util.h moolua/moo-lua-api-util.cpp \
+	moolua/moo-lua-api.cpp moolua/moo-lua-api.h \
+	moolua/gtk-lua-api.cpp moolua/gtk-lua-api.h moolua/lua/lfs.h \
+	moolua/lua/lfs.cpp moolua/lua/moolua.h moolua/lua/moolua.cpp \
 	moolua/lua/luaall.cpp moocpp/fileutils.h moocpp/fileutils.cpp \
 	moocpp/gobjptr.h moocpp/gstr.h moocpp/gstr.cpp moocpp/moocpp.h \
 	moocpp/regex.h moocpp/regex.cpp moocpp/util.h \
@@ -1380,18 +1379,17 @@ moo_sources = moo-config.h mooglib/moo-glib.h mooglib/moo-stat.h \
 	eggsmclient/eggsmclient-mangle.h \
 	eggsmclient/eggsmclient-private.h \
 	eggsmclient/eggsmclient-xsmp.c eggsmclient/eggdesktopfile.h \
-	eggsmclient/eggdesktopfile.c mooapp/mooappabout.cpp \
-	mooapp/mooappabout.h mooapp/mooapp.cpp mooapp/mooapp.h \
+	eggsmclient/eggdesktopfile.c mooapp/mooappabout.c \
+	mooapp/mooappabout.h mooapp/mooapp.c mooapp/mooapp.h \
 	mooapp/mooapp-accels.h mooapp/mooapp-info.h \
 	mooapp/mooapp-private.h mooapp/moohtml.h mooapp/moohtml.cpp \
-	mooapp/moolinklabel.h mooapp/moolinklabel.cpp \
-	moolua/medit-lua.h moolua/medit-lua.cpp \
-	moolua/mooluaplugin.cpp moolua/moolua-tests.h \
-	moolua/moolua-tests.cpp moolua/moo-lua-api-util.h \
-	moolua/moo-lua-api-util.cpp moolua/moo-lua-api.cpp \
-	moolua/moo-lua-api.h moolua/gtk-lua-api.cpp \
-	moolua/gtk-lua-api.h moolua/lua/lfs.h moolua/lua/lfs.cpp \
-	moolua/lua/moolua.h moolua/lua/moolua.cpp \
+	mooapp/moolinklabel.h mooapp/moolinklabel.c moolua/medit-lua.h \
+	moolua/medit-lua.cpp moolua/mooluaplugin.cpp \
+	moolua/moolua-tests.h moolua/moolua-tests.cpp \
+	moolua/moo-lua-api-util.h moolua/moo-lua-api-util.cpp \
+	moolua/moo-lua-api.cpp moolua/moo-lua-api.h \
+	moolua/gtk-lua-api.cpp moolua/gtk-lua-api.h moolua/lua/lfs.h \
+	moolua/lua/lfs.cpp moolua/lua/moolua.h moolua/lua/moolua.cpp \
 	moolua/lua/luaall.cpp moocpp/fileutils.h moocpp/fileutils.cpp \
 	moocpp/gobjptr.h moocpp/gstr.h moocpp/gstr.cpp moocpp/moocpp.h \
 	moocpp/regex.h moocpp/regex.cpp moocpp/util.h

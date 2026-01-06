@@ -174,7 +174,7 @@ moo_app_get_type (void)
         };
 
         type = g_type_register_static (G_TYPE_OBJECT, "MooApp",
-                                       &type_info, GTypeFlags (0));
+                                       &type_info, (GTypeFlags) 0);
     }
 
     return type;
@@ -984,26 +984,26 @@ install_common_actions (void)
                                  "tooltip", GTK_STOCK_PREFERENCES,
                                  "stock-id", GTK_STOCK_PREFERENCES,
                                  "closure-callback", moo_app_prefs_dialog,
-                                 nullptr);
+                                 NULL);
 
     moo_window_class_new_action (klass, "About", NULL,
                                  "label", GTK_STOCK_ABOUT,
                                  "no-accel", TRUE,
                                  "stock-id", GTK_STOCK_ABOUT,
                                  "closure-callback", moo_app_about_dialog,
-                                 nullptr);
+                                 NULL);
 
     moo_window_class_new_action (klass, "Help", NULL,
                                  "label", GTK_STOCK_HELP,
                                  "default-accel", MOO_APP_ACCEL_HELP,
                                  "stock-id", GTK_STOCK_HELP,
                                  "closure-callback", moo_app_help,
-                                 nullptr);
+                                 NULL);
 
     moo_window_class_new_action (klass, "ReportBug", NULL,
                                  "label", _("Report a Bug..."),
                                  "closure-callback", moo_app_report_bug,
-                                 nullptr);
+                                 NULL);
 
     moo_window_class_new_action (klass, "Quit", NULL,
                                  "display-name", GTK_STOCK_QUIT,
@@ -1013,7 +1013,7 @@ install_common_actions (void)
                                  "default-accel", MOO_APP_ACCEL_QUIT,
                                  "closure-callback", moo_app_quit,
                                  "closure-proxy-func", moo_app_instance,
-                                 nullptr);
+                                 NULL);
 
     g_type_class_unref (klass);
 }

@@ -1,7 +1,7 @@
 moo_sources +=			\
-	mooapp/mooappabout.cpp	\
+	mooapp/mooappabout.c	\
 	mooapp/mooappabout.h	\
-	mooapp/mooapp.cpp	\
+	mooapp/mooapp.c		\
 	mooapp/mooapp.h		\
 	mooapp/mooapp-accels.h	\
 	mooapp/mooapp-info.h	\
@@ -9,7 +9,7 @@ moo_sources +=			\
 	mooapp/moohtml.h	\
 	mooapp/moohtml.cpp	\
 	mooapp/moolinklabel.h	\
-	mooapp/moolinklabel.cpp
+	mooapp/moolinklabel.c
 
 EXTRA_DIST +=					\
 	mooapp/glade/mooappabout-dialog.glade	\
