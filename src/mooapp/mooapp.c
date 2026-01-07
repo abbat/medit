@@ -495,7 +495,10 @@ moo_app_finalize (GObject *object)
   moo_app_do_quit (app);
 
   moo_app_data.instance = NULL;
+
+#if GTK_CHECK_VERSION(3, 0, 0)
   on_gtk_main_quit_app_arg = NULL;
+#endif
 
   g_free (app->priv->rc_files[0]);
   g_free (app->priv->rc_files[1]);
