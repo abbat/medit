@@ -38,9 +38,9 @@ typedef struct
  */
 typedef struct
 {
-  MooWinPlugin parent;   /*!< \brief Parent window plugin structure */
-  MooCtagsView *view;    /*!< \brief Ctags view widget */
-  guint update_idle;     /*!< \brief ID for idle update callback */
+  MooWinPlugin parent; /*!< \brief Parent window plugin structure */
+  MooCtagsView *view;  /*!< \brief Ctags view widget */
+  guint update_idle;   /*!< \brief ID for idle update callback */
 } CtagsWindowPlugin;
 
 /*!
@@ -214,8 +214,10 @@ ctags_window_plugin_destroy (CtagsWindowPlugin *plugin)
  * \return TRUE on success
  */
 static gboolean
-ctags_plugin_init (G_GNUC_UNUSED CtagsPlugin *plugin)
+ctags_plugin_init (CtagsPlugin *plugin)
 {
+  (void) plugin;
+
   return TRUE;
 }
 
@@ -224,8 +226,9 @@ ctags_plugin_init (G_GNUC_UNUSED CtagsPlugin *plugin)
  * \param plugin The plugin instance (unused)
  */
 static void
-ctags_plugin_deinit (G_GNUC_UNUSED CtagsPlugin *plugin)
+ctags_plugin_deinit (CtagsPlugin *plugin)
 {
+  (void) plugin;
 }
 
 /*!

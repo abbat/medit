@@ -5,7 +5,7 @@ import mdp.module as module
 
 class Writer(object):
     def __init__(self, out):
-        object.__init__(self)
+        super().__init__()
         self.out = out
         self.xml = etree.TreeBuilder()
         self.__tag_opened = False
@@ -50,7 +50,7 @@ class Writer(object):
 
     def __write_param_or_retval_annotations(self, param, elm):
         for k in param.attributes:
-            elm.set(k, self.attributes[v])
+            elm.set(k, param.attributes[k])
         if param.transfer_mode is not None:
             elm.set('transfer_mode', param.transfer_mode)
         if param.element_type is not None:
@@ -117,13 +117,13 @@ class Writer(object):
         self.__write_docs(cls.docs)
         if cls.constructor is not None:
             self.__write_function(cls.constructor, 'constructor')
-        for meth in sorted(cls.static_methods, lambda x, y: cmp(x.name, y.name)):
+        for meth in sorted(cls.static_methods, key=lambda x: x.name):
             self.__write_function(meth, 'static-method')
-        for meth in sorted(cls.signals, lambda x, y: cmp(x.name, y.name)):
+        for meth in sorted(cls.signals, key=lambda x: x.name):
             self.__write_function(meth, 'signal')
-        for meth in sorted(cls.vmethods, lambda x, y: cmp(x.name, y.name)):
+        for meth in sorted(cls.vmethods, key=lambda x: x.name):
             self.__write_function(meth, 'virtual')
-        for meth in sorted(cls.methods, lambda x, y: cmp(x.name, y.name)):
+        for meth in sorted(cls.methods, key=lambda x: x.name):
             self.__write_function(meth, 'method')
         self.__end_tag('class')
 
@@ -164,7 +164,7 @@ class Writer(object):
         self.__end_tag(tag)
 
     def __write_function(self, func, tag):
-        name=func.name
+        name = func.name
         if tag == 'signal':
             name = name.replace('_', '-')
         dic = dict(name=name)
@@ -185,17 +185,17 @@ class Writer(object):
 
     def write(self, module):
         self.__start_tag('module', dict(name=module.name))
-        for cls in sorted(module.classes, lambda x, y: cmp(x.name, y.name)):
+        for cls in sorted(module.classes, key=lambda x: x.name):
             self.__write_class(cls)
-        for cls in sorted(module.boxed, lambda x, y: cmp(x.name, y.name)):
+        for cls in sorted(module.boxed, key=lambda x: x.name):
             self.__write_boxed(cls)
-        for enum in sorted(module.enums, lambda x, y: cmp(x.name, y.name)):
+        for enum in sorted(module.enums, key=lambda x: x.name):
             self.__write_enum(enum)
-        for func in sorted(module.functions, lambda x, y: cmp(x.name, y.name)):
+        for func in sorted(module.functions, key=lambda x: x.name):
             self.__write_function(func, 'function')
         self.__end_tag('module')
         elm = self.xml.close()
-        etree.ElementTree(elm).write(self.out)
+        etree.ElementTree(elm).write(self.out, encoding='unicode', xml_declaration=True)
 
 def write_xml(module, out):
     Writer(out).write(module)

@@ -366,16 +366,16 @@ BUILT_SOURCES = $(am__append_1)
 @MOO_DEV_MODE_TRUE@source_files = \
 @MOO_DEV_MODE_TRUE@    ../src/moolua/medit-lua.h\
 @MOO_DEV_MODE_TRUE@    ../src/moolua/medit-lua.cpp\
-@MOO_DEV_MODE_TRUE@    ../src/mooapp/mooappabout.cpp\
+@MOO_DEV_MODE_TRUE@    ../src/mooapp/mooappabout.c\
 @MOO_DEV_MODE_TRUE@    ../src/mooapp/mooappabout.h\
 @MOO_DEV_MODE_TRUE@    ../src/mooapp/mooapp-accels.h\
-@MOO_DEV_MODE_TRUE@    ../src/mooapp/mooapp.cpp\
+@MOO_DEV_MODE_TRUE@    ../src/mooapp/mooapp.c\
 @MOO_DEV_MODE_TRUE@    ../src/mooapp/mooapp.h\
 @MOO_DEV_MODE_TRUE@    ../src/mooapp/mooapp-info.h\
 @MOO_DEV_MODE_TRUE@    ../src/mooapp/mooapp-private.h\
 @MOO_DEV_MODE_TRUE@    ../src/mooapp/moohtml.cpp\
 @MOO_DEV_MODE_TRUE@    ../src/mooapp/moohtml.h\
-@MOO_DEV_MODE_TRUE@    ../src/mooapp/moolinklabel.cpp\
+@MOO_DEV_MODE_TRUE@    ../src/mooapp/moolinklabel.c\
 @MOO_DEV_MODE_TRUE@    ../src/mooapp/moolinklabel.h\
 @MOO_DEV_MODE_TRUE@    ../src/mooedit/mooedit-accels.h\
 @MOO_DEV_MODE_TRUE@    ../src/mooedit/mooeditaction.cpp\
@@ -587,7 +587,6 @@ BUILT_SOURCES = $(am__append_1)
 @MOO_DEV_MODE_TRUE@    ../src/mooutils/moospawn.h\
 @MOO_DEV_MODE_TRUE@    ../src/mooutils/moostock.c\
 @MOO_DEV_MODE_TRUE@    ../src/mooutils/moostock.h\
-@MOO_DEV_MODE_TRUE@    ../src/mooutils/mootypedecl-macros.h\
 @MOO_DEV_MODE_TRUE@    ../src/mooutils/mootype-macros.h\
 @MOO_DEV_MODE_TRUE@    ../src/mooutils/moouixml.c\
 @MOO_DEV_MODE_TRUE@    ../src/mooutils/moouixml.h\
@@ -611,8 +610,6 @@ BUILT_SOURCES = $(am__append_1)
 @MOO_DEV_MODE_TRUE@    ../src/mooutils/mooutils-misc.h\
 @MOO_DEV_MODE_TRUE@    ../src/mooutils/mooutils-script.c\
 @MOO_DEV_MODE_TRUE@    ../src/mooutils/mooutils-script.h\
-@MOO_DEV_MODE_TRUE@    ../src/mooutils/mooutils-thread.cpp\
-@MOO_DEV_MODE_TRUE@    ../src/mooutils/mooutils-thread.h\
 @MOO_DEV_MODE_TRUE@    ../src/mooutils/mooutils-treeview.cpp\
 @MOO_DEV_MODE_TRUE@    ../src/mooutils/mooutils-treeview.h\
 @MOO_DEV_MODE_TRUE@    ../src/mooutils/moowindow.c\

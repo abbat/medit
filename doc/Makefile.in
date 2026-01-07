@@ -726,15 +726,6 @@ uninstall-man: uninstall-man1
 @MOO_DEV_MODE_TRUE@	$(dest_png_files)			\
 @MOO_DEV_MODE_TRUE@	moo-help-sections.h.stamp
 
-@MOO_DEV_MODE_TRUE@$(srcdir)/built/man-medit.t2t: man-medit.t2t.in $(top_builddir)/config.status
-@MOO_DEV_MODE_TRUE@	$(AM_V_at)$(MKDIR_P) $(srcdir)/built
-@MOO_DEV_MODE_TRUE@	$(AM_V_GEN)cd $(top_builddir) && ./config.status --silent --file=doc/man-medit.t2t
-@MOO_DEV_MODE_TRUE@	$(AM_V_at)mv man-medit.t2t $(srcdir)/built/man-medit.t2t
-
-@MOO_DEV_MODE_TRUE@$(srcdir)/built/medit.1: built/man-medit.t2t
-@MOO_DEV_MODE_TRUE@	$(AM_V_GEN)$(TXT2TAGS) --target=man --outfile=- $(srcdir)/built/man-medit.t2t | grep -v "cmdline: txt2tags" \
-@MOO_DEV_MODE_TRUE@		> medit.1.tmp && mv medit.1.tmp $(srcdir)/built/medit.1
-
 install-data-local:
 	$(MKDIR_P) $(DESTDIR)$(MOO_HELP_DIR)/img $(DESTDIR)$(MOO_HELP_DIR)/script
 	cd $(srcdir) && $(INSTALL_DATA) help/*.html help/*.css $(DESTDIR)$(MOO_HELP_DIR)

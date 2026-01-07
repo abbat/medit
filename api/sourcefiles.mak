@@ -1,16 +1,16 @@
 source_files = \
     ../src/moolua/medit-lua.h\
     ../src/moolua/medit-lua.cpp\
-    ../src/mooapp/mooappabout.cpp\
+    ../src/mooapp/mooappabout.c\
     ../src/mooapp/mooappabout.h\
     ../src/mooapp/mooapp-accels.h\
-    ../src/mooapp/mooapp.cpp\
+    ../src/mooapp/mooapp.c\
     ../src/mooapp/mooapp.h\
     ../src/mooapp/mooapp-info.h\
     ../src/mooapp/mooapp-private.h\
     ../src/mooapp/moohtml.cpp\
     ../src/mooapp/moohtml.h\
-    ../src/mooapp/moolinklabel.cpp\
+    ../src/mooapp/moolinklabel.c\
     ../src/mooapp/moolinklabel.h\
     ../src/mooedit/mooedit-accels.h\
     ../src/mooedit/mooeditaction.cpp\
@@ -222,7 +222,6 @@ source_files = \
     ../src/mooutils/moospawn.h\
     ../src/mooutils/moostock.c\
     ../src/mooutils/moostock.h\
-    ../src/mooutils/mootypedecl-macros.h\
     ../src/mooutils/mootype-macros.h\
     ../src/mooutils/moouixml.c\
     ../src/mooutils/moouixml.h\
@@ -246,8 +245,6 @@ source_files = \
     ../src/mooutils/mooutils-misc.h\
     ../src/mooutils/mooutils-script.c\
     ../src/mooutils/mooutils-script.h\
-    ../src/mooutils/mooutils-thread.cpp\
-    ../src/mooutils/mooutils-thread.h\
     ../src/mooutils/mooutils-treeview.cpp\
     ../src/mooutils/mooutils-treeview.h\
     ../src/mooutils/moowindow.c\

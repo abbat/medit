@@ -467,7 +467,7 @@ class Parser(object):
         parts = []
         lastpos = 0
         while 1:
-            pos = string.find(buf, '/*', lastpos)
+            pos = buf.find('/*', lastpos)
             if pos >= 0:
                 if buf[pos:pos+len('/**vtable:')] == '/**vtable:':
                     parts.append(buf[lastpos:pos+len('/**vtable:')])
@@ -477,7 +477,7 @@ class Parser(object):
                     lastpos = pos + len('/**signal:')
                 else:
                     parts.append(buf[lastpos:pos])
-                    pos = string.find(buf, '*/', pos)
+                    pos = buf.find('*/', pos)
                     if pos >= 0:
                         lastpos = pos + 2
                     else:
@@ -485,7 +485,7 @@ class Parser(object):
             else:
                 parts.append(buf[lastpos:])
                 break
-        return string.join(parts, '')
+        return ''.join(parts)
 
     # Strips the dll API from buffer, for example WEBKIT_API
     def __strip_dll_api(self, buf):
@@ -542,14 +542,14 @@ class Parser(object):
         pat = re.compile(r'\s+ (\w+) \[ \s* \]', re.VERBOSE)
         buf = pat.sub(r'[] \1', buf)
 
-        buf = string.replace(buf, '/** vtable:', '/**vtable:')
+        buf = buf.replace('/** vtable:', '/**vtable:')
         pat = re.compile(r'(\w+) \s* \* \s* \(', re.VERBOSE)
         buf = pat.sub(r'\1* (', buf)
 
         # make return types that are const work.
         buf = re.sub(r'\s*\*\s*G_CONST_RETURN\s*\*\s*', '** ', buf)
-        buf = string.replace(buf, 'G_CONST_RETURN ', 'const-')
-        buf = string.replace(buf, 'const ', 'const-')
+        buf = buf.replace('G_CONST_RETURN ', 'const-')
+        buf = buf.replace('const ', 'const-')
 
         #strip GSEAL macros from the middle of function declarations:
         pat = re.compile(r"""GSEAL""", re.VERBOSE)
@@ -575,7 +575,7 @@ class Parser(object):
         arg_split_pat = re.compile("\s*,\s*")
 
         buf = self.__clean_func(buf)
-        buf = string.split(buf,'\n')
+        buf = buf.split('\n')
 
         for p in buf:
             if not p:
@@ -642,7 +642,7 @@ class Parser(object):
             args = m.group('args')
             args = arg_split_pat.split(args)
             for i in range(len(args)):
-                spaces = string.count(args[i], ' ')
+                spaces = args[i].count(' ')
                 if spaces > 1:
                     args[i] = string.replace(args[i], ' ', '-', spaces - 1).replace('gchar', 'char')
 
@@ -672,7 +672,7 @@ class Parser(object):
                 for i in range(len(args)):
                     if DEBUG:
                         print('arg:', args[i])
-                    argtype, argname = string.split(args[i])
+                    argtype, argname = args[i].split()
                     if DEBUG:
                         print(argtype, argname)
                     if len(func.params) <= i:

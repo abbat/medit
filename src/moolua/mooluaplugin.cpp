@@ -42,7 +42,7 @@ MOO_DEFINE_SLIST (ModuleList, module_list, LuaModule)
  */
 struct LuaPlugin
 {
-  MooPlugin parent;   /*!< \brief Parent plugin structure */
+  MooPlugin parent;    /*!< \brief Parent plugin structure */
   ModuleList *modules; /*!< \brief List of loaded modules */
 };
 
@@ -149,8 +149,11 @@ lua_plugin_load_module (LuaPlugin *plugin, const char *module_file)
  * \param data User data (unused)
  */
 static void
-load_lua_module (const char *module_file, G_GNUC_UNUSED const char *ini_file, G_GNUC_UNUSED gpointer data)
+load_lua_module (const char *module_file, const char *ini_file, gpointer data)
 {
+  (void) data;
+  (void) ini_file;
+
   if (LuaPlugin *plugin = (LuaPlugin *) moo_plugin_lookup (LUA_PLUGIN_ID))
     lua_plugin_load_module (plugin, module_file);
 }

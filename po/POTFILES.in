@@ -3,8 +3,8 @@ src/medit-app/medit.desktop.in
 src/mooapp/glade/mooappabout-credits.glade
 src/mooapp/glade/mooappabout-dialog.glade
 src/mooapp/glade/mooappabout-license.glade
-src/mooapp/mooappabout.cpp
-src/mooapp/mooapp.cpp
+src/mooapp/mooappabout.c
+src/mooapp/mooapp.c
 src/mooapp/moohtml.cpp
 src/mooedit/glade/mooeditprefs-file.glade
 src/mooedit/glade/mooeditprefs-filters.glade

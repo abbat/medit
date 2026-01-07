@@ -177,7 +177,7 @@ msgstr "Лицензия"
 #. Translators: this goes into About box, under Translated by tab,
 #. do not ignore it, markup isn't always used. It should be something
 #. like "Some Guy <someguy@domain.net>", with lines separated by \n
-#: ../src/mooapp/mooappabout.cpp:59
+#: ../src/mooapp/mooappabout.c:59
 msgid "translator-credits"
 msgstr ""
 "Андрей Федосеев <andrey.fedoseev@gmail.com>\n"
@@ -188,7 +188,7 @@ msgstr ""
 #. this must be valid html markup, e.g.
 #. "Some Guy <a href=\"mailto:someguy@domain.net\">&lt;someguy@domain.net&gt;</a>"
 #. Lines must be separated by <br>, like "First guy<br>Second Guy"
-#: ../src/mooapp/mooappabout.cpp:64
+#: ../src/mooapp/mooappabout.c:64
 msgid "translator-credits-markup"
 msgstr ""
 "Андрей Федосеев <a href=\"mailto:andrey.fedoseev@gmail.com\">&lt;andrey."
@@ -196,11 +196,11 @@ msgstr ""
 "dkoryavov@yandex.ru\">&lt;dkoryavov@yandex.ru&gt;</a><br>Олеся Герасименко "
 "<a href=\"mailto:gammaray@basealt.ru\">&lt;gammaray@basealt.ru&gt;</a>"
 
-#: ../src/mooapp/mooapp.cpp:992
+#: ../src/mooapp/mooapp.c:992
 msgid "Report a Bug..."
 msgstr "Сообщить о проблеме..."
 
-#: ../src/mooapp/mooapp.cpp:1356
+#: ../src/mooapp/mooapp.c:1356
 #, c-format
 msgid ""
 "The following URL will be opened:\n"
@@ -211,12 +211,12 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/mooapp/mooapp.cpp:1363
+#: ../src/mooapp/mooapp.c:1363
 msgid "Open URL?"
 msgstr "Открыть интернет-адрес?"
 
 #. Prefs dialog title
-#: ../src/mooapp/mooapp.cpp:1401
+#: ../src/mooapp/mooapp.c:1401
 msgid "Preferences"
 msgstr "Настройки"
 

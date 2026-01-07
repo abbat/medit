@@ -17,9 +17,9 @@
  * class:MooGladeXml: (parent GObject) (moo.private 1)
  **/
 
-/**
+/*
  * FIXME: may be gtk-2 widget types which not supported in gtk-3 (see FIXME in code)
- **/
+ */
 
 #ifdef GTK_DISABLE_DEPRECATED
 #undef GTK_DISABLE_DEPRECATED

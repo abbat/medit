@@ -702,7 +702,8 @@ editor_will_close_window (MooApp *app)
 }
 
 /*!
- * \brief Callback function called after an editor window is closed. Quits the application if there are no more windows.
+ * \brief Callback function called after an editor window is closed.
+ * Quits the application if there are no more windows.
  * \param app the MooApp instance
  */
 static void
@@ -737,7 +738,8 @@ init_plugins (MooApp *app)
 }
 
 /*!
- * \brief Gets the UI XML for the application. If not already created, tries to get it from the editor or creates a new one.
+ * \brief Gets the UI XML for the application.
+ * If not already created, tries to get it from the editor or creates a new one.
  * \param app the MooApp instance
  * \return the UI XML object
  */
@@ -1119,7 +1121,8 @@ moo_app_load_prefs (MooApp *app)
 }
 
 /*!
- * \brief Attempts to quit the application by closing all editor windows. Saves the session if not already in the process of closing a window.
+ * \brief Attempts to quit the application by closing all editor windows.
+ * Saves the session if not already in the process of closing a window.
  * \param app the MooApp instance
  * \return TRUE if all windows were closed, FALSE otherwise
  */
@@ -1245,7 +1248,8 @@ moo_app_instance (void)
 }
 
 /*!
- * \brief Initializes the application, setting up program class, icon name, loading preferences, initializing UI and editor, and starting input.
+ * \brief Initializes the application, setting up program class, icon name, loading preferences,
+ * initializing UI and editor, and starting input.
  * \param app the MooApp instance
  * \return TRUE on success, FALSE on failure
  */
@@ -1318,7 +1322,9 @@ moo_app_run (MooApp *app)
 }
 
 /*!
- * \brief Attempts to quit the application. If already in the process of quitting or not running, returns TRUE. Otherwise tries to close all windows and performs the actual quit if successful.
+ * \brief Attempts to quit the application.
+ * If already in the process of quitting or not running, returns TRUE.
+ * Otherwise tries to close all windows and performs the actual quit if successful.
  * \param app the MooApp instance
  * \return TRUE if the application will quit, FALSE if the quit was cancelled
  */
@@ -1342,7 +1348,8 @@ moo_app_quit (MooApp *app)
 }
 
 /*!
- * \brief Loads the session from disk if session management is enabled. Validates the session file format and version before loading.
+ * \brief Loads the session from disk if session management is enabled.
+ * Validates the session file format and version before loading.
  * \param app the MooApp instance
  */
 void
