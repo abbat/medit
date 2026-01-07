@@ -130,7 +130,7 @@ static volatile int signal_received;
 
 #if GTK_CHECK_VERSION(3, 0, 0)
 /*!< \brief Global application pointer for GTK3 (replaces quit_handler_id) */
-static MooApp *g_app;
+static MooApp *on_gtk_main_quit_app_arg;
 #endif
 
 /*!
@@ -467,9 +467,7 @@ moo_app_do_quit (MooApp *app)
   moo_app_write_session (app);
   moo_app_save_prefs (app);
 
-#if GTK_CHECK_VERSION(3, 0, 0)
-  g_app = NULL;
-#else
+#if !GTK_CHECK_VERSION(3, 0, 0)
   if (app->priv->quit_handler_id)
     gtk_quit_remove (app->priv->quit_handler_id);
 #endif
@@ -485,7 +483,8 @@ moo_app_do_quit (MooApp *app)
 }
 
 /*!
- * \brief Finalizes a MooApp object, cleaning up all allocated resources and calling the parent class finalize method.
+ * \brief Finalizes a MooApp object, cleaning up all allocated resources
+ * and calling the parent class finalize method.
  * \param object the GObject to finalize
  */
 static void
@@ -496,6 +495,7 @@ moo_app_finalize (GObject *object)
   moo_app_do_quit (app);
 
   moo_app_data.instance = NULL;
+  on_gtk_main_quit_app_arg = NULL;
 
   g_free (app->priv->rc_files[0]);
   g_free (app->priv->rc_files[1]);
@@ -1018,8 +1018,9 @@ static
 #endif
 {
 #if GTK_CHECK_VERSION(3, 0, 0)
-  MooApp *app = g_app;
-  g_app = NULL;
+  MooApp *app = on_gtk_main_quit_app_arg;
+  if (app == NULL)
+    return;
 #else
   app->priv->quit_handler_id = 0;
 #endif
@@ -1294,11 +1295,11 @@ moo_app_run (MooApp *app)
   app->priv->running = TRUE;
 
 #if GTK_CHECK_VERSION(3, 0, 0)
+  on_gtk_main_quit_app_arg = app;
   // FIXME: deprecated
   g_atexit (on_gtk_main_quit);
 #else
-  app->priv->quit_handler_id =
-      gtk_quit_add (1, (GtkFunction) on_gtk_main_quit, app);
+  app->priv->quit_handler_id = gtk_quit_add (1, (GtkFunction) on_gtk_main_quit, app);
 #endif
 
   g_timeout_add (100, (GSourceFunc) check_signal, NULL);
@@ -1341,10 +1342,8 @@ moo_app_quit (MooApp *app)
       moo_app_do_quit (app);
       return TRUE;
     }
-  else
-    {
-      return FALSE;
-    }
+
+  return FALSE;
 }
 
 /*!
