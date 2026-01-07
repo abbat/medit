@@ -1,7 +1,8 @@
 /*
- *   mooluaplugin.cpp
+ *   moolua/mooluaplugin.cpp
  *
  *   Copyright (C) 2004-2010 by Yevgen Muntyan <emuntyan@users.sourceforge.net>
+ *                 2023-2026 by Anton Batenev <antonbatenev@yandex.ru>
  *
  *   This file is part of medit.  medit is free software; you can
  *   redistribute it and/or modify it under the terms of the
@@ -13,118 +14,161 @@
  *   License along with medit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "config.h"
-#include "plugins/mooplugin-builtin.h"
-#include "mooedit/mooplugin-macro.h"
+#include "mooluaplugin.h"
+
+#include "medit-lua.h"
 #include "mooedit/mooplugin-loader.h"
-#include "mooutils/mooi18n.h"
-#include "mooutils/mooutils-messages.h"
+#include "mooedit/mooplugin-macro.h"
 #include "moolua/lua-module-init.h"
 #include "moolua/lua-plugin-init.h"
-#include "medit-lua.h"
-#include "mooutils/moolist.h"
+#include "mooutils/mooi18n.h"
 
-#define MOO_LUA_PLUGIN_ID "MooLua"
+/*!< \brief Identifier for the MooLua plugin */
+const char *LUA_PLUGIN_ID = "MooLua";
 
-struct MooLuaModule {
-    lua_State *L;
-};
-
-MOO_DEFINE_SLIST(ModuleList, module_list, MooLuaModule)
-
-struct MooLuaPlugin {
-    MooPlugin parent;
-    ModuleList *modules;
-};
-
-static MooLuaModule *
-moo_lua_module_load (const char *filename)
+/*!
+ * \brief Structure representing a Lua module
+ */
+struct LuaModule
 {
-    lua_State *L = medit_lua_new ();
+  lua_State *L; /*!< \brief Lua state instance */
+};
 
-    if (!L)
-        return NULL;
+/*!< \brief Define a singly-linked list for Lua modules */
+MOO_DEFINE_SLIST (ModuleList, module_list, LuaModule)
 
-    if (!medit_lua_do_string (L, LUA_MODULE_INIT))
+/*!
+ * \brief Structure representing a Lua plugin
+ */
+struct LuaPlugin
+{
+  MooPlugin parent;   /*!< \brief Parent plugin structure */
+  ModuleList *modules; /*!< \brief List of loaded modules */
+};
+
+/*!< \brief Define plugin information for the Lua plugin */
+MOO_PLUGIN_DEFINE_INFO (lua, N_ ("Lua"), N_ ("Lua support"), "Yevgen Muntyan <" MOO_EMAIL ">", MOO_VERSION)
+
+/*!< \brief Define the Lua plugin type and implementation */
+MOO_PLUGIN_DEFINE (Lua, lua, NULL, NULL, NULL, NULL, NULL, 0, 0)
+
+/*!
+ * \brief Load a Lua module from file
+ *
+ * \param filename Path to the Lua module file
+ * \return Pointer to the loaded Lua module, or NULL on failure
+ */
+static LuaModule *
+lua_module_load (const char *filename)
+{
+  lua_State *L = medit_lua_new ();
+
+  if (!L)
+    return NULL;
+
+  if (!medit_lua_do_string (L, LUA_MODULE_INIT))
     {
-        medit_lua_free (L);
-        return NULL;
+      medit_lua_free (L);
+      return NULL;
     }
 
-    if (!medit_lua_do_file (L, filename))
+  if (!medit_lua_do_file (L, filename))
     {
-        medit_lua_free (L);
-        return NULL;
+      medit_lua_free (L);
+      return NULL;
     }
 
-    MooLuaModule *mod = g_new0 (MooLuaModule, 1);
-    mod->L = L;
-    return mod;
+  LuaModule *mod = g_new0 (LuaModule, 1);
+  mod->L = L;
+
+  return mod;
 }
 
+/*!
+ * \brief Unload a Lua module and free its resources
+ *
+ * \param mod Pointer to the Lua module to unload
+ */
 static void
-moo_lua_module_unload (MooLuaModule *mod)
+lua_module_unload (LuaModule *mod)
 {
-    g_return_if_fail (mod != NULL);
-    if (mod->L)
-        medit_lua_free (mod->L);
-    g_free (mod);
+  g_return_if_fail (mod != NULL);
+  if (mod->L)
+    medit_lua_free (mod->L);
+
+  g_free (mod);
 }
 
+/*!
+ * \brief Initialize a Lua plugin
+ *
+ * \param plugin Pointer to the Lua plugin to initialize
+ * \return TRUE on success, FALSE on failure
+ */
 static gboolean
-moo_lua_plugin_init (MooLuaPlugin *plugin)
+lua_plugin_init (LuaPlugin *plugin)
 {
-    plugin->modules = NULL;
-    return TRUE;
+  plugin->modules = NULL;
+  return TRUE;
 }
 
+/*!
+ * \brief Deinitialize a Lua plugin and unload all its modules
+ *
+ * \param plugin Pointer to the Lua plugin to deinitialize
+ */
 static void
-moo_lua_plugin_deinit (MooLuaPlugin *plugin)
+lua_plugin_deinit (LuaPlugin *plugin)
 {
-    while (plugin->modules)
+  while (plugin->modules)
     {
-        MooLuaModule *mod = plugin->modules->data;
-        plugin->modules = module_list_delete_link (plugin->modules, plugin->modules);
-        moo_lua_module_unload (mod);
+      LuaModule *mod = plugin->modules->data;
+      plugin->modules = module_list_delete_link (plugin->modules, plugin->modules);
+      lua_module_unload (mod);
     }
 }
 
+/*!
+ * \brief Load a module into a Lua plugin
+ *
+ * \param plugin Pointer to the Lua plugin
+ * \param module_file Path to the module file to load
+ */
 static void
-moo_lua_plugin_load_module (MooLuaPlugin *plugin,
-                            const char   *module_file)
+lua_plugin_load_module (LuaPlugin *plugin, const char *module_file)
 {
-    if (MooLuaModule *mod = moo_lua_module_load (module_file))
-        plugin->modules = module_list_prepend (plugin->modules, mod);
+  if (LuaModule *mod = lua_module_load (module_file))
+    plugin->modules = module_list_prepend (plugin->modules, mod);
 }
 
-
+/*!
+ * \brief Callback function to load a Lua module
+ *
+ * \param module_file Path to the module file to load
+ * \param ini_file Configuration file (unused)
+ * \param data User data (unused)
+ */
 static void
-load_lua_module (const char *module_file,
-                 G_GNUC_UNUSED const char *ini_file,
-                 G_GNUC_UNUSED gpointer data)
+load_lua_module (const char *module_file, G_GNUC_UNUSED const char *ini_file, G_GNUC_UNUSED gpointer data)
 {
-    if (MooLuaPlugin *plugin = (MooLuaPlugin*) moo_plugin_lookup (MOO_LUA_PLUGIN_ID))
-        moo_lua_plugin_load_module (plugin, module_file);
+  if (LuaPlugin *plugin = (LuaPlugin *) moo_plugin_lookup (LUA_PLUGIN_ID))
+    lua_plugin_load_module (plugin, module_file);
 }
 
-
-MOO_PLUGIN_DEFINE_INFO (moo_lua,
-                        N_("Lua"), N_("Lua support"),
-                        "Yevgen Muntyan <" MOO_EMAIL ">",
-                        MOO_VERSION)
-MOO_PLUGIN_DEFINE (MooLua, moo_lua,
-                   NULL, NULL, NULL, NULL, NULL,
-                   0, 0)
-
-
+/*!
+ * \brief Initialize the MooLua plugin system
+ *
+ * \return TRUE on success, FALSE on failure
+ */
 gboolean
-_moo_lua_plugin_init (void)
+moo_lua_plugin_init (void)
 {
-    MooPluginLoader loader = { load_lua_module, NULL, NULL };
-    moo_plugin_loader_register (&loader, "Lua");
-    MooPluginParams params = { TRUE, TRUE };
-    return moo_plugin_register (MOO_LUA_PLUGIN_ID,
-                                moo_lua_plugin_get_type (),
-                                &moo_lua_plugin_info,
-                                &params);
+  MooPluginLoader loader = { load_lua_module, NULL, NULL };
+  moo_plugin_loader_register (&loader, "Lua");
+  MooPluginParams params = { TRUE, TRUE };
+
+  return moo_plugin_register (LUA_PLUGIN_ID,
+                              lua_plugin_get_type (),
+                              &lua_plugin_info,
+                              &params);
 }

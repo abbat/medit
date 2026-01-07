@@ -298,11 +298,12 @@ am__medit_SOURCES_DIST = medit-app/main.h medit-app/main.cpp main.c \
 	mooapp/mooapp-accels.h mooapp/mooapp-info.h \
 	mooapp/mooapp-private.h mooapp/moohtml.h mooapp/moohtml.cpp \
 	mooapp/moolinklabel.h mooapp/moolinklabel.c moolua/medit-lua.h \
-	moolua/medit-lua.cpp moolua/mooluaplugin.cpp \
-	moolua/moo-lua-api-util.h moolua/moo-lua-api-util.cpp \
-	moolua/moo-lua-api.cpp moolua/moo-lua-api.h \
-	moolua/gtk-lua-api.cpp moolua/gtk-lua-api.h moolua/lua/lfs.h \
-	moolua/lua/lfs.cpp moolua/lua/moolua.h moolua/lua/moolua.cpp \
+	moolua/medit-lua.cpp moolua/mooluaplugin.h \
+	moolua/mooluaplugin.cpp moolua/moo-lua-api-util.h \
+	moolua/moo-lua-api-util.cpp moolua/moo-lua-api.cpp \
+	moolua/moo-lua-api.h moolua/gtk-lua-api.cpp \
+	moolua/gtk-lua-api.h moolua/lua/lfs.h moolua/lua/lfs.cpp \
+	moolua/lua/moolua.h moolua/lua/moolua.cpp \
 	moolua/lua/luaall.cpp moocpp/fileutils.h moocpp/fileutils.cpp \
 	moocpp/gobjptr.h moocpp/gstr.h moocpp/gstr.cpp moocpp/moocpp.h \
 	moocpp/regex.h moocpp/regex.cpp moocpp/util.h \
@@ -1189,11 +1190,12 @@ moo_sources = main.c moo-config.h sysheaders.h mooglib/moo-glib.h \
 	mooapp/mooapp-accels.h mooapp/mooapp-info.h \
 	mooapp/mooapp-private.h mooapp/moohtml.h mooapp/moohtml.cpp \
 	mooapp/moolinklabel.h mooapp/moolinklabel.c moolua/medit-lua.h \
-	moolua/medit-lua.cpp moolua/mooluaplugin.cpp \
-	moolua/moo-lua-api-util.h moolua/moo-lua-api-util.cpp \
-	moolua/moo-lua-api.cpp moolua/moo-lua-api.h \
-	moolua/gtk-lua-api.cpp moolua/gtk-lua-api.h moolua/lua/lfs.h \
-	moolua/lua/lfs.cpp moolua/lua/moolua.h moolua/lua/moolua.cpp \
+	moolua/medit-lua.cpp moolua/mooluaplugin.h \
+	moolua/mooluaplugin.cpp moolua/moo-lua-api-util.h \
+	moolua/moo-lua-api-util.cpp moolua/moo-lua-api.cpp \
+	moolua/moo-lua-api.h moolua/gtk-lua-api.cpp \
+	moolua/gtk-lua-api.h moolua/lua/lfs.h moolua/lua/lfs.cpp \
+	moolua/lua/moolua.h moolua/lua/moolua.cpp \
 	moolua/lua/luaall.cpp moocpp/fileutils.h moocpp/fileutils.cpp \
 	moocpp/gobjptr.h moocpp/gstr.h moocpp/gstr.cpp moocpp/moocpp.h \
 	moocpp/regex.h moocpp/regex.cpp moocpp/util.h

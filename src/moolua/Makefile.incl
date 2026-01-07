@@ -1,6 +1,7 @@
 moo_sources +=				\
 	moolua/medit-lua.h		\
 	moolua/medit-lua.cpp		\
+	moolua/mooluaplugin.h		\
 	moolua/mooluaplugin.cpp		\
 	moolua/moo-lua-api-util.h	\
 	moolua/moo-lua-api-util.cpp	\

@@ -29,7 +29,6 @@ gboolean    _moo_file_list_plugin_init      (void);
 gboolean    _moo_user_tools_plugin_init     (void);
 
 gboolean    _moo_python_plugin_init         (void);
-gboolean    _moo_lua_plugin_init            (void);
 
 /* implemented in moofilelist.c */
 gboolean    _moo_str_semicase_compare       (const char *string,

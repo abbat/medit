@@ -130,8 +130,8 @@ active_doc_changed (CtagsWindowPlugin *plugin)
 static void
 entry_activated (CtagsWindowPlugin *plugin, MooCtagsEntry *entry)
 {
-  MooEditWindow *window;
   MooEditView *view;
+  MooEditWindow *window;
 
   window = MOO_WIN_PLUGIN (plugin)->window;
   view = moo_edit_window_get_active_view (window);
@@ -151,7 +151,8 @@ entry_activated (CtagsWindowPlugin *plugin, MooCtagsEntry *entry)
 static gboolean
 ctags_window_plugin_create (CtagsWindowPlugin *plugin)
 {
-  GtkWidget *swin, *view;
+  GtkWidget *swin;
+  GtkWidget *view;
   MooPaneLabel *label;
   MooEditWindow *window = MOO_WIN_PLUGIN (plugin)->window;
 
