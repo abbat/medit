@@ -9,7 +9,9 @@ moo_sources +=			\
 	mooapp/moohtml.h	\
 	mooapp/moohtml.cpp	\
 	mooapp/moolinklabel.h	\
-	mooapp/moolinklabel.c
+	mooapp/moolinklabel.c	\
+	mooapp/credits.h	\
+	mooapp/credits.c
 
 EXTRA_DIST +=					\
 	mooapp/glade/mooappabout-dialog.glade	\

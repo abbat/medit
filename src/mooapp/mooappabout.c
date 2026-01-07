@@ -14,6 +14,7 @@
  */
 
 #include "mooappabout.h"
+#include "credits.h"
 #include "mooapp.h"
 #include "mooapp-credits.h"
 #include "mooapp-info.h"
