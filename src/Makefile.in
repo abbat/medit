@@ -99,6 +99,7 @@ bin_PROGRAMS = $(am__EXEEXT_1)
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/readtags.c	\
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/readtags.h	\
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/readtags-mangle.h	\
+@MOO_BUILD_CTAGS_TRUE@	plugins/ctags/ctags-plugin.h	\
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/ctags-plugin.c	\
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/ctags-doc.c	\
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/ctags-doc.h	\
@@ -310,9 +311,10 @@ am__medit_SOURCES_DIST = medit-app/main.h medit-app/main.cpp main.c \
 	plugins/mooplugin-builtin.cpp plugins/moofilelist.cpp \
 	plugins/moofind.cpp plugins/ctags/readtags.c \
 	plugins/ctags/readtags.h plugins/ctags/readtags-mangle.h \
-	plugins/ctags/ctags-plugin.c plugins/ctags/ctags-doc.c \
-	plugins/ctags/ctags-doc.h plugins/ctags/ctags-view.c \
-	plugins/ctags/ctags-view.h plugins/usertools/moousertools.cpp \
+	plugins/ctags/ctags-plugin.h plugins/ctags/ctags-plugin.c \
+	plugins/ctags/ctags-doc.c plugins/ctags/ctags-doc.h \
+	plugins/ctags/ctags-view.c plugins/ctags/ctags-view.h \
+	plugins/usertools/moousertools.cpp \
 	plugins/usertools/moousertools.h \
 	plugins/usertools/moousertools-prefs.cpp \
 	plugins/usertools/moousertools-prefs.h \

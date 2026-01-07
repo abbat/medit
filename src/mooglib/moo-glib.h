@@ -95,40 +95,4 @@ struct mgw_access_mode_t
 
 int mgw_access (const char *path, mgw_access_mode_t mode);
 
-#ifndef MOO_DO_NOT_MANGLE_GLIB_FUNCTIONS
-
-#undef g_stat
-#undef g_rename
-#undef g_access
-#undef g_lstat
-#undef g_strerror
-#undef g_ascii_strtoull
-#undef g_file_error_from_errno
-#undef g_ascii_strtod
-#undef g_fopen
-#undef g_unlink
-#undef g_mkdir
-#undef g_mkdir_with_parents
-#undef g_open
-#undef g_spawn_async_with_pipes
-#undef g_io_channel_unix_new
-
-#define g_stat DO_NOT_USE_THIS_DIRECTLY_USE_MGW_WRAPPERS_INSTEAD
-#define g_rename DO_NOT_USE_THIS_DIRECTLY_USE_MGW_WRAPPERS_INSTEAD
-#define g_access DO_NOT_USE_THIS_DIRECTLY_USE_MGW_WRAPPERS_INSTEAD
-#define g_lstat DO_NOT_USE_THIS_DIRECTLY_USE_MGW_WRAPPERS_INSTEAD
-#define g_strerror DO_NOT_USE_THIS_DIRECTLY_USE_MGW_WRAPPERS_INSTEAD
-#define g_ascii_strtoull DO_NOT_USE_THIS_DIRECTLY_USE_MGW_WRAPPERS_INSTEAD
-#define g_file_error_from_errno DO_NOT_USE_THIS_DIRECTLY_USE_MGW_WRAPPERS_INSTEAD
-#define g_ascii_strtod DO_NOT_USE_THIS_DIRECTLY_USE_MGW_WRAPPERS_INSTEAD
-#define g_fopen DO_NOT_USE_THIS_DIRECTLY_USE_MGW_WRAPPERS_INSTEAD
-#define g_unlink DO_NOT_USE_THIS_DIRECTLY_USE_MGW_WRAPPERS_INSTEAD
-#define g_mkdir DO_NOT_USE_THIS_DIRECTLY_USE_MGW_WRAPPERS_INSTEAD
-#define g_mkdir_with_parents DO_NOT_USE_THIS_DIRECTLY_USE_MGW_WRAPPERS_INSTEAD
-#define g_open DO_NOT_USE_THIS_DIRECTLY_USE_MGW_WRAPPERS_INSTEAD
-#define g_spawn_async_with_pipes DO_NOT_USE_THIS_DIRECTLY_USE_MGW_WRAPPERS_INSTEAD
-#define g_io_channel_unix_new DO_NOT_USE_THIS_DIRECTLY_USE_MGW_WRAPPERS_INSTEAD
-
-#endif // MOO_DO_NOT_MANGLE_GLIB_FUNCTIONS
-
 G_END_DECLS

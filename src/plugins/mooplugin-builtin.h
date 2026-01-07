@@ -16,14 +16,11 @@
 #ifndef MOO_EDIT_PLUGINS_H
 #define MOO_EDIT_PLUGINS_H
 
-#include <mooglib/moo-glib.h>
+#include "sysheaders.h"
 
 G_BEGIN_DECLS
 
-
 void         moo_plugin_init                (void);
-
-gboolean    _moo_ctags_plugin_init          (void);
 
 gboolean    _moo_find_plugin_init           (void);
 gboolean    _moo_file_selector_plugin_init  (void);
@@ -37,7 +34,6 @@ gboolean    _moo_lua_plugin_init            (void);
 /* implemented in moofilelist.c */
 gboolean    _moo_str_semicase_compare       (const char *string,
                                              const char *key);
-
 
 G_END_DECLS
 

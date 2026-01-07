@@ -13,10 +13,12 @@
  *   License along with medit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <config.h>
+#include "mooplugin-builtin.h"
+
 #include "mooedit/mooplugin.h"
 #include "plugins/mooplugin-builtin.h"
 #include "mooutils/mooutils-misc.h"
+#include "plugins/ctags/ctags-plugin.h"
 
 void
 moo_plugin_init (void)
@@ -28,7 +30,7 @@ moo_plugin_init (void)
     _moo_file_list_plugin_init ();
     _moo_find_plugin_init ();
 #ifdef MOO_BUILD_CTAGS
-    _moo_ctags_plugin_init ();
+    moo_ctags_plugin_init ();
 #endif
 
     moo_plugin_read_dirs ();

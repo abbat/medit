@@ -1,5 +1,5 @@
 /*
- *   medit-app/main.h
+ *   plugins/ctags/ctags-plugin.h
  *
  *   Copyright (C) 2023-2026 by Anton Batenev <antonbatenev@yandex.ru>
  *
@@ -14,26 +14,23 @@
  */
 
 #pragma once
-#ifndef _medit_app_main_h_
-#define _medit_app_main_h_
+#ifndef _plugins_ctags_ctags_plugin_h_
+#define _plugins_ctags_ctags_plugin_h_
 
 #include "sysheaders.h"
 
-G_BEGIN_DECLS;
+G_BEGIN_DECLS
 
-/*!
- * \brief Main function of the medit application
+/**
+ * \brief Initialize the ctags plugin
  *
- * Performs application initialization, command line argument parsing,
- * file processing, launching a new instance or connecting to an existing one.
+ * This function initializes the ctags plugin for medit. It sets up
+ * necessary data structures and registers plugin functionality.
  *
- * \param argc Number of command line arguments
- * \param argv Array of command line arguments
- * \return Application exit code
+ * \return TRUE if initialization was successful, FALSE otherwise
  */
-int
-medit_app_main (int argc, char *argv[]);
+gboolean moo_ctags_plugin_init (void);
 
-G_END_DECLS;
+G_END_DECLS
 
-#endif /* _medit_app_main_h_ */
+#endif /* _plugins_ctags_ctags_plugin_h_ */
