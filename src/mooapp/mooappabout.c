@@ -65,18 +65,18 @@ set_translator_credits (CreditsDialogXml *gxml)
 
     if (!strcmp (credits, "translator-credits"))
     {
-        gtk_widget_hide (GTK_WIDGET (gxml->page_translator_credits));
+        gtk_widget_hide (GTK_WIDGET (gxml->tab_translated_by));
         return;
     }
 
 #ifdef MOO_USE_HTML
     if (strcmp (credits_markup, "translator-credits-markup") != 0)
-        _moo_html_load_memory (GTK_TEXT_VIEW (gxml->translated_by),
+        _moo_html_load_memory (GTK_TEXT_VIEW (gxml->view_translated_by),
                                credits_markup, -1, NULL, NULL);
     else
 #endif
     {
-        GtkTextBuffer *buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (gxml->translated_by));
+        GtkTextBuffer *buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (gxml->view_translated_by));
         gtk_text_buffer_insert_at_cursor (buffer, credits, -1);
     }
 }
@@ -84,14 +84,16 @@ set_translator_credits (CreditsDialogXml *gxml)
 static void
 show_credits (void)
 {
-    CreditsDialogXml *gxml;
     GtkTextBuffer *buffer;
+    CreditsDialogXml *gxml;
 
     if (credits_dialog)
     {
         if (about_dialog)
             moo_window_set_parent (GTK_WIDGET (credits_dialog), GTK_WIDGET (about_dialog));
+
         gtk_window_present (GTK_WINDOW (credits_dialog));
+
         return;
     }
 
@@ -110,23 +112,22 @@ show_credits (void)
     g_signal_connect (credits_dialog, "response", G_CALLBACK (gtk_widget_destroy), NULL);
 
 #ifdef MOO_USE_HTML
-    _moo_html_load_memory (GTK_TEXT_VIEW (gxml->written_by),
-                           "Yevgen Muntyan <a href=\"mailto://" MOO_EMAIL
-                                    "\">&lt;" MOO_EMAIL "&gt;</a>",
+    _moo_html_load_memory (GTK_TEXT_VIEW (gxml->view_written_by),
+                           "Yevgen Muntyan <a href=\"mailto://" MOO_EMAIL "\">&lt;" MOO_EMAIL "&gt;</a>",
                            -1, NULL, NULL);
 #else
-    buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (gxml->written_by));
-    gtk_text_buffer_insert_at_cursor (buffer,
-                                      "Yevgen Muntyan <" MOO_EMAIL ">", -1);
+    buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (gxml->view_written_by));
+    gtk_text_buffer_insert_at_cursor (buffer, "Yevgen Muntyan <" MOO_EMAIL ">", -1);
 #endif
 
     set_translator_credits (gxml);
 
-    buffer = gtk_text_view_get_buffer (gxml->thanks);
+    buffer = gtk_text_view_get_buffer (gxml->view_thanks);
     gtk_text_buffer_insert_at_cursor (buffer, MOO_APP_CREDITS, -1);
 
     if (about_dialog)
         moo_window_set_parent (GTK_WIDGET (credits_dialog), GTK_WIDGET (about_dialog));
+
     gtk_window_present (GTK_WINDOW (credits_dialog));
 }
 

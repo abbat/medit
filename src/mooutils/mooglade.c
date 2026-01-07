@@ -607,6 +607,7 @@ set_special_props (MooGladeXML    *xml,
     if (props->mask & PROP_HISTORY)
     {
 #if GTK_CHECK_VERSION(3,0,0)
+        g_warning ("%s:%d:%s", __FILE__, __LINE__, __FUNCTION__);
         if (GTK_IS_COMBO_BOX (widget))
             gtk_combo_box_set_active (GTK_COMBO_BOX (widget),
                                        props->history);
@@ -738,6 +739,7 @@ moo_glade_xml_create_widget (MooGladeXML *xml,
             }
 #if !GTK_CHECK_VERSION(3,0,0)
             // FIXME: gtk-3
+            g_warning ("%s:%d:%s", __FILE__, __LINE__, __FUNCTION__);
             else if (type == GTK_TYPE_LIST_ITEM)
             {
                 widget = gtk_list_item_new_with_label (props->label);
@@ -823,6 +825,7 @@ create_child (MooGladeXML    *xml,
         if (!strcmp (child->internal_child, "vbox") && GTK_IS_DIALOG (real_parent))
         {
 #if GTK_CHECK_VERSION(3,0,0)
+            g_warning ("%s:%d:%s", __FILE__, __LINE__, __FUNCTION__);
             widget = gtk_dialog_get_content_area (GTK_DIALOG (real_parent));
 #else
             widget = GTK_DIALOG (real_parent)->vbox;
@@ -837,6 +840,7 @@ create_child (MooGladeXML    *xml,
             widget = gtk_bin_get_child (GTK_BIN (real_parent));
         }
 #if !GTK_CHECK_VERSION(3,0,0)
+        g_warning ("%s:%d:%s", __FILE__, __LINE__, __FUNCTION__);
         // FIXME: GTK_IS_COMBO used in gtk-1 for GtkEntry or GtkList
         // must be replaced to GtkComboBox or GtkComboBoxEntry in gtk-2
         else if (!strcmp (child->internal_child, "entry") && GTK_IS_COMBO (real_parent))
