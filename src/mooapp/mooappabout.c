@@ -87,6 +87,10 @@ show_credits (void)
 {
     GtkTextBuffer *buffer;
     CreditsDialogXml *gxml;
+    //CreditsDialog *credits;
+
+    //credits = credits_dialog_new (GTK_WINDOW (about_dialog));
+    //return;
 
     if (credits_dialog)
     {

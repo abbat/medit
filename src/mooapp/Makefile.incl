@@ -11,7 +11,11 @@ moo_sources +=			\
 	mooapp/moolinklabel.h	\
 	mooapp/moolinklabel.c	\
 	mooapp/credits.h	\
-	mooapp/credits.c
+	mooapp/credits.c	\
+	mooapp/license.h	\
+	mooapp/license.c	\
+	mooapp/about.h		\
+	mooapp/about.c
 
 EXTRA_DIST +=					\
 	mooapp/glade/mooappabout-dialog.glade	\

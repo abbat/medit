@@ -172,8 +172,8 @@ create_notebook (CreditsDialog *dialog)
 #endif
 
   gtk_widget_show (label);
-  gtk_notebook_set_tab_label (dialog->notebook, tab, label);
   gtk_notebook_append_page (dialog->notebook, tab, NULL);
+  gtk_notebook_set_tab_label (dialog->notebook, tab, label);
 
   /* Create "Written by" tab */
   create_tab_written_by (dialog);
@@ -188,8 +188,8 @@ create_notebook (CreditsDialog *dialog)
 #endif
 
   gtk_widget_show (label);
-  gtk_notebook_set_tab_label (dialog->notebook, tab, label);
   gtk_notebook_append_page (dialog->notebook, tab, NULL);
+  gtk_notebook_set_tab_label (dialog->notebook, tab, label);
 
   /* Create "Translated by" tab */
   create_tab_translated_by (dialog);
@@ -204,8 +204,8 @@ create_notebook (CreditsDialog *dialog)
 #endif
 
   gtk_widget_show (label);
-  gtk_notebook_set_tab_label (dialog->notebook, tab, label);
   gtk_notebook_append_page (dialog->notebook, tab, NULL);
+  gtk_notebook_set_tab_label (dialog->notebook, tab, label);
 
   gtk_widget_show (GTK_WIDGET (dialog->notebook));
 }
@@ -245,10 +245,10 @@ create_action_box (CreditsDialog *dialog)
  * \return A newly allocated CreditsDialog structure
  */
 CreditsDialog *
-credits_dialog_new (void)
+credits_dialog_new (GtkWidget *parent)
 {
-  CreditsDialog *dialog;
   GtkWindow *window;
+  CreditsDialog *dialog;
 
   dialog = g_new0 (CreditsDialog, 1);
 
@@ -284,6 +284,13 @@ credits_dialog_new (void)
 
   gtk_widget_show_all (GTK_WIDGET (dialog->vbox));
   gtk_widget_show_all (GTK_WIDGET (dialog->action_box));
+
+  if (parent) {
+    // FIXME:
+    gtk_window_set_transient_for (window, GTK_WINDOW (gtk_widget_get_ancestor (parent, GTK_TYPE_WINDOW)));
+  }
+
+  gtk_widget_show (GTK_WIDGET (window));
 
   return dialog;
 }

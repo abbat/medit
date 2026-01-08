@@ -1,5 +1,5 @@
 /*
- *   mooapp/credits.h
+ *   mooapp/about.h
  *
  *   Copyright (C) 2023-2026 by Anton Batenev <antonbatenev@yandex.ru>
  *
@@ -14,30 +14,31 @@
  */
 
 #pragma once
-#ifndef _mooapp_credits_h_
-#define _mooapp_credits_h_
+#ifndef _mooapp_about_h_
+#define _mooapp_about_h_
 
 #include "sysheaders.h"
 
 G_BEGIN_DECLS
 
 /*!
- * \brief Structure containing all widgets from the credits dialog
+ * \brief Structure containing all widgets from the about dialog
  */
-typedef struct _CreditsDialog CreditsDialog;
+typedef struct _AboutDialog AboutDialog;
 
 /*!
- * \brief Creates a new CreditsDialog structure with all widgets initialized
- * \return A newly allocated CreditsDialog structure
+ * \brief Creates a new AboutDialog structure with all widgets initialized
+ * \param parent Parent widget for the dialog
+ * \return A newly allocated AboutDialog structure
  */
-CreditsDialog* credits_dialog_new (GtkWidget *parent);
+AboutDialog *about_dialog_new (GtkWidget *parent);
 
 /*!
- * \brief Frees the CreditsDialog structure and all its widgets
- * \param dialog A CreditsDialog structure
+ * \brief Frees the AboutDialog structure and all its widgets
+ * \param dialog An AboutDialog structure
  */
-void credits_dialog_free (CreditsDialog *dialog);
+void about_dialog_free (AboutDialog *dialog);
 
 G_END_DECLS
 
-#endif /* _mooapp_credits_h_ */
+#endif /* _mooapp_about_h_ */
