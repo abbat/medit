@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/pixmap">
+    <file alias="attach.png">mooutils/pixmaps/attach.png</file>
+    <file alias="close.png">mooutils/pixmaps/close.png</file>
+    <file alias="detach.png">mooutils/pixmaps/detach.png</file>
+    <file alias="hide.png">mooutils/pixmaps/hide.png</file>
+    <file alias="keepontop.png">mooutils/pixmaps/keepontop.png</file>
+    <file alias="medit.png">mooutils/pixmaps/medit.png</file>
+    <file alias="sticky.png">mooutils/pixmaps/sticky.png</file>
+    <file alias="symlink.png">mooutils/pixmaps/symlink.png</file>
+    <file alias="symlink-small.png">mooutils/pixmaps/symlink-small.png</file>
+  </gresource>
+</gresources>

@@ -130,7 +130,7 @@ am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(cfgdir)" \
 PROGRAMS = $(bin_PROGRAMS)
 LIBRARIES = $(noinst_LIBRARIES)
 am__medit_SOURCES_DIST = medit-app/main.h medit-app/main.cpp main.c \
-	moo-config.h sysheaders.h mooglib/moo-glib.h \
+	resources.c moo-config.h sysheaders.h mooglib/moo-glib.h \
 	mooglib/moo-stat.h mooglib/moo-time.h mooglib/moo-glib.cpp \
 	mooedit/mooedit-enums.h mooedit/mooeditor.h \
 	mooedit/mootextview.h mooedit/mootextprint.h \
@@ -347,8 +347,9 @@ am__objects_2 = xdgmime/xdgmimealias.$(OBJEXT) \
 	xdgmime/xdgmimeglob.$(OBJEXT) xdgmime/xdgmimeicon.$(OBJEXT) \
 	xdgmime/xdgmimemagic.$(OBJEXT) xdgmime/xdgmimeparent.$(OBJEXT)
 am__objects_3 = mooutils/mooappinput-unix.$(OBJEXT)
-am__objects_4 = main.$(OBJEXT) mooglib/moo-glib.$(OBJEXT) \
-	$(am__objects_1) mooedit/mooeditview.$(OBJEXT) \
+am__objects_4 = main.$(OBJEXT) resources.$(OBJEXT) \
+	mooglib/moo-glib.$(OBJEXT) $(am__objects_1) \
+	mooedit/mooeditview.$(OBJEXT) \
 	mooedit/mooeditview-script.$(OBJEXT) \
 	mooedit/mooeditaction.$(OBJEXT) \
 	mooedit/mooeditaction-factory.$(OBJEXT) \
@@ -502,7 +503,7 @@ DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/dummy.Po ./$(DEPDIR)/main.Po \
-	./$(DEPDIR)/marshals.Po \
+	./$(DEPDIR)/marshals.Po ./$(DEPDIR)/resources.Po \
 	eggsmclient/$(DEPDIR)/eggdesktopfile.Po \
 	eggsmclient/$(DEPDIR)/eggsmclient-xsmp.Po \
 	eggsmclient/$(DEPDIR)/eggsmclient.Po \
@@ -800,6 +801,7 @@ GDK_PIXBUF_CSOURCE = @GDK_PIXBUF_CSOURCE@
 GETTEXT_PACKAGE = @GETTEXT_PACKAGE@
 GETTEXT_PACKAGE_GSV = @GETTEXT_PACKAGE_GSV@
 GLIB_CFLAGS = @GLIB_CFLAGS@
+GLIB_COMPILE_RESOURCES = @GLIB_COMPILE_RESOURCES@
 GLIB_GENMARSHAL = @GLIB_GENMARSHAL@
 GLIB_LIBS = @GLIB_LIBS@
 GLIB_MKENUMS = @GLIB_MKENUMS@
@@ -1034,23 +1036,24 @@ AM_CPPFLAGS = $(MOO_CPPFLAGS) -I$(top_srcdir)/doc/built \
 	-I$(srcdir)/plugins/support
 AM_CFLAGS = $(MOO_CFLAGS) -DEGG_SM_CLIENT_BACKEND_XSMP
 AM_CXXFLAGS = $(MOO_CXXFLAGS)
-moo_sources = main.c moo-config.h sysheaders.h mooglib/moo-glib.h \
-	mooglib/moo-stat.h mooglib/moo-time.h mooglib/moo-glib.cpp \
-	$(moo_edit_enum_headers) mooedit/mooeditor.h \
-	mooedit/mootextview.h mooedit/mootextprint.h \
-	mooedit/mooeditview.h mooedit/mooeditaction.h \
-	mooedit/mooeditbookmark.h mooedit/mooeditconfig.h \
-	mooedit/mooeditdialogs.h mooedit/mooeditfiltersettings.h \
-	mooedit/mooedit.h mooedit/mooedithistoryitem.h \
-	mooedit/mooeditprefs.h mooedit/mooedittypes.h \
-	mooedit/mooeditwindow.h mooedit/mooeditfileinfo.h \
-	mooedit/mooplugin.h mooedit/mootextbuffer.h \
-	mooedit/mootextfind.h mooedit/mootextiter.h \
-	mooedit/mootextsearch.h mooedit/mootextstylescheme.h \
-	mooedit/mooeditview.cpp mooedit/mooeditview-priv.h \
-	mooedit/mooeditview-impl.h mooedit/mooeditview-script.cpp \
-	mooedit/mooeditview-script.h mooedit/mooedit-accels.h \
-	mooedit/mooeditaction.cpp mooedit/mooeditaction-factory.cpp \
+moo_sources = main.c resources.c moo-config.h sysheaders.h \
+	mooglib/moo-glib.h mooglib/moo-stat.h mooglib/moo-time.h \
+	mooglib/moo-glib.cpp $(moo_edit_enum_headers) \
+	mooedit/mooeditor.h mooedit/mootextview.h \
+	mooedit/mootextprint.h mooedit/mooeditview.h \
+	mooedit/mooeditaction.h mooedit/mooeditbookmark.h \
+	mooedit/mooeditconfig.h mooedit/mooeditdialogs.h \
+	mooedit/mooeditfiltersettings.h mooedit/mooedit.h \
+	mooedit/mooedithistoryitem.h mooedit/mooeditprefs.h \
+	mooedit/mooedittypes.h mooedit/mooeditwindow.h \
+	mooedit/mooeditfileinfo.h mooedit/mooplugin.h \
+	mooedit/mootextbuffer.h mooedit/mootextfind.h \
+	mooedit/mootextiter.h mooedit/mootextsearch.h \
+	mooedit/mootextstylescheme.h mooedit/mooeditview.cpp \
+	mooedit/mooeditview-priv.h mooedit/mooeditview-impl.h \
+	mooedit/mooeditview-script.cpp mooedit/mooeditview-script.h \
+	mooedit/mooedit-accels.h mooedit/mooeditaction.cpp \
+	mooedit/mooeditaction-factory.cpp \
 	mooedit/mooeditaction-factory.h mooedit/mooeditbookmark.cpp \
 	mooedit/mooedit.cpp mooedit/mooeditconfig.cpp \
 	mooedit/mooeditdialogs.cpp mooedit/mooedit-enum-types.c \
@@ -2056,6 +2059,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dummy.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/marshals.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/resources.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@eggsmclient/$(DEPDIR)/eggdesktopfile.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@eggsmclient/$(DEPDIR)/eggsmclient-xsmp.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@eggsmclient/$(DEPDIR)/eggsmclient.Po@am__quote@ # am--include-marker
@@ -2538,6 +2542,7 @@ distclean: distclean-am
 		-rm -f ./$(DEPDIR)/dummy.Po
 	-rm -f ./$(DEPDIR)/main.Po
 	-rm -f ./$(DEPDIR)/marshals.Po
+	-rm -f ./$(DEPDIR)/resources.Po
 	-rm -f eggsmclient/$(DEPDIR)/eggdesktopfile.Po
 	-rm -f eggsmclient/$(DEPDIR)/eggsmclient-xsmp.Po
 	-rm -f eggsmclient/$(DEPDIR)/eggsmclient.Po
@@ -2754,6 +2759,7 @@ maintainer-clean: maintainer-clean-am
 		-rm -f ./$(DEPDIR)/dummy.Po
 	-rm -f ./$(DEPDIR)/main.Po
 	-rm -f ./$(DEPDIR)/marshals.Po
+	-rm -f ./$(DEPDIR)/resources.Po
 	-rm -f eggsmclient/$(DEPDIR)/eggdesktopfile.Po
 	-rm -f eggsmclient/$(DEPDIR)/eggsmclient-xsmp.Po
 	-rm -f eggsmclient/$(DEPDIR)/eggsmclient.Po
@@ -3130,6 +3136,9 @@ moofileview/%-ui.h: moofileview/%.xml $(top_srcdir)/tools/xml2h.py
 mooedit/%-ui.h: mooedit/%.xml $(top_srcdir)/tools/xml2h.py
 	$(AM_V_at) $(MKDIR_P) `dirname $@`
 	$(AM_V_GEN)$(MOO_PYTHON) $(top_srcdir)/tools/xml2h.py $< $@.tmp $*_ui_xml && mv $@.tmp $@
+
+resources.c: resources.xml
+	$(AM_V_GEN)$(GLIB_COMPILE_RESOURCES) resources.xml --target=resources.c --generate-source
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

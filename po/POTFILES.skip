@@ -10,3 +10,4 @@ doc/txt2tags/txt2tags.py
 src/mooutils/moofontsel.c
 src/moopython/plugins/pyproject/
 src/plugins/old/
+src/resources.c

@@ -21,23 +21,7 @@
 
 G_BEGIN_DECLS
 
-/*!
- * \brief Structure containing all widgets from the about dialog
- */
-typedef struct _AboutDialog AboutDialog;
-
-/*!
- * \brief Creates a new AboutDialog structure with all widgets initialized
- * \param parent Parent widget for the dialog
- * \return A newly allocated AboutDialog structure
- */
-AboutDialog *about_dialog_new (GtkWidget *parent);
-
-/*!
- * \brief Frees the AboutDialog structure and all its widgets
- * \param dialog An AboutDialog structure
- */
-void about_dialog_free (AboutDialog *dialog);
+void show_about (GtkWidget *parent);
 
 G_END_DECLS
 

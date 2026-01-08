@@ -3,6 +3,7 @@ plat/
 tools/
 
 doc/
+
 src/medit-app/
 src/plugins/
 src/mooapp/
@@ -13,6 +14,7 @@ src/moopython/
 src/mooutils/
 src/eggsmclient/
 src/moolua/
+src/resources.c
 src/mooedit/medit.xml
 src/mooedit/mooplugin-loader.c
 src/mooedit/mooplugin.c

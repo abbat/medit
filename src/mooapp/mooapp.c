@@ -16,12 +16,12 @@
 
 #include "mooapp.h"
 
+#include "about.h"
 #include "eggsmclient/eggsmclient.h"
 #include "marshals.h"
 #include "mooapp-accels.h"
 #include "mooapp-info.h"
 #include "mooapp-private.h"
-#include "mooappabout.h"
 #include "mooedit/mooeditprefs.h"
 #include "mooedit/mooplugin.h"
 #include "moolua/medit-lua.h"
@@ -282,7 +282,7 @@ install_common_actions (void)
                                "label", GTK_STOCK_ABOUT,
                                "no-accel", TRUE,
                                "stock-id", GTK_STOCK_ABOUT,
-                               "closure-callback", moo_app_about_dialog,
+                               "closure-callback", show_about /* was moo_app_about_dialog from mooappabout.h */,
                                NULL);
 
   moo_window_class_new_action (klass, "Help", NULL,

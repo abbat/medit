@@ -86,6 +86,13 @@ AM_CONDITIONAL(GDK_QUARTZ, $GDK_QUARTZ)
 AC_SUBST(GLIB_GENMARSHAL, `$PKG_CONFIG --variable=glib_genmarshal glib-2.0`)
 AC_SUBST(GLIB_MKENUMS, `$PKG_CONFIG --variable=glib_mkenums glib-2.0`)
 
+AC_ARG_VAR([GLIB_COMPILE_RESOURCES], [glib-compile-resources])
+AC_CHECK_TOOL(GLIB_COMPILE_RESOURCES, glib-compile-resources, [:])
+if test "$GLIB_COMPILE_RESOURCES" = ":"; then
+  AC_MSG_ERROR([glib-compile-resources not found])
+fi
+
+# deprecated, use glib-compile-resources instead
 AC_ARG_VAR([GDK_PIXBUF_CSOURCE], [gdk-pixbuf-csource])
 AC_CHECK_TOOL(GDK_PIXBUF_CSOURCE, gdk-pixbuf-csource, [:])
 if test "$GDK_PIXBUF_CSOURCE" = ":"; then

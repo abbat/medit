@@ -8,7 +8,7 @@ AM_CPPFLAGS = $(MOO_CPPFLAGS) -I$(top_srcdir)/doc/built -Imooutils/glade
 AM_CFLAGS = $(MOO_CFLAGS)
 AM_CXXFLAGS = $(MOO_CXXFLAGS)
 
-moo_sources = main.c
+moo_sources = main.c resources.c
 built_moo_sources =
 moo_libadd =
 
@@ -91,3 +91,6 @@ moofileview/%-ui.h: moofileview/%.xml $(top_srcdir)/tools/xml2h.py
 mooedit/%-ui.h: mooedit/%.xml $(top_srcdir)/tools/xml2h.py
 	$(AM_V_at) $(MKDIR_P) `dirname $@`
 	$(AM_V_GEN)$(MOO_PYTHON) $(top_srcdir)/tools/xml2h.py $< $@.tmp $*_ui_xml && mv $@.tmp $@
+
+resources.c: resources.xml
+	$(AM_V_GEN)$(GLIB_COMPILE_RESOURCES) resources.xml --target=resources.c --generate-source

@@ -15,16 +15,16 @@
 
 #include "about.h"
 
+#include "mooapp-info.h"
 #include "mooutils/mooi18n.h"
 
 /*!
  * \brief Structure containing all widgets from the about dialog
  */
-struct _AboutDialog
+typedef struct
 {
   GtkDialog *AboutDialog;      /*!< \brief Main dialog widget */
-  GtkVBox *dialog_vbox;        /*!< \brief Dialog's main vbox */
-  GtkVBox *vbox;               /*!< \brief Inner vbox with content */
+  GtkVBox *vbox;               /*!< \brief Dialog's main vbox */
   GtkImage *logo;              /*!< \brief Application logo image */
   GtkLabel *name;              /*!< \brief Application name label */
   GtkLabel *description;       /*!< \brief Application description label */
@@ -35,152 +35,7 @@ struct _AboutDialog
   GtkButton *credits_button;   /*!< \brief Credits button */
   GtkButton *license_button;   /*!< \brief License button */
   GtkButton *close_button;     /*!< \brief Close button */
-};
-
-/*!
- * \brief Creates the vbox with all content elements
- * \param dialog An AboutDialog structure
- */
-static void
-create_vbox_content (AboutDialog *dialog)
-{
-  GtkWidget *widget;
-
-  /* Create main vbox with border and spacing */
-  widget = gtk_vbox_new (FALSE, 8);
-  dialog->vbox = GTK_VBOX (widget);
-  gtk_container_set_border_width (GTK_CONTAINER (widget), 12);
-  gtk_widget_show (widget);
-
-  /* Create logo image */
-  widget = gtk_image_new_from_stock ("gtk-about", GTK_ICON_SIZE_DIALOG);
-  dialog->logo = GTK_IMAGE (widget);
-  gtk_widget_show (widget);
-  gtk_box_pack_start (GTK_BOX (dialog->vbox), widget, FALSE, FALSE, 0);
-
-  /* Create application name label */
-  widget = gtk_label_new (NULL);
-  dialog->name = GTK_LABEL (widget);
-  gtk_label_set_markup (dialog->name, "<span size=\"xx-large\"><b>The App</b></span>");
-  gtk_label_set_selectable (dialog->name, TRUE);
-  gtk_widget_show (widget);
-  gtk_box_pack_start (GTK_BOX (dialog->vbox), widget, FALSE, FALSE, 0);
-
-  /* Create description label */
-  widget = gtk_label_new ("The App is an app");
-  dialog->description = GTK_LABEL (widget);
-  gtk_label_set_selectable (dialog->description, TRUE);
-  gtk_widget_show (widget);
-  gtk_box_pack_start (GTK_BOX (dialog->vbox), widget, FALSE, FALSE, 0);
-
-  /* Create copyright label */
-  widget = gtk_label_new (NULL);
-  dialog->copyright = GTK_LABEL (widget);
-  gtk_label_set_markup (dialog->copyright, "<small>\302\251 2004-2006 The Author</small>");
-  gtk_label_set_selectable (dialog->copyright, TRUE);
-  gtk_widget_show (widget);
-  gtk_box_pack_start (GTK_BOX (dialog->vbox), widget, FALSE, FALSE, 0);
-
-  /* Create URL alignment */
-  widget = gtk_alignment_new (0.0, 0.5, 0.0, 0.0);
-  dialog->url_alignment = GTK_ALIGNMENT (widget);
-  gtk_widget_show (widget);
-  gtk_box_pack_start (GTK_BOX (dialog->vbox), widget, FALSE, FALSE, 0);
-
-  /* Create URL label */
-  widget = gtk_label_new (NULL);
-  dialog->url = GTK_LABEL (widget);
-  gtk_label_set_markup (dialog->url, "<span foreground=\"#0000FF\">http://somesite.org</span>");
-  gtk_widget_show (widget);
-  gtk_container_add (GTK_CONTAINER (dialog->url_alignment), widget);
-}
-
-/*!
- * \brief Creates the action buttons
- * \param dialog An AboutDialog structure
- */
-static void
-create_action_buttons (AboutDialog *dialog)
-{
-  GtkWidget *widget;
-  GtkWidget *alignment;
-  GtkWidget *hbox;
-  GtkWidget *image;
-  GtkWidget *label;
-
-  /* Get the action area from the dialog */
-#if GTK_CHECK_VERSION(3, 0, 0)
-  dialog->action_box = GTK_HBUTTON_BOX (gtk_dialog_get_action_area (dialog->AboutDialog));
-#else
-  dialog->action_box = GTK_HBUTTON_BOX (dialog->AboutDialog->action_area);
-#endif
-  gtk_button_box_set_layout (GTK_BUTTON_BOX (dialog->action_box), GTK_BUTTONBOX_END);
-
-  /* Create credits button */
-  widget = gtk_button_new ();
-  dialog->credits_button = GTK_BUTTON (widget);
-  gtk_widget_set_can_focus (widget, TRUE);
-  gtk_widget_set_can_default (widget, TRUE);
-#if GTK_CHECK_VERSION(3, 0, 0)
-  gtk_widget_set_focus_on_click (widget, FALSE);
-#else
-  gtk_button_set_focus_on_click (GTK_BUTTON (widget), FALSE);
-#endif
-
-  /* Create alignment for credits button */
-  alignment = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
-  gtk_widget_show (alignment);
-  gtk_container_add (GTK_CONTAINER (widget), alignment);
-
-  /* Create hbox for credits button */
-  hbox = gtk_hbox_new (FALSE, 2);
-  gtk_widget_show (hbox);
-  gtk_container_add (GTK_CONTAINER (alignment), hbox);
-
-  /* Create image for credits button */
-  image = gtk_image_new_from_stock ("gtk-about", GTK_ICON_SIZE_BUTTON);
-  gtk_widget_show (image);
-  gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
-
-  /* Create label for credits button */
-  label = gtk_label_new_with_mnemonic ("C_redits");
-  gtk_widget_show (label);
-  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-
-  /* Add credits button to dialog */
-  gtk_dialog_add_action_widget (dialog->AboutDialog, widget, 0);
-  gtk_widget_show (widget);
-
-  /* Create license button */
-  widget = gtk_button_new_with_mnemonic ("_License");
-  dialog->license_button = GTK_BUTTON (widget);
-  gtk_widget_set_can_focus (widget, TRUE);
-  gtk_widget_set_can_default (widget, TRUE);
-#if GTK_CHECK_VERSION(3, 0, 0)
-  gtk_widget_set_focus_on_click (widget, FALSE);
-#else
-  gtk_button_set_focus_on_click (GTK_BUTTON (widget), FALSE);
-#endif
-
-  /* Add license button to dialog */
-  gtk_dialog_add_action_widget (dialog->AboutDialog, widget, 0);
-  gtk_widget_show (widget);
-
-  /* Create close button */
-  widget = gtk_button_new_from_stock ("gtk-close");
-  dialog->close_button = GTK_BUTTON (widget);
-  gtk_widget_set_can_focus (widget, TRUE);
-  gtk_widget_set_can_default (widget, TRUE);
-#if GTK_CHECK_VERSION(3, 0, 0)
-  gtk_widget_set_focus_on_click (widget, FALSE);
-#else
-  gtk_button_set_focus_on_click (GTK_BUTTON (widget), FALSE);
-#endif
-
-  /* Add close button to dialog */
-  gtk_dialog_add_action_widget (dialog->AboutDialog, widget, 0);
-  gtk_widget_show (widget);
-}
+} AboutDialog;
 
 /*!
  * \brief Creates a new AboutDialog structure with all widgets initialized
@@ -190,45 +45,150 @@ create_action_buttons (AboutDialog *dialog)
 AboutDialog *
 about_dialog_new (GtkWidget *parent)
 {
+  char *markup;
   GtkWindow *window;
+  GtkWidget *widget;
   AboutDialog *dialog;
+  GtkBox *vbox;
+  GtkBox *box;
+  GtkLabel *label;
+  GtkWidget *image;
+  GtkBox *abox;
+  GtkButton *button;
+
+#if !GTK_CHECK_VERSION(3, 0, 0)
+  GdkPixbuf *pixbuf;
+  GtkWidget *alignment;
+#endif
 
   dialog = g_new0 (AboutDialog, 1);
 
-  /* Create main dialog */
-  dialog->AboutDialog = GTK_DIALOG (gtk_dialog_new ());
-  window = GTK_WINDOW (dialog->AboutDialog);
+  widget = gtk_dialog_new ();
+  window = GTK_WINDOW (widget);
+  dialog->AboutDialog = GTK_DIALOG (widget);
 
   gtk_window_set_title (window, _ ("About"));
-  gtk_window_set_resizable (window, FALSE);
   gtk_window_set_position (window, GTK_WIN_POS_CENTER_ON_PARENT);
-  gtk_window_set_destroy_with_parent (window, TRUE);
   gtk_window_set_type_hint (window, GDK_WINDOW_TYPE_HINT_DIALOG);
+  gtk_window_set_resizable (window, FALSE);
+  gtk_window_set_destroy_with_parent (window, TRUE);
 
 #if !GTK_CHECK_VERSION(3, 0, 0)
   gtk_dialog_set_has_separator (dialog->AboutDialog, FALSE);
 #endif
 
-  /* Get the existing vbox from the dialog */
+  vbox = GTK_BOX (gtk_dialog_get_content_area (dialog->AboutDialog));
+  abox = GTK_BOX (gtk_dialog_get_action_area (dialog->AboutDialog));
+  gtk_button_box_set_layout (GTK_BUTTON_BOX (abox), GTK_BUTTONBOX_END);
+
+  /*
+   * content area
+   */
+
+  widget = gtk_vbox_new (FALSE, 8);
+  box = GTK_BOX (widget);
+  gtk_container_set_border_width (GTK_CONTAINER (widget), 12);
+  gtk_widget_show (widget);
+  gtk_box_pack_start (vbox, widget, TRUE, TRUE, 0);
+
+  /* logo */
 #if GTK_CHECK_VERSION(3, 0, 0)
-  dialog->dialog_vbox = GTK_VBOX (gtk_dialog_get_content_area (dialog->AboutDialog));
+  widget = gtk_image_new_from_resource ("/pixmap/medit.png");
 #else
-  dialog->dialog_vbox = GTK_VBOX (dialog->AboutDialog->vbox);
+  pixbuf = gdk_pixbuf_new_from_resource ("/pixmap/medit.png", NULL);
+  widget = gtk_image_new_from_pixbuf (pixbuf);
+  g_object_unref (pixbuf);
 #endif
 
-  /* Create and add vbox with content */
-  create_vbox_content (dialog);
-  gtk_box_pack_start (GTK_BOX (dialog->dialog_vbox), GTK_WIDGET (dialog->vbox), TRUE, TRUE, 0);
+  gtk_widget_show (widget);
+  gtk_box_pack_start (box, widget, FALSE, FALSE, 0);
+
+  /* application name */
+  widget = gtk_label_new (NULL);
+  label = GTK_LABEL (widget);
+  gtk_label_set_selectable (label, TRUE);
+  gtk_widget_show (widget);
+  gtk_box_pack_start (box, widget, FALSE, FALSE, 0);
+
+  markup = g_markup_printf_escaped ("<span size=\"xx-large\"><b>%s %s</b></span>", MOO_APP_FULL_NAME, MOO_DISPLAY_VERSION);
+  gtk_label_set_markup (label, markup);
+  g_free (markup);
+
+  /* application description */
+  widget = gtk_label_new (NULL);
+  label = GTK_LABEL (widget);
+  gtk_label_set_text (label, MOO_APP_DESCRIPTION);
+  gtk_label_set_selectable (label, TRUE);
+  gtk_widget_show (widget);
+  gtk_box_pack_start (box, widget, FALSE, FALSE, 0);
+
+  /* application copyright */
+  widget = gtk_label_new (NULL);
+  label = GTK_LABEL (widget);
+  gtk_label_set_selectable (label, TRUE);
+  gtk_widget_show (widget);
+  gtk_box_pack_start (box, widget, FALSE, FALSE, 0);
+
+  markup = g_markup_printf_escaped ("<small>\302\251 %s</small>", MOO_COPYRIGHT);
+  gtk_label_set_markup (label, markup);
+  g_free (markup);
+
+  /* application url */
+  widget = gtk_label_new (NULL);
+  label = GTK_LABEL (widget);
+  gtk_label_set_selectable (label, TRUE);
+  gtk_widget_show (widget);
+  gtk_box_pack_start (box, widget, FALSE, FALSE, 0);
+
+  markup = g_markup_printf_escaped ("<a href=\"%s\">%s</a>", MOO_APP_WEBSITE, MOO_APP_WEBSITE_LABEL);
+  gtk_label_set_markup (label, markup);
+  g_free (markup);
+
+  /*
+   * action area
+   */
+
+  /* credits button */
+  widget = gtk_button_new_with_mnemonic ("C_redits");
+  button = GTK_BUTTON (widget);
+  gtk_widget_set_can_focus (widget, TRUE);
+  gtk_widget_set_can_default (widget, TRUE);
+
+#if GTK_CHECK_VERSION(3, 0, 0)
+  image = gtk_image_new_from_icon_name ("help-about", GTK_ICON_SIZE_BUTTON);
+  gtk_button_set_image (button, image);
+  gtk_button_set_always_show_image (button, TRUE);
+
+  gtk_widget_set_focus_on_click (widget, FALSE);
+#else
+  // FIXME: Attempting to add a widget with type GtkAlignment to a GtkButton,
+  // but as a GtkBin subclass a GtkButton can only contain one widget at a time;
+  // it already contains a widget of type GtkLabel
+  box = GTK_BOX (gtk_hbox_new (FALSE, 2));
+  image = gtk_image_new_from_stock (GTK_STOCK_ABOUT, GTK_ICON_SIZE_BUTTON);
+  alignment = gtk_alignment_new (0.5, 0.5, 0, 0);
+
+  gtk_container_add (GTK_CONTAINER (button), alignment);
+  gtk_container_add (GTK_CONTAINER (alignment), GTK_WIDGET(box));
+  gtk_box_pack_start (box, image, FALSE, FALSE, 0);
+  gtk_box_pack_start (box, label, FALSE, FALSE, 0);
+
+  gtk_button_set_focus_on_click (button, FALSE);
+#endif
+
+  gtk_widget_show (widget);
+  gtk_box_pack_start (abox, widget, FALSE, FALSE, 0);
+
+  /* Create and add content_box with content */
+  // create_content_box_content (dialog);
 
   /* Create action buttons */
-  create_action_buttons (dialog);
+  // create_action_buttons (dialog);
 
-  gtk_widget_show_all (GTK_WIDGET (dialog->dialog_vbox));
+  // gtk_widget_show_all (GTK_WIDGET (dialog->vbox));
 
   if (parent)
-    {
-      gtk_window_set_transient_for (window, GTK_WINDOW (gtk_widget_get_ancestor (parent, GTK_TYPE_WINDOW)));
-    }
+    gtk_window_set_transient_for (window, GTK_WINDOW (gtk_widget_get_ancestor (parent, GTK_TYPE_WINDOW)));
 
   gtk_widget_show (GTK_WIDGET (window));
 
@@ -249,4 +209,12 @@ about_dialog_free (AboutDialog *dialog)
 
       g_free (dialog);
     }
+}
+
+void
+show_about (GtkWidget *parent)
+{
+  AboutDialog *dialog = about_dialog_new (parent);
+  gtk_dialog_run (dialog->AboutDialog);
+  about_dialog_free (dialog);
 }
