@@ -21,6 +21,10 @@
 
 G_BEGIN_DECLS
 
+/*!
+ * \brief Shows the about dialog
+ * \param parent Parent widget for the dialog
+ */
 void show_about (GtkWidget *parent);
 
 G_END_DECLS
