@@ -22,21 +22,11 @@
 G_BEGIN_DECLS
 
 /*!
- * \brief Structure containing all widgets from the credits dialog
+ * \brief Shows the credits dialog and waits for it to be closed
+ * \param parent The parent widget (can be NULL)
  */
-typedef struct _CreditsDialog CreditsDialog;
-
-/*!
- * \brief Creates a new CreditsDialog structure with all widgets initialized
- * \return A newly allocated CreditsDialog structure
- */
-CreditsDialog* credits_dialog_new (GtkWidget *parent);
-
-/*!
- * \brief Frees the CreditsDialog structure and all its widgets
- * \param dialog A CreditsDialog structure
- */
-void credits_dialog_free (CreditsDialog *dialog);
+void
+show_credits_dialog (GtkWidget *parent);
 
 G_END_DECLS
 

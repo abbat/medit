@@ -15,6 +15,7 @@
 
 #include "about.h"
 
+#include "credits.h"
 #include "mooapp-info.h"
 #include "mooutils/mooi18n.h"
 
@@ -27,7 +28,7 @@ static void
 on_credits_button_clicked (GtkWidget *widget, gpointer data)
 {
   (void) widget;
-  (void) data;
+  show_credits_dialog (GTK_WIDGET (data));
 }
 
 /*!
@@ -40,6 +41,7 @@ on_license_button_clicked (GtkWidget *widget, gpointer data)
 {
   (void) widget;
   (void) data;
+  gtk_show_uri (NULL, "https://github.com/abbat/medit/blob/main/COPYING", GDK_CURRENT_TIME, NULL);
 }
 
 /*!
@@ -74,8 +76,8 @@ create_logo_image (GtkBox *box)
   g_object_unref (pixbuf);
 #endif
 
-  gtk_widget_show (widget);
   gtk_box_pack_start (box, widget, FALSE, FALSE, 0);
+  gtk_widget_show (widget);
 }
 
 /*!
@@ -91,13 +93,15 @@ create_application_name_label (GtkBox *box)
 
   widget = gtk_label_new (NULL);
   label = GTK_LABEL (widget);
+
   gtk_label_set_selectable (label, TRUE);
-  gtk_widget_show (widget);
-  gtk_box_pack_start (box, widget, FALSE, FALSE, 0);
 
   markup = g_markup_printf_escaped ("<span size=\"xx-large\"><b>%s %s</b></span>", MOO_APP_FULL_NAME, MOO_DISPLAY_VERSION);
   gtk_label_set_markup (label, markup);
   g_free (markup);
+
+  gtk_box_pack_start (box, widget, FALSE, FALSE, 0);
+  gtk_widget_show (widget);
 }
 
 /*!
@@ -112,10 +116,12 @@ create_application_description_label (GtkBox *box)
 
   widget = gtk_label_new (NULL);
   label = GTK_LABEL (widget);
+
   gtk_label_set_text (label, MOO_APP_DESCRIPTION);
   gtk_label_set_selectable (label, TRUE);
-  gtk_widget_show (widget);
+
   gtk_box_pack_start (box, widget, FALSE, FALSE, 0);
+  gtk_widget_show (widget);
 }
 
 /*!
@@ -131,13 +137,15 @@ create_application_copyright_label (GtkBox *box)
 
   widget = gtk_label_new (NULL);
   label = GTK_LABEL (widget);
+
   gtk_label_set_selectable (label, TRUE);
-  gtk_widget_show (widget);
-  gtk_box_pack_start (box, widget, FALSE, FALSE, 0);
 
   markup = g_markup_printf_escaped ("<small>\302\251 %s</small>", MOO_COPYRIGHT);
   gtk_label_set_markup (label, markup);
   g_free (markup);
+
+  gtk_box_pack_start (box, widget, FALSE, FALSE, 0);
+  gtk_widget_show (widget);
 }
 
 /*!
@@ -153,13 +161,15 @@ create_application_url_label (GtkBox *box)
 
   widget = gtk_label_new (NULL);
   label = GTK_LABEL (widget);
+
   gtk_label_set_selectable (label, TRUE);
-  gtk_widget_show (widget);
-  gtk_box_pack_start (box, widget, FALSE, FALSE, 0);
 
   markup = g_markup_printf_escaped ("<a href=\"%s\">%s</a>", MOO_APP_WEBSITE, MOO_APP_WEBSITE_LABEL);
   gtk_label_set_markup (label, markup);
   g_free (markup);
+
+  gtk_box_pack_start (box, widget, FALSE, FALSE, 0);
+  gtk_widget_show (widget);
 }
 
 /*!
@@ -177,15 +187,17 @@ create_content_area (GtkDialog *dialog)
 
   widget = gtk_vbox_new (FALSE, 8);
   box = GTK_BOX (widget);
+
   gtk_container_set_border_width (GTK_CONTAINER (widget), 12);
-  gtk_widget_show (widget);
-  gtk_box_pack_start (vbox, widget, TRUE, TRUE, 0);
 
   create_logo_image (box);
   create_application_name_label (box);
   create_application_description_label (box);
   create_application_copyright_label (box);
   create_application_url_label (box);
+
+  gtk_box_pack_start (vbox, widget, TRUE, TRUE, 0);
+  gtk_widget_show (widget);
 }
 
 /*!
@@ -201,7 +213,7 @@ create_credits_button (GtkDialog *dialog, GtkBox *hbox)
   const char *mnemonic = _ ("C_redits");
 
 #if !GTK_CHECK_VERSION(3, 0, 0)
-  GtkBox *box;
+  GtkBox *bbox;
   GtkWidget *wbox;
   GtkWidget *label;
   GtkWidget *alignment;
@@ -218,33 +230,33 @@ create_credits_button (GtkDialog *dialog, GtkBox *hbox)
 #else
   widget = gtk_button_new ();
   button = GTK_BUTTON (widget);
+
   gtk_button_set_focus_on_click (button, FALSE);
 
-  wbox = gtk_hbox_new (FALSE, 2);
-  box = GTK_BOX (wbox);
-  gtk_widget_show (wbox);
-
   image = gtk_image_new_from_stock (GTK_STOCK_ABOUT, GTK_ICON_SIZE_BUTTON);
-  gtk_widget_show (image);
-
   label = gtk_label_new_with_mnemonic (mnemonic);
-  gtk_widget_show (label);
-
   alignment = gtk_alignment_new (0.5, 0.5, 0, 0);
-  gtk_widget_show (alignment);
 
-  gtk_box_pack_start (box, image, FALSE, FALSE, 0);
-  gtk_box_pack_start (box, label, FALSE, FALSE, 0);
+  wbox = gtk_hbox_new (FALSE, 2);
+  bbox = GTK_BOX (wbox);
+
+  gtk_box_pack_start (bbox, image, FALSE, FALSE, 0);
+  gtk_box_pack_start (bbox, label, FALSE, FALSE, 0);
 
   gtk_container_add (GTK_CONTAINER (button), alignment);
-  gtk_container_add (GTK_CONTAINER (alignment), GTK_WIDGET (box));
+  gtk_container_add (GTK_CONTAINER (alignment), GTK_WIDGET (bbox));
+
+  gtk_widget_show (wbox);
+  gtk_widget_show (image);
+  gtk_widget_show (label);
+  gtk_widget_show (alignment);
 #endif
 
   gtk_widget_set_can_focus (widget, TRUE);
   gtk_widget_set_can_default (widget, TRUE);
 
-  gtk_widget_show (widget);
   gtk_box_pack_start (hbox, widget, FALSE, FALSE, 0);
+  gtk_widget_show (widget);
 
   g_signal_connect (button, "clicked", G_CALLBACK (on_credits_button_clicked), dialog);
 }
@@ -271,8 +283,8 @@ create_license_button (GtkDialog *dialog, GtkBox *hbox)
 
   gtk_widget_set_can_focus (widget, TRUE);
   gtk_widget_set_can_default (widget, TRUE);
-  gtk_widget_show (widget);
   gtk_box_pack_start (hbox, widget, FALSE, FALSE, 0);
+  gtk_widget_show (widget);
 
   g_signal_connect (button, "clicked", G_CALLBACK (on_license_button_clicked), dialog);
 }
@@ -308,8 +320,8 @@ create_close_button (GtkDialog *dialog, GtkBox *hbox)
 
   gtk_widget_set_can_focus (widget, TRUE);
   gtk_widget_set_can_default (widget, TRUE);
-  gtk_widget_show (widget);
   gtk_box_pack_start (hbox, widget, FALSE, FALSE, 0);
+  gtk_widget_show (widget);
 
   g_signal_connect (button, "clicked", G_CALLBACK (on_close_button_clicked), dialog);
 }
@@ -375,6 +387,8 @@ about_dialog_new (GtkWidget *parent)
 void
 show_about (GtkWidget *parent)
 {
+  // FIXME: on ESC key press on gtk-3 raise
+  // gtk_widget_event: assertion 'WIDGET_REALIZED_FOR_EVENT (widget, event)'
   GtkDialog *dialog = about_dialog_new (parent);
   gtk_dialog_run (dialog);
   gtk_widget_destroy (GTK_WIDGET (dialog));

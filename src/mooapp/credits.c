@@ -1,7 +1,7 @@
 /*
  *   mooapp/credits.c
  *
- *   Copyright (C) 2004-2010 by Yevgen Muntyan <emuntyan@users.sourceforge.net>
+ *   Copyright (C) 2023-2026 by Anton Batenev <antonbatenev@yandex.ru>
  *
  *   This file is part of medit.  medit is free software; you can
  *   redistribute it and/or modify it under the terms of the
@@ -15,298 +15,259 @@
 
 #include "credits.h"
 
+#include "mooapp-credits.h"
+#include "moohtml.h"
 #include "mooutils/mooi18n.h"
 
 /*!
- * \brief Structure containing all widgets from the credits dialog
- */
-struct _CreditsDialog
-{
-  GtkDialog *CreditsDialog;             /*!< \brief Main dialog widget */
-  GtkVBox *vbox;                        /*!< \brief Dialog's main vbox */
-  GtkNotebook *notebook;                /*!< \brief Notebook widget with tabs */
-  GtkScrolledWindow *tab_thanks;        /*!< \brief Scrolled window for "Thanks" tab */
-  GtkTextView *view_thanks;             /*!< \brief Text view for "Thanks" tab */
-  GtkLabel *label_thanks;               /*!< \brief Label for "Thanks" tab */
-  GtkScrolledWindow *tab_written_by;    /*!< \brief Scrolled window for "Written by" tab */
-  GtkTextView *view_written_by;         /*!< \brief Text view for "Written by" tab */
-  GtkLabel *label_written_by;           /*!< \brief Label for "Written by" tab */
-  GtkScrolledWindow *tab_translated_by; /*!< \brief Scrolled window for "Translated by" tab */
-  GtkTextView *view_translated_by;      /*!< \brief Text view for "Translated by" tab */
-  GtkLabel *label_translated_by;        /*!< \brief Label for "Translated by" tab */
-  GtkHButtonBox *action_box;            /*!< \brief Button box for dialog actions */
-  GtkButton *button_close;              /*!< \brief Close button */
-};
-
-/*!
- * \brief Creates the "Thanks" tab with a scrolled window and text view
- * \return The created scrolled window widget
+ * \brief Callback function for the close button click event
+ * \param widget The button widget that triggered the event (unused)
+ * \param data The dialog window to close
  */
 static void
-create_tab_thanks (CreditsDialog *dialog)
+on_close_button_clicked (GtkWidget *widget, gpointer data)
 {
-  GtkWidget *widget;
-
-  widget = gtk_scrolled_window_new (NULL, NULL);
-  dialog->tab_thanks = GTK_SCROLLED_WINDOW (widget);
-  gtk_scrolled_window_set_policy (dialog->tab_thanks, GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-  gtk_scrolled_window_set_shadow_type (dialog->tab_thanks, GTK_SHADOW_IN);
-
-#if GTK_CHECK_VERSION(3, 0, 0)
-  gtk_widget_set_hexpand (widget, TRUE);
-  gtk_widget_set_vexpand (widget, TRUE);
-#endif
-
-  widget = gtk_text_view_new ();
-  dialog->view_thanks = GTK_TEXT_VIEW (widget);
-  gtk_text_view_set_editable (dialog->view_thanks, FALSE);
-  gtk_text_view_set_left_margin (dialog->view_thanks, 3);
-  gtk_text_view_set_right_margin (dialog->view_thanks, 3);
-
-#if GTK_CHECK_VERSION(3, 0, 0)
-  gtk_text_view_set_top_margin (dialog->view_thanks, 3);
-  gtk_text_view_set_bottom_margin (dialog->view_thanks, 3);
-#endif
-
-  gtk_widget_show (widget);
-  gtk_widget_show (GTK_WIDGET (dialog->tab_thanks));
-
-  gtk_container_add (GTK_CONTAINER (dialog->tab_thanks), widget);
+  (void) widget;
+  gtk_dialog_response (GTK_DIALOG (data), GTK_RESPONSE_CLOSE);
 }
 
 /*!
- * \brief Creates the "Written by" tab with a scrolled window and text view
- * \return The created scrolled window widget
+ * \brief Creates a new tab in a notebook with a text view
+ * \param notebook The notebook widget to add the tab to
+ * \param caption The text to display on the tab label
+ * \return The created text view widget
  */
-static void
-create_tab_written_by (CreditsDialog *dialog)
+static GtkTextView *
+notebook_create_tab (GtkNotebook *notebook, const char *caption)
 {
-  GtkWidget *widget;
-
-  widget = gtk_scrolled_window_new (NULL, NULL);
-  dialog->tab_written_by = GTK_SCROLLED_WINDOW (widget);
-  gtk_scrolled_window_set_policy (dialog->tab_written_by, GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-  gtk_scrolled_window_set_shadow_type (dialog->tab_written_by, GTK_SHADOW_IN);
-
-#if GTK_CHECK_VERSION(3, 0, 0)
-  gtk_widget_set_hexpand (widget, TRUE);
-  gtk_widget_set_vexpand (widget, TRUE);
-#endif
-
-  widget = gtk_text_view_new ();
-  dialog->view_written_by = GTK_TEXT_VIEW (widget);
-  gtk_text_view_set_editable (dialog->view_written_by, FALSE);
-  gtk_text_view_set_left_margin (dialog->view_written_by, 3);
-  gtk_text_view_set_right_margin (dialog->view_written_by, 3);
-
-#if GTK_CHECK_VERSION(3, 0, 0)
-  gtk_text_view_set_top_margin (dialog->view_written_by, 3);
-  gtk_text_view_set_bottom_margin (dialog->view_written_by, 3);
-#endif
-
-  gtk_widget_show (widget);
-  gtk_widget_show (GTK_WIDGET (dialog->tab_written_by));
-
-  gtk_container_add (GTK_CONTAINER (dialog->tab_written_by), widget);
-}
-
-/*!
- * \brief Creates the "Translated by" tab with a scrolled window and text view
- * \return The created scrolled window widget
- */
-static void
-create_tab_translated_by (CreditsDialog *dialog)
-{
-  GtkWidget *widget;
-
-  widget = gtk_scrolled_window_new (NULL, NULL);
-  dialog->tab_translated_by = GTK_SCROLLED_WINDOW (widget);
-  gtk_scrolled_window_set_policy (dialog->tab_translated_by, GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-  gtk_scrolled_window_set_shadow_type (dialog->tab_translated_by, GTK_SHADOW_IN);
-
-#if GTK_CHECK_VERSION(3, 0, 0)
-  gtk_widget_set_hexpand (widget, TRUE);
-  gtk_widget_set_vexpand (widget, TRUE);
-#endif
-
-  widget = gtk_text_view_new ();
-  dialog->view_translated_by = GTK_TEXT_VIEW (widget);
-  gtk_text_view_set_editable (dialog->view_translated_by, FALSE);
-  gtk_text_view_set_left_margin (dialog->view_translated_by, 3);
-  gtk_text_view_set_right_margin (dialog->view_translated_by, 3);
-
-#if GTK_CHECK_VERSION(3, 0, 0)
-  gtk_text_view_set_top_margin (dialog->view_translated_by, 3);
-  gtk_text_view_set_bottom_margin (dialog->view_translated_by, 3);
-#endif
-
-  gtk_widget_show (widget);
-  gtk_widget_show (GTK_WIDGET (dialog->tab_translated_by));
-
-  gtk_container_add (GTK_CONTAINER (dialog->tab_translated_by), widget);
-}
-
-/*!
- * \brief Creates the notebook with all tabs
- * \param dialog A CreditsDialog structure
- * \return The created notebook widget
- */
-static void
-create_notebook (CreditsDialog *dialog)
-{
-  GtkWidget *tab;
   GtkWidget *label;
+  GtkWidget *widget;
+  GtkTextView *view;
+  GtkScrolledWindow *tab;
 
-  dialog->notebook = GTK_NOTEBOOK (gtk_notebook_new ());
-
-  /* Create "Thanks" tab */
-  create_tab_thanks (dialog);
-  tab = GTK_WIDGET (dialog->tab_thanks);
-  label = gtk_label_new (_ ("Thanks"));
-  dialog->label_thanks = GTK_LABEL (label);
+  widget = gtk_scrolled_window_new (NULL, NULL);
+  tab = GTK_SCROLLED_WINDOW (widget);
 
 #if GTK_CHECK_VERSION(3, 0, 0)
-  gtk_container_child_set (GTK_CONTAINER (dialog->notebook), tab, "tab-fill", FALSE, NULL);
-#else
-  gtk_notebook_set_tab_label_packing (dialog->notebook, tab, FALSE, FALSE, GTK_PACK_START);
+  gtk_widget_set_hexpand (widget, TRUE);
+  gtk_widget_set_vexpand (widget, TRUE);
 #endif
 
-  gtk_widget_show (label);
-  gtk_notebook_append_page (dialog->notebook, tab, NULL);
-  gtk_notebook_set_tab_label (dialog->notebook, tab, label);
+  gtk_scrolled_window_set_policy (tab, GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+  gtk_scrolled_window_set_shadow_type (tab, GTK_SHADOW_IN);
+  gtk_notebook_append_page (notebook, widget, NULL);
+  gtk_widget_show (widget);
 
-  /* Create "Written by" tab */
-  create_tab_written_by (dialog);
-  tab = GTK_WIDGET (dialog->tab_written_by);
-  label = gtk_label_new (_ ("Written by"));
-  dialog->label_written_by = GTK_LABEL (label);
+  label = gtk_label_new (caption);
+  gtk_notebook_set_tab_label (notebook, widget, label);
+  gtk_widget_show (label);
+
+  widget = gtk_text_view_new ();
+  view = GTK_TEXT_VIEW (widget);
+
+  gtk_text_view_set_editable (view, FALSE);
+  gtk_text_view_set_left_margin (view, 3);
+  gtk_text_view_set_right_margin (view, 3);
 
 #if GTK_CHECK_VERSION(3, 0, 0)
-  gtk_container_child_set (GTK_CONTAINER (dialog->notebook), tab, "tab-fill", FALSE, NULL);
-#else
-  gtk_notebook_set_tab_label_packing (dialog->notebook, tab, FALSE, FALSE, GTK_PACK_START);
+  gtk_text_view_set_top_margin (view, 3);
+  gtk_text_view_set_bottom_margin (view, 3);
 #endif
 
-  gtk_widget_show (label);
-  gtk_notebook_append_page (dialog->notebook, tab, NULL);
-  gtk_notebook_set_tab_label (dialog->notebook, tab, label);
+  gtk_container_add (GTK_CONTAINER (tab), widget);
+  gtk_widget_show (widget);
 
-  /* Create "Translated by" tab */
-  create_tab_translated_by (dialog);
-  tab = GTK_WIDGET (dialog->tab_translated_by);
-  label = gtk_label_new (_ ("Translated by"));
-  dialog->label_translated_by = GTK_LABEL (label);
-
-#if GTK_CHECK_VERSION(3, 0, 0)
-  gtk_container_child_set (GTK_CONTAINER (dialog->notebook), tab, "tab-fill", FALSE, NULL);
-#else
-  gtk_notebook_set_tab_label_packing (dialog->notebook, tab, FALSE, FALSE, GTK_PACK_START);
-#endif
-
-  gtk_widget_show (label);
-  gtk_notebook_append_page (dialog->notebook, tab, NULL);
-  gtk_notebook_set_tab_label (dialog->notebook, tab, label);
-
-  gtk_widget_show (GTK_WIDGET (dialog->notebook));
+  return view;
 }
 
 /*!
- * \brief Creates the action area with the close button
- * \param dialog A CreditsDialog structure
- * \return The created button box widget
+ * \brief Sets the content of the "Thanks" tab
+ * \param view The text view to set the content for
  */
 static void
-create_action_box (CreditsDialog *dialog)
+set_thanks_content (GtkTextView *view)
+{
+  GtkTextBuffer *buffer = gtk_text_view_get_buffer (view);
+  gtk_text_buffer_set_text (buffer, MOO_APP_CREDITS, -1);
+}
+
+/*!
+ * \brief Sets the content of the "Written by" tab with author information
+ * \param view The text view to set the content for
+ */
+static void
+set_written_by_content (GtkTextView *view)
+{
+// FIXME: remove or rewrite MOO_HTML
+#ifdef MOO_USE_HTML
+  _moo_html_load_memory (view, "Yevgen Muntyan <a href=\"mailto://" MOO_EMAIL "\">&lt;" MOO_EMAIL "&gt;</a>", -1, NULL, NULL);
+#else
+  GtkTextBuffer *buffer = gtk_text_view_get_buffer (view);
+  gtk_text_buffer_set_text (buffer, "Yevgen Muntyan <" MOO_EMAIL ">", -1);
+#endif
+}
+
+/*!
+ * \brief Sets the content of the "Translated by" tab with translator credits
+ * \param view The text view to set the content for
+ */
+static void
+set_translated_by_content (GtkTextView *view)
+{
+  const char *credits = _ ("translator-credits");
+
+// FIXME: remove or rewrite MOO_HTML
+#ifdef MOO_USE_HTML
+  const char *credits_markup = _ ("translator-credits-markup");
+
+  if (strcmp (credits_markup, "translator-credits-markup") != 0)
+    _moo_html_load_memory (view, credits_markup, -1, NULL, NULL);
+  else
+#endif
+      if (strcmp (credits, "translator-credits") != 0)
+    {
+      GtkTextBuffer *buffer = gtk_text_view_get_buffer (view);
+      gtk_text_buffer_set_text (buffer, credits, -1);
+    }
+}
+
+/*!
+ * \brief Creates a notebook with tabs for credits information
+ * \param vbox The box container to add the notebook to
+ */
+static void
+create_notebook (GtkBox *vbox)
 {
   GtkWidget *widget;
+  GtkTextView *view;
+  GtkNotebook *notebook;
 
-  widget = gtk_hbutton_box_new ();
-  dialog->action_box = GTK_HBUTTON_BOX (widget);
-  gtk_button_box_set_layout (GTK_BUTTON_BOX (widget), GTK_BUTTONBOX_END);
+  widget = gtk_notebook_new ();
+  notebook = GTK_NOTEBOOK (widget);
 
-  /* Create close button */
-  widget = gtk_button_new_from_stock ("gtk-close");
-  dialog->button_close = GTK_BUTTON (widget);
+  view = notebook_create_tab (notebook, _ ("Thanks"));
+  set_thanks_content (view);
+
+  view = notebook_create_tab (notebook, _ ("Written by"));
+  set_written_by_content (view);
+
+  view = notebook_create_tab (notebook, _ ("Translated by"));
+  set_translated_by_content (view);
+
+  gtk_box_pack_start (GTK_BOX (vbox), widget, TRUE, TRUE, 0);
+  gtk_widget_show (widget);
+}
+
+/*!
+ * \brief Creates the content area of the credits dialog
+ * \param dialog The dialog to create the content area for
+ */
+static void
+create_content_area (GtkDialog *dialog)
+{
+  GtkBox *vbox = GTK_BOX (gtk_dialog_get_content_area (dialog));
+
+  create_notebook (vbox);
+}
+
+/*!
+ * \brief Creates the close button for the credits dialog
+ * \param dialog The dialog to create the button for
+ * \param hbox The box container to add the button to
+ */
+static void
+create_close_button (GtkDialog *dialog, GtkBox *hbox)
+{
+  GtkButton *button;
+  GtkWidget *widget;
+
+#if GTK_CHECK_VERSION(3, 0, 0)
+  GtkWidget *image;
+  const char *mnemonic = _ ("_Close");
+
+  widget = gtk_button_new_with_mnemonic (mnemonic);
+  button = GTK_BUTTON (widget);
+  image = gtk_image_new_from_icon_name ("window-close", GTK_ICON_SIZE_BUTTON);
+
+  gtk_button_set_image (button, image);
+  gtk_button_set_always_show_image (button, TRUE);
+  gtk_widget_set_focus_on_click (widget, FALSE);
+#else
+  widget = gtk_button_new_from_stock (GTK_STOCK_CLOSE);
+  button = GTK_BUTTON (widget);
+
+  gtk_button_set_focus_on_click (button, FALSE);
+#endif
 
   gtk_widget_set_can_focus (widget, TRUE);
   gtk_widget_set_can_default (widget, TRUE);
-  gtk_widget_grab_focus (widget);
-  gtk_widget_grab_default (widget);
-
-  /* Add button to dialog */
-  gtk_dialog_add_action_widget (dialog->CreditsDialog, widget, GTK_RESPONSE_CLOSE);
-
+  gtk_box_pack_start (hbox, widget, FALSE, FALSE, 0);
   gtk_widget_show (widget);
-  gtk_widget_show (GTK_WIDGET (dialog->action_box));
+
+  g_signal_connect (button, "clicked", G_CALLBACK (on_close_button_clicked), dialog);
 }
 
 /*!
- * \brief Creates a new CreditsDialog structure with all widgets initialized
- * \return A newly allocated CreditsDialog structure
+ * \brief Creates the action area of the credits dialog
+ * \param dialog The dialog to create the action area for
  */
-CreditsDialog *
+static void
+create_action_area (GtkDialog *dialog)
+{
+  GtkBox *hbox;
+
+  hbox = GTK_BOX (gtk_dialog_get_action_area (dialog));
+  gtk_button_box_set_layout (GTK_BUTTON_BOX (hbox), GTK_BUTTONBOX_END);
+
+  create_close_button (dialog, hbox);
+}
+
+/*!
+ * \brief Creates a new credits dialog
+ * \param parent The parent widget (can be NULL)
+ * \return The newly created credits dialog
+ */
+GtkDialog *
 credits_dialog_new (GtkWidget *parent)
 {
+  GtkWidget *widget;
+  GtkDialog *dialog;
   GtkWindow *window;
-  CreditsDialog *dialog;
 
-  dialog = g_new0 (CreditsDialog, 1);
-
-  /* Create main dialog */
-  dialog->CreditsDialog = GTK_DIALOG (gtk_dialog_new ());
-  window = GTK_WINDOW (dialog->CreditsDialog);
+  widget = gtk_dialog_new ();
+  dialog = GTK_DIALOG (widget);
+  window = GTK_WINDOW (widget);
 
   gtk_window_set_title (window, _ ("Credits"));
-  gtk_window_set_default_size (window, 360, 260);
   gtk_window_set_position (window, GTK_WIN_POS_CENTER_ON_PARENT);
-  gtk_window_set_destroy_with_parent (window, TRUE);
   gtk_window_set_type_hint (window, GDK_WINDOW_TYPE_HINT_DIALOG);
+  gtk_window_set_default_size (window, 360, 260);
+  gtk_window_set_resizable (window, TRUE);
+  gtk_window_set_destroy_with_parent (window, TRUE);
 
 #if !GTK_CHECK_VERSION(3, 0, 0)
-  gtk_dialog_set_has_separator (dialog->CreditsDialog, FALSE);
+  gtk_dialog_set_has_separator (dialog, FALSE);
 #endif
 
-  /* Get the existing vbox from the dialog */
-  /* TODO: check vbox created automatically */
-#if GTK_CHECK_VERSION(3, 0, 0)
-  dialog->vbox = GTK_VBOX (gtk_dialog_get_content_area (dialog->CreditsDialog));
-#else
-  dialog->vbox = GTK_VBOX (dialog->CreditsDialog->vbox);
-#endif
+  create_content_area (dialog);
+  create_action_area (dialog);
 
-  /* Create and add notebook */
-  create_notebook (dialog);
-  gtk_box_pack_start (GTK_BOX (dialog->vbox), GTK_WIDGET (dialog->notebook), TRUE, TRUE, 0);
-
-  /* Create and add action area */
-  create_action_box (dialog);
-  gtk_box_pack_start (GTK_BOX (dialog->vbox), GTK_WIDGET (dialog->action_box), FALSE, FALSE, 0);
-
-  gtk_widget_show_all (GTK_WIDGET (dialog->vbox));
-  gtk_widget_show_all (GTK_WIDGET (dialog->action_box));
-
-  if (parent) {
-    // FIXME:
+  if (parent)
     gtk_window_set_transient_for (window, GTK_WINDOW (gtk_widget_get_ancestor (parent, GTK_TYPE_WINDOW)));
-  }
 
-  gtk_widget_show (GTK_WIDGET (window));
+  gtk_widget_show (widget);
 
   return dialog;
 }
 
 /*!
- * \brief Frees the CreditsDialog structure and all its widgets
- * \param dialog A CreditsDialog structure
+ * \brief Shows the credits dialog and waits for it to be closed
+ * \param parent The parent widget (can be NULL)
  */
 void
-credits_dialog_free (CreditsDialog *dialog)
+show_credits_dialog (GtkWidget *parent)
 {
-  if (dialog)
-    {
-      if (dialog->CreditsDialog)
-        gtk_widget_destroy (GTK_WIDGET (dialog->CreditsDialog));
-
-      g_free (dialog);
-    }
+  GtkDialog *dialog = credits_dialog_new (parent);
+  gtk_dialog_run (dialog);
+  gtk_widget_destroy (GTK_WIDGET (dialog));
 }
