@@ -1,9 +1,7 @@
 src/medit-app/main.cpp
 src/medit-app/medit.desktop.in
-src/mooapp/glade/mooappabout-credits.glade
-src/mooapp/glade/mooappabout-dialog.glade
-src/mooapp/glade/mooappabout-license.glade
-src/mooapp/mooappabout.c
+src/mooapp/about.c
+src/mooapp/credits.c
 src/mooapp/mooapp.c
 src/mooapp/moohtml.cpp
 src/mooedit/glade/mooeditprefs-file.glade

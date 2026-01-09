@@ -367,8 +367,10 @@ BUILT_SOURCES = $(am__append_1)
 @MOO_DEV_MODE_TRUE@source_files = \
 @MOO_DEV_MODE_TRUE@    ../src/moolua/medit-lua.h\
 @MOO_DEV_MODE_TRUE@    ../src/moolua/medit-lua.cpp\
-@MOO_DEV_MODE_TRUE@    ../src/mooapp/mooappabout.c\
-@MOO_DEV_MODE_TRUE@    ../src/mooapp/mooappabout.h\
+@MOO_DEV_MODE_TRUE@    ../src/mooapp/about.c\
+@MOO_DEV_MODE_TRUE@    ../src/mooapp/about.h\
+@MOO_DEV_MODE_TRUE@    ../src/mooapp/credits.c\
+@MOO_DEV_MODE_TRUE@    ../src/mooapp/credits.h\
 @MOO_DEV_MODE_TRUE@    ../src/mooapp/mooapp-accels.h\
 @MOO_DEV_MODE_TRUE@    ../src/mooapp/mooapp.c\
 @MOO_DEV_MODE_TRUE@    ../src/mooapp/mooapp.h\

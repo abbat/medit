@@ -293,14 +293,12 @@ am__medit_SOURCES_DIST = medit-app/main.h medit-app/main.cpp main.c \
 	eggsmclient/eggsmclient-mangle.h \
 	eggsmclient/eggsmclient-private.h \
 	eggsmclient/eggsmclient-xsmp.c eggsmclient/eggdesktopfile.h \
-	eggsmclient/eggdesktopfile.c mooapp/mooappabout.c \
-	mooapp/mooappabout.h mooapp/mooapp.c mooapp/mooapp.h \
+	eggsmclient/eggdesktopfile.c mooapp/mooapp.c mooapp/mooapp.h \
 	mooapp/mooapp-accels.h mooapp/mooapp-info.h \
 	mooapp/mooapp-private.h mooapp/moohtml.h mooapp/moohtml.cpp \
 	mooapp/moolinklabel.h mooapp/moolinklabel.c mooapp/credits.h \
-	mooapp/credits.c mooapp/license.h mooapp/license.c \
-	mooapp/about.h mooapp/about.c moolua/medit-lua.h \
-	moolua/medit-lua.cpp moolua/mooluaplugin.h \
+	mooapp/credits.c mooapp/about.h mooapp/about.c \
+	moolua/medit-lua.h moolua/medit-lua.cpp moolua/mooluaplugin.h \
 	moolua/mooluaplugin.cpp moolua/moo-lua-api-util.h \
 	moolua/moo-lua-api-util.cpp moolua/moo-lua-api.cpp \
 	moolua/moo-lua-api.h moolua/gtk-lua-api.cpp \
@@ -439,12 +437,10 @@ am__objects_4 = main.$(OBJEXT) resources.$(OBJEXT) \
 	gtksourceview/gtktextregion.$(OBJEXT) \
 	eggsmclient/eggsmclient.$(OBJEXT) \
 	eggsmclient/eggsmclient-xsmp.$(OBJEXT) \
-	eggsmclient/eggdesktopfile.$(OBJEXT) \
-	mooapp/mooappabout.$(OBJEXT) mooapp/mooapp.$(OBJEXT) \
+	eggsmclient/eggdesktopfile.$(OBJEXT) mooapp/mooapp.$(OBJEXT) \
 	mooapp/moohtml.$(OBJEXT) mooapp/moolinklabel.$(OBJEXT) \
-	mooapp/credits.$(OBJEXT) mooapp/license.$(OBJEXT) \
-	mooapp/about.$(OBJEXT) moolua/medit-lua.$(OBJEXT) \
-	moolua/mooluaplugin.$(OBJEXT) \
+	mooapp/credits.$(OBJEXT) mooapp/about.$(OBJEXT) \
+	moolua/medit-lua.$(OBJEXT) moolua/mooluaplugin.$(OBJEXT) \
 	moolua/moo-lua-api-util.$(OBJEXT) moolua/moo-lua-api.$(OBJEXT) \
 	moolua/gtk-lua-api.$(OBJEXT) moolua/lua/lfs.$(OBJEXT) \
 	moolua/lua/moolua.$(OBJEXT) moolua/lua/luaall.$(OBJEXT) \
@@ -520,8 +516,7 @@ am__depfiles_remade = ./$(DEPDIR)/dummy.Po ./$(DEPDIR)/main.Po \
 	gtksourceview/$(DEPDIR)/gtksourceview-utils.Po \
 	gtksourceview/$(DEPDIR)/gtktextregion.Po \
 	medit-app/$(DEPDIR)/main.Po mooapp/$(DEPDIR)/about.Po \
-	mooapp/$(DEPDIR)/credits.Po mooapp/$(DEPDIR)/license.Po \
-	mooapp/$(DEPDIR)/mooapp.Po mooapp/$(DEPDIR)/mooappabout.Po \
+	mooapp/$(DEPDIR)/credits.Po mooapp/$(DEPDIR)/mooapp.Po \
 	mooapp/$(DEPDIR)/moohtml.Po mooapp/$(DEPDIR)/moolinklabel.Po \
 	moocpp/$(DEPDIR)/fileutils.Po moocpp/$(DEPDIR)/gstr.Po \
 	moocpp/$(DEPDIR)/regex.Po \
@@ -987,12 +982,9 @@ EXTRA_DIST = mooglib/moo-glib.cpp marshals.list \
 	moofileview/glade/moofileprops.glade \
 	moofileview/glade/moocreatefolder.glade \
 	moofileview/glade/moobookmark-editor.glade \
-	moofileview/moofileview.xml \
-	mooapp/glade/mooappabout-dialog.glade \
-	mooapp/glade/mooappabout-license.glade \
-	mooapp/glade/mooappabout-credits.glade moolua/gtk-api.h \
-	moolua/gtk-api.c moolua/lua/COPYRIGHT moolua/lua/lapi.c \
-	moolua/lua/lapi.h moolua/lua/lauxlib.c moolua/lua/lauxlib.h \
+	moofileview/moofileview.xml moolua/gtk-api.h moolua/gtk-api.c \
+	moolua/lua/COPYRIGHT moolua/lua/lapi.c moolua/lua/lapi.h \
+	moolua/lua/lauxlib.c moolua/lua/lauxlib.h \
 	moolua/lua/lbaselib.c moolua/lua/lcode.c moolua/lua/lcode.h \
 	moolua/lua/ldblib.c moolua/lua/ldebug.c moolua/lua/ldebug.h \
 	moolua/lua/ldo.c moolua/lua/ldo.h moolua/lua/ldump.c \
@@ -1194,14 +1186,12 @@ moo_sources = main.c resources.c moo-config.h sysheaders.h \
 	eggsmclient/eggsmclient-mangle.h \
 	eggsmclient/eggsmclient-private.h \
 	eggsmclient/eggsmclient-xsmp.c eggsmclient/eggdesktopfile.h \
-	eggsmclient/eggdesktopfile.c mooapp/mooappabout.c \
-	mooapp/mooappabout.h mooapp/mooapp.c mooapp/mooapp.h \
+	eggsmclient/eggdesktopfile.c mooapp/mooapp.c mooapp/mooapp.h \
 	mooapp/mooapp-accels.h mooapp/mooapp-info.h \
 	mooapp/mooapp-private.h mooapp/moohtml.h mooapp/moohtml.cpp \
 	mooapp/moolinklabel.h mooapp/moolinklabel.c mooapp/credits.h \
-	mooapp/credits.c mooapp/license.h mooapp/license.c \
-	mooapp/about.h mooapp/about.c moolua/medit-lua.h \
-	moolua/medit-lua.cpp moolua/mooluaplugin.h \
+	mooapp/credits.c mooapp/about.h mooapp/about.c \
+	moolua/medit-lua.h moolua/medit-lua.cpp moolua/mooluaplugin.h \
 	moolua/mooluaplugin.cpp moolua/moo-lua-api-util.h \
 	moolua/moo-lua-api-util.cpp moolua/moo-lua-api.cpp \
 	moolua/moo-lua-api.h moolua/gtk-lua-api.cpp \
@@ -1210,6 +1200,8 @@ moo_sources = main.c resources.c moo-config.h sysheaders.h \
 	moolua/lua/luaall.cpp moocpp/fileutils.h moocpp/fileutils.cpp \
 	moocpp/gobjptr.h moocpp/gstr.h moocpp/gstr.cpp moocpp/moocpp.h \
 	moocpp/regex.h moocpp/regex.cpp moocpp/util.h
+
+# FIXME: use resources
 built_moo_sources = marshals.h mooedit/moopluginprefs-gxml.h \
 	mooedit/mooeditprefs-view-gxml.h \
 	mooedit/mooeditprefs-file-gxml.h \
@@ -1228,9 +1220,7 @@ built_moo_sources = marshals.h mooedit/moopluginprefs-gxml.h \
 	moofileview/moofileprops-gxml.h \
 	moofileview/moocreatefolder-gxml.h \
 	moofileview/moobookmark-editor-gxml.h \
-	moofileview/moofileview-ui.h mooapp/mooappabout-dialog-gxml.h \
-	mooapp/mooappabout-license-gxml.h \
-	mooapp/mooappabout-credits-gxml.h mooapp-credits.h \
+	moofileview/moofileview-ui.h mooapp-credits.h \
 	moolua/lua-default-init.h moolua/lua-module-init.h \
 	moolua/lua-plugin-init.h
 moo_libadd = -ldl
@@ -1898,8 +1888,6 @@ mooapp/$(am__dirstamp):
 mooapp/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) mooapp/$(DEPDIR)
 	@: > mooapp/$(DEPDIR)/$(am__dirstamp)
-mooapp/mooappabout.$(OBJEXT): mooapp/$(am__dirstamp) \
-	mooapp/$(DEPDIR)/$(am__dirstamp)
 mooapp/mooapp.$(OBJEXT): mooapp/$(am__dirstamp) \
 	mooapp/$(DEPDIR)/$(am__dirstamp)
 mooapp/moohtml.$(OBJEXT): mooapp/$(am__dirstamp) \
@@ -1907,8 +1895,6 @@ mooapp/moohtml.$(OBJEXT): mooapp/$(am__dirstamp) \
 mooapp/moolinklabel.$(OBJEXT): mooapp/$(am__dirstamp) \
 	mooapp/$(DEPDIR)/$(am__dirstamp)
 mooapp/credits.$(OBJEXT): mooapp/$(am__dirstamp) \
-	mooapp/$(DEPDIR)/$(am__dirstamp)
-mooapp/license.$(OBJEXT): mooapp/$(am__dirstamp) \
 	mooapp/$(DEPDIR)/$(am__dirstamp)
 mooapp/about.$(OBJEXT): mooapp/$(am__dirstamp) \
 	mooapp/$(DEPDIR)/$(am__dirstamp)
@@ -2078,9 +2064,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@medit-app/$(DEPDIR)/main.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@mooapp/$(DEPDIR)/about.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@mooapp/$(DEPDIR)/credits.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@mooapp/$(DEPDIR)/license.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@mooapp/$(DEPDIR)/mooapp.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@mooapp/$(DEPDIR)/mooappabout.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@mooapp/$(DEPDIR)/moohtml.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@mooapp/$(DEPDIR)/moolinklabel.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@moocpp/$(DEPDIR)/fileutils.Po@am__quote@ # am--include-marker
@@ -2561,9 +2545,7 @@ distclean: distclean-am
 	-rm -f medit-app/$(DEPDIR)/main.Po
 	-rm -f mooapp/$(DEPDIR)/about.Po
 	-rm -f mooapp/$(DEPDIR)/credits.Po
-	-rm -f mooapp/$(DEPDIR)/license.Po
 	-rm -f mooapp/$(DEPDIR)/mooapp.Po
-	-rm -f mooapp/$(DEPDIR)/mooappabout.Po
 	-rm -f mooapp/$(DEPDIR)/moohtml.Po
 	-rm -f mooapp/$(DEPDIR)/moolinklabel.Po
 	-rm -f moocpp/$(DEPDIR)/fileutils.Po
@@ -2778,9 +2760,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f medit-app/$(DEPDIR)/main.Po
 	-rm -f mooapp/$(DEPDIR)/about.Po
 	-rm -f mooapp/$(DEPDIR)/credits.Po
-	-rm -f mooapp/$(DEPDIR)/license.Po
 	-rm -f mooapp/$(DEPDIR)/mooapp.Po
-	-rm -f mooapp/$(DEPDIR)/mooappabout.Po
 	-rm -f mooapp/$(DEPDIR)/moohtml.Po
 	-rm -f mooapp/$(DEPDIR)/moolinklabel.Po
 	-rm -f moocpp/$(DEPDIR)/fileutils.Po
