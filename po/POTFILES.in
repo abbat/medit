@@ -35,7 +35,6 @@ src/moofileview/moobookmarkmgr.c
 src/moofileview/moofileview.c
 src/moofileview/moofileview-tools.cpp
 src/moofileview/moofileview.xml
-src/moolua/mooluaplugin.cpp
 src/moopython/plugins/medit/runpython.py
 src/moopython/plugins/python.py
 src/moopython/plugins/terminal.py

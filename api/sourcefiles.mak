@@ -1,6 +1,4 @@
 source_files = \
-    ../src/moolua/medit-lua.h\
-    ../src/moolua/medit-lua.cpp\
     ../src/mooapp/about.c\
     ../src/mooapp/about.h\
     ../src/mooapp/credits.c\

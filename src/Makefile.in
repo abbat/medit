@@ -93,9 +93,7 @@ host_triplet = @host@
 bin_PROGRAMS = $(am__EXEEXT_1)
 @MOO_DEV_MODE_TRUE@am__append_1 = mooedit/mooedit-enum-types.h.stamp mooedit/mooedit-enum-types.c.stamp
 @MOO_DEV_MODE_TRUE@am__append_2 = mooutils/mooutils-enums.h.stamp mooutils/mooutils-enums.c.stamp
-@MOO_DEV_MODE_TRUE@am__append_3 = moolua/moo-lua-api.cpp \
-@MOO_DEV_MODE_TRUE@	moolua/gtk-lua-api.cpp
-@MOO_BUILD_CTAGS_TRUE@am__append_4 = \
+@MOO_BUILD_CTAGS_TRUE@am__append_3 = \
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/readtags.c	\
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/readtags.h	\
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/readtags-mangle.h	\
@@ -106,8 +104,8 @@ bin_PROGRAMS = $(am__EXEEXT_1)
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/ctags-view.c	\
 @MOO_BUILD_CTAGS_TRUE@	plugins/ctags/ctags-view.h
 
-@MOO_BUILD_APP_TRUE@am__append_5 = medit
-@MOO_BUILD_APP_TRUE@@MOO_OS_UNIX_TRUE@am__append_6 = medit-app/medit.desktop
+@MOO_BUILD_APP_TRUE@am__append_4 = medit
+@MOO_BUILD_APP_TRUE@@MOO_OS_UNIX_TRUE@am__append_5 = medit-app/medit.desktop
 subdir = src
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -296,16 +294,10 @@ am__medit_SOURCES_DIST = medit-app/main.h medit-app/main.cpp main.c \
 	eggsmclient/eggdesktopfile.c mooapp/mooapp.c mooapp/mooapp.h \
 	mooapp/mooapp-accels.h mooapp/mooapp-info.h \
 	mooapp/mooapp-private.h mooapp/credits.h mooapp/credits.c \
-	mooapp/about.h mooapp/about.c moolua/medit-lua.h \
-	moolua/medit-lua.cpp moolua/mooluaplugin.h \
-	moolua/mooluaplugin.cpp moolua/moo-lua-api-util.h \
-	moolua/moo-lua-api-util.cpp moolua/moo-lua-api.cpp \
-	moolua/moo-lua-api.h moolua/gtk-lua-api.cpp \
-	moolua/gtk-lua-api.h moolua/lua/lfs.h moolua/lua/lfs.cpp \
-	moolua/lua/moolua.h moolua/lua/moolua.cpp \
-	moolua/lua/luaall.cpp moocpp/fileutils.h moocpp/fileutils.cpp \
-	moocpp/gobjptr.h moocpp/gstr.h moocpp/gstr.cpp moocpp/moocpp.h \
-	moocpp/regex.h moocpp/regex.cpp moocpp/util.h \
+	mooapp/about.h mooapp/about.c moocpp/fileutils.h \
+	moocpp/fileutils.cpp moocpp/gobjptr.h moocpp/gstr.h \
+	moocpp/gstr.cpp moocpp/moocpp.h moocpp/regex.h \
+	moocpp/regex.cpp moocpp/util.h \
 	plugins/moofileselector-prefs.cpp plugins/moofileselector.cpp \
 	plugins/moofileselector.h plugins/mooplugin-builtin.h \
 	plugins/mooplugin-builtin.cpp plugins/moofilelist.cpp \
@@ -438,10 +430,6 @@ am__objects_4 = main.$(OBJEXT) resources.$(OBJEXT) \
 	eggsmclient/eggsmclient-xsmp.$(OBJEXT) \
 	eggsmclient/eggdesktopfile.$(OBJEXT) mooapp/mooapp.$(OBJEXT) \
 	mooapp/credits.$(OBJEXT) mooapp/about.$(OBJEXT) \
-	moolua/medit-lua.$(OBJEXT) moolua/mooluaplugin.$(OBJEXT) \
-	moolua/moo-lua-api-util.$(OBJEXT) moolua/moo-lua-api.$(OBJEXT) \
-	moolua/gtk-lua-api.$(OBJEXT) moolua/lua/lfs.$(OBJEXT) \
-	moolua/lua/moolua.$(OBJEXT) moolua/lua/luaall.$(OBJEXT) \
 	moocpp/fileutils.$(OBJEXT) moocpp/gstr.$(OBJEXT) \
 	moocpp/regex.$(OBJEXT)
 @MOO_BUILD_CTAGS_TRUE@am__objects_5 =  \
@@ -563,13 +551,8 @@ am__depfiles_remade = ./$(DEPDIR)/dummy.Po ./$(DEPDIR)/main.Po \
 	moofileview/$(DEPDIR)/moofoldermodel.Po \
 	moofileview/$(DEPDIR)/mooiconview.Po \
 	moofileview/$(DEPDIR)/mootreeview.Po \
-	mooglib/$(DEPDIR)/moo-glib.Po moolua/$(DEPDIR)/gtk-lua-api.Po \
-	moolua/$(DEPDIR)/medit-lua.Po \
-	moolua/$(DEPDIR)/moo-lua-api-util.Po \
-	moolua/$(DEPDIR)/moo-lua-api.Po \
-	moolua/$(DEPDIR)/mooluaplugin.Po moolua/lua/$(DEPDIR)/lfs.Po \
-	moolua/lua/$(DEPDIR)/luaall.Po moolua/lua/$(DEPDIR)/moolua.Po \
-	mooutils/$(DEPDIR)/moo-mime.Po mooutils/$(DEPDIR)/mooaccel.Po \
+	mooglib/$(DEPDIR)/moo-glib.Po mooutils/$(DEPDIR)/moo-mime.Po \
+	mooutils/$(DEPDIR)/mooaccel.Po \
 	mooutils/$(DEPDIR)/mooaccelbutton.Po \
 	mooutils/$(DEPDIR)/mooaccelprefs.Po \
 	mooutils/$(DEPDIR)/mooaction.Po \
@@ -743,8 +726,6 @@ am__DIST_COMMON = $(srcdir)/Makefile.in \
 	$(srcdir)/mooedit/Makefile.incl \
 	$(srcdir)/mooedit/langs/Makefile.incl \
 	$(srcdir)/moofileview/Makefile.incl \
-	$(srcdir)/moolua/Makefile.incl \
-	$(srcdir)/moolua/lua/Makefile.incl \
 	$(srcdir)/mooutils/Makefile.incl \
 	$(srcdir)/plugins/Makefile.incl \
 	$(srcdir)/plugins/ctags/Makefile.incl \
@@ -979,29 +960,7 @@ EXTRA_DIST = mooglib/moo-glib.cpp marshals.list \
 	moofileview/glade/moofileprops.glade \
 	moofileview/glade/moocreatefolder.glade \
 	moofileview/glade/moobookmark-editor.glade \
-	moofileview/moofileview.xml moolua/gtk-api.h moolua/gtk-api.c \
-	moolua/lua/COPYRIGHT moolua/lua/lapi.c moolua/lua/lapi.h \
-	moolua/lua/lauxlib.c moolua/lua/lauxlib.h \
-	moolua/lua/lbaselib.c moolua/lua/lcode.c moolua/lua/lcode.h \
-	moolua/lua/ldblib.c moolua/lua/ldebug.c moolua/lua/ldebug.h \
-	moolua/lua/ldo.c moolua/lua/ldo.h moolua/lua/ldump.c \
-	moolua/lua/lfunc.c moolua/lua/lfunc.h moolua/lua/lgc.c \
-	moolua/lua/lgc.h moolua/lua/linit.c moolua/lua/liolib.c \
-	moolua/lua/llex.c moolua/lua/llex.h moolua/lua/llimits.h \
-	moolua/lua/lmathlib.c moolua/lua/lmem.c moolua/lua/lmem.h \
-	moolua/lua/loadlib.c moolua/lua/lobject.c moolua/lua/lobject.h \
-	moolua/lua/lopcodes.c moolua/lua/lopcodes.h \
-	moolua/lua/loslib.c moolua/lua/lparser.c moolua/lua/lparser.h \
-	moolua/lua/lstate.c moolua/lua/lstate.h moolua/lua/lstring.c \
-	moolua/lua/lstring.h moolua/lua/ltable.c moolua/lua/ltable.h \
-	moolua/lua/ltablib.c moolua/lua/ltm.c moolua/lua/ltm.h \
-	moolua/lua/lua.h moolua/lua/luaall.cpp moolua/lua/luaconf.h \
-	moolua/lua/lualib.h moolua/lua/lundump.c moolua/lua/lundump.h \
-	moolua/lua/lvm.c moolua/lua/lvm.h moolua/lua/lzio.c \
-	moolua/lua/lzio.h moolua/lua/README moolua/lua/slnudata.c \
-	moolua/lua/slnunico.c moolua/lua/_moo \
-	moolua/lua-default-init.lua moolua/lua-module-init.lua \
-	moolua/lua-plugin-init.lua \
+	moofileview/moofileview.xml \
 	plugins/glade/moofileselector-prefs.glade \
 	plugins/glade/moofileselector.glade \
 	plugins/glade/moofind.glade plugins/glade/moogrep.glade \
@@ -1013,15 +972,12 @@ EXTRA_DIST = mooglib/moo-glib.cpp marshals.list \
 	plugins/usertools/filters.xml plugins/usertools/menu-tmpl.xml \
 	plugins/usertools/context-tmpl.xml \
 	plugins/usertools/genplatxml.py medit-app/medit.desktop.in
-BUILT_SOURCES = $(am__append_3) $(built_moo_sources) \
-	$(built_plugins_sources)
-CLEANFILES = $(am__append_6) $(built_moo_sources) \
+BUILT_SOURCES = $(built_moo_sources) $(built_plugins_sources)
+CLEANFILES = $(am__append_5) $(built_moo_sources) \
 	$(built_plugins_sources)
 noinst_LIBRARIES = 
-# -I$(moo_srcdir)/moolua/lua
 AM_CPPFLAGS = $(MOO_CPPFLAGS) -I$(top_srcdir)/doc/built \
 	-Imooutils/glade -Imoofileview -Imoofileview/glade \
-	-DLUA_USE_APICHECK -DLUA_USE_POSIX -DLUA_USE_DLOPEN \
 	-I$(srcdir)/plugins/support
 AM_CFLAGS = $(MOO_CFLAGS) -DEGG_SM_CLIENT_BACKEND_XSMP
 AM_CXXFLAGS = $(MOO_CXXFLAGS)
@@ -1186,16 +1142,10 @@ moo_sources = main.c resources.c moo-config.h sysheaders.h \
 	eggsmclient/eggdesktopfile.c mooapp/mooapp.c mooapp/mooapp.h \
 	mooapp/mooapp-accels.h mooapp/mooapp-info.h \
 	mooapp/mooapp-private.h mooapp/credits.h mooapp/credits.c \
-	mooapp/about.h mooapp/about.c moolua/medit-lua.h \
-	moolua/medit-lua.cpp moolua/mooluaplugin.h \
-	moolua/mooluaplugin.cpp moolua/moo-lua-api-util.h \
-	moolua/moo-lua-api-util.cpp moolua/moo-lua-api.cpp \
-	moolua/moo-lua-api.h moolua/gtk-lua-api.cpp \
-	moolua/gtk-lua-api.h moolua/lua/lfs.h moolua/lua/lfs.cpp \
-	moolua/lua/moolua.h moolua/lua/moolua.cpp \
-	moolua/lua/luaall.cpp moocpp/fileutils.h moocpp/fileutils.cpp \
-	moocpp/gobjptr.h moocpp/gstr.h moocpp/gstr.cpp moocpp/moocpp.h \
-	moocpp/regex.h moocpp/regex.cpp moocpp/util.h
+	mooapp/about.h mooapp/about.c moocpp/fileutils.h \
+	moocpp/fileutils.cpp moocpp/gobjptr.h moocpp/gstr.h \
+	moocpp/gstr.cpp moocpp/moocpp.h moocpp/regex.h \
+	moocpp/regex.cpp moocpp/util.h
 
 # FIXME: use resources
 built_moo_sources = marshals.h mooedit/moopluginprefs-gxml.h \
@@ -1216,14 +1166,12 @@ built_moo_sources = marshals.h mooedit/moopluginprefs-gxml.h \
 	moofileview/moofileprops-gxml.h \
 	moofileview/moocreatefolder-gxml.h \
 	moofileview/moobookmark-editor-gxml.h \
-	moofileview/moofileview-ui.h mooapp-credits.h \
-	moolua/lua-default-init.h moolua/lua-module-init.h \
-	moolua/lua-plugin-init.h
-moo_libadd = -ldl
+	moofileview/moofileview-ui.h mooapp-credits.h
+moo_libadd = 
 plugins_sources = plugins/moofileselector-prefs.cpp \
 	plugins/moofileselector.cpp plugins/moofileselector.h \
 	plugins/mooplugin-builtin.h plugins/mooplugin-builtin.cpp \
-	plugins/moofilelist.cpp plugins/moofind.cpp $(am__append_4) \
+	plugins/moofilelist.cpp plugins/moofind.cpp $(am__append_3) \
 	plugins/usertools/moousertools.cpp \
 	plugins/usertools/moousertools.h \
 	plugins/usertools/moousertools-prefs.cpp \
@@ -1445,13 +1393,6 @@ PIXMAPS = \
 	mooutils/pixmaps/symlink.png		\
 	mooutils/pixmaps/symlink-small.png
 
-genlua_files = \
-	$(top_srcdir)/api/genlua.py		\
-	$(top_srcdir)/api/mpi/__init__.py	\
-	$(top_srcdir)/api/mpi/module.py		\
-	$(top_srcdir)/api/mpi/luawriter.py
-
-luadir = $(MOO_DATA_DIR)/lua
 cfgdir = $(MOO_DATA_DIR)
 cfg_DATA = \
 	plugins/usertools/filters.xml		\
@@ -1484,7 +1425,7 @@ all: $(BUILT_SOURCES)
 
 .SUFFIXES:
 .SUFFIXES: .c .cpp .lo .o .obj
-$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(srcdir)/mooedit/Makefile.incl $(srcdir)/mooedit/langs/Makefile.incl $(srcdir)/xdgmime/Makefile.incl $(srcdir)/mooutils/Makefile.incl $(srcdir)/moofileview/Makefile.incl $(srcdir)/gtksourceview/Makefile.incl $(srcdir)/eggsmclient/Makefile.incl $(srcdir)/mooapp/Makefile.incl $(srcdir)/moolua/Makefile.incl $(srcdir)/moolua/lua/Makefile.incl $(srcdir)/plugins/Makefile.incl $(srcdir)/plugins/ctags/Makefile.incl $(srcdir)/plugins/usertools/Makefile.incl $(srcdir)/plugins/support/Makefile.incl $(srcdir)/medit-app/Makefile.incl $(srcdir)/moocpp/Makefile.incl $(am__configure_deps)
+$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(srcdir)/mooedit/Makefile.incl $(srcdir)/mooedit/langs/Makefile.incl $(srcdir)/xdgmime/Makefile.incl $(srcdir)/mooutils/Makefile.incl $(srcdir)/moofileview/Makefile.incl $(srcdir)/gtksourceview/Makefile.incl $(srcdir)/eggsmclient/Makefile.incl $(srcdir)/mooapp/Makefile.incl $(srcdir)/plugins/Makefile.incl $(srcdir)/plugins/ctags/Makefile.incl $(srcdir)/plugins/usertools/Makefile.incl $(srcdir)/plugins/support/Makefile.incl $(srcdir)/medit-app/Makefile.incl $(srcdir)/moocpp/Makefile.incl $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -1504,7 +1445,7 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	    echo ' cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__maybe_remake_depfiles)'; \
 	    cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__maybe_remake_depfiles);; \
 	esac;
-$(srcdir)/mooedit/Makefile.incl $(srcdir)/mooedit/langs/Makefile.incl $(srcdir)/xdgmime/Makefile.incl $(srcdir)/mooutils/Makefile.incl $(srcdir)/moofileview/Makefile.incl $(srcdir)/gtksourceview/Makefile.incl $(srcdir)/eggsmclient/Makefile.incl $(srcdir)/mooapp/Makefile.incl $(srcdir)/moolua/Makefile.incl $(srcdir)/moolua/lua/Makefile.incl $(srcdir)/plugins/Makefile.incl $(srcdir)/plugins/ctags/Makefile.incl $(srcdir)/plugins/usertools/Makefile.incl $(srcdir)/plugins/support/Makefile.incl $(srcdir)/medit-app/Makefile.incl $(srcdir)/moocpp/Makefile.incl $(am__empty):
+$(srcdir)/mooedit/Makefile.incl $(srcdir)/mooedit/langs/Makefile.incl $(srcdir)/xdgmime/Makefile.incl $(srcdir)/mooutils/Makefile.incl $(srcdir)/moofileview/Makefile.incl $(srcdir)/gtksourceview/Makefile.incl $(srcdir)/eggsmclient/Makefile.incl $(srcdir)/mooapp/Makefile.incl $(srcdir)/plugins/Makefile.incl $(srcdir)/plugins/ctags/Makefile.incl $(srcdir)/plugins/usertools/Makefile.incl $(srcdir)/plugins/support/Makefile.incl $(srcdir)/medit-app/Makefile.incl $(srcdir)/moocpp/Makefile.incl $(am__empty):
 
 $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
@@ -1890,34 +1831,6 @@ mooapp/credits.$(OBJEXT): mooapp/$(am__dirstamp) \
 	mooapp/$(DEPDIR)/$(am__dirstamp)
 mooapp/about.$(OBJEXT): mooapp/$(am__dirstamp) \
 	mooapp/$(DEPDIR)/$(am__dirstamp)
-moolua/$(am__dirstamp):
-	@$(MKDIR_P) moolua
-	@: > moolua/$(am__dirstamp)
-moolua/$(DEPDIR)/$(am__dirstamp):
-	@$(MKDIR_P) moolua/$(DEPDIR)
-	@: > moolua/$(DEPDIR)/$(am__dirstamp)
-moolua/medit-lua.$(OBJEXT): moolua/$(am__dirstamp) \
-	moolua/$(DEPDIR)/$(am__dirstamp)
-moolua/mooluaplugin.$(OBJEXT): moolua/$(am__dirstamp) \
-	moolua/$(DEPDIR)/$(am__dirstamp)
-moolua/moo-lua-api-util.$(OBJEXT): moolua/$(am__dirstamp) \
-	moolua/$(DEPDIR)/$(am__dirstamp)
-moolua/moo-lua-api.$(OBJEXT): moolua/$(am__dirstamp) \
-	moolua/$(DEPDIR)/$(am__dirstamp)
-moolua/gtk-lua-api.$(OBJEXT): moolua/$(am__dirstamp) \
-	moolua/$(DEPDIR)/$(am__dirstamp)
-moolua/lua/$(am__dirstamp):
-	@$(MKDIR_P) moolua/lua
-	@: > moolua/lua/$(am__dirstamp)
-moolua/lua/$(DEPDIR)/$(am__dirstamp):
-	@$(MKDIR_P) moolua/lua/$(DEPDIR)
-	@: > moolua/lua/$(DEPDIR)/$(am__dirstamp)
-moolua/lua/lfs.$(OBJEXT): moolua/lua/$(am__dirstamp) \
-	moolua/lua/$(DEPDIR)/$(am__dirstamp)
-moolua/lua/moolua.$(OBJEXT): moolua/lua/$(am__dirstamp) \
-	moolua/lua/$(DEPDIR)/$(am__dirstamp)
-moolua/lua/luaall.$(OBJEXT): moolua/lua/$(am__dirstamp) \
-	moolua/lua/$(DEPDIR)/$(am__dirstamp)
 moocpp/$(am__dirstamp):
 	@$(MKDIR_P) moocpp
 	@: > moocpp/$(am__dirstamp)
@@ -2022,8 +1935,6 @@ mostlyclean-compile:
 	-rm -f mooedit/*.$(OBJEXT)
 	-rm -f moofileview/*.$(OBJEXT)
 	-rm -f mooglib/*.$(OBJEXT)
-	-rm -f moolua/*.$(OBJEXT)
-	-rm -f moolua/lua/*.$(OBJEXT)
 	-rm -f mooutils/*.$(OBJEXT)
 	-rm -f plugins/*.$(OBJEXT)
 	-rm -f plugins/ctags/*.$(OBJEXT)
@@ -2109,14 +2020,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@moofileview/$(DEPDIR)/mooiconview.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@moofileview/$(DEPDIR)/mootreeview.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@mooglib/$(DEPDIR)/moo-glib.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@moolua/$(DEPDIR)/gtk-lua-api.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@moolua/$(DEPDIR)/medit-lua.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@moolua/$(DEPDIR)/moo-lua-api-util.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@moolua/$(DEPDIR)/moo-lua-api.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@moolua/$(DEPDIR)/mooluaplugin.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@moolua/lua/$(DEPDIR)/lfs.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@moolua/lua/$(DEPDIR)/luaall.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@moolua/lua/$(DEPDIR)/moolua.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@mooutils/$(DEPDIR)/moo-mime.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@mooutils/$(DEPDIR)/mooaccel.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@mooutils/$(DEPDIR)/mooaccelbutton.Po@am__quote@ # am--include-marker
@@ -2482,10 +2385,6 @@ distclean-generic:
 	-rm -f moofileview/$(am__dirstamp)
 	-rm -f mooglib/$(DEPDIR)/$(am__dirstamp)
 	-rm -f mooglib/$(am__dirstamp)
-	-rm -f moolua/$(DEPDIR)/$(am__dirstamp)
-	-rm -f moolua/$(am__dirstamp)
-	-rm -f moolua/lua/$(DEPDIR)/$(am__dirstamp)
-	-rm -f moolua/lua/$(am__dirstamp)
 	-rm -f mooutils/$(DEPDIR)/$(am__dirstamp)
 	-rm -f mooutils/$(am__dirstamp)
 	-rm -f plugins/$(DEPDIR)/$(am__dirstamp)
@@ -2588,14 +2487,6 @@ distclean: distclean-am
 	-rm -f moofileview/$(DEPDIR)/mooiconview.Po
 	-rm -f moofileview/$(DEPDIR)/mootreeview.Po
 	-rm -f mooglib/$(DEPDIR)/moo-glib.Po
-	-rm -f moolua/$(DEPDIR)/gtk-lua-api.Po
-	-rm -f moolua/$(DEPDIR)/medit-lua.Po
-	-rm -f moolua/$(DEPDIR)/moo-lua-api-util.Po
-	-rm -f moolua/$(DEPDIR)/moo-lua-api.Po
-	-rm -f moolua/$(DEPDIR)/mooluaplugin.Po
-	-rm -f moolua/lua/$(DEPDIR)/lfs.Po
-	-rm -f moolua/lua/$(DEPDIR)/luaall.Po
-	-rm -f moolua/lua/$(DEPDIR)/moolua.Po
 	-rm -f mooutils/$(DEPDIR)/moo-mime.Po
 	-rm -f mooutils/$(DEPDIR)/mooaccel.Po
 	-rm -f mooutils/$(DEPDIR)/mooaccelbutton.Po
@@ -2695,8 +2586,8 @@ info: info-am
 
 info-am:
 
-install-data-am: install-cfgDATA install-data-local \
-	install-desktopDATA install-iconthemeDATA install-langsDATA
+install-data-am: install-cfgDATA install-desktopDATA \
+	install-iconthemeDATA install-langsDATA
 	@$(NORMAL_INSTALL)
 	$(MAKE) $(AM_MAKEFLAGS) install-data-hook
 install-dvi: install-dvi-am
@@ -2801,14 +2692,6 @@ maintainer-clean: maintainer-clean-am
 	-rm -f moofileview/$(DEPDIR)/mooiconview.Po
 	-rm -f moofileview/$(DEPDIR)/mootreeview.Po
 	-rm -f mooglib/$(DEPDIR)/moo-glib.Po
-	-rm -f moolua/$(DEPDIR)/gtk-lua-api.Po
-	-rm -f moolua/$(DEPDIR)/medit-lua.Po
-	-rm -f moolua/$(DEPDIR)/moo-lua-api-util.Po
-	-rm -f moolua/$(DEPDIR)/moo-lua-api.Po
-	-rm -f moolua/$(DEPDIR)/mooluaplugin.Po
-	-rm -f moolua/lua/$(DEPDIR)/lfs.Po
-	-rm -f moolua/lua/$(DEPDIR)/luaall.Po
-	-rm -f moolua/lua/$(DEPDIR)/moolua.Po
 	-rm -f mooutils/$(DEPDIR)/moo-mime.Po
 	-rm -f mooutils/$(DEPDIR)/mooaccel.Po
 	-rm -f mooutils/$(DEPDIR)/mooaccelbutton.Po
@@ -2910,7 +2793,7 @@ ps-am:
 
 uninstall-am: uninstall-binPROGRAMS uninstall-cfgDATA \
 	uninstall-desktopDATA uninstall-iconthemeDATA \
-	uninstall-langsDATA uninstall-local
+	uninstall-langsDATA
 	@$(NORMAL_INSTALL)
 	$(MAKE) $(AM_MAKEFLAGS) uninstall-hook
 .MAKE: all check install install-am install-data-am install-exec \
@@ -2923,17 +2806,17 @@ uninstall-am: uninstall-binPROGRAMS uninstall-cfgDATA \
 	distclean-tags distdir dvi dvi-am html html-am info info-am \
 	install install-am install-binPROGRAMS install-cfgDATA \
 	install-data install-data-am install-data-hook \
-	install-data-local install-desktopDATA install-dvi \
-	install-dvi-am install-exec install-exec-am install-html \
-	install-html-am install-iconthemeDATA install-info \
-	install-info-am install-langsDATA install-man install-pdf \
-	install-pdf-am install-ps install-ps-am install-strip \
-	installcheck installcheck-am installdirs maintainer-clean \
+	install-desktopDATA install-dvi install-dvi-am install-exec \
+	install-exec-am install-html install-html-am \
+	install-iconthemeDATA install-info install-info-am \
+	install-langsDATA install-man install-pdf install-pdf-am \
+	install-ps install-ps-am install-strip installcheck \
+	installcheck-am installdirs maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-compile \
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
 	tags tags-am uninstall uninstall-am uninstall-binPROGRAMS \
 	uninstall-cfgDATA uninstall-desktopDATA uninstall-hook \
-	uninstall-iconthemeDATA uninstall-langsDATA uninstall-local
+	uninstall-iconthemeDATA uninstall-langsDATA
 
 .PRECIOUS: Makefile
 
@@ -3003,40 +2886,6 @@ moo-pixbufs.h: $(PIXMAPS)
 # -%- strip:true -%-
 mooapp-credits.h: $(top_srcdir)/THANKS $(top_srcdir)/tools/xml2h.py
 	$(AM_V_GEN)$(MOO_PYTHON) $(top_srcdir)/tools/xml2h.py $(top_srcdir)/THANKS mooapp-credits.h MOO_APP_CREDITS
-install-data-local: install-lua-moo
-uninstall-local: uninstall-lua-moo
-install-lua-moo:
-	$(MKDIR_P) $(DESTDIR)$(luadir)/_moo
-	cd $(srcdir) && $(INSTALL_DATA) moolua/lua/_moo/*.lua $(DESTDIR)$(luadir)/_moo/
-uninstall-lua-moo:
-	rm -f $(DESTDIR)$(luadir)/_moo/*.lua
-moolua/lua-default-init.h: moolua/lua-default-init.lua $(top_srcdir)/tools/xml2h.py
-	$(AM_V_at)$(MKDIR_P) moolua
-	$(AM_V_GEN)$(MOO_PYTHON) $(top_srcdir)/tools/xml2h.py $(srcdir)/moolua/lua-default-init.lua moolua/lua-default-init.h.tmp LUA_DEFAULT_INIT \
-		&& mv moolua/lua-default-init.h.tmp moolua/lua-default-init.h
-moolua/lua-module-init.h: moolua/lua-module-init.lua $(top_srcdir)/tools/xml2h.py
-	$(AM_V_at)$(MKDIR_P) moolua
-	$(AM_V_GEN)$(MOO_PYTHON) $(top_srcdir)/tools/xml2h.py $(srcdir)/moolua/lua-module-init.lua moolua/lua-module-init.h.tmp LUA_MODULE_INIT \
-		&& mv moolua/lua-module-init.h.tmp moolua/lua-module-init.h
-moolua/lua-plugin-init.h: moolua/lua-plugin-init.lua $(top_srcdir)/tools/xml2h.py
-	$(AM_V_at)$(MKDIR_P) moolua
-	$(AM_V_GEN)$(MOO_PYTHON) $(top_srcdir)/tools/xml2h.py $(srcdir)/moolua/lua-plugin-init.lua moolua/lua-plugin-init.h.tmp LUA_PLUGIN_INIT \
-		&& mv moolua/lua-plugin-init.h.tmp moolua/lua-plugin-init.h
-@MOO_DEV_MODE_TRUE@moolua/moo-lua-api.cpp: $(genlua_files) $(top_srcdir)/api/moo.xml $(top_srcdir)/api/gtk.xml
-@MOO_DEV_MODE_TRUE@	$(AM_V_at)$(MKDIR_P) moolua
-@MOO_DEV_MODE_TRUE@	$(AM_V_GEN)$(MOO_PYTHON) $(top_srcdir)/api/genlua.py \
-@MOO_DEV_MODE_TRUE@                --include-header moo-lua-api.h \
-@MOO_DEV_MODE_TRUE@		--import $(top_srcdir)/api/gtk.xml \
-@MOO_DEV_MODE_TRUE@		$(top_srcdir)/api/moo.xml > moolua/moo-lua-api.cpp.tmp && \
-@MOO_DEV_MODE_TRUE@	mv moolua/moo-lua-api.cpp.tmp $(srcdir)/moolua/moo-lua-api.cpp
-@MOO_DEV_MODE_TRUE@	$(AM_V_at)rm -f moolua/moo-lua-api.cpp.tmp
-@MOO_DEV_MODE_TRUE@moolua/gtk-lua-api.cpp: $(genlua_files) $(top_srcdir)/api/gtk.xml
-@MOO_DEV_MODE_TRUE@	$(AM_V_at)$(MKDIR_P) moolua
-@MOO_DEV_MODE_TRUE@	$(AM_V_GEN)$(MOO_PYTHON) $(top_srcdir)/api/genlua.py \
-@MOO_DEV_MODE_TRUE@                --include-header gtk-lua-api.h \
-@MOO_DEV_MODE_TRUE@		$(top_srcdir)/api/gtk.xml > moolua/gtk-lua-api.cpp.tmp && \
-@MOO_DEV_MODE_TRUE@	mv moolua/gtk-lua-api.cpp.tmp $(srcdir)/moolua/gtk-lua-api.cpp
-@MOO_DEV_MODE_TRUE@	$(AM_V_at)rm -f moolua/gtk-lua-api.cpp.tmp
 plugins/usertools/lua-tool-setup.h: plugins/usertools/lua-tool-setup.lua $(top_srcdir)/tools/xml2h.py
 	$(AM_V_at)$(MKDIR_P) plugins/usertools
 	$(AM_V_GEN)$(MOO_PYTHON) $(top_srcdir)/tools/xml2h.py $(srcdir)/plugins/usertools/lua-tool-setup.lua \

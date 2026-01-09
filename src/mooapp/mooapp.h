@@ -145,13 +145,6 @@ gboolean moo_app_send_files (MooOpenInfoArray *files, guint32 stamp, const char 
 void moo_app_open_files (MooApp *app, MooOpenInfoArray *files, guint32 stamp);
 
 /*!
- * \brief Runs a script in the application
- * \param app a MooApp
- * \param script the script to run
- */
-void moo_app_run_script (MooApp *app, const char *script);
-
-/*!
  * \brief Gets system information including application version, OS details, and library versions
  * \param app a MooApp
  * \return (transfer full): a newly allocated string containing system information

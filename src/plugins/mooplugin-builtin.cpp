@@ -19,14 +19,10 @@
 #include "plugins/mooplugin-builtin.h"
 #include "mooutils/mooutils-misc.h"
 #include "plugins/ctags/ctags-plugin.h"
-#include "moolua/mooluaplugin.h"
 
 void
 moo_plugin_init (void)
 {
-    if (!moo_getenv_bool ("MOO_DISABLE_LUA"))
-        moo_lua_plugin_init ();
-
     _moo_file_selector_plugin_init ();
     _moo_file_list_plugin_init ();
     _moo_find_plugin_init ();

@@ -341,7 +341,6 @@ egg_sm_client_get (void)
 # ifdef EGG_SM_CLIENT_BACKEND_DBUS
 	  if (!global_client)
 	    global_client = egg_sm_client_dbus_new ();
-# endif
 #endif
 	}
 

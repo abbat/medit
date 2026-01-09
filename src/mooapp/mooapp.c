@@ -24,7 +24,6 @@
 #include "mooapp-private.h"
 #include "mooedit/mooeditprefs.h"
 #include "mooedit/mooplugin.h"
-#include "moolua/medit-lua.h"
 #include "mooutils/moo-mime.h"
 #include "mooutils/mooappinput.h"
 #include "mooutils/moodialogs.h"
@@ -46,12 +45,6 @@ const char *MOO_APP_CMD_VERSION = "1.0";
 
 /*!< \brief Preferences key for asking about opening bug report URL */
 const char *ASK_OPEN_BUG_URL_KEY = "Application/ask_open_bug_url";
-
-/*!< \brief Prefix for Lua script commands */
-const char *SCRIPT_PREFIX_LUA = "lua:";
-
-/*!< \brief Prefix for Lua file script commands */
-const char *SCRIPT_PREFIX_LUA_FILE = "luaf:";
 
 /*!
  * \brief Property identifiers for MooApp objects
@@ -963,10 +956,11 @@ moo_app_exec_cmd (MooApp *app, char cmd, const char *data, G_GNUC_UNUSED guint l
 
   switch (code)
     {
+/* FIXME: lua
     case CMD_SCRIPT:
       moo_app_run_script (app, data);
       break;
-
+*/
     case CMD_OPEN_FILES:
       moo_app_cmd_open_files (app, data);
       break;
@@ -1510,25 +1504,6 @@ moo_app_open_files (MooApp *app, MooOpenInfoArray *files, guint32 stamp)
     }
 
   moo_editor_present (app->priv->editor, stamp);
-}
-
-/*!
- * \brief Executes a script in the application. The script can be a Lua script or a Lua file, depending on the prefix.
- * \param app the MooApp instance
- * \param script the script to execute
- */
-void
-moo_app_run_script (MooApp *app, const char *script)
-{
-  g_return_if_fail (MOO_IS_APP (app));
-  g_return_if_fail (script != NULL);
-
-  if (g_str_has_prefix (script, SCRIPT_PREFIX_LUA))
-    medit_lua_run_string (script + strlen (SCRIPT_PREFIX_LUA));
-  else if (g_str_has_prefix (script, SCRIPT_PREFIX_LUA_FILE))
-    medit_lua_run_file (script + strlen (SCRIPT_PREFIX_LUA_FILE));
-  else
-    medit_lua_run_string (script);
 }
 
 /*!

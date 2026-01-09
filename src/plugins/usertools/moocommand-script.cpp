@@ -21,7 +21,6 @@
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mootype-macros.h"
 #include "plugins/usertools/mooedittools-script-gxml.h"
-#include "moolua/medit-lua.h"
 #include <string.h>
 
 struct MooCommandFactoryScript
@@ -45,62 +44,17 @@ static MooCommand  *moo_command_script_new (MooScriptType     type,
                                             const char       *code,
                                             MooCommandOptions options);
 
-static void
-moo_command_script_run_lua (MooCommandScript  *cmd,
-                            MooCommandContext *ctx)
-{
-    GtkTextBuffer *buffer = NULL;
-    lua_State *L;
-
-    g_return_if_fail (cmd->code != NULL);
-
-    L = medit_lua_new ();
-    g_return_if_fail (L != NULL);
-
-    if (!medit_lua_do_string (L, LUA_TOOL_SETUP_LUA))
-    {
-        medit_lua_free (L);
-        return;
-    }
-
-    if (luaL_loadstring (L, cmd->code) != 0)
-    {
-        const char *msg = lua_tostring (L, -1);
-        g_critical ("%s", msg ? msg : "ERROR");
-        medit_lua_free (L);
-        return;
-    }
-
-    if (moo_command_context_get_doc (ctx))
-        buffer = moo_edit_get_buffer (moo_command_context_get_doc (ctx));
-
-    if (buffer)
-        gtk_text_buffer_begin_user_action (buffer);
-
-    if (lua_pcall (L, 0, 0, 0) != 0)
-    {
-        const char *msg = lua_tostring (L, -1);
-        g_critical ("%s", msg ? msg : "ERROR");
-        lua_pop (L, 1);
-    }
-
-    if (buffer)
-        gtk_text_buffer_end_user_action (buffer);
-
-    medit_lua_free (L);
-}
 
 static void
 moo_command_script_run (MooCommand        *cmd_base,
                         MooCommandContext *ctx)
 {
     MooCommandScript *cmd = MOO_COMMAND_SCRIPT (cmd_base);
-
+// FIXME: lua was here
+(void)ctx;
+(void)cmd;
     switch (cmd->type)
     {
-        case MOO_SCRIPT_LUA:
-            moo_command_script_run_lua (cmd, ctx);
-            break;
         default:
             g_return_if_reached ();
     }

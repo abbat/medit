@@ -368,9 +368,11 @@ get_time_stamp (void)
 static void
 run_script_func (void)
 {
+  /* FIXME: remove
   char **p;
   for (p = medit_opts.run_script; p && *p; ++p)
     moo_app_run_script (moo_app_instance (), *p);
+  */
 }
 
 /*!

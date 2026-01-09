@@ -42,7 +42,6 @@ include moofileview/Makefile.incl
 include gtksourceview/Makefile.incl
 include eggsmclient/Makefile.incl
 include mooapp/Makefile.incl
-include moolua/Makefile.incl
 include plugins/Makefile.incl
 include medit-app/Makefile.incl
 include moocpp/Makefile.incl

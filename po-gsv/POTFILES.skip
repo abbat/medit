@@ -13,7 +13,6 @@ src/moofileview/
 src/moopython/
 src/mooutils/
 src/eggsmclient/
-src/moolua/
 src/resources.c
 src/mooedit/medit.xml
 src/mooedit/mooplugin-loader.c

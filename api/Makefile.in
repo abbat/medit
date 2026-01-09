@@ -87,7 +87,6 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-@MOO_DEV_MODE_TRUE@am__append_1 = moo.xml.stamp gtk.xml.stamp
 subdir = api
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -359,14 +358,10 @@ EXTRA_DIST = \
 	$(gendefs_files)	\
 	$(genlua_files)		\
 	$(gendocs_files)	\
-	sourcefiles.mak		\
-	moo.xml			\
-	gtk.xml
+	sourcefiles.mak
 
-BUILT_SOURCES = $(am__append_1)
+BUILT_SOURCES = 
 @MOO_DEV_MODE_TRUE@source_files = \
-@MOO_DEV_MODE_TRUE@    ../src/moolua/medit-lua.h\
-@MOO_DEV_MODE_TRUE@    ../src/moolua/medit-lua.cpp\
 @MOO_DEV_MODE_TRUE@    ../src/mooapp/about.c\
 @MOO_DEV_MODE_TRUE@    ../src/mooapp/about.h\
 @MOO_DEV_MODE_TRUE@    ../src/mooapp/credits.c\
@@ -834,32 +829,6 @@ uninstall-am:
 
 .PRECIOUS: Makefile
 
-@MOO_DEV_MODE_TRUE@moo.xml.stamp: $(docparser_files) $(source_files)
-@MOO_DEV_MODE_TRUE@	$(AM_V_GEN)$(MOO_PYTHON) $(srcdir)/parsedocs.py \
-@MOO_DEV_MODE_TRUE@		--source-dir $(top_srcdir)/src/mooapp \
-@MOO_DEV_MODE_TRUE@		--source-dir $(top_srcdir)/src/mooedit \
-@MOO_DEV_MODE_TRUE@		--source-dir $(top_srcdir)/src/moofileview \
-@MOO_DEV_MODE_TRUE@		--source-dir $(top_srcdir)/src/mooutils \
-@MOO_DEV_MODE_TRUE@		--source-dir $(top_srcdir)/src/moopython \
-@MOO_DEV_MODE_TRUE@		--source-dir $(top_srcdir)/src/plugins/usertools \
-@MOO_DEV_MODE_TRUE@		--source-dir $(top_srcdir)/src/plugins/support \
-@MOO_DEV_MODE_TRUE@		--source-file $(top_srcdir)/src/moolua/medit-lua.cpp \
-@MOO_DEV_MODE_TRUE@		--source-file $(top_srcdir)/src/moolua/medit-lua.h \
-@MOO_DEV_MODE_TRUE@                --skip 'moofontsel.*' \
-@MOO_DEV_MODE_TRUE@		--output moo.xml.tmp
-@MOO_DEV_MODE_TRUE@	$(AM_V_at)cmp -s moo.xml.tmp $(srcdir)/moo.xml || mv moo.xml.tmp $(srcdir)/moo.xml
-@MOO_DEV_MODE_TRUE@	$(AM_V_at)rm -f moo.xml.tmp
-@MOO_DEV_MODE_TRUE@	$(AM_V_at)echo stamp > moo.xml.stamp
-@MOO_DEV_MODE_TRUE@gtk.xml.stamp: $(docparser_files) $(top_srcdir)/src/moolua/gtk-api.c $(top_srcdir)/src/moolua/gtk-api.h
-@MOO_DEV_MODE_TRUE@	$(AM_V_at)$(MKDIR_P) moolua
-@MOO_DEV_MODE_TRUE@	$(AM_V_GEN)$(MOO_PYTHON) $(srcdir)/parsedocs.py \
-@MOO_DEV_MODE_TRUE@		--source-file $(top_srcdir)/src/moolua/gtk-api.c \
-@MOO_DEV_MODE_TRUE@		--source-file $(top_srcdir)/src/moolua/gtk-api.h \
-@MOO_DEV_MODE_TRUE@		--module Gtk \
-@MOO_DEV_MODE_TRUE@		--output gtk.xml.tmp
-@MOO_DEV_MODE_TRUE@	$(AM_V_at)cmp -s gtk.xml.tmp $(srcdir)/gtk.xml || mv gtk.xml.tmp $(srcdir)/gtk.xml
-@MOO_DEV_MODE_TRUE@	$(AM_V_at)rm -f gtk.xml.tmp
-@MOO_DEV_MODE_TRUE@	$(AM_V_at)echo stamp > gtk.xml.stamp
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
