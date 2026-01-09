@@ -22,12 +22,7 @@
 #include <locale.h>
 
 #define MOO_ACCEL_PREFS_KEY "Shortcuts"
-
-#if defined(GDK_WINDOWING_QUARTZ)
-#define COMMAND_MASK GDK_META_MASK
-#else
 #define COMMAND_MASK GDK_CONTROL_MASK
-#endif
 
 
 static void          accel_map_changed      (GtkAccelMap        *map,

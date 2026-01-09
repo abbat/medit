@@ -550,11 +550,7 @@ moo_window_init (MooWindow *window)
                         GTK_WIDGET (window->statusbar),
                         TRUE, TRUE, 0);
     rg = g_object_new (GTK_TYPE_STATUSBAR,
-#ifdef GDK_WINDOWING_QUARTZ
-                       "has-resize-grip", FALSE,
-#else
                        "has-resize-grip", TRUE,
-#endif
                        (const char*) NULL);
     gtk_widget_set_name (rg, "no-shadow");
     gtk_box_pack_end (GTK_BOX (window->status_area),

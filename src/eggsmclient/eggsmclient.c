@@ -331,9 +331,6 @@ egg_sm_client_get (void)
     {
       if (!sm_client_disable)
 	{
-#if defined (GDK_WINDOWING_QUARTZ)
-	  global_client = egg_sm_client_osx_new ();
-#else
 	  /* If both D-Bus and XSMP are compiled in, try XSMP first
 	   * (since it supports state saving) and fall back to D-Bus
 	   * if XSMP isn't available.
