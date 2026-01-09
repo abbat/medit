@@ -6,8 +6,6 @@ moo_sources +=			\
 	mooapp/mooapp-private.h	\
 	mooapp/moohtml.h	\
 	mooapp/moohtml.cpp	\
-	mooapp/moolinklabel.h	\
-	mooapp/moolinklabel.c	\
 	mooapp/credits.h	\
 	mooapp/credits.c	\
 	mooapp/about.h		\
