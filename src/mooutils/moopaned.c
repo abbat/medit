@@ -1732,10 +1732,12 @@ moo_paned_add (GtkContainer   *container,
 
     gtk_widget_set_parent_window (child, MOO_PANED(container)->priv->bin_window);
     gtk_widget_set_parent (child, GTK_WIDGET (bin));
+
 #if GTK_CHECK_VERSION(3,0,0)
     /* FIXME: This code was written by AI and requires review */
     /* In GTK+3, we need to use gtk_container_add instead of directly setting bin->child */
-    gtk_container_add (container, child);
+    /* this code not working properly because recursion container_class->add = moo_paned_add; */
+    /* gtk_container_add (container, child); */
 #else
     /* In GTK+2, we can directly set bin->child */
     bin->child = child;   //gtk_container_add (container, child); // TODO: check this!
