@@ -38,8 +38,6 @@ struct MeditOpts
   const char *geometry = nullptr;      /*!< \brief Window geometry specification (WIDTHxHEIGHT[+X+Y]) */
   const char *debug = nullptr;         /*!< \brief Debug mode options */
   char **filesp = nullptr;             /*!< \brief Pointer to array of files (temporary, used during parsing) */
-  char **run_script = nullptr;         /*!< \brief Scripts to run on startup */
-  char **send_script = nullptr;        /*!< \brief Scripts to send to existing instance */
   int use_session = -1;                /*!< \brief Whether to load and save session (1=yes, 0=no, -1=not specified) */
   int pid = -1;                        /*!< \brief Process ID of existing instance to connect to */
   int line = 0;                        /*!< \brief Line number to position cursor at when opening file */
@@ -275,8 +273,6 @@ parse_args (int argc, char *argv[])
     { "line", 'l', 0, G_OPTION_ARG_INT, &medit_opts.line, N_ ("Open file and position cursor on line LINE"), N_ ("LINE") },
     { "encoding", 'e', 0, G_OPTION_ARG_STRING, (gpointer) &medit_opts.encoding, N_ ("Use character encoding ENCODING"), N_ ("ENCODING") },
     { "reload", 'r', 0, G_OPTION_ARG_NONE, &medit_opts.reload, N_ ("Automatically reload file if it was modified on disk"), NULL },
-    { "run-script", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_STRING_ARRAY, (gpointer) &medit_opts.run_script, "Run SCRIPT", "SCRIPT" },
-    { "send-script", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_STRING_ARRAY, (gpointer) &medit_opts.send_script, "Send SCRIPT to existing instance", "SCRIPT" },
     { "log-window", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_NONE, &medit_opts.log_window, "Show debug output", NULL },
     { "log-file", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_FILENAME, (gpointer) &medit_opts.log_file, "Write debug output to FILE", "FILE" },
     { "debug", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_STRING, (gpointer) &medit_opts.debug, "Run in debug mode", NULL },
@@ -357,22 +353,6 @@ get_time_stamp (void)
 #else
   return 0;
 #endif
-}
-
-/*!
- * \brief Execute scripts on startup
- *
- * Executes all scripts specified in the --run-script option.
- * Called as a callback after application startup.
- */
-static void
-run_script_func (void)
-{
-  /* FIXME: remove
-  char **p;
-  for (p = medit_opts.run_script; p && *p; ++p)
-    moo_app_run_script (moo_app_instance (), *p);
-  */
 }
 
 /*!
@@ -736,21 +716,6 @@ medit_app_main (int argc, char *argv[])
   if (name && !name[0])
     name = NULL;
 
-  if (medit_opts.send_script)
-    {
-      char **p;
-      for (p = medit_opts.send_script; *p; ++p)
-        {
-          GString *msg = g_string_new ("e");
-          g_string_append (msg, *p);
-          moo_app_send_msg (name, msg->str, msg->len + 1);
-          g_string_free (msg, TRUE);
-        }
-
-      notify_startup_complete ();
-      exit (EXIT_SUCCESS);
-    }
-
   files = parse_files ();
   if (name)
     {
@@ -764,8 +729,7 @@ medit_app_main (int argc, char *argv[])
         }
     }
 
-  if (!new_instance && !medit_opts.instance_name &&
-      moo_app_send_files (files, stamp, NULL))
+  if (!new_instance && !medit_opts.instance_name && moo_app_send_files (files, stamp, NULL))
     {
       notify_startup_complete ();
       exit (EXIT_SUCCESS);
@@ -802,9 +766,6 @@ medit_app_main (int argc, char *argv[])
 
   moo_open_info_array_free (files);
   g_option_context_free (ctx);
-
-  if (medit_opts.run_script)
-    g_signal_connect (app, "started", G_CALLBACK (run_script_func), NULL);
 
   retval = moo_app_run (app);
 

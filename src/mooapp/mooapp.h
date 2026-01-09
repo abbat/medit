@@ -119,15 +119,6 @@ void moo_app_load_session (MooApp *app);
 MooEditor *moo_app_get_editor (MooApp *app);
 
 /*!
- * \brief Sends a message to another process
- * \param pid the process ID to send the message to
- * \param data the message data
- * \param len the length of the message data
- * \return TRUE on success, FALSE on failure
- */
-gboolean moo_app_send_msg (const char *pid, const char *data, gssize len);
-
-/*!
  * \brief Sends files to another process
  * \param files an array of files to send
  * \param stamp a timestamp

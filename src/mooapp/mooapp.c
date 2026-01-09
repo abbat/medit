@@ -791,6 +791,7 @@ moo_app_init_ui (MooApp *app)
   MooUiXml *xml = NULL;
   char **files, **p;
 
+  // FIXME: file ui.xml not exists, seems useless code
   files = moo_get_data_files (MOO_UI_XML_FILE);
 
   for (p = files; p && *p; ++p)
@@ -1423,7 +1424,7 @@ moo_app_get_editor (MooApp *app)
  * \param len the length of the data
  * \return TRUE on success, FALSE on failure
  */
-gboolean
+static gboolean
 moo_app_send_msg (const char *pid, const char *data, gssize len)
 {
   g_return_val_if_fail (data != NULL, FALSE);

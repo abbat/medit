@@ -42,3 +42,4 @@ I'm not sure we need it:
 
 * keep compatibility with windows / darwin - I can not test & support it
 * python bindings - EOL & removed with python2
+* lua bindings - seems useless
