@@ -10,8 +10,6 @@ source_files = \
     ../src/mooapp/mooapp.h\
     ../src/mooapp/mooapp-info.h\
     ../src/mooapp/mooapp-private.h\
-    ../src/mooapp/moohtml.cpp\
-    ../src/mooapp/moohtml.h\
     ../src/mooedit/mooedit-accels.h\
     ../src/mooedit/mooeditaction.cpp\
     ../src/mooedit/mooeditaction-factory.cpp\

@@ -16,7 +16,6 @@
 #include "credits.h"
 
 #include "mooapp-credits.h"
-#include "moohtml.h"
 #include "mooutils/mooi18n.h"
 
 /*!
@@ -98,13 +97,8 @@ set_thanks_content (GtkTextView *view)
 static void
 set_written_by_content (GtkTextView *view)
 {
-// FIXME: remove or rewrite MOO_HTML
-#ifdef MOO_USE_HTML
-  _moo_html_load_memory (view, "Yevgen Muntyan <a href=\"mailto://" MOO_EMAIL "\">&lt;" MOO_EMAIL "&gt;</a>", -1, NULL, NULL);
-#else
   GtkTextBuffer *buffer = gtk_text_view_get_buffer (view);
   gtk_text_buffer_set_text (buffer, "Yevgen Muntyan <" MOO_EMAIL ">", -1);
-#endif
 }
 
 /*!
@@ -114,17 +108,9 @@ set_written_by_content (GtkTextView *view)
 static void
 set_translated_by_content (GtkTextView *view)
 {
-  const char *credits = _ ("translator-credits");
-
-// FIXME: remove or rewrite MOO_HTML
-#ifdef MOO_USE_HTML
-  const char *credits_markup = _ ("translator-credits-markup");
-
-  if (strcmp (credits_markup, "translator-credits-markup") != 0)
-    _moo_html_load_memory (view, credits_markup, -1, NULL, NULL);
-  else
-#endif
-      if (strcmp (credits, "translator-credits") != 0)
+  const char *msgid = "translator-credits";
+  const char *credits = _ (msgid);
+  if (strcmp (credits, msgid) != 0)
     {
       GtkTextBuffer *buffer = gtk_text_view_get_buffer (view);
       gtk_text_buffer_set_text (buffer, credits, -1);

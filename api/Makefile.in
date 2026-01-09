@@ -376,8 +376,6 @@ BUILT_SOURCES = $(am__append_1)
 @MOO_DEV_MODE_TRUE@    ../src/mooapp/mooapp.h\
 @MOO_DEV_MODE_TRUE@    ../src/mooapp/mooapp-info.h\
 @MOO_DEV_MODE_TRUE@    ../src/mooapp/mooapp-private.h\
-@MOO_DEV_MODE_TRUE@    ../src/mooapp/moohtml.cpp\
-@MOO_DEV_MODE_TRUE@    ../src/mooapp/moohtml.h\
 @MOO_DEV_MODE_TRUE@    ../src/mooedit/mooedit-accels.h\
 @MOO_DEV_MODE_TRUE@    ../src/mooedit/mooeditaction.cpp\
 @MOO_DEV_MODE_TRUE@    ../src/mooedit/mooeditaction-factory.cpp\

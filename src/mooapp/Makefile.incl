@@ -4,8 +4,6 @@ moo_sources +=			\
 	mooapp/mooapp-accels.h	\
 	mooapp/mooapp-info.h	\
 	mooapp/mooapp-private.h	\
-	mooapp/moohtml.h	\
-	mooapp/moohtml.cpp	\
 	mooapp/credits.h	\
 	mooapp/credits.c	\
 	mooapp/about.h		\
