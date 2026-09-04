@@ -24,7 +24,8 @@ the GTK+3 way to achieve the same. Do not invent new behaviour.
 The tree is configured **in-tree for GTK+3** (`./configure GTK_VERSION=3`). Just:
 
 ```bash
-cd /home/abbat/my/medit && make -C src        # ~10s for one .o + link
+SRC=$(git rev-parse --show-toplevel)   # repository root; every path below is relative to it
+cd "$SRC" && make -C src               # ~10s for one .o + link
 ```
 
 Do **not** run `configure` here for GTK+2 — it aborts with "source directory already
@@ -37,7 +38,7 @@ configured" and fixing that would need `make distclean`, destroying the working 
 ```bash
 M=<scratch>/m2
 rsync -a --exclude='.git' --exclude='*.o' --exclude='locale/' --exclude='src/medit' \
-      /home/abbat/my/medit/ $M/
+      "$SRC"/ $M/
 (cd $M && make distclean >/dev/null 2>&1; ./configure GTK_VERSION=2 && make -C src)
 ```
 
@@ -70,6 +71,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -qq && apt-get install -y -qq build-essential debhelper pkg-config \
     intltool python-is-python3 libgtk2.0-dev libxml2-dev libjpeg-dev
 EOF
+S=<scratch>                                                  # session scratch dir
 git ls-files -z | tar --null -T - -czf $S/medit-src.tar.gz   # tracked files + local edits
 docker run --rm -v $S:/w medit-u2004 bash -c 'set -o pipefail
   mkdir /build && cd /build && tar xzf /w/medit-src.tar.gz
