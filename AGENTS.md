@@ -214,6 +214,9 @@ Known and deliberately left alone: `draw_entry()` in `mooiconview.c` still uses
 - One logical fix per commit. Commit message: what the GTK+2 code did, why the GTK+3
   port broke it, the evidence (verbatim critical text / gdb output), and the fix.
 - Commit only source files — the tree is full of untracked build artifacts.
+- **Language:** the user is addressed in Russian, but everything committed to the
+  repository — source code, code comments, commit messages, this file — stays in
+  English.
 - Trailer:
   ```
   Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
