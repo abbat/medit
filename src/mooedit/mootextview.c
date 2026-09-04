@@ -2490,15 +2490,9 @@ moo_text_view_expose (GtkWidget      *widget,
     if (view->priv->update_n_lines_idle)
         update_n_lines_idle (view);
 
+#if !GTK_CHECK_VERSION(3,0,0)
     if (draw_text_window)
     {
-#if GTK_CHECK_VERSION(3,0,0)
-        /* one context for the whole widget: move it onto the window we paint */
-        cairo_save (cr);
-        gtk_cairo_transform_to_window (cr, widget, text_window);
-        text_cr = cr;
-#endif
-
         if (gtk_widget_get_sensitive (GTK_WIDGET(view)))
         {
             if ((gtk_widget_has_focus (GTK_WIDGET (view)) ||
@@ -2521,12 +2515,8 @@ moo_text_view_expose (GtkWidget      *widget,
 
         text_cr = moo_cairo_create (text_cr, text_window);
         draw_marks_background (view, text_window, &text_area, text_cr);
-
-#if GTK_CHECK_VERSION(3,0,0)
-        cairo_restore (cr);
-        text_cr = NULL;
-#endif
     }
+#endif
 
 #if !GTK_CHECK_VERSION(3,0,0)
     if (draw_left_window)
@@ -2552,8 +2542,35 @@ moo_text_view_expose (GtkWidget      *widget,
 #if GTK_CHECK_VERSION(3,0,0)
     handled = GTK_WIDGET_CLASS(moo_text_view_parent_class)->draw (widget, cr);
 
-    /* after chaining up: GtkTextView paints the border windows' background in
-       its own ::draw, which would wipe out anything we put there first */
+    /* Everything below has to come after chaining up: GtkTextView fills the
+       backgrounds of its windows in its own ::draw and would wipe out anything
+       painted before it. The line backgrounds are meant to sit *under* the
+       text, so they are composited with MULTIPLY, which tints the background
+       the text has already been drawn on instead of covering it. */
+    if (draw_text_window)
+    {
+        cairo_save (cr);
+        gtk_cairo_transform_to_window (cr, widget, text_window);
+        cairo_set_operator (cr, CAIRO_OPERATOR_MULTIPLY);
+
+        if (gtk_widget_get_sensitive (GTK_WIDGET (view)))
+        {
+            if ((gtk_widget_has_focus (GTK_WIDGET (view)) ||
+                 view->priv->highlight_current_line_unfocused)
+                && view->priv->color_settings[MOO_TEXT_VIEW_COLOR_CURRENT_LINE]
+                && view->priv->gcs[MOO_TEXT_VIEW_COLOR_CURRENT_LINE])
+                    moo_text_view_draw_current_line (text_view, cr);
+
+            if (gtk_widget_has_focus (GTK_WIDGET (view)) &&
+                view->priv->color_settings[MOO_TEXT_VIEW_COLOR_RIGHT_MARGIN] &&
+                view->priv->gcs[MOO_TEXT_VIEW_COLOR_RIGHT_MARGIN])
+                    moo_text_view_draw_right_margin (text_view, text_window, cr);
+        }
+
+        draw_marks_background (view, text_window, &text_area, cr);
+        cairo_restore (cr);
+    }
+
     if (draw_left_window)
     {
         cairo_save (cr);
