@@ -21,55 +21,64 @@ the GTK+3 way to achieve the same. Do not invent new behaviour.
 
 ## 1. Build
 
-The tree is configured **in-tree for GTK+3** (`./configure GTK_VERSION=3`). Just:
+CMake, out of source. Two build directories keep both GTK versions alive at the same
+time — no copying of the tree, no `distclean`:
 
 ```bash
-SRC=$(git rev-parse --show-toplevel)   # repository root; every path below is relative to it
-cd "$SRC" && make -C src               # ~10s for one .o + link
+SRC=$(git rev-parse --show-toplevel)              # repository root; every path below is relative to it
+cmake -S "$SRC" -B "$SRC/build3" -DGTK_VERSION=3  # once
+cmake --build "$SRC/build3" -j8                   # ~10s for one .o + link
 ```
 
-Do **not** run `configure` here for GTK+2 — it aborts with "source directory already
-configured" and fixing that would need `make distclean`, destroying the working build.
-
-### GTK+2 reference build (for A/B comparison)
-
-`configure` defaults to `GTK_VERSION=2`. Build a throwaway copy:
+`GTK_VERSION` defaults to 2, so the reference build is just another directory:
 
 ```bash
-M=<scratch>/m2
-rsync -a --exclude='.git' --exclude='*.o' --exclude='locale/' --exclude='src/medit' \
-      "$SRC"/ $M/
-(cd $M && make distclean >/dev/null 2>&1; ./configure GTK_VERSION=2 && make -C src)
+cmake -S "$SRC" -B "$SRC/build2" -DGTK_VERSION=2
+cmake --build "$SRC/build2" -j8
 ```
 
-rsync of the working tree beats `git archive` plus hand-copied files: it picks up
-uncommitted work and file deletions for free, and one stale copy is enough to make an
-A/B comparison lie. Full build ≈ 3 min; incremental ≈ 10s. Both GTK+2 2.24.33 and
+The binary lands in `<build dir>/src/medit`, the compiled catalogs in
+`<build dir>/locale/`. Full build ≈ 3 min, incremental ≈ 10s. Both GTK+2 2.24.33 and
 GTK+3 3.24.38 dev packages are installed. **Every fix must build clean and behave
 correctly on both.**
 
-**Do not use a pre-session build as the "GTK+2 reference".** Since the translations
-fix the UI language differs, so pixel comparisons against an old build are noise. To
-check a change for regressions, A/B *the same tree* with and without that one change:
+Other options: `-DENABLE_NLS=OFF`, `-DENABLE_STRICT=ON` (all warnings and `-Werror`),
+`-DCMAKE_BUILD_TYPE=Debug` (the default is RelWithDebInfo, i.e. `-g -O2`).
+
+### A/B comparison of one change
+
+**Do not use a pre-session build as the "GTK+2 reference".** Since the translations fix
+the UI language differs, so pixel comparisons against an old build are noise. Compare
+*the same tree* with and without the one change, rebuilding in place:
 
 ```bash
-git show HEAD:path/to/file > $M/path/to/file   # without
-(cd $M && make -C src) && <screenshot>          # ...
-cp path/to/file $M/path/to/file                 # with
+cmake --build "$SRC/build3" -j8 && <screenshot>   # with
+git stash push path/to/file
+cmake --build "$SRC/build3" -j8 && <screenshot>   # without
+git stash pop
 ```
+
+### Code generation
+
+`marshals.[ch]` (glib-genmarshal), `moo-pixbufs.h` (gdk-pixbuf-csource), `resources.c`
+(glib-compile-resources), `*-gxml.h` (tools/glade2c.py), `*-ui.h` and
+`mooapp-credits.h` (tools/xml2h.py), and `plugins/usertools/{menu,context}.xml`
+(genplatxml.py) are all built into the build directory. Adding a glade or ui file means
+adding it to the list in `src/CMakeLists.txt`; adding a source file means adding it to
+the `target_sources()` list in that directory's `CMakeLists.txt`.
 
 ### Debian package build (old distros)
 
 The package targets **Debian 11, Ubuntu 20.04 and 22.04** — much older toolchains than
-this machine (gcc 12, autoconf 2.71, glib 2.74+). The local build proves nothing about
+this machine (gcc 12, cmake 3.25, glib 2.74+). The local build proves nothing about
 them, so check anything that touches build files or headers in containers:
 
 ```bash
 docker build -t medit-u2004 - <<'EOF'
 FROM ubuntu:20.04
 ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update -qq && apt-get install -y -qq build-essential debhelper pkg-config \
-    intltool python-is-python3 libgtk2.0-dev libxml2-dev libjpeg-dev
+RUN apt-get update -qq && apt-get install -y -qq build-essential debhelper cmake \
+    pkg-config intltool python3 libgtk2.0-dev libxml2-dev libjpeg-dev
 EOF
 S=<scratch>                                                  # session scratch dir
 git ls-files -z | tar --null -T - -czf $S/medit-src.tar.gz   # tracked files + local edits
@@ -80,11 +89,12 @@ docker run --rm -v $S:/w medit-u2004 bash -c 'set -o pipefail
 
 Cache the image once (`docker build -t medit-u2004`); each fresh `apt-get install` costs
 a few minutes. To collect **every** error in one pass instead of one per run, replace
-`dpkg-buildpackage` with `autoreconf -f -i && ./configure && make -k -C src -j8 2>&1 |
-grep error: | sort -u` — `-k` keeps going after the first failing file.
+`dpkg-buildpackage` with `cmake -S . -B b && cmake --build b -j8 -- -k 2>&1 | grep
+error: | sort -u` — `-k` keeps make going after the first failing file.
 
-Ubuntu 20.04 (gcc 9, glib 2.64) is the strictest of the three; Debian 11 differs only in
-carrying autoconf 2.69. Ubuntu images pull normally; **Debian 11 does not** — bullseye is
+The oldest cmake among the three is 3.16 (Ubuntu 20.04), which is what
+`cmake_minimum_required` targets. Ubuntu 20.04 (gcc 9, glib 2.64) is the strictest
+compiler of the three. Ubuntu images pull normally; **Debian 11 does not** — bullseye is
 past EOL, its `main` moved to archive.debian.org while `bullseye-security` is gone from
 deb.debian.org and not yet archived, so `apt-get install` dies with 404s. Use
 snapshot.debian.org on the `debian/eol:bullseye` image:
@@ -97,11 +107,6 @@ plus `Acquire::Check-Valid-Until "false";`.
 
 What actually broke there — none of it visible in a local build:
 
-* **`AC_PREREQ`** — `autoupdate` rewrites it to the version of the autoconf that ran, so a
-  local `autoreconf` silently raises the floor and every older builder fails in `aclocal`
-  with exit 63. Keep it at the oldest version the target distros ship (2.69).
-* **`ACLOCAL_AMFLAGS = -I m4 $(ACLOCAL_FLAGS)`** — `autoreconf` feeds this line to `sh`,
-  where `$(...)` is command substitution: `sh: 1: ACLOCAL_FLAGS: not found`.
 * **Unnamed parameters** in C function definitions (`static void f (Foo *x, gpointer)`) —
   legal in C++ and C23 only. gcc 12 accepts them *silently* even at `-std=gnu17`; gcc 9
   errors with "parameter name omitted". Write `G_GNUC_UNUSED gpointer data`.

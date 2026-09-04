@@ -5,20 +5,17 @@ export DH_OPTIONS=-v
 
 export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 
-DEB_HOST_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
-DEB_BUILD_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
-
 %:
-	dh $@
+	dh $@ --buildsystem=cmake
 
 override_dh_auto_configure:
-	dh_auto_configure -- --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) --prefix=/usr
+	dh_auto_configure -- -DGTK_VERSION=2
 
 override_dh_auto_install:
 	dh_auto_install
 	find $(CURDIR)/debian/medit/ -type d -empty -delete
 
 override_dh_clean:
-	dh $@
+	dh $@ --buildsystem=cmake
 
 override_dh_auto_test:

@@ -1,28 +1,29 @@
-medit uses autotools for the build. Quick build with default options:
+medit uses CMake for the build. Quick build with default options:
 
-tar xjf medit-x.x.x.tar.bz2
-cd medit-x.x.x
-./configure
-make
-make install
+cmake -S . -B build
+cmake --build build -j$(nproc)
+cmake --install build
 
-This will configure, build, and install medit to /usr/local.
+This will configure, build, and install medit to /usr/local. Pass
+-DCMAKE_INSTALL_PREFIX=/usr to install into /usr instead.
 
-medit requires development packages of the following: gtk2, libxml2, python2, pygtk2.
-For example, on Debian you may need to install libgtk2.0-dev, libxml2-dev, python2.7-dev, python-gtk2-dev.
+medit requires development packages of the following: gtk2 (or gtk3), glib2, libxml2.
+For example, on Debian you may need to install libgtk2.0-dev, libxml2-dev, and to build
+the sources also cmake, pkg-config, intltool, gettext and python3.
 
-If you checked out a copy of mercurial repository, then do the following to build:
+Build options:
 
-./autogen.sh
-./configure --enable-dev-mode
-make
-make install
+  -DGTK_VERSION=2|3|4    GTK version to build against (default: 2)
+  -DENABLE_NLS=ON|OFF    Native Language Support (default: ON)
+  -DENABLE_STRICT=ON|OFF all warnings and -Werror (default: OFF)
+  -DENABLE_INSTALL_HOOKS=ON|OFF
+                         run gtk-update-icon-cache on install (default: ON)
+  -DCMAKE_BUILD_TYPE=... Debug, Release, RelWithDebInfo (default: RelWithDebInfo)
 
-Building medit from Mercurial requires the following, in addition to the dependencies
-listed above: automake, autoconf, libtool, intltool, docbook, xsltproc, txt2tags.
-Other tools may be required and configure may not check for them, please report those
-to the author.
+The build is out of source, so several configurations can live side by side:
 
-To build a python module which could be used in other programs, use
---enable-moo-module --enable-shared --disable-static configure flags in addition
-to above.
+cmake -S . -B build2 -DGTK_VERSION=2 && cmake --build build2 -j$(nproc)
+cmake -S . -B build3 -DGTK_VERSION=3 && cmake --build build3 -j$(nproc)
+
+The binary is built as <build dir>/src/medit and can be run straight from there: it
+finds its translations in <build dir>/locale without an install.
