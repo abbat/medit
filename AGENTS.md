@@ -6,12 +6,12 @@ The port was largely done by an AI and is buggy. Most defects found so far sit i
 blocks marked `/* FIXME: This code was written by AI and requires review */`.
 Run `grep -rc "written by AI" src` for the current count; they are concentrated in:
 
-| file | markers |
-|---|---|
-| `src/mooutils/moopaned.c` | 23 |
-| `src/mooutils/moonotebook.c` | 14 |
-| `src/moofileview/mooiconview.c` | 10 |
-| `src/mooutils/moopane.c` | 3 |
+`moopaned.c`, `moonotebook.c` and `mooiconview.c` between them hold most of them.
+
+The `_DEAD_CODE_*.md` files in the root, if they are still there, are **not reliable**:
+their line numbers roughly hold but the descriptions are invented (they call a complete
+function an "incomplete stub", name a macro that does not exist, and claim working file
+copying is disabled). Re-read the code before acting on them.
 
 **The GTK+2 branch of every `#if GTK_CHECK_VERSION(3,0,0)` is the specification.**
 When GTK+3 misbehaves, read the `#else` branch first and ask what it achieved, then find
@@ -36,13 +36,26 @@ configured" and fixing that would need `make distclean`, destroying the working 
 
 ```bash
 M=<scratch>/m2
-mkdir -p $M && (cd /home/abbat/my/medit && git archive HEAD | tar -x -C $M)
-cp <your modified files> $M/<same paths>          # keep in sync by hand
-(cd $M && ./configure GTK_VERSION=2 && make -C src)
+rsync -a --exclude='.git' --exclude='*.o' --exclude='locale/' --exclude='src/medit' \
+      /home/abbat/my/medit/ $M/
+(cd $M && make distclean >/dev/null 2>&1; ./configure GTK_VERSION=2 && make -C src)
 ```
 
-Full build ≈ 3 min; incremental ≈ 10s. Both GTK+2 2.24.33 and GTK+3 3.24.38 dev
-packages are installed. **Every fix must build clean and behave correctly on both.**
+rsync of the working tree beats `git archive` plus hand-copied files: it picks up
+uncommitted work and file deletions for free, and one stale copy is enough to make an
+A/B comparison lie. Full build ≈ 3 min; incremental ≈ 10s. Both GTK+2 2.24.33 and
+GTK+3 3.24.38 dev packages are installed. **Every fix must build clean and behave
+correctly on both.**
+
+**Do not use a pre-session build as the "GTK+2 reference".** Since the translations
+fix the UI language differs, so pixel comparisons against an old build are noise. To
+check a change for regressions, A/B *the same tree* with and without that one change:
+
+```bash
+git show HEAD:path/to/file > $M/path/to/file   # without
+(cd $M && make -C src) && <screenshot>          # ...
+cp path/to/file $M/path/to/file                 # with
+```
 
 ---
 
@@ -161,6 +174,12 @@ compare -metric AE before.png after.png null:                      # 0 = identic
 A/B against the GTK+2 build is the fastest way to identify a UI regression — it turns
 "looks wrong" into "GTK+2 draws X here, GTK+3 does not".
 
+Crop carefully before concluding anything: a wrong offset once made a fix look like it
+had broken the tab labels, and it had done the opposite. `import -window $WID` gives
+window coordinates, `import -window root` gives screen coordinates — clicks with
+`xdotool` always take the latter. Mixing them up types into the editor instead of the
+widget you meant.
+
 ### Teardown
 
 **Kill by PID from `$S/pids`, never by name.** `pkill -x xfwm4` once killed the user's
@@ -181,6 +200,28 @@ command line and kills the shell (exit 144). `pkill -x medit` is safe.
 | `Xvfb`/`import` need `DISPLAY=:99` on **every** invocation | it is not exported between Bash tool calls |
 | Writing a marker into the log the app is writing to (`echo MARK >> log`) — the app's own fd has its own offset and **overwrites the marker**, so `sed -n '/MARK/,$p'` silently yields nothing and looks like "the code never ran" | record `N=$(wc -l < log)` before the action and read `tail -n +$((N+1)) log` after |
 | `g_print` to a redirected file is block-buffered, so a tail of the log lags reality | use `g_printerr`, or run under `stdbuf -o0` |
+| `git add -A` sweeps in hundreds of build artifacts — the tree is full of `.o`, `.deps/`, generated `*-gxml.h`, `src/medit`, and `.gitignore` does not cover them | `git add -u` (tracked files only), or name paths explicitly; check `git status --short \| grep -v '^??'` before committing |
+| The pane buttons are not always on the right — their side is remembered in the sandbox `state.xml`, so a coordinate that worked last run can miss entirely | screenshot first and locate the button; never reuse coordinates across sessions |
+| A build-tree run also reads data from an **installed** medit package (`/usr/share/medit/`), so its stale `menu.xml` produces warnings about our tree | reproduce with `MOO_DATA_DIRS=<dir>` holding the tree's own xml — but note it *replaces* the whole search list, so style schemes and the file-selector plugin stop loading; use it to attribute a warning, not to test the UI |
+
+### Getting a backtrace for a warning or critical
+
+`G_DEBUG=fatal-warnings` under gdb is the quick route, but medit prints an unrelated
+critical at startup, so `fatal-criticals` kills it before you reach anything. The
+general recipe, which survives that:
+
+```gdb
+break g_logv          # every g_warning/g_critical passes through here
+commands
+silent
+printf "=== LOG\n"
+bt 12
+continue
+end
+run
+```
+
+Then locate the message text in the log and take the block printed just above it.
 
 ---
 
@@ -224,8 +265,39 @@ Reading these first will usually identify the next one:
   `gtk_menu_reposition()` on the already-placed menu does **not** rescue it, and
   the submenu's `::show` is never emitted at all — both were tried.
 
+- **`5dd83ef` + `166576e`** `MooEditWindow` cached the active tab in a plain
+  `priv->active_tab` pointer that nothing owned. It was cleared when a tab moved
+  between notebooks but not when one was destroyed, so closing the last document left
+  it dangling and every later lookup ran on freed memory. Fixed by holding it with
+  `g_object_add_weak_pointer()`.
+  → *Two lessons. Any cached widget pointer with no reference wants a weak pointer.
+  And when you introduce a setter, grep for **every** direct assignment to the field:
+  two were missed here, which desynchronised add/remove and produced
+  `g_object_weak_unref: couldn't find weak ref`.*
+  → *The build defines `-DG_DISABLE_CAST_CHECKS`, so `MOO_EDIT_TAB (x)` is a plain
+  cast that validates nothing. Where a pointer comes from outside, check it with
+  `MOO_IS_…` explicitly.*
+- **`4c98d11`** `moo_notebook_size_allocate()` allocated only the current page. The
+  others stay visible widgets and `forall()` hands them all to GTK, so a page that was
+  never allocated sits at GTK's default 1x1 — smaller than the borders of the scrolled
+  window inside it, giving `Negative content width -1`.
+  → *If GTK complains about a nonsensical allocation, look for a container that
+  allocates some of its children and not others.*
+- **`0b21a59`** GTK+2's `gtk_combo_box_entry_new()` is a combo **with an entry** and a
+  model of your choosing. Its GTK+3 spelling is `gtk_combo_box_new_with_entry()`, not
+  `gtk_combo_box_text_new()` — the latter has no entry (`gtk_bin_get_child()` returns a
+  `GtkCellView`, which has no `::activate` and is not a `GtkEntry`) and owns its own
+  model. Symptom: the filter field in the file dialog stayed empty.
+
 Known and deliberately left alone: `draw_entry()` in `mooiconview.c` still uses
 `gdk_cairo_create()` per row (deprecated since 3.22, bypasses the clip, works).
+
+Four `#if 0` blocks survive the dead-code cleanup on purpose, because each documents a
+feature that is disabled rather than abandoned: the tree view's drag source in
+`moofileview.c` (drag and drop works in icon view only), `_moo_edit_print_options_dialog()`
+in `mootextprint.c` (`medit.xml` still lists a `PrintOptions` item with no action behind
+it), and the overwrite-prompt code in `moofileview.c` (`copy_files()` runs `cp -R` with
+no prompt at all). Leave them until the features are decided.
 
 ---
 
