@@ -15,15 +15,15 @@ Second life for `medit` (also known as `mooedit`) text editor in modern linux di
 * also we can drop compatibility layer to older gtk2 and glib.
 * current glib / gtk version matrix in modern linux distros for reference:
 
-| distro       | glib            | gtk-2   | gtk-3             | gtk-4  |
-|--------------|-----------------|---------|-------------------|--------|
-| debian 11    | 2.66.8          | 2.24.33 | 3.24.24           | -      |
-| debian 12    | 2.74.6          | 2.24.33 | 3.24.37           | 4.8.3  |
-| ubuntu 20.04 | 2.64.2 (2.64.6) | 2.24.32 | 3.24.18 (3.24.20) | -      |
-| ubuntu 22.04 | 2.72.1 (2.72.4) | 2.24.33 | 3.24.33           | 4.6.2  |
-| fedora 37    | 2.74.7          | 2.24.33 | 3.24.38           | 4.8.3  |
-| fedora 38    | 2.76.4          | 2.24.33 | 3.24.38           | 4.10.5 |
-| minimum      | 2.64.2 (2.64.6) | 2.24.32 | 3.24.18 (3.24.20) | 4.6.2  |
+| distro       | glib            | gtk-2   | gtk-3             | gtk-4           |
+|--------------|-----------------|---------|-------------------|-----------------|
+| debian 12    | 2.74.6          | 2.24.33 | 3.24.37           | 4.8.3           |
+| debian 13    | 2.84.4          | 2.24.33 | 3.24.49           | 4.18.6          |
+| ubuntu 24.04 | 2.80.x          | 2.24.33 | 3.24.41           | 4.14.5          |
+| ubuntu 26.04 | 2.86.x (2.88.x) | 2.24.33 | 3.24.50           | 4.22.4          |
+| fedora 43    | 2.86.0 (2.86.5) | 2.24.33 | 3.24.51 (3.24.52) | 4.20.2 (4.20.4) |
+| fedora 44    | 2.88.0 (2.88.3) | 2.24.33 | 3.24.52           | 4.22.1 (4.22.4) |
+| minimum      | 2.64.2 (2.64.6) | 2.24.32 | 3.24.18 (3.24.20) | 4.6.2           |
 
 * [glib changelog](https://gitlab.gnome.org/GNOME/glib/-/blob/main/NEWS)
 * [gtk-2.24 changelog](https://gitlab.gnome.org/GNOME/gtk/-/blob/gtk-2-24/NEWS)
@@ -37,9 +37,3 @@ I'm not sure we need it:
 * keep compatibility with gtk-2
 * migrate to mordern build system instead autotools (CMake?)
 * migrate from glade to native code (remove python preprocessor from xml to c)
-
-### remove
-
-* keep compatibility with windows / darwin - I can not test & support it
-* python bindings - EOL & removed with python2
-* lua bindings - seems useless
