@@ -532,7 +532,9 @@ parse_shadow_style (void)
 static void
 moo_window_init (MooWindow *window)
 {
+#if !GTK_CHECK_VERSION(3, 0, 0)
     GtkWidget *rg;
+#endif
 
     window->priv = g_new0 (MooWindowPrivate, 1);
 
@@ -543,12 +545,21 @@ moo_window_init (MooWindow *window)
 
     window->status_area = gtk_hbox_new (FALSE, 0);
     window->statusbar = g_object_new (GTK_TYPE_STATUSBAR,
+#if !GTK_CHECK_VERSION(3, 0, 0)
                                       "has-resize-grip", FALSE,
+#endif
                                       (const char*) NULL);
     gtk_widget_set_name (GTK_WIDGET (window->statusbar), "no-shadow");
     gtk_box_pack_start (GTK_BOX (window->status_area),
                         GTK_WIDGET (window->statusbar),
                         TRUE, TRUE, 0);
+
+#if !GTK_CHECK_VERSION(3, 0, 0)
+    /* A second, empty statusbar packed at the end exists only to draw the
+       window resize grip. GTK+3 has no such thing: the property moved from
+       GtkStatusbar to GtkWindow in 3.0 and was dropped altogether in 3.14,
+       resizing being the window manager's job now. So there is neither a
+       property to set nor any grip to reserve room for. */
     rg = g_object_new (GTK_TYPE_STATUSBAR,
                        "has-resize-grip", TRUE,
                        (const char*) NULL);
@@ -556,6 +567,8 @@ moo_window_init (MooWindow *window)
     gtk_box_pack_end (GTK_BOX (window->status_area),
                       rg, FALSE, FALSE, 0);
     gtk_widget_set_size_request (rg, 24, -1);
+#endif
+
     gtk_widget_show_all (window->status_area);
 
     window->priv->toolbar_visible = TRUE;
