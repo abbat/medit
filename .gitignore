@@ -1,7 +1,3 @@
 doxygen
-configure~
-autom4te.cache
 .vscode
-src/resources.c
-/locale/
 /build*/
