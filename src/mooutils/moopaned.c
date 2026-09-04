@@ -1660,9 +1660,30 @@ moo_paned_expose (GtkWidget      *widget,
 
     if (paned->priv->pane_widget_visible)
 #if GTK_CHECK_VERSION(3,0,0)
+    {
+        /* GTK+2 gave the pane window an opaque background with
+           gtk_style_set_background(). GTK+3 has no equivalent -- windows are
+           not painted by GDK any more -- so fill it here, otherwise the pane's
+           frame is a bare container and whatever is underneath shows through. */
+        if (paned->priv->pane_window)
+        {
+            GtkStyleContext *ctx = gtk_widget_get_style_context (widget);
+
+            cairo_save (cr);
+            gtk_cairo_transform_to_window (cr, widget, paned->priv->pane_window);
+            gtk_style_context_save (ctx);
+            gtk_style_context_add_class (ctx, GTK_STYLE_CLASS_BACKGROUND);
+            gtk_render_background (ctx, cr, 0, 0,
+                                   gdk_window_get_width (paned->priv->pane_window),
+                                   gdk_window_get_height (paned->priv->pane_window));
+            gtk_style_context_restore (ctx);
+            cairo_restore (cr);
+        }
+
         gtk_container_propagate_draw (GTK_CONTAINER (paned),
                                       _moo_pane_get_frame (paned->priv->current_pane),
                                       cr);
+    }
 #else
         gtk_container_propagate_expose (GTK_CONTAINER (paned),
                                         _moo_pane_get_frame (paned->priv->current_pane),
