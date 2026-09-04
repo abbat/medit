@@ -3,11 +3,28 @@
 Second life for `medit` (also known as `mooedit`) text editor in modern linux distros.
 
 * original website: https://mooedit.sourceforge.net
-* last known release: 1.2.92 (2017-11-12)
+* last upstream release: 1.2.92 (2017-11-12)
+* current release of this fork: 1.3.0
 
 ## download / install
 
 * [DEB](http://software.opensuse.org/download.html?project=home:antonbatenev:medit&package=medit)
+
+## sources
+
+This fork lives at <https://github.com/abbat/medit>:
+
+```bash
+git clone https://github.com/abbat/medit.git
+cd medit
+```
+
+`main` carries the current state, and every release is tagged (`v1.3.0`,
+`v1.2.92`, ...); `git checkout v1.3.0` gets the sources of a given release.
+See [INSTALL](INSTALL) for how to build them.
+
+The original sources up to 1.2.92, which this fork started from, are at
+<https://sourceforge.net/projects/mooedit/files/medit/>.
 
 ## goals
 

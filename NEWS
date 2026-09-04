@@ -1,3 +1,18 @@
+2026-09-05  Anton Batenev  <antonbatenev@yandex.ru>
+
+    * === Released 1.3.0 ===
+
+    First release of the fork, picking up where 1.2.92-devel left off in 2017.
+
+    Ported to GTK+3: medit builds and runs against gtk-3.24 while still building
+    against gtk-2.24, GTK_VERSION selects which one.
+    Dropped the platform code that is no longer supported: windows, macos and
+    darwin, along with the python and lua bindings, the html widget and the tests.
+    The about, credits and license dialogs are plain C now instead of glade.
+    Moved the sources under src/, switched to -std=gnu17 and removed ~2000 lines
+    of dead code.
+    Replaced autotools with CMake.
+
 2017-11-12  Yevgen Muntyan  <emuntyan@users.sourceforge.net>
 
     * === Released 1.2.92-devel ===
