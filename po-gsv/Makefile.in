@@ -539,9 +539,26 @@ SUFFIXES: .po .gmo .mo
 	  && rm -f $$file && $(GMSGFMT) -o $$file $<
 
 all: all-catalogs-$(ENABLE_NLS)
-all-catalogs-yes: $(CATALOGS)
+all-catalogs-yes: $(CATALOGS) locale-tree
 all-catalogs-no:
 $(CATALOGS): $(srcdir)/Makefile.am
+
+# Lay the catalogs out the way gettext expects to find them, in a locale tree
+# in the build directory, so that a binary run straight from the build tree
+# finds its translations without make install. moo_get_locale_dir() falls back
+# to this when the configured locale directory has no catalog.
+locale-tree: $(CATALOGS)
+	@linguas="$(LINGUAS)"; \
+	for lang in $$linguas; do \
+	  dir=$(top_builddir)/locale/$$lang/LC_MESSAGES; \
+	  gmo=$$lang.gmo; \
+	  test -r $$gmo || gmo=$(srcdir)/$$lang.gmo; \
+	  if test -r $$gmo; then \
+	    $(mkdir_p) $$dir && cp -f $$gmo $$dir/$(GETTEXT_PACKAGE_GSV).mo; \
+	  fi; \
+	done
+
+.PHONY: locale-tree
 
 install-data-local: install-catalogs
 install-catalogs: install-catalogs-$(ENABLE_NLS)

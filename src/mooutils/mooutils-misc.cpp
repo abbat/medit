@@ -1228,11 +1228,100 @@ moo_get_lib_dirs (void)
 }
 
 
+static gboolean
+locale_dir_has_catalog (const char *dir)
+{
+    const char * const *langs = g_get_language_names ();
+    guint i;
+
+    for (i = 0; langs != NULL && langs[i] != NULL; ++i)
+    {
+        char *path;
+        gboolean found;
+
+        path = g_build_filename (dir, langs[i], "LC_MESSAGES",
+                                 GETTEXT_PACKAGE ".mo", (const char*) NULL);
+        found = g_file_test (path, G_FILE_TEST_IS_REGULAR);
+        g_free (path);
+
+        if (found)
+            return TRUE;
+    }
+
+    return FALSE;
+}
+
+/* When medit is run straight from a build tree its catalogs have not been
+   installed, so the configured locale directory holds nothing. The build puts
+   a locale tree next to the binary's directory (see po/Makefile.am), so look
+   for one there before giving up. */
+static char *
+find_locale_dir_near_binary (void)
+{
+    char *exe;
+    char *dir;
+    int i;
+
+    exe = g_file_read_link ("/proc/self/exe", NULL);
+
+    if (exe == NULL)
+        return NULL;
+
+    dir = g_path_get_dirname (exe);
+    g_free (exe);
+
+    for (i = 0; i < 3 && dir != NULL; ++i)
+    {
+        char *candidate;
+        char *parent;
+
+        candidate = g_build_filename (dir, "locale", (const char*) NULL);
+
+        if (locale_dir_has_catalog (candidate))
+        {
+            g_free (dir);
+            return candidate;
+        }
+
+        g_free (candidate);
+
+        parent = g_path_get_dirname (dir);
+
+        if (strcmp (parent, dir) == 0)
+        {
+            g_free (parent);
+            break;
+        }
+
+        g_free (dir);
+        dir = parent;
+    }
+
+    g_free (dir);
+    return NULL;
+}
+
 const char *
 moo_get_locale_dir (void)
 {
+    static char *locale_dir;
     const char *dir = g_getenv ("MOO_LOCALE_DIR");
-    return dir && dir[0] ? dir : MOO_LOCALE_DIR;
+
+    if (dir != NULL && dir[0] != 0)
+        return dir;
+
+    if (locale_dir == NULL)
+    {
+        if (locale_dir_has_catalog (MOO_LOCALE_DIR))
+            locale_dir = g_strdup (MOO_LOCALE_DIR);
+        else
+            locale_dir = find_locale_dir_near_binary ();
+
+        if (locale_dir == NULL)
+            locale_dir = g_strdup (MOO_LOCALE_DIR);
+    }
+
+    return locale_dir;
 }
 
 

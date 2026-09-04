@@ -62,6 +62,18 @@ timeout 15 ./src/medit --new-app FILE >log 2>&1; echo "exit=$?"
 `--new-app` is mandatory — medit is single-instance and will otherwise hand the file to
 a running copy and exit.
 
+### Translations
+
+The catalogs are not installed unless `make install` is run, and the binary's
+compiled-in `MOO_LOCALE_DIR` points at `/usr/local/share/locale`, so a build tree
+run used to come up with an untranslated UI. `po/Makefile.am` now also lays the
+catalogs out as `<builddir>/locale/<lang>/LC_MESSAGES/<domain>.mo`, and
+`moo_get_locale_dir()` falls back to that tree when the configured directory has
+no catalog. `MOO_LOCALE_DIR` in the environment still overrides both.
+
+If the UI comes up in English, check `find locale -type f | wc -l` in the build
+directory — if it is empty, run `make -C po && make -C po-gsv`.
+
 ### Isolate config
 
 medit writes `~/.local/share/medit/{prefs,file-list-config}.xml` and
