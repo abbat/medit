@@ -238,6 +238,8 @@ static void          save_paned_config                  (MooEditWindow      *win
 static void          moo_edit_window_connect_menubar    (MooWindow          *window);
 static void          moo_edit_window_update_doc_list    (MooEditWindow      *window);
 static void          update_window_menu                 (MooEditWindow      *window);
+static void          set_active_tab                     (MooEditWindow      *window,
+                                                         MooEditTab         *tab);
 static void          window_menu_item_selected          (MooWindow          *window,
                                                          GtkMenuItem        *item);
 
@@ -915,6 +917,8 @@ moo_edit_window_destroy (GtkObject *object)
         g_assert (window->priv->stop_clients == nullptr);
         g_slist_free (list);
     }
+
+    set_active_tab (window, nullptr);
 
     window->priv->notebooks.clear();
 
@@ -2216,7 +2220,7 @@ move_tab_to_split_view (MooEditWindow *window,
 
     g_object_ref (tab);
 
-    window->priv->active_tab = nullptr;
+    set_active_tab (window, nullptr);
 
     gtk_container_remove (GTK_CONTAINER (old_nb), GTK_WIDGET (tab));
     label = create_tab_label (window, tab, doc);
@@ -2230,6 +2234,28 @@ move_tab_to_split_view (MooEditWindow *window,
     g_object_unref (tab);
 }
 
+/* active_tab is a cache, and nothing owns a reference through it. Hold it with
+   a weak pointer so that it is cleared whenever the tab goes away -- closing the
+   last document used to leave it dangling, and every later lookup of the active
+   view then ran on freed memory. */
+static void
+set_active_tab (MooEditWindow *window,
+                MooEditTab    *tab)
+{
+    if (window->priv->active_tab == tab)
+        return;
+
+    if (window->priv->active_tab != nullptr)
+        g_object_remove_weak_pointer (G_OBJECT (window->priv->active_tab),
+                                      (gpointer*) &window->priv->active_tab);
+
+    window->priv->active_tab = tab;
+
+    if (tab != nullptr)
+        g_object_add_weak_pointer (G_OBJECT (tab),
+                                   (gpointer*) &window->priv->active_tab);
+}
+
 void
 _moo_edit_window_set_active_tab (MooEditWindow *window,
                                  MooEditTab    *tab)
@@ -2237,7 +2263,7 @@ _moo_edit_window_set_active_tab (MooEditWindow *window,
     g_return_if_fail (MOO_IS_EDIT_WINDOW (window));
     g_return_if_fail (MOO_IS_EDIT_TAB (tab));
     g_return_if_fail (moo_edit_tab_get_window (tab) == window);
-    window->priv->active_tab = tab;
+    set_active_tab (window, tab);
 }
 
 static void
@@ -2735,7 +2761,11 @@ moo_edit_window_get_active_tab (MooEditWindow *window)
             return nullptr;
 
         tab = moo_notebook_get_nth_page (notebook, page);
-        window->priv->active_tab = MOO_EDIT_TAB (tab);
+
+        if (!MOO_IS_EDIT_TAB (tab))
+            return nullptr;
+
+        set_active_tab (window, MOO_EDIT_TAB (tab));
     }
 
     return window->priv->active_tab;
