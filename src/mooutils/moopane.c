@@ -1684,13 +1684,20 @@ draw_pixbuf (GtkWidget      *widget,
     pixbuf_height = gdk_pixbuf_get_height (pixbuf);
 
     gtk_widget_get_allocation (widget, &allocation);
-    x = allocation.x + (allocation.width - pixbuf_width) / 2;
-    y = allocation.y + (allocation.height - pixbuf_height) / 2;
+    x = (allocation.width - pixbuf_width) / 2;
+    y = (allocation.height - pixbuf_height) / 2;
+
+#if !GTK_CHECK_VERSION(3,0,0)
+    /* GTK+2 draws onto the parent's window, so the allocation offset belongs in
+       the coordinates. The GTK+3 cairo context is already translated to this
+       widget, and adding it there put the icon outside the widget's clip. */
+    x += allocation.x;
+    y += allocation.y;
+#endif
 
 #if GTK_CHECK_VERSION(3,0,0)
-    /* FIXME: This code was written by AI and requires review */
-    gdk_cairo_set_source_pixbuf(cr, pixbuf, x, y);
-    cairo_paint(cr);
+    gdk_cairo_set_source_pixbuf (cr, pixbuf, x, y);
+    cairo_paint (cr);
 #else
     gdk_draw_pixbuf (event->window,
                      widget->style->black_gc,
@@ -1734,11 +1741,16 @@ draw_arrow (GtkWidget      *widget,
     gtk_widget_get_allocation (widget, &allocation);
     width = 3 * allocation.width / 4;
     height = 3 * allocation.height / 4;
-    x = allocation.x + width / 6;
-    y = allocation.y + height / 6;
+    x = width / 6;
+    y = height / 6;
+
+#if !GTK_CHECK_VERSION(3,0,0)
+    /* see draw_pixbuf(): only GTK+2 wants the allocation offset here */
+    x += allocation.x;
+    y += allocation.y;
+#endif
 
 #if GTK_CHECK_VERSION(3,0,0)
-    /* FIXME: This code was written by AI and requires review */
     GtkStyleContext *context = gtk_widget_get_style_context(widget);
     gtk_style_context_set_state(context, gtk_widget_get_state_flags(widget));
 
