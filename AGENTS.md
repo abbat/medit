@@ -4,7 +4,7 @@ Fork of medit (GTK+ text editor) being **ported from GTK+2 to GTK+3**. Work bran
 
 The port was largely done by an AI and is buggy. Most defects found so far sit inside
 blocks marked `/* FIXME: This code was written by AI and requires review */`.
-**64 such markers remain** (`grep -rc "written by AI" src`), concentrated in:
+Run `grep -rc "written by AI" src` for the current count; they are concentrated in:
 
 | file | markers |
 |---|---|
@@ -167,6 +167,8 @@ command line and kills the shell (exit 144). `pkill -x medit` is safe.
 | `grep` is `ugrep`; a pattern starting with `-` is parsed as an option | `grep -n -e "->field"` |
 | gdb `-batch` breakpoint commands: an error **aborts the script and kills the app** | only read struct fields; never call libgtk functions (no debug info → "unknown return type"); break *after* locals are assigned, not at function entry |
 | `Xvfb`/`import` need `DISPLAY=:99` on **every** invocation | it is not exported between Bash tool calls |
+| Writing a marker into the log the app is writing to (`echo MARK >> log`) — the app's own fd has its own offset and **overwrites the marker**, so `sed -n '/MARK/,$p'` silently yields nothing and looks like "the code never ran" | record `N=$(wc -l < log)` before the action and read `tail -n +$((N+1)) log` after |
+| `g_print` to a redirected file is block-buffered, so a tail of the log lags reality | use `g_printerr`, or run under `stdbuf -o0` |
 
 ---
 
@@ -204,7 +206,79 @@ Known and deliberately left alone: `draw_entry()` in `mooiconview.c` still uses
 
 ---
 
-## 6. Conventions
+## 6. The two GTK+3 porting mistakes that account for most bugs
+
+Nearly every visual bug found so far is one of these two. Check for them first.
+
+### a) Dispatching on a window taken from the drawing context
+
+GTK+2 delivered one expose per `GdkWindow` and code branched on `event->window`.
+The port kept that shape but took the window from the drawing context:
+
+```c
+drawing_context = gdk_cairo_get_drawing_context (cr);
+event_window = gdk_drawing_context_get_window (drawing_context);   /* WRONG */
+if (event_window == some_window) ...                               /* never true */
+```
+
+That window is the **toplevel frame's**, so the comparisons never match and the
+code silently does nothing. Same for `gdk_drawing_context_get_clip()`: its region
+is in toplevel coordinates, so intersecting it with widget-space rectangles
+clips away everything above the widget's origin.
+
+GTK+3 emits **one `::draw` for the whole widget**. The correct shape is:
+
+```c
+if (win && gtk_cairo_should_draw_window (cr, win))
+{
+    cairo_save (cr);
+    gtk_cairo_transform_to_window (cr, widget, win);   /* now widget/window coords */
+    ... paint ...
+    cairo_restore (cr);
+}
+```
+
+Use `gdk_cairo_get_clip_rectangle (cr, &rect)` for the damage region. Do **not**
+make a new context with `gdk_cairo_create()` on a border/child window inside
+`::draw` — it paints nowhere. Coordinates passed to cairo are relative to the
+widget/window, never `allocation.x/y` (that offset is GTK+2's, and adding it puts
+the drawing outside the clip).
+
+Ordering matters too: `GtkTextView` fills its windows' backgrounds in its own
+`::draw`, so anything painted *before* chaining up is wiped out. Line numbers are
+painted after the chain-up; line backgrounds that must sit under the text are
+painted after it with `CAIRO_OPERATOR_MULTIPLY`.
+
+### b) Style calls that are silently dead on GTK+3
+
+These compile, run, and do nothing — no warning:
+
+| call | status |
+|---|---|
+| `gtk_style_context_set_background()` | no-op since 3.18 |
+| `gdk_window_set_background[_rgba]()` | no-op; GDK does not paint window backgrounds |
+| `gtk_style_context_add_region()` | no-op since 3.14 |
+| `gtk_style_context_get_background_color()` | returns **fully transparent** on a bare widget context |
+
+That last one is worth measuring rather than assuming. On this machine's theme:
+
+```
+plain widget context   NORMAL/ACTIVE/SELECTED  -> rgba(0,0,0, a=0)   ← useless
+with GTK_STYLE_CLASS_VIEW  NORMAL/ACTIVE       -> white
+with GTK_STYLE_CLASS_VIEW  SELECTED            -> the selection blue
+```
+
+So: a widget that wants a background must paint it itself in `::draw`
+(`gtk_render_background()`), and any colour query needs
+`gtk_style_context_save()` + `add_class (GTK_STYLE_CLASS_VIEW)` (or the right
+class for that widget) + `set_state()` + `restore()`. Better still, let the theme
+draw: `gtk_render_background()` with the state set beats fetching a colour and
+filling a rectangle.
+
+`ui/stest.c`-style throwaway probes are cheap: a 20-line GTK+3 program that
+prints what these functions return settles such questions in one build.
+
+## 7. Conventions
 
 - Fix both GTK versions in one change where the API allows it, and **delete the
   `#if GTK_CHECK_VERSION` split** when one code path is correct for both.
