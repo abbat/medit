@@ -459,7 +459,11 @@ dialog_set_filter (MooFilterMgr   *mgr,
                    Filter         *filter)
 {
     GtkEntry *entry = GTK_ENTRY (g_object_get_data (G_OBJECT (dialog), "moo-filter-entry"));
-    gtk_entry_set_text (entry, filter_get_description (filter));
+    const char *description = filter_get_description (filter);
+
+    /* a filter need not carry a description, and gtk_entry_set_text() rejects
+       NULL */
+    gtk_entry_set_text (entry, description != NULL ? description : "");
     gtk_file_chooser_set_filter (dialog, filter_get_gtk_filter (filter));
     mgr_set_last_filter (mgr,
                          (const char*) g_object_get_data (G_OBJECT (dialog), "moo-filter-user-id"),
@@ -547,7 +551,11 @@ moo_filter_mgr_attach (MooFilterMgr   *mgr,
     gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 
 #if GTK_CHECK_VERSION(3,0,0)
-    combo = gtk_combo_box_text_new ();
+    /* The GTK+2 GtkComboBoxEntry is a combo box with an entry and a model of
+       our choosing. gtk_combo_box_text_new() is neither: it has no entry, so
+       gtk_bin_get_child() below returned a GtkCellView, and it owns its own
+       model, which moo_filter_mgr_init_filter_combo() then replaces. */
+    combo = gtk_combo_box_new_with_entry ();
 #else
     combo = gtk_combo_box_entry_new ();
 #endif

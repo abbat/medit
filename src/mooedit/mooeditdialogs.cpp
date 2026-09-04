@@ -46,10 +46,16 @@ _moo_edit_open_dialog (GtkWidget *widget,
     {
         GFile *file = moo_edit_get_file (current_doc);
 
+        /* moo_edit_get_file() returns NULL for a document with no file yet;
+           unreffing that, and the start folder below when no last directory has
+           been remembered, is where the
+             g_object_unref: assertion 'G_IS_OBJECT (object)' failed
+           on opening the dialog came from. */
         if (file)
+        {
             start = g_file_get_parent (file);
-
-        g_object_unref (file);
+            g_object_unref (file);
+        }
     }
 
     if (!start)
@@ -78,12 +84,12 @@ _moo_edit_open_dialog (GtkWidget *widget,
         for (i = 0; i < files->n_elms; ++i)
             moo_open_info_array_take (info_array, moo_open_info_new_file (files->elms[i], encoding, -1, MooOpenFlags (0)));
 
-        g_object_unref (start);
+        g_clear_object (&start);
         start = g_file_get_parent (files->elms[0]);
         moo_prefs_set_file (moo_edit_setting (MOO_EDIT_PREFS_LAST_DIR), start);
     }
 
-    g_object_unref (start);
+    g_clear_object (&start);
     g_object_unref (dialog);
     moo_file_array_free (files);
     return info_array;
@@ -109,9 +115,11 @@ _moo_edit_save_as_dialog (MooEdit    *doc,
     {
         file = moo_edit_get_file (doc);
         if (file)
+        {
             start = g_file_get_parent (file);
-        g_object_unref (file);
-        file = NULL;
+            g_object_unref (file);
+            file = NULL;
+        }
     }
 
     if (!start)
@@ -130,7 +138,7 @@ _moo_edit_save_as_dialog (MooEdit    *doc,
     if (!moo_file_dialog_run (dialog))
     {
         g_object_unref (dialog);
-        g_object_unref (start);
+        g_clear_object (&start);
         return NULL;
     }
 
@@ -139,11 +147,11 @@ _moo_edit_save_as_dialog (MooEdit    *doc,
     g_return_val_if_fail (file != NULL, NULL);
     info = moo_save_info_new_file (file, encoding);
 
-    g_object_unref (start);
+    g_clear_object (&start);
     start = g_file_get_parent (file);
     moo_prefs_set_file (moo_edit_setting (MOO_EDIT_PREFS_LAST_DIR), start);
 
-    g_object_unref (start);
+    g_clear_object (&start);
     g_object_unref (file);
     g_object_unref (dialog);
     return info;
