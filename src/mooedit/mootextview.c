@@ -3851,8 +3851,14 @@ moo_text_view_size_request (GtkWidget      *widget,
     }
 
 #if GTK_CHECK_VERSION(3,0,0)
-    GTK_WIDGET_CLASS(moo_text_view_parent_class)->get_preferred_width (widget, &requisition->width, NULL);
-    GTK_WIDGET_CLASS(moo_text_view_parent_class)->get_preferred_height (widget, &requisition->height, NULL);
+    {
+        /* Unlike the gtk_widget_get_preferred_*() wrappers, the vfuncs themselves
+           dereference both out-parameters unconditionally, so NULL is not allowed
+           here even though we only care about the minimum size. */
+        int natural;
+        GTK_WIDGET_CLASS(moo_text_view_parent_class)->get_preferred_width (widget, &requisition->width, &natural);
+        GTK_WIDGET_CLASS(moo_text_view_parent_class)->get_preferred_height (widget, &requisition->height, &natural);
+    }
 #else
     GTK_WIDGET_CLASS(moo_text_view_parent_class)->size_request (widget, requisition);
 #endif
