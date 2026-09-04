@@ -1538,6 +1538,27 @@ create_tree_view_proxy (MooFileView *fileview)
 
 
 static GtkWidget *
+create_scrolled_window (GtkPolicyType hpolicy,
+                        GtkPolicyType vpolicy)
+{
+    GtkWidget *swin;
+
+    swin = gtk_scrolled_window_new (NULL, NULL);
+    gtk_widget_show (swin);
+    gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (swin), hpolicy, vpolicy);
+
+#if GTK_CHECK_VERSION(3,0,0)
+    /* A tabless GtkNotebook painted a frame around its page on GTK+2, which is
+       what gave the file list its border. GTK+3 themes draw no such frame, so
+       ask the scrolled window for the border instead. */
+    gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (swin), GTK_SHADOW_IN);
+#endif
+
+    return swin;
+}
+
+
+static GtkWidget *
 create_notebook (MooFileView *fileview)
 {
     GtkWidget *notebook, *swin, *treeview, *iconview, *bkview;
@@ -1547,11 +1568,7 @@ create_notebook (MooFileView *fileview)
 
     create_tree_view_proxy (fileview);
 
-    swin = gtk_scrolled_window_new (NULL, NULL);
-    gtk_widget_show (swin);
-    gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (swin),
-                                    GTK_POLICY_AUTOMATIC,
-                                    GTK_POLICY_AUTOMATIC);
+    swin = create_scrolled_window (GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
     gtk_notebook_append_page (GTK_NOTEBOOK (notebook), swin, NULL);
     treeview = create_treeview (fileview);
     gtk_widget_show (treeview);
@@ -1563,11 +1580,7 @@ create_notebook (MooFileView *fileview)
                               fileview);
     _moo_tree_view_add (fileview->priv->view, treeview);
 
-    swin = gtk_scrolled_window_new (NULL, NULL);
-    gtk_widget_show (swin);
-    gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (swin),
-                                    GTK_POLICY_ALWAYS,
-                                    GTK_POLICY_AUTOMATIC);
+    swin = create_scrolled_window (GTK_POLICY_ALWAYS, GTK_POLICY_AUTOMATIC);
     gtk_notebook_append_page (GTK_NOTEBOOK (notebook), swin, NULL);
     iconview = create_iconview (fileview);
     gtk_widget_show (iconview);
@@ -1575,11 +1588,7 @@ create_notebook (MooFileView *fileview)
     fileview->priv->iconview = MOO_ICON_VIEW (iconview);
     _moo_tree_view_add (fileview->priv->view, iconview);
 
-    swin = gtk_scrolled_window_new (NULL, NULL);
-    gtk_widget_show (swin);
-    gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (swin),
-                                    GTK_POLICY_AUTOMATIC,
-                                    GTK_POLICY_AUTOMATIC);
+    swin = create_scrolled_window (GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
     gtk_notebook_append_page (GTK_NOTEBOOK (notebook), swin, NULL);
     bkview = create_bookmark_view (fileview);
     gtk_widget_show (bkview);
