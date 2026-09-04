@@ -237,6 +237,7 @@ static void          save_paned_config                  (MooEditWindow      *win
 
 static void          moo_edit_window_connect_menubar    (MooWindow          *window);
 static void          moo_edit_window_update_doc_list    (MooEditWindow      *window);
+static void          update_window_menu                 (MooEditWindow      *window);
 static void          window_menu_item_selected          (MooWindow          *window,
                                                          GtkMenuItem        *item);
 
@@ -1985,10 +1986,12 @@ moo_edit_window_connect_menubar (MooWindow *window)
     win_item = moo_ui_xml_get_widget (moo_window_get_ui_xml (window),
                                       window->menubar,
                                       "Editor/Menubar/Window");
+
     g_return_if_fail (win_item != nullptr);
     g_signal_connect_swapped (win_item, "select",
                               G_CALLBACK (window_menu_item_selected),
                               window);
+
 }
 
 
@@ -4651,6 +4654,41 @@ window_menu_item_selected (MooWindow   *window,
     populate_window_menu (MOO_EDIT_WINDOW (window), menu, no_docs_item);
 }
 
+/* ::select on the menu item is too late when the pointer moves onto Window from
+   a neighbouring menu instead of clicking it: by then GTK+3 has already sized
+   and placed the submenu, so it keeps the size it had without the document
+   items and shows a scroll arrow instead of them. Keep the menu up to date as
+   the document list changes, so it is already the right size when it pops up. */
+static void
+update_window_menu (MooEditWindow *window)
+{
+    MooUiXml *xml;
+    GtkWidget *menubar;
+    GtkWidget *win_item;
+    GtkWidget *menu;
+    GtkWidget *no_docs_item;
+
+    xml = moo_window_get_ui_xml (MOO_WINDOW (window));
+    menubar = MOO_WINDOW (window)->menubar;
+
+    if (xml == nullptr || menubar == nullptr)
+        return;
+
+    win_item = moo_ui_xml_get_widget (xml, menubar, "Editor/Menubar/Window");
+    no_docs_item = moo_ui_xml_get_widget (xml, menubar,
+                                          "Editor/Menubar/Window/NoDocuments");
+
+    if (win_item == nullptr || no_docs_item == nullptr)
+        return;
+
+    menu = gtk_menu_item_get_submenu (GTK_MENU_ITEM (win_item));
+
+    if (menu == nullptr)
+        return;
+
+    populate_window_menu (window, menu, no_docs_item);
+}
+
 
 static void
 moo_edit_window_update_doc_list (MooEditWindow *window)
@@ -4676,6 +4714,8 @@ moo_edit_window_update_doc_list (MooEditWindow *window)
                                                             g_list_last (window->priv->history));
         }
     }
+
+    update_window_menu (window);
 }
 
 

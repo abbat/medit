@@ -201,6 +201,17 @@ Reading these first will usually identify the next one:
   to ask for `GTK_SHADOW_IN`.
   → *A missing visual may come from a container two levels up, not the widget itself.*
 
+- **`d842683`, and the Window menu** Two cases where GTK+3 changed *when*
+  something happens rather than what an API does. Whitespace markers: see (c)
+  above. The Window menu: it was filled from `::select` on the menu item, which
+  on GTK+3 arrives when the submenu is already `visible` and `mapped` — fine on a
+  click, but when the pointer slides over from a neighbouring menu the submenu
+  keeps the size it had without the document items and shows a scroll arrow. The
+  fix was to stop filling it lazily and keep it up to date from
+  `moo_edit_window_update_doc_list()`. `gtk_widget_queue_resize()` +
+  `gtk_menu_reposition()` on the already-placed menu does **not** rescue it, and
+  the submenu's `::show` is never emitted at all — both were tried.
+
 Known and deliberately left alone: `draw_entry()` in `mooiconview.c` still uses
 `gdk_cairo_create()` per row (deprecated since 3.22, bypasses the clip, works).
 
