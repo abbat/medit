@@ -1714,34 +1714,15 @@ static void
 moo_paned_add (GtkContainer   *container,
                GtkWidget      *child)
 {
-    GtkBin *bin = GTK_BIN (container);
-
     g_return_if_fail (GTK_IS_WIDGET (child));
 
-    if (gtk_bin_get_child (bin) != NULL)
-    {
-        g_warning ("Attempting to add a widget with type %s to a %s, "
-                   "but as a GtkBin subclass a %s can only contain one widget at a time; "
-                   "it already contains a widget of type %s",
-        g_type_name (G_OBJECT_TYPE (child)),
-        g_type_name (G_OBJECT_TYPE (bin)),
-        g_type_name (G_OBJECT_TYPE (bin)),
-        g_type_name (G_OBJECT_TYPE (gtk_bin_get_child (bin))));
-        return;
-    }
-
     gtk_widget_set_parent_window (child, MOO_PANED(container)->priv->bin_window);
-    gtk_widget_set_parent (child, GTK_WIDGET (bin));
 
-#if GTK_CHECK_VERSION(3,0,0)
-    /* FIXME: This code was written by AI and requires review */
-    /* In GTK+3, we need to use gtk_container_add instead of directly setting bin->child */
-    /* this code not working properly because recursion container_class->add = moo_paned_add; */
-    /* gtk_container_add (container, child); */
-#else
-    /* In GTK+2, we can directly set bin->child */
-    bin->child = child;   //gtk_container_add (container, child); // TODO: check this!
-#endif
+    /* GtkBin::add parents the widget *and* records it as the bin child, which is
+       what gtk_bin_get_child() returns. Calling gtk_widget_set_parent() here
+       instead would leave GtkBin unaware of the child, so gtk_bin_get_child()
+       would keep returning NULL. It warns about a second child itself. */
+    GTK_CONTAINER_CLASS(moo_paned_parent_class)->add (container, child);
 }
 
 
