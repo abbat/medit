@@ -655,7 +655,7 @@ accel_entry_new (guint            key,
 }
 
 static void
-accel_entry_free (AccelEntry *entry, gpointer)
+accel_entry_free (AccelEntry *entry, G_GNUC_UNUSED gpointer data)
 {
     if (entry)
     {

@@ -166,7 +166,7 @@ moo_closure_signal_destroy (MooClosure *closure)
 
 
 static void
-object_died (MooClosureSignal *cl, GObject*)
+object_died (MooClosureSignal *cl, G_GNUC_UNUSED GObject* object)
 {
     _moo_object_ptr_free (cl->object);
     cl->object = NULL;
@@ -256,7 +256,7 @@ moo_closure_simple_destroy (MooClosure *closure)
 
 
 static void
-closure_simple_object_died (MooClosureSimple *cl, GObject*)
+closure_simple_object_died (MooClosureSimple *cl, G_GNUC_UNUSED GObject* object)
 {
     MooObjectPtr *tmp = cl->object;
     cl->object = NULL;
@@ -307,7 +307,7 @@ _moo_closure_new_simple (gpointer    object,
  */
 
 static void
-object_ptr_object_died (MooObjectPtr *ptr, GObject*)
+object_ptr_object_died (MooObjectPtr *ptr, G_GNUC_UNUSED GObject* dead_object)
 {
     GObject *object = ptr->target;
 

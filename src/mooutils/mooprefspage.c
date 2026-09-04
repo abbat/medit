@@ -266,7 +266,7 @@ static void     setting_set_value   (GtkWidget      *widget,
 
 
 static void
-moo_prefs_page_init_sig_data (MooPrefsPage *page, gpointer)
+moo_prefs_page_init_sig_data (MooPrefsPage *page, G_GNUC_UNUSED gpointer data)
 {
     moo_prefs_page_init_sig(page);
 }
@@ -291,7 +291,7 @@ moo_prefs_page_init_sig (MooPrefsPage *page)
 
 
 static void
-moo_prefs_page_apply_data (MooPrefsPage *page, gpointer)
+moo_prefs_page_apply_data (MooPrefsPage *page, G_GNUC_UNUSED gpointer data)
 {
     moo_prefs_page_apply(page);
 }
@@ -310,7 +310,7 @@ moo_prefs_page_apply (MooPrefsPage *page)
 
 
 static void
-setting_init (GtkWidget *widget, gpointer)
+setting_init (GtkWidget *widget, G_GNUC_UNUSED gpointer data)
 {
     const GValue *value;
     const char *prefs_key = g_object_get_data (G_OBJECT (widget), "moo-prefs-key");
@@ -325,7 +325,7 @@ setting_init (GtkWidget *widget, gpointer)
 
 
 static void
-setting_apply (GtkWidget *widget, gpointer)
+setting_apply (GtkWidget *widget, G_GNUC_UNUSED gpointer data)
 {
     const char *prefs_key = g_object_get_data (G_OBJECT (widget), "moo-prefs-key");
     GtkWidget *set_or_not = g_object_get_data (G_OBJECT (widget), "moo-prefs-set-or-not");

@@ -21,13 +21,13 @@
 #include <string.h>
 
 // GFunc compatible g_free
-static inline void moo_free(gpointer mem, gpointer)
+static inline void moo_free(gpointer mem, G_GNUC_UNUSED gpointer user_data)
 {
     g_free(mem);
 }
 
 // GWeakNotify compatible g_nullify_pointer
-static inline void moo_nullify_pointer(gpointer data, GObject*)
+static inline void moo_nullify_pointer(gpointer data, G_GNUC_UNUSED GObject* object)
 {
     g_nullify_pointer((gpointer*)data);
 }

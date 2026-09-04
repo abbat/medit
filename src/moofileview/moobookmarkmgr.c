@@ -908,7 +908,7 @@ static void
 icon_data_func (G_GNUC_UNUSED GtkTreeViewColumn *column,
                 GtkCellRenderer    *cell,
                 GtkTreeModel       *model,
-                GtkTreeIter        *iter, gpointer)
+                GtkTreeIter        *iter, G_GNUC_UNUSED gpointer data)
 {
     MooBookmark *bookmark = get_bookmark (model, iter);
 
@@ -932,7 +932,7 @@ static void
 label_data_func (G_GNUC_UNUSED GtkTreeViewColumn *column,
                  GtkCellRenderer    *cell,
                  GtkTreeModel       *model,
-                 GtkTreeIter        *iter, gpointer)
+                 GtkTreeIter        *iter, G_GNUC_UNUSED gpointer data)
 {
     MooBookmark *bookmark = get_bookmark (model, iter);
 
@@ -955,7 +955,7 @@ static void
 path_data_func (G_GNUC_UNUSED GtkTreeViewColumn *column,
                 GtkCellRenderer    *cell,
                 GtkTreeModel       *model,
-                GtkTreeIter        *iter, gpointer)
+                GtkTreeIter        *iter, G_GNUC_UNUSED gpointer data)
 {
     MooBookmark *bookmark = get_bookmark (model, iter);
 
@@ -1314,7 +1314,7 @@ static void
 combo_icon_data_func (G_GNUC_UNUSED GtkCellLayout *cell_layout,
                       GtkCellRenderer    *cell,
                       GtkTreeModel       *model,
-                      GtkTreeIter        *iter, gpointer)
+                      GtkTreeIter        *iter, G_GNUC_UNUSED gpointer data)
 {
     char *stock = NULL;
     GdkPixbuf *pixbuf = NULL;
@@ -1338,7 +1338,7 @@ static void
 combo_label_data_func (G_GNUC_UNUSED GtkCellLayout *cell_layout,
                        GtkCellRenderer    *cell,
                        GtkTreeModel       *model,
-                       GtkTreeIter        *iter, gpointer)
+                       GtkTreeIter        *iter, G_GNUC_UNUSED gpointer data)
 {
     char *label = NULL;
     gtk_tree_model_get (model, iter, ICON_COLUMN_LABEL, &label, -1);

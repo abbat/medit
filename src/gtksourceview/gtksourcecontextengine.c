@@ -3334,7 +3334,7 @@ context_new (Context           *parent,
 
 static void
 context_unref_hash_cb (G_GNUC_UNUSED gpointer text,
-		       Context *context, gpointer)
+		       Context *context, G_GNUC_UNUSED gpointer data)
 {
 	context->parent = NULL;
 	context_unref (context);
@@ -3453,7 +3453,7 @@ context_unref (Context *context)
 
 static void
 context_freeze_hash_cb (G_GNUC_UNUSED gpointer text,
-		        Context *context, gpointer)
+		        Context *context, G_GNUC_UNUSED gpointer data)
 {
 	context_freeze (context);
 }
@@ -3518,7 +3518,7 @@ get_child_contexts_hash_cb (G_GNUC_UNUSED gpointer text,
  * if it was incremented by context_freeze().
  */
 static void
-context_thaw (Context *ctx, gpointer)
+context_thaw (Context *ctx, G_GNUC_UNUSED gpointer data)
 {
 	ContextPtr *ptr;
 
@@ -5678,7 +5678,7 @@ definition_child_new (ContextDefinition *definition,
 }
 
 static void
-definition_child_free (DefinitionChild *ch, gpointer)
+definition_child_free (DefinitionChild *ch, G_GNUC_UNUSED gpointer data)
 {
 	if (!ch->resolved)
 		g_free (ch->u.id);
@@ -6249,7 +6249,7 @@ _gtk_source_context_replace_new	(const gchar *to_replace_id,
 }
 
 void
-_gtk_source_context_replace_free (GtkSourceContextReplace *repl, gpointer)
+_gtk_source_context_replace_free (GtkSourceContextReplace *repl, G_GNUC_UNUSED gpointer data)
 {
 	if (repl != NULL)
 	{

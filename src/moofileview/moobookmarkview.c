@@ -229,7 +229,7 @@ static void
 icon_data_func (G_GNUC_UNUSED GtkTreeViewColumn *column,
                 GtkCellRenderer    *cell,
                 GtkTreeModel       *model,
-                GtkTreeIter        *iter, gpointer)
+                GtkTreeIter        *iter, G_GNUC_UNUSED gpointer data)
 {
     MooBookmark *bookmark = get_bookmark (model, iter);
 
@@ -253,7 +253,7 @@ static void
 label_data_func (G_GNUC_UNUSED GtkTreeViewColumn *column,
                  GtkCellRenderer    *cell,
                  GtkTreeModel       *model,
-                 GtkTreeIter        *iter, gpointer)
+                 GtkTreeIter        *iter, G_GNUC_UNUSED gpointer data)
 {
     MooBookmark *bookmark = get_bookmark (model, iter);
 

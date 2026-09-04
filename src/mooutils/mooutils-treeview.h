@@ -21,19 +21,19 @@
 G_BEGIN_DECLS
 
 // GFunc compatible gtk_tree_path_free
-static inline void moo_tree_path_free(GtkTreePath* path, gpointer)
+static inline void moo_tree_path_free(GtkTreePath* path, G_GNUC_UNUSED gpointer user_data)
 {
     gtk_tree_path_free(path);
 }
 
 // GFunc compatible gtk_tree_row_reference_free
-static inline void moo_tree_row_reference_free(GtkTreeRowReference* reference, gpointer)
+static inline void moo_tree_row_reference_free(GtkTreeRowReference* reference, G_GNUC_UNUSED gpointer user_data)
 {
     gtk_tree_row_reference_free(reference);
 }
 
 // GCompareDataFunc compatible gtk_tree_path_compare
-static inline gint moo_tree_path_compare(const GtkTreePath* a, const GtkTreePath* b, gpointer)
+static inline gint moo_tree_path_compare(const GtkTreePath* a, const GtkTreePath* b, G_GNUC_UNUSED gpointer user_data)
 {
     return gtk_tree_path_compare(a, b);
 }

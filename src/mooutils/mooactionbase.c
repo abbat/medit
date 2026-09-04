@@ -33,7 +33,7 @@ enum {
 
 
 static void
-class_init (gpointer g_iface, gpointer)
+class_init (gpointer g_iface, G_GNUC_UNUSED gpointer data)
 {
     g_object_interface_install_property (g_iface,
         g_param_spec_string ("display-name", "display-name", "display-name",

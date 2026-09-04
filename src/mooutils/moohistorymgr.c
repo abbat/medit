@@ -1605,7 +1605,7 @@ schedule_update_widgets (MooHistoryMgr *mgr)
 
 
 void
-moo_history_item_free_data (MooHistoryItem *item, gpointer)
+moo_history_item_free_data (MooHistoryItem *item, G_GNUC_UNUSED gpointer data)
 {
     moo_history_item_free (item);
 }

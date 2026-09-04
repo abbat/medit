@@ -204,7 +204,7 @@ _moo_folder_impl_free (MooFolderImpl *impl)
 
 
 void
-_moo_folder_impl_free_data (MooFolderImpl *impl, gpointer)
+_moo_folder_impl_free_data (MooFolderImpl *impl, G_GNUC_UNUSED gpointer data)
 {
     _moo_folder_impl_free(impl);
 }

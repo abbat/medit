@@ -23,7 +23,7 @@
 G_BEGIN_DECLS
 
 // GFunc compatible xmlFree
-static inline void moo_xmlFree(void *mem, gpointer)
+static inline void moo_xmlFree(void *mem, G_GNUC_UNUSED gpointer user_data)
 {
     xmlFree(mem);
 }

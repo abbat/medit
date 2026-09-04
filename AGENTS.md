@@ -57,6 +57,57 @@ git show HEAD:path/to/file > $M/path/to/file   # without
 cp path/to/file $M/path/to/file                 # with
 ```
 
+### Debian package build (old distros)
+
+The package targets **Debian 11, Ubuntu 20.04 and 22.04** — much older toolchains than
+this machine (gcc 12, autoconf 2.71, glib 2.74+). The local build proves nothing about
+them, so check anything that touches build files or headers in containers:
+
+```bash
+docker build -t medit-u2004 - <<'EOF'
+FROM ubuntu:20.04
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update -qq && apt-get install -y -qq build-essential debhelper pkg-config \
+    intltool python-is-python3 libgtk2.0-dev libxml2-dev libjpeg-dev
+EOF
+git ls-files -z | tar --null -T - -czf $S/medit-src.tar.gz   # tracked files + local edits
+docker run --rm -v $S:/w medit-u2004 bash -c 'set -o pipefail
+  mkdir /build && cd /build && tar xzf /w/medit-src.tar.gz
+  dpkg-buildpackage -us -uc -b -j8 2>&1 | tail -25'
+```
+
+Cache the image once (`docker build -t medit-u2004`); each fresh `apt-get install` costs
+a few minutes. To collect **every** error in one pass instead of one per run, replace
+`dpkg-buildpackage` with `autoreconf -f -i && ./configure && make -k -C src -j8 2>&1 |
+grep error: | sort -u` — `-k` keeps going after the first failing file.
+
+Ubuntu 20.04 (gcc 9, glib 2.64) is the strictest of the three; Debian 11 differs only in
+carrying autoconf 2.69. Ubuntu images pull normally; **Debian 11 does not** — bullseye is
+past EOL, its `main` moved to archive.debian.org while `bullseye-security` is gone from
+deb.debian.org and not yet archived, so `apt-get install` dies with 404s. Use
+snapshot.debian.org on the `debian/eol:bullseye` image:
+
+```
+deb http://snapshot.debian.org/archive/debian/20250601T000000Z bullseye main
+deb http://snapshot.debian.org/archive/debian-security/20250601T000000Z bullseye-security main
+```
+plus `Acquire::Check-Valid-Until "false";`.
+
+What actually broke there — none of it visible in a local build:
+
+* **`AC_PREREQ`** — `autoupdate` rewrites it to the version of the autoconf that ran, so a
+  local `autoreconf` silently raises the floor and every older builder fails in `aclocal`
+  with exit 63. Keep it at the oldest version the target distros ship (2.69).
+* **`ACLOCAL_AMFLAGS = -I m4 $(ACLOCAL_FLAGS)`** — `autoreconf` feeds this line to `sh`,
+  where `$(...)` is command substitution: `sh: 1: ACLOCAL_FLAGS: not found`.
+* **Unnamed parameters** in C function definitions (`static void f (Foo *x, gpointer)`) —
+  legal in C++ and C23 only. gcc 12 accepts them *silently* even at `-std=gnu17`; gcc 9
+  errors with "parameter name omitted". Write `G_GNUC_UNUSED gpointer data`.
+* **Symbols newer than the oldest target glib**, e.g. `G_REGEX_DEFAULT` (2.74) on Ubuntu
+  22.04's 2.72. Use `(GRegexCompileFlags) 0`, as the rest of the tree does.
+* **`g_object_ref` in C++** returns `gpointer` on older glib (no `typeof` magic), so
+  assigning it to a typed field needs an explicit cast.
+
 ---
 
 ## 2. Running and verifying
@@ -202,6 +253,8 @@ command line and kills the shell (exit 144). `pkill -x medit` is safe.
 | `g_print` to a redirected file is block-buffered, so a tail of the log lags reality | use `g_printerr`, or run under `stdbuf -o0` |
 | `git add -A` sweeps in hundreds of build artifacts — the tree is full of `.o`, `.deps/`, generated `*-gxml.h`, `src/medit`, and `.gitignore` does not cover them | `git add -u` (tracked files only), or name paths explicitly; check `git status --short \| grep -v '^??'` before committing |
 | The pane buttons are not always on the right — their side is remembered in the sandbox `state.xml`, so a coordinate that worked last run can miss entirely | screenshot first and locate the button; never reuse coordinates across sessions |
+| `cmd \| tail -n` reports the **exit code of `tail`**, so a failed build looks like `exit=0` | `set -o pipefail` before any pipeline whose status you intend to read |
+| gcc 12 accepts C constructs that gcc 9/10 reject (unnamed parameters), so a clean local build says nothing about Debian 11 / Ubuntu 20.04 | see "Debian package build (old distros)" |
 | A build-tree run also reads data from an **installed** medit package (`/usr/share/medit/`), so its stale `menu.xml` produces warnings about our tree | reproduce with `MOO_DATA_DIRS=<dir>` holding the tree's own xml — but note it *replaces* the whole search list, so style schemes and the file-selector plugin stop loading; use it to attribute a warning, not to test the UI |
 
 ### Getting a backtrace for a warning or critical

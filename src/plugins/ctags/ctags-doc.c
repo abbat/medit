@@ -413,7 +413,7 @@ _moo_ctags_entry_unref (MooCtagsEntry *entry)
 
 
 void
-_moo_ctags_entry_unref_data (MooCtagsEntry *entry, gpointer)
+_moo_ctags_entry_unref_data (MooCtagsEntry *entry, G_GNUC_UNUSED gpointer data)
 {
     _moo_ctags_entry_unref(entry);
 }

@@ -52,7 +52,8 @@ typedef struct {                                                            \
 } Name__##PluginClass;                                                      \
                                                                             \
 static void                                                                 \
-name__##_plugin_class_init (MooPluginClass *klass, gpointer)                \
+name__##_plugin_class_init (MooPluginClass *klass,                          \
+                            G_GNUC_UNUSED gpointer data)                    \
 {                                                                           \
     name__##_plugin_parent_class = g_type_class_peek_parent (klass);        \
                                                                             \
@@ -70,7 +71,8 @@ name__##_plugin_class_init (MooPluginClass *klass, gpointer)                \
 }                                                                           \
                                                                             \
 static void                                                                 \
-name__##_plugin_instance_init (MooPlugin *plugin, gpointer)                 \
+name__##_plugin_instance_init (MooPlugin *plugin,                           \
+                               G_GNUC_UNUSED gpointer data)                 \
 {                                                                           \
     plugin->win_plugin_type = WIN_PLUGIN_TYPE__;                            \
     plugin->doc_plugin_type = DOC_PLUGIN_TYPE__;                            \
@@ -135,7 +137,8 @@ static void name__##_window_plugin_destroy (Name__##WindowPlugin *plugin);      
 static gpointer name__##_window_plugin_parent_class = NULL;                     \
                                                                                 \
 static void                                                                     \
-name__##_window_plugin_class_init (MooWinPluginClass *klass, gpointer)          \
+name__##_window_plugin_class_init (MooWinPluginClass *klass,                    \
+                                   G_GNUC_UNUSED gpointer data)                 \
 {                                                                               \
     name__##_window_plugin_parent_class = g_type_class_peek_parent (klass);     \
     klass->create = (MooWinPluginCreateFunc) name__##_window_plugin_create;     \

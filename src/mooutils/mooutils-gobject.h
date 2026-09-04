@@ -22,31 +22,31 @@
 G_BEGIN_DECLS
 
 // GFunc compatible g_object_freeze_notify
-static inline void moo_object_freeze_notify(GObject* object, gpointer)
+static inline void moo_object_freeze_notify(GObject* object, G_GNUC_UNUSED gpointer user_data)
 {
     g_object_freeze_notify(object);
 }
 
 // GFunc compatible g_object_thaw_notify
-static inline void moo_object_thaw_notify(GObject* object, gpointer)
+static inline void moo_object_thaw_notify(GObject* object, G_GNUC_UNUSED gpointer user_data)
 {
     g_object_thaw_notify(object);
 }
 
 // GFunc compatible g_object_ref
-static inline void moo_object_ref(GObject* object, gpointer)
+static inline void moo_object_ref(GObject* object, G_GNUC_UNUSED gpointer user_data)
 {
     g_object_ref(object);
 }
 
 // GFunc compatible g_object_unref
-static inline void moo_object_unref(GObject* object, gpointer)
+static inline void moo_object_unref(GObject* object, G_GNUC_UNUSED gpointer user_data)
 {
     g_object_unref(object);
 }
 
 // GtkCallback compatible gtk_widget_destroy
-static inline void moo_widget_destroy(GtkWidget* widget, gpointer)
+static inline void moo_widget_destroy(GtkWidget* widget, G_GNUC_UNUSED gpointer user_data)
 {
     gtk_widget_destroy(widget);
 }

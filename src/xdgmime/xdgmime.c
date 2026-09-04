@@ -373,7 +373,7 @@ xdg_check_time_and_dirs (void)
   return retval;
 }
 
-static inline int moo_mime_init_from_directory (const char *directory, gpointer)
+static inline int moo_mime_init_from_directory (const char *directory, G_GNUC_UNUSED gpointer data)
 {
     return xdg_mime_init_from_directory(directory);
 }

@@ -1449,7 +1449,7 @@ completion_set_file_system (MooFileEntryCompletion *cmpl,
 
 
 static void
-completion_entry_destroyed (MooFileEntryCompletion *cmpl, GObject*)
+completion_entry_destroyed (MooFileEntryCompletion *cmpl, G_GNUC_UNUSED GObject* object)
 {
     cmpl->priv->entry = NULL;
     g_object_notify (G_OBJECT (cmpl), "entry");
@@ -1522,7 +1522,7 @@ completion_entry_key_press (GtkEntry               *entry,
 
 
 static gboolean
-completion_default_visible_func (MooFile *file, gpointer)
+completion_default_visible_func (MooFile *file, G_GNUC_UNUSED gpointer data)
 {
     return file && strcmp (_moo_file_name (file), "..");
 }

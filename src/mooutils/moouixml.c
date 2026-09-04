@@ -584,7 +584,7 @@ item_free (Item *item)
 }
 
 static void
-node_free_data (Node *node, gpointer)
+node_free_data (Node *node, G_GNUC_UNUSED gpointer data)
 {
     node_free(node);
 }

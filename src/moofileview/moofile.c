@@ -167,7 +167,7 @@ _moo_file_unref (MooFile *file)
 
 
 void
-_moo_file_unref_data (MooFile *file, gpointer)
+_moo_file_unref_data (MooFile *file, G_GNUC_UNUSED gpointer data)
 {
     _moo_file_unref (file);
 }

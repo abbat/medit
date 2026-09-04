@@ -1334,8 +1334,8 @@ _moo_tree_view_setup_expander (GtkTreeView       *tree_view,
                                              tree_view, NULL);
 
     data = g_slice_new0 (ExpanderData);
-    data->column = g_object_ref (column);
-    data->cell = g_object_ref (cell);
+    data->column = (GtkTreeViewColumn*) g_object_ref (column);
+    data->cell = (GtkCellRenderer*) g_object_ref (cell);
     g_object_set_data_full (G_OBJECT (tree_view), "moo-tree-view-expander-data",
                             data, (GDestroyNotify) expander_data_free);
 

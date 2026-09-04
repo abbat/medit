@@ -15,11 +15,10 @@ m4_define([_moo_web_contact_],[http://mooedit.sourceforge.net/contact.html])
 m4_define([_moo_email_],[emuntyan@users.sourceforge.net])
 m4_define([_moo_copyright_],[2004-2014 Yevgen Muntyan <_moo_email_>])
 
-AC_PREREQ([2.71])
+AC_PREREQ([2.69])
 AC_INIT([medit],[_moo_display_version_],[_moo_email_])
 AC_USE_SYSTEM_EXTENSIONS
 AC_CONFIG_MACRO_DIR([m4])
-AC_SUBST(ACLOCAL_FLAGS)
 
 AM_INIT_AUTOMAKE([1.11 foreign dist-bzip2 no-dist-gzip subdir-objects])
 AM_SILENT_RULES([yes])

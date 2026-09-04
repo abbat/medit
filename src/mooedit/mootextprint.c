@@ -2022,7 +2022,7 @@ hf_format_chunk_new (HFFormatType type,
 
 
 static void
-hf_format_chunk_free (HFFormatChunk *chunk, gpointer)
+hf_format_chunk_free (HFFormatChunk *chunk, G_GNUC_UNUSED gpointer data)
 {
     if (chunk)
     {

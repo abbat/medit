@@ -366,7 +366,7 @@ _moo_app_input_channel_get_name (InputChannel *ch)
 }
 
 static void
-connection_free (Connection *conn, gpointer)
+connection_free (Connection *conn, G_GNUC_UNUSED gpointer data)
 {
     if (conn->io_watch)
         g_source_remove (conn->io_watch);
@@ -639,7 +639,7 @@ _moo_app_input_channel_new (const char *appname,
 }
 
 void
-_moo_app_input_channel_free (InputChannel *ch, gpointer)
+_moo_app_input_channel_free (InputChannel *ch, G_GNUC_UNUSED gpointer data)
 {
     input_channel_shutdown (ch);
     g_free (ch->name);

@@ -199,7 +199,7 @@ moo_doc_plugin_get_type (void)
 
 
 static void
-some_plugin_class_init (gpointer klass, gpointer)
+some_plugin_class_init (gpointer klass, G_GNUC_UNUSED gpointer data)
 {
     parent_class = g_type_class_peek_parent (klass);
 }

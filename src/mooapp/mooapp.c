@@ -582,7 +582,7 @@ moo_app_set_property (GObject *object, guint prop_id, const GValue *value, GPara
  * \param data unused data pointer
  */
 static void
-moo_app_class_init (MooAppClass *klass, gpointer)
+moo_app_class_init (MooAppClass *klass, G_GNUC_UNUSED gpointer data)
 {
   GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
 
@@ -1032,7 +1032,7 @@ static
  * \return TRUE to continue the timeout
  */
 static gboolean
-check_signal (gpointer)
+check_signal (G_GNUC_UNUSED gpointer data)
 {
   if (signal_received)
     {
@@ -1189,7 +1189,7 @@ append_escaped (GString *str, const char *format, ...)
  * \param data unused data pointer
  */
 static void
-moo_app_instance_init (MooApp *app, gpointer)
+moo_app_instance_init (MooApp *app, G_GNUC_UNUSED gpointer data)
 {
   g_return_if_fail (moo_app_data.instance == NULL);
 

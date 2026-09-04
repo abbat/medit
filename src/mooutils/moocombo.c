@@ -233,7 +233,7 @@ moo_combo_class_init (MooComboClass *klass)
 
 
 static void
-moo_combo_cell_layout_init (GtkCellLayoutIface *iface, gpointer)
+moo_combo_cell_layout_init (GtkCellLayoutIface *iface, G_GNUC_UNUSED gpointer data)
 {
     iface->pack_start = moo_combo_cell_layout_pack_start;
     iface->pack_end = moo_combo_cell_layout_pack_end;

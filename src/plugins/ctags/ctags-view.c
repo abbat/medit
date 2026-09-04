@@ -74,7 +74,7 @@ static void
 data_func (G_GNUC_UNUSED GtkTreeViewColumn *column,
            GtkCellRenderer   *cell,
            GtkTreeModel      *model,
-           GtkTreeIter       *iter, gpointer)
+           GtkTreeIter       *iter, G_GNUC_UNUSED gpointer data)
 {
     MooCtagsEntry *entry = NULL;
     char *label = NULL;
@@ -106,7 +106,7 @@ static gboolean
 tree_view_search_equal_func (GtkTreeModel *model,
                              G_GNUC_UNUSED int column,
                              const char   *key,
-                             GtkTreeIter  *iter, gpointer)
+                             GtkTreeIter  *iter, G_GNUC_UNUSED gpointer data)
 {
     MooCtagsEntry *entry = NULL;
     const char *compare_with = NULL;

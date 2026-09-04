@@ -354,7 +354,7 @@ child_new (MooTreeView  *view,
 
 
 static void
-child_free (Child *child, gpointer)
+child_free (Child *child, G_GNUC_UNUSED gpointer data)
 {
     if (child->widget)
     {

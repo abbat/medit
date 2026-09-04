@@ -367,7 +367,7 @@ moo_history_combo_popup (MooCombo *combo)
 static int
 default_sort_func (GtkTreeModel       *model,
                    GtkTreeIter        *a,
-                   GtkTreeIter        *b, gpointer)
+                   GtkTreeIter        *b, G_GNUC_UNUSED gpointer data)
 {
     MooHistoryListItem *e1 = NULL, *e2 = NULL;
     int result;
@@ -584,7 +584,7 @@ static void
 cell_data_func (G_GNUC_UNUSED GtkCellLayout *cell_layout,
                 GtkCellRenderer    *cell,
                 GtkTreeModel       *model,
-                GtkTreeIter        *iter, gpointer)
+                GtkTreeIter        *iter, G_GNUC_UNUSED gpointer data)
 {
     MooHistoryListItem *e = NULL;
 

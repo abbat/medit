@@ -496,7 +496,7 @@ menu_new (gpointer            data,
 
 
 static void
-menu_free (Menu               *menu, gpointer)
+menu_free (Menu               *menu, G_GNUC_UNUSED gpointer data)
 {
     if (menu)
     {

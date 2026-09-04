@@ -845,7 +845,6 @@ am__isrc
 INSTALL_DATA
 INSTALL_SCRIPT
 INSTALL_PROGRAM
-ACLOCAL_FLAGS
 OBJEXT
 EXEEXT
 ac_ct_CC
@@ -4262,7 +4261,6 @@ then :
   printf "%s\n" "#define _XOPEN_SOURCE 500" >>confdefs.h
 
 fi
-
 
 
 

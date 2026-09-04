@@ -1033,7 +1033,7 @@ signal_new (const char     *name,
 
 
 static void
-signal_free (Signal *signal, gpointer)
+signal_free (Signal *signal, G_GNUC_UNUSED gpointer data)
 {
     if (signal)
     {
@@ -1088,7 +1088,7 @@ widget_free (Widget *widget)
 
 
 static void
-child_free (Child *child, gpointer)
+child_free (Child *child, G_GNUC_UNUSED gpointer data)
 {
     if (child)
     {

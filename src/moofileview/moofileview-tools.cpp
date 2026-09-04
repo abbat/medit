@@ -79,10 +79,10 @@ run_command (const char *command_template,
     GError *error = NULL;
     GRegex *regex;
 
-    regex = g_regex_new ("%[fF]", G_REGEX_DEFAULT, G_REGEX_MATCH_DEFAULT, NULL);
+    regex = g_regex_new ("%[fF]", (GRegexCompileFlags) 0, (GRegexMatchFlags) 0, NULL);
     g_return_if_fail (regex != NULL);
 
-    command = g_regex_replace_literal (regex, command_template, -1, 0, files, G_REGEX_MATCH_DEFAULT, &error);
+    command = g_regex_replace_literal (regex, command_template, -1, 0, files, (GRegexMatchFlags) 0, &error);
 
     if (!command)
     {
