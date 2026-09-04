@@ -1224,20 +1224,12 @@ moo_icon_view_expose (GtkWidget      *widget,
     GSList *l;
     MooIconView *view = MOO_ICON_VIEW (widget);
     Layout *layout = view->priv->layout;
-    GdkWindow *event_window;
 
-#if GTK_CHECK_VERSION(3,22,0)
+#if GTK_CHECK_VERSION(3,0,0)
     cairo_region_t *area;
-    cairo_region_t *event_region;
-    GdkDrawingContext *drawing_context;
-
-    drawing_context = gdk_cairo_get_drawing_context(cr);
-    if (!drawing_context)
-        return GTK_WIDGET_CLASS(_moo_icon_view_parent_class)->draw (widget, cr);
-
-    event_window = gdk_drawing_context_get_window (drawing_context);
-    event_region = gdk_drawing_context_get_clip (drawing_context);
+    cairo_rectangle_int_t clip_rect;
 #else
+    GdkWindow *event_window;
     GdkRegion *area;
     GdkRegion *event_region;
 
@@ -1249,7 +1241,19 @@ moo_icon_view_expose (GtkWidget      *widget,
         return TRUE;
 
 #if GTK_CHECK_VERSION(3,0,0)
-    area = cairo_region_copy (event_region);
+    /* The damage region in this widget's own coordinates is what the cairo
+       clip carries. The drawing context's clip is expressed in the frame's
+       toplevel coordinate space instead, so intersecting the columns with it
+       dropped every row lying above the icon view's origin in the toplevel. */
+    if (!gdk_cairo_get_clip_rectangle (cr, &clip_rect))
+    {
+        clip_rect.x = 0;
+        clip_rect.y = 0;
+        clip_rect.width = gtk_widget_get_allocated_width (widget);
+        clip_rect.height = gtk_widget_get_allocated_height (widget);
+    }
+
+    area = cairo_region_create_rectangle (&clip_rect);
     cairo_region_translate (area, view->priv->xoffset, 0);
 #else
     area = gdk_region_copy (event_region);
@@ -1302,28 +1306,33 @@ moo_icon_view_expose (GtkWidget      *widget,
 
     if (view->priv->drag_select)
     {
-        cairo_t *cr;
         GdkRectangle rect;
         GdkColor *color;
         double dash_len = 1.;
 
-        cr = gdk_cairo_create (event_window);
-        get_drag_select_rect (view, &rect);
-
 #if GTK_CHECK_VERSION(3,0,0)
-        /* FIXME: This code was written by AI and requires review */
         GtkStyleContext *context = gtk_widget_get_style_context (widget);
         GdkRGBA color_rgba;
+        GdkColor color_gdk;
+
+        /* draw on the context we were handed: it is already set up for this
+           widget's window, unlike a new one made from some other window */
+        cairo_save (cr);
+
         gtk_style_context_get_background_color (context, GTK_STATE_FLAG_SELECTED, &color_rgba);
-        /* Convert GdkRGBA to GdkColor for compatibility with existing code */
-        static GdkColor color_gdk;
+        color_gdk.pixel = 0;
         color_gdk.red = color_rgba.red * 65535;
         color_gdk.green = color_rgba.green * 65535;
         color_gdk.blue = color_rgba.blue * 65535;
         color = &color_gdk;
 #else
+        cairo_t *cr;
+
+        cr = gdk_cairo_create (event_window);
         color = &widget->style->base[GTK_STATE_SELECTED];
 #endif
+
+        get_drag_select_rect (view, &rect);
 
         cairo_set_source_rgba (cr,
                                color->red / 65535.,
@@ -1343,7 +1352,11 @@ moo_icon_view_expose (GtkWidget      *widget,
                          rect.height - 1);
         cairo_stroke (cr);
 
+#if GTK_CHECK_VERSION(3,0,0)
+        cairo_restore (cr);
+#else
         cairo_destroy (cr);
+#endif
     }
 
     return TRUE;
