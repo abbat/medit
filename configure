@@ -766,7 +766,7 @@ MEDIT_PORTABLE_MAGIC_FILE_NAME
 MOO_PACKAGE_NAME
 MOO_FORK_COPYRIGHT
 MOO_COPYRIGHT
-MOO_WEB_CONTACT
+MOO_BUGREPORT_URL
 MOO_WEBSITE_OLD
 MOO_WEBSITE
 MOO_EMAIL
@@ -13289,7 +13289,7 @@ MOO_WEBSITE="https://github.com/abbat/medit"
 
 MOO_WEBSITE_OLD="http://mooedit.sourceforge.net/"
 
-MOO_WEB_CONTACT="http://mooedit.sourceforge.net/contact.html"
+MOO_BUGREPORT_URL="https://github.com/abbat/medit/issues/new"
 
 MOO_COPYRIGHT="2004-2014 Yevgen Muntyan <emuntyan@users.sourceforge.net>"
 
@@ -21347,7 +21347,7 @@ printf "%s\n" "#define MOO_WEBSITE \"$MOO_WEBSITE\"" >>confdefs.h
 printf "%s\n" "#define MOO_WEBSITE_OLD \"$MOO_WEBSITE_OLD\"" >>confdefs.h
 
 
-printf "%s\n" "#define MOO_WEB_CONTACT \"$MOO_WEB_CONTACT\"" >>confdefs.h
+printf "%s\n" "#define MOO_BUGREPORT_URL \"$MOO_BUGREPORT_URL\"" >>confdefs.h
 
 
 

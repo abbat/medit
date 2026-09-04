@@ -12,7 +12,7 @@ m4_if(_moo_version_suffix_,[],
 
 m4_define([_moo_website_],[https://github.com/abbat/medit])
 m4_define([_moo_website_old_],[http://mooedit.sourceforge.net/])
-m4_define([_moo_web_contact_],[http://mooedit.sourceforge.net/contact.html])
+m4_define([_moo_bugreport_url_],[https://github.com/abbat/medit/issues/new])
 m4_define([_moo_email_],[emuntyan@users.sourceforge.net])
 m4_define([_moo_copyright_],[2004-2014 Yevgen Muntyan <_moo_email_>])
 m4_define([_moo_fork_email_],[antonbatenev@yandex.ru])
@@ -38,7 +38,7 @@ AC_SUBST(MOO_DISPLAY_VERSION,"_moo_display_version_")
 AC_SUBST(MOO_EMAIL,"_moo_email_")
 AC_SUBST(MOO_WEBSITE,"_moo_website_")
 AC_SUBST(MOO_WEBSITE_OLD,"_moo_website_old_")
-AC_SUBST(MOO_WEB_CONTACT,"_moo_web_contact_")
+AC_SUBST(MOO_BUGREPORT_URL,"_moo_bugreport_url_")
 AC_SUBST(MOO_COPYRIGHT,"_moo_copyright_")
 AC_SUBST(MOO_FORK_COPYRIGHT,"_moo_fork_copyright_")
 
@@ -120,7 +120,7 @@ AC_DEFINE_UNQUOTED(MOO_COPYRIGHT,["$MOO_COPYRIGHT"],MOO_COPYRIGHT)
 AC_DEFINE_UNQUOTED(MOO_FORK_COPYRIGHT,["$MOO_FORK_COPYRIGHT"],MOO_FORK_COPYRIGHT)
 AC_DEFINE_UNQUOTED(MOO_WEBSITE,["$MOO_WEBSITE"],MOO_WEBSITE)
 AC_DEFINE_UNQUOTED(MOO_WEBSITE_OLD,["$MOO_WEBSITE_OLD"],MOO_WEBSITE_OLD)
-AC_DEFINE_UNQUOTED(MOO_WEB_CONTACT,["$MOO_WEB_CONTACT"],MOO_WEB_CONTACT)
+AC_DEFINE_UNQUOTED(MOO_BUGREPORT_URL,["$MOO_BUGREPORT_URL"],MOO_BUGREPORT_URL)
 
 MOO_AC_CHECK_OS
 

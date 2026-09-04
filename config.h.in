@@ -98,6 +98,9 @@
 /* broken gtk theme */
 #undef MOO_BROKEN_GTK_THEME
 
+/* MOO_BUGREPORT_URL */
+#undef MOO_BUGREPORT_URL
+
 /* build ctags plugin */
 #undef MOO_BUILD_CTAGS
 
@@ -154,9 +157,6 @@
 
 /* MOO_WEBSITE_OLD */
 #undef MOO_WEBSITE_OLD
-
-/* MOO_WEB_CONTACT */
-#undef MOO_WEB_CONTACT
 
 /* Name of package */
 #undef PACKAGE

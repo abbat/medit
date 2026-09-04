@@ -165,7 +165,7 @@ static void
 moo_app_report_bug (GtkWidget *window)
 {
   char *message;
-  const char *url = "https://github.com/abbat/medit/issues/new";
+  const char *url = MOO_APP_BUGREPORT_URL;
   const char *prefs_val;
   gboolean do_open = TRUE;
 
