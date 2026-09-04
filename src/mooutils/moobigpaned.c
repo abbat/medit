@@ -1552,11 +1552,12 @@ create_drop_outline (MooBigPaned *paned)
 
 #if GTK_CHECK_VERSION(3, 0, 0)
     gdk_window_shape_combine_region (paned->priv->drop_outline, mask, 0, 0);
+    /* a cairo_region_t is not a GObject */
+    cairo_region_destroy (mask);
 #else
     gdk_window_shape_combine_mask (paned->priv->drop_outline, mask, 0, 0);
-#endif
-
     g_object_unref (mask);
+#endif
 
     gdk_window_show (paned->priv->drop_outline);
 }
