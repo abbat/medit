@@ -1452,23 +1452,29 @@ static void     draw_entry                  (MooIconView    *view,
     if (selected || drop)
     {
 #if GTK_CHECK_VERSION(3,0,0)
-        /* FIXME: This code was written by AI and requires review */
-        GdkRGBA color;
+        GtkStateFlags flags = GTK_STATE_FLAG_SELECTED;
 
         if (gtk_widget_has_focus (widget) || drop)
         {
-            gtk_style_context_get_background_color (context, GTK_STATE_FLAG_SELECTED, &color);
+            flags |= GTK_STATE_FLAG_FOCUSED;
             state = GTK_CELL_RENDERER_SELECTED | GTK_CELL_RENDERER_FOCUSED;
         }
         else
         {
-            gtk_style_context_get_background_color (context, GTK_STATE_FLAG_ACTIVE, &color);
             state = GTK_CELL_RENDERER_SELECTED;
         }
 
-        cairo_set_source_rgba (cr, color.red, color.green, color.blue, color.alpha);
-        cairo_rectangle (cr, entry_rect->x, entry_rect->y, entry_rect->width, entry_rect->height);
-        cairo_fill (cr);
+        /* Let the theme paint the selection. gtk_style_context_get_background_color()
+           is deprecated and returns nothing usable for a plain widget context: the
+           unfocused case came back white, and since the cell renderer draws selected
+           text in the selected foreground colour, the row ended up white on white. */
+        gtk_style_context_save (context);
+        gtk_style_context_add_class (context, GTK_STYLE_CLASS_VIEW);
+        gtk_style_context_set_state (context, flags);
+        gtk_render_background (context, cr,
+                               entry_rect->x, entry_rect->y,
+                               entry_rect->width, entry_rect->height);
+        gtk_style_context_restore (context);
 #else
         GdkGC *selection_gc;
 
