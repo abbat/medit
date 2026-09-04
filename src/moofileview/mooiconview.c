@@ -102,6 +102,7 @@ struct _MooIconViewPrivate {
     GtkTreeRowReference *drop_dest;
 
     gboolean         mapped;
+    gboolean         allocated;
 
     DndInfo         *dnd_info;
     int              button_pressed;
@@ -524,17 +525,6 @@ static void     add_move_binding            (GtkBindingSet  *binding_set,
 static void
 _moo_icon_view_init (MooIconView *view)
 {
-    GtkWidget *widget = GTK_WIDGET (view);
-
-#if GTK_CHECK_VERSION(3,0,0)
-    /* FIXME: This code was written by AI and requires review */
-    GtkAllocation allocation = { -1, -1, -1, -1 };
-    gtk_widget_set_allocation (widget, &allocation);
-#else
-    widget->allocation.width = -1;
-    widget->allocation.height = -1;
-#endif
-
     gtk_widget_set_has_window (GTK_WIDGET (view), TRUE);
     gtk_widget_set_can_focus (GTK_WIDGET (view), TRUE);
 
@@ -558,6 +548,8 @@ _moo_icon_view_init (MooIconView *view)
 
     view->priv->pixel_icon_size = -1;
     view->priv->icon_size = -1;
+
+    view->priv->allocated = FALSE;
 
     view->priv->xoffset = 0;
     _moo_icon_view_set_adjustment (view, NULL);
@@ -1105,7 +1097,7 @@ moo_icon_view_size_allocate (GtkWidget     *widget,
 
     if (gtk_widget_get_realized (widget))
     {
-        if (gtk_widget_get_allocated_height (widget) < 0 ||
+        if (!view->priv->allocated ||
             view->priv->layout->row_height == 0)
         {
             height_changed = TRUE;
@@ -1118,7 +1110,8 @@ moo_icon_view_size_allocate (GtkWidget     *widget,
         }
     }
 
-    gtk_widget_set_allocation (widget, allocation); // or we need gtk_widget_size_allocate (widget, allocation); ???
+    gtk_widget_set_allocation (widget, allocation);
+    view->priv->allocated = TRUE;
 
     if (gtk_widget_get_realized (widget))
     {
