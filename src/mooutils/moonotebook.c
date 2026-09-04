@@ -1093,12 +1093,26 @@ moo_notebook_size_allocate (GtkWidget     *widget,
 
     if (nb->priv->current_page)
     {
+        GSList *l;
+
         child_allocation.x = allocation->x + border_width + xthickness;
         child_allocation.y = allocation->y + nb->priv->tabs_height + border_width + ythickness;
         child_allocation.width = MAX (0, allocation->width - 2*border_width - 2*xthickness);
         child_allocation.height = MAX (0, nb->priv->child_height - 2*ythickness);
-        gtk_widget_size_allocate (nb->priv->current_page->child,
-                                  &child_allocation);
+
+        /* Every page gets the allocation, not just the current one. Only the
+           current page is mapped, so the others are still not drawn, but they
+           are visible widgets and GTK+3 walks all of them through forall() when
+           it reallocates. A page that was never allocated is left at GTK's
+           default 1x1, which is smaller than the border of whatever is inside
+           it, and that produces
+             Negative content width -1 ... (node scrolledwindow)
+             gtk_box_gadget_distribute: assertion 'size >= 0' failed */
+        for (l = nb->priv->pages; l != NULL; l = l->next)
+        {
+            Page *page = l->data;
+            gtk_widget_size_allocate (page->child, &child_allocation);
+        }
     }
 }
 
