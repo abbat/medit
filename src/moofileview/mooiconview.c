@@ -948,11 +948,9 @@ moo_icon_view_style_set (GtkWidget *widget,
     if (gtk_widget_get_realized (widget))
     {
 #if GTK_CHECK_VERSION(3,0,0)
-        /* FIXME: This code was written by AI and requires review */
-        GdkRGBA bg_color;
-        GtkStyleContext *context = gtk_widget_get_style_context (widget);
-        gtk_style_context_get_background_color (context, gtk_widget_get_state_flags (widget), &bg_color);
-        gdk_window_set_background_rgba (gtk_widget_get_window (widget), &bg_color);
+        /* GDK does not paint window backgrounds on GTK+3; moo_icon_view_draw()
+           fills it instead, so there is nothing to set here. */
+        gtk_widget_queue_draw (widget);
 #else
         gdk_window_set_background (gtk_widget_get_window (widget),
                                    &widget->style->base[gtk_widget_get_state (widget)]);
@@ -967,13 +965,7 @@ moo_icon_view_state_changed (GtkWidget *widget,
 {
     if (gtk_widget_get_realized (widget))
     {
-#if GTK_CHECK_VERSION(3,0,0)
-        /* FIXME: This code was written by AI and requires review */
-        GdkRGBA bg_color;
-        GtkStyleContext *context = gtk_widget_get_style_context (widget);
-        gtk_style_context_get_background_color (context, gtk_widget_get_state_flags (widget), &bg_color);
-        gdk_window_set_background_rgba (gtk_widget_get_window (widget), &bg_color);
-#else
+#if !GTK_CHECK_VERSION(3,0,0)
         gdk_window_set_background (gtk_widget_get_window (widget),
                                    &widget->style->base[gtk_widget_get_state (widget)]);
 #endif
@@ -1028,12 +1020,11 @@ moo_icon_view_realize (GtkWidget *widget)
     gdk_window_set_user_data (gtk_widget_get_window (widget), widget);
 
 #if GTK_CHECK_VERSION(3,0,0)
-    /* FIXME: This code was written by AI and requires review */
-    GtkStyleContext *context = gtk_widget_get_style_context (widget);
-    gtk_style_context_add_class (context, GTK_STYLE_CLASS_VIEW);
-    GdkRGBA bg_color;
-    gtk_style_context_get_background_color (context, GTK_STATE_FLAG_NORMAL, &bg_color);
-    gdk_window_set_background_rgba (gtk_widget_get_window (widget), &bg_color);
+    /* The view class makes the theme give us the text-view background rather
+       than the fully transparent colour a bare widget context yields. The
+       window background itself is painted in moo_icon_view_draw(). */
+    gtk_style_context_add_class (gtk_widget_get_style_context (widget),
+                                 GTK_STYLE_CLASS_VIEW);
 #else
     widget->style = gtk_style_attach (widget->style, gtk_widget_get_window (widget));
     gdk_window_set_background (gtk_widget_get_window (widget), &widget->style->base[GTK_STATE_NORMAL]);
@@ -1253,6 +1244,13 @@ moo_icon_view_expose (GtkWidget      *widget,
         clip_rect.height = gtk_widget_get_allocated_height (widget);
     }
 
+    /* GTK+2 set the window background from the style; on GTK+3 the widget has
+       to paint it. */
+    gtk_render_background (gtk_widget_get_style_context (widget), cr,
+                           0, 0,
+                           gtk_widget_get_allocated_width (widget),
+                           gtk_widget_get_allocated_height (widget));
+
     area = cairo_region_create_rectangle (&clip_rect);
     cairo_region_translate (area, view->priv->xoffset, 0);
 #else
@@ -1319,7 +1317,12 @@ moo_icon_view_expose (GtkWidget      *widget,
            widget's window, unlike a new one made from some other window */
         cairo_save (cr);
 
+        /* the view class is what makes the theme return the selection colour;
+           a bare widget context gives a fully transparent one */
+        gtk_style_context_save (context);
+        gtk_style_context_add_class (context, GTK_STYLE_CLASS_VIEW);
         gtk_style_context_get_background_color (context, GTK_STATE_FLAG_SELECTED, &color_rgba);
+        gtk_style_context_restore (context);
         color_gdk.pixel = 0;
         color_gdk.red = color_rgba.red * 65535;
         color_gdk.green = color_rgba.green * 65535;

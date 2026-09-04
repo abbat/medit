@@ -1215,13 +1215,7 @@ moo_notebook_realize (GtkWidget *widget)
 #if 0
     update_notebook_style (widget);
 #endif
-#if GTK_CHECK_VERSION(3,0,0)
-    /* FIXME: This code was written by AI and requires review */
-    /* In GTK+3, background is handled through GtkStyleContext */
-    GtkStyleContext *context = gtk_widget_get_style_context(widget);
-    gtk_style_context_add_region(context, GTK_STYLE_REGION_TAB, GTK_REGION_ONLY);
-    gtk_style_context_set_background(context, nb->priv->tab_window);
-#else
+#if !GTK_CHECK_VERSION(3,0,0)
     gtk_style_set_background (widget->style, nb->priv->tab_window, GTK_STATE_NORMAL);
 #endif
 
@@ -1241,13 +1235,9 @@ moo_notebook_style_set (GtkWidget *widget,
 
     if (nb->priv->tab_window)
 #if GTK_CHECK_VERSION(3,0,0)
-        /* FIXME: This code was written by AI and requires review */
-        /* In GTK+3, background is handled through GtkStyleContext */
-    {
-        GtkStyleContext *context = gtk_widget_get_style_context(widget);
-        gtk_style_context_add_region(context, GTK_STYLE_REGION_TAB, GTK_REGION_ONLY);
-        gtk_style_context_set_background(context, nb->priv->tab_window);
-    }
+        /* the tab window's background is painted in moo_notebook_draw();
+           gtk_style_context_set_background() has been a no-op since 3.18 */
+        gtk_widget_queue_draw (widget);
 #else
         gtk_style_set_background (widget->style,
                                   nb->priv->tab_window,
@@ -1514,40 +1504,50 @@ moo_notebook_expose (GtkWidget      *widget,
                      GdkEventExpose *event)
 #endif
 {
-    GdkWindow *event_window;
-    GdkRectangle *event_area;
+    MooNotebook *nb = MOO_NOTEBOOK (widget);
+    gboolean draw_tabs, draw_main;
 
-#if GTK_CHECK_VERSION (3,22,0)
-    // TODO: extract to function for other units
-    cairo_region_t *region;
-    cairo_rectangle_int_t rectangle;
-    GdkDrawingContext *drawing_context;
+#if GTK_CHECK_VERSION (3,0,0)
+    /* GTK+3 emits one ::draw for the whole widget. The drawing context's window
+       is the toplevel frame's, so comparing it against our own windows -- which
+       is what the port did -- never matched and none of this was drawn. */
+    GdkRectangle tab_area = { 0, 0, 0, 0 };
+    GdkRectangle *event_area = &tab_area;
 
-    drawing_context = gdk_cairo_get_drawing_context(cr);
-    if (!drawing_context)
-        return GTK_WIDGET_CLASS(moo_notebook_grand_parent_class)->draw (widget, cr);
+    draw_tabs = nb->priv->tab_window != NULL &&
+                gtk_cairo_should_draw_window (cr, nb->priv->tab_window);
+    draw_main = gtk_cairo_should_draw_window (cr, gtk_widget_get_window (widget));
 
-    event_window = gdk_drawing_context_get_window (drawing_context);
-
-    region = gdk_drawing_context_get_clip (drawing_context);
-    cairo_region_get_extents (region, &rectangle);
-
-    event_area = (GdkRectangle*)&rectangle;
+    if (draw_tabs)
+    {
+        tab_area.width = gdk_window_get_width (nb->priv->tab_window);
+        tab_area.height = gdk_window_get_height (nb->priv->tab_window);
+    }
 #else
-    event_window = event->window;
-    event_area = &event->area;
+    GdkWindow *event_window = event->window;
+    GdkRectangle *event_area = &event->area;
+
+    draw_tabs = (event_window == nb->priv->tab_window);
+    draw_main = (event_window == gtk_widget_get_window (widget));
 #endif
 
-    MooNotebook *nb = MOO_NOTEBOOK (widget);
-
-    if (event_window == nb->priv->tab_window)
+    if (draw_tabs)
 #if GTK_CHECK_VERSION (3,0,0)
+    {
+        cairo_save (cr);
+        gtk_cairo_transform_to_window (cr, widget, nb->priv->tab_window);
+        /* GTK+2 set this window's background from the style; on GTK+3 the
+           widget has to paint it */
+        gtk_render_background (gtk_widget_get_style_context (widget), cr,
+                               0, 0, tab_area.width, tab_area.height);
         moo_notebook_draw_labels (nb, cr);
+        cairo_restore (cr);
+    }
 #else
         moo_notebook_draw_labels (nb, event_area);
 #endif
 
-    if (event_window == gtk_widget_get_window (widget) && nb->priv->tabs_visible)
+    if (draw_main && nb->priv->tabs_visible)
 #if GTK_CHECK_VERSION (3,0,0)
         moo_notebook_draw_child_border (nb, cr);
 #else
@@ -1561,9 +1561,14 @@ moo_notebook_expose (GtkWidget      *widget,
     GTK_WIDGET_CLASS(moo_notebook_grand_parent_class)->expose_event (widget, event);
 #endif
 
-    if (nb->priv->in_drag && event_window == nb->priv->tab_window)
+    if (nb->priv->in_drag && draw_tabs)
 #if GTK_CHECK_VERSION (3,0,0)
+    {
+        cairo_save (cr);
+        gtk_cairo_transform_to_window (cr, widget, nb->priv->tab_window);
         moo_notebook_draw_dragged_label (nb, cr, event_area);
+        cairo_restore (cr);
+    }
 #else
         moo_notebook_draw_dragged_label (nb, event);
 #endif
@@ -2462,9 +2467,6 @@ moo_notebook_draw_label (MooNotebook    *nb,
     GtkStateFlags state_flags = state == GTK_STATE_NORMAL ? GTK_STATE_FLAG_NORMAL : GTK_STATE_FLAG_ACTIVE;
     gtk_style_context_set_state(context, state_flags);
 
-    /* Add tab region for proper styling */
-    gtk_style_context_add_region(context, GTK_STYLE_REGION_TAB, GTK_REGION_ONLY);
-
     /* Render the extension (tab) background */
     gtk_render_background(context, cr, x, y, page->label->width, height);
 
@@ -2503,9 +2505,6 @@ moo_notebook_draw_label (MooNotebook    *nb,
         /* Set the state for rendering */
         GtkStateFlags state_flags = state == GTK_STATE_NORMAL ? GTK_STATE_FLAG_NORMAL : GTK_STATE_FLAG_ACTIVE;
         gtk_style_context_set_state(context, state_flags);
-
-        /* Add tab region for proper styling */
-        gtk_style_context_add_region(context, GTK_STYLE_REGION_TAB, GTK_REGION_ONLY);
 
         /* Render the focus rectangle */
         gtk_render_focus(context, cr,

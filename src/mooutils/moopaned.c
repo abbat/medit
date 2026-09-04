@@ -640,23 +640,16 @@ static void
 moo_paned_style_set (GtkWidget *widget,
                      G_GNUC_UNUSED GtkStyle *old_style)
 {
+#if !GTK_CHECK_VERSION(3,0,0)
     MooPaned *paned = MOO_PANED (widget);
+#endif
 
 #if GTK_CHECK_VERSION(3,0,0)
-    /* FIXME: This code was written by AI and requires review */
-    /* In GTK+3, style context is always available */
-    if (gtk_widget_get_style_context (widget))
-    {
-        if (paned->priv->bin_window)
-            gtk_style_context_set_background (gtk_widget_get_style_context (widget),
-                                             paned->priv->bin_window);
-        if (paned->priv->handle_window)
-            gtk_style_context_set_background (gtk_widget_get_style_context (widget),
-                                             paned->priv->handle_window);
-        if (paned->priv->pane_window)
-            gtk_style_context_set_background (gtk_widget_get_style_context (widget),
-                                             paned->priv->pane_window);
-    }
+    /* Nothing to do: gtk_style_context_set_background() has been a no-op since
+       GTK+ 3.18 because GDK no longer paints window backgrounds. The pane
+       window is filled in moo_paned_draw() instead; the others are covered by
+       their children. */
+    gtk_widget_queue_draw (widget);
 #else
     /* In GTK+2, check if widget->style exists */
     if (widget->style)
@@ -811,11 +804,7 @@ realize_handle (MooPaned *paned)
             &attributes, attributes_mask);
     gdk_window_set_user_data (paned->priv->handle_window, widget);
 
-#if GTK_CHECK_VERSION(3,0,0)
-    /* FIXME: This code was written by AI and requires review */
-    gtk_style_context_set_background (gtk_widget_get_style_context (widget),
-                                     paned->priv->handle_window);
-#else
+#if !GTK_CHECK_VERSION(3,0,0)
     gtk_style_set_background (widget->style,
                               paned->priv->handle_window,
                               GTK_STATE_NORMAL);
@@ -900,11 +889,7 @@ realize_pane (MooPaned *paned)
             gdk_window_new (gtk_widget_get_window (widget), &attributes, attributes_mask);
     gdk_window_set_user_data (paned->priv->pane_window, widget);
 
-#if GTK_CHECK_VERSION(3,0,0)
-    /* FIXME: This code was written by AI and requires review */
-    gtk_style_context_set_background (gtk_widget_get_style_context (widget),
-                                     paned->priv->pane_window);
-#else
+#if !GTK_CHECK_VERSION(3,0,0)
     gtk_style_set_background (widget->style,
                               paned->priv->pane_window,
                               GTK_STATE_NORMAL);

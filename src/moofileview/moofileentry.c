@@ -148,6 +148,17 @@ enum {
 
 static guint signals[LAST_SIGNAL];
 
+#if GTK_CHECK_VERSION(3,0,0)
+static const char *popup_selection_css =
+    /* keep the selected row looking selected even though the popup's tree
+       view never takes focus; GTK+2 did this by copying base[SELECTED]
+       onto the ACTIVE state */
+    "treeview.view:selected {"
+    "  background-color: @theme_selected_bg_color;"
+    "  color: @theme_selected_fg_color;"
+    "}";
+#endif
+
 static void
 _moo_file_entry_completion_class_init (MooFileEntryCompletionClass *klass)
 {
@@ -771,27 +782,16 @@ completion_popup (MooFileEntryCompletion *cmpl)
     gtk_widget_ensure_style (GTK_WIDGET (cmpl->priv->treeview));
 
 #if GTK_CHECK_VERSION(3,0,0)
-    /* FIXME: This code was written by AI and requires review */
-    GtkStyleContext *context = gtk_widget_get_style_context(GTK_WIDGET(cmpl->priv->treeview));
-    GtkCssProvider *provider = gtk_css_provider_new();
-    GdkRGBA color;
+    {
+        GtkStyleContext *context =
+            gtk_widget_get_style_context (GTK_WIDGET (cmpl->priv->treeview));
+        GtkCssProvider *provider = gtk_css_provider_new ();
 
-    /* Get the selected background color from the default theme */
-    gtk_style_context_get_background_color(context, GTK_STATE_FLAG_SELECTED, &color);
-
-    /* Create CSS to set the background color for the active state */
-    char *css = g_strdup_printf("treeview { background-color: rgba(%d,%d,%d,%f); }",
-                               (int)(color.red * 255),
-                               (int)(color.green * 255),
-                               (int)(color.blue * 255),
-                               color.alpha);
-
-    gtk_css_provider_load_from_data(provider, css, -1, NULL);
-    gtk_style_context_add_provider(context, GTK_STYLE_PROVIDER(provider),
-                                  GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
-
-    g_free(css);
-    g_object_unref(provider);
+        gtk_css_provider_load_from_data (provider, popup_selection_css, -1, NULL);
+        gtk_style_context_add_provider (context, GTK_STYLE_PROVIDER (provider),
+                                        GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+        g_object_unref (provider);
+    }
 #else
     gtk_widget_modify_bg (GTK_WIDGET (cmpl->priv->treeview), GTK_STATE_ACTIVE,
                           &GTK_WIDGET(cmpl->priv->treeview)->style->base[GTK_STATE_SELECTED]);

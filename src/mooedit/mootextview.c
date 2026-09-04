@@ -2162,6 +2162,28 @@ invalidate_gcs (MooTextView *view)
     }
 }
 
+#if GTK_CHECK_VERSION(3,0,0)
+static void
+get_view_background_color (GtkWidget *widget,
+                           GdkColor  *color)
+{
+    GtkStyleContext *context = gtk_widget_get_style_context (widget);
+    GdkRGBA rgba;
+
+    /* the view class is what makes the theme hand back the text background;
+       a bare widget context returns a fully transparent colour */
+    gtk_style_context_save (context);
+    gtk_style_context_add_class (context, GTK_STYLE_CLASS_VIEW);
+    gtk_style_context_get_background_color (context, GTK_STATE_FLAG_NORMAL, &rgba);
+    gtk_style_context_restore (context);
+
+    color->pixel = 0;
+    color->red = rgba.red * 65535;
+    color->green = rgba.green * 65535;
+    color->blue = rgba.blue * 65535;
+}
+#endif
+
 static void
 update_gc (MooTextView     *view,
            MooTextViewColor color_num)
@@ -2200,12 +2222,7 @@ update_gc (MooTextView     *view,
             g_warning ("could not parse color %s",
                        view->priv->colors[color_num]);
 #if GTK_CHECK_VERSION(3,0,0)
-            GtkStyleContext *context = gtk_widget_get_style_context (widget);
-            GdkRGBA rgba;
-            gtk_style_context_get_background_color (context, GTK_STATE_FLAG_NORMAL, &rgba);
-            color.red = rgba.red * 65535;
-            color.green = rgba.green * 65535;
-            color.blue = rgba.blue * 65535;
+            get_view_background_color (widget, &color);
 #else
             color = widget->style->bg[GTK_STATE_NORMAL];
 #endif
@@ -2214,12 +2231,7 @@ update_gc (MooTextView     *view,
     else
     {
 #if GTK_CHECK_VERSION(3,0,0)
-        GtkStyleContext *context = gtk_widget_get_style_context (widget);
-        GdkRGBA rgba;
-        gtk_style_context_get_background_color (context, GTK_STATE_FLAG_NORMAL, &rgba);
-        color.red = rgba.red * 65535;
-        color.green = rgba.green * 65535;
-        color.blue = rgba.blue * 65535;
+        get_view_background_color (widget, &color);
 #else
         color = widget->style->bg[GTK_STATE_NORMAL];
 #endif
