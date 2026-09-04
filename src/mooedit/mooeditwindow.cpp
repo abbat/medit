@@ -2828,7 +2828,7 @@ moo_edit_window_set_active_view (MooEditWindow *window,
     page = get_view_page_num (window, view, &notebook);
     g_return_if_fail (page >= 0);
 
-    window->priv->active_tab = moo_edit_view_get_tab (view);
+    set_active_tab (window, moo_edit_view_get_tab (view));
     moo_notebook_set_current_page (notebook, page);
     gtk_widget_grab_focus (GTK_WIDGET (view));
 }
@@ -3191,7 +3191,7 @@ _moo_edit_window_remove_doc (MooEditWindow *window,
     g_return_if_fail (notebook != nullptr && page >= 0);
 
     if (tab == window->priv->active_tab)
-        window->priv->active_tab = nullptr;
+        set_active_tab (window, nullptr);
 
     for (i = 0; i < views->n_elms; ++i)
     {
