@@ -167,7 +167,7 @@ create_application_url_label (GtkBox *box)
   gtk_label_set_selectable (label, TRUE);
   gtk_label_set_justify (label, GTK_JUSTIFY_CENTER);
 
-  markup = g_markup_printf_escaped ("<a href=\"%s\">%s</a>\n"
+  markup = g_markup_printf_escaped ("<a href=\"%s\">%s</a>\n\n"
                                     "<small><a href=\"%s\">%s</a> (%s)</small>",
                                     MOO_APP_WEBSITE, MOO_APP_WEBSITE_LABEL,
                                     MOO_APP_WEBSITE_OLD, MOO_APP_WEBSITE_OLD_LABEL,
