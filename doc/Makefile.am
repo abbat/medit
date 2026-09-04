@@ -13,15 +13,6 @@ gendocbook_files =				\
 	$(top_srcdir)/api/mpi/module.py		\
 	$(top_srcdir)/api/mpi/docbookwriter.py
 
-script_docbook_sources =			\
-	built/medit-defines.ent			\
-	built/script-python.docbook		\
-	built/script-lua.docbook		\
-	built/script-lua-gtk.docbook
-
-$(srcdir)/help/script/index.html: $(script_docbook_sources) script-book.xsl
-	$(AM_V_GEN)cd $(srcdir) && $(XSLTPROC) --xinclude script-book.xsl script.docbook
-
 $(srcdir)/help/medit.css: medit.css
 	$(AM_V_at)$(MKDIR_P) $(srcdir)/help/
 	$(AM_V_GEN)cp $(srcdir)/medit.css $(srcdir)/help/
@@ -75,7 +66,6 @@ all-am: doc
 doc:						\
 	$(srcdir)/help/index.html		\
 	$(srcdir)/help/help.html		\
-	$(srcdir)/help/script/index.html	\
 	$(srcdir)/help/medit.css		\
 	$(srcdir)/built/medit.1			\
 	$(dest_png_files)			\
@@ -86,15 +76,13 @@ endif
 EXTRA_DIST = help built/moo-help-sections.h built/medit.1
 
 install-data-local:
-	$(MKDIR_P) $(DESTDIR)$(MOO_HELP_DIR)/img $(DESTDIR)$(MOO_HELP_DIR)/script
+	$(MKDIR_P) $(DESTDIR)$(MOO_HELP_DIR)/img
 	cd $(srcdir) && $(INSTALL_DATA) help/*.html help/*.css $(DESTDIR)$(MOO_HELP_DIR)
-	cd $(srcdir) && $(INSTALL_DATA) help/script/*.html $(DESTDIR)$(MOO_HELP_DIR)/script
 	cd $(srcdir) && $(INSTALL_DATA) help/img/*.png $(DESTDIR)$(MOO_HELP_DIR)/img
 
 uninstall-local:
 	rm -f $(DESTDIR)$(MOO_HELP_DIR)/*.html \
 		$(DESTDIR)$(MOO_HELP_DIR)/*.css \
-		$(DESTDIR)$(MOO_HELP_DIR)/script/*.html \
 		$(DESTDIR)$(MOO_HELP_DIR)/img/*.png
 
 if MOO_OS_UNIX

@@ -957,11 +957,6 @@ moo_app_exec_cmd (MooApp *app, char cmd, const char *data, G_GNUC_UNUSED guint l
 
   switch (code)
     {
-/* FIXME: lua
-    case CMD_SCRIPT:
-      moo_app_run_script (app, data);
-      break;
-*/
     case CMD_OPEN_FILES:
       moo_app_cmd_open_files (app, data);
       break;

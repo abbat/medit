@@ -1,16 +1,4 @@
 <moo-user-tools version="1.0"><!-- -%- indent-width:2 -%- -->
-  <command id="SortLines">
-    <name>Sort Lines</name>
-    <options>need-doc</options>
-    <type>lua</type>
-    <lua:code><![CDATA[
-lines = doc.get_selected_lines()
-if #lines > 1 then
-  table.sort(lines)
-  doc.replace_selected_lines(lines)
-end
-]]></lua:code>
-  </command>
   <command id="SortLinesUniq"><!-- ###unix### -->
     <name>Sort | Uniq</name>
     <options>need-doc</options>
@@ -137,35 +125,5 @@ else
   xdg-open "$doc_base.pdf"
 fi
 ]]></exe:code>
-  </command>
-  <command id="Math">
-    <name>Math</name>
-    <file-filter>*.tex</file-filter>
-    <accel>&lt;alt&gt;M</accel>
-    <type>lua</type>
-    <lua:code><![CDATA[
-if doc.has_selection() then
-  doc.replace_selected_text('$' .. doc.get_selected_text() .. '$')
-else
-  pos = doc.get_cursor_pos().get_offset()
-  doc.insert_text('$ $')
-  doc.select_range(pos + 1, pos + 2)
-end
-]]></lua:code>
-  </command>
-  <command id="InsertDateAndTime"><!-- ###python### -->
-    <name>Insert Date and Time</name>
-    <options>need-doc</options>
-    <type>python</type>
-    <python:code><![CDATA[
-# insert_date_and_time.py is installed in
-# $prefix/share/medit/python
-from insert_date_and_time import get_format
-import time
-
-fmt = get_format(window)
-if fmt is not None:
-    doc.replace_selected_text(time.strftime(fmt))
-]]></python:code>
   </command>
 </moo-user-tools>

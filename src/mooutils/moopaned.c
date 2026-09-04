@@ -14,15 +14,15 @@
  */
 
 /**
- * class:MooPaned: (parent GtkBin) (constructable) (moo.lua 0) (moo.private 1)
+ * class:MooPaned: (parent GtkBin) (constructable) (moo.private 1)
  **/
 
 /**
- * boxed:MooPaneLabel: (moo.lua 0) (moo.private 1)
+ * boxed:MooPaneLabel: (moo.private 1)
  **/
 
 /**
- * boxed:MooPaneParams: (moo.lua 0) (moo.private 1)
+ * boxed:MooPaneParams: (moo.private 1)
  **/
 
 #ifdef HAVE_CONFIG_H

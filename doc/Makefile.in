@@ -260,8 +260,6 @@ MOO_MV_TO_SRCDIR = @MOO_MV_TO_SRCDIR@
 MOO_PACKAGE_NAME = @MOO_PACKAGE_NAME@
 MOO_PO_SUBDIRS_RULE = @MOO_PO_SUBDIRS_RULE@
 MOO_PYTHON = @MOO_PYTHON@
-MOO_PYTHON_LIB_DIR = @MOO_PYTHON_LIB_DIR@
-MOO_PYTHON_PLUGIN_DIR = @MOO_PYTHON_PLUGIN_DIR@
 MOO_TEXT_LANG_FILES_DIR = @MOO_TEXT_LANG_FILES_DIR@
 MOO_TOP_SRCDIR = @MOO_TOP_SRCDIR@
 MOO_VERSION = @MOO_VERSION@
@@ -364,12 +362,6 @@ BUILT_SOURCES =
 @MOO_DEV_MODE_TRUE@	$(top_srcdir)/api/mpi/__init__.py	\
 @MOO_DEV_MODE_TRUE@	$(top_srcdir)/api/mpi/module.py		\
 @MOO_DEV_MODE_TRUE@	$(top_srcdir)/api/mpi/docbookwriter.py
-
-@MOO_DEV_MODE_TRUE@script_docbook_sources = \
-@MOO_DEV_MODE_TRUE@	built/medit-defines.ent			\
-@MOO_DEV_MODE_TRUE@	built/script-python.docbook		\
-@MOO_DEV_MODE_TRUE@	built/script-lua.docbook		\
-@MOO_DEV_MODE_TRUE@	built/script-lua-gtk.docbook
 
 @MOO_DEV_MODE_TRUE@docbook_files = \
 @MOO_DEV_MODE_TRUE@	medit.docbook			\
@@ -640,9 +632,6 @@ uninstall-man: uninstall-man1
 @MOO_DEV_MODE_TRUE@	$(AM_V_at)$(MKDIR_P) $(srcdir)/built
 @MOO_DEV_MODE_TRUE@	$(AM_V_at)mv medit-defines.ent $(srcdir)/built/
 
-@MOO_DEV_MODE_TRUE@$(srcdir)/help/script/index.html: $(script_docbook_sources) script-book.xsl
-@MOO_DEV_MODE_TRUE@	$(AM_V_GEN)cd $(srcdir) && $(XSLTPROC) --xinclude script-book.xsl script.docbook
-
 @MOO_DEV_MODE_TRUE@$(srcdir)/help/medit.css: medit.css
 @MOO_DEV_MODE_TRUE@	$(AM_V_at)$(MKDIR_P) $(srcdir)/help/
 @MOO_DEV_MODE_TRUE@	$(AM_V_GEN)cp $(srcdir)/medit.css $(srcdir)/help/
@@ -681,22 +670,19 @@ uninstall-man: uninstall-man1
 @MOO_DEV_MODE_TRUE@doc:						\
 @MOO_DEV_MODE_TRUE@	$(srcdir)/help/index.html		\
 @MOO_DEV_MODE_TRUE@	$(srcdir)/help/help.html		\
-@MOO_DEV_MODE_TRUE@	$(srcdir)/help/script/index.html	\
 @MOO_DEV_MODE_TRUE@	$(srcdir)/help/medit.css		\
 @MOO_DEV_MODE_TRUE@	$(srcdir)/built/medit.1			\
 @MOO_DEV_MODE_TRUE@	$(dest_png_files)			\
 @MOO_DEV_MODE_TRUE@	moo-help-sections.h.stamp
 
 install-data-local:
-	$(MKDIR_P) $(DESTDIR)$(MOO_HELP_DIR)/img $(DESTDIR)$(MOO_HELP_DIR)/script
+	$(MKDIR_P) $(DESTDIR)$(MOO_HELP_DIR)/img
 	cd $(srcdir) && $(INSTALL_DATA) help/*.html help/*.css $(DESTDIR)$(MOO_HELP_DIR)
-	cd $(srcdir) && $(INSTALL_DATA) help/script/*.html $(DESTDIR)$(MOO_HELP_DIR)/script
 	cd $(srcdir) && $(INSTALL_DATA) help/img/*.png $(DESTDIR)$(MOO_HELP_DIR)/img
 
 uninstall-local:
 	rm -f $(DESTDIR)$(MOO_HELP_DIR)/*.html \
 		$(DESTDIR)$(MOO_HELP_DIR)/*.css \
-		$(DESTDIR)$(MOO_HELP_DIR)/script/*.html \
 		$(DESTDIR)$(MOO_HELP_DIR)/img/*.png
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

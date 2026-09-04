@@ -517,7 +517,7 @@ _moo_editor_get_file_watch (MooEditor *editor)
 
 
 /**
- * moo_editor_create_instance: (static-method-of MooEditor) (moo.lua 0)
+ * moo_editor_create_instance: (static-method-of MooEditor)
  *
  * @embedded: (default TRUE):
  *
@@ -2242,7 +2242,7 @@ moo_editor_open_path (MooEditor     *editor,
 }
 
 /**
- * moo_editor_create_doc: (moo.lua 0)
+ * moo_editor_create_doc:
  *
  * @editor:
  * @filename: (type const-filename) (allow-none) (default NULL)
@@ -2947,7 +2947,7 @@ moo_editor_get_doc_for_uri (MooEditor  *editor,
 
 
 /**
- * moo_editor_set_window_type: (moo.lua 0)
+ * moo_editor_set_window_type:
  */
 void
 moo_editor_set_window_type (MooEditor      *editor,
@@ -2960,7 +2960,7 @@ moo_editor_set_window_type (MooEditor      *editor,
 
 
 /**
- * moo_editor_set_doc_type: (moo.lua 0)
+ * moo_editor_set_doc_type:
  */
 void
 moo_editor_set_doc_type (MooEditor      *editor,

@@ -179,8 +179,6 @@ AC_DEFUN_ONCE([MOO_AC_SET_DIRS],[
   AC_DEFINE_UNQUOTED([MEDIT_PORTABLE_DATA_DIR], "$MEDIT_PORTABLE_DATA_DIR", [prefs files are saved in this directory])
   AC_DEFINE_UNQUOTED([MEDIT_PORTABLE_CACHE_DIR], "$MEDIT_PORTABLE_CACHE_DIR", [cache files are saved in this directory])
 
-  AC_SUBST(MOO_PYTHON_PLUGIN_DIR, "${MOO_DATA_DIR}/plugins")
-  AC_SUBST(MOO_PYTHON_LIB_DIR, "${MOO_DATA_DIR}/python")
 ])
 
 ##############################################################################

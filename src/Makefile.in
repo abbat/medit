@@ -321,8 +321,6 @@ am__medit_SOURCES_DIST = medit-app/main.h medit-app/main.cpp main.c \
 	plugins/usertools/moousertools-enums.cpp \
 	plugins/usertools/moocommand-exe.cpp \
 	plugins/usertools/moocommand-exe.h \
-	plugins/usertools/moocommand-script.cpp \
-	plugins/usertools/moocommand-script.h \
 	plugins/support/moocmdview.h plugins/support/moocmdview.cpp \
 	plugins/support/mooeditwindowoutput.h \
 	plugins/support/mooeditwindowoutput.cpp \
@@ -448,7 +446,6 @@ am__objects_6 = plugins/moofileselector-prefs.$(OBJEXT) \
 	plugins/usertools/moooutputfilterregex.$(OBJEXT) \
 	plugins/usertools/moousertools-enums.$(OBJEXT) \
 	plugins/usertools/moocommand-exe.$(OBJEXT) \
-	plugins/usertools/moocommand-script.$(OBJEXT) \
 	plugins/support/moocmdview.$(OBJEXT) \
 	plugins/support/mooeditwindowoutput.$(OBJEXT) \
 	plugins/support/moolineview.$(OBJEXT) \
@@ -615,7 +612,6 @@ am__depfiles_remade = ./$(DEPDIR)/dummy.Po ./$(DEPDIR)/main.Po \
 	plugins/support/$(DEPDIR)/moolineview.Po \
 	plugins/support/$(DEPDIR)/moooutputfilter.Po \
 	plugins/usertools/$(DEPDIR)/moocommand-exe.Po \
-	plugins/usertools/$(DEPDIR)/moocommand-script.Po \
 	plugins/usertools/$(DEPDIR)/moocommand.Po \
 	plugins/usertools/$(DEPDIR)/moocommanddisplay.Po \
 	plugins/usertools/$(DEPDIR)/moooutputfilterregex.Po \
@@ -838,8 +834,6 @@ MOO_MV_TO_SRCDIR = @MOO_MV_TO_SRCDIR@
 MOO_PACKAGE_NAME = @MOO_PACKAGE_NAME@
 MOO_PO_SUBDIRS_RULE = @MOO_PO_SUBDIRS_RULE@
 MOO_PYTHON = @MOO_PYTHON@
-MOO_PYTHON_LIB_DIR = @MOO_PYTHON_LIB_DIR@
-MOO_PYTHON_PLUGIN_DIR = @MOO_PYTHON_PLUGIN_DIR@
 MOO_TEXT_LANG_FILES_DIR = @MOO_TEXT_LANG_FILES_DIR@
 MOO_TOP_SRCDIR = @MOO_TOP_SRCDIR@
 MOO_VERSION = @MOO_VERSION@
@@ -965,10 +959,7 @@ EXTRA_DIST = mooglib/moo-glib.cpp marshals.list \
 	plugins/glade/moofileselector.glade \
 	plugins/glade/moofind.glade plugins/glade/moogrep.glade \
 	plugins/usertools/glade/mooedittools-exe.glade \
-	plugins/usertools/glade/mooedittools-script.glade \
 	plugins/usertools/glade/moousertools.glade \
-	plugins/usertools/lua-tool-setup.lua \
-	plugins/usertools/python-tool-setup.py \
 	plugins/usertools/filters.xml plugins/usertools/menu-tmpl.xml \
 	plugins/usertools/context-tmpl.xml \
 	plugins/usertools/genplatxml.py medit-app/medit.desktop.in
@@ -1187,8 +1178,6 @@ plugins_sources = plugins/moofileselector-prefs.cpp \
 	plugins/usertools/moousertools-enums.cpp \
 	plugins/usertools/moocommand-exe.cpp \
 	plugins/usertools/moocommand-exe.h \
-	plugins/usertools/moocommand-script.cpp \
-	plugins/usertools/moocommand-script.h \
 	plugins/support/moocmdview.h plugins/support/moocmdview.cpp \
 	plugins/support/mooeditwindowoutput.h \
 	plugins/support/mooeditwindowoutput.cpp \
@@ -1199,10 +1188,8 @@ built_plugins_sources = plugins/moofileselector-prefs-gxml.h \
 	plugins/moofileselector-gxml.h plugins/moofind-gxml.h \
 	plugins/moogrep-gxml.h \
 	plugins/usertools/mooedittools-exe-gxml.h \
-	plugins/usertools/mooedittools-script-gxml.h \
 	plugins/usertools/moousertools-gxml.h \
-	plugins/usertools/lua-tool-setup.h plugins/usertools/menu.xml \
-	plugins/usertools/context.xml
+	plugins/usertools/menu.xml plugins/usertools/context.xml
 moo_srcdir = $(srcdir)
 moo_builddir = .
 moo_edit_enum_headers = \
@@ -1900,9 +1887,6 @@ plugins/usertools/moousertools-enums.$(OBJEXT):  \
 plugins/usertools/moocommand-exe.$(OBJEXT):  \
 	plugins/usertools/$(am__dirstamp) \
 	plugins/usertools/$(DEPDIR)/$(am__dirstamp)
-plugins/usertools/moocommand-script.$(OBJEXT):  \
-	plugins/usertools/$(am__dirstamp) \
-	plugins/usertools/$(DEPDIR)/$(am__dirstamp)
 plugins/support/$(am__dirstamp):
 	@$(MKDIR_P) plugins/support
 	@: > plugins/support/$(am__dirstamp)
@@ -2089,7 +2073,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@plugins/support/$(DEPDIR)/moolineview.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@plugins/support/$(DEPDIR)/moooutputfilter.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@plugins/usertools/$(DEPDIR)/moocommand-exe.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@plugins/usertools/$(DEPDIR)/moocommand-script.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@plugins/usertools/$(DEPDIR)/moocommand.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@plugins/usertools/$(DEPDIR)/moocommanddisplay.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@plugins/usertools/$(DEPDIR)/moooutputfilterregex.Po@am__quote@ # am--include-marker
@@ -2556,7 +2539,6 @@ distclean: distclean-am
 	-rm -f plugins/support/$(DEPDIR)/moolineview.Po
 	-rm -f plugins/support/$(DEPDIR)/moooutputfilter.Po
 	-rm -f plugins/usertools/$(DEPDIR)/moocommand-exe.Po
-	-rm -f plugins/usertools/$(DEPDIR)/moocommand-script.Po
 	-rm -f plugins/usertools/$(DEPDIR)/moocommand.Po
 	-rm -f plugins/usertools/$(DEPDIR)/moocommanddisplay.Po
 	-rm -f plugins/usertools/$(DEPDIR)/moooutputfilterregex.Po
@@ -2761,7 +2743,6 @@ maintainer-clean: maintainer-clean-am
 	-rm -f plugins/support/$(DEPDIR)/moolineview.Po
 	-rm -f plugins/support/$(DEPDIR)/moooutputfilter.Po
 	-rm -f plugins/usertools/$(DEPDIR)/moocommand-exe.Po
-	-rm -f plugins/usertools/$(DEPDIR)/moocommand-script.Po
 	-rm -f plugins/usertools/$(DEPDIR)/moocommand.Po
 	-rm -f plugins/usertools/$(DEPDIR)/moocommanddisplay.Po
 	-rm -f plugins/usertools/$(DEPDIR)/moooutputfilterregex.Po
@@ -2886,11 +2867,6 @@ moo-pixbufs.h: $(PIXMAPS)
 # -%- strip:true -%-
 mooapp-credits.h: $(top_srcdir)/THANKS $(top_srcdir)/tools/xml2h.py
 	$(AM_V_GEN)$(MOO_PYTHON) $(top_srcdir)/tools/xml2h.py $(top_srcdir)/THANKS mooapp-credits.h MOO_APP_CREDITS
-plugins/usertools/lua-tool-setup.h: plugins/usertools/lua-tool-setup.lua $(top_srcdir)/tools/xml2h.py
-	$(AM_V_at)$(MKDIR_P) plugins/usertools
-	$(AM_V_GEN)$(MOO_PYTHON) $(top_srcdir)/tools/xml2h.py $(srcdir)/plugins/usertools/lua-tool-setup.lua \
-		plugins/usertools/lua-tool-setup.h.tmp LUA_TOOL_SETUP_LUA \
-		&& mv plugins/usertools/lua-tool-setup.h.tmp plugins/usertools/lua-tool-setup.h
 plugins/usertools/%.xml: plugins/usertools/%-tmpl.xml plugins/usertools/genplatxml.py
 	$(AM_V_at)$(MKDIR_P) plugins/usertools
 	$(AM_V_GEN)$(MOO_PYTHON) $(srcdir)/plugins/usertools/genplatxml.py $(genplatxml_args) \

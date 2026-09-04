@@ -3811,7 +3811,7 @@ moo_edit_window_add_pane_full (MooEditWindow  *window,
 }
 
 /**
- * moo_edit_window_add_pane: (moo.lua 0)
+ * moo_edit_window_add_pane:
  *
  * @window:
  * @user_id: (type const-utf8)
@@ -3832,7 +3832,7 @@ moo_edit_window_add_pane (MooEditWindow  *window,
 
 
 /**
- * moo_edit_window_remove_pane: (moo.lua 0)
+ * moo_edit_window_remove_pane:
  *
  * @window:
  * @user_id: (type const-utf8)
@@ -3857,7 +3857,7 @@ moo_edit_window_remove_pane (MooEditWindow *window,
 
 
 /**
- * moo_edit_window_show_pane: (moo.lua 0) (moo.private 1)
+ * moo_edit_window_show_pane: (moo.private 1)
  *
  * @window:
  * @user_id: (type const-utf8)
@@ -3878,7 +3878,7 @@ moo_edit_window_show_pane (MooEditWindow *window,
 
 
 /**
- * moo_edit_window_get_pane: (moo.lua 0)
+ * moo_edit_window_get_pane:
  *
  * @window:
  * @user_id: (type const-utf8)
@@ -4318,7 +4318,7 @@ check_action_filter (G_GNUC_UNUSED GtkAction *action,
 }
 
 /**
- * moo_edit_window_set_action_filter: (moo.lua 0)
+ * moo_edit_window_set_action_filter:
  *
  * @action_id: (type const-utf8)
  * @type:
@@ -4408,7 +4408,7 @@ client_job_finished (gpointer        client,
 
 
 /**
- * moo_edit_window_add_stop_client: (moo.lua 0)
+ * moo_edit_window_add_stop_client:
  */
 void
 moo_edit_window_add_stop_client (MooEditWindow  *window,
@@ -4458,7 +4458,7 @@ moo_edit_window_add_stop_client (MooEditWindow  *window,
 
 
 /**
- * moo_edit_window_remove_stop_client: (moo.lua 0)
+ * moo_edit_window_remove_stop_client:
  */
 void
 moo_edit_window_remove_stop_client (MooEditWindow  *window,
@@ -4482,7 +4482,7 @@ moo_edit_window_remove_stop_client (MooEditWindow  *window,
 
 
 /**
- * moo_edit_window_abort_jobs: (moo.lua 0)
+ * moo_edit_window_abort_jobs:
  */
 void
 moo_edit_window_abort_jobs (MooEditWindow *window)

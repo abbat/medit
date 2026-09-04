@@ -14,23 +14,23 @@
  */
 
 /**
- * class:MooPlugin: (parent GObject) (moo.lua 0) (moo.private 1)
+ * class:MooPlugin: (parent GObject) (moo.private 1)
  **/
 
 /**
- * class:MooWinPlugin: (parent GObject) (moo.lua 0) (moo.private 1)
+ * class:MooWinPlugin: (parent GObject) (moo.private 1)
  **/
 
 /**
- * class:MooDocPlugin: (parent GObject) (moo.lua 0) (moo.private 1)
+ * class:MooDocPlugin: (parent GObject) (moo.private 1)
  **/
 
 /**
- * boxed:MooPluginInfo: (moo.lua 0) (moo.private 1)
+ * boxed:MooPluginInfo: (moo.private 1)
  **/
 
 /**
- * boxed:MooPluginParams: (moo.lua 0) (moo.private 1)
+ * boxed:MooPluginParams: (moo.private 1)
  **/
 
 #ifdef HAVE_CONFIG_H
@@ -227,7 +227,7 @@ moo_plugin_class_init (MooPluginClass *klass, gpointer data)
 
 
 /**
- * moo_plugin_register: (moo.lua 0) (moo.private 1)
+ * moo_plugin_register: (moo.private 1)
  *
  * @id: (type const-utf8)
  * @type:

@@ -110,7 +110,7 @@ typedef enum {
 } MooDrawWsFlags;
 
 /**
- * enum:MooActionCheckType: (moo.lua 0) (moo.private 1)
+ * enum:MooActionCheckType: (moo.private 1)
  *
  * @MOO_ACTION_CHECK_SENSITIVE:
  * @MOO_ACTION_CHECK_VISIBLE:

@@ -13,30 +13,15 @@ plugins_sources +=					\
 	plugins/usertools/moousertools-enums.h		\
 	plugins/usertools/moousertools-enums.cpp	\
 	plugins/usertools/moocommand-exe.cpp		\
-	plugins/usertools/moocommand-exe.h		\
-	plugins/usertools/moocommand-script.cpp		\
-	plugins/usertools/moocommand-script.h
+	plugins/usertools/moocommand-exe.h
 
 EXTRA_DIST +=						\
 	plugins/usertools/glade/mooedittools-exe.glade	\
-	plugins/usertools/glade/mooedittools-script.glade\
 	plugins/usertools/glade/moousertools.glade
 
 built_plugins_sources +=				\
 	plugins/usertools/mooedittools-exe-gxml.h	\
-	plugins/usertools/mooedittools-script-gxml.h	\
 	plugins/usertools/moousertools-gxml.h
-
-EXTRA_DIST += plugins/usertools/lua-tool-setup.lua
-built_plugins_sources += plugins/usertools/lua-tool-setup.h
-plugins/usertools/lua-tool-setup.h: plugins/usertools/lua-tool-setup.lua $(top_srcdir)/tools/xml2h.py
-	$(AM_V_at)$(MKDIR_P) plugins/usertools
-	$(AM_V_GEN)$(MOO_PYTHON) $(top_srcdir)/tools/xml2h.py $(srcdir)/plugins/usertools/lua-tool-setup.lua \
-		plugins/usertools/lua-tool-setup.h.tmp LUA_TOOL_SETUP_LUA \
-		&& mv plugins/usertools/lua-tool-setup.h.tmp plugins/usertools/lua-tool-setup.h
-
-EXTRA_DIST +=						\
-	plugins/usertools/python-tool-setup.py
 
 cfgdir = $(MOO_DATA_DIR)
 cfg_DATA =					\

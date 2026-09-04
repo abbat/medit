@@ -11,12 +11,6 @@ gendefs_files =			\
 	mpi/module.py		\
 	mpi/defswriter.py
 
-genlua_files =			\
-	genlua.py		\
-	mpi/__init__.py		\
-	mpi/module.py		\
-	mpi/luawriter.py
-
 gendocs_files =			\
 	gendocs.py		\
 	gendocbook.py		\
@@ -27,7 +21,6 @@ gendocs_files =			\
 EXTRA_DIST =			\
 	$(docparser_files)	\
 	$(gendefs_files)	\
-	$(genlua_files)		\
 	$(gendocs_files)	\
 	sourcefiles.mak
 

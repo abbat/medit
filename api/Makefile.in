@@ -229,8 +229,6 @@ MOO_MV_TO_SRCDIR = @MOO_MV_TO_SRCDIR@
 MOO_PACKAGE_NAME = @MOO_PACKAGE_NAME@
 MOO_PO_SUBDIRS_RULE = @MOO_PO_SUBDIRS_RULE@
 MOO_PYTHON = @MOO_PYTHON@
-MOO_PYTHON_LIB_DIR = @MOO_PYTHON_LIB_DIR@
-MOO_PYTHON_PLUGIN_DIR = @MOO_PYTHON_PLUGIN_DIR@
 MOO_TEXT_LANG_FILES_DIR = @MOO_TEXT_LANG_FILES_DIR@
 MOO_TOP_SRCDIR = @MOO_TOP_SRCDIR@
 MOO_VERSION = @MOO_VERSION@
@@ -340,12 +338,6 @@ gendefs_files = \
 	mpi/module.py		\
 	mpi/defswriter.py
 
-genlua_files = \
-	genlua.py		\
-	mpi/__init__.py		\
-	mpi/module.py		\
-	mpi/luawriter.py
-
 gendocs_files = \
 	gendocs.py		\
 	gendocbook.py		\
@@ -356,7 +348,6 @@ gendocs_files = \
 EXTRA_DIST = \
 	$(docparser_files)	\
 	$(gendefs_files)	\
-	$(genlua_files)		\
 	$(gendocs_files)	\
 	sourcefiles.mak
 

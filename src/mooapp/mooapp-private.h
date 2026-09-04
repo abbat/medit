@@ -22,18 +22,15 @@ G_BEGIN_DECLS
 
 typedef enum
 {
-    CMD_SCRIPT = 1,
-    CMD_OPEN_FILES,
+    CMD_OPEN_FILES = 1,
     CMD_LAST
 } MooAppCmdCode;
 
 /* I is taken by the IPC thing */
-#define CMD_SCRIPT_S        "e"
 #define CMD_OPEN_FILES_S    "F"
 
 static const char *moo_app_cmd_chars =
     "\0"
-    CMD_SCRIPT_S
     CMD_OPEN_FILES_S
 ;
 
