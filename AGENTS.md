@@ -238,16 +238,30 @@ if (win && gtk_cairo_should_draw_window (cr, win))
 }
 ```
 
-Use `gdk_cairo_get_clip_rectangle (cr, &rect)` for the damage region. Do **not**
-make a new context with `gdk_cairo_create()` on a border/child window inside
-`::draw` — it paints nowhere. Coordinates passed to cairo are relative to the
-widget/window, never `allocation.x/y` (that offset is GTK+2's, and adding it puts
-the drawing outside the clip).
+Use `gdk_cairo_get_clip_rectangle (cr, &rect)` for the damage region.
+Coordinates passed to cairo are relative to the widget/window, never
+`allocation.x/y` (that offset is GTK+2's, and adding it puts the drawing outside
+the clip).
+
+`gdk_cairo_create()` on a window inside `::draw` does still paint — the text
+view's whitespace markers and the icon view's cells reach the screen that way —
+but it is deprecated and bypasses the clip, so prefer transforming the context
+you were handed. Where it appeared not to work, the real cause was ordering:
+`GtkTextView` fills the border windows in its own `::draw` and wiped out what had
+been painted before the chain-up.
 
 Ordering matters too: `GtkTextView` fills its windows' backgrounds in its own
 `::draw`, so anything painted *before* chaining up is wiped out. Line numbers are
 painted after the chain-up; line backgrounds that must sit under the text are
 painted after it with `CAIRO_OPERATOR_MULTIPLY`.
+
+### c) Translating GDK drawing primitives to cairo one call at a time
+
+`gdk_draw_polygon (…, FALSE, points, 3)` over three points a pixel apart draws
+three pixels. The same path stroked with cairo gets a 1px antialiased line on
+*either side* of every edge — the whitespace markers turned from neat dots into
+blurry triangles. When the GTK+2 original addressed individual pixels, fill
+1x1 rectangles with `CAIRO_ANTIALIAS_NONE` rather than stroking a path.
 
 ### b) Style calls that are silently dead on GTK+3
 

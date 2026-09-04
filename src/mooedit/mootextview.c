@@ -2358,18 +2358,26 @@ draw_tab_at_iter (GtkTextView    *text_view,
     points[2].y += 1;
 
 #if GTK_CHECK_VERSION(3,0,0)
-    cairo_t *cr = gdk_cairo_create (window);
-    if (cr)
     {
-        GtkStyleContext *context = gtk_widget_get_style_context (GTK_WIDGET(text_view));
+        cairo_t *cr = gdk_cairo_create (window);
+        GtkStyleContext *context = gtk_widget_get_style_context (GTK_WIDGET (text_view));
         GdkRGBA color;
+        int i;
+
         gtk_style_context_get_color (context, GTK_STATE_FLAG_NORMAL, &color);
         gdk_cairo_set_source_rgba (cr, &color);
-        cairo_move_to (cr, points[0].x, points[0].y);
-        cairo_line_to (cr, points[1].x, points[1].y);
-        cairo_line_to (cr, points[2].x, points[2].y);
-        cairo_close_path (cr);
-        cairo_stroke (cr);
+
+        /* The three points are one pixel apart, so what GTK+2 stroked was a
+           degenerate triangle: three pixels forming a small corner. Stroking
+           that path with cairo puts a one pixel wide, antialiased line on
+           either side of each edge and smears it into a blurry triangle twice
+           the size, so fill the pixels themselves instead. */
+        cairo_set_antialias (cr, CAIRO_ANTIALIAS_NONE);
+
+        for (i = 0; i < 3; ++i)
+            cairo_rectangle (cr, points[i].x, points[i].y, 1, 1);
+
+        cairo_fill (cr);
         cairo_destroy (cr);
     }
 #else
