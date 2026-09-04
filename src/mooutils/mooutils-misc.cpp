@@ -364,15 +364,6 @@ _moo_get_top_window (GSList *windows)
 }
 
 
-#if 0
-static gboolean
-_moo_window_is_hidden (GtkWindow  *window)
-{
-    g_return_val_if_fail (GTK_IS_WINDOW (window), FALSE);
-    return is_minimized (GDK_WINDOW_XDISPLAY (GTK_WIDGET(window)->window),
-                         GDK_WINDOW_XID (GTK_WIDGET(window)->window));
-}
-#endif
 
 #else /* neither X */
 
@@ -446,27 +437,6 @@ _moo_window_set_icon_from_stock (GtkWindow  *window,
 }
 
 
-#if 0
-GtkWindow *
-_moo_get_toplevel_window (void)
-{
-    GList *list, *l;
-    GSList *windows = NULL;
-    GtkWindow *top;
-
-    list = gtk_window_list_toplevels ();
-
-    for (l = list; l != NULL; l = l->next)
-        if (GTK_IS_WINDOW (l->data) && GTK_WIDGET(l->data)->window)
-            windows = g_slist_prepend (windows, l->data);
-
-    top = _moo_get_top_window (windows);
-
-    g_list_free (list);
-    g_slist_free (windows);
-    return top;
-}
-#endif
 
 
 /***************************************************************************/

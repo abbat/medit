@@ -266,24 +266,6 @@ _moo_bookmark_free (MooBookmark *bookmark)
 }
 
 
-#if 0
-void
-_moo_bookmark_set_path (MooBookmark    *bookmark,
-                        const char     *path)
-{
-    char *display_path;
-    g_return_if_fail (bookmark != NULL);
-    g_return_if_fail (path != NULL);
-
-    display_path = g_filename_display_name (path);
-    g_return_if_fail (display_path != NULL);
-
-    g_free (bookmark->path);
-    g_free (bookmark->display_path);
-    bookmark->display_path = display_path;
-    bookmark->path = g_strdup (path);
-}
-#endif
 
 
 static void
@@ -663,114 +645,6 @@ _moo_bookmark_mgr_remove_user (MooBookmarkMgr *mgr,
 }
 
 
-#if 0
-// static void     create_menu_items           (MooBookmarkMgr *mgr,
-//                                              GtkMenuShell   *menu,
-//                                              int             position,
-//                                              MooBookmarkFunc func,
-//                                              gpointer        data)
-// {
-//     GtkTreeIter iter;
-//     GtkTreeModel *model = GTK_TREE_MODEL (mgr->priv->store);
-//
-//     if (!gtk_tree_model_get_iter_first (model, &iter))
-//         return;
-//
-//     do
-//     {
-//         MooBookmark *bookmark = NULL;
-//         GtkWidget *item, *icon;
-//
-//         gtk_tree_model_get (model, &iter, COLUMN_BOOKMARK, &bookmark, -1);
-//
-//         if (!bookmark)
-//         {
-//             item = gtk_separator_menu_item_new ();
-//         }
-//         else
-//         {
-//             if (bookmark->label)
-//                 item = gtk_image_menu_item_new_with_label (bookmark->label);
-//             else
-//                 item = gtk_image_menu_item_new ();
-//
-//             if (bookmark->pixbuf)
-//                 icon = gtk_image_new_from_pixbuf (bookmark->pixbuf);
-//             else if (bookmark->icon_stock_id)
-//                 icon = gtk_image_new_from_stock (bookmark->icon_stock_id,
-//                     GTK_ICON_SIZE_MENU);
-//             else
-//                 icon = NULL;
-//
-//             if (icon)
-//             {
-//                 gtk_widget_show (icon);
-//                 gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), icon);
-//             }
-//
-//             g_signal_connect (item, "activate",
-//                               G_CALLBACK (menu_item_activated), mgr);
-//         }
-//
-//         g_object_set_data_full (G_OBJECT (item), "moo-bookmark-mgr",
-//                                 g_object_ref (mgr), g_object_unref);
-//         g_object_set_data_full (G_OBJECT (item), "moo-bookmark",
-//                                 bookmark, (GDestroyNotify) _moo_bookmark_free);
-//         g_object_set_data (G_OBJECT (item), "moo-bookmark-func", func);
-//         g_object_set_data (G_OBJECT (item), "moo-bookmark-data", data);
-//
-//         gtk_widget_show (item);
-//         gtk_menu_shell_insert (menu, item, position);
-//         if (position >= 0)
-//             position++;
-//     }
-//     while (gtk_tree_model_iter_next (model, &iter));
-// }
-
-
-static void moo_bookmark_mgr_update_menu(GtkMenuShell   *menu,
-                                         MooBookmarkMgr *mgr)
-{
-    MooBookmarkFunc func;
-    gpointer data;
-    GList *items;
-    int position = 0;
-
-    g_return_if_fail (MOO_IS_BOOKMARK_MGR (mgr));
-    g_return_if_fail (GTK_IS_MENU_SHELL (menu));
-
-    g_return_if_fail (g_object_get_data (G_OBJECT (menu), "moo-bookmark-mgr") == mgr);
-
-    func = g_object_get_data (G_OBJECT (menu), "moo-bookmark-func");
-    data = g_object_get_data (G_OBJECT (menu), "moo-bookmark-data");
-
-    items = gtk_container_get_children (GTK_CONTAINER (menu));
-
-    if (items)
-    {
-        GList *l;
-        GList *my_items = NULL;
-
-        for (l = items; l != NULL; l = l->next)
-        {
-            if (g_object_get_data (G_OBJECT (l->data), "moo-bookmark-mgr") == mgr)
-            {
-                my_items = g_list_prepend (my_items, l->data);
-                if (position < 0)
-                    position = g_list_position (items, l);
-            }
-        }
-
-        for (l = my_items; l != NULL; l = l->next)
-            gtk_container_remove (GTK_CONTAINER (menu), l->data);
-
-        g_list_free (items);
-        g_list_free (my_items);
-    }
-
-    create_menu_items (mgr, menu, position, func, data);
-}
-#endif
 
 
 /***************************************************************************/
@@ -1316,71 +1190,9 @@ path_editing_started (GtkCellRenderer    *cell,
 
     g_object_set (cmpl, "entry", editable, NULL);
 
-#if 0
-    if (!g_object_get_data (G_OBJECT (editable), "moo-stupid-entry-workaround"))
-    {
-        g_signal_connect (editable, "realize",
-                          G_CALLBACK (path_entry_realize), NULL);
-        g_signal_connect (editable, "unrealize",
-                          G_CALLBACK (path_entry_unrealize), NULL);
-        g_object_set_data (G_OBJECT (editable), "moo-stupid-entry-workaround",
-                           GINT_TO_POINTER (TRUE));
-    }
-#endif
 }
 
 
-#if 0
-static void
-path_entry_realize (GtkWidget *entry)
-{
-    GtkSettings *settings;
-    gboolean value;
-
-    g_return_if_fail (gtk_widget_has_screen (entry));
-    settings = gtk_settings_get_for_screen (gtk_widget_get_screen (entry));
-    g_return_if_fail (settings != NULL);
-
-    g_object_get (settings, "gtk-entry-select-on-focus", &value, NULL);
-    g_object_set (settings, "gtk-entry-select-on-focus", FALSE, NULL);
-    g_object_set_data (G_OBJECT (settings),
-                       "moo-stupid-entry-workaround",
-                       GINT_TO_POINTER (TRUE));
-    g_object_set_data (G_OBJECT (settings),
-                       "moo-stupid-entry-workaround-value",
-                       GINT_TO_POINTER (value));
-
-    gtk_editable_set_position (GTK_EDITABLE (entry), -1);
-}
-
-
-static void
-path_entry_unrealize (GtkWidget *entry)
-{
-    GtkSettings *settings;
-    gboolean value;
-
-    g_return_if_fail (gtk_widget_has_screen (entry));
-    settings = gtk_settings_get_for_screen (gtk_widget_get_screen (entry));
-    g_return_if_fail (settings != NULL);
-
-    if (g_object_get_data (G_OBJECT (settings), "moo-stupid-entry-workaround"))
-    {
-        value = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (settings),
-                                 "moo-stupid-entry-workaround-value"));
-        g_object_set (settings, "gtk-entry-select-on-focus", value, NULL);
-        g_object_set_data (G_OBJECT (settings), "moo-stupid-entry-workaround", NULL);
-    }
-
-    g_signal_handlers_disconnect_by_func (entry,
-                                          (gpointer) path_entry_realize,
-                                          NULL);
-    g_signal_handlers_disconnect_by_func (entry,
-                                          (gpointer) path_entry_unrealize,
-                                          NULL);
-    g_object_set_data (G_OBJECT (entry), "moo-stupid-entry-workaround", NULL);
-}
-#endif
 
 
 static void combo_icon_data_func    (GtkCellLayout      *cell_layout,

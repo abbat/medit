@@ -88,29 +88,6 @@ static void      _hash_table_remove     (FileList       *flist,
 
 
 #ifdef MOO_DEBUG
-#if 0
-#define DEFINE_CHECK_FILE_LIST_INTEGRITY
-static void CHECK_FILE_LIST_INTEGRITY (FileList *flist)
-{
-    GList *link;
-
-    g_assert ((int)g_list_length (flist->list) == flist->size);
-    g_assert ((int)g_hash_table_size (flist->name_to_file) == flist->size);
-    g_assert ((int)g_hash_table_size (flist->display_name_to_file) == flist->size);
-    g_assert ((int)g_hash_table_size (flist->file_to_link) == flist->size);
-
-    for (link = flist->list; link != NULL; link = link->next)
-    {
-        MooFile *file = link->data;
-        g_assert (file != NULL);
-        g_assert (file == g_hash_table_lookup (flist->name_to_file,
-                _moo_file_name (file)));
-        g_assert (file == g_hash_table_lookup (flist->display_name_to_file,
-                _moo_file_display_name (file)));
-        g_assert (link == g_hash_table_lookup (flist->file_to_link, file));
-    }
-}
-#endif
 #endif /* MOO_DEBUG */
 
 #ifndef DEFINE_CHECK_FILE_LIST_INTEGRITY

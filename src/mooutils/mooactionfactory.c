@@ -297,24 +297,6 @@ moo_action_factory_create_action (MooActionFactory   *factory,
 }
 
 
-#if 0
-MooActionFactory *
-moo_action_factory_new (GType       action_type,
-                        const char *first_prop_name,
-                        ...)
-{
-    MooActionFactory *factory;
-    va_list var_args;
-
-    g_return_val_if_fail (g_type_is_a (action_type, MOO_TYPE_ACTION_BASE), NULL);
-
-    va_start (var_args, first_prop_name);
-    factory = moo_action_factory_new_valist (action_type, first_prop_name, var_args);
-    va_end (var_args);
-
-    return factory;
-}
-#endif
 
 
 MooActionFactory *

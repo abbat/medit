@@ -520,11 +520,6 @@ keyval_from_symbol (char sym)
         case '%':  return GDK_KEY_percent;
         case '&':  return GDK_KEY_ampersand;
         case '\'': return GDK_KEY_apostrophe;
-#if 0
-        case '\'': return GDK_KEY_quoteright;
-#define GDK_asciicircum 0x05e
-#define GDK_grave 0x060
-#endif
         case '(':  return GDK_KEY_parenleft;
         case ')':  return GDK_KEY_parenright;
         case '*':  return GDK_KEY_asterisk;

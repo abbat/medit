@@ -1800,26 +1800,10 @@ create_bookmark_view (MooFileView *fileview)
 
     bkview = _moo_bookmark_view_new (NULL);
 
-#if 0
-//     gtk_tree_view_enable_drag_source (GTK_TREE_VIEW (bkview),
-//                                       GDK_BUTTON1_MASK,
-//                                       source_targets,
-//                                       G_N_ELEMENTS (source_targets),
-//                                       GDK_ACTION_ASK | GDK_ACTION_COPY |
-//                                               GDK_ACTION_MOVE | GDK_ACTION_LINK);
-#endif
     gtk_drag_dest_set (bkview, 0, NULL, 0,
                        GDK_ACTION_COPY | GDK_ACTION_MOVE | GDK_ACTION_LINK);
     gtk_drag_dest_set_target_list (bkview, fileview->priv->targets);
 
-#if 0
-//     g_signal_connect_swapped (bkview, "drag-data-received",
-//                               G_CALLBACK (drag_data_received),
-//                               fileview);
-//     g_signal_connect_swapped (bkview, "drag-drop",
-//                               G_CALLBACK (drag_drop),
-//                               fileview);
-#endif
     g_signal_connect_swapped (bkview, "drag-leave",
                               G_CALLBACK (drag_leave),
                               fileview);
@@ -4258,16 +4242,7 @@ entry_activate (GtkEntry       *entry,
 }
 
 
-#if 0
-#define PRINT_KEY_EVENT(event)                                      \
-    g_print ("%s%s%s%s\n",                                          \
-             event->state & GDK_SHIFT_MASK ? "<Shift>" : "",        \
-             event->state & GDK_CONTROL_MASK ? "<Control>" : "",    \
-             event->state & GDK_MOD1_MASK ? "<Alt>" : "",           \
-             gdk_keyval_name (event->keyval))
-#else
 #define PRINT_KEY_EVENT(event)
-#endif
 
 
 static gboolean
@@ -4827,10 +4802,6 @@ typeahead_tab_key (MooFileView *fileview)
 
             name = _moo_file_display_name (file);
 
-#if 0
-            if (!file || !stuff->file_equals (file, stuff->matched_prefix->str))
-                goto error;
-#endif
 
             if (MOO_FILE_IS_DIR (file))
             {
@@ -4864,10 +4835,6 @@ typeahead_tab_key (MooFileView *fileview)
     if (!file)
         goto error;
 
-#if 0
-//     if (!stuff->file_has_prefix (file, stuff->matched_prefix->str, stuff->matched_prefix->len))
-//         goto error;
-#endif
 
     name = _moo_file_display_name (file);
     path_entry_set_text (fileview, name);
@@ -5907,31 +5874,6 @@ moo_file_view_drop_uris (MooFileView    *fileview,
 
     mask = _moo_get_modifiers (widget);
 
-#if 0
-#define ACTION_NAME(ac) (ac == GDK_ACTION_DEFAULT ? "DEFAULT" :             \
-                         (ac == GDK_ACTION_COPY ? "COPY" :                  \
-                          (ac == GDK_ACTION_MOVE ? "MOVE" :                 \
-                           (ac == GDK_ACTION_LINK ? "LINK" :                \
-                            (ac == GDK_ACTION_PRIVATE ? "PRIVATE" :         \
-                             (ac == GDK_ACTION_ASK ? "ASK" : "???"))))))
-
-    g_print ("suggested: %s\naction: %s\n",
-             ACTION_NAME (context->suggested_action),
-             ACTION_NAME (context->action));
-
-    g_print ("actions: %s%s%s%s%s%s\n",
-             context->actions & GDK_ACTION_DEFAULT ? "DEFAULT " : "",
-             context->actions & GDK_ACTION_COPY ? "COPY " : "",
-             context->actions & GDK_ACTION_MOVE ? "MOVE " : "",
-             context->actions & GDK_ACTION_LINK ? "LINK " : "",
-             context->actions & GDK_ACTION_PRIVATE ? "PRIVATE " : "",
-             context->actions & GDK_ACTION_ASK ? "ASK " : "");
-
-    g_print ("modifiers: %s%s%s\n",
-             mask & GDK_SHIFT_MASK ? "SHIFT " : "",
-             mask & GDK_CONTROL_MASK ? "CONTROL " : "",
-             mask & GDK_MOD1_MASK ? "MOD1 " : "");
-#endif
 
     if (mask & (GDK_SHIFT_MASK | GDK_CONTROL_MASK | GDK_MOD1_MASK))
         action = gdk_drag_context_get_suggested_action(context);
@@ -6079,100 +6021,6 @@ out:
 }
 
 
-#if 0
-static void
-bookmark_drag_data_received (MooFileView    *fileview,
-                             GdkDragContext *context,
-                             int             x,
-                             int             y,
-                             GtkSelectionData *data,
-                             guint           info,
-                             guint           time,
-                             MooBookmarkView *bkview);
-
-
-static gboolean
-bookmark_drag_drop (MooFileView    *fileview,
-                    GdkDragContext *context,
-                    int             x,
-                    int             y,
-                    guint           time,
-                    MooBookmarkView *bkview);
-
-
-static void
-bookmark_drag_leave (MooFileView    *fileview,
-                     GdkDragContext *context,
-                     guint           time,
-                     MooBookmarkView *bkview);
-
-
-static gboolean
-bookmark_drag_motion (MooBookmarkView *bkview,
-                      GdkDragContext *context,
-                      int             x,
-                      int             y,
-                      guint           time,
-                      MooFileView    *fileview)
-{
-    MooFolder *source_dir;
-    MooFolder *current_dir;
-    GtkTreePath *path = NULL;
-    MooIconViewCell cell;
-    int cell_x, cell_y;
-    gboolean new_timeout = TRUE;
-
-    if (!check_drop_targets (fileview, context, GTK_WIDGET (bkview)) ||
-         !_moo_tree_view_get_path_at_pos (bkview, x, y, &path, &cell_x, &cell_y))
-    {
-        _moo_tree_view_set_drag_dest_row (bkview, NULL);
-        cancel_drop_open (fileview);
-        return FALSE;
-    }
-
-    _moo_tree_view_set_drag_dest_row (bkview, path);
-
-    gdk_drag_status (context, context->actions & GDK_ACTION_MOVE ?
-                     GDK_ACTION_MOVE : context->suggested_action, time);
-
-    if (fileview->priv->drop_to.row)
-    {
-        GtkTreePath *old_path = gtk_tree_row_reference_get_path (fileview->priv->drop_to.row);
-
-        if (old_path && !gtk_tree_path_compare (path, old_path) &&
-            fileview->priv->drop_to.cell == cell &&
-            !gtk_drag_check_threshold (GTK_WIDGET (bkview),
-                                       fileview->priv->drop_to.x,
-                                       fileview->priv->drop_to.y,
-                                       cell_x,
-                                       cell_y))
-        {
-            new_timeout = FALSE;
-            g_assert (fileview->priv->drop_to.timeout != 0);
-        }
-    }
-
-    if (new_timeout)
-    {
-        cancel_drop_open (fileview);
-
-        fileview->priv->drop_to.row =
-                gtk_tree_row_reference_new (_moo_tree_view_get_model (bkview), path);
-        fileview->priv->drop_to.timeout =
-                g_timeout_add (DROP_OPEN_TIMEOUT,
-                               (GSourceFunc) drop_open_timeout_func,
-                               fileview);
-        fileview->priv->drop_to.x = cell_x;
-        fileview->priv->drop_to.y = cell_y;
-        fileview->priv->drop_to.cell = cell;
-    }
-
-out:
-    if (path)
-        gtk_tree_path_free (path);
-    return TRUE;
-}
-#endif
 
 
 GType

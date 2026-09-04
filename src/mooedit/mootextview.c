@@ -2730,24 +2730,6 @@ moo_text_view_lookup_tag (MooTextView    *view,
 }
 
 
-#if 0
-MOO_DEFINE_QUARK_STATIC ("moo-text-tag-cursor", cursor_quark)
-
-void
-moo_text_tag_set_cursor (GtkTextTag    *tag,
-                         GdkCursorType  cursor)
-{
-    g_return_if_fail (GTK_IS_TEXT_TAG (tag));
-    g_object_set_qdata (G_OBJECT (tag), cursor_quark (), GINT_TO_POINTER (cursor));
-}
-
-GdkCursorType
-moo_text_tag_get_cursor (GtkTextTag *tag)
-{
-    g_return_val_if_fail (GTK_IS_TEXT_TAG (tag), 0);
-    return GPOINTER_TO_INT (g_object_get_qdata (G_OBJECT (tag), cursor_quark ()));
-}
-#endif
 
 
 void

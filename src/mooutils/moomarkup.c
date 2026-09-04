@@ -1049,64 +1049,6 @@ moo_markup_set_content (MooMarkupNode *node,
 }
 
 
-#if 0
-MooMarkupNode*
-moo_markup_create_file_element (MooMarkupNode      *parent,
-                                const char         *path,
-                                const char         *filename)
-{
-    char *filename_utf8;
-    MooMarkupNode *elm;
-
-    g_return_val_if_fail (filename != NULL, NULL);
-
-    filename_utf8 = g_filename_display_name (filename);
-
-    if (!filename_utf8)
-    {
-        g_warning ("could not convert '%s' to utf8",
-                   filename);
-        return NULL;
-    }
-
-    elm = moo_markup_create_text_element (parent, path, filename_utf8);
-
-    g_free (filename_utf8);
-    return elm;
-}
-
-char *
-moo_markup_get_file_content (MooMarkupNode *node)
-{
-    g_return_val_if_fail (MOO_MARKUP_IS_ELEMENT (node), NULL);
-
-    if (!MOO_MARKUP_ELEMENT(node)->content)
-        return NULL;
-
-    return g_filename_from_utf8 (MOO_MARKUP_ELEMENT(node)->content,
-                                 -1, NULL, NULL, NULL);
-}
-
-
-gboolean
-moo_markup_save (MooMarkupDoc       *doc,
-                 const char         *filename,
-                 GError            **error)
-{
-    char *text;
-    gboolean result;
-
-    g_return_val_if_fail (MOO_MARKUP_IS_DOC (doc), FALSE);
-    g_return_val_if_fail (filename != NULL, FALSE);
-
-    text = moo_markup_node_get_string (MOO_MARKUP_NODE (doc));
-    g_return_val_if_fail (text != NULL, FALSE);
-
-    result = _moo_save_file_utf8 (filename, text, -1, error);
-    g_free (text);
-    return result;
-}
-#endif
 
 
 #define INDENT_CHAR ' '

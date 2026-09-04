@@ -279,24 +279,6 @@ moo_action_collection_remove_action (MooActionCollection *coll,
 }
 
 
-#if 0
-GList *
-moo_action_collection_list_actions (MooActionCollection *coll)
-{
-    GList *list = NULL;
-    GSList *l;
-
-    g_return_val_if_fail (MOO_IS_ACTION_COLLECTION (coll), NULL);
-
-    for (l = coll->priv->groups_list; l != NULL; l = l->next)
-    {
-        GtkActionGroup *group = l->data;
-        list = g_list_concat (list, gtk_action_group_list_actions (group));
-    }
-
-    return list;
-}
-#endif
 
 
 void

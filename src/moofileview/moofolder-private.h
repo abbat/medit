@@ -49,14 +49,6 @@ struct _MooFolderClass
                                  GSList     *files);
 };
 
-typedef struct {
-    double names_timer;
-    double stat_timer;
-    guint stat_counter;
-    double icons_timer;
-    guint icons_counter;
-} Debug;
-
 typedef enum {
     STAGE_NAMES     = 1,
     STAGE_STAT      = 2,
@@ -77,7 +69,6 @@ struct _MooFolderImpl {
     int populate_priority;
     guint populate_idle_id;
     double populate_timeout;
-    Debug debug;
     GTimer *timer;
     MooFileWatch *fam;
     guint fam_request;

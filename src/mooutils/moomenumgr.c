@@ -926,22 +926,6 @@ moo_menu_mgr_remove (MooMenuMgr         *mgr,
 }
 
 
-#if 0
-void
-moo_menu_mgr_remove_named (MooMenuMgr         *mgr,
-                           const char         *item_id)
-{
-    GNode *node;
-
-    g_return_if_fail (MOO_IS_MENU_MGR (mgr));
-    g_return_if_fail (item_id != NULL);
-
-    node = g_hash_table_lookup (mgr->priv->named_nodes, item_id);
-    g_return_if_fail (node != NULL);
-
-    mgr_remove (mgr, node);
-}
-#endif
 
 
 int

@@ -44,14 +44,6 @@ G_STMT_START {              \
     g_timer_stop (timer);   \
 } G_STMT_END
 
-#if 0
-#define PRINT_TIMES g_print
-#else
-static void G_GNUC_PRINTF(1,2) PRINT_TIMES (G_GNUC_UNUSED const char *format, ...)
-{
-}
-#endif
-
 static void     moo_folder_dispose          (GObject        *object);
 
 static void     moo_folder_deleted          (MooFolderImpl  *impl);
@@ -513,7 +505,7 @@ get_names (MooFolderImpl *impl)
     folder_emit_files (impl, FILES_ADDED, added);
     g_slist_free (added);
 
-    elapsed = impl->debug.names_timer = g_timer_elapsed (timer, NULL);
+    elapsed = g_timer_elapsed (timer, NULL);
     g_timer_destroy (timer);
 
     g_dir_close (impl->dir);
@@ -521,9 +513,6 @@ get_names (MooFolderImpl *impl)
 
     impl->done = STAGE_NAMES;
 
-    PRINT_TIMES ("names folder %s: %f sec\n",
-                 impl->path,
-                 impl->debug.names_timer);
 
     return elapsed;
 }
@@ -573,8 +562,6 @@ get_stat_a_bit (MooFolderImpl *impl)
     }
 
     elapsed = g_timer_elapsed (impl->timer, NULL) - elapsed;
-    impl->debug.stat_timer += elapsed;
-    impl->debug.stat_counter += 1;
     g_timer_stop (impl->timer);
 
     if (!done)
@@ -587,10 +574,6 @@ get_stat_a_bit (MooFolderImpl *impl)
         g_assert (impl->files_copy == NULL);
         impl->populate_idle_id = 0;
 
-        PRINT_TIMES ("stat folder %s: %d iterations, %f sec\n",
-                     impl->path,
-                     impl->debug.stat_counter,
-                     impl->debug.stat_timer);
 
         impl->done = STAGE_STAT;
 
@@ -696,16 +679,10 @@ get_icons_a_bit (MooFolderImpl *impl)
     }
 
     elapsed = g_timer_elapsed (impl->timer, NULL) - elapsed;
-    impl->debug.icons_timer += elapsed;
-    impl->debug.icons_counter += 1;
     TIMER_CLEAR (impl->timer);
 
     if (done)
     {
-        PRINT_TIMES ("icons folder %s: %d iterations, %f sec\n",
-                     impl->path,
-                     impl->debug.icons_counter,
-                     impl->debug.icons_timer);
 
         g_assert (impl->files_copy == NULL);
         impl->populate_idle_id = 0;
@@ -721,17 +698,6 @@ get_icons_a_bit (MooFolderImpl *impl)
 }
 
 
-#if 0
-MooFile *
-_moo_folder_get_file (MooFolder  *folder,
-                      const char *basename)
-{
-    g_return_val_if_fail (MOO_IS_FOLDER (folder), NULL);
-    g_return_val_if_fail (!folder->impl->deleted, NULL);
-    g_return_val_if_fail (basename != NULL, NULL);
-    return g_hash_table_lookup (folder->impl->files, basename);
-}
-#endif
 
 
 char *

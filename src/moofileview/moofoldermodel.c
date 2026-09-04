@@ -318,10 +318,6 @@ G_STMT_START {                          \
 } G_STMT_END
 
 #ifdef MOO_DEBUG
-#if 0
-#define DEFINE_CHECK_ITER
-static void CHECK_ITER (MooFolderModel *model, GtkTreeIter *iter);
-#endif
 #endif /* MOO_DEBUG */
 
 #ifndef DEFINE_CHECK_ITER
@@ -870,14 +866,3 @@ _moo_folder_filter_set_folder (MooFolderFilter    *filter,
 }
 
 
-#if 0
-MooFolder *
-_moo_folder_filter_get_folder (MooFolderFilter *filter)
-{
-    GtkTreeModel *model;
-    g_return_val_if_fail (MOO_IS_FOLDER_FILTER (filter), NULL);
-    model = gtk_tree_model_filter_get_model (GTK_TREE_MODEL_FILTER (filter));
-    g_return_val_if_fail (MOO_IS_FOLDER_MODEL (model), NULL);
-    return _moo_folder_model_get_folder (MOO_FOLDER_MODEL (model));
-}
-#endif

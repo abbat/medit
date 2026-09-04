@@ -1065,9 +1065,6 @@ ipc_callback (GObject    *obj,
         return;
     }
 
-#if 0
-    g_print ("%s: got data: %.*s\n", G_STRLOC, (int) len, data);
-#endif
 
     if (parse_update_item (xml, &item, &type))
     {

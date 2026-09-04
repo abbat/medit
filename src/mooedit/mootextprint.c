@@ -1139,9 +1139,6 @@ fill_layout (MooPrintOperation *op,
     attr_list = NULL;
     segm_start = *start;
     start_index = gtk_text_iter_get_line_index (start);
-#if 0
-    moo_dmsg ("line %d, start at %d\n", gtk_text_iter_get_line (start), start_index);
-#endif
 
     while (gtk_text_iter_compare (&segm_start, end) < 0)
     {

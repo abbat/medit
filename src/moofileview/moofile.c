@@ -378,31 +378,6 @@ _moo_file_link_get_target (const MooFile *file)
 }
 
 
-#if 0
-MooFileTime
-_moo_file_get_mtime (const MooFile *file)
-{
-    g_return_val_if_fail (file != NULL, 0);
-    return file->statbuf.st_mtime;
-}
-
-MooFileSize
-_moo_file_get_size (const MooFile *file)
-{
-    g_return_val_if_fail (file != NULL, 0);
-    return file->statbuf.st_size;
-}
-
-const struct stat *
-_moo_file_get_stat (const MooFile *file)
-{
-    g_return_val_if_fail (file != NULL, NULL);
-    if (file->flags & MOO_FILE_HAS_STAT && file->info & MOO_FILE_INFO_EXISTS)
-        return &file->statbuf;
-    else
-        return NULL;
-}
-#endif
 
 
 guint8
@@ -487,8 +462,5 @@ static MooIconEmblem
 get_icon_flags (const MooFile *file)
 {
     return
-#if 0
-        (MOO_FILE_IS_LOCKED (file) ? MOO_ICON_EMBLEM_LOCK : 0) |
-#endif
         (MOO_FILE_IS_LINK (file) ? MOO_ICON_EMBLEM_LINK : 0);
 }

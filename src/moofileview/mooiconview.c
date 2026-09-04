@@ -814,78 +814,6 @@ static void     free_attributes (CellInfo   *info)
 }
 
 
-#if 0
-static void
-_moo_icon_view_clear_attributes (MooIconView    *view,
-                                 MooIconViewCell cell)
-{
-    CellInfo *info;
-
-    g_return_if_fail (MOO_IS_ICON_VIEW (view));
-    g_return_if_fail (cell == MOO_ICON_VIEW_CELL_PIXBUF ||
-            cell == MOO_ICON_VIEW_CELL_TEXT);
-
-    if (cell == MOO_ICON_VIEW_CELL_PIXBUF)
-        info = &view->priv->pixbuf;
-    else
-        info = &view->priv->text;
-
-    free_attributes (info);
-
-    moo_icon_view_invalidate_layout (view);
-}
-
-static void
-moo_icon_view_set_attributesv (MooIconView    *view,
-                               MooIconViewCell cell_type,
-                               const char     *first_attr,
-                               va_list         args)
-{
-    char *attribute;
-    int column;
-    CellInfo *info;
-
-    _moo_icon_view_clear_attributes (view, cell_type);
-
-    attribute = (char*) first_attr;
-
-    if (cell_type == MOO_ICON_VIEW_CELL_PIXBUF)
-        info = &view->priv->pixbuf;
-    else
-        info = &view->priv->text;
-
-    while (attribute != NULL)
-    {
-        column = va_arg (args, int);
-
-        info->attributes = g_slist_prepend (info->attributes,
-                                            GINT_TO_POINTER (column));
-        info->attributes = g_slist_prepend (info->attributes,
-                                            g_strdup (attribute));
-
-        attribute = va_arg (args, char*);
-    }
-
-    moo_icon_view_invalidate_layout (view);
-}
-
-void
-_moo_icon_view_set_attributes (MooIconView    *view,
-                               MooIconViewCell cell_type,
-                               const char     *first_attr,
-                               ...)
-{
-    va_list args;
-
-    g_return_if_fail (MOO_IS_ICON_VIEW (view));
-    g_return_if_fail (cell_type == MOO_ICON_VIEW_CELL_PIXBUF ||
-            cell_type == MOO_ICON_VIEW_CELL_TEXT);
-
-    va_start (args, first_attr);
-    moo_icon_view_set_attributesv (view, cell_type, first_attr, args);
-    va_end (args);
-}
-#endif
 
 
 void
@@ -3397,14 +3325,6 @@ _moo_icon_view_get_selected_rows (MooIconView *view)
 }
 
 
-#if 0
-int
-_moo_icon_view_count_selected_rows (MooIconView *view)
-{
-    g_return_val_if_fail (MOO_IS_ICON_VIEW (view), 0);
-    return g_slist_length (view->priv->selection->selected);
-}
-#endif
 
 
 static int
@@ -3611,42 +3531,6 @@ _moo_icon_view_path_is_selected (MooIconView *view,
 }
 
 
-#if 0
-void
-moo_icon_view_select_all (MooIconView *view)
-{
-    GtkTreeIter iter;
-    Selection *selection;
-
-    g_return_if_fail (MOO_IS_ICON_VIEW (view));
-
-    if (!view->priv->model || model_empty (view->priv->model))
-        return;
-
-    selection = view->priv->selection;
-    g_slist_foreach (selection->selected,
-                     (GFunc) moo_tree_row_reference_free, NULL);
-    g_slist_free (selection->selected);
-    selection->selected = NULL;
-
-    gtk_tree_model_get_iter_first (view->priv->model, &iter);
-
-    do {
-        GtkTreePath *path;
-        GtkTreeRowReference *ref;
-        path = gtk_tree_model_get_path (view->priv->model, &iter);
-        g_return_if_fail (path != NULL);
-        ref = gtk_tree_row_reference_new (view->priv->model, path);
-        selection->selected = g_slist_prepend (selection->selected, ref);
-        gtk_tree_path_free (path);
-    }
-    while (gtk_tree_model_iter_next (view->priv->model, &iter));
-
-    selection->selected = g_slist_reverse (selection->selected);
-    gtk_widget_queue_draw (GTK_WIDGET (view));
-    selection_changed (view);
-}
-#endif
 
 
 void
@@ -3830,31 +3714,6 @@ _moo_icon_view_enable_drag_source (MooIconView        *view,
 }
 
 
-#if 0
-GtkTargetList*
-_moo_icon_view_get_source_targets (MooIconView *view)
-{
-    g_return_val_if_fail (MOO_IS_ICON_VIEW (view), NULL);
-    return view->priv->dnd_info->source_targets;
-}
-
-void
-_moo_icon_view_disable_drag_source (MooIconView *view)
-{
-    DndInfo *info;
-
-    g_return_if_fail (MOO_IS_ICON_VIEW (view));
-
-    info = view->priv->dnd_info;
-
-    if (info->source_enabled)
-    {
-        gtk_drag_source_unset (GTK_WIDGET (view));
-        gtk_target_list_unref (info->source_targets);
-        info->source_targets = NULL;
-    }
-}
-#endif
 
 
 static gboolean
@@ -3903,17 +3762,6 @@ moo_icon_view_maybe_drag (MooIconView    *view,
     view->priv->button_pressed = 0;
     return TRUE;
 
-#if 0
-//     GdkPixmap *pixmap;
-//     pixmap = moo_icon_view_create_row_drag_icon (view, path);
-//     gtk_drag_set_icon_pixmap (context,
-//                               gdk_drawable_get_colormap (pixmap),
-//                               pixmap,
-//                               NULL,
-//                               /* the + 1 is for the black border in the icon ? */
-//                               view->priv->button_press_x + 1,
-//                               1);
-#endif
 }
 
 
@@ -3976,24 +3824,6 @@ _moo_icon_view_set_dest_targets (MooIconView        *view,
 }
 
 
-#if 0
-void
-_moo_icon_view_disable_drag_dest (MooIconView *view)
-{
-    DndInfo *info;
-
-    g_return_if_fail (MOO_IS_ICON_VIEW (view));
-
-    info = view->priv->dnd_info;
-
-    if (info->dest_enabled)
-    {
-        gtk_drag_dest_unset (GTK_WIDGET (view));
-        gtk_target_list_unref (info->dest_targets);
-        info->dest_targets = NULL;
-    }
-}
-#endif
 
 
 static void

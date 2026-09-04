@@ -190,9 +190,6 @@ static const struct {
     {"CP20127",     "ASCII"},
 
     {"CP20866",     "KOI8-R"},
-#if 0
-    {"CP21866",   "KOI8-RU"},
-#endif
 
     {"CP936",       "GBK"},
     {"CP1361",      "JOHAB"},
@@ -256,14 +253,4 @@ static const struct {
     {"CP1252",      "WINDOWS-1252"},
     {"ANSI-1251",   "WINDOWS-1251"},
     {"CP1251",      "WINDOWS-1251"},
-#if 0
-    {"IBM-921",     "ISO-8859-13"},
-    {"IBM-856",     "CP856"},
-    {"IBM-922",     "CP922"},
-    {"IBM-932",     "CP932"},
-    {"IBM-943",     "CP943"},
-    {"IBM-1046",    "CP1046"},
-    {"IBM-1124",    "CP1124"},
-    {"IBM-1129",    "CP1129"},
-#endif
 };

@@ -494,31 +494,6 @@ moo_line_view_write_line (MooLineView    *view,
 }
 
 
-#if 0
-static void
-check_if_scrolled (MooLineView *view)
-{
-    GdkRectangle rect;
-    GtkTextIter iter;
-    int line;
-
-    if (!gtk_widget_get_realized (GTK_WIDGET (view)))
-    {
-        view->priv->scrolled = FALSE;
-        return;
-    }
-
-    gtk_text_view_get_visible_rect (GTK_TEXT_VIEW (view), &rect);
-    gtk_text_view_get_line_at_y (GTK_TEXT_VIEW (view), &iter,
-                                 rect.y + rect.height - 1, NULL);
-    line = gtk_text_iter_get_line (&iter);
-
-    if (line + 2 < gtk_text_buffer_get_line_count (get_buffer (view)))
-        view->priv->scrolled = TRUE;
-    else
-        view->priv->scrolled = FALSE;
-}
-#else
 static void
 check_if_scrolled (MooLineView *view)
 {
@@ -546,7 +521,6 @@ check_if_scrolled (MooLineView *view)
     view->priv->scrolled = adj && gtk_widget_get_realized (GTK_WIDGET (view)) &&
                            ABS (gtk_adjustment_get_value (adj) - (gtk_adjustment_get_upper (adj) - gtk_adjustment_get_page_size (adj))) > delta;
 }
-#endif
 
 
 int

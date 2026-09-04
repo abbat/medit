@@ -56,12 +56,6 @@ add_icon_name_if_present (GtkIconSet *set,
         gtk_icon_set_add_source (set, source);
         gtk_icon_source_free (source);
     }
-#if 0
-    else
-    {
-        g_message ("no icon '%s'", icon_name);
-    }
-#endif
 }
 
 static void

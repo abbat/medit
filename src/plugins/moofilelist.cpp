@@ -1460,21 +1460,6 @@ add_row_from_dir_uri (G_GNUC_UNUSED FileList    *list,
                       G_GNUC_UNUSED GtkTreeIter *parent,
                       G_GNUC_UNUSED int          index)
 {
-#if 0
-    /* TODO read files */
-    Group *grp;
-    char *basename;
-
-    return;
-
-    basename = uri_get_basename (uri);
-    grp = group_new (basename);
-
-    file_list_insert_row (list, ITEM (grp), iter, parent, index);
-
-    item_unref (ITEM (grp));
-    g_free (basename);
-#endif
 }
 
 static void

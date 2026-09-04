@@ -56,9 +56,6 @@ struct MooTextBufferPrivate {
     MooUndoStack *undo_stack;
     gpointer modifying_action;
     int move_cursor_to;
-#if 0
-    int cursor_was_at;
-#endif
 };
 
 
@@ -113,9 +110,6 @@ static MooUndoAction *insert_action_new             (GtkTextBuffer      *buffer,
 static MooUndoAction *delete_action_new             (GtkTextBuffer      *buffer,
                                                      GtkTextIter        *start,
                                                      GtkTextIter        *end);
-#if 0
-static void     before_undo_redo                    (MooTextBuffer      *buffer);
-#endif
 static void     after_undo_redo                     (MooTextBuffer      *buffer);
 static void     proxy_notify_can_undo_redo          (MooTextBuffer      *buffer,
                                                      GParamSpec         *pspec);
@@ -366,14 +360,6 @@ moo_text_buffer_init (MooTextBuffer *buffer)
 
     buffer->priv->undo_stack = moo_undo_stack_new (buffer);
     buffer->priv->move_cursor_to = -1;
-#if 0
-    g_signal_connect_swapped (buffer->priv->undo_stack, "undo",
-                              G_CALLBACK (before_undo_redo),
-                              buffer);
-    g_signal_connect_swapped (buffer->priv->undo_stack, "redo",
-                              G_CALLBACK (before_undo_redo),
-                              buffer);
-#endif
     g_signal_connect_data (buffer->priv->undo_stack, "undo",
                            G_CALLBACK (after_undo_redo),
                            buffer, NULL,
@@ -434,11 +420,6 @@ moo_text_buffer_dispose (GObject *object)
     buffer->priv->left_brackets = NULL;
     buffer->priv->right_brackets = NULL;
 
-#if 0
-    g_signal_handlers_disconnect_by_func (buffer->priv->undo_stack,
-                                          (gpointer) before_undo_redo,
-                                          buffer);
-#endif
     if (buffer->priv->undo_stack)
     {
         g_signal_handlers_disconnect_by_func (buffer->priv->undo_stack,
@@ -758,16 +739,6 @@ moo_text_buffer_delete_range (GtkTextBuffer      *text_buffer,
 }
 
 
-#if 0
-static void
-before_undo_redo (MooTextBuffer *buffer)
-{
-    GtkTextIter iter;
-    gtk_text_buffer_get_iter_at_mark (GTK_TEXT_BUFFER (buffer), &iter,
-                                      gtk_text_buffer_get_insert (GTK_TEXT_BUFFER (buffer)));
-    buffer->priv->cursor_was_at = gtk_text_iter_get_offset (&iter);
-}
-#endif
 
 static void
 after_undo_redo (MooTextBuffer *buffer)
@@ -777,10 +748,6 @@ after_undo_redo (MooTextBuffer *buffer)
 
     if (buffer->priv->move_cursor_to >= 0)
         move_to = buffer->priv->move_cursor_to;
-#if 0
-    else
-        move_to = buffer->priv->cursor_was_at;
-#endif
 
     if (move_to >= 0)
     {
@@ -789,9 +756,6 @@ after_undo_redo (MooTextBuffer *buffer)
     }
 
     buffer->priv->move_cursor_to = -1;
-#if 0
-    buffer->priv->cursor_was_at = -1;
-#endif
 }
 
 static void
@@ -994,19 +958,6 @@ _moo_text_buffer_update_highlight (MooTextBuffer      *buffer,
 }
 
 
-#if 0
-// void
-// _moo_text_buffer_apply_syntax_tag (MooTextBuffer      *buffer,
-//                                    GtkTextTag         *tag,
-//                                    const GtkTextIter  *start,
-//                                    const GtkTextIter  *end)
-// {
-//     GtkTextBuffer *text_buffer = GTK_TEXT_BUFFER (buffer);
-//     buffer->priv->may_apply_tag = TRUE;
-//     gtk_text_buffer_apply_tag (text_buffer, tag, start, end);
-//     buffer->priv->may_apply_tag = FALSE;
-// }
-#endif
 
 
 void

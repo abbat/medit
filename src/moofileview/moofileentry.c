@@ -544,14 +544,6 @@ completion_parse_text (MooFileEntryCompletion *cmpl,
 
     text_len = strlen (text);
 
-#if 0
-    /* this was needed in the widget */
-    if (text_len <= cmpl->priv->display_basename_len)
-    {
-        g_warning ("something is wrong");
-        goto out;
-    }
-#endif
 
     if (!cmpl->priv->dirname || strcmp (cmpl->priv->dirname, dirname))
     {
@@ -1536,21 +1528,6 @@ completion_default_visible_func (MooFile *file, gpointer)
 }
 
 
-#if 0
-void
-_moo_file_entry_completion_set_visible_func (MooFileEntryCompletion *cmpl,
-                                             MooFileVisibleFunc      func,
-                                             gpointer                data)
-{
-    g_return_if_fail (MOO_IS_FILE_ENTRY_COMPLETION (cmpl));
-
-    if (!func)
-        func = (MooFileVisibleFunc) completion_default_visible_func;
-
-    cmpl->priv->visible_func = func;
-    cmpl->priv->visible_func_data = data;
-}
-#endif
 
 
 void

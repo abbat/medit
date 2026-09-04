@@ -553,20 +553,6 @@ moo_edit_config_set_global (MooEditConfigSource source,
 }
 
 
-#if 0
-void
-moo_edit_config_get_global (const char     *first_setting,
-                            ...)
-{
-    va_list var_args;
-
-    global_init ();
-
-    va_start (var_args, first_setting);
-    g_object_get_valist (G_OBJECT (global), first_setting, var_args);
-    va_end (var_args);
-}
-#endif
 
 
 void
@@ -601,52 +587,6 @@ moo_edit_config_unset_by_source (MooEditConfig  *config,
 }
 
 
-#if 0
-int
-moo_edit_config_get_source (MooEditConfig *config,
-                            const char    *setting)
-{
-    guint id;
-
-    g_return_val_if_fail (MOO_IS_EDIT_CONFIG (config), 0);
-    g_return_val_if_fail (setting != 0, 0);
-
-    if (!moo_edit_config_lookup_spec (setting, &id, TRUE))
-        g_return_val_if_reached (0);
-
-    return VALUE(config, id)->source;
-}
-
-void
-moo_edit_config_compose (MooEditConfig  *target,
-                         MooEditConfig  *src)
-{
-    guint i;
-
-    g_return_if_fail (MOO_IS_EDIT_CONFIG (target));
-    g_return_if_fail (MOO_IS_EDIT_CONFIG (src));
-
-    g_object_ref (target);
-    g_object_freeze_notify (G_OBJECT (target));
-
-    for (i = 1; i < vars->len; ++i)
-    {
-        Value *old = VALUE (target, i);
-        Value *new = VALUE (src, i);
-
-        if (old->source < new->source)
-            continue;
-
-        g_value_copy (&new->gval, &old->gval);
-        old->source = new->source;
-
-        object_notify (target, i);
-    }
-
-    g_object_thaw_notify (G_OBJECT (target));
-    g_object_unref (target);
-}
-#endif
 
 
 guint

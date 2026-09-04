@@ -2318,14 +2318,6 @@ moo_font_button_update_font_info (MooFontButton *font_button)
   desc = pango_font_description_from_string (font_button->priv->fontname);
   family = pango_font_description_get_family (desc);
 
-#if 0
-  /* This gives the wrong names, e.g. Italic when the font selection
-   * dialog displayed Oblique.
-   */
-  pango_font_description_unset_fields (desc, PANGO_FONT_MASK_FAMILY | PANGO_FONT_MASK_SIZE);
-  style = pango_font_description_to_string (desc);
-  gtk_label_set_text (GTK_LABEL (font_button->priv->style_label), style);
-#endif
 
   style = NULL;
   if (font_button->priv->show_style && family)

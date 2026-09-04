@@ -223,15 +223,6 @@ get_bookmark (GtkTreeModel *model,
 }
 
 
-#if 0
-static void
-set_bookmark (GtkListStore *store,
-              GtkTreeIter  *iter,
-              MooBookmark  *bookmark)
-{
-    gtk_list_store_set (store, iter, COLUMN_BOOKMARK, bookmark, -1);
-}
-#endif
 
 
 static void

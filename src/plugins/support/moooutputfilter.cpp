@@ -350,14 +350,6 @@ moo_output_filter_set_window (MooOutputFilter *filter,
     filter->priv->window = (MooEditWindow*) window;
 }
 
-#if 0
-gpointer
-moo_output_filter_get_window (MooOutputFilter *filter)
-{
-    g_return_val_if_fail (MOO_IS_OUTPUT_FILTER (filter), NULL);
-    return filter->priv->window;
-}
-#endif
 
 
 static char *

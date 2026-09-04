@@ -3767,12 +3767,6 @@ remove_pane_action (MooEditWindow *window,
     if (action)
         g_object_set (action, "visible", FALSE, nullptr);
 
-#if 0
-    klass = g_type_class_peek (MOO_TYPE_EDIT_WINDOW);
-
-    if (moo_window_class_find_action (klass, action_id))
-        moo_window_class_remove_last_action (klass, action_id);
-#endif
 
     g_free (action_id);
 }

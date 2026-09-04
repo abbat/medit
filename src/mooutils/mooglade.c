@@ -1302,16 +1302,6 @@ child_new (MooGladeXML    *xml,
         return NULL;
     }
 
-#if 0
-    if (!strcmp (class_name, "GtkToolbar"))
-    {
-        g_warning ("Ignoring %s", class_name);
-        child = g_new0 (Child, 1);
-        child->empty = TRUE;
-        child->parent_node = parent;
-        return child;
-    }
-#endif
 
     internal_child = moo_markup_get_prop (node, "internal-child");
 
@@ -1512,10 +1502,6 @@ widget_props_add (WidgetProps  *props,
     else if (!strcmp (name, "items") &&
              GTK_IS_COMBO_BOX_CLASS (klass))
     {
-#if 0
-//         if (value && value[0])
-//             g_message ("ignoring ComboBox items property");
-#endif
     }
     else
     {
@@ -2377,9 +2363,6 @@ moo_glade_xml_parse_markup (MooGladeXML  *xml,
     if (!moo_glade_xml_build (xml, widget, root_widget, error))
         goto out;
 
-#if 0
-    gtk_widget_show_all (widget->widget);
-#endif
 
     xml->priv->root_id = g_strdup (widget->id);
     result = TRUE;
@@ -2857,129 +2840,7 @@ get_type_by_name (const char *name)
 }
 
 
-#if 0
-static void print_widget    (Widget *widget, guint offset);
-static void print_child     (Child *child, guint offset);
-static void print_props     (GParameter *params, guint n_params, guint offset);
-
-static void
-print_widget (Widget *widget, guint offset)
-{
-    GSList *l;
-    char *fill = g_strnfill (offset, ' ');
-    g_print ("%sWidget id '%s' class '%s'\n",
-             fill, widget->id, g_type_name (widget->type));
-    print_props (widget->props->params, widget->props->n_params, offset);
-    for (l = widget->children; l != NULL; l = l->next)
-        print_child (l->data, offset + 3);
-}
-
-
-static void
-print_child (Child *child, guint offset)
-{
-    char *fill = g_strnfill (offset, ' ');
-    g_print ("%sChild\n", fill);
-    print_props (child->props->params, child->props->n_params, offset);
-    print_widget (child->widget, offset + 3);
-}
-
-
-static void
-print_value (GValue *value)
-{
-    if (value->g_type == G_TYPE_CHAR)
-    {
-        g_print ("%c", g_value_get_char (value));
-    }
-    else if (value->g_type == G_TYPE_UCHAR)
-    {
-        g_print ("%c", g_value_get_uchar (value));
-    }
-    else if (value->g_type == G_TYPE_BOOLEAN)
-    {
-        g_print ("%s",
-                 g_value_get_boolean (value) ? "TRUE" : "FALSE");
-    }
-    else if (value->g_type == G_TYPE_INT ||
-             value->g_type == G_TYPE_LONG ||
-             value->g_type == G_TYPE_INT64 ||
-             value->g_type == G_TYPE_UINT ||
-             value->g_type == G_TYPE_ULONG ||
-             value->g_type == G_TYPE_UINT64) /* XXX */
-    {
-        int val;
-
-        if (value->g_type == G_TYPE_INT)
-            val = g_value_get_int (value);
-        else if (value->g_type == G_TYPE_LONG)
-            val = g_value_get_long (value);
-        else if (value->g_type == G_TYPE_INT64)
-            val = g_value_get_int64 (value);
-        else if (value->g_type == G_TYPE_UINT)
-            val = g_value_get_uint (value);
-        else if (value->g_type == G_TYPE_ULONG)
-            val = g_value_get_ulong (value);
-        else if (value->g_type == G_TYPE_UINT64)
-            val = g_value_get_uint64 (value);
-
-        g_print ("%d", val);
-    }
-    else if (value->g_type == G_TYPE_FLOAT ||
-             value->g_type == G_TYPE_DOUBLE) /* XXX */
-    {
-        double val;
-
-        if (value->g_type == G_TYPE_FLOAT)
-            val = g_value_get_float (value);
-        else if (value->g_type == G_TYPE_DOUBLE)
-            val = g_value_get_double (value);
-
-        g_print ("%f", val);
-    }
-    else if (value->g_type == G_TYPE_STRING)
-    {
-        g_print ("%s", g_value_get_string (value));
-    }
-    else if (G_TYPE_IS_ENUM (value->g_type))
-    {
-        g_print ("%d", g_value_get_enum (value));
-    }
-    else if (G_TYPE_IS_FLAGS (value->g_type))
-    {
-        g_print ("%d", g_value_get_flags (value));
-    }
-    else
-    {
-        g_print ("<%s>", g_type_name (value->g_type));
-    }
-}
-
-
-static void
-print_props (GParameter *params, guint n_params, guint offset)
-{
-    guint i;
-    char *fill = g_strnfill (offset, ' ');
-    for (i = 0; i < n_params; ++i)
-    {
-        GParameter *param = &params[i];
-        g_print ("%s%s = '", fill, param->name);
-        print_value (&param->value);
-        g_print ("'\n");
-    }
-}
-
-
-static void
-dump_widget (Widget *widget)
-{
-    print_widget (widget, 0);
-}
-
-#else
 static void
 dump_widget (G_GNUC_UNUSED Widget *widget)
 {
 }
-#endif

@@ -603,23 +603,6 @@ create_lang_model (void)
 }
 
 
-#if 0
-static gboolean
-separator_func (GtkTreeModel *model,
-                GtkTreeIter  *iter,
-                G_GNUC_UNUSED gpointer data)
-{
-    char *name = NULL;
-
-    gtk_tree_model_get (model, iter, COLUMN_NAME, &name, -1);
-
-    if (!name)
-        return TRUE;
-
-    g_free (name);
-    return FALSE;
-}
-#endif
 
 
 static void

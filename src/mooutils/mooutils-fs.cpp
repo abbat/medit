@@ -590,10 +590,6 @@ _moo_glob_match_simple (const char *pattern,
     if ((gl = _moo_glob_new (pattern)))
         result = _moo_glob_match (gl, filename);
 
-#if 0
-    if (result && 0)
-        _moo_message ("'%s' matched '%s'", filename, pattern);
-#endif
 
     _moo_glob_free (gl);
     return result;

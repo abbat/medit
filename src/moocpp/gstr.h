@@ -90,19 +90,6 @@ class ConstCharSource
 public:
     static const char* get(const char* s) { return s; }
 
-#if 0
-template<size_t arr_size>
-struct ConstCharSource<char[arr_size]>
-{
-    static const char* get(char (&s)[arr_size]) { return &s[0]; }
-};
-
-template<size_t arr_size>
-struct ConstCharSource<const char[arr_size]>
-{
-    static const char* get(const char (&s)[arr_size]) { return &s[0]; }
-};
-#endif
 
     static const char* get(const gstr& s) { return s.get(); }
 };

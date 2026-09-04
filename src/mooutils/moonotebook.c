@@ -132,13 +132,6 @@ struct _MooNotebookPrivate {
 };
 
 
-#if 0
-/* XXX try to decide what these invariants are, and do check them */
-#define DO_CHECK_INVARIANTS
-static void NOTEBOOK_CHECK_INVARIANTS (MooNotebook *nb);
-#else
-#define NOTEBOOK_CHECK_INVARIANTS(nb) ((void) 0)
-#endif
 
 
 /*
@@ -196,10 +189,6 @@ static void     moo_notebook_get_preferred_height (GtkWidget      *widget,
 static void     moo_notebook_size_allocate  (GtkWidget      *widget,
                                              GtkAllocation  *allocation);
 
-#if 0
-static void     moo_notebook_parent_set     (GtkWidget      *widget,
-                                             GtkWidget      *previous_parent);
-#endif
 static gboolean moo_notebook_focus          (GtkWidget      *widget,
                                              GtkDirectionType direction);
 static gboolean moo_notebook_focus_in       (GtkWidget      *widget,
@@ -257,12 +246,6 @@ static gboolean moo_notebook_key_press      (GtkWidget      *widget,
                                              GdkEventKey    *event);
 static gboolean moo_notebook_motion         (GtkWidget      *widget,
                                              GdkEventMotion *event);
-#if 0
-static gboolean moo_notebook_enter          (GtkWidget      *widget,
-                                             GdkEventCrossing *event);
-static gboolean moo_notebook_leave          (GtkWidget      *widget,
-                                             GdkEventCrossing *event);
-#endif
 static gboolean moo_notebook_scroll_event   (GtkWidget      *widget,
                                              GdkEventScroll *event);
 
@@ -385,9 +368,6 @@ static void moo_notebook_class_init (MooNotebookClass *klass)
 
     gtkobject_class->destroy = moo_notebook_destroy;
 
-#if 0
-    widget_class->parent_set = moo_notebook_parent_set;
-#endif
     widget_class->style_set = moo_notebook_style_set;
     widget_class->realize = moo_notebook_realize;
     widget_class->unrealize = moo_notebook_unrealize;
@@ -411,10 +391,6 @@ static void moo_notebook_class_init (MooNotebookClass *klass)
     widget_class->key_press_event = moo_notebook_key_press;
     widget_class->focus = moo_notebook_focus;
     widget_class->motion_notify_event = moo_notebook_motion;
-#if 0
-    widget_class->enter_notify_event = moo_notebook_enter;
-    widget_class->leave_notify_event = moo_notebook_leave;
-#endif
 
     widget_class->drag_begin = NULL;
     widget_class->drag_end = NULL;
@@ -803,7 +779,6 @@ moo_notebook_size_request (GtkWidget      *widget,
     int ythickness = widget->style->ythickness;
 #endif
 
-    NOTEBOOK_CHECK_INVARIANTS (nb);
 
     requisition->width = 2 * border_width;
     requisition->height = 2 * border_width;
@@ -955,7 +930,6 @@ moo_notebook_size_allocate (GtkWidget     *widget,
 #endif
     int border_width = get_border_width (nb);
 
-    NOTEBOOK_CHECK_INVARIANTS (nb);
 
     gtk_widget_set_allocation (widget, allocation); // or we need gtk_widget_size_allocate ???
 
@@ -1117,55 +1091,6 @@ moo_notebook_size_allocate (GtkWidget     *widget,
 }
 
 
-#if 0
-static void
-mangle_class_name (char *string)
-{
-    g_return_if_fail (string != NULL);
-
-    while ((string = strstr (string, "MooNotebook")))
-    {
-        string[0] = 'G';
-        string[1] = 't';
-        string[2] = 'k';
-        string += strlen ("MooNotebook");
-    }
-}
-
-
-static void
-update_notebook_style (GtkWidget *widget)
-{
-    GtkStyle *style;
-    GtkSettings *settings;
-    char *path, *class_path;
-
-    if (!gtk_widget_has_screen (widget))
-        return;
-
-    settings = gtk_widget_get_settings (widget);
-
-    gtk_widget_path (widget, NULL, &path, NULL);
-    mangle_class_name (path);
-    gtk_widget_class_path (widget, NULL, &class_path, NULL);
-    mangle_class_name (class_path);
-
-    style = gtk_rc_get_style_by_paths (settings, path, class_path,
-                                       GTK_TYPE_NOTEBOOK);
-    gtk_widget_set_style (widget, style);
-
-    g_free (path);
-    g_free (class_path);
-}
-
-
-static void
-moo_notebook_parent_set (GtkWidget *widget,
-                         G_GNUC_UNUSED GtkWidget *previous_parent)
-{
-    update_notebook_style (widget);
-}
-#endif
 
 
 static void
@@ -1226,9 +1151,6 @@ moo_notebook_realize (GtkWidget *widget)
     nb->priv->tab_window = gdk_window_new (gtk_widget_get_window (widget), &attributes, attributes_mask);
     gdk_window_set_user_data (nb->priv->tab_window, widget);
 
-#if 0
-    update_notebook_style (widget);
-#endif
 #if !GTK_CHECK_VERSION(3,0,0)
     gtk_style_set_background (widget->style, nb->priv->tab_window, GTK_STATE_NORMAL);
 #endif
@@ -2233,7 +2155,6 @@ moo_notebook_check_tabs (MooNotebook *nb)
         gdk_window_show (nb->priv->tab_window);
     }
 
-    NOTEBOOK_CHECK_INVARIANTS (nb);
 }
 
 

@@ -1097,21 +1097,6 @@ moo_command_data_new (guint len)
 }
 
 
-#if 0
-void
-moo_command_data_clear (MooCommandData *data)
-{
-    guint i;
-
-    g_return_if_fail (data != NULL);
-
-    for (i = 0; i < data->len; ++i)
-    {
-        g_free (data->data[i]);
-        data->data[i] = NULL;
-    }
-}
-#endif
 
 
 MooCommandData *

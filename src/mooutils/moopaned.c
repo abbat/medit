@@ -1694,26 +1694,6 @@ moo_paned_expose (GtkWidget      *widget,
 }
 
 
-#if 0
-/* TODO */
-static GdkEventExpose *clip_bin_child_event (MooPaned       *paned,
-                                             GdkEventExpose *event)
-{
-    GtkAllocation child_alloc;
-    GdkRegion *child_rect;
-    GdkEventExpose *child_event;
-
-    get_bin_child_allocation (paned, &child_alloc);
-    child_rect = gdk_region_rectangle ((GdkRectangle*) &child_alloc);
-
-    child_event = (GdkEventExpose*) gdk_event_copy ((GdkEvent*) event);
-    gdk_region_intersect (child_event->region, child_rect);
-    gdk_region_get_clipbox (child_event->region, &child_event->area);
-
-    gdk_region_destroy (child_rect);
-    return child_event;
-}
-#endif
 
 
 static void
@@ -3565,9 +3545,6 @@ static void
 handle_realize (G_GNUC_UNUSED GtkWidget *widget,
                 MooPaned  *paned)
 {
-#if 0
-    GdkCursor *cursor;
-#endif
 
     g_return_if_fail (MOO_IS_PANED (paned));
     g_return_if_fail (MOO_PANED(paned)->priv->bin_window != NULL);
@@ -3575,12 +3552,6 @@ handle_realize (G_GNUC_UNUSED GtkWidget *widget,
     if (!paned->priv->enable_handle_drag)
         return;
 
-#if 0
-    cursor = gdk_cursor_new (paned->priv->handle_cursor_type);
-    g_return_if_fail (cursor != NULL);
-    gdk_window_set_cursor (widget->window, cursor);
-    gdk_cursor_unref (cursor);
-#endif
 }
 
 
