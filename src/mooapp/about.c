@@ -139,8 +139,10 @@ create_application_copyright_label (GtkBox *box)
   label = GTK_LABEL (widget);
 
   gtk_label_set_selectable (label, TRUE);
+  gtk_label_set_justify (label, GTK_JUSTIFY_CENTER);
 
-  markup = g_markup_printf_escaped ("<small>\302\251 %s</small>", MOO_COPYRIGHT);
+  markup = g_markup_printf_escaped ("<small>\302\251 %s\n\302\251 %s</small>",
+                                    MOO_COPYRIGHT, MOO_FORK_COPYRIGHT);
   gtk_label_set_markup (label, markup);
   g_free (markup);
 
@@ -163,8 +165,13 @@ create_application_url_label (GtkBox *box)
   label = GTK_LABEL (widget);
 
   gtk_label_set_selectable (label, TRUE);
+  gtk_label_set_justify (label, GTK_JUSTIFY_CENTER);
 
-  markup = g_markup_printf_escaped ("<a href=\"%s\">%s</a>", MOO_APP_WEBSITE, MOO_APP_WEBSITE_LABEL);
+  markup = g_markup_printf_escaped ("<a href=\"%s\">%s</a>\n"
+                                    "<small><a href=\"%s\">%s</a> (%s)</small>",
+                                    MOO_APP_WEBSITE, MOO_APP_WEBSITE_LABEL,
+                                    MOO_APP_WEBSITE_OLD, MOO_APP_WEBSITE_OLD_LABEL,
+                                    _("old site"));
   gtk_label_set_markup (label, markup);
   g_free (markup);
 

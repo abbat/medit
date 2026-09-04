@@ -764,8 +764,10 @@ GETTEXT_PACKAGE_GSV
 GETTEXT_PACKAGE
 MEDIT_PORTABLE_MAGIC_FILE_NAME
 MOO_PACKAGE_NAME
+MOO_FORK_COPYRIGHT
 MOO_COPYRIGHT
 MOO_WEB_CONTACT
+MOO_WEBSITE_OLD
 MOO_WEBSITE
 MOO_EMAIL
 MOO_DISPLAY_VERSION
@@ -13283,11 +13285,15 @@ MOO_DISPLAY_VERSION="1.3.0"
 
 MOO_EMAIL="emuntyan@users.sourceforge.net"
 
-MOO_WEBSITE="http://mooedit.sourceforge.net/"
+MOO_WEBSITE="https://github.com/abbat/medit"
+
+MOO_WEBSITE_OLD="http://mooedit.sourceforge.net/"
 
 MOO_WEB_CONTACT="http://mooedit.sourceforge.net/contact.html"
 
 MOO_COPYRIGHT="2004-2014 Yevgen Muntyan <emuntyan@users.sourceforge.net>"
+
+MOO_FORK_COPYRIGHT="2023-2026 Anton Batenev <antonbatenev@yandex.ru>"
 
 
 # keep in sync with po/maintain
@@ -21332,7 +21338,13 @@ printf "%s\n" "#define PACKAGE_BUGREPORT \"$PACKAGE_BUGREPORT\"" >>confdefs.h
 printf "%s\n" "#define MOO_COPYRIGHT \"$MOO_COPYRIGHT\"" >>confdefs.h
 
 
+printf "%s\n" "#define MOO_FORK_COPYRIGHT \"$MOO_FORK_COPYRIGHT\"" >>confdefs.h
+
+
 printf "%s\n" "#define MOO_WEBSITE \"$MOO_WEBSITE\"" >>confdefs.h
+
+
+printf "%s\n" "#define MOO_WEBSITE_OLD \"$MOO_WEBSITE_OLD\"" >>confdefs.h
 
 
 printf "%s\n" "#define MOO_WEB_CONTACT \"$MOO_WEB_CONTACT\"" >>confdefs.h
