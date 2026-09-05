@@ -85,9 +85,33 @@ to know when touching them:
   piece of a window keep it inside a `GtkWindow` or `GtkDialog`; use
   `moo_builder_reparent()` to move it where it belongs. Adding it directly leaves the
   target empty and, in the placeholder-dialog case, does not even warn.
+* **A widget handed to other code needs `moo_builder_take()`**, not `moo_builder_get()`.
+  Anything that will be packed by its receiver — a page returned to a factory, a custom
+  widget given to GtkPrintOperation — must leave the placeholder first. Handing it over
+  with a parent still attached makes `gtk_container_add()` refuse ("Can't set a parent
+  on widget which has a parent"), puts the packing properties on the placeholder, and
+  ends in an abort inside `gtk_container_propagate_expose` when the wrong container
+  draws it.
 * **Widget types must be registered** before GtkBuilder sees their name, or it fails
   with "Invalid object type". `moo_builder_new()` registers the mooutils widgets;
   widgets from elsewhere need a `g_type_ensure()` of their own.
+* **Placeholder windows must not be `visible`**, or GtkBuilder shows them: empty windows
+  appear beside the real dialog and get drawn after their content was moved out.
+* **Do not describe a model or cell renderers** for a combo the code fills itself
+  (`init_combo()` and friends). Two renderers draw the value twice — "Selected lines
+  Selected lines" — and it looks like a theme glitch rather than a bug.
+
+**Check that an edited .ui actually reached the binary**, before concluding anything from
+a test run:
+
+```bash
+gresource extract build3/src/medit /ui/<name>.ui | head
+```
+
+The resource is baked in at build time, so a stale dependency means the running binary
+still has the old interface while the file on disk looks right. That is exactly what
+happened once: the glob feeding the dependency covered `src/*/ui/*.ui` only, and the
+plugins keep theirs one level deeper, so two rounds of "fixes" changed nothing.
 
 ### Debian package build (old distros)
 
