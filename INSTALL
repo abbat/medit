@@ -28,6 +28,10 @@ cmake -S . -B build3 -DGTK_VERSION=3 && cmake --build build3 -j$(nproc)
 The binary is built as <build dir>/src/medit and can be run straight from there: it
 finds its translations in <build dir>/locale without an install.
 
+To remove the build directories and whatever a package build left in debian/, run
+
+./clean.sh
+
 gtk-4
 -----
 

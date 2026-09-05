@@ -42,6 +42,9 @@ The binary lands in `<build dir>/src/medit`, the compiled catalogs in
 GTK+3 3.24.38 dev packages are installed. **Every fix must build clean and behave
 correctly on both.**
 
+`./clean.sh` removes every build directory (anything holding a CMakeCache.txt) and
+the leftovers of a package build under `debian/`; it touches nothing else.
+
 Other options: `-DENABLE_NLS=OFF`, `-DENABLE_STRICT=ON` (all warnings and `-Werror`),
 `-DCMAKE_BUILD_TYPE=Debug` (the default is RelWithDebInfo, i.e. `-g -O2`).
 
