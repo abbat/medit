@@ -2,3 +2,11 @@ compression = "bzip2"
 compression-level = 9
 tar-ignore = .git
 tar-ignore = .gitignore
+tar-ignore = .vscode
+# build output, in case a build directory is left behind under another name
+tar-ignore = build*
+tar-ignore = obj-*
+tar-ignore = *.o
+tar-ignore = debian/files
+tar-ignore = debian/.debhelper
+tar-ignore = debian/*.substvars

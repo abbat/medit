@@ -27,6 +27,6 @@ override_dh_auto_install:
 	done
 
 override_dh_auto_clean:
-	rm -rf build-gtk2 build-gtk3
+	./clean.sh
 
 override_dh_auto_test:
