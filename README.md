@@ -4,7 +4,7 @@ Second life for `medit` (also known as `mooedit`) text editor in modern linux di
 
 * original website: https://mooedit.sourceforge.net
 * last upstream release: 1.2.92 (2017-11-12)
-* current release of this fork: 1.3.1
+* current release of this fork: 1.3.2
 
 ## download / install
 

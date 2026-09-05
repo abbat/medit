@@ -1,5 +1,17 @@
 2026-09-05  Anton Batenev  <antonbatenev@yandex.ru>
 
+    * === Released 1.3.2 ===
+
+    The dialogs are built by GtkBuilder from .ui files kept in the resource
+    bundle, so the glade to C generator and the libglade parser behind it are
+    gone; the menu descriptions and the credits text come from the bundle too.
+    Nothing in the build runs python any more.
+    The resources are compressed, 711 KB down to 134 KB.
+    Fixed a crash when opening the user tools preferences page, and a set of
+    leaks: every builder now belongs to something that releases it.
+
+2026-09-05  Anton Batenev  <antonbatenev@yandex.ru>
+
     * === Released 1.3.1 ===
 
     Replaced autotools with CMake. The build is out of source now, so a gtk-2 and

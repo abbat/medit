@@ -1,3 +1,19 @@
+medit (1.3.2) unstable; urgency=low
+
+  * Build the dialogs with GtkBuilder. The interfaces are .ui files inside the
+    resource bundle now, which retires tools/glade2c.py and the hand written
+    libglade parser it fed — 3341 lines of our own code replaced by what gtk
+    has shipped since 2.12.
+  * Take the menu descriptions and the credits text from the resource bundle as
+    well. With that the build needs no python at all: the generators under
+    tools/ and api/ are gone, and python3 is out of the build dependencies.
+  * Compress the resources: 711 KB of interface descriptions become 134 KB.
+  * Fix a crash when opening the user tools preferences page, and give every
+    GtkBuilder an owner — eleven of them were leaked, seven on every call of
+    the dialog they belonged to.
+
+ -- Anton Batenev <antonbatenev@yandex.ru>  Fri, 05 Sep 2026 20:00:00 +0300
+
 medit (1.3.1) unstable; urgency=low
 
   * Replace autotools with CMake. The build is out of source, so a gtk-2 and a
