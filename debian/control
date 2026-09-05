@@ -15,11 +15,11 @@ Homepage: https://github.com/abbat/medit
 
 Package: medit
 Architecture: all
-Depends: ${misc:Depends}, medit-gtk2 | medit-gtk3
+Depends: ${misc:Depends}, medit-gtk3 | medit-gtk2
 Description: Useful programming and around-programming text editor
- This package installs medit itself, built against either GTK+2 or GTK+3.
+ This package installs medit itself, built against either GTK+3 or GTK+2.
  The two builds are mutually exclusive; installing this package pulls in
- medit-gtk2 unless medit-gtk3 is already installed.
+ medit-gtk3 unless medit-gtk2 is already installed.
  .
  Features:
   * Configurable syntax highlighting.
@@ -36,8 +36,8 @@ Conflicts: medit-gtk3
 Replaces: medit-gtk3, medit (<< 1.3.1)
 Breaks: medit (<< 1.3.1)
 Description: Useful programming and around-programming text editor (GTK+2)
- This is the GTK+2 build of medit. It cannot be installed alongside
- medit-gtk3; install one or the other.
+ This is the GTK+2 build of medit, kept for systems without GTK+3. It cannot be
+ installed alongside medit-gtk3; install one or the other.
  .
  Features:
   * Configurable syntax highlighting.
@@ -54,8 +54,8 @@ Conflicts: medit-gtk2
 Replaces: medit-gtk2, medit (<< 1.3.1)
 Breaks: medit (<< 1.3.1)
 Description: Useful programming and around-programming text editor (GTK+3)
- This is the GTK+3 build of medit. It cannot be installed alongside
- medit-gtk2; install one or the other.
+ This is the GTK+3 build of medit, and the one the medit metapackage installs.
+ It cannot be installed alongside medit-gtk2; install one or the other.
  .
  Features:
   * Configurable syntax highlighting.

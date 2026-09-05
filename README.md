@@ -28,9 +28,10 @@ ships packages for the distributions that lost it.
 for Debian 11, 12, 13 and Ubuntu 20.04, 22.04, 24.04. The page has the
 repository setup instructions.
 
-`medit` is a metapackage that pulls in either `medit-gtk2` or `medit-gtk3` —
-install one of those directly to pick the toolkit yourself. The two are
-mutually exclusive, and only `medit-gtk3` has the terminal pane.
+`medit` is a metapackage that pulls in `medit-gtk3`, or leaves `medit-gtk2` in
+place if that is what is already installed — install one of those directly to
+pick the toolkit yourself. The two are mutually exclusive, and only
+`medit-gtk3` has the terminal pane.
 
 ## what this fork changes
 

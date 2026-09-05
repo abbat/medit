@@ -181,13 +181,15 @@ docker run --rm -v $S:/w medit-u2004 bash -c 'set -o pipefail
 
 The package builds medit **twice**, once per gtk version: `medit-gtk2` and
 `medit-gtk3` carry the two builds and conflict with each other, and `medit` is an
-arch-all metapackage depending on `medit-gtk2 | medit-gtk3`. So `debian/rules` runs
+arch-all metapackage depending on `medit-gtk3 | medit-gtk2`. So `debian/rules` runs
 `dh_auto_configure`/`dh_auto_build`/`dh_auto_install` once per `--builddirectory`, and a
 package build takes twice as long as a plain one. When changing the packaging, check
-both the fresh install (`apt install medit` must pull gtk2), the switch
-(`apt install medit-gtk3` must remove gtk2), and the upgrade from the old monolithic
-`medit` (its `/usr/bin/medit` has to move to `medit-gtk2` without a file conflict —
-that is what the `Breaks`/`Replaces: medit (<< 1.3.1)` are for).
+both the fresh install (`apt install medit` must pull gtk3, the first alternative), the
+switch (`apt install medit-gtk2` must remove gtk3), and the upgrade from the old monolithic
+`medit` (its `/usr/bin/medit` has to move to `medit-gtk3` without a file conflict —
+that is what the `Breaks`/`Replaces: medit (<< 1.3.1)` are for). A fourth case is worth
+one more run: a system already on `medit-gtk2` must **stay** there, because the installed
+package still satisfies the alternative and apt does not reconsider the order.
 
 Cache the image once (`docker build -t medit-u2004`); each fresh `apt-get install` costs
 a few minutes. To collect **every** error in one pass instead of one per run, replace
