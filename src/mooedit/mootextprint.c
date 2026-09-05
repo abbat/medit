@@ -1941,7 +1941,7 @@ _moo_edit_print_options_dialog (GtkWidget *parent)
     xml = moo_builder_new ("/ui/mooprint.ui");
     g_return_if_fail (xml != NULL);
 
-    dialog = GTK_WIDGET (moo_builder_get (xml, "dialog"));
+    dialog = GTK_WIDGET (moo_builder_get (xml, "dialog1"));
     g_return_if_fail (dialog != NULL);
 
     moo_window_set_parent (dialog, parent);

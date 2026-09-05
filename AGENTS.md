@@ -113,6 +113,12 @@ still has the old interface while the file on disk looks right. That is exactly 
 happened once: the glob feeding the dependency covered `src/*/ui/*.ui` only, and the
 plugins keep theirs one level deeper, so two rounds of "fixes" changed nothing.
 
+A missing id is only reported when the dialog is opened, and some dialogs are hard to
+reach (the drop dialog needs a real drag and drop). Cheap check for all of them at once:
+collect the ids each `.ui` declares, collect what the code asks
+`moo_builder_get/take/reparent` for, and compare. That is how the one stale id left in
+mootextprint.c was found.
+
 ### Debian package build (old distros)
 
 The package targets **Debian 11, Ubuntu 20.04 and 22.04** — much older toolchains than
