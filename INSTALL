@@ -13,7 +13,7 @@ the sources also cmake, pkg-config, intltool, gettext and python3.
 
 Build options:
 
-  -DGTK_VERSION=2|3|4    GTK version to build against (default: 2)
+  -DGTK_VERSION=2|3|4    GTK version to build against (default: 2, see below)
   -DENABLE_NLS=ON|OFF    Native Language Support (default: ON)
   -DENABLE_STRICT=ON|OFF all warnings and -Werror (default: OFF)
   -DENABLE_INSTALL_HOOKS=ON|OFF
@@ -27,3 +27,11 @@ cmake -S . -B build3 -DGTK_VERSION=3 && cmake --build build3 -j$(nproc)
 
 The binary is built as <build dir>/src/medit and can be run straight from there: it
 finds its translations in <build dir>/locale without an install.
+
+gtk-4
+-----
+
+-DGTK_VERSION=4 configures against the gtk4 package (libgtk-4-dev on Debian), but the
+sources are not ported to gtk-4 yet, so the build fails: gtk-4 removed the GtkAction
+family, gtk_widget_destroy() and the X11 headers the session management code uses.
+The option is there for the port to come; use 2 or 3 to build medit today.
