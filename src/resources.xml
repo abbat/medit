@@ -12,39 +12,39 @@
     <file alias="symlink-small.png">mooutils/pixmaps/symlink-small.png</file>
   </gresource>
   <gresource prefix="/ui">
-    <file preprocess="xml-stripblanks" alias="mootextgotoline.ui">mooedit/ui/mootextgotoline.ui</file>
-    <file preprocess="xml-stripblanks" alias="mooaccelbutton.ui">mooutils/ui/mooaccelbutton.ui</file>
-    <file preprocess="xml-stripblanks" alias="moologwindow.ui">mooutils/ui/moologwindow.ui</file>
-    <file preprocess="xml-stripblanks" alias="mooaccelprefs.ui">mooutils/ui/mooaccelprefs.ui</file>
-    <file preprocess="xml-stripblanks" alias="moobookmark-editor.ui">moofileview/ui/moobookmark-editor.ui</file>
-    <file preprocess="xml-stripblanks" alias="moocreatefolder.ui">moofileview/ui/moocreatefolder.ui</file>
-    <file preprocess="xml-stripblanks" alias="moofileprops.ui">moofileview/ui/moofileprops.ui</file>
-    <file preprocess="xml-stripblanks" alias="moofileview-drop.ui">moofileview/ui/moofileview-drop.ui</file>
-    <file preprocess="xml-stripblanks" alias="moofileselector.ui">plugins/ui/moofileselector.ui</file>
-    <file preprocess="xml-stripblanks" alias="moofileselector-prefs.ui">plugins/ui/moofileselector-prefs.ui</file>
-    <file preprocess="xml-stripblanks" alias="moofind.ui">plugins/ui/moofind.ui</file>
-    <file preprocess="xml-stripblanks" alias="moogrep.ui">plugins/ui/moogrep.ui</file>
-    <file preprocess="xml-stripblanks" alias="mooedittools-exe.ui">plugins/usertools/ui/mooedittools-exe.ui</file>
-    <file preprocess="xml-stripblanks" alias="moousertools.ui">plugins/usertools/ui/moousertools.ui</file>
-    <file preprocess="xml-stripblanks" alias="mooeditprefs-file.ui">mooedit/ui/mooeditprefs-file.ui</file>
-    <file preprocess="xml-stripblanks" alias="mooeditprefs-filters.ui">mooedit/ui/mooeditprefs-filters.ui</file>
-    <file preprocess="xml-stripblanks" alias="mooeditprefs-general.ui">mooedit/ui/mooeditprefs-general.ui</file>
-    <file preprocess="xml-stripblanks" alias="mooeditprefs-langs.ui">mooedit/ui/mooeditprefs-langs.ui</file>
-    <file preprocess="xml-stripblanks" alias="mooeditprefs-view.ui">mooedit/ui/mooeditprefs-view.ui</file>
-    <file preprocess="xml-stripblanks" alias="mooeditprogress.ui">mooedit/ui/mooeditprogress.ui</file>
-    <file preprocess="xml-stripblanks" alias="mooeditsavemult.ui">mooedit/ui/mooeditsavemult.ui</file>
-    <file preprocess="xml-stripblanks" alias="moopluginprefs.ui">mooedit/ui/moopluginprefs.ui</file>
-    <file preprocess="xml-stripblanks" alias="mooprint.ui">mooedit/ui/mooprint.ui</file>
-    <file preprocess="xml-stripblanks" alias="mooquicksearch.ui">mooedit/ui/mooquicksearch.ui</file>
-    <file preprocess="xml-stripblanks" alias="moostatusbar.ui">mooedit/ui/moostatusbar.ui</file>
-    <file preprocess="xml-stripblanks" alias="mootextfind-prompt.ui">mooedit/ui/mootextfind-prompt.ui</file>
-    <file preprocess="xml-stripblanks" alias="mootextfind.ui">mooedit/ui/mootextfind.ui</file>
-    <file preprocess="xml-stripblanks" alias="mootryencoding.ui">mooedit/ui/mootryencoding.ui</file>
-    <file preprocess="xml-stripblanks" alias="medit.xml">mooedit/medit.xml</file>
-    <file preprocess="xml-stripblanks" alias="mooedit.xml">mooedit/mooedit.xml</file>
-    <file preprocess="xml-stripblanks" alias="moofileview.xml">moofileview/moofileview.xml</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="mootextgotoline.ui">mooedit/ui/mootextgotoline.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="mooaccelbutton.ui">mooutils/ui/mooaccelbutton.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="moologwindow.ui">mooutils/ui/moologwindow.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="mooaccelprefs.ui">mooutils/ui/mooaccelprefs.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="moobookmark-editor.ui">moofileview/ui/moobookmark-editor.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="moocreatefolder.ui">moofileview/ui/moocreatefolder.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="moofileprops.ui">moofileview/ui/moofileprops.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="moofileview-drop.ui">moofileview/ui/moofileview-drop.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="moofileselector.ui">plugins/ui/moofileselector.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="moofileselector-prefs.ui">plugins/ui/moofileselector-prefs.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="moofind.ui">plugins/ui/moofind.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="moogrep.ui">plugins/ui/moogrep.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="mooedittools-exe.ui">plugins/usertools/ui/mooedittools-exe.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="moousertools.ui">plugins/usertools/ui/moousertools.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="mooeditprefs-file.ui">mooedit/ui/mooeditprefs-file.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="mooeditprefs-filters.ui">mooedit/ui/mooeditprefs-filters.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="mooeditprefs-general.ui">mooedit/ui/mooeditprefs-general.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="mooeditprefs-langs.ui">mooedit/ui/mooeditprefs-langs.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="mooeditprefs-view.ui">mooedit/ui/mooeditprefs-view.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="mooeditprogress.ui">mooedit/ui/mooeditprogress.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="mooeditsavemult.ui">mooedit/ui/mooeditsavemult.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="moopluginprefs.ui">mooedit/ui/moopluginprefs.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="mooprint.ui">mooedit/ui/mooprint.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="mooquicksearch.ui">mooedit/ui/mooquicksearch.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="moostatusbar.ui">mooedit/ui/moostatusbar.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="mootextfind-prompt.ui">mooedit/ui/mootextfind-prompt.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="mootextfind.ui">mooedit/ui/mootextfind.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="mootryencoding.ui">mooedit/ui/mootryencoding.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="medit.xml">mooedit/medit.xml</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="mooedit.xml">mooedit/mooedit.xml</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="moofileview.xml">moofileview/moofileview.xml</file>
   </gresource>
   <gresource prefix="/text">
-    <file alias="THANKS">../THANKS</file>
+    <file compressed="true" alias="THANKS">../THANKS</file>
   </gresource>
 </gresources>
