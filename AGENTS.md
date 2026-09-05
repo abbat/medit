@@ -1,6 +1,7 @@
 # AGENTS.md — medit
 
-Fork of medit (GTK+ text editor) being **ported from GTK+2 to GTK+3**. Work branch: `clean`.
+Fork of medit (GTK+ text editor) **ported from GTK+2 to GTK+3**; both builds are kept
+alive. Work branch: `main`.
 
 The port was largely done by an AI and is buggy. Most defects found so far sit inside
 blocks marked `/* FIXME: This code was written by AI and requires review */`.
@@ -177,6 +178,46 @@ What actually broke there — none of it visible in a local build:
 * **`g_object_ref` in C++** returns `gpointer` on older glib (no `typeof` magic), so
   assigning it to a typed field needs an explicit cast.
 
+### Fedora and Arch packages
+
+Three packaging trees live side by side: `debian/` (three packages, both gtk versions),
+`rpm/medit.spec` (Fedora 44, gtk-3 only) and `arch/PKGBUILD` (one `medit`, gtk-3 only).
+The last two build from the GitHub tag tarball, so their `sha256sums`/`Source0` follow
+the release, not the working tree. To test a spec against uncommitted work, tar the
+worktree with a `medit-<version>/` prefix into `~/rpmbuild/SOURCES` instead.
+
+```bash
+docker build -t medit-f44 - <<'EOF'
+FROM fedora:44
+RUN dnf -y --setopt=install_weak_deps=False --disablerepo=fedora-cisco-openh264 install \
+        rpm-build rpmdevtools cmake gcc gcc-c++ gtk3-devel glib2-devel libxml2-devel \
+        gdk-pixbuf2-devel libICE-devel libSM-devel intltool gettext desktop-file-utils
+EOF
+```
+
+`--disablerepo=fedora-cisco-openh264` is not optional: that repository is frequently
+unreachable and a weak dependency drags it in, failing the image build.
+
+Fedora compiles with **LTO and gcc 14**, which see things the Debian build cannot:
+
+* **`-Wodr`** catches two file-local structs sharing a name across translation units
+  with different fields. They are only file-local by convention — C gives them external
+  linkage — so LTO merges them. `RegexActionInfo`/`RegexFilterInfo` were renamed for
+  this. An anonymous namespace would be the C++ answer, but it trades the warning for
+  `-Wsubobject-linkage` as soon as an externally visible struct has such a member.
+* **`-Wc++20-compat`** catches identifiers that became keywords: a variable named
+  `requires` would stop compiling the day the project moves to C++20.
+
+Two spec details that are easy to get wrong: `-DENABLE_INSTALL_HOOKS=OFF`, or
+`gtk-update-icon-cache` runs inside `%{buildroot}` and ships a stale `icon-theme.cache`;
+and `--no-warn-unused-cli`, which silences CMake's notice about the `*_RELEASE` and
+Fortran flags `%cmake` passes unconditionally.
+
+**CentOS is not a target and cannot be one.** CentOS Linux 8 died in 2021 and Stream 8
+in 2024, their repositories survive only on vault.centos.org, and what is there is glib
+2.56 / gtk 3.22 — below the floor this code needs. Stream 9 (gtk 3.24.31) and Stream 10
+(3.24.43) would work if anyone asks.
+
 ---
 
 ## 2. Running and verifying
@@ -197,15 +238,46 @@ a running copy and exit.
 
 ### Translations
 
-The catalogs are not installed unless `make install` is run, and the binary's
-compiled-in `MOO_LOCALE_DIR` points at `/usr/local/share/locale`, so a build tree
-run used to come up with an untranslated UI. `po/Makefile.am` now also lays the
+The binary's compiled-in `MOO_LOCALE_DIR` points at the install prefix, so a build tree
+run used to come up with an untranslated UI. `cmake/Gettext.cmake` also lays the
 catalogs out as `<builddir>/locale/<lang>/LC_MESSAGES/<domain>.mo`, and
 `moo_get_locale_dir()` falls back to that tree when the configured directory has
 no catalog. `MOO_LOCALE_DIR` in the environment still overrides both.
 
 If the UI comes up in English, check `find locale -type f | wc -l` in the build
-directory — if it is empty, run `make -C po && make -C po-gsv`.
+directory — if it is empty, rebuild: the catalogs are a build target
+(`cmake --build build3`).
+
+**Nothing regenerates the .pot any more.** intltool went with autotools, and the tree
+carries no template — `po/POTFILES.in` is only a list. To find out what a catalog is
+missing, build one by hand and merge:
+
+```bash
+sed -e 's/^\[type: gettext\/glade\][[:space:]]*//' -e '/^#/d' po/POTFILES.in > files.txt
+xgettext --directory=. --files-from=files.txt --from-code=UTF-8 \
+    --keyword=_ --keyword=N_ --keyword=Q_ --keyword=C_:1c,2 --keyword=NC_:1c,2 \
+    --add-comments -o medit.pot
+msgmerge --no-fuzzy-matching po/ru.po medit.pot -o /tmp/ru.po
+msgfmt --statistics -o /dev/null /tmp/ru.po
+```
+
+This is an approximation — xgettext treats `.xml` as C and does not understand
+`.desktop.in`, both of which intltool handled — so trust it for "which msgid is
+missing", not for the absolute counts.
+
+**A translation can be present and still not appear.** The glade era left msgids that
+no longer match the code: dialog titles were extracted as `"Dialog title|About"` (the
+intltool "strip everything before the bar" idiom) and the Russian file additionally
+carried `msgctxt "yes"` on them. When the About and Credits dialogs became plain C
+calling `_("About")`, the lookups quietly missed and the dialogs came up in English
+while `msgfmt --statistics` reported the catalog as fully translated. If a string looks
+translated but shows in English, compare the msgid in the .po with the literal in the
+source before anything else.
+
+Catalog state, for reference: `ru` is complete and is the one to check first; `es`, `fr`,
+`pl`, `ja`, `fi`, `de` are 90%+; `cs`, `nl` and `zh_CN` are half empty, and adding a
+stray translated string to their untouched sections is worse than leaving the gap. Also
+pre-existing: `ja.po` and `pl.po` fail `msgfmt --check` on plural forms.
 
 ### Isolate config
 
