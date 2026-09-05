@@ -17,7 +17,7 @@
 #include "marshals.h"
 #include "mooutils/moodialogs.h"
 #include "mooutils/mooi18n.h"
-#include "mooutils/mooaccelbutton-gxml.h"
+#include "mooutils/moobuilder.h"
 #include "mooutils/mooaccel.h"
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
@@ -310,14 +310,18 @@ static void
 moo_accel_button_clicked (GtkButton *gtkbutton)
 {
     MooAccelButton *button = MOO_ACCEL_BUTTON (gtkbutton);
-    AccelDialogXml *xml;
+    GtkBuilder *builder;
     GtkWidget *dialog;
+    GtkWidget *eventbox;
     GtkWidget *parent;
     Stuff s = { (GdkModifierType) 0, 0, NULL, NULL, 0 };
     int response;
 
-    xml = accel_dialog_xml_new ();
-    dialog = GTK_WIDGET (xml->AccelDialog);
+    builder = moo_builder_new ("/ui/mooaccelbutton.ui");
+    g_return_if_fail (builder != NULL);
+
+    dialog = GTK_WIDGET (moo_builder_get (builder, "AccelDialog"));
+    eventbox = GTK_WIDGET (moo_builder_get (builder, "eventbox"));
 
     parent = gtk_widget_get_toplevel (GTK_WIDGET (gtkbutton));
     gtk_window_set_transient_for (GTK_WINDOW (dialog),
@@ -332,18 +336,19 @@ moo_accel_button_clicked (GtkButton *gtkbutton)
     if (button->title)
         gtk_window_set_title (GTK_WINDOW (dialog), button->title);
 
-    gtk_button_set_use_underline (GTK_BUTTON (xml->ok), FALSE);
-    gtk_button_set_use_underline (GTK_BUTTON (xml->cancel), FALSE);
+    gtk_button_set_use_underline (GTK_BUTTON (moo_builder_get (builder, "ok")), FALSE);
+    gtk_button_set_use_underline (GTK_BUTTON (moo_builder_get (builder, "cancel")), FALSE);
 
-    s.label = xml->label;
+    s.label = GTK_LABEL (moo_builder_get (builder, "label"));
     s.dialog = GTK_DIALOG (dialog);
 
-    g_signal_connect (xml->eventbox, "key-press-event", G_CALLBACK (key_event), &s);
+    g_signal_connect (eventbox, "key-press-event", G_CALLBACK (key_event), &s);
 
     response = gtk_dialog_run (GTK_DIALOG (dialog));
     remove_commit_timeout (&s);
 
     gtk_widget_destroy (dialog);
+    g_object_unref (builder);
 
     if (response == GTK_RESPONSE_OK)
     {

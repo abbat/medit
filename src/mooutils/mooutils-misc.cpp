@@ -26,7 +26,7 @@
 #include "mooutils/moocompat.h"
 #include "mooutils/mootype-macros.h"
 #include "mooutils/mooarray.h"
-#include "mooutils/moologwindow-gxml.h"
+#include "mooutils/moobuilder.h"
 #include <gtk/gtk.h>
 #include <mooglib/moo-glib.h>
 #ifdef HAVE_UNISTD_H
@@ -462,13 +462,19 @@ moo_log_window_new (void)
 {
     MooLogWindow *log;
     PangoFontDescription *font;
-    LogWindowXml *xml;
+    GtkBuilder *builder;
 
-    xml = log_window_xml_new ();
+    builder = moo_builder_new ("/ui/moologwindow.ui");
+    g_return_val_if_fail (builder != NULL, NULL);
+
     log = g_new (MooLogWindow, 1);
 
-    log->window = GTK_WIDGET (xml->LogWindow);
-    log->textview = xml->textview;
+    log->window = GTK_WIDGET (moo_builder_get (builder, "LogWindow"));
+    log->textview = GTK_TEXT_VIEW (moo_builder_get (builder, "textview"));
+
+    /* the window outlives the builder; it is never destroyed, only hidden */
+    g_object_ref (log->window);
+    g_object_unref (builder);
 
     g_signal_connect (log->window, "delete-event",
                       G_CALLBACK (gtk_widget_hide_on_delete), NULL);

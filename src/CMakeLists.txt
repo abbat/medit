@@ -90,9 +90,6 @@ moo_glade2c(MOO_GXML_HEADERS
     moofileview/glade/moocreatefolder.glade
     moofileview/glade/moofileprops.glade
     moofileview/glade/moofileview-drop.glade
-    mooutils/glade/mooaccelbutton.glade
-    mooutils/glade/mooaccelprefs.glade
-    mooutils/glade/moologwindow.glade
     plugins/glade/moofileselector-prefs.glade
     plugins/glade/moofileselector.glade
     plugins/glade/moofind.glade

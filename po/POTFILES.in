@@ -35,7 +35,7 @@ src/moofileview/moobookmarkmgr.c
 src/moofileview/moofileview.c
 src/moofileview/moofileview-tools.cpp
 src/moofileview/moofileview.xml
-src/mooutils/glade/mooaccelprefs.glade
+src/mooutils/ui/mooaccelprefs.ui
 src/mooutils/mooaccelprefs.cpp
 src/mooutils/moodialogs.c
 src/mooutils/mooencodings.cpp

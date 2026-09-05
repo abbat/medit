@@ -1,0 +1,178 @@
+<?xml version="1.0"?>
+<interface>
+  <object class="GtkWindow" id="window1">
+    <property name="visible">True</property>
+    <child>
+      <object class="GtkVBox" id="AccelPrefsPage">
+        <property name="visible">True</property>
+        <property name="border_width">3</property>
+        <property name="spacing">3</property>
+        <child>
+          <object class="GtkHBox" id="hbox9">
+            <property name="spacing">3</property>
+            <child>
+              <object class="GtkLabel" id="label64">
+                <property name="visible">True</property>
+                <property name="label">Search:</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkEntry" id="seach">
+                <property name="visible">True</property>
+              </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkScrolledWindow" id="scrolledwindow">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="hscrollbar_policy">GTK_POLICY_NEVER</property>
+            <property name="shadow_type">GTK_SHADOW_IN</property>
+            <child>
+              <object class="GtkTreeView" id="treeview">
+                <property name="visible">True</property>
+                <property name="has_focus">True</property>
+                <property name="can_default">True</property>
+                <property name="rules_hint">True</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkFrame" id="shortcut_frame">
+            <property name="visible">True</property>
+            <property name="label_xalign">0</property>
+            <child>
+              <object class="GtkAlignment" id="alignment29">
+                <property name="visible">True</property>
+                <property name="top_padding">3</property>
+                <property name="bottom_padding">3</property>
+                <property name="left_padding">3</property>
+                <property name="right_padding">3</property>
+                <child>
+                  <object class="GtkVBox" id="vbox11">
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkHBox" id="hbox10">
+                        <property name="visible">True</property>
+                        <child>
+                          <object class="GtkRadioButton" id="shortcut_none">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes" context="yes" comments="Translators: remove the part before and including |">Shortcut|None</property>
+                            <property name="use_underline">True</property>
+                            <property name="focus_on_click">False</property>
+                            <property name="draw_indicator">True</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkRadioButton" id="shortcut_default">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes" context="yes" comments="Translators: remove the part before and including |">Shortcut|Default</property>
+                            <property name="use_underline">True</property>
+                            <property name="focus_on_click">False</property>
+                            <property name="draw_indicator">True</property>
+                            <property name="group">shortcut_none</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                            <property name="padding">3</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkRadioButton" id="shortcut_custom">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes" context="yes" comments="Translators: remove the part before and including |">Shortcut|Custom</property>
+                            <property name="use_underline">True</property>
+                            <property name="focus_on_click">False</property>
+                            <property name="draw_indicator">True</property>
+                            <property name="group">shortcut_none</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                            <property name="position">2</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="MooAccelButton" id="shortcut">
+                            <property name="visible">True</property>
+                            <property name="use_underline">True</property>
+                            <property name="focus_on_click">False</property>
+                          </object>
+                          <packing>
+                            <property name="position">3</property>
+                          </packing>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkHBox" id="hbox11">
+                        <property name="visible">True</property>
+                        <child>
+                          <object class="GtkLabel" id="label66">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Default key:</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                            <property name="padding">3</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="default_label">
+                            <property name="visible">True</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child type="label">
+              <object class="GtkLabel" id="label65">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Shortcut for selected action</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

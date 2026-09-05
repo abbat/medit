@@ -17,6 +17,39 @@
 
 #include "mooutils/moobuilder.h"
 
+#include "mooutils/mooaccelbutton.h"
+#include "mooutils/moocombo.h"
+#include "mooutils/mooentry.h"
+#include "mooutils/moofontsel.h"
+#include "mooutils/moohistorycombo.h"
+#include "mooutils/mooprefspage.h"
+
+/*!
+ * \brief Makes medit's own widget types known to GtkBuilder
+ *
+ * GtkBuilder looks types up by name, and a type that has not been used yet is
+ * not registered, so an interface mentioning it fails to build with
+ * "Invalid object type". Widgets from other directories register themselves the
+ * same way before building an interface that uses them.
+ */
+static void
+register_types (void)
+{
+    static gsize done = 0;
+
+    if (g_once_init_enter (&done))
+    {
+        g_type_ensure (MOO_TYPE_ACCEL_BUTTON);
+        g_type_ensure (MOO_TYPE_COMBO);
+        g_type_ensure (MOO_TYPE_ENTRY);
+        g_type_ensure (MOO_TYPE_FONT_BUTTON);
+        g_type_ensure (MOO_TYPE_HISTORY_COMBO);
+        g_type_ensure (MOO_TYPE_PREFS_PAGE);
+
+        g_once_init_leave (&done, 1);
+    }
+}
+
 GtkBuilder *
 moo_builder_new (const char *resource_path)
 {
@@ -27,6 +60,8 @@ moo_builder_new (const char *resource_path)
     GError *error = NULL;
 
     g_return_val_if_fail (resource_path != NULL, NULL);
+
+    register_types ();
 
     builder = gtk_builder_new ();
     /* Without this the labels marked translatable in the .ui file are looked up
