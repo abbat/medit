@@ -20,7 +20,7 @@ ships packages for the distributions that lost it.
 
 * original website: <https://mooedit.sourceforge.net> (old site, no longer updated)
 * last upstream release: 1.2.92 (2017-11-12)
-* current release of this fork: 1.3.2
+* current release of this fork: 1.3.3
 
 ## download
 
@@ -71,8 +71,8 @@ cmake --build build -j$(nproc)
 The binary is `build/src/medit` and runs straight from the build directory.
 [INSTALL](INSTALL) has the dependencies, the build options and the details.
 
-`main` carries the current state and every release is tagged (`v1.3.2`,
-`v1.3.1`, ...), so `git checkout v1.3.2` gets the sources of a given release.
+`main` carries the current state and every release is tagged (`v1.3.3`,
+`v1.3.2`, ...), so `git checkout v1.3.3` gets the sources of a given release.
 The original sources up to 1.2.92, which this fork started from, are at
 <https://sourceforge.net/projects/mooedit/files/medit/>.
 

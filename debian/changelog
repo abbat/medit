@@ -1,3 +1,21 @@
+medit (1.3.3) unstable; urgency=low
+
+  * Bring back the terminal pane, which was a python plugin on top of the GTK+2
+    vte and went away with python. It is a builtin plugin over vte-2.91 now:
+    the same shell, the same ten color schemes and context menu, plus a Tools
+    menu entry bound to Ctrl+` and a preferences page for the shell, the font
+    and the scheme.
+  * Build against GTK+3 by default, and make the medit metapackage install
+    medit-gtk3. A system already on medit-gtk2 stays there; -DGTK_VERSION=2
+    still builds against GTK+2, which has no terminal pane because vte dropped
+    GTK+2 in 0.30.
+  * Add packaging for Fedora (rpm/medit.spec) and Arch (arch/PKGBUILD).
+  * Fix the About and Credits dialogs coming up untranslated: the glade era
+    left msgids the plain C code no longer asks for, in every catalog.
+  * Fix the warnings gcc 14 and LTO report.
+
+ -- Anton Batenev <antonbatenev@yandex.ru>  Sat, 05 Sep 2026 23:00:00 +0300
+
 medit (1.3.2) unstable; urgency=low
 
   * Build the dialogs with GtkBuilder. The interfaces are .ui files inside the

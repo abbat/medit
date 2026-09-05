@@ -1,5 +1,21 @@
 2026-09-05  Anton Batenev  <antonbatenev@yandex.ru>
 
+    * === Released 1.3.3 ===
+
+    The terminal pane is back. It was a python plugin on top of the GTK+2 vte
+    and went with python; it is a builtin plugin on top of vte-2.91 now, with
+    the same shell, color schemes and context menu, an entry in the Tools menu
+    and a preferences page. vte is optional (-DENABLE_TERMINAL=OFF) and exists
+    for GTK+3 only, so the GTK+2 build does not have the pane.
+    GTK+3 is what the build produces by default now, and what the medit
+    metapackage installs; -DGTK_VERSION=2 and medit-gtk2 still select GTK+2.
+    Packaging for Fedora (rpm/medit.spec) and Arch (arch/PKGBUILD).
+    The About and Credits dialogs are translated again: the glade era left
+    msgids the plain C code no longer asks for, in every catalog.
+    Fixed the warnings gcc 14 and LTO report.
+
+2026-09-05  Anton Batenev  <antonbatenev@yandex.ru>
+
     * === Released 1.3.2 ===
 
     The dialogs are built by GtkBuilder from .ui files kept in the resource
