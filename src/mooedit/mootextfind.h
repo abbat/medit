@@ -38,7 +38,7 @@ typedef struct MooFindClass  MooFindClass;
 struct MooFind
 {
     GtkDialog base;
-    struct MooFindBoxXml *xml;
+    GtkBuilder *xml;
     struct MooRegex *regex;
     guint replace : 1;
 };

@@ -1424,7 +1424,7 @@ moo_plugin_attach_prefs (GtkWidget *dialog)
 
     page = moo_prefs_page_new (C_("Prefs page label", "Plugins"), MOO_STOCK_PLUGINS);
     gxml = moo_builder_new ("/ui/moopluginprefs.ui");
-    g_return_val_if_fail (gxml != NULL, NULL);
+    g_return_if_fail (gxml != NULL);
     moo_builder_reparent (gxml, "PrefsPage", GTK_WIDGET (page));
     g_object_set_data (G_OBJECT (page), "moo-plugin-prefs-xml", gxml);
     g_object_set_data (G_OBJECT (page), "moo-plugin-prefs-dialog", dialog);

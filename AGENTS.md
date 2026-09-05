@@ -63,11 +63,12 @@ git stash pop
 
 ### Code generation
 
-`marshals.[ch]` (glib-genmarshal), `moo-pixbufs.h` (gdk-pixbuf-csource), `resources.c`
-(glib-compile-resources), `*-ui.h` and `mooapp-credits.h` (tools/xml2h.py), and
-`plugins/usertools/{menu,context}.xml` (genplatxml.py) are built into the build
-directory. Adding a source file means adding it to the `target_sources()` list in that
-directory's `CMakeLists.txt`.
+Only three things are generated: `marshals.[ch]` (glib-genmarshal), `moo-pixbufs.h`
+(gdk-pixbuf-csource) and `resources.c` (glib-compile-resources). Everything else that
+used to be generated — interfaces, menu descriptions, the credits text — is a resource
+now, listed in `src/resources.xml` and read at runtime. The build needs no python.
+Adding a source file means adding it to the `target_sources()` list in that directory's
+`CMakeLists.txt`.
 
 ### Dialogs
 
@@ -99,7 +100,7 @@ docker build -t medit-u2004 - <<'EOF'
 FROM ubuntu:20.04
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -qq && apt-get install -y -qq build-essential debhelper cmake \
-    pkg-config intltool python3 libgtk2.0-dev libgtk-3-dev libxml2-dev libjpeg-dev
+    pkg-config intltool libgtk2.0-dev libgtk-3-dev libxml2-dev libjpeg-dev
 EOF
 S=<scratch>                                                  # session scratch dir
 git ls-files -z | tar --null -T - -czf $S/medit-src.tar.gz   # tracked files + local edits

@@ -52,4 +52,3 @@ The original sources up to 1.2.92, which this fork started from, are at
 I'm not sure we need it:
 
 * keep compatibility with gtk-2
-* migrate from glade to native code (remove python preprocessor from xml to c)
