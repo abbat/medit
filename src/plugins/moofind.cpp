@@ -990,6 +990,12 @@ find_window_plugin_destroy (WindowStuff *stuff)
         gtk_widget_destroy (stuff->grep_dialog);
     if (stuff->find_dialog)
         gtk_widget_destroy (stuff->find_dialog);
+
+    if (stuff->grep_builder)
+        g_object_unref (stuff->grep_builder);
+    if (stuff->find_builder)
+        g_object_unref (stuff->find_builder);
+
     g_free (stuff->current_file);
 }
 

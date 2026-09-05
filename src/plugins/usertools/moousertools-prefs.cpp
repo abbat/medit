@@ -575,7 +575,7 @@ command_page_new (MooPrefsPage *page)
     g_return_if_fail (builder != NULL);
 
     moo_builder_reparent (builder, "Command", GTK_WIDGET (page));
-    command_builder_data.set(page, builder);
+    command_builder_data.set(page, builder, g_object_unref);
 }
 
 

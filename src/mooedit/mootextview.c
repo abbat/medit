@@ -4331,6 +4331,11 @@ moo_text_view_start_quick_search (MooTextView *view)
 
         moo_text_view_add_child_in_border (view, view->priv->qs.evbox,
                                            GTK_TEXT_WINDOW_BOTTOM);
+
+        /* the widgets belong to the view now; the builder rides on the box so
+           it goes away with them */
+        g_object_set_data_full (G_OBJECT (view->priv->qs.evbox), "moo-builder",
+                                xml, g_object_unref);
     }
 
     buffer = get_buffer (view);

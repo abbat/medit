@@ -470,6 +470,8 @@ new_file_dialog (GtkWidget   *parent,
 out:
     if (dialog)
         gtk_widget_destroy (dialog);
+    if (builder)
+        g_object_unref (builder);
     return fullname;
 }
 
@@ -854,6 +856,8 @@ save_as_dialog (GtkWidget   *parent,
 out:
     if (dialog)
         gtk_widget_destroy (dialog);
+    if (builder)
+        g_object_unref (builder);
     return fullname;
 }
 

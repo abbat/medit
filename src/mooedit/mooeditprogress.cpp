@@ -41,6 +41,9 @@ moo_edit_progress_init (MooEditProgress *pr)
     pr->xml = moo_builder_new ("/ui/mooeditprogress.ui");
     g_return_if_fail (pr->xml != NULL);
     moo_builder_reparent (pr->xml, "ProgressWidget", GTK_WIDGET (pr));
+
+    /* released with the widget itself */
+    g_object_set_data_full (G_OBJECT (pr), "moo-builder", pr->xml, g_object_unref);
     g_signal_connect_swapped (GTK_BUTTON (moo_builder_get (pr->xml, "cancel")), "clicked", G_CALLBACK (cancel_clicked), pr);
 }
 

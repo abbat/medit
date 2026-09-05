@@ -381,6 +381,7 @@ _moo_file_view_create_folder_dialog (GtkWidget  *parent,
         new_folder_name = NULL;
 
     gtk_widget_destroy (dialog);
+    g_object_unref (builder);
     return new_folder_name;
 }
 
@@ -520,6 +521,7 @@ _moo_file_view_save_drop_dialog (GtkWidget  *parent,
 
 out:
     gtk_widget_destroy (dialog);
+    g_object_unref (builder);
     g_free (start_name);
     return fullname;
 }

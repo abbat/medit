@@ -410,6 +410,7 @@ _moo_edit_save_multiple_changes_dialog (MooEditArray *docs,
     g_free (question);
     g_free (msg);
     gtk_widget_destroy (dialog);
+    g_object_unref (xml);
     return retval;
 }
 
@@ -569,6 +570,7 @@ _moo_edit_try_encoding_dialog (GFile       *file,
     *new_encoding = g_strdup (_moo_encodings_combo_get_enc (GTK_COMBO_BOX (encoding_combo), MOO_ENCODING_COMBO_OPEN));
 
     gtk_widget_destroy (dialog);
+    g_object_unref (xml);
     g_free (secondary);
     g_free (msg);
 
@@ -765,7 +767,16 @@ GtkWidget *
 _moo_text_prompt_on_replace_dialog (GtkWidget *parent)
 {
     GtkBuilder *xml;
+    GtkWidget *dialog;
+
     xml = moo_builder_new ("/ui/mootextfind-prompt.ui");
-    moo_window_set_parent (GTK_WIDGET (GTK_DIALOG (moo_builder_get (xml, "FindPromptDialog"))), parent);
-    return GTK_WIDGET (GTK_DIALOG (moo_builder_get (xml, "FindPromptDialog")));
+    g_return_val_if_fail (xml != NULL, NULL);
+
+    dialog = GTK_WIDGET (moo_builder_get (xml, "FindPromptDialog"));
+    moo_window_set_parent (dialog, parent);
+
+    /* the dialog outlives this function, so the builder rides along on it */
+    g_object_set_data_full (G_OBJECT (dialog), "moo-builder", xml, g_object_unref);
+
+    return dialog;
 }
