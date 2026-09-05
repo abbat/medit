@@ -15,7 +15,7 @@ src/mooedit/glade/mooprint.glade
 src/mooedit/glade/mooquicksearch.glade
 src/mooedit/glade/mootextfind.glade
 src/mooedit/glade/mootextfind-prompt.glade
-src/mooedit/glade/mootextgotoline.glade
+src/mooedit/ui/mootextgotoline.ui
 src/mooedit/medit.xml
 src/mooedit/mooeditaction-factory.cpp
 src/mooedit/mooeditdialogs.cpp
@@ -35,9 +35,6 @@ src/moofileview/moobookmarkmgr.c
 src/moofileview/moofileview.c
 src/moofileview/moofileview-tools.cpp
 src/moofileview/moofileview.xml
-src/moopython/plugins/medit/runpython.py
-src/moopython/plugins/python.py
-src/moopython/plugins/terminal.py
 src/mooutils/glade/mooaccelprefs.glade
 src/mooutils/mooaccelprefs.cpp
 src/mooutils/moodialogs.c
@@ -66,9 +63,7 @@ src/plugins/moofind.cpp
 src/plugins/support/mooeditwindowoutput.cpp
 src/plugins/usertools/filters.xml
 src/plugins/usertools/glade/mooedittools-exe.glade
-src/plugins/usertools/glade/mooedittools-script.glade
 src/plugins/usertools/glade/moousertools.glade
 src/plugins/usertools/moocommand-exe.cpp
-src/plugins/usertools/moocommand-script.cpp
 src/plugins/usertools/moousertools.cpp
 src/plugins/usertools/moousertools-prefs.cpp

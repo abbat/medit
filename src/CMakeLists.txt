@@ -60,12 +60,14 @@ add_custom_command(
     COMMENT "Generating mooapp-credits.h"
     VERBATIM)
 
+file(GLOB_RECURSE MOO_UI_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/*/ui/*.ui")
+
 add_custom_command(
     OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/resources.c"
     COMMAND ${GLIB_COMPILE_RESOURCES} "${CMAKE_CURRENT_SOURCE_DIR}/resources.xml"
             --sourcedir "${CMAKE_CURRENT_SOURCE_DIR}"
             --target "${CMAKE_CURRENT_BINARY_DIR}/resources.c" --generate-source
-    DEPENDS resources.xml
+    DEPENDS resources.xml ${MOO_UI_FILES}
     COMMENT "Generating resources.c"
     VERBATIM)
 
@@ -83,7 +85,6 @@ moo_glade2c(MOO_GXML_HEADERS
     mooedit/glade/moostatusbar.glade
     mooedit/glade/mootextfind-prompt.glade
     mooedit/glade/mootextfind.glade
-    mooedit/glade/mootextgotoline.glade
     mooedit/glade/mootryencoding.glade
     moofileview/glade/moobookmark-editor.glade
     moofileview/glade/moocreatefolder.glade

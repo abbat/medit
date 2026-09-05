@@ -28,6 +28,8 @@ target_sources(medit PRIVATE
     mooappinput.h
     mooarray.h
     mooatom.h
+    moobuilder.c
+    moobuilder.h
     moobigpaned.c
     moobigpaned.h
     mooclosure.c

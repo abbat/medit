@@ -26,7 +26,7 @@
 #include "mooutils/moohelp.h"
 #include "mooutils/moocompat.h"
 #include "mooedit/mootextfind-gxml.h"
-#include "mooedit/mootextgotoline-gxml.h"
+#include "mooutils/moobuilder.h"
 #ifdef MOO_ENABLE_HELP
 #include "moo-help-sections.h"
 #endif
@@ -1326,19 +1326,25 @@ update_scale_value (GtkSpinButton  *spin,
 void
 moo_text_view_run_goto_line (GtkTextView *view)
 {
+    GtkBuilder *builder;
     GtkDialog *dialog;
+    GtkRange *scale;
+    GtkSpinButton *spin;
     GtkTextBuffer *buffer;
     int line_count, line;
     GtkTextIter iter;
-    GotoLineDialogXml *xml;
 
     g_return_if_fail (GTK_IS_TEXT_VIEW (view));
 
     buffer = gtk_text_view_get_buffer (view);
     line_count = gtk_text_buffer_get_line_count (buffer);
 
-    xml = goto_line_dialog_xml_new ();
-    dialog = xml->GotoLineDialog;
+    builder = moo_builder_new ("/ui/mootextgotoline.ui");
+    g_return_if_fail (builder != NULL);
+
+    dialog = GTK_DIALOG (moo_builder_get (builder, "GotoLineDialog"));
+    scale = GTK_RANGE (moo_builder_get (builder, "scale"));
+    spin = GTK_SPIN_BUTTON (moo_builder_get (builder, "spin"));
 
     gtk_dialog_set_alternative_button_order (dialog,
                                              GTK_RESPONSE_OK,
@@ -1349,28 +1355,30 @@ moo_text_view_run_goto_line (GtkTextView *view)
                                       gtk_text_buffer_get_insert (buffer));
     line = gtk_text_iter_get_line (&iter);
 
-    gtk_range_set_range (GTK_RANGE (xml->scale), 1, line_count + 1);
-    gtk_range_set_value (GTK_RANGE (xml->scale), line + 1);
+    gtk_range_set_range (scale, 1, line_count + 1);
+    gtk_range_set_value (scale, line + 1);
 
-    gtk_entry_set_activates_default (GTK_ENTRY (xml->spin), TRUE);
-    gtk_spin_button_set_range (xml->spin, 1, line_count);
-    gtk_spin_button_set_value (xml->spin, line + 1);
-    gtk_editable_select_region (GTK_EDITABLE (xml->spin), 0, -1);
+    gtk_entry_set_activates_default (GTK_ENTRY (spin), TRUE);
+    gtk_spin_button_set_range (spin, 1, line_count);
+    gtk_spin_button_set_value (spin, line + 1);
+    gtk_editable_select_region (GTK_EDITABLE (spin), 0, -1);
 
-    g_signal_connect (xml->scale, "value-changed", G_CALLBACK (update_spin_value), xml->spin);
-    g_signal_connect (xml->spin, "value-changed", G_CALLBACK (update_scale_value), xml->scale);
+    g_signal_connect (scale, "value-changed", G_CALLBACK (update_spin_value), spin);
+    g_signal_connect (spin, "value-changed", G_CALLBACK (update_scale_value), scale);
 
     moo_window_set_parent (GTK_WIDGET (dialog), GTK_WIDGET (view));
 
     if (gtk_dialog_run (dialog) != GTK_RESPONSE_OK)
     {
         gtk_widget_destroy (GTK_WIDGET (dialog));
+        g_object_unref (builder);
         return;
     }
 
-    gtk_spin_button_update (xml->spin);
-    line = gtk_spin_button_get_value (xml->spin) - 1;
+    gtk_spin_button_update (spin);
+    line = gtk_spin_button_get_value (spin) - 1;
     gtk_widget_destroy (GTK_WIDGET (dialog));
+    g_object_unref (builder);
 
     if (MOO_IS_TEXT_VIEW (view))
     {

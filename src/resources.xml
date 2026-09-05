@@ -11,4 +11,7 @@
     <file alias="symlink.png">mooutils/pixmaps/symlink.png</file>
     <file alias="symlink-small.png">mooutils/pixmaps/symlink-small.png</file>
   </gresource>
+  <gresource prefix="/ui">
+    <file preprocess="xml-stripblanks" alias="mootextgotoline.ui">mooedit/ui/mootextgotoline.ui</file>
+  </gresource>
 </gresources>
