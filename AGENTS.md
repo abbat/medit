@@ -64,11 +64,29 @@ git stash pop
 ### Code generation
 
 `marshals.[ch]` (glib-genmarshal), `moo-pixbufs.h` (gdk-pixbuf-csource), `resources.c`
-(glib-compile-resources), `*-gxml.h` (tools/glade2c.py), `*-ui.h` and
-`mooapp-credits.h` (tools/xml2h.py), and `plugins/usertools/{menu,context}.xml`
-(genplatxml.py) are all built into the build directory. Adding a glade or ui file means
-adding it to the list in `src/CMakeLists.txt`; adding a source file means adding it to
-the `target_sources()` list in that directory's `CMakeLists.txt`.
+(glib-compile-resources), `*-ui.h` and `mooapp-credits.h` (tools/xml2h.py), and
+`plugins/usertools/{menu,context}.xml` (genplatxml.py) are built into the build
+directory. Adding a source file means adding it to the `target_sources()` list in that
+directory's `CMakeLists.txt`.
+
+### Dialogs
+
+Interfaces live in `src/*/ui/*.ui` (GtkBuilder XML), are compiled into the binary by
+`glib-compile-resources` through `src/resources.xml`, and are built by
+`moo_builder_new ("/ui/<name>.ui")` + `moo_builder_get (builder, "<id>")`. Three things
+to know when touching them:
+
+* **A new .ui file needs three entries**: the file itself, a line in
+  `src/resources.xml`, and a line in `po/POTFILES.in` — the latter prefixed with
+  `[type: gettext/glade]`, because intltool goes by extension and does not know `.ui`.
+  Forget the prefix and the dialog silently comes up untranslated.
+* **A widget still belongs to its placeholder window.** Interfaces that describe a
+  piece of a window keep it inside a `GtkWindow` or `GtkDialog`; use
+  `moo_builder_reparent()` to move it where it belongs. Adding it directly leaves the
+  target empty and, in the placeholder-dialog case, does not even warn.
+* **Widget types must be registered** before GtkBuilder sees their name, or it fails
+  with "Invalid object type". `moo_builder_new()` registers the mooutils widgets;
+  widgets from elsewhere need a `g_type_ensure()` of their own.
 
 ### Debian package build (old distros)
 
