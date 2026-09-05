@@ -828,10 +828,11 @@ init_editor_dialog (GtkBuilder *builder)
     GtkCellRenderer *cell;
     GtkTreeSelection *selection;
     MooFileEntryCompletion *completion;
+    GtkTreeView *treeview = treeview;
 
     init_icon_combo (GTK_COMBO_BOX (moo_builder_get (builder, "icon_combo")), builder);
 
-    selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (moo_builder_get (builder, "treeview")));
+    selection = gtk_tree_view_get_selection (treeview);
     gtk_tree_selection_set_mode (selection, GTK_SELECTION_MULTIPLE);
     g_signal_connect (selection, "changed",
                       G_CALLBACK (selection_changed), builder);
@@ -851,8 +852,8 @@ init_editor_dialog (GtkBuilder *builder)
     gtk_tree_view_column_set_cell_data_func (column, cell,
                                              (GtkTreeCellDataFunc) icon_data_func,
                                              NULL, NULL);
-    gtk_tree_view_append_column (GTK_TREE_VIEW (moo_builder_get (builder, "treeview")), column);
-    g_object_set_data (G_OBJECT (GTK_TREE_VIEW (moo_builder_get (builder, "treeview"))),
+    gtk_tree_view_append_column (treeview, column);
+    g_object_set_data (G_OBJECT (treeview),
                        "moo-bookmarks-icon-column",
                        column);
 
@@ -867,8 +868,8 @@ init_editor_dialog (GtkBuilder *builder)
     gtk_tree_view_column_set_cell_data_func (column, cell,
                                              (GtkTreeCellDataFunc) label_data_func,
                                              NULL, NULL);
-    gtk_tree_view_append_column (GTK_TREE_VIEW (moo_builder_get (builder, "treeview")), column);
-    g_object_set_data (G_OBJECT (GTK_TREE_VIEW (moo_builder_get (builder, "treeview"))),
+    gtk_tree_view_append_column (treeview, column);
+    g_object_set_data (G_OBJECT (treeview),
                        "moo-bookmarks-label-column",
                        column);
 
@@ -885,8 +886,8 @@ init_editor_dialog (GtkBuilder *builder)
     gtk_tree_view_column_set_cell_data_func (column, cell,
                                              (GtkTreeCellDataFunc) path_data_func,
                                              NULL, NULL);
-    gtk_tree_view_append_column (GTK_TREE_VIEW (moo_builder_get (builder, "treeview")), column);
-    g_object_set_data (G_OBJECT (GTK_TREE_VIEW (moo_builder_get (builder, "treeview"))),
+    gtk_tree_view_append_column (treeview, column);
+    g_object_set_data (G_OBJECT (treeview),
                        "moo-bookmarks-path-column",
                        column);
 
@@ -1030,23 +1031,24 @@ selection_changed (GtkTreeSelection *selection,
 static void
 new_clicked (GtkBuilder *builder)
 {
+    GtkTreeView *treeview = GTK_TREE_VIEW (moo_builder_get (builder, "treeview"));
     GtkTreeIter iter;
     GtkTreePath *path;
     GtkTreeViewColumn *column;
     GtkListStore *store;
     MooBookmark *bookmark;
 
-    store = GTK_LIST_STORE (gtk_tree_view_get_model (GTK_TREE_VIEW (moo_builder_get (builder, "treeview"))));
+    store = GTK_LIST_STORE (gtk_tree_view_get_model (treeview));
 
     bookmark = _moo_bookmark_new ("New bookmark", NULL,
                                   MOO_STOCK_FOLDER);
     gtk_list_store_append (store, &iter);
     set_bookmark (store, &iter, bookmark);
 
-    column = g_object_get_data (G_OBJECT (GTK_TREE_VIEW (moo_builder_get (builder, "treeview"))),
+    column = g_object_get_data (G_OBJECT (treeview),
                                 "moo-bookmarks-label-column");
     path = gtk_tree_model_get_path (GTK_TREE_MODEL (store), &iter);
-    gtk_tree_view_set_cursor (GTK_TREE_VIEW (moo_builder_get (builder, "treeview")), path, column, TRUE);
+    gtk_tree_view_set_cursor (treeview, path, column, TRUE);
 
     g_object_set_data (G_OBJECT (store),
                        "moo-bookmarks-modified",
@@ -1060,15 +1062,16 @@ new_clicked (GtkBuilder *builder)
 static void
 delete_clicked (GtkBuilder *builder)
 {
+    GtkTreeView *treeview = GTK_TREE_VIEW (moo_builder_get (builder, "treeview"));
     GtkTreeIter iter;
     GtkTreePath *path;
     GtkTreeSelection *selection;
     GtkListStore *store;
     GList *paths, *rows = NULL, *l;
 
-    store = GTK_LIST_STORE (gtk_tree_view_get_model (GTK_TREE_VIEW (moo_builder_get (builder, "treeview"))));
+    store = GTK_LIST_STORE (gtk_tree_view_get_model (treeview));
 
-    selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (moo_builder_get (builder, "treeview")));
+    selection = gtk_tree_view_get_selection (treeview);
     paths = gtk_tree_selection_get_selected_rows (selection, NULL);
 
     if (!paths)

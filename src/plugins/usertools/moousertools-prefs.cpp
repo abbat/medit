@@ -169,13 +169,14 @@ setup_options_widgets (GtkBuilder *builder)
     gtk_list_store_insert_with_values (store, NULL, G_MAXINT, 0, C_("Requires-combo", "Document"), -1);
     /* 'Requires' combo box entry on Tools prefs page */
     gtk_list_store_insert_with_values (store, NULL, G_MAXINT, 0, C_("Requires-combo", "File on disk"), -1);
-    gtk_combo_box_set_model (GTK_COMBO_BOX (moo_builder_get (builder, "combo_requires")), GTK_TREE_MODEL (store));
+    GtkComboBox *combo_requires = GTK_COMBO_BOX (moo_builder_get (builder, "combo_requires"));
+    gtk_combo_box_set_model (combo_requires, GTK_TREE_MODEL (store));
     g_object_unref (store);
 
-    gtk_cell_layout_clear (GTK_CELL_LAYOUT (GTK_COMBO_BOX (moo_builder_get (builder, "combo_requires"))));
+    gtk_cell_layout_clear (GTK_CELL_LAYOUT (combo_requires));
     cell = gtk_cell_renderer_text_new ();
-    gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (GTK_COMBO_BOX (moo_builder_get (builder, "combo_requires"))), cell, TRUE);
-    gtk_cell_layout_add_attribute (GTK_CELL_LAYOUT (GTK_COMBO_BOX (moo_builder_get (builder, "combo_requires"))), cell, "text", 0);
+    gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (combo_requires), cell, TRUE);
+    gtk_cell_layout_add_attribute (GTK_CELL_LAYOUT (combo_requires), cell, "text", 0);
 
     store = gtk_list_store_new (1, G_TYPE_STRING);
     // 'Save' combo box entry on Tools prefs page
@@ -184,13 +185,14 @@ setup_options_widgets (GtkBuilder *builder)
     gtk_list_store_insert_with_values (store, NULL, G_MAXINT, 0, C_("Save-combo", "Current document"), -1);
     // 'Save' combo box entry on Tools prefs page
     gtk_list_store_insert_with_values (store, NULL, G_MAXINT, 0, C_("Save-combo", "All documents"), -1);
-    gtk_combo_box_set_model (GTK_COMBO_BOX (moo_builder_get (builder, "combo_save")), GTK_TREE_MODEL (store));
+    GtkComboBox *combo_save = GTK_COMBO_BOX (moo_builder_get (builder, "combo_save"));
+    gtk_combo_box_set_model (combo_save, GTK_TREE_MODEL (store));
     g_object_unref (store);
 
-    gtk_cell_layout_clear (GTK_CELL_LAYOUT (GTK_COMBO_BOX (moo_builder_get (builder, "combo_save"))));
+    gtk_cell_layout_clear (GTK_CELL_LAYOUT (combo_save));
     cell = gtk_cell_renderer_text_new ();
-    gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (GTK_COMBO_BOX (moo_builder_get (builder, "combo_save"))), cell, TRUE);
-    gtk_cell_layout_add_attribute (GTK_CELL_LAYOUT (GTK_COMBO_BOX (moo_builder_get (builder, "combo_save"))), cell, "text", 0);
+    gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (combo_save), cell, TRUE);
+    gtk_cell_layout_add_attribute (GTK_CELL_LAYOUT (combo_save), cell, "text", 0);
 }
 
 static void
@@ -465,7 +467,8 @@ command_page_init (MooPrefsPage    *page,
     gtk_tree_view_column_set_cell_data_func (column, cell,
                                              (GtkTreeCellDataFunc) name_data_func,
                                              NULL, NULL);
-    gtk_tree_view_append_column (GTK_TREE_VIEW (moo_builder_get (builder, "treeview")), column);
+    GtkTreeView *treeview = GTK_TREE_VIEW (moo_builder_get (builder, "treeview"));
+    gtk_tree_view_append_column (treeview, column);
     g_object_set (cell, "editable", TRUE, nullptr);
     g_signal_connect_swapped (cell, "edited", G_CALLBACK (name_cell_edited), page);
 
@@ -473,7 +476,7 @@ command_page_init (MooPrefsPage    *page,
 
     helper = _moo_command_display_new (GTK_COMBO_BOX (moo_builder_get (builder, "combo_type")),
                                        GTK_NOTEBOOK (moo_builder_get (builder, "type_notebook")),
-                                       GTK_WIDGET (GTK_TREE_VIEW (moo_builder_get (builder, "treeview"))),
+                                       GTK_WIDGET (treeview),
                                        GTK_WIDGET (GTK_BUTTON (moo_builder_get (builder, "new"))),
                                        GTK_WIDGET (GTK_BUTTON (moo_builder_get (builder, "delete"))),
                                        GTK_WIDGET (GTK_BUTTON (moo_builder_get (builder, "up"))),
@@ -492,9 +495,9 @@ command_page_init (MooPrefsPage    *page,
     g_signal_connect_swapped (helper, "update-widgets", G_CALLBACK (update_widgets), page);
     g_signal_connect_swapped (helper, "update-model", G_CALLBACK (update_model), page);
 
-    gtk_tree_view_set_model (GTK_TREE_VIEW (moo_builder_get (builder, "treeview")), GTK_TREE_MODEL (store));
+    gtk_tree_view_set_model (treeview, GTK_TREE_MODEL (store));
 
-    _moo_tree_view_select_first (GTK_TREE_VIEW (moo_builder_get (builder, "treeview")));
+    _moo_tree_view_select_first (treeview);
     _moo_tree_helper_update_widgets (MOO_TREE_HELPER (helper));
 
     g_object_unref (store);

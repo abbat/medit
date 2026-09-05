@@ -547,8 +547,9 @@ _moo_edit_try_encoding_dialog (GFile       *file,
 
     dialog = GTK_WIDGET (GTK_DIALOG (moo_builder_get (xml, "TryEncodingDialog")));
 
-    _moo_encodings_combo_init (GTK_COMBO_BOX (GTK_COMBO_BOX (moo_builder_get (xml, "encoding_combo"))), MOO_ENCODING_COMBO_OPEN, FALSE);
-    _moo_encodings_combo_set_enc (GTK_COMBO_BOX (GTK_COMBO_BOX (moo_builder_get (xml, "encoding_combo"))), encoding, MOO_ENCODING_COMBO_OPEN);
+    GtkComboBox *encoding_combo = GTK_COMBO_BOX (moo_builder_get (xml, "encoding_combo"));
+    _moo_encodings_combo_init (GTK_COMBO_BOX (encoding_combo), MOO_ENCODING_COMBO_OPEN, FALSE);
+    _moo_encodings_combo_set_enc (GTK_COMBO_BOX (encoding_combo), encoding, MOO_ENCODING_COMBO_OPEN);
 
     if ((window = moo_editor_get_active_window (moo_editor_instance ())))
         moo_window_set_parent (dialog, GTK_WIDGET (window));
@@ -565,7 +566,7 @@ _moo_edit_try_encoding_dialog (GFile       *file,
 
     dialog_response = gtk_dialog_run (GTK_DIALOG (dialog));
 
-    *new_encoding = g_strdup (_moo_encodings_combo_get_enc (GTK_COMBO_BOX (GTK_COMBO_BOX (moo_builder_get (xml, "encoding_combo"))), MOO_ENCODING_COMBO_OPEN));
+    *new_encoding = g_strdup (_moo_encodings_combo_get_enc (GTK_COMBO_BOX (encoding_combo), MOO_ENCODING_COMBO_OPEN));
 
     gtk_widget_destroy (dialog);
     g_free (secondary);

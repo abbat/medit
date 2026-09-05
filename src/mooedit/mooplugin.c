@@ -1435,7 +1435,8 @@ moo_plugin_attach_prefs (GtkWidget *dialog)
     moo_help_set_id (GTK_WIDGET (page), HELP_SECTION_PREFS_PLUGINS);
 #endif
 
-    selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (moo_builder_get (gxml, "treeview")));
+    GtkTreeView *treeview = GTK_TREE_VIEW (moo_builder_get (gxml, "treeview"));
+    selection = gtk_tree_view_get_selection (treeview);
     gtk_tree_selection_set_mode (selection, GTK_SELECTION_SINGLE);
     g_signal_connect (selection, "changed", G_CALLBACK (selection_changed), gxml);
 
@@ -1443,20 +1444,20 @@ moo_plugin_attach_prefs (GtkWidget *dialog)
                                 G_TYPE_BOOLEAN,
                                 G_TYPE_STRING,
                                 G_TYPE_STRING);
-    gtk_tree_view_set_model (GTK_TREE_VIEW (moo_builder_get (gxml, "treeview")), GTK_TREE_MODEL (store));
+    gtk_tree_view_set_model (treeview, GTK_TREE_MODEL (store));
     g_object_unref (store);
 
     cell = gtk_cell_renderer_toggle_new ();
     g_object_set (cell, "activatable", TRUE, NULL);
     g_signal_connect (cell, "toggled", G_CALLBACK (enable_toggled), store);
     /* Column label on Plugins prefs page */
-    gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (moo_builder_get (gxml, "treeview")), 0,
+    gtk_tree_view_insert_column_with_attributes (treeview, 0,
                                                  C_("plugin-prefs-column", "Enabled"), cell,
                                                  "active", COLUMN_ENABLED, NULL);
 
     cell = gtk_cell_renderer_text_new ();
     /* Column label on Plugins prefs page */
-    gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (moo_builder_get (gxml, "treeview")), 1,
+    gtk_tree_view_insert_column_with_attributes (treeview, 1,
                                                  C_("plugin-prefs-column", "Plugin"), cell,
                                                  "text", COLUMN_PLUGIN_NAME, NULL);
 

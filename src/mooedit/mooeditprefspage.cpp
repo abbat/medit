@@ -999,21 +999,22 @@ filter_treeview_init (GtkBuilder *gxml)
 
     store = gtk_list_store_new (FILTER_NUM_COLUMNS, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
     populate_filter_settings_store (store);
-    gtk_tree_view_set_model (GTK_TREE_VIEW (moo_builder_get (gxml, "filter_treeview")), GTK_TREE_MODEL (store));
+    GtkTreeView *treeview = GTK_TREE_VIEW (moo_builder_get (gxml, "filter_treeview"));
+    gtk_tree_view_set_model (treeview, GTK_TREE_MODEL (store));
 
     /* Column label on File Filters prefs page */
-    create_filter_column (GTK_TREE_VIEW (moo_builder_get (gxml, "filter_treeview")), store, C_("filter-prefs-column", "Filter"), FILTER_COLUMN_FILTER);
+    create_filter_column (treeview, store, C_("filter-prefs-column", "Filter"), FILTER_COLUMN_FILTER);
     /* Column label on File Filters prefs page */
-    create_filter_column (GTK_TREE_VIEW (moo_builder_get (gxml, "filter_treeview")), store, C_("filter-prefs-column", "Options"), FILTER_COLUMN_CONFIG);
+    create_filter_column (treeview, store, C_("filter-prefs-column", "Options"), FILTER_COLUMN_CONFIG);
 
-    gtk_tree_view_set_tooltip_column (GTK_TREE_VIEW (moo_builder_get (gxml, "filter_treeview")), FILTER_COLUMN_INVALID_TOOLTIP);
+    gtk_tree_view_set_tooltip_column (treeview, FILTER_COLUMN_INVALID_TOOLTIP);
 
-    helper = _moo_tree_helper_new (GTK_WIDGET (GTK_TREE_VIEW (moo_builder_get (gxml, "filter_treeview"))),
+    helper = _moo_tree_helper_new (GTK_WIDGET (treeview),
                                    GTK_WIDGET (GTK_BUTTON (moo_builder_get (gxml, "new_filter_setting"))),
                                    GTK_WIDGET (GTK_BUTTON (moo_builder_get (gxml, "delete_filter_setting"))),
                                    GTK_WIDGET (GTK_BUTTON (moo_builder_get (gxml, "filter_setting_up"))),
                                    GTK_WIDGET (GTK_BUTTON (moo_builder_get (gxml, "filter_setting_down"))));
-    g_object_set_data_full (G_OBJECT (GTK_TREE_VIEW (moo_builder_get (gxml, "filter_treeview"))), "tree-helper", helper, g_object_unref);
+    g_object_set_data_full (G_OBJECT (treeview), "tree-helper", helper, g_object_unref);
     g_object_set_data (G_OBJECT (store), "tree-helper", helper);
 
     _moo_tree_helper_update_widgets (helper);

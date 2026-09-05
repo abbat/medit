@@ -100,9 +100,15 @@ _moo_edit_progress_set_text (MooEditProgress *progress,
 static gboolean
 pulse_progress (MooEditProgress *progress)
 {
+    GtkProgressBar *bar;
+
     g_return_val_if_fail (MOO_IS_EDIT_PROGRESS (progress), FALSE);
-    g_return_val_if_fail (GTK_IS_WIDGET (GTK_PROGRESS_BAR (moo_builder_get (progress->xml, "progressbar"))), FALSE);
-    gtk_progress_bar_pulse (GTK_PROGRESS_BAR (GTK_PROGRESS_BAR (moo_builder_get (progress->xml, "progressbar"))));
+
+    /* this runs on a timer while a file loads, so look the bar up once */
+    bar = GTK_PROGRESS_BAR (moo_builder_get (progress->xml, "progressbar"));
+    g_return_val_if_fail (GTK_IS_WIDGET (bar), FALSE);
+
+    gtk_progress_bar_pulse (bar);
     update_progress (progress);
     return TRUE;
 }
