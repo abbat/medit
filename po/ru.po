@@ -129,72 +129,60 @@ msgstr "Текстовый редактор"
 msgid "editor;texteditor;text"
 msgstr "editor;texteditor;text;редактор;текстовыйредактор;текст"
 
-#. Translators: remove the part before and including |
-#: ../src/mooapp/glade/mooappabout-credits.glade.h:2
-msgctxt "yes"
-msgid "Dialog title|Credits"
-msgstr "Благодарности"
-
-#. Tab label in Credits dialog
-#: ../src/mooapp/glade/mooappabout-credits.glade.h:4
-msgid "Thanks"
-msgstr "Спасибо"
-
-#. Tab label in Credits dialog
-#: ../src/mooapp/glade/mooappabout-credits.glade.h:6
-msgid "Written by"
-msgstr "Авторы"
-
-#. Tab label in Credits dialog
-#: ../src/mooapp/glade/mooappabout-credits.glade.h:8
-msgid "Translated by"
-msgstr "Перевод"
-
-#. Translators: remove the part before and including |
-#: ../src/mooapp/glade/mooappabout-dialog.glade.h:2
-msgctxt "yes"
-msgid "Dialog title|About"
-msgstr "О программе"
+#. Label of the link to the old upstream website in the About dialog
+#: ../src/mooapp/about.c:174
+msgid "old site"
+msgstr "старый сайт"
 
 #. Credits button label in About dialog
-#: ../src/mooapp/glade/mooappabout-dialog.glade.h:4
-msgctxt "yes"
+#: ../src/mooapp/about.c:220
 msgid "C_redits"
 msgstr "_Благодарности"
 
 #. License button label in About dialog
-#: ../src/mooapp/glade/mooappabout-dialog.glade.h:6
-msgctxt "yes"
+#: ../src/mooapp/about.c:280
 msgid "_License"
 msgstr "_Лицензия"
 
-#. Translators: remove the part before and including |
-#: ../src/mooapp/glade/mooappabout-license.glade.h:2
-msgctxt "yes"
-msgid "Dialog title|License"
-msgstr "Лицензия"
+#. Close button label in the About and Credits dialogs
+#: ../src/mooapp/about.c:312 ../src/mooapp/credits.c:178
+msgid "_Close"
+msgstr "_Закрыть"
+
+#. Title of the About dialog
+#: ../src/mooapp/about.c:369
+msgid "About"
+msgstr "О программе"
+
+#. Tab label in Credits dialog
+#: ../src/mooapp/credits.c:140
+msgid "Thanks"
+msgstr "Спасибо"
+
+#. Tab label in Credits dialog
+#: ../src/mooapp/credits.c:143
+msgid "Written by"
+msgstr "Авторы"
+
+#. Tab label in Credits dialog
+#: ../src/mooapp/credits.c:146
+msgid "Translated by"
+msgstr "Перевод"
+
+#. Title of the Credits dialog
+#: ../src/mooapp/credits.c:233
+msgid "Credits"
+msgstr "Благодарности"
 
 #. Translators: this goes into About box, under Translated by tab,
 #. do not ignore it, markup isn't always used. It should be something
 #. like "Some Guy <someguy@domain.net>", with lines separated by \n
-#: ../src/mooapp/mooappabout.c:59
+#: ../src/mooapp/credits.c:117
 msgid "translator-credits"
 msgstr ""
 "Андрей Федосеев <andrey.fedoseev@gmail.com>\n"
 "Denis Koryavov <dkoryavov@yandex.ru>\n"
 "Олеся Герасименко <gammaray@basealt.ru>"
-
-#. Translators: this goes into About box, under Translated by tab,
-#. this must be valid html markup, e.g.
-#. "Some Guy <a href=\"mailto:someguy@domain.net\">&lt;someguy@domain.net&gt;</a>"
-#. Lines must be separated by <br>, like "First guy<br>Second Guy"
-#: ../src/mooapp/mooappabout.c:64
-msgid "translator-credits-markup"
-msgstr ""
-"Андрей Федосеев <a href=\"mailto:andrey.fedoseev@gmail.com\">&lt;andrey."
-"fedoseev@gmail.com&gt;</a><br>Денис Корявов <a href=\"mailto:"
-"dkoryavov@yandex.ru\">&lt;dkoryavov@yandex.ru&gt;</a><br>Олеся Герасименко "
-"<a href=\"mailto:gammaray@basealt.ru\">&lt;gammaray@basealt.ru&gt;</a>"
 
 #: ../src/mooapp/mooapp.c:992
 msgid "Report a Bug..."

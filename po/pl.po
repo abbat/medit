@@ -118,62 +118,57 @@ msgstr "Opcje %s i %s nie mogą być użyte jednocześnie\n"
 msgid "Text editor"
 msgstr "Edytor tekstu"
 
-#. Translators: remove the part before and including |
-#: ../src/mooapp/glade/mooappabout-credits.glade.h:2
-msgid "Dialog title|Credits"
-msgstr "Zasługi"
-
-#. Tab label in Credits dialog
-#: ../src/mooapp/glade/mooappabout-credits.glade.h:4
-msgid "Thanks"
-msgstr "Podziękowania"
-
-#. Tab label in Credits dialog
-#: ../src/mooapp/glade/mooappabout-credits.glade.h:6
-msgid "Written by"
-msgstr "Program"
-
-#. Tab label in Credits dialog
-#: ../src/mooapp/glade/mooappabout-credits.glade.h:8
-msgid "Translated by"
-msgstr "Tłumaczenie"
-
-#. Translators: remove the part before and including |
-#: ../src/mooapp/glade/mooappabout-dialog.glade.h:2
-msgid "Dialog title|About"
-msgstr "O programie"
+#. Label of the link to the old upstream website in the About dialog
+#: ../src/mooapp/about.c:174
+msgid "old site"
+msgstr "stara strona"
 
 #. Credits button label in About dialog
-#: ../src/mooapp/glade/mooappabout-dialog.glade.h:4
+#: ../src/mooapp/about.c:220
 msgid "C_redits"
 msgstr "_Zasługi"
 
 #. License button label in About dialog
-#: ../src/mooapp/glade/mooappabout-dialog.glade.h:6
+#: ../src/mooapp/about.c:280
 msgid "_License"
 msgstr "_Licencja"
 
-#. Translators: remove the part before and including |
-#: ../src/mooapp/glade/mooappabout-license.glade.h:2
-msgid "Dialog title|License"
-msgstr "Licencja"
+#. Close button label in the About and Credits dialogs
+#: ../src/mooapp/about.c:312 ../src/mooapp/credits.c:178
+msgid "_Close"
+msgstr "_Zamknij"
+
+#. Title of the About dialog
+#: ../src/mooapp/about.c:369
+msgid "About"
+msgstr "O programie"
+
+#. Tab label in Credits dialog
+#: ../src/mooapp/credits.c:140
+msgid "Thanks"
+msgstr "Podziękowania"
+
+#. Tab label in Credits dialog
+#: ../src/mooapp/credits.c:143
+msgid "Written by"
+msgstr "Program"
+
+#. Tab label in Credits dialog
+#: ../src/mooapp/credits.c:146
+msgid "Translated by"
+msgstr "Tłumaczenie"
+
+#. Title of the Credits dialog
+#: ../src/mooapp/credits.c:233
+msgid "Credits"
+msgstr "Zasługi"
 
 #. Translators: this goes into About box, under Translated by tab,
 #. do not ignore it, markup isn't always used. It should be something
 #. like "Some Guy <someguy@domain.net>", with lines separated by \n
-#: ../src/mooapp/mooappabout.c:57
+#: ../src/mooapp/credits.c:117
 msgid "translator-credits"
 msgstr "Piotr Orzechowski <dev@porzechowski.com>"
-
-#. Translators: this goes into About box, under Translated by tab,
-#. this must be valid html markup, e.g.
-#. "Some Guy <a href=\"mailto:someguy@domain.net\">&lt;someguy@domain.net&gt;</a>"
-#. Lines must be separated by <br>, like "First guy<br>Second Guy"
-#: ../src/mooapp/mooappabout.c:62
-msgid "translator-credits-markup"
-msgstr ""
-"Piotr Orzechowski <a "
-"href=\"mailto:dev@porzechowski.com\">&lt;dev@porzechowski.com&gt;</a>"
 
 #: ../src/mooapp/mooapp.c:993
 msgid "Report a Bug..."

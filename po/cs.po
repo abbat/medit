@@ -119,62 +119,57 @@ msgstr ""
 msgid "Text editor"
 msgstr "Textový editor"
 
-#. Translators: remove the part before and including |
-#: ../src/mooapp/glade/mooappabout-credits.glade.h:2
-msgid "Dialog title|Credits"
-msgstr ""
-
-#. Tab label in Credits dialog
-#: ../src/mooapp/glade/mooappabout-credits.glade.h:4
-msgid "Thanks"
-msgstr "Díky"
-
-#. Tab label in Credits dialog
-#: ../src/mooapp/glade/mooappabout-credits.glade.h:6
-msgid "Written by"
-msgstr "Napsal"
-
-#. Tab label in Credits dialog
-#: ../src/mooapp/glade/mooappabout-credits.glade.h:8
-msgid "Translated by"
-msgstr "Přeložili"
-
-#. Translators: remove the part before and including |
-#: ../src/mooapp/glade/mooappabout-dialog.glade.h:2
-msgid "Dialog title|About"
+#. Label of the link to the old upstream website in the About dialog
+#: ../src/mooapp/about.c:174
+msgid "old site"
 msgstr ""
 
 #. Credits button label in About dialog
-#: ../src/mooapp/glade/mooappabout-dialog.glade.h:4
+#: ../src/mooapp/about.c:220
 msgid "C_redits"
 msgstr ""
 
 #. License button label in About dialog
-#: ../src/mooapp/glade/mooappabout-dialog.glade.h:6
+#: ../src/mooapp/about.c:280
 msgid "_License"
 msgstr ""
 
-#. Translators: remove the part before and including |
-#: ../src/mooapp/glade/mooappabout-license.glade.h:2
-msgid "Dialog title|License"
+#. Close button label in the About and Credits dialogs
+#: ../src/mooapp/about.c:312 ../src/mooapp/credits.c:178
+msgid "_Close"
+msgstr ""
+
+#. Title of the About dialog
+#: ../src/mooapp/about.c:369
+msgid "About"
+msgstr ""
+
+#. Tab label in Credits dialog
+#: ../src/mooapp/credits.c:140
+msgid "Thanks"
+msgstr "Díky"
+
+#. Tab label in Credits dialog
+#: ../src/mooapp/credits.c:143
+msgid "Written by"
+msgstr "Napsal"
+
+#. Tab label in Credits dialog
+#: ../src/mooapp/credits.c:146
+msgid "Translated by"
+msgstr "Přeložili"
+
+#. Title of the Credits dialog
+#: ../src/mooapp/credits.c:233
+msgid "Credits"
 msgstr ""
 
 #. Translators: this goes into About box, under Translated by tab,
 #. do not ignore it, markup isn't always used. It should be something
 #. like "Some Guy <someguy@domain.net>", with lines separated by \n
-#: ../src/mooapp/mooappabout.c:57
+#: ../src/mooapp/credits.c:117
 msgid "translator-credits"
 msgstr "Vlastimil Ott <vlastimil@e-ott.info>"
-
-#. Translators: this goes into About box, under Translated by tab,
-#. this must be valid html markup, e.g.
-#. "Some Guy <a href=\"mailto:someguy@domain.net\">&lt;someguy@domain.net&gt;</a>"
-#. Lines must be separated by <br>, like "First guy<br>Second Guy"
-#: ../src/mooapp/mooappabout.c:62
-msgid "translator-credits-markup"
-msgstr ""
-"Vlastimil Ott <a href=\"mailto:vlastimil@e-ott.info\">&lt;vlastimil@e-ott."
-"info&gt;</a>"
 
 #: ../src/mooapp/mooapp.c:993
 msgid "Report a Bug..."
