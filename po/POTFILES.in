@@ -27,10 +27,10 @@ src/mooedit/mooeditwindow.cpp
 src/mooedit/mooplugin.c
 src/mooedit/mooplugin-loader.c
 src/mooedit/mootextfind.c
-src/moofileview/glade/moobookmark-editor.glade
-src/moofileview/glade/moocreatefolder.glade
-src/moofileview/glade/moofileprops.glade
-src/moofileview/glade/moofileview-drop.glade
+src/moofileview/ui/moobookmark-editor.ui
+src/moofileview/ui/moocreatefolder.ui
+src/moofileview/ui/moofileprops.ui
+src/moofileview/ui/moofileview-drop.ui
 src/moofileview/moobookmarkmgr.c
 src/moofileview/moofileview.c
 src/moofileview/moofileview-tools.cpp

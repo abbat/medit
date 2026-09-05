@@ -36,7 +36,6 @@ typedef struct _MooFilePropsDialogClass   MooFilePropsDialogClass;
 struct _MooFilePropsDialog
 {
     GtkDialog base;
-    struct MooFilePropsXml *xml;
     GtkWidget *notebook;
     GtkWidget *icon;
     GtkWidget *entry;

@@ -16,5 +16,9 @@
     <file preprocess="xml-stripblanks" alias="mooaccelbutton.ui">mooutils/ui/mooaccelbutton.ui</file>
     <file preprocess="xml-stripblanks" alias="moologwindow.ui">mooutils/ui/moologwindow.ui</file>
     <file preprocess="xml-stripblanks" alias="mooaccelprefs.ui">mooutils/ui/mooaccelprefs.ui</file>
+    <file preprocess="xml-stripblanks" alias="moobookmark-editor.ui">moofileview/ui/moobookmark-editor.ui</file>
+    <file preprocess="xml-stripblanks" alias="moocreatefolder.ui">moofileview/ui/moocreatefolder.ui</file>
+    <file preprocess="xml-stripblanks" alias="moofileprops.ui">moofileview/ui/moofileprops.ui</file>
+    <file preprocess="xml-stripblanks" alias="moofileview-drop.ui">moofileview/ui/moofileview-drop.ui</file>
   </gresource>
 </gresources>

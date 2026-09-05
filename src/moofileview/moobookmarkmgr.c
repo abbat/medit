@@ -26,7 +26,8 @@
 #include "mooutils/moostock.h"
 #include "mooutils/mootype-macros.h"
 #include "mooutils/mooutils-treeview.h"
-#include "moofileview/moobookmark-editor-gxml.h"
+#include "mooutils/moobuilder.h"
+#include "mooutils/mooi18n.h"
 #include <string.h>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
@@ -298,13 +299,13 @@ _moo_bookmark_set_display_path (MooBookmark  *bookmark,
 static void
 moo_bookmark_mgr_load (MooBookmarkMgr *mgr)
 {
-    MooMarkupNode *xml;
+    MooMarkupNode *builder;
     MooMarkupNode *root, *node;
 
-    xml = moo_prefs_get_markup (MOO_PREFS_RC);
-    g_return_if_fail (xml != NULL);
+    builder = moo_prefs_get_markup (MOO_PREFS_RC);
+    g_return_if_fail (builder != NULL);
 
-    root = moo_markup_get_element (xml, BOOKMARKS_ROOT);
+    root = moo_markup_get_element (builder, BOOKMARKS_ROOT);
 
     if (!root)
         return;
@@ -361,17 +362,17 @@ moo_bookmark_mgr_load (MooBookmarkMgr *mgr)
 static void
 moo_bookmark_mgr_save (MooBookmarkMgr *mgr)
 {
-    MooMarkupNode *xml;
+    MooMarkupNode *builder;
     MooMarkupNode *root;
     GtkTreeModel *model;
     GtkTreeIter iter;
 
-    xml = moo_prefs_get_markup (MOO_PREFS_RC);
-    g_return_if_fail (xml != NULL);
+    builder = moo_prefs_get_markup (MOO_PREFS_RC);
+    g_return_if_fail (builder != NULL);
 
     model = GTK_TREE_MODEL (mgr->priv->store);
 
-    root = moo_markup_get_element (xml, BOOKMARKS_ROOT);
+    root = moo_markup_get_element (builder, BOOKMARKS_ROOT);
 
     if (root)
         moo_markup_delete_node (root);
@@ -379,7 +380,7 @@ moo_bookmark_mgr_save (MooBookmarkMgr *mgr)
     if (!gtk_tree_model_get_iter_first (model, &iter))
         return;
 
-    root = moo_markup_create_element (xml, BOOKMARKS_ROOT);
+    root = moo_markup_create_element (builder, BOOKMARKS_ROOT);
     g_return_if_fail (root != NULL);
 
     do
@@ -414,7 +415,7 @@ moo_bookmark_mgr_save (MooBookmarkMgr *mgr)
 
 struct _UserInfo {
     GObject *user;
-    MooUiXml *xml;
+    MooUiXml *builder;
     MooActionCollection *actions;
     char *path;
     guint user_id;
@@ -425,7 +426,7 @@ struct _UserInfo {
 static UserInfo*
 user_info_new (GObject             *user,
                MooActionCollection *actions,
-               MooUiXml            *xml,
+               MooUiXml            *builder,
                const char          *path,
                guint                user_id)
 {
@@ -433,14 +434,14 @@ user_info_new (GObject             *user,
 
     g_return_val_if_fail (G_IS_OBJECT (user), NULL);
     g_return_val_if_fail (MOO_IS_ACTION_COLLECTION (actions), NULL);
-    g_return_val_if_fail (MOO_IS_UI_XML (xml), NULL);
+    g_return_val_if_fail (MOO_IS_UI_XML (builder), NULL);
     g_return_val_if_fail (path, NULL);
     g_return_val_if_fail (user_id > 0, NULL);
 
     info = g_new0 (UserInfo, 1);
     info->user = user;
     info->actions = actions;
-    info->xml = xml;
+    info->builder = builder;
     info->path = g_strdup (path);
     info->user_id = user_id;
 
@@ -490,7 +491,7 @@ make_menu (MooBookmarkMgr *mgr,
     if (!gtk_tree_model_get_iter_first (model, &iter))
         return;
 
-    info->merge_id = moo_ui_xml_new_merge_id (info->xml);
+    info->merge_id = moo_ui_xml_new_merge_id (info->builder);
     markup = g_string_new (NULL);
 
     group = moo_action_collection_get_group (info->actions, NULL);
@@ -531,7 +532,7 @@ make_menu (MooBookmarkMgr *mgr,
     }
     while (gtk_tree_model_iter_next (model, &iter));
 
-    moo_ui_xml_insert_markup (info->xml, info->merge_id,
+    moo_ui_xml_insert_markup (info->builder, info->merge_id,
                               info->path, -1, markup->str);
     g_string_free (markup, TRUE);
 }
@@ -554,7 +555,7 @@ destroy_menu (UserInfo *info)
 
     if (info->merge_id > 0)
     {
-        moo_ui_xml_remove_ui (info->xml, info->merge_id);
+        moo_ui_xml_remove_ui (info->builder, info->merge_id);
         info->merge_id = 0;
     }
 }
@@ -590,7 +591,7 @@ void
 _moo_bookmark_mgr_add_user (MooBookmarkMgr *mgr,
                             gpointer        user,
                             MooActionCollection *actions,
-                            MooUiXml       *xml,
+                            MooUiXml       *builder,
                             const char     *path)
 {
     UserInfo *info;
@@ -598,10 +599,10 @@ _moo_bookmark_mgr_add_user (MooBookmarkMgr *mgr,
     g_return_if_fail (MOO_IS_BOOKMARK_MGR (mgr));
     g_return_if_fail (G_IS_OBJECT (user));
     g_return_if_fail (MOO_IS_ACTION_COLLECTION (actions));
-    g_return_if_fail (MOO_IS_UI_XML (xml));
+    g_return_if_fail (MOO_IS_UI_XML (builder));
     g_return_if_fail (path != NULL);
 
-    info = user_info_new (user, actions, xml, path,
+    info = user_info_new (user, actions, builder, path,
                           ++mgr->priv->last_user_id);
     mgr->priv->users = g_slist_prepend (mgr->priv->users, info);
 
@@ -654,7 +655,18 @@ _moo_bookmark_mgr_remove_user (MooBookmarkMgr *mgr,
 static GtkTreeModel *copy_bookmarks         (GtkListStore   *store);
 static void          copy_bookmarks_back    (GtkListStore   *store,
                                              GtkTreeModel   *model);
-static void          init_editor_dialog     (BkEditorXml    *xml);
+static void          init_editor_dialog     (GtkBuilder     *builder);
+
+/*!
+ * \brief Returns the builder that made the editor dialog
+ * \param dialog the editor dialog
+ * \return the builder, kept alive by the dialog itself
+ */
+static GtkBuilder *
+editor_builder (GtkWidget *dialog)
+{
+    return GTK_BUILDER (g_object_get_data (G_OBJECT (dialog), "moo-builder"));
+}
 static void          dialog_response        (GtkWidget      *dialog,
                                              int             response,
                                              MooBookmarkMgr *mgr);
@@ -665,17 +677,20 @@ GtkWidget *
 _moo_bookmark_mgr_get_editor (MooBookmarkMgr *mgr)
 {
     GtkWidget *dialog;
-    BkEditorXml *xml;
+    GtkBuilder *builder;
 
     if (mgr->priv->editor)
         return mgr->priv->editor;
 
-    xml = bk_editor_xml_new ();
-    dialog = GTK_WIDGET (xml->BkEditor);
+    builder = moo_builder_new ("/ui/moobookmark-editor.ui");
+    g_return_val_if_fail (builder != NULL, NULL);
+
+    dialog = GTK_WIDGET (moo_builder_get (builder, "BkEditor"));
+    g_object_set_data_full (G_OBJECT (dialog), "moo-builder", builder, g_object_unref);
 
     gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 
-    init_editor_dialog (xml);
+    init_editor_dialog (builder);
 
     g_signal_connect (dialog, "response",
                       G_CALLBACK (dialog_response), mgr);
@@ -696,13 +711,13 @@ dialog_show (GtkWidget      *dialog,
              MooBookmarkMgr *mgr)
 {
     GtkTreeModel *model;
-    BkEditorXml *xml;
+    GtkBuilder *builder;
 
-    xml = bk_editor_xml_get (dialog);
-    g_return_if_fail (xml != NULL);
+    builder = editor_builder (dialog);
+    g_return_if_fail (builder != NULL);
 
     model = copy_bookmarks (mgr->priv->store);
-    gtk_tree_view_set_model (xml->treeview, model);
+    gtk_tree_view_set_model (GTK_TREE_VIEW (moo_builder_get (builder, "treeview")), model);
     g_object_unref (model);
 }
 
@@ -713,10 +728,10 @@ dialog_response (GtkWidget      *dialog,
                  MooBookmarkMgr *mgr)
 {
     GtkTreeModel *model;
-    BkEditorXml *xml;
+    GtkBuilder *builder;
 
-    xml = bk_editor_xml_get (dialog);
-    g_return_if_fail (xml != NULL);
+    builder = editor_builder (dialog);
+    g_return_if_fail (builder != NULL);
 
     if (response != GTK_RESPONSE_OK)
     {
@@ -724,7 +739,7 @@ dialog_response (GtkWidget      *dialog,
         return;
     }
 
-    model = gtk_tree_view_get_model (xml->treeview);
+    model = gtk_tree_view_get_model (GTK_TREE_VIEW (moo_builder_get (builder, "treeview")));
     copy_bookmarks_back (mgr->priv->store, model);
     gtk_widget_hide (dialog);
 }
@@ -784,50 +799,50 @@ static void     path_data_func      (GtkTreeViewColumn  *column,
                                      GtkTreeIter        *iter, gpointer);
 
 static void     selection_changed   (GtkTreeSelection   *selection,
-                                     BkEditorXml        *xml);
-static void     new_clicked         (BkEditorXml        *xml);
-static void     delete_clicked      (BkEditorXml        *xml);
-static void     separator_clicked   (BkEditorXml        *xml);
+                                     GtkBuilder         *builder);
+static void     new_clicked         (GtkBuilder         *builder);
+static void     delete_clicked      (GtkBuilder         *builder);
+static void     separator_clicked   (GtkBuilder         *builder);
 
 static void     label_edited        (GtkCellRenderer    *cell,
                                      char               *path,
                                      char               *text,
-                                     BkEditorXml        *xml);
+                                     GtkBuilder         *builder);
 static void     path_edited         (GtkCellRenderer    *cell,
                                      char               *path,
                                      char               *text,
-                                     BkEditorXml        *xml);
+                                     GtkBuilder         *builder);
 static void     path_editing_started(GtkCellRenderer    *cell,
                                      GtkCellEditable    *editable);
 
 static void     init_icon_combo     (GtkComboBox        *combo,
-                                     BkEditorXml        *xml);
+                                     GtkBuilder         *builder);
 static void     combo_update_icon   (GtkComboBox        *combo,
-                                     BkEditorXml        *xml);
+                                     GtkBuilder         *builder);
 
 
 static void
-init_editor_dialog (BkEditorXml *xml)
+init_editor_dialog (GtkBuilder *builder)
 {
     GtkTreeViewColumn *column;
     GtkCellRenderer *cell;
     GtkTreeSelection *selection;
     MooFileEntryCompletion *completion;
 
-    init_icon_combo (xml->icon_combo, xml);
+    init_icon_combo (GTK_COMBO_BOX (moo_builder_get (builder, "icon_combo")), builder);
 
-    selection = gtk_tree_view_get_selection (xml->treeview);
+    selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (moo_builder_get (builder, "treeview")));
     gtk_tree_selection_set_mode (selection, GTK_SELECTION_MULTIPLE);
     g_signal_connect (selection, "changed",
-                      G_CALLBACK (selection_changed), xml);
-    selection_changed (selection, xml);
+                      G_CALLBACK (selection_changed), builder);
+    selection_changed (selection, builder);
 
-    g_signal_connect_swapped (xml->delete_button, "clicked",
-                              G_CALLBACK (delete_clicked), xml);
-    g_signal_connect_swapped (xml->new_button, "clicked",
-                              G_CALLBACK (new_clicked), xml);
-    g_signal_connect_swapped (xml->separator_button, "clicked",
-                              G_CALLBACK (separator_clicked), xml);
+    g_signal_connect_swapped (GTK_WIDGET (moo_builder_get (builder, "delete_button")), "clicked",
+                              G_CALLBACK (delete_clicked), builder);
+    g_signal_connect_swapped (GTK_WIDGET (moo_builder_get (builder, "new_button")), "clicked",
+                              G_CALLBACK (new_clicked), builder);
+    g_signal_connect_swapped (GTK_WIDGET (moo_builder_get (builder, "separator_button")), "clicked",
+                              G_CALLBACK (separator_clicked), builder);
 
     /* Icon */
     cell = gtk_cell_renderer_pixbuf_new ();
@@ -836,8 +851,8 @@ init_editor_dialog (BkEditorXml *xml)
     gtk_tree_view_column_set_cell_data_func (column, cell,
                                              (GtkTreeCellDataFunc) icon_data_func,
                                              NULL, NULL);
-    gtk_tree_view_append_column (xml->treeview, column);
-    g_object_set_data (G_OBJECT (xml->treeview),
+    gtk_tree_view_append_column (GTK_TREE_VIEW (moo_builder_get (builder, "treeview")), column);
+    g_object_set_data (G_OBJECT (GTK_TREE_VIEW (moo_builder_get (builder, "treeview"))),
                        "moo-bookmarks-icon-column",
                        column);
 
@@ -845,15 +860,15 @@ init_editor_dialog (BkEditorXml *xml)
     cell = gtk_cell_renderer_text_new ();
     g_object_set (cell, "editable", TRUE, NULL);
     g_signal_connect (cell, "edited",
-                      G_CALLBACK (label_edited), xml);
+                      G_CALLBACK (label_edited), builder);
 
     /* Column label in file selector bookmark editor */
     column = gtk_tree_view_column_new_with_attributes (C_("fileview-bookmark-editor", "Label"), cell, NULL);
     gtk_tree_view_column_set_cell_data_func (column, cell,
                                              (GtkTreeCellDataFunc) label_data_func,
                                              NULL, NULL);
-    gtk_tree_view_append_column (xml->treeview, column);
-    g_object_set_data (G_OBJECT (xml->treeview),
+    gtk_tree_view_append_column (GTK_TREE_VIEW (moo_builder_get (builder, "treeview")), column);
+    g_object_set_data (G_OBJECT (GTK_TREE_VIEW (moo_builder_get (builder, "treeview"))),
                        "moo-bookmarks-label-column",
                        column);
 
@@ -861,7 +876,7 @@ init_editor_dialog (BkEditorXml *xml)
     cell = gtk_cell_renderer_text_new ();
     g_object_set (cell, "editable", TRUE, NULL);
     g_signal_connect (cell, "edited",
-                      G_CALLBACK (path_edited), xml);
+                      G_CALLBACK (path_edited), builder);
     g_signal_connect (cell, "editing-started",
                       G_CALLBACK (path_editing_started), NULL);
 
@@ -870,8 +885,8 @@ init_editor_dialog (BkEditorXml *xml)
     gtk_tree_view_column_set_cell_data_func (column, cell,
                                              (GtkTreeCellDataFunc) path_data_func,
                                              NULL, NULL);
-    gtk_tree_view_append_column (xml->treeview, column);
-    g_object_set_data (G_OBJECT (xml->treeview),
+    gtk_tree_view_append_column (GTK_TREE_VIEW (moo_builder_get (builder, "treeview")), column);
+    g_object_set_data (G_OBJECT (GTK_TREE_VIEW (moo_builder_get (builder, "treeview"))),
                        "moo-bookmarks-path-column",
                        column);
 
@@ -976,14 +991,14 @@ path_data_func (G_GNUC_UNUSED GtkTreeViewColumn *column,
 
 static void
 selection_changed (GtkTreeSelection *selection,
-                   BkEditorXml      *xml)
+                   GtkBuilder       *builder)
 {
     GtkWidget *selected_hbox;
     int selected;
 
-    selected_hbox = GTK_WIDGET (xml->selected_hbox);
+    selected_hbox = GTK_WIDGET (GTK_WIDGET (moo_builder_get (builder, "selected_hbox")));
     selected = gtk_tree_selection_count_selected_rows (selection);
-    gtk_widget_set_sensitive (GTK_WIDGET (xml->delete_button), selected);
+    gtk_widget_set_sensitive (GTK_WIDGET (GTK_WIDGET (moo_builder_get (builder, "delete_button"))), selected);
 
     if (selected == 1)
     {
@@ -997,7 +1012,7 @@ selection_changed (GtkTreeSelection *selection,
         if (bookmark)
         {
             gtk_widget_set_sensitive (selected_hbox, TRUE);
-            combo_update_icon (xml->icon_combo, xml);
+            combo_update_icon (GTK_COMBO_BOX (moo_builder_get (builder, "icon_combo")), builder);
             _moo_bookmark_free (bookmark);
         }
         else
@@ -1013,7 +1028,7 @@ selection_changed (GtkTreeSelection *selection,
 
 
 static void
-new_clicked (BkEditorXml *xml)
+new_clicked (GtkBuilder *builder)
 {
     GtkTreeIter iter;
     GtkTreePath *path;
@@ -1021,17 +1036,17 @@ new_clicked (BkEditorXml *xml)
     GtkListStore *store;
     MooBookmark *bookmark;
 
-    store = GTK_LIST_STORE (gtk_tree_view_get_model (xml->treeview));
+    store = GTK_LIST_STORE (gtk_tree_view_get_model (GTK_TREE_VIEW (moo_builder_get (builder, "treeview"))));
 
     bookmark = _moo_bookmark_new ("New bookmark", NULL,
                                   MOO_STOCK_FOLDER);
     gtk_list_store_append (store, &iter);
     set_bookmark (store, &iter, bookmark);
 
-    column = g_object_get_data (G_OBJECT (xml->treeview),
+    column = g_object_get_data (G_OBJECT (GTK_TREE_VIEW (moo_builder_get (builder, "treeview"))),
                                 "moo-bookmarks-label-column");
     path = gtk_tree_model_get_path (GTK_TREE_MODEL (store), &iter);
-    gtk_tree_view_set_cursor (xml->treeview, path, column, TRUE);
+    gtk_tree_view_set_cursor (GTK_TREE_VIEW (moo_builder_get (builder, "treeview")), path, column, TRUE);
 
     g_object_set_data (G_OBJECT (store),
                        "moo-bookmarks-modified",
@@ -1043,7 +1058,7 @@ new_clicked (BkEditorXml *xml)
 
 
 static void
-delete_clicked (BkEditorXml *xml)
+delete_clicked (GtkBuilder *builder)
 {
     GtkTreeIter iter;
     GtkTreePath *path;
@@ -1051,9 +1066,9 @@ delete_clicked (BkEditorXml *xml)
     GtkListStore *store;
     GList *paths, *rows = NULL, *l;
 
-    store = GTK_LIST_STORE (gtk_tree_view_get_model (xml->treeview));
+    store = GTK_LIST_STORE (gtk_tree_view_get_model (GTK_TREE_VIEW (moo_builder_get (builder, "treeview"))));
 
-    selection = gtk_tree_view_get_selection (xml->treeview);
+    selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (moo_builder_get (builder, "treeview")));
     paths = gtk_tree_selection_get_selected_rows (selection, NULL);
 
     if (!paths)
@@ -1087,11 +1102,11 @@ delete_clicked (BkEditorXml *xml)
 
 
 static void
-separator_clicked (BkEditorXml *xml)
+separator_clicked (GtkBuilder *builder)
 {
     GtkTreeIter iter;
     GtkListStore *store;
-    store = GTK_LIST_STORE (gtk_tree_view_get_model (xml->treeview));
+    store = GTK_LIST_STORE (gtk_tree_view_get_model (GTK_TREE_VIEW (moo_builder_get (builder, "treeview"))));
     gtk_list_store_append (store, &iter);
 }
 
@@ -1100,14 +1115,14 @@ static void
 label_edited (G_GNUC_UNUSED GtkCellRenderer *cell,
               char        *path_string,
               char        *text,
-              BkEditorXml *xml)
+              GtkBuilder *builder)
 {
     GtkTreeIter iter;
     GtkTreePath *path;
     GtkListStore *store;
     MooBookmark *bookmark;
 
-    store = GTK_LIST_STORE (gtk_tree_view_get_model (xml->treeview));
+    store = GTK_LIST_STORE (gtk_tree_view_get_model (GTK_TREE_VIEW (moo_builder_get (builder, "treeview"))));
 
     path = gtk_tree_path_new_from_string (path_string);
 
@@ -1139,7 +1154,7 @@ static void
 path_edited (G_GNUC_UNUSED GtkCellRenderer *cell,
              char        *path_string,
              char        *text,
-             BkEditorXml *xml)
+             GtkBuilder *builder)
 {
     GtkTreeIter iter;
     GtkTreePath *path;
@@ -1147,7 +1162,7 @@ path_edited (G_GNUC_UNUSED GtkCellRenderer *cell,
     MooBookmark *bookmark;
     MooFileEntryCompletion *cmpl;
 
-    store = GTK_LIST_STORE (gtk_tree_view_get_model (xml->treeview));
+    store = GTK_LIST_STORE (gtk_tree_view_get_model (GTK_TREE_VIEW (moo_builder_get (builder, "treeview"))));
 
     path = gtk_tree_path_new_from_string (path_string);
 
@@ -1219,18 +1234,18 @@ static void icon_store_find_stock   (GtkListStore       *store,
 static void icon_store_find_empty   (GtkListStore       *store,
                                      GtkTreeIter        *iter);
 static void icon_combo_changed      (GtkComboBox        *combo,
-                                     BkEditorXml        *xml);
+                                     GtkBuilder         *builder);
 
 static void
 init_icon_combo (GtkComboBox *combo,
-                 BkEditorXml *xml)
+                 GtkBuilder *builder)
 {
     static GtkListStore *icon_store;
     GtkCellRenderer *cell;
 
     if (!icon_store)
     {
-        GtkWidget *dialog = GTK_WIDGET (xml->BkEditor);
+        GtkWidget *dialog = GTK_WIDGET (moo_builder_get (builder, "BkEditor"));
         gtk_widget_ensure_style (dialog);
 
         icon_store = gtk_list_store_new (3, GDK_TYPE_PIXBUF,
@@ -1262,13 +1277,13 @@ init_icon_combo (GtkComboBox *combo,
                                         NULL, NULL);
 
     g_signal_connect (combo, "changed",
-                      G_CALLBACK (icon_combo_changed), xml);
+                      G_CALLBACK (icon_combo_changed), builder);
 }
 
 
 static void
 combo_update_icon (GtkComboBox *combo,
-                   BkEditorXml *xml)
+                   GtkBuilder *builder)
 {
     GtkTreeSelection *selection;
     GtkTreeModel *model;
@@ -1277,7 +1292,7 @@ combo_update_icon (GtkComboBox *combo,
     MooBookmark *bookmark;
     GtkListStore *icon_store;
 
-    selection = gtk_tree_view_get_selection (xml->treeview);
+    selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (moo_builder_get (builder, "treeview")));
     rows = gtk_tree_selection_get_selected_rows (selection, &model);
     g_return_if_fail (rows != NULL && rows->next == NULL);
 
@@ -1294,9 +1309,9 @@ combo_update_icon (GtkComboBox *combo,
     else
         icon_store_find_empty (icon_store, &iter);
 
-    g_signal_handlers_block_by_func (combo, (gpointer) icon_combo_changed, xml);
+    g_signal_handlers_block_by_func (combo, (gpointer) icon_combo_changed, builder);
     gtk_combo_box_set_active_iter (combo, &iter);
-    g_signal_handlers_unblock_by_func (combo, (gpointer) icon_combo_changed, xml);
+    g_signal_handlers_unblock_by_func (combo, (gpointer) icon_combo_changed, builder);
 
     _moo_bookmark_free (bookmark);
     gtk_tree_path_free (rows->data);
@@ -1422,7 +1437,7 @@ fill_icon_store (GtkListStore   *store,
 
 static void
 icon_combo_changed (GtkComboBox *combo,
-                    BkEditorXml *xml)
+                    GtkBuilder *builder)
 {
     GtkTreeSelection *selection;
     GtkTreeModel *model;
@@ -1433,7 +1448,7 @@ icon_combo_changed (GtkComboBox *combo,
     GdkPixbuf *pixbuf = NULL;
     char *stock = NULL;
 
-    selection = gtk_tree_view_get_selection (xml->treeview);
+    selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (moo_builder_get (builder, "treeview")));
     rows = gtk_tree_selection_get_selected_rows (selection, &model);
     g_return_if_fail (rows != NULL && rows->next == NULL);
 

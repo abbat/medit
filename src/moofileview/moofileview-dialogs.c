@@ -21,9 +21,7 @@
 #include "mooutils/moodialogs.h"
 #include "mooutils/mooi18n.h"
 #include "mooutils/moocompat.h"
-#include "moofileview/moofileprops-gxml.h"
-#include "moofileview/moocreatefolder-gxml.h"
-#include "moofileview/moofileview-drop-gxml.h"
+#include "mooutils/moobuilder.h"
 #include <time.h>
 #include <string.h>
 #include <gtk/gtk.h>
@@ -62,12 +60,23 @@ _moo_file_props_dialog_class_init (MooFilePropsDialogClass *klass)
 static void
 _moo_file_props_dialog_init (MooFilePropsDialog *dialog)
 {
-    dialog->xml = moo_file_props_xml_new ();
+    GtkBuilder *builder;
+    GtkWidget *window;
 
-    dialog->notebook = GTK_WIDGET (dialog->xml->MooFileProps);
-    dialog->icon = GTK_WIDGET (dialog->xml->icon);
-    dialog->entry = GTK_WIDGET (dialog->xml->entry);
-    dialog->table = GTK_WIDGET (dialog->xml->table);
+    builder = moo_builder_new ("/ui/moofileprops.ui");
+    g_return_if_fail (builder != NULL);
+
+    dialog->notebook = GTK_WIDGET (moo_builder_get (builder, "MooFileProps"));
+    dialog->icon = GTK_WIDGET (moo_builder_get (builder, "icon"));
+    dialog->entry = GTK_WIDGET (moo_builder_get (builder, "entry"));
+    dialog->table = GTK_WIDGET (moo_builder_get (builder, "table"));
+
+    /* the notebook is described inside a placeholder dialog; take it out of
+       whatever holds it, then drop that placeholder */
+    window = gtk_widget_get_toplevel (dialog->notebook);
+    g_object_ref (dialog->notebook);
+    gtk_container_remove (GTK_CONTAINER (gtk_widget_get_parent (dialog->notebook)),
+                          dialog->notebook);
 
 #if GTK_CHECK_VERSION(3,0,0)
     /* FIXME: This code was written by AI and requires review */
@@ -75,6 +84,10 @@ _moo_file_props_dialog_init (MooFilePropsDialog *dialog)
 #else
     gtk_container_add (GTK_CONTAINER(GTK_DIALOG(dialog)->vbox), dialog->notebook);
 #endif
+
+    g_object_unref (dialog->notebook);
+    gtk_widget_destroy (window);
+    g_object_unref (builder);
 
     gtk_dialog_add_buttons (GTK_DIALOG (dialog),
                             GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
@@ -285,13 +298,12 @@ moo_file_props_dialog_destroy (GtkObject *object)
 {
     MooFilePropsDialog *dialog = MOO_FILE_PROPS_DIALOG (object);
 
-    if (dialog->xml)
+    if (dialog->notebook)
     {
         if (dialog->file)
             _moo_file_unref (dialog->file);
         if (dialog->folder)
             g_object_unref (dialog->folder);
-        dialog->xml = NULL;
         dialog->file = NULL;
         dialog->folder = NULL;
         dialog->notebook = NULL;
@@ -334,31 +346,37 @@ char*
 _moo_file_view_create_folder_dialog (GtkWidget  *parent,
                                      MooFolder  *folder)
 {
-    CreateFolderXml *xml;
+    GtkBuilder *builder;
+    GtkLabel *label;
+    MooEntry *entry;
     GtkWidget *dialog;
     char *text, *path, *new_folder_name = NULL;
 
     g_return_val_if_fail (MOO_IS_FOLDER (folder), NULL);
 
-    xml = create_folder_xml_new ();
-    dialog = GTK_WIDGET (xml->CreateFolder);
+    builder = moo_builder_new ("/ui/moocreatefolder.ui");
+    g_return_val_if_fail (builder != NULL, NULL);
+
+    dialog = GTK_WIDGET (moo_builder_get (builder, "CreateFolder"));
+    label = GTK_LABEL (moo_builder_get (builder, "label"));
+    entry = MOO_ENTRY (moo_builder_get (builder, "entry"));
 
     moo_window_set_parent (dialog, parent);
 
     path = g_filename_display_name (_moo_folder_get_path (folder));
     text = g_strdup_printf ("Create new folder in %s", path);
-    gtk_label_set_text (xml->label, text);
+    gtk_label_set_text (label, text);
     g_free (path);
     g_free (text);
 
-    gtk_entry_set_text (GTK_ENTRY (xml->entry), "New Folder");
-    moo_entry_clear_undo (xml->entry);
+    gtk_entry_set_text (GTK_ENTRY (entry), "New Folder");
+    moo_entry_clear_undo (entry);
     gtk_widget_show_all (dialog);
-    gtk_widget_grab_focus (GTK_WIDGET (xml->entry));
-    gtk_editable_select_region (GTK_EDITABLE (xml->entry), 0, -1);
+    gtk_widget_grab_focus (GTK_WIDGET (entry));
+    gtk_editable_select_region (GTK_EDITABLE (entry), 0, -1);
 
     if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_OK)
-        new_folder_name = g_strdup (gtk_entry_get_text (GTK_ENTRY (xml->entry)));
+        new_folder_name = g_strdup (gtk_entry_get_text (GTK_ENTRY (entry)));
     else
         new_folder_name = NULL;
 
@@ -430,19 +448,21 @@ char *
 _moo_file_view_save_drop_dialog (GtkWidget  *parent,
                                  const char *dirname)
 {
-    DropXml *xml;
+    GtkBuilder *builder;
     GtkWidget *dialog;
     GtkEntry *entry;
     char *start_name, *fullname = NULL;
 
     g_return_val_if_fail (dirname != NULL, NULL);
 
-    xml = drop_xml_new ();
-    dialog = GTK_WIDGET (xml->Drop);
+    builder = moo_builder_new ("/ui/moofileview-drop.ui");
+    g_return_val_if_fail (builder != NULL, FALSE);
+
+    dialog = GTK_WIDGET (moo_builder_get (builder, "Drop"));
 
     moo_position_window_at_pointer (dialog, parent);
 
-    entry = GTK_ENTRY (xml->entry);
+    entry = GTK_ENTRY (moo_builder_get (builder, "entry"));
 
     start_name = find_available_clip_name (dirname);
     gtk_entry_set_text (entry, start_name);
@@ -451,7 +471,7 @@ _moo_file_view_save_drop_dialog (GtkWidget  *parent,
     gtk_widget_show_all (dialog);
     gtk_widget_grab_focus (GTK_WIDGET (entry));
 
-    moo_bind_bool_property (xml->ok_button, "sensitive", entry, "empty", TRUE);
+    moo_bind_bool_property (moo_builder_get (builder, "ok_button"), "sensitive", entry, "empty", TRUE);
 
     while (TRUE)
     {

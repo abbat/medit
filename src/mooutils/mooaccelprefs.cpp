@@ -260,7 +260,7 @@ _moo_accel_prefs_page_init (MooAccelPrefsPage *page)
     window = GTK_WIDGET (moo_builder_get (builder, "window1"));
     content = GTK_WIDGET (moo_builder_get (builder, "AccelPrefsPage"));
     g_object_ref (content);
-    gtk_container_remove (GTK_CONTAINER (window), content);
+    gtk_container_remove (GTK_CONTAINER (gtk_widget_get_parent (content)), content);
     gtk_container_add (GTK_CONTAINER (page), content);
     g_object_unref (content);
 

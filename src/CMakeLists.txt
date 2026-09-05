@@ -86,10 +86,6 @@ moo_glade2c(MOO_GXML_HEADERS
     mooedit/glade/mootextfind-prompt.glade
     mooedit/glade/mootextfind.glade
     mooedit/glade/mootryencoding.glade
-    moofileview/glade/moobookmark-editor.glade
-    moofileview/glade/moocreatefolder.glade
-    moofileview/glade/moofileprops.glade
-    moofileview/glade/moofileview-drop.glade
     plugins/glade/moofileselector-prefs.glade
     plugins/glade/moofileselector.glade
     plugins/glade/moofind.glade
