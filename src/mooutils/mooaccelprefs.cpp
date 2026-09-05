@@ -17,7 +17,6 @@
 #include "mooutils/mooaccel.h"
 #include "mooutils/mooprefsdialog.h"
 #include "mooutils/mooaccelbutton.h"
-#include "mooutils/mooglade.h"
 #include "mooutils/moodialogs.h"
 #include "mooutils/mooi18n.h"
 #include "mooutils/moostock.h"

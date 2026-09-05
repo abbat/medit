@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<interface>
+  <object class="GtkWindow" id="window1">
+    <child>
+      <object class="GtkFrame" id="EditorStatusbar">
+        <property name="visible">True</property>
+        <property name="label_xalign">0</property>
+        <child>
+          <object class="GtkAlignment" id="alignment1">
+            <property name="visible">True</property>
+            <property name="left_padding">6</property>
+            <property name="right_padding">6</property>
+            <child>
+              <object class="GtkHBox" id="info">
+                <property name="visible">True</property>
+                <property name="spacing">12</property>
+                <child>
+                  <object class="GtkLabel" id="cursor">
+                    <property name="visible">True</property>
+                    <property name="label">Line: 10  Col: 100</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="chars">
+                    <property name="visible">True</property>
+                    <property name="events"/>
+                    <property name="label">Chars: 10000</property>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="insert">
+                    <property name="visible">True</property>
+                    <property name="label">INS</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

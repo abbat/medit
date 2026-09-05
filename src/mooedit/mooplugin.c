@@ -39,8 +39,9 @@
 
 #include "mooedit/mooplugin.h"
 #include "mooedit/mooplugin-loader.h"
-#include "mooedit/moopluginprefs-gxml.h"
 #include "mooutils/mooprefsdialog.h"
+#include "mooutils/moobuilder.h"
+#include "mooutils/mooi18n.h"
 #include "mooutils/moostock.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooutils-debug.h"
@@ -1208,7 +1209,7 @@ enum {
 
 static void
 selection_changed (GtkTreeSelection *selection,
-                   PrefsPageXml     *gxml)
+                   GtkBuilder     *gxml)
 {
     MooPlugin *plugin = NULL;
     GtkTreeModel *model;
@@ -1222,19 +1223,19 @@ selection_changed (GtkTreeSelection *selection,
         g_free (id);
     }
 
-    gtk_widget_set_sensitive (GTK_WIDGET (gxml->info), plugin != NULL);
+    gtk_widget_set_sensitive (GTK_WIDGET (GTK_TABLE (moo_builder_get (gxml, "info"))), plugin != NULL);
 
     if (plugin)
     {
-        gtk_label_set_text (gxml->author, moo_plugin_author (plugin));
-        gtk_label_set_text (gxml->version, moo_plugin_version (plugin));
-        gtk_label_set_text (gxml->description, moo_plugin_description (plugin));
+        gtk_label_set_text (GTK_LABEL (moo_builder_get (gxml, "author")), moo_plugin_author (plugin));
+        gtk_label_set_text (GTK_LABEL (moo_builder_get (gxml, "version")), moo_plugin_version (plugin));
+        gtk_label_set_text (GTK_LABEL (moo_builder_get (gxml, "description")), moo_plugin_description (plugin));
     }
     else
     {
-        gtk_label_set_text (gxml->author, "");
-        gtk_label_set_text (gxml->version, "");
-        gtk_label_set_text (gxml->description, "");
+        gtk_label_set_text (GTK_LABEL (moo_builder_get (gxml, "author")), "");
+        gtk_label_set_text (GTK_LABEL (moo_builder_get (gxml, "version")), "");
+        gtk_label_set_text (GTK_LABEL (moo_builder_get (gxml, "description")), "");
     }
 }
 
@@ -1317,13 +1318,13 @@ sync_pages (MooPrefsDialog *dialog)
 
 static void
 prefs_page_init (MooPrefsPage *page,
-                 PrefsPageXml *gxml)
+                 GtkBuilder *gxml)
 {
     GtkListStore *store;
     GtkTreeModel *model;
     GSList *l, *plugins;
 
-    model = gtk_tree_view_get_model (gxml->treeview);
+    model = gtk_tree_view_get_model (GTK_TREE_VIEW (moo_builder_get (gxml, "treeview")));
     store = GTK_LIST_STORE (model);
 
     gtk_list_store_clear (store);
@@ -1345,7 +1346,7 @@ prefs_page_init (MooPrefsPage *page,
         }
     }
 
-    selection_changed (gtk_tree_view_get_selection (gxml->treeview), gxml);
+    selection_changed (gtk_tree_view_get_selection (GTK_TREE_VIEW (moo_builder_get (gxml, "treeview"))), gxml);
 
     g_slist_free (plugins);
     sync_pages (g_object_get_data (G_OBJECT (page), "moo-plugin-prefs-dialog"));
@@ -1354,7 +1355,7 @@ prefs_page_init (MooPrefsPage *page,
 
 static void
 prefs_page_apply (MooPrefsPage *page,
-                  PrefsPageXml *gxml)
+                  GtkBuilder *gxml)
 {
     GtkTreeModel *model;
     GtkTreeIter iter;
@@ -1362,7 +1363,7 @@ prefs_page_apply (MooPrefsPage *page,
 
     dialog = g_object_get_data (G_OBJECT (page), "moo-plugin-prefs-dialog");
 
-    model = gtk_tree_view_get_model (gxml->treeview);
+    model = gtk_tree_view_get_model (GTK_TREE_VIEW (moo_builder_get (gxml, "treeview")));
 
     if (gtk_tree_model_get_iter_first (model, &iter)) do
     {
@@ -1417,12 +1418,14 @@ moo_plugin_attach_prefs (GtkWidget *dialog)
     GtkCellRenderer *cell;
     GtkListStore *store;
     GtkTreeSelection *selection;
-    PrefsPageXml *gxml;
+    GtkBuilder *gxml;
 
     g_return_if_fail (MOO_IS_PREFS_DIALOG (dialog));
 
     page = moo_prefs_page_new (C_("Prefs page label", "Plugins"), MOO_STOCK_PLUGINS);
-    gxml = prefs_page_xml_new_with_root (page);
+    gxml = moo_builder_new ("/ui/moopluginprefs.ui");
+    g_return_val_if_fail (gxml != NULL, NULL);
+    moo_builder_reparent (gxml, "PrefsPage", GTK_WIDGET (page));
     g_object_set_data (G_OBJECT (page), "moo-plugin-prefs-xml", gxml);
     g_object_set_data (G_OBJECT (page), "moo-plugin-prefs-dialog", dialog);
     g_signal_connect (page, "init", G_CALLBACK (prefs_page_init), gxml);
@@ -1432,7 +1435,7 @@ moo_plugin_attach_prefs (GtkWidget *dialog)
     moo_help_set_id (GTK_WIDGET (page), HELP_SECTION_PREFS_PLUGINS);
 #endif
 
-    selection = gtk_tree_view_get_selection (gxml->treeview);
+    selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (moo_builder_get (gxml, "treeview")));
     gtk_tree_selection_set_mode (selection, GTK_SELECTION_SINGLE);
     g_signal_connect (selection, "changed", G_CALLBACK (selection_changed), gxml);
 
@@ -1440,20 +1443,20 @@ moo_plugin_attach_prefs (GtkWidget *dialog)
                                 G_TYPE_BOOLEAN,
                                 G_TYPE_STRING,
                                 G_TYPE_STRING);
-    gtk_tree_view_set_model (gxml->treeview, GTK_TREE_MODEL (store));
+    gtk_tree_view_set_model (GTK_TREE_VIEW (moo_builder_get (gxml, "treeview")), GTK_TREE_MODEL (store));
     g_object_unref (store);
 
     cell = gtk_cell_renderer_toggle_new ();
     g_object_set (cell, "activatable", TRUE, NULL);
     g_signal_connect (cell, "toggled", G_CALLBACK (enable_toggled), store);
     /* Column label on Plugins prefs page */
-    gtk_tree_view_insert_column_with_attributes (gxml->treeview, 0,
+    gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (moo_builder_get (gxml, "treeview")), 0,
                                                  C_("plugin-prefs-column", "Enabled"), cell,
                                                  "active", COLUMN_ENABLED, NULL);
 
     cell = gtk_cell_renderer_text_new ();
     /* Column label on Plugins prefs page */
-    gtk_tree_view_insert_column_with_attributes (gxml->treeview, 1,
+    gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (moo_builder_get (gxml, "treeview")), 1,
                                                  C_("plugin-prefs-column", "Plugin"), cell,
                                                  "text", COLUMN_PLUGIN_NAME, NULL);
 

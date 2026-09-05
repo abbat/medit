@@ -20,11 +20,11 @@
 #include "mooedit/mooeditprefs.h"
 #include "mooedit/mootext-private.h"
 #include "mooutils/moodialogs.h"
+#include "mooutils/moobuilder.h"
 #include "mooutils/mooi18n.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooutils-debug.h"
 #include "mooutils/mootype-macros.h"
-#include "mooedit/mooprint-gxml.h"
 #include "mooglib/moo-time.h"
 #include <sys/types.h>
 #include <string.h>
@@ -1811,22 +1811,22 @@ _moo_edit_export_pdf (GtkTextView *view,
 #define SET_TEXT(wid,setting)                                           \
 G_STMT_START {                                                          \
     const char *s__ = moo_prefs_get_string (setting);                   \
-    gtk_entry_set_text (xml->wid, MOO_NZS (s__));                       \
+    gtk_entry_set_text (GTK_ENTRY (moo_builder_get (xml, #wid)), MOO_NZS (s__));                       \
 } G_STMT_END
 
 #define GET_TEXT(wid,setting)                                           \
 G_STMT_START {                                                          \
-    const char *s__ = gtk_entry_get_text (xml->wid);                    \
+    const char *s__ = gtk_entry_get_text (GTK_ENTRY (moo_builder_get (xml, #wid)));                    \
     moo_prefs_set_string (setting, s__ && s__[0] ? s__ : NULL);         \
 } G_STMT_END
 
 #define SET_BOOL(wid,setting)                                           \
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (xml->wid),         \
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (moo_builder_get (xml, #wid)),         \
                                   moo_prefs_get_bool (setting))
 
 #define GET_BOOL(wid,setting)                                           \
     moo_prefs_set_bool (setting,                                        \
-        gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (xml->wid)))
+        gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (moo_builder_get (xml, #wid))))
 
 
 static void
@@ -1854,7 +1854,7 @@ moo_print_init_prefs (void)
 
 
 static void
-set_options (PrintWidgetXml *xml)
+set_options (GtkBuilder *xml)
 {
     const char *s;
 
@@ -1881,16 +1881,16 @@ set_options (PrintWidgetXml *xml)
     SET_BOOL (ellipsize, PREFS_ELLIPSIZE);
     SET_BOOL (line_numbers, PREFS_LINE_NUMBERS);
 
-    gtk_spin_button_set_value (xml->line_numbers_step,
+    gtk_spin_button_set_value (GTK_SPIN_BUTTON (moo_builder_get (xml, "line_numbers_step")),
                                moo_prefs_get_int (PREFS_LINE_NUMBERS_STEP));
 
     if ((s = moo_prefs_get_string (PREFS_FONT)))
-        gtk_font_button_set_font_name (xml->font, s);
+        gtk_font_button_set_font_name (GTK_FONT_BUTTON (moo_builder_get (xml, "font")), s);
 }
 
 
 static void
-get_options (PrintWidgetXml *xml)
+get_options (GtkBuilder *xml)
 {
     g_return_if_fail (xml != NULL);
 
@@ -1912,9 +1912,9 @@ get_options (PrintWidgetXml *xml)
     GET_BOOL (ellipsize, PREFS_ELLIPSIZE);
     GET_BOOL (line_numbers, PREFS_LINE_NUMBERS);
 
-    if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (xml->line_numbers)))
+    if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GTK_CHECK_BUTTON (moo_builder_get (xml, "line_numbers")))))
     {
-        GtkSpinButton *btn = xml->line_numbers_step;
+        GtkSpinButton *btn = GTK_SPIN_BUTTON (moo_builder_get (xml, "line_numbers_step"));
         int step;
         gtk_spin_button_update (btn);
         step = gtk_spin_button_get_value_as_int (btn);
@@ -1926,8 +1926,8 @@ get_options (PrintWidgetXml *xml)
         moo_prefs_set_int (PREFS_LINE_NUMBERS_STEP, step);
     }
 
-    if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (xml->use_custom_font)))
-        moo_prefs_set_string (PREFS_FONT, gtk_font_button_get_font_name (xml->font));
+    if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GTK_CHECK_BUTTON (moo_builder_get (xml, "use_custom_font")))))
+        moo_prefs_set_string (PREFS_FONT, gtk_font_button_get_font_name (GTK_FONT_BUTTON (moo_builder_get (xml, "font"))));
 }
 
 
@@ -1936,12 +1936,12 @@ void
 _moo_edit_print_options_dialog (GtkWidget *parent)
 {
     GtkWidget *dialog;
-    PrintWidgetXml *xml;
+    GtkBuilder *xml;
 
-    xml = moo_glade_xml_new_from_buf (MOO_PRINT_GLADE_XML, -1, NULL, GETTEXT_PACKAGE, NULL);
+    xml = moo_builder_new ("/ui/mooprint.ui");
     g_return_if_fail (xml != NULL);
 
-    dialog = moo_glade_xml_get_widget (xml, "dialog");
+    dialog = GTK_WIDGET (moo_builder_get (xml, "dialog"));
     g_return_if_fail (dialog != NULL);
 
     moo_window_set_parent (dialog, parent);
@@ -1960,18 +1960,26 @@ _moo_edit_print_options_dialog (GtkWidget *parent)
 static GtkWidget *
 moo_print_operation_create_custom_widget (G_GNUC_UNUSED GtkPrintOperation *operation)
 {
-    PrintWidgetXml *xml;
+    GtkBuilder *xml;
+    GtkWidget *widget;
 
-    xml = print_widget_xml_new ();
+    xml = moo_builder_new ("/ui/mooprint.ui");
+    g_return_val_if_fail (xml != NULL, NULL);
 
-    moo_bind_sensitive (GTK_WIDGET (xml->wrap), GTK_WIDGET (xml->ellipsize), TRUE);
-    moo_bind_sensitive (GTK_WIDGET (xml->print_header), GTK_WIDGET (xml->header_alignment), FALSE);
-    moo_bind_sensitive (GTK_WIDGET (xml->print_footer), GTK_WIDGET (xml->footer_alignment), FALSE);
-    moo_bind_sensitive (GTK_WIDGET (xml->use_custom_font), GTK_WIDGET (xml->font), FALSE);
-    moo_bind_sensitive (GTK_WIDGET (xml->line_numbers), GTK_WIDGET (xml->line_numbers_hbox), FALSE);
+    moo_bind_sensitive (GTK_WIDGET (GTK_CHECK_BUTTON (moo_builder_get (xml, "wrap"))), GTK_WIDGET (GTK_CHECK_BUTTON (moo_builder_get (xml, "ellipsize"))), TRUE);
+    moo_bind_sensitive (GTK_WIDGET (GTK_CHECK_BUTTON (moo_builder_get (xml, "print_header"))), GTK_WIDGET (GTK_ALIGNMENT (moo_builder_get (xml, "header_alignment"))), FALSE);
+    moo_bind_sensitive (GTK_WIDGET (GTK_CHECK_BUTTON (moo_builder_get (xml, "print_footer"))), GTK_WIDGET (GTK_ALIGNMENT (moo_builder_get (xml, "footer_alignment"))), FALSE);
+    moo_bind_sensitive (GTK_WIDGET (GTK_CHECK_BUTTON (moo_builder_get (xml, "use_custom_font"))), GTK_WIDGET (GTK_FONT_BUTTON (moo_builder_get (xml, "font"))), FALSE);
+    moo_bind_sensitive (GTK_WIDGET (GTK_CHECK_BUTTON (moo_builder_get (xml, "line_numbers"))), GTK_WIDGET (GTK_HBOX (moo_builder_get (xml, "line_numbers_hbox"))), FALSE);
 
     set_options (xml);
-    return GTK_WIDGET (xml->PrintWidget);
+
+    widget = GTK_WIDGET (moo_builder_get (xml, "PrintWidget"));
+    /* the widget is handed to gtk, which owns it from here on; the builder
+       rides along so the apply callback can find the fields again */
+    g_object_set_data_full (G_OBJECT (widget), "moo-builder", xml, g_object_unref);
+
+    return widget;
 }
 
 
@@ -1979,7 +1987,7 @@ static void
 moo_print_operation_custom_widget_apply (G_GNUC_UNUSED GtkPrintOperation *print,
                                          GtkWidget *widget)
 {
-    get_options (print_widget_xml_get (widget));
+    get_options (GTK_BUILDER (g_object_get_data (G_OBJECT (widget), "moo-builder")));
 }
 
 

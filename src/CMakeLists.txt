@@ -71,22 +71,6 @@ add_custom_command(
     COMMENT "Generating resources.c"
     VERBATIM)
 
-moo_glade2c(MOO_GXML_HEADERS
-    mooedit/glade/mooeditprefs-file.glade
-    mooedit/glade/mooeditprefs-filters.glade
-    mooedit/glade/mooeditprefs-general.glade
-    mooedit/glade/mooeditprefs-langs.glade
-    mooedit/glade/mooeditprefs-view.glade
-    mooedit/glade/mooeditprogress.glade
-    mooedit/glade/mooeditsavemult.glade
-    mooedit/glade/moopluginprefs.glade
-    mooedit/glade/mooprint.glade
-    mooedit/glade/mooquicksearch.glade
-    mooedit/glade/moostatusbar.glade
-    mooedit/glade/mootextfind-prompt.glade
-    mooedit/glade/mootextfind.glade
-    mooedit/glade/mootryencoding.glade)
-
 moo_xml2h(MOO_UI_HEADERS
     mooedit/medit.xml            medit_ui_xml
     mooedit/mooedit.xml          mooedit_ui_xml
@@ -119,7 +103,6 @@ add_executable(medit
     "${CMAKE_CURRENT_BINARY_DIR}/moo-pixbufs.h"
     "${CMAKE_CURRENT_BINARY_DIR}/mooapp-credits.h"
     "${CMAKE_CURRENT_BINARY_DIR}/resources.c"
-    ${MOO_GXML_HEADERS}
     ${MOO_UI_HEADERS}
     ${MOO_USERTOOLS_XML})
 

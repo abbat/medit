@@ -37,6 +37,7 @@
 #include "mooedit/mooeditbookmark.h"
 #include "mooedit/moolangmgr.h"
 #include "mooutils/moonotebook.h"
+#include "mooutils/moobuilder.h"
 #include "mooutils/moostock.h"
 #include "marshals.h"
 #include "mooutils/moomenuaction.h"
@@ -48,7 +49,6 @@
 #include "mooutils/mooencodings.h"
 #include "mooutils/moocompat.h"
 #include "mooutils/mooutils-enums.h"
-#include "mooedit/moostatusbar-gxml.h"
 #include "moocpp/gobjptr.h"
 #include <string.h>
 #include <gtk/gtk.h>
@@ -3984,21 +3984,33 @@ update_statusbar (MooEditWindow *window)
 static void
 create_statusbar (MooEditWindow *window)
 {
-    EditorStatusbarXml *xml;
+    GtkBuilder *xml;
+    GtkWidget *statusbar;
 
-    xml = editor_statusbar_xml_new ();
+    xml = moo_builder_new ("/ui/moostatusbar.ui");
+    g_return_if_fail (xml != NULL);
+
+    statusbar = GTK_WIDGET (moo_builder_get (xml, "EditorStatusbar"));
+
+    /* the statusbar is described inside a placeholder window and still belongs
+       to it; detach it before handing it to the window */
+    g_object_ref (statusbar);
+    gtk_container_remove (GTK_CONTAINER (gtk_widget_get_parent (statusbar)), statusbar);
 
     gtk_container_add_with_properties (GTK_CONTAINER (MOO_WINDOW (window)->status_area),
-                                       GTK_WIDGET (xml->EditorStatusbar),
+                                       statusbar,
                                        "pack-type", GTK_PACK_END,
                                        "expand", FALSE,
                                        "fill", FALSE,
                                        nullptr);
+    g_object_unref (statusbar);
 
-    window->priv->cursor_label = xml->cursor;
-    window->priv->chars_label = xml->chars;
-    window->priv->insert_label = xml->insert;
-    window->priv->info = GTK_WIDGET (xml->info);
+    window->priv->cursor_label = GTK_LABEL (moo_builder_get (xml, "cursor"));
+    window->priv->chars_label = GTK_LABEL (moo_builder_get (xml, "chars"));
+    window->priv->insert_label = GTK_LABEL (moo_builder_get (xml, "insert"));
+    window->priv->info = GTK_WIDGET (moo_builder_get (xml, "info"));
+
+    g_object_set_data_full (G_OBJECT (window), "moo-statusbar-builder", xml, g_object_unref);
 }
 
 

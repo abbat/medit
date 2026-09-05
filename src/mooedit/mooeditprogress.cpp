@@ -1,6 +1,6 @@
 #include "mooedit/mooeditprogress.h"
-#include "mooedit/mooeditprogress-gxml.h"
 #include "mooutils/mooutils-script.h"
+#include "mooutils/moobuilder.h"
 
 #define MOO_TYPE_EDIT_PROGRESS                       (moo_edit_progress_get_type ())
 #define MOO_EDIT_PROGRESS(object)                    (G_TYPE_CHECK_INSTANCE_CAST ((object), MOO_TYPE_EDIT_PROGRESS, MooEditProgress))
@@ -18,7 +18,7 @@ struct MooEditProgress
 {
     GtkAlignment base;
 
-    ProgressWidgetXml *xml;
+    GtkBuilder *xml;
 
     guint timeout;
     char *text;
@@ -38,8 +38,10 @@ G_DEFINE_TYPE (MooEditProgress, moo_edit_progress, GTK_TYPE_ALIGNMENT)
 static void
 moo_edit_progress_init (MooEditProgress *pr)
 {
-    pr->xml = progress_widget_xml_new_with_root (GTK_WIDGET (pr));
-    g_signal_connect_swapped (pr->xml->cancel, "clicked", G_CALLBACK (cancel_clicked), pr);
+    pr->xml = moo_builder_new ("/ui/mooeditprogress.ui");
+    g_return_if_fail (pr->xml != NULL);
+    moo_builder_reparent (pr->xml, "ProgressWidget", GTK_WIDGET (pr));
+    g_signal_connect_swapped (GTK_BUTTON (moo_builder_get (pr->xml, "cancel")), "clicked", G_CALLBACK (cancel_clicked), pr);
 }
 
 static void
@@ -76,7 +78,7 @@ update_progress (MooEditProgress *progress)
 {
     g_return_if_fail (MOO_IS_EDIT_PROGRESS (progress));
     g_return_if_fail (progress->text != NULL);
-    gtk_progress_bar_set_text (progress->xml->progressbar,
+    gtk_progress_bar_set_text (GTK_PROGRESS_BAR (moo_builder_get (progress->xml, "progressbar")),
                                progress->text);
 }
 
@@ -99,8 +101,8 @@ static gboolean
 pulse_progress (MooEditProgress *progress)
 {
     g_return_val_if_fail (MOO_IS_EDIT_PROGRESS (progress), FALSE);
-    g_return_val_if_fail (GTK_IS_WIDGET (progress->xml->progressbar), FALSE);
-    gtk_progress_bar_pulse (GTK_PROGRESS_BAR (progress->xml->progressbar));
+    g_return_val_if_fail (GTK_IS_WIDGET (GTK_PROGRESS_BAR (moo_builder_get (progress->xml, "progressbar"))), FALSE);
+    gtk_progress_bar_pulse (GTK_PROGRESS_BAR (GTK_PROGRESS_BAR (moo_builder_get (progress->xml, "progressbar"))));
     update_progress (progress);
     return TRUE;
 }
@@ -137,7 +139,7 @@ _moo_edit_progress_set_cancel_func (MooEditProgress *progress,
     g_return_if_fail (MOO_IS_EDIT_PROGRESS (progress));
     progress->cancel_op = cancel_func;
     progress->cancel_data = cancel_func_data;
-    gtk_widget_set_sensitive (GTK_WIDGET (progress->xml->cancel),
+    gtk_widget_set_sensitive (GTK_WIDGET (GTK_BUTTON (moo_builder_get (progress->xml, "cancel"))),
                               cancel_func != NULL);
 }
 

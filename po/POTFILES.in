@@ -3,19 +3,19 @@ src/medit-app/medit.desktop.in
 src/mooapp/about.c
 src/mooapp/credits.c
 src/mooapp/mooapp.c
-src/mooedit/glade/mooeditprefs-file.ui
-src/mooedit/glade/mooeditprefs-filters.ui
-src/mooedit/glade/mooeditprefs-general.ui
-src/mooedit/glade/mooeditprefs-langs.ui
-src/mooedit/glade/mooeditprefs-view.ui
-src/mooedit/glade/mooeditprogress.ui
-src/mooedit/glade/mooeditsavemult.ui
-src/mooedit/glade/moopluginprefs.ui
-src/mooedit/glade/mooprint.ui
-src/mooedit/glade/mooquicksearch.ui
-src/mooedit/glade/mootextfind.ui
-src/mooedit/glade/mootextfind-prompt.ui
-src/mooedit/ui/mootextgotoline.ui
+[type: gettext/glade]src/mooedit/ui/mooeditprefs-file.ui
+[type: gettext/glade]src/mooedit/ui/mooeditprefs-filters.ui
+[type: gettext/glade]src/mooedit/ui/mooeditprefs-general.ui
+[type: gettext/glade]src/mooedit/ui/mooeditprefs-langs.ui
+[type: gettext/glade]src/mooedit/ui/mooeditprefs-view.ui
+[type: gettext/glade]src/mooedit/ui/mooeditprogress.ui
+[type: gettext/glade]src/mooedit/ui/mooeditsavemult.ui
+[type: gettext/glade]src/mooedit/ui/moopluginprefs.ui
+[type: gettext/glade]src/mooedit/ui/mooprint.ui
+[type: gettext/glade]src/mooedit/ui/mooquicksearch.ui
+[type: gettext/glade]src/mooedit/ui/mootextfind.ui
+[type: gettext/glade]src/mooedit/ui/mootextfind-prompt.ui
+[type: gettext/glade]src/mooedit/ui/mootextgotoline.ui
 src/mooedit/medit.xml
 src/mooedit/mooeditaction-factory.cpp
 src/mooedit/mooeditdialogs.cpp
@@ -27,15 +27,15 @@ src/mooedit/mooeditwindow.cpp
 src/mooedit/mooplugin.c
 src/mooedit/mooplugin-loader.c
 src/mooedit/mootextfind.c
-src/moofileview/ui/moobookmark-editor.ui
-src/moofileview/ui/moocreatefolder.ui
-src/moofileview/ui/moofileprops.ui
-src/moofileview/ui/moofileview-drop.ui
+[type: gettext/glade]src/moofileview/ui/moobookmark-editor.ui
+[type: gettext/glade]src/moofileview/ui/moocreatefolder.ui
+[type: gettext/glade]src/moofileview/ui/moofileprops.ui
+[type: gettext/glade]src/moofileview/ui/moofileview-drop.ui
 src/moofileview/moobookmarkmgr.c
 src/moofileview/moofileview.c
 src/moofileview/moofileview-tools.cpp
 src/moofileview/moofileview.xml
-src/mooutils/ui/mooaccelprefs.ui
+[type: gettext/glade]src/mooutils/ui/mooaccelprefs.ui
 src/mooutils/mooaccelprefs.cpp
 src/mooutils/moodialogs.c
 src/mooutils/mooencodings.cpp
@@ -52,18 +52,18 @@ src/mooutils/mooutils-fs.cpp
 src/mooutils/mooutils-misc.cpp
 src/mooutils/moowindow.c
 src/plugins/ctags/ctags-plugin.c
-src/plugins/ui/moofileselector.ui
-src/plugins/ui/moofileselector-prefs.ui
-src/plugins/ui/moofind.ui
-src/plugins/ui/moogrep.ui
+[type: gettext/glade]src/plugins/ui/moofileselector.ui
+[type: gettext/glade]src/plugins/ui/moofileselector-prefs.ui
+[type: gettext/glade]src/plugins/ui/moofind.ui
+[type: gettext/glade]src/plugins/ui/moogrep.ui
 src/plugins/moofilelist.cpp
 src/plugins/moofileselector.cpp
 src/plugins/moofileselector-prefs.cpp
 src/plugins/moofind.cpp
 src/plugins/support/mooeditwindowoutput.cpp
 src/plugins/usertools/filters.xml
-src/plugins/usertools/ui/mooedittools-exe.ui
-src/plugins/usertools/ui/moousertools.ui
+[type: gettext/glade]src/plugins/usertools/ui/mooedittools-exe.ui
+[type: gettext/glade]src/plugins/usertools/ui/moousertools.ui
 src/plugins/usertools/moocommand-exe.cpp
 src/plugins/usertools/moousertools.cpp
 src/plugins/usertools/moousertools-prefs.cpp

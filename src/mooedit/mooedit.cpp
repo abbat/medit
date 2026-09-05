@@ -54,7 +54,6 @@
 #include "mooutils/mootype-macros.h"
 #include "mooutils/mooatom.h"
 #include "mooutils/moocompat.h"
-#include "mooedit/mooeditprogress-gxml.h"
 #include <string.h>
 #include <stdlib.h>
 

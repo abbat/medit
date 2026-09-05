@@ -33,6 +33,7 @@
 #include "mooedit/mooedit.h"
 #include "marshals.h"
 #include "mooutils/mooutils-misc.h"
+#include "mooutils/moobuilder.h"
 #include "mooutils/mooundo.h"
 #include "mooutils/mooeditops.h"
 #include "mooutils/mooentry.h"
@@ -41,7 +42,6 @@
 #include "mooutils/mootype-macros.h"
 #include "mooutils/moocompat.h"
 #include "mooutils/mooutils-gobject.h"
-#include "mooedit/mooquicksearch-gxml.h"
 #include <gtk/gtk.h>
 #include <mooglib/moo-glib.h>
 #include <gdk/gdkkeysyms.h>
@@ -4304,16 +4304,17 @@ moo_text_view_start_quick_search (MooTextView *view)
 
     if (!view->priv->qs.entry)
     {
-        QsBoxXml *xml;
+        GtkBuilder *xml;
 
-        xml = qs_box_xml_new ();
+        xml = moo_builder_new ("/ui/mooquicksearch.ui");
+        g_return_if_fail (xml != NULL);
 
-        view->priv->qs.evbox = GTK_WIDGET (xml->QsBox);
+        view->priv->qs.evbox = GTK_WIDGET (GTK_EVENT_BOX (moo_builder_get (xml, "QsBox")));
         g_return_if_fail (view->priv->qs.evbox != NULL);
 
-        view->priv->qs.entry = GTK_WIDGET (xml->entry);
-        view->priv->qs.case_sensitive = GTK_TOGGLE_BUTTON (xml->case_sensitive);
-        view->priv->qs.regex = GTK_TOGGLE_BUTTON (xml->regex);
+        view->priv->qs.entry = GTK_WIDGET (MOO_ENTRY (moo_builder_get (xml, "entry")));
+        view->priv->qs.case_sensitive = GTK_TOGGLE_BUTTON (GTK_CHECK_BUTTON (moo_builder_get (xml, "case_sensitive")));
+        view->priv->qs.regex = GTK_TOGGLE_BUTTON (GTK_CHECK_BUTTON (moo_builder_get (xml, "regex")));
 
         g_signal_connect_swapped (view->priv->qs.entry, "changed",
                                   G_CALLBACK (search_entry_changed), view);

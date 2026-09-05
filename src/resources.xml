@@ -26,5 +26,19 @@
     <file preprocess="xml-stripblanks" alias="moogrep.ui">plugins/ui/moogrep.ui</file>
     <file preprocess="xml-stripblanks" alias="mooedittools-exe.ui">plugins/usertools/ui/mooedittools-exe.ui</file>
     <file preprocess="xml-stripblanks" alias="moousertools.ui">plugins/usertools/ui/moousertools.ui</file>
+    <file preprocess="xml-stripblanks" alias="mooeditprefs-file.ui">mooedit/ui/mooeditprefs-file.ui</file>
+    <file preprocess="xml-stripblanks" alias="mooeditprefs-filters.ui">mooedit/ui/mooeditprefs-filters.ui</file>
+    <file preprocess="xml-stripblanks" alias="mooeditprefs-general.ui">mooedit/ui/mooeditprefs-general.ui</file>
+    <file preprocess="xml-stripblanks" alias="mooeditprefs-langs.ui">mooedit/ui/mooeditprefs-langs.ui</file>
+    <file preprocess="xml-stripblanks" alias="mooeditprefs-view.ui">mooedit/ui/mooeditprefs-view.ui</file>
+    <file preprocess="xml-stripblanks" alias="mooeditprogress.ui">mooedit/ui/mooeditprogress.ui</file>
+    <file preprocess="xml-stripblanks" alias="mooeditsavemult.ui">mooedit/ui/mooeditsavemult.ui</file>
+    <file preprocess="xml-stripblanks" alias="moopluginprefs.ui">mooedit/ui/moopluginprefs.ui</file>
+    <file preprocess="xml-stripblanks" alias="mooprint.ui">mooedit/ui/mooprint.ui</file>
+    <file preprocess="xml-stripblanks" alias="mooquicksearch.ui">mooedit/ui/mooquicksearch.ui</file>
+    <file preprocess="xml-stripblanks" alias="moostatusbar.ui">mooedit/ui/moostatusbar.ui</file>
+    <file preprocess="xml-stripblanks" alias="mootextfind-prompt.ui">mooedit/ui/mootextfind-prompt.ui</file>
+    <file preprocess="xml-stripblanks" alias="mootextfind.ui">mooedit/ui/mootextfind.ui</file>
+    <file preprocess="xml-stripblanks" alias="mootryencoding.ui">mooedit/ui/mootryencoding.ui</file>
   </gresource>
 </gresources>

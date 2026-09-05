@@ -59,8 +59,6 @@ target_sources(medit PRIVATE
     moofiltermgr.h
     moofontsel.c
     moofontsel.h
-    mooglade.c
-    mooglade.h
     moohelp.c
     moohelp.h
     moohistorycombo.c

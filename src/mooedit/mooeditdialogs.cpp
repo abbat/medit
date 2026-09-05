@@ -20,11 +20,9 @@
 #include "mooutils/moodialogs.h"
 #include "mooutils/moostock.h"
 #include "mooutils/mooi18n.h"
+#include "mooutils/moobuilder.h"
 #include "mooutils/mooencodings.h"
 #include "mooutils/mooutils.h"
-#include "mooedit/mootextfind-prompt-gxml.h"
-#include "mooedit/mooeditsavemult-gxml.h"
-#include "mooedit/mootryencoding-gxml.h"
 #include <gtk/gtk.h>
 #include <mooglib/moo-glib.h>
 #include <string.h>
@@ -350,13 +348,13 @@ _moo_edit_save_multiple_changes_dialog (MooEditArray *docs,
     char *msg, *question;
     int response;
     MooSaveChangesResponse retval;
-    SaveMultDialogXml *xml;
+    GtkBuilder *xml;
 
     g_return_val_if_fail (docs != NULL && docs->n_elms > 1, MOO_SAVE_CHANGES_RESPONSE_CANCEL);
     g_return_val_if_fail (to_save != NULL, MOO_SAVE_CHANGES_RESPONSE_CANCEL);
 
-    xml = save_mult_dialog_xml_new ();
-    dialog = GTK_WIDGET (xml->SaveMultDialog);
+    xml = moo_builder_new ("/ui/mooeditsavemult.ui");
+    dialog = GTK_WIDGET (GTK_DIALOG (moo_builder_get (xml, "SaveMultDialog")));
 
     moo_window_set_parent (dialog, GTK_WIDGET (moo_edit_get_view (docs->elms[0])));
 
@@ -384,9 +382,9 @@ _moo_edit_save_multiple_changes_dialog (MooEditArray *docs,
                                 (guint) docs->n_elms);
     msg = g_markup_printf_escaped ("<span weight=\"bold\" size=\"larger\">%s</span>",
                                    question);
-    gtk_label_set_markup (xml->label, msg);
+    gtk_label_set_markup (GTK_LABEL (moo_builder_get (xml, "label")), msg);
 
-    files_treeview_init (xml->treeview, dialog, docs);
+    files_treeview_init (GTK_TREE_VIEW (moo_builder_get (xml, "treeview")), dialog, docs);
 
     {
         GtkWidget *button;
@@ -402,7 +400,7 @@ _moo_edit_save_multiple_changes_dialog (MooEditArray *docs,
             retval = MOO_SAVE_CHANGES_RESPONSE_DONT_SAVE;
             break;
         case GTK_RESPONSE_YES:
-            files_treeview_get_to_save (xml->treeview, to_save);
+            files_treeview_get_to_save (GTK_TREE_VIEW (moo_builder_get (xml, "treeview")), to_save);
             retval = MOO_SAVE_CHANGES_RESPONSE_SAVE;
             break;
         default:
@@ -513,19 +511,14 @@ _moo_edit_try_encoding_dialog (GFile       *file,
 {
     MooEditWindow *window;
     GtkWidget *dialog;
-    TryEncodingDialogXml *xml;
+    GtkBuilder *xml;
     int dialog_response;
     char *filename;
     char *msg;
     char *secondary;
 
-    xml = try_encoding_dialog_xml_new ();
+    xml = moo_builder_new ("/ui/mootryencoding.ui");
     g_return_val_if_fail (xml, MOO_EDIT_TRY_ENCODING_RESPONSE_CANCEL);
-
-    if (xml->TryEncodingDialog == NULL) {
-        _try_encoding_dialog_xml_free (xml);
-        return MOO_EDIT_TRY_ENCODING_RESPONSE_CANCEL;
-    }
 
     filename = moo_file_get_display_name (file);
     if (filename)
@@ -549,13 +542,13 @@ _moo_edit_try_encoding_dialog (GFile       *file,
         secondary = g_strdup_printf (_("Could not detect file character encoding. "
                                        "Try to select an encoding below."));
 
-    gtk_label_set_markup (xml->label_primary, msg);
-    gtk_label_set_text (xml->label_secondary, secondary);
+    gtk_label_set_markup (GTK_LABEL (moo_builder_get (xml, "label_primary")), msg);
+    gtk_label_set_text (GTK_LABEL (moo_builder_get (xml, "label_secondary")), secondary);
 
-    dialog = GTK_WIDGET (xml->TryEncodingDialog);
+    dialog = GTK_WIDGET (GTK_DIALOG (moo_builder_get (xml, "TryEncodingDialog")));
 
-    _moo_encodings_combo_init (GTK_COMBO_BOX (xml->encoding_combo), MOO_ENCODING_COMBO_OPEN, FALSE);
-    _moo_encodings_combo_set_enc (GTK_COMBO_BOX (xml->encoding_combo), encoding, MOO_ENCODING_COMBO_OPEN);
+    _moo_encodings_combo_init (GTK_COMBO_BOX (GTK_COMBO_BOX (moo_builder_get (xml, "encoding_combo"))), MOO_ENCODING_COMBO_OPEN, FALSE);
+    _moo_encodings_combo_set_enc (GTK_COMBO_BOX (GTK_COMBO_BOX (moo_builder_get (xml, "encoding_combo"))), encoding, MOO_ENCODING_COMBO_OPEN);
 
     if ((window = moo_editor_get_active_window (moo_editor_instance ())))
         moo_window_set_parent (dialog, GTK_WIDGET (window));
@@ -572,7 +565,7 @@ _moo_edit_try_encoding_dialog (GFile       *file,
 
     dialog_response = gtk_dialog_run (GTK_DIALOG (dialog));
 
-    *new_encoding = g_strdup (_moo_encodings_combo_get_enc (GTK_COMBO_BOX (xml->encoding_combo), MOO_ENCODING_COMBO_OPEN));
+    *new_encoding = g_strdup (_moo_encodings_combo_get_enc (GTK_COMBO_BOX (GTK_COMBO_BOX (moo_builder_get (xml, "encoding_combo"))), MOO_ENCODING_COMBO_OPEN));
 
     gtk_widget_destroy (dialog);
     g_free (secondary);
@@ -770,8 +763,8 @@ _moo_text_regex_error_dialog (GtkWidget  *parent,
 GtkWidget *
 _moo_text_prompt_on_replace_dialog (GtkWidget *parent)
 {
-    FindPromptDialogXml *xml;
-    xml = find_prompt_dialog_xml_new ();
-    moo_window_set_parent (GTK_WIDGET (xml->FindPromptDialog), parent);
-    return GTK_WIDGET (xml->FindPromptDialog);
+    GtkBuilder *xml;
+    xml = moo_builder_new ("/ui/mootextfind-prompt.ui");
+    moo_window_set_parent (GTK_WIDGET (GTK_DIALOG (moo_builder_get (xml, "FindPromptDialog"))), parent);
+    return GTK_WIDGET (GTK_DIALOG (moo_builder_get (xml, "FindPromptDialog")));
 }
