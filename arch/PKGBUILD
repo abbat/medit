@@ -11,8 +11,7 @@ depends=(glib2 gtk3 hicolor-icon-theme libice libsm libx11 libxml2 vte3)
 makedepends=(cmake gdk-pixbuf2 gettext glib2-devel intltool)
 optdepends=('ctags: list the functions of the open document')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
-# TODO: run updpkgsums once the v1.3.3 tag is pushed and GitHub has the tarball
-sha256sums=('0000000000000000000000000000000000000000000000000000000000000000')
+sha256sums=('60621eeb0d0ff1a9be7049c40729fbd2ca41d08f97f701a6071ee628a8adcaec')
 
 build() {
     # CMAKE_BUILD_TYPE=None keeps the flags makepkg exports; the install hook
