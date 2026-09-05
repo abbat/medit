@@ -36,8 +36,9 @@ mutually exclusive, and only `medit-gtk3` has the terminal pane.
 
 Everything that kept medit out of the distributions is gone:
 
-* **GTK+3.** medit builds and runs against gtk-3.24; the gtk-2.24 build is kept
-  as well, and `-DGTK_VERSION=2|3` selects which one.
+* **GTK+3.** medit builds and runs against gtk-3.24, which is what the build
+  defaults to; the gtk-2.24 build is kept for older systems and
+  `-DGTK_VERSION=2` selects it.
 * **No python.** The dialogs used to be generated from glade files by a python
   script and parsed at runtime by a bundled copy of libglade. They are plain
   `.ui` files now, loaded by GtkBuilder from a GResource bundle, so neither the

@@ -43,7 +43,7 @@ set(GETTEXT_PACKAGE_GSV "${MOO_PACKAGE_NAME}-gsv")
 # Options
 # ---------------------------------------------------------------------------
 
-set(GTK_VERSION "2" CACHE STRING "GTK version to compile with (2, 3 or 4)")
+set(GTK_VERSION "3" CACHE STRING "GTK version to compile with (2, 3 or 4)")
 set_property(CACHE GTK_VERSION PROPERTY STRINGS 2 3 4)
 
 option(ENABLE_NLS "Native Language Support" ON)

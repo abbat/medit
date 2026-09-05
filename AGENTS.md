@@ -27,11 +27,11 @@ time — no copying of the tree, no `distclean`:
 
 ```bash
 SRC=$(git rev-parse --show-toplevel)              # repository root; every path below is relative to it
-cmake -S "$SRC" -B "$SRC/build3" -DGTK_VERSION=3  # once
+cmake -S "$SRC" -B "$SRC/build3" -DGTK_VERSION=3  # once; 3 is the default, the flag is for clarity
 cmake --build "$SRC/build3" -j8                   # ~10s for one .o + link
 ```
 
-`GTK_VERSION` defaults to 2, so the reference build is just another directory:
+The GTK+2 reference build is just another directory, and there the flag is required:
 
 ```bash
 cmake -S "$SRC" -B "$SRC/build2" -DGTK_VERSION=2
