@@ -19,6 +19,7 @@
 #include "plugins/mooplugin-builtin.h"
 #include "mooutils/mooutils-misc.h"
 #include "plugins/ctags/ctags-plugin.h"
+#include "plugins/terminal/terminal-plugin.h"
 
 void
 moo_plugin_init (void)
@@ -28,6 +29,9 @@ moo_plugin_init (void)
     _moo_find_plugin_init ();
 #ifdef MOO_BUILD_CTAGS
     moo_ctags_plugin_init ();
+#endif
+#ifdef MOO_BUILD_TERMINAL
+    moo_terminal_plugin_init ();
 #endif
 
     moo_plugin_read_dirs ();

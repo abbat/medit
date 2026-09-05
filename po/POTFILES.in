@@ -61,6 +61,10 @@ src/plugins/moofileselector.cpp
 src/plugins/moofileselector-prefs.cpp
 src/plugins/moofind.cpp
 src/plugins/support/mooeditwindowoutput.cpp
+src/plugins/terminal/terminal-colors.cpp
+src/plugins/terminal/terminal-plugin.cpp
+src/plugins/terminal/terminal-prefs.cpp
+[type: gettext/glade]src/plugins/terminal/ui/terminal-prefs.ui
 src/plugins/usertools/filters.xml
 [type: gettext/glade]src/plugins/usertools/ui/mooedittools-exe.ui
 [type: gettext/glade]src/plugins/usertools/ui/moousertools.ui

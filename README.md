@@ -4,7 +4,7 @@
 
 A maintained fork of **medit** (also known as **mooedit**) — a light, fast GTK
 text editor with tabs, syntax highlighting, a file selector, find in files,
-ctags navigation and user defined tools.
+ctags navigation, a terminal pane and user defined tools.
 
 Upstream stopped at 1.2.92 in 2017. Its author called the editor "rather dead
 than alive" [\[1\]](https://sourceforge.net/p/mooedit/discussion/571682/thread/87dbc94e/#2e8e),
@@ -30,7 +30,7 @@ repository setup instructions.
 
 `medit` is a metapackage that pulls in either `medit-gtk2` or `medit-gtk3` —
 install one of those directly to pick the toolkit yourself. The two are
-mutually exclusive.
+mutually exclusive, and only `medit-gtk3` has the terminal pane.
 
 ## what this fork changes
 
@@ -42,8 +42,12 @@ Everything that kept medit out of the distributions is gone:
   script and parsed at runtime by a bundled copy of libglade. They are plain
   `.ui` files now, loaded by GtkBuilder from a GResource bundle, so neither the
   build nor the editor needs an interpreter. python2 was the reason medit left
-  Debian; nothing in the tree runs python of any version any more. The one
-  casualty is the terminal pane: it was a python plugin and it is gone.
+  Debian; nothing in the tree runs python of any version any more.
+* **The terminal pane is back.** It used to be a python plugin on top of the
+  GTK+2 vte; it is a builtin C++ plugin on top of vte-2.91 now, with the same
+  shell, color schemes and context menu, plus an entry in the Tools menu bound
+  to ``Ctrl+` ``. The GTK+2 build does not get it — vte's last GTK+2 release is
+  0.28.2 from 2011 — and vte is optional either way (`-DENABLE_TERMINAL=OFF`).
 * **CMake** instead of autotools. The build is out of source, so a gtk-2 and a
   gtk-3 build directory can live side by side.
 * Windows, macOS, the python and lua bindings, the HTML widget and about 2000

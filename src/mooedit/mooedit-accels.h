@@ -60,4 +60,6 @@
 
 #define MOO_EDIT_ACCEL_COMPLETE "<Ctrl>Space"
 
+#define MOO_EDIT_ACCEL_TERMINAL "<Ctrl>grave"
+
 #endif /* MOO_EDIT_ACCELS_H */

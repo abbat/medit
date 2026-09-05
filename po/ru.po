@@ -2481,6 +2481,50 @@ msgctxt "Save-combo"
 msgid "All documents"
 msgstr "Все документы"
 
+#: ../src/plugins/terminal/terminal-plugin.cpp:241
+msgid ""
+"The shell keeps exiting immediately, not restarting it. Check the shell in "
+"the Terminal preferences."
+msgstr ""
+"Оболочка немедленно завершается, перезапуск остановлен. Проверьте оболочку в "
+"настройках терминала."
+
+#: ../src/plugins/terminal/terminal-plugin.cpp:719
+msgid "Show the terminal pane"
+msgstr "Показать панель терминала"
+
+#: ../src/plugins/terminal/terminal-plugin.cpp:743
+msgid "Terminal pane"
+msgstr "Панель терминала"
+
+#: ../src/plugins/terminal/ui/terminal-prefs.ui:20
+msgid "S_hell:"
+msgstr "_Оболочка:"
+
+#: ../src/plugins/terminal/ui/terminal-prefs.ui:31
+msgid ""
+"Leave empty to use the login shell. Takes effect the next time the shell is "
+"started."
+msgstr ""
+"Оставьте пустым, чтобы использовать оболочку пользователя. Применяется при "
+"следующем запуске оболочки."
+
+#: ../src/plugins/terminal/ui/terminal-prefs.ui:44
+msgid "Color _scheme:"
+msgstr "Цветовая _схема:"
+
+#: ../src/plugins/terminal/ui/terminal-prefs.ui:68
+msgid "_Font:"
+msgstr "_Шрифт:"
+
+#: ../src/plugins/terminal/ui/terminal-prefs.ui:99
+msgid "_Default"
+msgstr "По _умолчанию"
+
+#: ../src/plugins/terminal/ui/terminal-prefs.ui:101
+msgid "Use the system monospace font"
+msgstr "Использовать системный моноширинный шрифт"
+
 #~ msgid ""
 #~ "console message|in file %s, line %d, function %s:\n"
 #~ "%s"

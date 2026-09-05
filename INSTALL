@@ -11,6 +11,9 @@ medit requires development packages of the following: gtk2 (or gtk3), glib2, lib
 For example, on Debian you may need to install libgtk2.0-dev, libxml2-dev, and to build
 the sources also cmake, pkg-config, intltool and gettext.
 
+The terminal pane additionally needs vte (libvte-2.91-dev on Debian). It is optional
+and looked for only in the gtk3 build; see ENABLE_TERMINAL below.
+
 Build options:
 
   -DGTK_VERSION=2|3|4    GTK version to build against (default: 2, see below)
@@ -18,6 +21,8 @@ Build options:
   -DENABLE_STRICT=ON|OFF all warnings and -Werror (default: OFF)
   -DENABLE_INSTALL_HOOKS=ON|OFF
                          run gtk-update-icon-cache on install (default: ON)
+  -DENABLE_TERMINAL=AUTO|ON|OFF
+                         terminal pane, needs vte-2.91 (default: AUTO, see below)
   -DCMAKE_BUILD_TYPE=... Debug, Release, RelWithDebInfo (default: RelWithDebInfo)
 
 The build is out of source, so several configurations can live side by side:
@@ -31,6 +36,15 @@ finds its translations in <build dir>/locale without an install.
 To remove the build directories and whatever a package build left in debian/, run
 
 ./clean.sh
+
+the terminal pane
+-----------------
+
+The pane at the bottom of the window that runs a shell is built on vte. vte dropped
+GTK+2 in 0.30, back in 2011, so the pane exists in the gtk3 build only. AUTO, the
+default, builds it when pkg-config finds vte-2.91 and silently leaves it out when it
+does not; ON turns a missing vte into a configure error, which is what the packaging
+uses; OFF never builds it.
 
 gtk-4
 -----

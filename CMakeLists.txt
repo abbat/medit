@@ -139,6 +139,34 @@ check_symbol_exists(bind_textdomain_codeset libintl.h HAVE_BIND_TEXTDOMAIN_CODES
 # ctags plugin builds on unix only
 set(MOO_BUILD_CTAGS 1)
 
+# The terminal pane needs vte. vte dropped GTK+2 in 0.30 (2011), the last GTK+2
+# release being 0.28.2, so the pane is built for the GTK+3 build only.
+#
+# Test GTK_PACKAGE, not GTK_VERSION: pkg_check_modules(GTK ...) above defines
+# GTK_VERSION as the version of the module it found, shadowing the cache entry
+# that selects the toolkit, so by now it reads 3.24.38 rather than 3.
+set(ENABLE_TERMINAL "AUTO" CACHE STRING "Terminal pane, needs vte-2.91 (AUTO, ON or OFF)")
+set_property(CACHE ENABLE_TERMINAL PROPERTY STRINGS AUTO ON OFF)
+
+if(ENABLE_TERMINAL STREQUAL "OFF")
+    message(STATUS "Building without the terminal pane")
+elseif(NOT GTK_PACKAGE STREQUAL "gtk+-3.0")
+    if(ENABLE_TERMINAL STREQUAL "ON")
+        message(FATAL_ERROR "ENABLE_TERMINAL=ON needs vte-2.91, which exists for GTK+3 only")
+    endif()
+    message(STATUS "Not a GTK+3 build, building without the terminal pane")
+else()
+    pkg_check_modules(VTE IMPORTED_TARGET vte-2.91)
+
+    if(VTE_FOUND)
+        set(MOO_BUILD_TERMINAL 1)
+    elseif(ENABLE_TERMINAL STREQUAL "ON")
+        message(FATAL_ERROR "ENABLE_TERMINAL=ON, but vte-2.91 was not found")
+    else()
+        message(STATUS "vte-2.91 not found, building without the terminal pane")
+    endif()
+endif()
+
 configure_file(cmake/config.h.in config.h @ONLY)
 
 # ---------------------------------------------------------------------------

@@ -7,7 +7,7 @@ pkgdesc="Useful programming and around-programming text editor"
 arch=(x86_64)
 url="https://github.com/abbat/medit"
 license=(LGPL-2.1-only)
-depends=(glib2 gtk3 hicolor-icon-theme libice libsm libx11 libxml2)
+depends=(glib2 gtk3 hicolor-icon-theme libice libsm libx11 libxml2 vte3)
 makedepends=(cmake gdk-pixbuf2 gettext glib2-devel intltool)
 optdepends=('ctags: list the functions of the open document')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
@@ -20,6 +20,7 @@ build() {
         -DCMAKE_BUILD_TYPE=None \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DENABLE_INSTALL_HOOKS=OFF \
+        -DENABLE_TERMINAL=ON \
         -DGTK_VERSION=3
     cmake --build build
 }

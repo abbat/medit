@@ -97,6 +97,10 @@ if(LIBM)
     target_link_libraries(medit PRIVATE ${LIBM})
 endif()
 
+if(MOO_BUILD_TERMINAL)
+    target_link_libraries(medit PRIVATE PkgConfig::VTE)
+endif()
+
 add_subdirectory(eggsmclient)
 add_subdirectory(gtksourceview)
 add_subdirectory(mooapp)

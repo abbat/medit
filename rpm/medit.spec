@@ -20,6 +20,8 @@ BuildRequires:  intltool
 BuildRequires:  libICE-devel
 BuildRequires:  libSM-devel
 BuildRequires:  libxml2-devel
+# the terminal pane
+BuildRequires:  vte291-devel
 
 Recommends:     ctags
 
@@ -34,7 +36,8 @@ the editor Yevgen Muntyan stopped working on in 2017, ported to GTK+3.
 %build
 # the icon cache is updated by a file trigger, not by us; --no-warn-unused-cli
 # silences the notice about the RELEASE and Fortran flags %%cmake always passes
-%cmake --no-warn-unused-cli -DGTK_VERSION=3 -DENABLE_INSTALL_HOOKS=OFF
+%cmake --no-warn-unused-cli -DGTK_VERSION=3 -DENABLE_INSTALL_HOOKS=OFF \
+    -DENABLE_TERMINAL=ON
 %cmake_build
 
 %install

@@ -120,6 +120,45 @@ collect the ids each `.ui` declares, collect what the code asks
 `moo_builder_get/take/reparent` for, and compare. That is how the one stale id left in
 mootextprint.c was found.
 
+### Builtin plugins, and dependencies only one gtk version has
+
+A builtin plugin is a directory under `src/plugins/`, a `target_sources()` list in its
+own `CMakeLists.txt`, and one call in `moo_plugin_init()` (`plugins/mooplugin-builtin.cpp`).
+`moofind.cpp` is the template: `MOO_PLUGIN_DEFINE_INFO` + `MOO_WIN_PLUGIN_DEFINE` +
+`MOO_PLUGIN_DEFINE`, a pane added in the window plugin's `create` and removed in its
+`destroy`, actions registered on `MOO_TYPE_EDIT_WINDOW` in `init` and removed in
+`deinit`. Three things that are not obvious from it:
+
+* **A pane needs no menu item.** `View → Panes` lists every pane by itself, and the
+  paned strip gets a button; an action is only worth adding for the accelerator.
+  `moo_big_paned_present_pane()` takes the pane **widget**, not the `MooPane*` that
+  `moo_edit_window_add_pane()` returned — `moo_edit_window_show_pane (window, id)` is
+  the call that does the lookup for you.
+* **The focused widget sees a key before the accelerators.**
+  `moo_window_key_press_event()` (`mooutils/moowindow.c:753`) calls
+  `gtk_window_propagate_key_event()` *before* `gtk_window_activate_key()`, the inverse
+  of GtkWindow's own order, deliberately. So a widget that wants raw keys — a terminal —
+  really gets `Ctrl+F`, and in exchange **no** editor accelerator fires while it has the
+  focus, `MOO_EDIT_ACCEL_FOCUS_DOC` included. Only accels the user marked global
+  (`_moo_accel_prefs_get_global`) still run first, via `activate_global_accel()`. A pane
+  that grabs the keyboard has to provide its own way back to the document; the terminal
+  handles its own accelerator in `key-press-event` and uses it to toggle the focus.
+* **A window plugin is attached before the window has a document.**
+  `moo_edit_window_get_active_doc()` returns NULL in `create`, so anything that depends
+  on the open file — a working directory, a path — has to wait. The terminal starts its
+  shell from the pane's `::map` instead, which also means no shell is forked for a user
+  who never opens the pane.
+
+A dependency that only one gtk version has follows `MOO_BUILD_CTAGS` / `MOO_BUILD_TERMINAL`:
+a tri-state `ENABLE_<X>` cache variable (AUTO/ON/OFF), a `#cmakedefine` in
+`cmake/config.h.in`, and `#ifdef` around the `add_subdirectory()`, the
+`target_link_libraries()` and the one call in `moo_plugin_init()`. What that does *not*
+cover is the plugin's own header: `mooplugin-builtin.cpp` includes it unconditionally,
+so **it is compiled by the gtk2 build too**. Keep types the other toolkit lacks
+(`GtkFontChooser`, `VteTerminal`, …) out of it — declare a `GtkWidget*` and cast inside
+the `.cpp`. A green gtk3 build proves nothing here; only building gtk2 does, which is
+how this one was caught, in a container, after the local gtk2 build had gone stale.
+
 ### Debian package build (old distros)
 
 The package targets **Debian 11, Ubuntu 20.04 and 22.04** — much older toolchains than
@@ -274,6 +313,14 @@ while `msgfmt --statistics` reported the catalog as fully translated. If a strin
 translated but shows in English, compare the msgid in the .po with the literal in the
 source before anything else.
 
+**The catalogs still carry the msgids of features that were removed.** ru.po kept
+everything the python plugins had translated, so reinstating a feature in C gets its
+translations back for free in every language — provided the literal matches the old one
+exactly, typographic quotes included (`"“cd” to current file directory"`). Grep the .po
+before inventing a wording; that is why the terminal's context menu came up in Russian
+with only nine new strings to write. For strings gtk itself carries, `D_(str, "gtk30")`
+borrows gtk's catalog the same way (`"Pick a Font"`); the python plugin used `"gtk20"`.
+
 Catalog state, for reference: `ru` is complete and is the one to check first; `es`, `fr`,
 `pl`, `ja`, `fi`, `de` are 90%+; `cs`, `nl` and `zh_CN` are half empty, and adding a
 stray translated string to their untouched sections is worse than leaving the gap. Also
@@ -396,6 +443,7 @@ command line and kills the shell (exit 144). `pkill -x medit` is safe.
 | The pane buttons are not always on the right — their side is remembered in the sandbox `state.xml`, so a coordinate that worked last run can miss entirely | screenshot first and locate the button; never reuse coordinates across sessions |
 | `cmd \| tail -n` reports the **exit code of `tail`**, so a failed build looks like `exit=0` | `set -o pipefail` before any pipeline whose status you intend to read |
 | gcc 12 accepts C constructs that gcc 9/10 reject (unnamed parameters), so a clean local build says nothing about Debian 11 / Ubuntu 20.04 | see "Debian package build (old distros)" |
+| `pkg_check_modules(GTK … ${GTK_PACKAGE})` defines `GTK_VERSION` as the version it found (`3.24.38`), shadowing the cache entry of the same name that selects the toolkit | anywhere below the Dependencies section of the top `CMakeLists.txt`, branch on `GTK_PACKAGE STREQUAL "gtk+-3.0"`, never on `GTK_VERSION` |
 | A build-tree run also reads data from an **installed** medit package (`/usr/share/medit/`), so its stale `menu.xml` produces warnings about our tree | reproduce with `MOO_DATA_DIRS=<dir>` holding the tree's own xml — but note it *replaces* the whole search list, so style schemes and the file-selector plugin stop loading; use it to attribute a warning, not to test the UI |
 
 ### Getting a backtrace for a warning or critical

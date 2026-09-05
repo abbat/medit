@@ -11,3 +11,7 @@ target_sources(medit PRIVATE
 add_subdirectory(ctags)
 add_subdirectory(support)
 add_subdirectory(usertools)
+
+if(MOO_BUILD_TERMINAL)
+    add_subdirectory(terminal)
+endif()
