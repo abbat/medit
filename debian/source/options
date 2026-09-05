@@ -10,3 +10,5 @@ tar-ignore = *.o
 tar-ignore = debian/files
 tar-ignore = debian/.debhelper
 tar-ignore = debian/*.substvars
+# the readme screenshot: github only, no business in the source package
+tar-ignore = doc/screenshot.png
