@@ -85,13 +85,7 @@ moo_glade2c(MOO_GXML_HEADERS
     mooedit/glade/moostatusbar.glade
     mooedit/glade/mootextfind-prompt.glade
     mooedit/glade/mootextfind.glade
-    mooedit/glade/mootryencoding.glade
-    plugins/glade/moofileselector-prefs.glade
-    plugins/glade/moofileselector.glade
-    plugins/glade/moofind.glade
-    plugins/glade/moogrep.glade
-    plugins/usertools/glade/mooedittools-exe.glade
-    plugins/usertools/glade/moousertools.glade)
+    mooedit/glade/mootryencoding.glade)
 
 moo_xml2h(MOO_UI_HEADERS
     mooedit/medit.xml            medit_ui_xml

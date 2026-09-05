@@ -35,7 +35,7 @@
 #include "mooutils/mooi18n.h"
 #include "mooutils/moo-mime.h"
 #include "mooutils/moomenu.h"
-#include "plugins/moofileselector-gxml.h"
+#include "mooutils/moobuilder.h"
 #include "mooutils/moohelp.h"
 #include "mooutils/mooatom.h"
 #include <mooglib/moo-glib.h>
@@ -369,7 +369,7 @@ static GtkWidget *
 create_new_file_dialog (GtkWidget         *parent,
                         const char        *dirname,
                         const char        *start_text,
-                        NewFileDialogXml **xml)
+                        GtkBuilder       **builder)
 {
     GtkWidget *dialog;
     char *display_dirname, *label_text;
@@ -377,21 +377,24 @@ create_new_file_dialog (GtkWidget         *parent,
     display_dirname = g_filename_display_basename (dirname);
     g_return_val_if_fail (display_dirname != nullptr, nullptr);
 
-    *xml = new_file_dialog_xml_new ();
-    dialog = GTK_WIDGET ((*xml)->NewFileDialog);
+    *builder = moo_builder_new ("/ui/moofileselector.ui");
+    g_return_val_if_fail (*builder != nullptr, nullptr);
+
+    dialog = GTK_WIDGET (moo_builder_get (*builder, "NewFileDialog"));
 
     moo_window_set_parent (dialog, parent);
 
-    gtk_entry_set_text (GTK_ENTRY ((*xml)->entry), start_text);
-    moo_entry_clear_undo ((*xml)->entry);
+    gtk_entry_set_text (GTK_ENTRY (moo_builder_get (*builder, "entry")), start_text);
+    moo_entry_clear_undo (MOO_ENTRY (moo_builder_get (*builder, "entry")));
 
     label_text = g_strdup_printf (_("Create file in folder '%s':"), display_dirname);
-    gtk_label_set_text ((*xml)->label, label_text);
+    gtk_label_set_text (GTK_LABEL (moo_builder_get (*builder, "label")), label_text);
 
     gtk_widget_show_all (dialog);
-    gtk_widget_grab_focus (GTK_WIDGET ((*xml)->entry));
+    gtk_widget_grab_focus (GTK_WIDGET (moo_builder_get (*builder, "entry")));
 
-    moo_bind_bool_property ((*xml)->ok_button, "sensitive", (*xml)->entry, "empty", TRUE);
+    moo_bind_bool_property (moo_builder_get (*builder, "ok_button"), "sensitive",
+                            moo_builder_get (*builder, "entry"), "empty", TRUE);
 
     g_free (label_text);
     g_free (display_dirname);
@@ -403,7 +406,7 @@ new_file_dialog (GtkWidget   *parent,
                  const char  *dirname,
                  const char  *start_name)
 {
-    NewFileDialogXml *xml = nullptr;
+    GtkBuilder *builder = nullptr;
     GtkWidget *dialog = nullptr;
     GtkEntry *entry = nullptr;
     char *fullname = nullptr;
@@ -418,9 +421,9 @@ new_file_dialog (GtkWidget   *parent,
 
         if (!dialog)
         {
-            dialog = create_new_file_dialog (parent, dirname, start_name, &xml);
+            dialog = create_new_file_dialog (parent, dirname, start_name, &builder);
             g_return_val_if_fail (dialog != nullptr, nullptr);
-            entry = GTK_ENTRY (xml->entry);
+            entry = GTK_ENTRY (moo_builder_get (builder, "entry"));
         }
 
         if (gtk_dialog_run (GTK_DIALOG (dialog)) != GTK_RESPONSE_OK)
@@ -745,23 +748,26 @@ static GtkWidget *
 create_save_as_dialog (GtkWidget        *parent,
                        const char       *start_text,
                        const char       *title,
-                       SaveAsDialogXml **xml)
+                       GtkBuilder      **builder)
 {
     GtkWidget *dialog;
 
-    *xml = save_as_dialog_xml_new ();
-    dialog = GTK_WIDGET ((*xml)->SaveAsDialog);
+    *builder = moo_builder_new ("/ui/moofileselector.ui");
+    g_return_val_if_fail (*builder != nullptr, nullptr);
+
+    dialog = GTK_WIDGET (moo_builder_get (*builder, "SaveAsDialog"));
 
     gtk_window_set_title (GTK_WINDOW (dialog), title);
     moo_window_set_parent (dialog, parent);
 
-    gtk_entry_set_text (GTK_ENTRY ((*xml)->entry), start_text);
-    moo_entry_clear_undo (MOO_ENTRY ((*xml)->entry));
+    gtk_entry_set_text (GTK_ENTRY (moo_builder_get (*builder, "entry")), start_text);
+    moo_entry_clear_undo (MOO_ENTRY (moo_builder_get (*builder, "entry")));
 
     gtk_widget_show_all (dialog);
-    gtk_widget_grab_focus (GTK_WIDGET ((*xml)->entry));
+    gtk_widget_grab_focus (GTK_WIDGET (moo_builder_get (*builder, "entry")));
 
-    moo_bind_bool_property ((*xml)->ok_button, "sensitive", (*xml)->entry, "empty", TRUE);
+    moo_bind_bool_property (moo_builder_get (*builder, "ok_button"), "sensitive",
+                            moo_builder_get (*builder, "entry"), "empty", TRUE);
 
     return dialog;
 }
@@ -773,7 +779,7 @@ save_as_dialog (GtkWidget   *parent,
                 gboolean     ask_name,
                 const char  *title)
 {
-    SaveAsDialogXml *xml = nullptr;
+    GtkBuilder *builder = nullptr;
     GtkWidget *dialog = nullptr;
     GtkEntry *entry = nullptr;
     char *fullname = nullptr;
@@ -794,8 +800,8 @@ save_as_dialog (GtkWidget   *parent,
         {
             if (!dialog)
             {
-                dialog = create_save_as_dialog (parent, start_name, title, &xml);
-                entry = GTK_ENTRY (xml->entry);
+                dialog = create_save_as_dialog (parent, start_name, title, &builder);
+                entry = GTK_ENTRY (moo_builder_get (builder, "entry"));
             }
 
             if (gtk_dialog_run (GTK_DIALOG (dialog)) != GTK_RESPONSE_OK)

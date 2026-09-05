@@ -28,7 +28,7 @@
 #include "mooutils/mooutils-debug.h"
 #include "mooutils/moospawn.h"
 #include "mooutils/mootype-macros.h"
-#include "plugins/usertools/mooedittools-exe-gxml.h"
+#include "mooutils/moobuilder.h"
 #include <gtk/gtk.h>
 #include <string.h>
 
@@ -969,7 +969,8 @@ set_filter_combo (GtkComboBox *combo,
 static GtkWidget *
 unx_factory_create_widget (G_GNUC_UNUSED MooCommandFactory *factory)
 {
-    ExePageXml *xml;
+    GtkBuilder *builder;
+    GtkWidget *page;
 
     const char *input_names[] = {
         /* Translators: this is a kind of input for a shell command, remove the part before and including | */
@@ -984,16 +985,20 @@ unx_factory_create_widget (G_GNUC_UNUSED MooCommandFactory *factory)
         N_("Input|Document copy")
     };
 
-    xml = exe_page_xml_new ();
+    builder = moo_builder_new ("/ui/mooedittools-exe.ui");
+    g_return_val_if_fail (builder != NULL, NULL);
 
-    moo_text_view_set_font_from_string (xml->textview, "Monospace");
-    moo_text_view_set_lang_by_id (xml->textview, "sh");
+    moo_text_view_set_font_from_string (MOO_TEXT_VIEW (moo_builder_get (builder, "textview")), "Monospace");
+    moo_text_view_set_lang_by_id (MOO_TEXT_VIEW (moo_builder_get (builder, "textview")), "sh");
 
-    init_combo (xml->input, input_names, G_N_ELEMENTS (input_names));
-    init_combo (xml->output, output_names, G_N_ELEMENTS (output_names));
-    init_filter_combo (xml->filter);
+    init_combo (GTK_COMBO_BOX (moo_builder_get (builder, "input")), input_names, G_N_ELEMENTS (input_names));
+    init_combo (GTK_COMBO_BOX (moo_builder_get (builder, "output")), output_names, G_N_ELEMENTS (output_names));
+    init_filter_combo (GTK_COMBO_BOX (moo_builder_get (builder, "filter")));
 
-    return GTK_WIDGET (xml->ExePage);
+    page = GTK_WIDGET (moo_builder_get (builder, "ExePage"));
+    g_object_set_data_full (G_OBJECT (page), "moo-builder", builder, g_object_unref);
+
+    return page;
 }
 
 
@@ -1005,25 +1010,25 @@ unx_factory_load_data (G_GNUC_UNUSED MooCommandFactory *factory,
     GtkTextBuffer *buffer;
     const char *cmd_line;
     int index;
-    ExePageXml *xml;
+    GtkBuilder *builder;
 
     g_return_if_fail (data != NULL);
 
-    xml = exe_page_xml_get (page);
-    g_return_if_fail (xml != NULL);
+    builder = GTK_BUILDER (g_object_get_data (G_OBJECT (page), "moo-builder"));
+    g_return_if_fail (builder != NULL);
 
-    buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (xml->textview));
+    buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (MOO_TEXT_VIEW (moo_builder_get (builder, "textview"))));
 
     cmd_line = moo_command_data_get_code (data);
     gtk_text_buffer_set_text (buffer, MOO_NZS (cmd_line), -1);
 
     parse_input (moo_command_data_get (data, KEY_INPUT), &index);
-    gtk_combo_box_set_active (xml->input, index);
+    gtk_combo_box_set_active (GTK_COMBO_BOX (moo_builder_get (builder, "input")), index);
 
     parse_output (moo_command_data_get (data, KEY_OUTPUT), &index);
-    gtk_combo_box_set_active (xml->output, index);
+    gtk_combo_box_set_active (GTK_COMBO_BOX (moo_builder_get (builder, "output")), index);
 
-    set_filter_combo (xml->filter, moo_command_data_get (data, KEY_FILTER));
+    set_filter_combo (GTK_COMBO_BOX (moo_builder_get (builder, "filter")), moo_command_data_get (data, KEY_FILTER));
 }
 
 
@@ -1032,17 +1037,17 @@ unx_factory_save_data (G_GNUC_UNUSED MooCommandFactory *factory,
                        GtkWidget      *page,
                        MooCommandData *data)
 {
-    ExePageXml *xml;
+    GtkBuilder *builder;
     const char *cmd_line;
     char *new_cmd_line;
     gboolean changed = FALSE;
     int index, old_index;
     const char *input_strings[5] = { "none", "lines", "selection", "doc", "doc-copy" };
 
-    xml = exe_page_xml_get (page);
-    g_return_val_if_fail (xml != NULL, FALSE);
+    builder = GTK_BUILDER (g_object_get_data (G_OBJECT (page), "moo-builder"));
+    g_return_val_if_fail (builder != NULL, FALSE);
 
-    new_cmd_line = moo_text_view_get_text (GTK_TEXT_VIEW (xml->textview));
+    new_cmd_line = moo_text_view_get_text (GTK_TEXT_VIEW (MOO_TEXT_VIEW (moo_builder_get (builder, "textview"))));
     cmd_line = moo_command_data_get_code (data);
 
     if (!moo_str_equal (cmd_line, new_cmd_line))
@@ -1051,7 +1056,7 @@ unx_factory_save_data (G_GNUC_UNUSED MooCommandFactory *factory,
         changed = TRUE;
     }
 
-    index = gtk_combo_box_get_active (xml->input);
+    index = gtk_combo_box_get_active (GTK_COMBO_BOX (moo_builder_get (builder, "input")));
     parse_input (moo_command_data_get (data, KEY_INPUT), &old_index);
     g_assert (0 <= index && index < MOO_COMMAND_EXE_MAX_INPUT);
     if (index != old_index)
@@ -1060,7 +1065,7 @@ unx_factory_save_data (G_GNUC_UNUSED MooCommandFactory *factory,
         changed = TRUE;
     }
 
-    index = gtk_combo_box_get_active (xml->output);
+    index = gtk_combo_box_get_active (GTK_COMBO_BOX (moo_builder_get (builder, "output")));
     parse_output (moo_command_data_get (data, KEY_OUTPUT), &old_index);
     g_assert (0 <= index && index < MOO_COMMAND_EXE_MAX_OUTPUT);
     if (index != old_index)
@@ -1073,7 +1078,7 @@ unx_factory_save_data (G_GNUC_UNUSED MooCommandFactory *factory,
     {
         const char *old_filter;
         char *new_filter = NULL;
-        GtkComboBox *combo = xml->filter;
+        GtkComboBox *combo = GTK_COMBO_BOX (moo_builder_get (builder, "filter"));
         GtkTreeIter iter;
 
         if (gtk_combo_box_get_active_iter (combo, &iter))

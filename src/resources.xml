@@ -20,5 +20,11 @@
     <file preprocess="xml-stripblanks" alias="moocreatefolder.ui">moofileview/ui/moocreatefolder.ui</file>
     <file preprocess="xml-stripblanks" alias="moofileprops.ui">moofileview/ui/moofileprops.ui</file>
     <file preprocess="xml-stripblanks" alias="moofileview-drop.ui">moofileview/ui/moofileview-drop.ui</file>
+    <file preprocess="xml-stripblanks" alias="moofileselector.ui">plugins/ui/moofileselector.ui</file>
+    <file preprocess="xml-stripblanks" alias="moofileselector-prefs.ui">plugins/ui/moofileselector-prefs.ui</file>
+    <file preprocess="xml-stripblanks" alias="moofind.ui">plugins/ui/moofind.ui</file>
+    <file preprocess="xml-stripblanks" alias="moogrep.ui">plugins/ui/moogrep.ui</file>
+    <file preprocess="xml-stripblanks" alias="mooedittools-exe.ui">plugins/usertools/ui/mooedittools-exe.ui</file>
+    <file preprocess="xml-stripblanks" alias="moousertools.ui">plugins/usertools/ui/moousertools.ui</file>
   </gresource>
 </gresources>

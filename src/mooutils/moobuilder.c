@@ -111,3 +111,26 @@ moo_builder_get (GtkBuilder *builder, const char *id)
 
     return object;
 }
+
+void
+moo_builder_reparent (GtkBuilder *builder, const char *id, GtkWidget *parent)
+{
+    GtkWidget *widget;
+    GtkWidget *placeholder;
+
+    g_return_if_fail (GTK_IS_BUILDER (builder));
+    g_return_if_fail (GTK_IS_CONTAINER (parent));
+
+    widget = GTK_WIDGET (moo_builder_get (builder, id));
+    g_return_if_fail (widget != NULL);
+
+    placeholder = gtk_widget_get_toplevel (widget);
+
+    g_object_ref (widget);
+    gtk_container_remove (GTK_CONTAINER (gtk_widget_get_parent (widget)), widget);
+    gtk_container_add (GTK_CONTAINER (parent), widget);
+    g_object_unref (widget);
+
+    if (GTK_IS_WINDOW (placeholder))
+        gtk_widget_destroy (placeholder);
+}

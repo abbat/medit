@@ -35,6 +35,18 @@ GtkBuilder *moo_builder_new (const char *resource_path);
  */
 gpointer moo_builder_get (GtkBuilder *builder, const char *id);
 
+/*!
+ * \brief Moves a widget built by moo_builder_new() into a parent of your own
+ * \param builder the builder
+ * \param id id of the widget to move
+ * \param parent container to put it in
+ *
+ * Interfaces that describe a piece of a window rather than a whole one keep it
+ * inside a placeholder window; this takes the piece out and drops the
+ * placeholder.
+ */
+void moo_builder_reparent (GtkBuilder *builder, const char *id, GtkWidget *parent);
+
 G_END_DECLS
 
 #endif /* MOO_BUILDER_H */
