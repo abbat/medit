@@ -63,9 +63,9 @@ typedef enum {
 
 typedef struct FilterStore FilterStore;
 typedef struct PatternInfo PatternInfo;
-typedef struct ActionInfo ActionInfo;
+typedef struct RegexActionInfo RegexActionInfo;
 typedef struct FilterState FilterState;
-typedef struct FilterInfo FilterInfo;
+typedef struct RegexFilterInfo RegexFilterInfo;
 
 struct FilterState {
     guint ref_count;
@@ -84,13 +84,13 @@ struct PatternInfo {
     guint span;
 };
 
-struct ActionInfo {
+struct RegexActionInfo {
     ActionType type;
     ActionTarget target;
     char *data;
 };
 
-struct FilterInfo {
+struct RegexFilterInfo {
     guint ref_count;
     char *id;
     char *name;
@@ -98,7 +98,7 @@ struct FilterInfo {
 };
 
 struct _MooOutputFilterRegexPrivate {
-    FilterInfo *filter;
+    RegexFilterInfo *filter;
     FilterState *state;
     GSList *file_stack;
     GSList *dir_stack;
@@ -109,11 +109,11 @@ struct _MooOutputFilterRegexPrivate {
 };
 
 
-static FilterInfo  *filter_info_new     (const char     *id,
+static RegexFilterInfo  *filter_info_new     (const char     *id,
                                          const char     *name,
                                          GSList         *patterns);
-static FilterInfo  *filter_info_ref     (FilterInfo     *filter);
-static void         filter_info_unref   (FilterInfo     *filter);
+static RegexFilterInfo  *filter_info_ref     (RegexFilterInfo     *filter);
+static void         filter_info_unref   (RegexFilterInfo     *filter);
 
 static PatternInfo *pattern_info_new    (OutputType      type,
                                          const char     *pattern,
@@ -122,12 +122,12 @@ static PatternInfo *pattern_info_new    (OutputType      type,
                                          guint           span);
 static void         pattern_info_free   (PatternInfo    *pattern, gpointer);
 
-static ActionInfo  *action_info_new     (ActionType      type,
+static RegexActionInfo  *action_info_new     (ActionType      type,
                                          ActionTarget    target,
                                          const char     *substring);
 
-static void         action_info_free      (ActionInfo *action);
-static void         action_info_free_data (ActionInfo *action, gpointer);
+static void         action_info_free      (RegexActionInfo *action);
+static void         action_info_free_data (RegexActionInfo *action, gpointer);
 
 
 G_DEFINE_TYPE_WITH_CODE (MooOutputFilterRegex, _moo_output_filter_regex, MOO_TYPE_OUTPUT_FILTER, G_ADD_PRIVATE(MooOutputFilterRegex))
@@ -413,7 +413,7 @@ get_tag (MooLineView *view,
 static void
 process_action (MooOutputFilterRegex *filter,
                 PatternInfo          *pattern,
-                ActionInfo           *action,
+                RegexActionInfo           *action,
                 const char           *text)
 {
     GSList **list = NULL;
@@ -522,7 +522,7 @@ process_line (MooOutputFilterRegex  *filter,
         line_data = process_location (filter, pattern, text, view, line_no);
 
         for (l = pattern->actions; l != NULL; l = l->next)
-            process_action (filter, pattern, (ActionInfo*) l->data, text);
+            process_action (filter, pattern, (RegexActionInfo*) l->data, text);
 
         if (pattern->span)
         {
@@ -605,10 +605,10 @@ static MooOutputFilter *
 filter_factory_func (const char *id,
                      gpointer    data)
 {
-    FilterInfo *info;
+    RegexFilterInfo *info;
     MooOutputFilterRegex *filter;
 
-    info = (FilterInfo*) data;
+    info = (RegexFilterInfo*) data;
 
     g_return_val_if_fail (id != NULL, NULL);
     g_return_val_if_fail (!strcmp (info->id, id), NULL);
@@ -621,12 +621,12 @@ filter_factory_func (const char *id,
 }
 
 
-static ActionInfo *
+static RegexActionInfo *
 action_info_new (ActionType      type,
                  ActionTarget    target,
                  const char     *substring)
 {
-    ActionInfo *info = g_new0 (ActionInfo, 1);
+    RegexActionInfo *info = g_new0 (RegexActionInfo, 1);
     info->type = type;
     info->target = target;
     info->data = g_strdup (substring);
@@ -634,7 +634,7 @@ action_info_new (ActionType      type,
 }
 
 static void
-action_info_free (ActionInfo *action)
+action_info_free (RegexActionInfo *action)
 {
     if (action)
     {
@@ -645,7 +645,7 @@ action_info_free (ActionInfo *action)
 
 
 static void
-action_info_free_data (ActionInfo *action, gpointer)
+action_info_free_data (RegexActionInfo *action, gpointer)
 {
     action_info_free(action);
 }
@@ -779,14 +779,14 @@ filter_state_unref (FilterState *state)
 }
 
 
-static FilterInfo *
+static RegexFilterInfo *
 filter_info_new (const char *id,
                  const char *name,
                  GSList     *patterns)
 {
-    FilterInfo *info;
+    RegexFilterInfo *info;
 
-    info = g_new0 (FilterInfo, 1);
+    info = g_new0 (RegexFilterInfo, 1);
     info->ref_count = 1;
     info->id = g_strdup (id);
     info->name = g_strdup (name);
@@ -795,8 +795,8 @@ filter_info_new (const char *id,
     return info;
 }
 
-static FilterInfo *
-filter_info_ref (FilterInfo *filter)
+static RegexFilterInfo *
+filter_info_ref (RegexFilterInfo *filter)
 {
     g_return_val_if_fail (filter != NULL, NULL);
     ++filter->ref_count;
@@ -804,7 +804,7 @@ filter_info_ref (FilterInfo *filter)
 }
 
 static void
-filter_info_unref (FilterInfo *filter)
+filter_info_unref (RegexFilterInfo *filter)
 {
     if (filter && !--filter->ref_count)
     {
@@ -820,7 +820,7 @@ filter_info_unref (FilterInfo *filter)
 /* Loading and saving
  */
 
-static ActionInfo *
+static RegexActionInfo *
 parse_action_node (MooMarkupNode *node,
                    const char    *file)
 {
@@ -916,7 +916,7 @@ parse_match_node (MooMarkupNode *node,
 
     for (child = node->children; child != NULL; child = child->next)
     {
-        ActionInfo *action;
+        RegexActionInfo *action;
 
         if (!MOO_MARKUP_IS_ELEMENT (child))
             continue;
@@ -950,14 +950,14 @@ error:
 }
 
 
-static FilterInfo *
+static RegexFilterInfo *
 parse_filter_node (MooMarkupNode *elm,
                    const char    *file)
 {
     const char *id;
     const char *name;
     const char *_name;
-    FilterInfo *info;
+    RegexFilterInfo *info;
     GSList *patterns = NULL;
     MooMarkupNode *child;
 
@@ -1054,7 +1054,7 @@ parse_filter_file (const char *file)
 
     for (node = root->children; node != NULL; node = node->next)
     {
-        FilterInfo *info;
+        RegexFilterInfo *info;
 
         if (!MOO_MARKUP_IS_ELEMENT (node))
             continue;

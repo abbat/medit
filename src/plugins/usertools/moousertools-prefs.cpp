@@ -224,7 +224,7 @@ get_options (GtkBuilder  *builder,
     char *string;
     int row_requires;
     int row_save;
-    const char *requires = NULL;
+    const char *needs = NULL;
     const char *save = NULL;
 
     row_requires = gtk_combo_box_get_active (GTK_COMBO_BOX (moo_builder_get (builder, "combo_requires")));
@@ -239,10 +239,10 @@ get_options (GtkBuilder  *builder,
         case ROW_REQUIRES_NOTHING:
             break;
         case ROW_REQUIRES_DOC:
-            requires = "need-doc";
+            needs = "need-doc";
             break;
         case ROW_REQUIRES_FILE:
-            requires = "need-file";
+            needs = "need-file";
             break;
         default:
             g_critical ("oops");
@@ -271,10 +271,10 @@ get_options (GtkBuilder  *builder,
             break;
     }
 
-    if (requires && save)
-        string = g_strdup_printf ("%s,%s", requires, save);
-    else if (requires)
-        string = g_strdup (requires);
+    if (needs && save)
+        string = g_strdup_printf ("%s,%s", needs, save);
+    else if (needs)
+        string = g_strdup (needs);
     else
         string = g_strdup (save);
 
