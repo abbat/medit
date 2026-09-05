@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <interface>
   <object class="GtkDialog" id="dialog1">
-    <property name="visible">True</property>
     <property name="title">dialog1</property>
     <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
     <child internal-child="vbox">

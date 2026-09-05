@@ -1974,7 +1974,7 @@ moo_print_operation_create_custom_widget (G_GNUC_UNUSED GtkPrintOperation *opera
 
     set_options (xml);
 
-    widget = GTK_WIDGET (moo_builder_get (xml, "PrintWidget"));
+    widget = moo_builder_take (xml, "PrintWidget");
     /* the widget is handed to gtk, which owns it from here on; the builder
        rides along so the apply callback can find the fields again */
     g_object_set_data_full (G_OBJECT (widget), "moo-builder", xml, g_object_unref);

@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <interface>
   <object class="GtkWindow" id="window1">
-    <property name="visible">True</property>
     <property name="title">window1</property>
     <child>
       <object class="GtkVBox" id="vbox1">

@@ -1,46 +1,6 @@
 <?xml version="1.0"?>
 <interface>
-  <object class="GtkListStore" id="model1">
-    <columns>
-      <column type="gchararray"/>
-    </columns>
-    <data>
-      <row>
-        <col id="0">None</col>
-      </row>
-      <row>
-        <col id="0">Something</col>
-      </row>
-    </data>
-  </object>
-  <object class="GtkListStore" id="model2">
-    <columns>
-      <column type="gchararray"/>
-    </columns>
-    <data>
-      <row>
-        <col id="0">None</col>
-      </row>
-      <row>
-        <col id="0">Something</col>
-      </row>
-    </data>
-  </object>
-  <object class="GtkListStore" id="model3">
-    <columns>
-      <column type="gchararray"/>
-    </columns>
-    <data>
-      <row>
-        <col id="0">None</col>
-      </row>
-      <row>
-        <col id="0">Something</col>
-      </row>
-    </data>
-  </object>
   <object class="GtkWindow" id="window5">
-    <property name="visible">True</property>
     <property name="title">window2</property>
     <child>
       <object class="GtkVBox" id="ExePage">
@@ -56,13 +16,6 @@
             <child>
               <object class="GtkComboBox" id="filter">
                 <property name="visible">True</property>
-                <property name="model">model1</property>
-                <child>
-                  <object class="GtkCellRendererText" id="renderer1"/>
-                  <attributes>
-                    <attribute name="text">0</attribute>
-                  </attributes>
-                </child>
               </object>
               <packing>
                 <property name="left_attach">1</property>
@@ -89,13 +42,6 @@
             <child>
               <object class="GtkComboBox" id="output">
                 <property name="visible">True</property>
-                <property name="model">model2</property>
-                <child>
-                  <object class="GtkCellRendererText" id="renderer2"/>
-                  <attributes>
-                    <attribute name="text">0</attribute>
-                  </attributes>
-                </child>
               </object>
               <packing>
                 <property name="left_attach">1</property>
@@ -122,13 +68,6 @@
             <child>
               <object class="GtkComboBox" id="input">
                 <property name="visible">True</property>
-                <property name="model">model3</property>
-                <child>
-                  <object class="GtkCellRendererText" id="renderer3"/>
-                  <attributes>
-                    <attribute name="text">0</attribute>
-                  </attributes>
-                </child>
               </object>
               <packing>
                 <property name="left_attach">1</property>

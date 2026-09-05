@@ -995,7 +995,7 @@ unx_factory_create_widget (G_GNUC_UNUSED MooCommandFactory *factory)
     init_combo (GTK_COMBO_BOX (moo_builder_get (builder, "output")), output_names, G_N_ELEMENTS (output_names));
     init_filter_combo (GTK_COMBO_BOX (moo_builder_get (builder, "filter")));
 
-    page = GTK_WIDGET (moo_builder_get (builder, "ExePage"));
+    page = moo_builder_take (builder, "ExePage");
     g_object_set_data_full (G_OBJECT (page), "moo-builder", builder, g_object_unref);
 
     return page;

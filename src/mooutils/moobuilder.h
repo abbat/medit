@@ -55,6 +55,20 @@ gpointer moo_builder_get (GtkBuilder *builder, const char *id);
  */
 void moo_builder_reparent (GtkBuilder *builder, const char *id, GtkWidget *parent);
 
+/*!
+ * \brief Takes a widget out of the interface, to be put somewhere by the caller
+ * \param builder the builder
+ * \param id id of the widget
+ * \return the widget, with a floating reference, so that whatever container it
+ *         is handed to takes ownership of it in the usual way
+ *
+ * Use this when the widget is returned to code that will pack it itself. Handing
+ * out a widget that still sits in its placeholder window makes that code fail
+ * with "Can't set a parent on widget which has a parent", and the packing
+ * properties then land on the placeholder instead.
+ */
+GtkWidget *moo_builder_take (GtkBuilder *builder, const char *id);
+
 G_END_DECLS
 
 #endif /* MOO_BUILDER_H */

@@ -51,7 +51,8 @@ add_custom_command(
     COMMENT "Generating moo-pixbufs.h"
     VERBATIM)
 
-file(GLOB_RECURSE MOO_UI_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/*/ui/*.ui")
+# every .ui, at any depth: plugins keep theirs one level deeper
+file(GLOB_RECURSE MOO_UI_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/*.ui")
 
 add_custom_command(
     OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/resources.c"

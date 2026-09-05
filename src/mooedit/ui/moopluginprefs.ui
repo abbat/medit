@@ -3,7 +3,6 @@
   <!-- interface-requires gtk+ 2.6 -->
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkWindow" id="window1">
-    <property name="visible">True</property>
     <property name="title">window1</property>
     <child>
       <object class="GtkVBox" id="PrefsPage">
