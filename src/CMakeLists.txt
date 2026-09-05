@@ -1,4 +1,3 @@
-include(${CMAKE_SOURCE_DIR}/cmake/Codegen.cmake)
 
 # ---------------------------------------------------------------------------
 # Generated sources
@@ -52,14 +51,6 @@ add_custom_command(
     COMMENT "Generating moo-pixbufs.h"
     VERBATIM)
 
-add_custom_command(
-    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/mooapp-credits.h"
-    COMMAND ${Python3_EXECUTABLE} "${CMAKE_SOURCE_DIR}/tools/xml2h.py"
-            "${CMAKE_SOURCE_DIR}/THANKS" "${CMAKE_CURRENT_BINARY_DIR}/mooapp-credits.h" MOO_APP_CREDITS
-    DEPENDS "${CMAKE_SOURCE_DIR}/THANKS" "${CMAKE_SOURCE_DIR}/tools/xml2h.py"
-    COMMENT "Generating mooapp-credits.h"
-    VERBATIM)
-
 file(GLOB_RECURSE MOO_UI_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/*/ui/*.ui")
 
 add_custom_command(
@@ -67,29 +58,10 @@ add_custom_command(
     COMMAND ${GLIB_COMPILE_RESOURCES} "${CMAKE_CURRENT_SOURCE_DIR}/resources.xml"
             --sourcedir "${CMAKE_CURRENT_SOURCE_DIR}"
             --target "${CMAKE_CURRENT_BINARY_DIR}/resources.c" --generate-source
-    DEPENDS resources.xml ${MOO_UI_FILES}
+    DEPENDS resources.xml ${MOO_UI_FILES} "${CMAKE_SOURCE_DIR}/THANKS"
+            mooedit/medit.xml mooedit/mooedit.xml moofileview/moofileview.xml
     COMMENT "Generating resources.c"
     VERBATIM)
-
-moo_xml2h(MOO_UI_HEADERS
-    mooedit/medit.xml            medit_ui_xml
-    mooedit/mooedit.xml          mooedit_ui_xml
-    moofileview/moofileview.xml  moofileview_ui_xml)
-
-# Platform-specific menu and context files for the user tools plugin.
-set(MOO_USERTOOLS_XML "")
-foreach(name menu context)
-    add_custom_command(
-        OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/plugins/usertools/${name}.xml"
-        COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_CURRENT_BINARY_DIR}/plugins/usertools"
-        COMMAND ${Python3_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/plugins/usertools/genplatxml.py"
-                --enable=unix "${CMAKE_CURRENT_SOURCE_DIR}/plugins/usertools/${name}-tmpl.xml"
-                > "${CMAKE_CURRENT_BINARY_DIR}/plugins/usertools/${name}.xml"
-        DEPENDS plugins/usertools/${name}-tmpl.xml plugins/usertools/genplatxml.py
-        COMMENT "Generating plugins/usertools/${name}.xml"
-        VERBATIM)
-    list(APPEND MOO_USERTOOLS_XML "${CMAKE_CURRENT_BINARY_DIR}/plugins/usertools/${name}.xml")
-endforeach()
 
 # ---------------------------------------------------------------------------
 # The application
@@ -101,10 +73,7 @@ add_executable(medit
     "${CMAKE_CURRENT_BINARY_DIR}/marshals.c"
     "${CMAKE_CURRENT_BINARY_DIR}/marshals.h"
     "${CMAKE_CURRENT_BINARY_DIR}/moo-pixbufs.h"
-    "${CMAKE_CURRENT_BINARY_DIR}/mooapp-credits.h"
-    "${CMAKE_CURRENT_BINARY_DIR}/resources.c"
-    ${MOO_UI_HEADERS}
-    ${MOO_USERTOOLS_XML})
+    "${CMAKE_CURRENT_BINARY_DIR}/resources.c")
 
 target_include_directories(medit PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}"
@@ -146,7 +115,6 @@ install(TARGETS medit RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 install(FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/plugins/usertools/filters.xml"
-    ${MOO_USERTOOLS_XML}
     DESTINATION "${MOO_DATA_DIR}")
 
 install(FILES mooutils/pixmaps/medit.png

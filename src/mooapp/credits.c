@@ -15,8 +15,8 @@
 
 #include "credits.h"
 
-#include "mooapp-credits.h"
 #include "mooutils/mooi18n.h"
+#include "mooutils/moobuilder.h"
 
 /*!
  * \brief Callback function for the close button click event
@@ -87,7 +87,13 @@ static void
 set_thanks_content (GtkTextView *view)
 {
   GtkTextBuffer *buffer = gtk_text_view_get_buffer (view);
-  gtk_text_buffer_set_text (buffer, MOO_APP_CREDITS, -1);
+  char *thanks = moo_resource_get_text ("/text/THANKS", NULL);
+
+  if (thanks != NULL)
+  {
+      gtk_text_buffer_set_text (buffer, thanks, -1);
+      g_free (thanks);
+  }
 }
 
 /*!

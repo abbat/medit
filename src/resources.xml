@@ -40,5 +40,11 @@
     <file preprocess="xml-stripblanks" alias="mootextfind-prompt.ui">mooedit/ui/mootextfind-prompt.ui</file>
     <file preprocess="xml-stripblanks" alias="mootextfind.ui">mooedit/ui/mootextfind.ui</file>
     <file preprocess="xml-stripblanks" alias="mootryencoding.ui">mooedit/ui/mootryencoding.ui</file>
+    <file preprocess="xml-stripblanks" alias="medit.xml">mooedit/medit.xml</file>
+    <file preprocess="xml-stripblanks" alias="mooedit.xml">mooedit/mooedit.xml</file>
+    <file preprocess="xml-stripblanks" alias="moofileview.xml">moofileview/moofileview.xml</file>
+  </gresource>
+  <gresource prefix="/text">
+    <file alias="THANKS">../THANKS</file>
   </gresource>
 </gresources>

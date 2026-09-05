@@ -50,12 +50,42 @@ register_types (void)
     }
 }
 
+char *
+moo_resource_get_text (const char *resource_path, gsize *length)
+{
+    GBytes *data;
+    gconstpointer contents;
+    gsize size;
+    char *text;
+    GError *error = NULL;
+
+    g_return_val_if_fail (resource_path != NULL, NULL);
+
+    data = g_resources_lookup_data (resource_path, G_RESOURCE_LOOKUP_FLAGS_NONE, &error);
+
+    if (data == NULL)
+    {
+        g_critical ("could not read %s: %s", resource_path, error->message);
+        g_error_free (error);
+        return NULL;
+    }
+
+    contents = g_bytes_get_data (data, &size);
+    text = g_strndup ((const char *) contents, size);
+    g_bytes_unref (data);
+
+    if (length != NULL)
+        *length = size;
+
+    return text;
+}
+
+
 GtkBuilder *
 moo_builder_new (const char *resource_path)
 {
     GtkBuilder *builder;
-    GBytes *data;
-    const char *xml;
+    char *xml;
     gsize size;
     GError *error = NULL;
 
@@ -68,30 +98,26 @@ moo_builder_new (const char *resource_path)
        in the default domain and come out untranslated. */
     gtk_builder_set_translation_domain (builder, GETTEXT_PACKAGE);
 
-    /* The resource is read through gio rather than with
-       gtk_builder_add_from_resource(), which gtk-2 does not have. */
-    data = g_resources_lookup_data (resource_path, G_RESOURCE_LOOKUP_FLAGS_NONE, &error);
+    /* The interface is read through gio and fed to the builder as a string:
+       gtk_builder_add_from_resource() does not exist in gtk-2. */
+    xml = moo_resource_get_text (resource_path, &size);
 
-    if (data == NULL)
+    if (xml == NULL)
     {
-        g_critical ("could not read %s: %s", resource_path, error->message);
-        g_error_free (error);
         g_object_unref (builder);
         return NULL;
     }
-
-    xml = (const char *) g_bytes_get_data (data, &size);
 
     if (!gtk_builder_add_from_string (builder, xml, size, &error))
     {
         g_critical ("could not build %s: %s", resource_path, error->message);
         g_error_free (error);
-        g_bytes_unref (data);
+        g_free (xml);
         g_object_unref (builder);
         return NULL;
     }
 
-    g_bytes_unref (data);
+    g_free (xml);
 
     return builder;
 }

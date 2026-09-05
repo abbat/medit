@@ -109,9 +109,6 @@ foreach(tool GLIB_GENMARSHAL GLIB_COMPILE_RESOURCES GDK_PIXBUF_CSOURCE)
     endif()
 endforeach()
 
-# The build scripts under tools/ turn glade and xml files into C headers.
-find_package(Python3 REQUIRED COMPONENTS Interpreter)
-
 if(ENABLE_NLS)
     find_program(MSGFMT NAMES msgfmt)
     find_program(INTLTOOL_MERGE NAMES intltool-merge)

@@ -1,5 +1,5 @@
 <moo-user-tools version="1.0"><!-- -%- indent-width:2 -%- -->
-  <command id="SortLinesUniq"><!-- ###unix### -->
+  <command id="SortLinesUniq">
     <name>Sort | Uniq</name>
     <options>need-doc</options>
     <type>exe</type>
@@ -9,7 +9,7 @@
 sort | uniq
 ]]></exe:code>
   </command>
-  <command id="DiffToDisk"><!-- ###unix### -->
+  <command id="DiffToDisk">
     <name>Diff to Disk</name>
     <options>need-file</options>
     <type>exe</type>
@@ -19,7 +19,7 @@ diff -pu $DOC_PATH $INPUT_FILE > $TEMP_DIR/m.diff
 medit -r $TEMP_DIR/m.diff
 ]]></exe:code>
   </command>
-  <command id="Yacc"><!-- ###unix### -->
+  <command id="Yacc">
     <name>Bison</name>
     <langs>yacc</langs>
     <options>need-file,need-save</options>
@@ -30,7 +30,7 @@ medit -r $TEMP_DIR/m.diff
 bison $DOC
 ]]></exe:code>
   </command>
-  <command id="LaTeX"><!-- ###unix### -->
+  <command id="LaTeX">
     <name>LaTeX</name>
     <file-filter>*.tex</file-filter>
     <options>need-save</options>
@@ -43,7 +43,7 @@ doc="${LATEX_MASTER:-$DOC}"
 latex --src-specials "$doc"
 ]]></exe:code>
   </command>
-  <command id="Make_PDF"><!-- ###unix### -->
+  <command id="Make_PDF">
     <name>Make PDF</name>
     <file-filter>*.tex</file-filter>
     <options>need-save</options>
@@ -58,7 +58,7 @@ latex --src-specials "$doc"
   ps2pdf "$doc_base.ps"
 ]]></exe:code>
   </command>
-  <command id="Bibtex"><!-- ###unix### -->
+  <command id="Bibtex">
     <name>LaTeX</name>
     <file-filter>*.tex</file-filter>
     <accel>&lt;shift&gt;&lt;ctrl&gt;B</accel>
@@ -71,7 +71,7 @@ doc_base=`basename "$doc" .tex`
 bibtex "$doc_base"
 ]]></exe:code>
   </command>
-  <command id="PdfLaTeX"><!-- ###unix### -->
+  <command id="PdfLaTeX">
     <name>PdfLaTeX</name>
     <file-filter>*.tex</file-filter>
     <options>need-save</options>
@@ -83,7 +83,7 @@ doc="${LATEX_MASTER:-$DOC}"
 pdflatex "$doc"
 ]]></exe:code>
   </command>
-  <command id="View_DVI"><!-- ###unix### -->
+  <command id="View_DVI">
     <name>View DVI</name>
     <file-filter>*.tex</file-filter>
     <accel>&lt;shift&gt;&lt;ctrl&gt;V</accel>
@@ -102,7 +102,7 @@ else
 fi
 ]]></exe:code>
   </command>
-  <command id="View_PDF"><!-- ###unix### -->
+  <command id="View_PDF">
     <name>View PDF</name>
     <file-filter>*.tex</file-filter>
     <type>exe</type>

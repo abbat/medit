@@ -30,9 +30,8 @@
 #include "mooedit/mooeditfiltersettings.h"
 #include "mooedit/mooeditfileinfo-impl.h"
 #include "mooedit/mooedithistoryitem.h"
-#include "mooedit/mooedit-ui.h"
-#include "mooedit/medit-ui.h"
 #include "mooutils/moomenuaction.h"
+#include "mooutils/moobuilder.h"
 #include "marshals.h"
 #include "mooutils/mooutils-cpp.h"
 #include "mooutils/mooutils-misc.h"
@@ -360,9 +359,15 @@ moo_editor_constructor (GType                  type,
 
     _moo_stock_init ();
 
+    char *ui;
+
     editor->priv->doc_ui_xml = moo_ui_xml_new ();
-    moo_ui_xml_add_ui_from_string (editor->priv->doc_ui_xml,
-                                   mooedit_ui_xml, -1);
+    ui = moo_resource_get_text ("/ui/mooedit.xml", NULL);
+    if (ui != NULL)
+    {
+        moo_ui_xml_add_ui_from_string (editor->priv->doc_ui_xml, ui, -1);
+        g_free (ui);
+    }
 
     editor->priv->lang_mgr = g::object_ref (moo_lang_mgr_default ());
     g_signal_connect_swapped (editor->priv->lang_mgr, "loaded",
@@ -648,8 +653,15 @@ moo_editor_get_ui_xml (MooEditor *editor)
 
     if (!editor->priv->ui_xml)
     {
+        char *ui = moo_resource_get_text ("/ui/medit.xml", NULL);
+
         editor->priv->ui_xml = moo_ui_xml_new ();
-        moo_ui_xml_add_ui_from_string (editor->priv->ui_xml, medit_ui_xml, -1);
+
+        if (ui != NULL)
+        {
+            moo_ui_xml_add_ui_from_string (editor->priv->ui_xml, ui, -1);
+            g_free (ui);
+        }
     }
 
     return editor->priv->ui_xml;

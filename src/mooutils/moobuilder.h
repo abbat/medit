@@ -21,6 +21,14 @@
 G_BEGIN_DECLS
 
 /*!
+ * \brief Reads a text file out of a GResource
+ * \param resource_path resource path, e.g. "/ui/medit.xml"
+ * \param length where to store the length in bytes, or NULL
+ * \return the contents, to be freed with g_free(); NULL on error, reported as a critical
+ */
+char *moo_resource_get_text (const char *resource_path, gsize *length);
+
+/*!
  * \brief Builds an interface from a GResource, in the application's text domain
  * \param resource_path resource path of the .ui file, e.g. "/ui/mootextgotoline.ui"
  * \return the builder, or NULL on error (which is reported as a critical)

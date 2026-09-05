@@ -1,5 +1,5 @@
 <moo-user-tools version="1.0"><!-- -%- indent-width:2 -%- -->
-  <command id="DVI_Forward_Search"><!-- ###unix### -->
+  <command id="DVI_Forward_Search">
     <name>DVI Forward Search</name>
     <file-filter>*.tex</file-filter>
     <options>need-file</options>

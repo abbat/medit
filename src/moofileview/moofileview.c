@@ -23,11 +23,11 @@
 #include "moofileview/mooiconview.h"
 #include "moofileview/moofileview-aux.h"
 #include "moofileview/moofileview-private.h"
-#include "moofileview/moofileview-ui.h"
 #include "moofileview/mootreeview.h"
 #include "moofileview/moobookmarkview.h"
 #include "moofileview/moofileview-tools.h"
 #include "mooutils/mooutils-gobject.h"
+#include "mooutils/moobuilder.h"
 #include "mooutils/mooutils-fs.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooutils-debug.h"
@@ -1126,9 +1126,15 @@ init_actions (MooFileView *fileview)
     GtkActionGroup *group;
 
     fileview->priv->actions = moo_action_collection_new ("File Selector", _("File Selector"));
+    char *ui;
+
     fileview->priv->ui_xml = moo_ui_xml_new ();
-    moo_ui_xml_add_ui_from_string (fileview->priv->ui_xml,
-                                   moofileview_ui_xml, -1);
+    ui = moo_resource_get_text ("/ui/moofileview.xml", NULL);
+    if (ui != NULL)
+    {
+        moo_ui_xml_add_ui_from_string (fileview->priv->ui_xml, ui, -1);
+        g_free (ui);
+    }
 
     group = moo_action_collection_get_group (fileview->priv->actions, NULL);
 
