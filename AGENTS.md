@@ -78,7 +78,7 @@ docker build -t medit-u2004 - <<'EOF'
 FROM ubuntu:20.04
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -qq && apt-get install -y -qq build-essential debhelper cmake \
-    pkg-config intltool python3 libgtk2.0-dev libxml2-dev libjpeg-dev
+    pkg-config intltool python3 libgtk2.0-dev libgtk-3-dev libxml2-dev libjpeg-dev
 EOF
 S=<scratch>                                                  # session scratch dir
 git ls-files -z | tar --null -T - -czf $S/medit-src.tar.gz   # tracked files + local edits
@@ -86,6 +86,16 @@ docker run --rm -v $S:/w medit-u2004 bash -c 'set -o pipefail
   mkdir /build && cd /build && tar xzf /w/medit-src.tar.gz
   dpkg-buildpackage -us -uc -b -j8 2>&1 | tail -25'
 ```
+
+The package builds medit **twice**, once per gtk version: `medit-gtk2` and
+`medit-gtk3` carry the two builds and conflict with each other, and `medit` is an
+arch-all metapackage depending on `medit-gtk2 | medit-gtk3`. So `debian/rules` runs
+`dh_auto_configure`/`dh_auto_build`/`dh_auto_install` once per `--builddirectory`, and a
+package build takes twice as long as a plain one. When changing the packaging, check
+both the fresh install (`apt install medit` must pull gtk2), the switch
+(`apt install medit-gtk3` must remove gtk2), and the upgrade from the old monolithic
+`medit` (its `/usr/bin/medit` has to move to `medit-gtk2` without a file conflict —
+that is what the `Breaks`/`Replaces: medit (<< 1.3.1)` are for).
 
 Cache the image once (`docker build -t medit-u2004`); each fresh `apt-get install` costs
 a few minutes. To collect **every** error in one pass instead of one per run, replace

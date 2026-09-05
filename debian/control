@@ -5,6 +5,7 @@ Maintainer: Anton Batenev <antonbatenev@yandex.ru>
 Build-Depends: debhelper (>= 10), cmake, pkg-config, intltool, python3,
  libjpeg62-turbo-dev | libjpeg-dev,
  libgtk2.0-dev,
+ libgtk-3-dev,
  libxml2-dev,
 Standards-Version: 4.1.2
 Vcs-Git: https://github.com/abbat/medit.git
@@ -12,16 +13,53 @@ Vcs-Browser: https://github.com/abbat/medit
 Homepage: https://github.com/abbat/medit
 
 Package: medit
-Architecture: any
-Depends: ${misc:Depends}, ${shlibs:Depends}, ${python:Depends}
+Architecture: all
+Depends: ${misc:Depends}, medit-gtk2 | medit-gtk3
 Description: Useful programming and around-programming text editor
+ This package installs medit itself, built against either GTK+2 or GTK+3.
+ The two builds are mutually exclusive; installing this package pulls in
+ medit-gtk2 unless medit-gtk3 is already installed.
+ .
  Features:
   * Configurable syntax highlighting.
   * Configurable keyboard accelerators.
-  * Multiplatform - works both on unix and windows.
-  * Plugins: can be written in C or Python.
-  * Configurable tools available from the main and context menus. They can be
-    written in Python, or it can be a shell script, or in MooScript - simple
-    builtin scripting lanugage.
+  * Configurable tools available from the main and context menus, written as
+    shell scripts.
+  * Regular expression search/replace, grep and find frontends, builtin file
+    selector and whatnot.
+
+Package: medit-gtk2
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Conflicts: medit-gtk3
+Replaces: medit-gtk3, medit (<< 1.3.1)
+Breaks: medit (<< 1.3.1)
+Description: Useful programming and around-programming text editor (GTK+2)
+ This is the GTK+2 build of medit. It cannot be installed alongside
+ medit-gtk3; install one or the other.
+ .
+ Features:
+  * Configurable syntax highlighting.
+  * Configurable keyboard accelerators.
+  * Configurable tools available from the main and context menus, written as
+    shell scripts.
+  * Regular expression search/replace, grep and find frontends, builtin file
+    selector and whatnot.
+
+Package: medit-gtk3
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Conflicts: medit-gtk2
+Replaces: medit-gtk2, medit (<< 1.3.1)
+Breaks: medit (<< 1.3.1)
+Description: Useful programming and around-programming text editor (GTK+3)
+ This is the GTK+3 build of medit. It cannot be installed alongside
+ medit-gtk2; install one or the other.
+ .
+ Features:
+  * Configurable syntax highlighting.
+  * Configurable keyboard accelerators.
+  * Configurable tools available from the main and context menus, written as
+    shell scripts.
   * Regular expression search/replace, grep and find frontends, builtin file
     selector and whatnot.

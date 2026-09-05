@@ -5,17 +5,28 @@ export DH_OPTIONS=-v
 
 export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 
+# medit is built twice, once against each gtk version; the two binary packages
+# are mutually exclusive, so a system carries whichever one its user installs.
+GTK_BUILDS = gtk2 gtk3
+
 %:
 	dh $@ --buildsystem=cmake
 
 override_dh_auto_configure:
-	dh_auto_configure -- -DGTK_VERSION=2
+	dh_auto_configure --builddirectory=build-gtk2 -- -DGTK_VERSION=2
+	dh_auto_configure --builddirectory=build-gtk3 -- -DGTK_VERSION=3
+
+override_dh_auto_build:
+	dh_auto_build --builddirectory=build-gtk2
+	dh_auto_build --builddirectory=build-gtk3
 
 override_dh_auto_install:
-	dh_auto_install
-	find $(CURDIR)/debian/medit/ -type d -empty -delete
+	set -e; for v in $(GTK_BUILDS); do \
+		dh_auto_install --builddirectory=build-$$v --destdir=debian/medit-$$v; \
+		find $(CURDIR)/debian/medit-$$v/ -type d -empty -delete; \
+	done
 
-override_dh_clean:
-	dh $@ --buildsystem=cmake
+override_dh_auto_clean:
+	rm -rf build-gtk2 build-gtk3
 
 override_dh_auto_test:

@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.16)
 # Version. Keep in sync with debian/changelog.
 set(MOO_MAJOR_VERSION 1)
 set(MOO_MINOR_VERSION 3)
-set(MOO_MICRO_VERSION 0)
+set(MOO_MICRO_VERSION 1)
 set(MOO_VERSION_SUFFIX "")
 
 set(MOO_MODULE_MAJOR_VERSION 2)

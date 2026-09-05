@@ -1,3 +1,16 @@
+medit (1.3.1) unstable; urgency=low
+
+  * Replace autotools with CMake. The build is out of source, so a gtk-2 and a
+    gtk-3 build directory can live side by side; the set of installed files is
+    unchanged.
+  * Split the package in three: medit is now a metapackage depending on
+    medit-gtk2 | medit-gtk3, and those two carry the actual builds. They are
+    mutually exclusive, so a system runs whichever gtk version its user picked.
+  * Fix the pkg-config name asked for by GTK_VERSION=4 (gtk4, not gtk+-4.0),
+    and point README at the git repository instead of a mercurial checkout.
+
+ -- Anton Batenev <antonbatenev@yandex.ru>  Sat, 05 Sep 2026 13:00:00 +0300
+
 medit (1.3.0) unstable; urgency=low
 
   * Port to GTK+3. medit now builds and runs against gtk-3.24 while still
@@ -9,8 +22,6 @@ medit (1.3.0) unstable; urgency=low
     instead of glade.
   * Move the sources under src/, switch to -std=gnu17 and remove ~2000 lines
     of dead code.
-  * Replace autotools with CMake. `cmake -S . -B build -DGTK_VERSION=3`
-    selects the gtk-3 build; the set of installed files is unchanged.
 
  -- Anton Batenev <antonbatenev@yandex.ru>  Fri, 04 Sep 2026 22:35:00 +0300
 
