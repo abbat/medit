@@ -87,10 +87,31 @@ curl -s https://api.github.com/repos/abbat/medit/actions/workflows   # what is r
 curl -s https://api.github.com/repos/abbat/medit/actions/runs        # what has actually run
 ```
 
-So a source change does not need a container to prove it compiles anywhere. What is
-still manual, and still worth a container: the **package** builds (`dpkg-buildpackage`,
-`rpmbuild`, `makepkg` — CI compiles but does not package), anything visual, and anything
-that has to actually run.
+`.github/workflows/package.yml` builds the three packaging trees the way a distribution
+would, also on every push:
+
+| job | what it covers |
+|---|---|
+| `version` | the version in `CMakeLists.txt`, `NEWS`, `debian/changelog`, `rpm/medit.spec`, `arch/PKGBUILD` and `README.md` — six files, nothing deriving one from another |
+| `deb` | `dpkg-buildpackage` on ubuntu 22.04 and debian 13, two compiles each, then installs the result and runs it |
+| `rpm` | `rpmbuild` on fedora:44, then installs and runs |
+| `arch` | `makepkg` on archlinux, then installs and runs |
+
+Its build dependencies are deliberately *not* installed by name, unlike `build.yml`'s:
+`mk-build-deps` reads `debian/control`, `dnf builddep` reads the spec, `makepkg -s`
+reads the PKGBUILD. A dependency declared under a name the distribution has since
+renamed is one of the things under test, and naming them in the workflow would hide it.
+
+Each job then installs what it built and runs `medit --version`, which parses its
+arguments before opening a display and is therefore the one thing a container can run.
+That is what covers `${shlibs:Depends}` resolving to packages that exist, an `%files`
+entry for a path cmake no longer installs, and a binary that links but does not start.
+
+So a source change does not need a container to prove it compiles anywhere, or that it
+still packages. What is still manual: the **apt scenarios**, which need a sequence of
+installs rather than one — the fresh install, the switch to gtk2, the upgrade from the
+old monolithic `medit`, and the system already on `medit-gtk2` that must stay there —
+anything visual, and anything that has to run further than `--version`.
 
 ### The analyze target
 
@@ -386,9 +407,10 @@ how this one was caught, in a container, after the local gtk2 build had gone sta
 
 The package targets **Debian 12 and 13, Ubuntu 22.04, 24.04 and 26.04** — Debian 11 and
 Ubuntu 20.04 were dropped when their support ended. `.github/workflows/build.yml`
-compiles all five for both toolkits on every push, so ordinary source changes need no
-container. What CI does *not* do is build the package, so check anything that touches
-`debian/` by hand:
+compiles all five for both toolkits on every push, and `package.yml` runs
+`dpkg-buildpackage` on the oldest and the newest of them, so ordinary source changes
+need no container. What is worth doing by hand is the faster loop while *writing* a
+packaging change, and the apt scenarios below, which CI does not reach:
 
 ```bash
 docker build -t medit-deb - <<'EOF'
@@ -490,6 +512,8 @@ add what has been released since:
 * `.github/workflows/build.yml` — the `deb` job's `image:` matrix, and the Fedora
   release in the `fedora` job.
 * `.github/workflows/codeql.yml` — the runner and its dependency list.
+* `.github/workflows/package.yml` — the `deb` matrix, which carries the oldest and the
+  newest deb target, and the Fedora release in the `rpm` job.
 * `AGENTS.md` — "Debian package build (old distros)", which names the targets and the
   compiler span they cover.
 * `debian/control`, `rpm/medit.spec`, `arch/PKGBUILD` — dependency names occasionally
@@ -508,8 +532,9 @@ the whole `snapshot.debian.org` recipe its dead archive needed. A new one is wor
 container run before it goes in the matrix — Ubuntu 26.04 arrived with gcc 15 and cmake
 4.2, two and three major versions ahead of anything the tree had been built with.
 
-The version itself lives in six places and they all have to move together. `1.3.4` was
-cut like this:
+The version itself lives in six places and they all have to move together. The `version`
+job in `package.yml` compares all six and fails if one is left behind, so this is a list
+to work through rather than a thing to remember. `1.3.4` was cut like this:
 
 1. `CMakeLists.txt` — `MOO_MICRO_VERSION`. The comment above it says "keep in sync with
    debian/changelog", and that is the whole of the coupling: nothing derives one from

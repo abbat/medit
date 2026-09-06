@@ -1,0 +1,241 @@
+# Build the three packaging trees the way a distribution would.
+#
+# build.yml proves the source compiles on every target; it says nothing about
+# whether the packages can be built from it, and those are two different
+# failures. What only a package build sees: a Build-Depends that no longer
+# exists under that name, a file the install list does not mention, a
+# debian/rules override that stopped matching the debhelper sequence, a
+# ${shlibs:Depends} that resolves to nothing, an rpm %files entry for a path
+# cmake no longer installs. Each of those ships broken while every compile is
+# green.
+#
+# The dependencies are deliberately *not* installed by name here, unlike in
+# build.yml. Each job asks the packaging tree itself what it needs --
+# mk-build-deps from debian/control, dnf builddep from the spec, makepkg -s
+# from the PKGBUILD -- because the declaration being wrong is one of the things
+# under test.
+name: package
+
+on:
+  push:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # The version lives in six files and nothing derives one from another, so the
+  # only thing that keeps them together is somebody remembering. This is the
+  # cheapest job in either workflow and it fails the moment one of them is
+  # forgotten during a release.
+  version:
+    name: version in six places
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Compare
+        run: |
+          set -eu
+          cmake=$(sed -nE 's/^set\(MOO_(MAJOR|MINOR|MICRO)_VERSION ([0-9]+)\)/\2/p' CMakeLists.txt | paste -sd.)
+          news=$(sed -nE 's/^[[:space:]]*\* === Released ([0-9.]+) ===.*/\1/p' NEWS | head -1)
+          deb=$(sed -nE '1s/^medit \(([^)-]+).*/\1/p' debian/changelog)
+          rpm=$(sed -nE 's/^Version:[[:space:]]+//p' rpm/medit.spec | head -1)
+          arch=$(sed -nE 's/^pkgver=//p' arch/PKGBUILD)
+          readme=$(sed -nE 's/^\* current release of this fork: ([0-9.]+).*/\1/p' README.md | head -1)
+
+          printf '%-20s %s\n' CMakeLists.txt "$cmake" NEWS "$news" \
+                              debian/changelog "$deb" rpm/medit.spec "$rpm" \
+                              arch/PKGBUILD "$arch" README.md "$readme"
+
+          bad=0
+          for v in "$news" "$deb" "$rpm" "$arch" "$readme"; do
+              [ "$v" = "$cmake" ] || bad=1
+          done
+          [ -n "$cmake" ] || bad=1
+          if [ "$bad" != 0 ]; then
+              echo "::error::the version is not the same in all six files"
+              exit 1
+          fi
+
+  # Two releases rather than all five: a package build costs two compiles,
+  # because debian/rules configures a build directory per gtk version. The
+  # oldest target and the newest are where the dependency names differ -- the
+  # `libjpeg62-turbo-dev | libjpeg-dev` alternative in debian/control is there
+  # for exactly that.
+  deb:
+    name: dpkg-buildpackage, ${{ matrix.image }}
+    runs-on: ubuntu-latest
+    container: ${{ matrix.image }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - image: ubuntu:22.04
+            tag: ubuntu2204
+          - image: debian:13
+            tag: debian13
+    env:
+      DEBIAN_FRONTEND: noninteractive
+    steps:
+      # Before checkout: actions/checkout wants git, and the container has none.
+      - name: Install the packaging tools
+        run: |
+          set -eux
+          apt-get update -qq
+          apt-get install -y -qq --no-install-recommends \
+              build-essential devscripts equivs dpkg-dev git ca-certificates
+
+      - uses: actions/checkout@v7
+
+      - name: Install the build dependencies debian/control declares
+        run: mk-build-deps -i -r -t "apt-get -y -qq --no-install-recommends" debian/control
+
+      # -b, binary only: a source package would need the upstream tarball this
+      # tree does not carry. The build runs twice, once per gtk version.
+      - name: Build the packages
+        run: dpkg-buildpackage -us -uc -b -j"$(nproc)"
+
+      # Installing is the half a compile cannot reach: it is where
+      # ${shlibs:Depends} has to name packages that exist, and where the
+      # metapackage's `medit-gtk3 | medit-gtk2` has to pick gtk3 on a system
+      # that has neither.
+      # dpkg-buildpackage writes to the parent directory, which is outside
+      # GITHUB_WORKSPACE and therefore out of reach of upload-artifact.
+      - name: Collect the packages
+        run: |
+          set -eux
+          mkdir artifacts
+          mv ../*.deb artifacts/
+          ls -l artifacts
+
+      - name: Install what was built
+        run: |
+          set -eux
+          apt-get install -y -qq ./artifacts/medit-gtk3_*.deb ./artifacts/medit_*.deb
+          dpkg -l 'medit*'
+
+      # --version parses its arguments before it opens a display, so it is the
+      # one thing that can run in a container. It says the packaged binary
+      # links and starts, which the build directory does not, and it reads the
+      # version out of the binary rather than out of a file.
+      - name: Run the installed binary
+        run: |
+          set -eux
+          v=$(dpkg-parsechangelog -S Version | sed 's/-[^-]*$//')
+          test "$(medit --version)" = "medit $v"
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: deb-${{ matrix.tag }}
+          path: artifacts/*.deb
+          retention-days: 14
+
+  rpm:
+    name: rpmbuild, fedora:44
+    runs-on: ubuntu-latest
+    container: fedora:44
+    steps:
+      # --disablerepo=fedora-cisco-openh264 is not optional: that repository is
+      # frequently unreachable and a weak dependency drags it in, which fails
+      # the whole transaction.
+      - name: Install the packaging tools
+        run: |
+          set -eux
+          dnf -y --setopt=install_weak_deps=False --disablerepo=fedora-cisco-openh264 install \
+              rpm-build rpmdevtools 'dnf-command(builddep)' git tar
+
+      - uses: actions/checkout@v7
+
+      - name: Install the build dependencies the spec declares
+        run: |
+          set -eux
+          dnf -y --setopt=install_weak_deps=False --disablerepo=fedora-cisco-openh264 \
+              builddep rpm/medit.spec
+
+      # Source0 is the GitHub tag tarball, which does not exist for a branch.
+      # Hand rpmbuild the checked out tree instead, under the medit-<version>/
+      # prefix %autosetup expects. Everything else in the spec runs as it ships.
+      - name: Build the package
+        run: |
+          set -eux
+          git config --global --add safe.directory "$PWD"
+          v=$(rpmspec -q --srpm --qf '%{version}\n' rpm/medit.spec)
+          rpmdev-setuptree
+          git archive --format=tar.gz --prefix="medit-$v/" \
+              -o ~/rpmbuild/SOURCES/medit-"$v".tar.gz HEAD
+          rpmbuild -bb rpm/medit.spec
+
+      # The spec's own %check already runs desktop-file-validate; this is the
+      # part that needs the package installed rather than built.
+      - name: Install what was built and run it
+        run: |
+          set -eux
+          mkdir artifacts
+          mv ~/rpmbuild/RPMS/*/*.rpm artifacts/
+          ls -l artifacts
+          dnf -y install ./artifacts/medit-[0-9]*.rpm
+          v=$(rpmspec -q --srpm --qf '%{version}\n' rpm/medit.spec)
+          test "$(medit --version)" = "medit $v"
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: rpm-fedora44
+          path: artifacts/*.rpm
+          retention-days: 14
+
+  arch:
+    name: makepkg, archlinux
+    runs-on: ubuntu-latest
+    container: archlinux:base-devel
+    steps:
+      - name: Install the packaging tools
+        run: |
+          set -eux
+          pacman -Syu --noconfirm --needed git sudo
+          # makepkg refuses to run as root and the image has no other user.
+          useradd -m builder
+          echo 'builder ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/builder
+
+      - uses: actions/checkout@v7
+
+      # Same substitution as the rpm job and for the same reason: source= names
+      # the tag tarball and checks its sha256, and a branch has neither. Only
+      # those two lines are rewritten -- depends, makedepends, build() and
+      # package() are the file as it ships, and `makepkg -s` is what proves the
+      # dependency names still exist in the repositories.
+      - name: Build the package
+        run: |
+          set -eux
+          git config --global --add safe.directory "$PWD"
+          v=$(sed -nE 's/^pkgver=//p' arch/PKGBUILD)
+          install -d /tmp/pkg
+          cp arch/PKGBUILD /tmp/pkg/
+          git archive --format=tar.gz --prefix="medit-$v/" \
+              -o /tmp/pkg/medit-"$v".tar.gz HEAD
+          sed -i -e 's|^source=.*|source=("$pkgname-$pkgver.tar.gz")|' \
+                 -e "s|^sha256sums=.*|sha256sums=('SKIP')|" /tmp/pkg/PKGBUILD
+          chown -R builder /tmp/pkg
+          sudo -u builder bash -c 'cd /tmp/pkg && makepkg -s --noconfirm'
+
+      - name: Install what was built and run it
+        run: |
+          set -eux
+          mkdir artifacts
+          mv /tmp/pkg/*.pkg.tar.zst artifacts/
+          ls -l artifacts
+          pacman -U --noconfirm ./artifacts/medit-[0-9]*.pkg.tar.zst
+          v=$(sed -nE 's/^pkgver=//p' arch/PKGBUILD)
+          test "$(medit --version)" = "medit $v"
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: arch
+          path: artifacts/*.pkg.tar.zst
+          retention-days: 14
