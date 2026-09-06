@@ -1023,6 +1023,7 @@ lsp_plugin_init (LspPlugin *plugin)
                                  "display-name", _("LSP Servers"),
                                  "label", _("LSP _Servers..."),
                                  "tooltip", _("Edit the list of language servers"),
+                                 "stock-id", GTK_STOCK_INDEX,
                                  "closure-callback", edit_config_cb,
                                  nullptr);
 
