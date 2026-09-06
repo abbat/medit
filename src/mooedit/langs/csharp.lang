@@ -30,6 +30,7 @@
     <property name="line-comment-start">//</property>
     <property name="block-comment-start">/*</property>
     <property name="block-comment-end">*/</property>
+    <property name="suggested-suffix">.cs</property>
   </metadata>
 
   <styles>
@@ -131,6 +132,7 @@
       <keyword>private</keyword>
       <keyword>protected</keyword>
       <keyword>public</keyword>
+      <keyword>record</keyword>
       <keyword>ref</keyword>
       <keyword>sealed</keyword>
       <keyword>static</keyword>
@@ -157,6 +159,7 @@
       <keyword>goto</keyword>
       <keyword>if</keyword>
       <keyword>in</keyword>
+      <keyword>init</keyword>
       <keyword>is</keyword>
       <keyword>nameof</keyword>
       <keyword>new</keyword>

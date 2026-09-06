@@ -28,6 +28,7 @@
     <property name="line-comment-start">//</property>
     <property name="block-comment-start">/*</property>
     <property name="block-comment-end">*/</property>
+    <property name="suggested-suffix">.h</property>
   </metadata>
 
   <!--
@@ -39,7 +40,7 @@
     for instance a different style for C++ headers.
   -->
   <definitions>
-    <context id="chdr">
+    <context id="chdr" class="no-spell-check">
       <include>
         <context ref="objc:objc-header"/>
         <context ref="cpp:cpp-proper"/>

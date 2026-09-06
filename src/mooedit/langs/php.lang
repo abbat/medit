@@ -32,6 +32,7 @@
     <property name="line-comment-start">//</property>
     <property name="block-comment-start">/*</property>
     <property name="block-comment-end">*/</property>
+    <property name="suggested-suffix">.php</property>
   </metadata>
 
   <styles>
@@ -57,6 +58,8 @@
   </styles>
 
   <definitions>
+
+    <define-regex id="identifier">[a-zA-Z_\N{U+80}-\N{U+10ffff}][a-zA-Z0-9_\N{U+80}-\N{U+10ffff}]*</define-regex>
 
     <context id="bash-line-comment" style-ref="comment" end-at-line-end="true" extend-parent="false" class="comment" class-disabled="no-spell-check">
       <start>#</start>
@@ -89,11 +92,27 @@
     </context>
 
     <context id="variable" style-ref="variable">
-      <match>[$]+[a-zA-Z_][a-zA-Z0-9_]*</match>
+      <match>[$]+\%{identifier}</match>
     </context>
 
     <context id="array-operators" style-ref="variable">
       <match>(\[|\])</match>
+    </context>
+
+    <context id="attribute" style-ref="preprocessor">
+      <start>#\[</start>
+      <end>\]</end>
+      <include>
+        <context ref="nested-array"/>
+      </include>
+    </context>
+
+    <context id="nested-array">
+      <start>\[</start>
+      <end>\]</end>
+      <include>
+        <context ref="nested-array"/>
+      </include>
     </context>
 
     <context id="string-var">
@@ -147,11 +166,25 @@
     </context>
 
     <context id="here-doc-string" style-ref="here-doc" extend-parent="true">
-      <start>(&lt;&lt;&lt;)\s?([a-zA-Z_][a-zA-Z0-9_]*)</start>
-      <end>^(\%{2@start});?$</end>
+      <start>(&lt;&lt;&lt;)\s?(\%{identifier})</start>
+      <end>^\s*(\%{2@start})(;|\b)</end>
       <include>
         <context sub-pattern="0" where="start" style-ref="here-doc-bound"/>
         <context sub-pattern="1" where="end" style-ref="here-doc-bound"/>
+        <context sub-pattern="2" where="end" style-ref="operator"/>
+        <context ref="escape"/>
+        <context ref="string-var"/>
+        <context ref="def:line-continue"/>
+      </include>
+    </context>
+
+    <context id="here-doc-string-double-quotes" style-ref="here-doc" extend-parent="true">
+      <start>(&lt;&lt;&lt;)\s?"(\%{identifier})"</start>
+      <end>^\s*(\%{2@start})(;|\b)</end>
+      <include>
+        <context sub-pattern="0" where="start" style-ref="here-doc-bound"/>
+        <context sub-pattern="1" where="end" style-ref="here-doc-bound"/>
+        <context sub-pattern="2" where="end" style-ref="operator"/>
         <context ref="escape"/>
         <context ref="string-var"/>
         <context ref="def:line-continue"/>
@@ -159,11 +192,12 @@
     </context>
 
     <context id="now-doc-string" style-ref="here-doc" extend-parent="true">
-      <start>(&lt;&lt;&lt;)\s?'([a-zA-Z_][a-zA-Z0-9_]*)'</start>
-      <end>^(\%{2@start});?$</end>
+      <start>(&lt;&lt;&lt;)\s?'(\%{identifier})'</start>
+      <end>^\s*(\%{2@start})(;|\b)</end>
       <include>
         <context sub-pattern="0" where="start" style-ref="here-doc-bound"/>
         <context sub-pattern="1" where="end" style-ref="here-doc-bound"/>
+        <context sub-pattern="2" where="end" style-ref="operator"/>
         <context style-ref="def:special-char">
           <match>\\['\\]</match>
         </context>
@@ -172,7 +206,7 @@
     </context>
 
     <context id="identifier" style-ref="identifier">
-      <match>[a-zA-Z_][a-zA-Z0-9_]*</match>
+      <match>\%{identifier}</match>
     </context>
 
     <context id="keywords" style-ref="keyword">
@@ -200,11 +234,13 @@
       <keyword>endif</keyword>
       <keyword>endswitch</keyword>
       <keyword>endwhile</keyword>
+      <keyword>enum</keyword>
       <keyword>eval</keyword>
       <keyword>exit</keyword>
       <keyword>extends</keyword>
       <keyword>final</keyword>
       <keyword>finally</keyword>
+      <keyword>fn</keyword>
       <keyword>for</keyword>
       <keyword>foreach</keyword>
       <keyword>function</keyword>
@@ -219,6 +255,7 @@
       <keyword>interface</keyword>
       <keyword>isset</keyword>
       <keyword>list</keyword>
+      <keyword>match</keyword>
       <keyword>namespace</keyword>
       <keyword>new</keyword>
       <keyword>or</keyword>
@@ -226,6 +263,7 @@
       <keyword>private</keyword>
       <keyword>protected</keyword>
       <keyword>public</keyword>
+      <keyword>readonly</keyword>
       <keyword>require</keyword>
       <keyword>require_once</keyword>
       <keyword>return</keyword>
@@ -247,9 +285,17 @@
       <keyword>floatval</keyword>
       <keyword>gettype</keyword>
       <keyword>intval</keyword>
+      <keyword>json_decode</keyword>
+      <keyword>json_encode</keyword>
       <keyword>print_r</keyword>
       <keyword>serialize</keyword>
       <keyword>settype</keyword>
+      <keyword>str_contains</keyword>
+      <keyword>str_replace</keyword>
+      <keyword>str_starts_with</keyword>
+      <keyword>str_ends_with</keyword>
+      <keyword>strip_tags</keyword>
+      <keyword>strpos</keyword>
       <keyword>strval</keyword>
       <keyword>unserialize</keyword>
       <keyword>var_dump</keyword>
@@ -269,11 +315,13 @@
       <keyword>float</keyword>
       <keyword>int</keyword>
       <keyword>integer</keyword>
+      <keyword>mixed</keyword>
       <keyword>numeric</keyword>
       <keyword>object</keyword>
       <keyword>resource</keyword>
       <keyword>string</keyword>
       <keyword>unset</keyword>
+      <keyword>void</keyword>
     </context>
 
     <context id="null-value" style-ref="null-value">
@@ -327,16 +375,19 @@
         <context sub-pattern="0" where="start" style-ref="preprocessor"/>
         <context sub-pattern="0" where="end" style-ref="preprocessor"/>
         <context ref="cpp-line-comment"/>
+        <context ref="attribute"/>
         <context ref="bash-line-comment"/>
         <context ref="c-block-comment"/>
         <context ref="double-quoted-string"/>
         <context ref="single-quoted-string"/>
         <context ref="backtick-string"/>
         <context ref="here-doc-string"/>
+        <context ref="here-doc-string-double-quotes"/>
         <context ref="now-doc-string"/>
         <context ref="variable"/>
         <context ref="array-operators"/>
         <context ref="keywords"/>
+        <context ref="common-function"/>
         <context ref="operators"/>
         <context ref="type"/>
         <context ref="null-value"/>

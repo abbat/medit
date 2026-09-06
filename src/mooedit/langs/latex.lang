@@ -26,19 +26,21 @@
     <property name="mimetypes">text/x-tex</property>
     <property name="globs">*.tex;*.ltx;*.sty;*.cls;*.dtx;*.ins;*.bbl</property>
     <property name="line-comment-start">%</property>
+    <property name="suggested-suffix">.tex</property>
   </metadata>
 
   <styles>
-    <style id="comment"            name="Comment"              map-to="def:comment"/>
-    <style id="display-math"       name="Math Mode"            map-to="def:string"/>
-    <style id="inline-math"        name="Inline Math Mode"     map-to="latex:display-math"/>
-    <style id="math"               name="Math Mode"            map-to="latex:display-math"/>
-    <style id="math-boundary"      name="Math Boundary"        map-to="latex:display-math"/>
-    <style id="include"            name="Include"              map-to="def:keyword"/>
-    <style id="common-commands"    name="Command"              map-to="def:keyword"/>
-    <style id="command"            name="Command"              map-to="def:keyword"/>
-    <style id="verbatim"           name="Verbatim"             map-to="def:comment"/>
-    <style id="special-char"       name="Special Character"    map-to="def:special-char"/>
+    <style id="comment"            name="Comment"               map-to="def:comment"/>
+    <style id="display-math"       name="Math Mode"             map-to="def:string"/>
+    <style id="inline-math"        name="Inline Math Mode"      map-to="latex:display-math"/>
+    <style id="math"               name="Math Mode"             map-to="latex:display-math"/>
+    <style id="math-boundary"      name="Math Boundary"         map-to="latex:display-math"/>
+    <style id="include"            name="Include"               map-to="def:preprocessor"/>
+    <style id="included-file"      name="Included file"         map-to="def:string"/>
+    <style id="common-commands"    name="Command"               map-to="def:keyword"/>
+    <style id="command"            name="Command"               map-to="def:keyword"/>
+    <style id="verbatim"           name="Verbatim"              map-to="def:comment"/>
+    <style id="special-char"       name="Special Character"     map-to="def:special-char"/>
     <style id="part"               name="Part Heading"          map-to="def:heading0"/>
     <style id="chapter"            name="Chapter Heading"       map-to="def:heading1"/>
     <style id="section"            name="Section Heading"       map-to="def:heading2"/>
@@ -54,18 +56,20 @@
 
     <context id="comment">
       <include>
-        <context id="end-line-comment" style-ref="comment">
+        <context id="end-line-comment" style-ref="comment" class-disabled="no-spell-check">
           <start>%</start>
-          <end>$</end>
+          <end>^</end>
           <include>
             <context ref="def:in-comment"/>
           </include>
         </context>
 
-        <context id="comment-env" style-ref="comment" class="no-spell-check">
+        <context id="comment-env" style-ref="comment" class-disabled="no-spell-check">
           <start>\\begin\{comment\}</start>
           <end>\\end\{comment\}</end>
           <include>
+            <context sub-pattern="0" where="start" class="no-spell-check"/>
+            <context sub-pattern="0" where="end" class="no-spell-check"/>
             <context ref="def:in-comment"/>
           </include>
         </context>
@@ -86,8 +90,8 @@
     </context>
 
     <context id="lstlisting-env" style-inside="true" style-ref="verbatim" class="no-spell-check">
-      <start>(\\begin)\{lstlisting\}</start>
-      <end>(\\end)\{lstlisting\}</end>
+      <start>(\\begin)\{(lstlisting|minted)\}</start>
+      <end>(\\end)\{\%{2@start}\}</end>
       <include>
         <context sub-pattern="1" where="start" style-ref="common-commands"/>
         <context sub-pattern="1" where="end" style-ref="common-commands"/>
@@ -193,6 +197,22 @@
       </include>
     </context>
 
+    <context id="mintinline-curly-brackets" style-inside="true" style-ref="verbatim" class="no-spell-check">
+      <start>(\\mintinline)(\[.*?\])?\{.+?\}{</start>
+      <end>}</end>
+      <include>
+        <context sub-pattern="1" where="start" style-ref="command"/>
+      </include>
+    </context>
+
+    <context id="mintinline" style-inside="true" style-ref="verbatim" class="no-spell-check">
+      <start>(\\mintinline)(\[.*?\])?\{.+?\}((?!\[)\S)</start>  <!-- ignore when starting with [ -->
+      <end>\%{3@start}</end>
+      <include>
+        <context sub-pattern="1" where="start" style-ref="command"/>
+      </include>
+    </context>
+
     <!-- If using \verb instead of \lstinline, the brackets cannot be used -->
     <context id="verbatim-inline" style-inside="true" style-ref="verbatim" class-disabled="no-spell-check">
       <start>(\\verb)\*?(\S)</start>
@@ -210,6 +230,8 @@
         <context ref="lstinline-curly-brackets"/>
         <context ref="lstinline-square-brackets"/>
         <context ref="lstinline"/>
+        <context ref="mintinline-curly-brackets" />
+        <context ref="mintinline"/>
       </include>
     </context>
 
@@ -217,136 +239,100 @@
 
     <context id="common-commands" style-ref="common-commands" class="no-spell-check">
       <prefix>\\</prefix>
-      <!-- We need to special case "_" since it is not considered a
-        boundary but it is allowed in latex -->
-      <suffix>(\b|(?=_))</suffix>
-      <keyword>Alpha</keyword>
-      <keyword>Beta</keyword>
-      <keyword>Chi</keyword>
-      <keyword>Delta</keyword>
-      <keyword>Epsilon</keyword>
-      <keyword>Eta</keyword>
-      <keyword>Gamma</keyword>
-      <keyword>Iota</keyword>
-      <keyword>Kappa</keyword>
-      <keyword>Lambda</keyword>
-      <keyword>Leftarrow</keyword>
-      <keyword>Leftrightarrow</keyword>
-      <keyword>Mu</keyword>
-      <keyword>Nu</keyword>
-      <keyword>Omega</keyword>
-      <keyword>Phi</keyword>
-      <keyword>Pi</keyword>
-      <keyword>Psi</keyword>
-      <keyword>Rho</keyword>
-      <keyword>Rightarrow</keyword>
-      <keyword>Sigma</keyword>
-      <keyword>Tau</keyword>
-      <keyword>Zeta</keyword>
-      <keyword>alpha</keyword>
+      <suffix>((?=[^\@[:alpha:]])|$)</suffix>
       <keyword>appendix</keyword>
       <keyword>begin</keyword>
-      <keyword>beta</keyword>
-      <keyword>bigcap</keyword>
-      <keyword>bigcup</keyword>
-      <keyword>cap</keyword>
-      <keyword>cdot</keyword>
-      <keyword>chapter</keyword>
-      <keyword>chi</keyword>
       <keyword>cite</keyword>
-      <keyword>cup</keyword>
-      <keyword>delta</keyword>
-      <keyword>documentclass</keyword>
       <keyword>end</keyword>
-      <keyword>enumi</keyword>
-      <keyword>enumii</keyword>
-      <keyword>enumiii</keyword>
-      <keyword>enumiv</keyword>
-      <keyword>epsilon</keyword>
-      <keyword>equation</keyword>
-      <keyword>eta</keyword>
-      <keyword>exists</keyword>
-      <keyword>figure</keyword>
       <keyword>footnote</keyword>
       <keyword>footnotemark</keyword>
       <keyword>footnotetext</keyword>
-      <keyword>forall</keyword>
-      <keyword>gamma</keyword>
-      <keyword>geq</keyword>
-      <keyword>in</keyword>
-      <keyword>int</keyword>
-      <keyword>iota</keyword>
-      <keyword>kappa</keyword>
+      <keyword>includeonly</keyword>
       <keyword>label</keyword>
-      <keyword>lambda</keyword>
       <keyword>ldots</keyword>
-      <keyword>leftarrow</keyword>
-      <keyword>leq</keyword>
-      <keyword>mpfootnote</keyword>
-      <keyword>mu</keyword>
-      <keyword>neq</keyword>
       <keyword>newcommand</keyword>
       <keyword>newenvironment</keyword>
-      <keyword>newfont</keyword>
       <keyword>newtheorem</keyword>
-      <keyword>not</keyword>
-      <keyword>notin</keyword>
-      <keyword>nu</keyword>
-      <keyword>omega</keyword>
       <keyword>onecolumn</keyword>
-      <keyword>page</keyword>
       <keyword>pageref</keyword>
-      <keyword>paragraph</keyword>
-      <keyword>part</keyword>
-      <keyword>phi</keyword>
-      <keyword>pi</keyword>
-      <keyword>prod</keyword>
-      <keyword>psi</keyword>
       <keyword>qquad</keyword>
       <keyword>quad</keyword>
       <keyword>ref</keyword>
-      <keyword>rho</keyword>
-      <keyword>rightarrow</keyword>
-      <keyword>section</keyword>
-      <keyword>setminus</keyword>
-      <keyword>sigma</keyword>
-      <keyword>subparagraph</keyword>
-      <keyword>subsection</keyword>
-      <keyword>subset</keyword>
-      <keyword>subseteq</keyword>
-      <keyword>subsetneq</keyword>
-      <keyword>subsubsection</keyword>
-      <keyword>subsubsubsection</keyword>
-      <keyword>sum</keyword>
-      <keyword>supset</keyword>
-      <keyword>supseteq</keyword>
-      <keyword>supsetneq</keyword>
-      <keyword>table</keyword>
-      <keyword>tau</keyword>
-      <keyword>times</keyword>
       <keyword>twocolumn</keyword>
-      <keyword>varepsilon</keyword>
-      <keyword>varphi</keyword>
-      <keyword>zeta</keyword>
     </context>
 
     <context id="generic-command" style-ref="command" class="no-spell-check" extend-parent="false">
-      <match>\\\@?[[:alnum:]]+\*?</match>
+      <match>\\((\@|[[:alpha:]])+|.|$)</match>
+    </context>
+
+    <context id="line-break" once-only="true">
+      <start>$</start>
+      <end>^</end>
+    </context>
+
+    <context id="bracket-argument" end-at-line-end="true" once-only="true">
+      <start>(?=\[)</start>
+      <include>
+        <context ref="end-line-comment"/>
+
+        <context id="bracket-argument-content" class="no-spell-check">
+          <start>[^\]%\s]</start>
+          <end>((?=%|\])|^)</end>
+        </context>
+
+        <context id="bracket-argument-end" end-parent="true">
+          <start>\]</start>
+          <end>((?=\S)|^)</end>
+        </context>
+      </include>
+    </context>
+
+    <context id="brace-argument" end-at-line-end="true">
+      <start>(?=\{)</start>
+      <include>
+        <context id="brace-argument-start" once-only="true">
+          <start>\{</start>
+          <end>((?=%|\{|\})|^)</end>
+        </context>
+
+        <context ref="end-line-comment"/>
+        <context ref="brace-argument"/>
+
+        <context id="brace-argument-content" class="no-spell-check">
+          <start>[^\}%\s]</start>
+          <end>((?=%|\})|^)</end>
+        </context>
+
+        <context id="brace-argument-end" end-parent="true">
+          <start>\}</start>
+          <end>((?=\S)|^)</end>
+        </context>
+      </include>
+    </context>
+
+    <context id="single-brace-argument" end-at-line-end="true" end-parent="true">
+      <start>(?=\{)</start>
+      <include>
+        <context ref="brace-argument-start"/>
+        <context ref="end-line-comment"/>
+        <context ref="brace-argument"/>
+        <context ref="brace-argument-content"/>
+        <context ref="brace-argument-end"/>
+      </include>
     </context>
 
     <context id="specific-commands">
       <include>
-        <context id="documentclass" class="no-spell-check">
-          <match>(\\documentclass)(\[.*\])?(\{.*\})?</match>
+        <context id="include" end-at-line-end="true">
+          <start>(\\(InputIfFileExists|LoadClassWithOptions|LoadClass|RequirePackageWithOptions|RequirePackage|documentclass|include|input|usepackage))(?=([^\@[:alpha:]]|$))</start>
+          <end>\S</end>
           <include>
-            <context sub-pattern="1" style-ref="common-commands"/>
-          </include>
-        </context>
-
-        <context id="include" class="no-spell-check">
-          <match>(\\(input|include|includeonly|usepackage))\b(\[.*\])?(\{.*\})?</match>
-          <include>
-            <context sub-pattern="1" style-ref="include"/>
+            <context sub-pattern="1" where="start" style-ref="include" class="no-spell-check"/>
+            <context sub-pattern="0" where="end" style-ref="included-file" class="no-spell-check"/>
+            <context ref="line-break"/>
+            <context ref="end-line-comment"/>
+            <context ref="bracket-argument"/>
+            <context ref="single-brace-argument" style-ref="included-file"/>
           </include>
         </context>
 
@@ -494,7 +480,8 @@
       <match extended="true">
         \\(
           frac | sqrt | sum | (co)?prod | o?int |           #-Functions
-          infty | (c|d|v)dots | nonumber |                  #-special in math mode
+          exists | forall | infty | (c|d|v)dots |           #-special in math mode
+          nonumber | not |                                  ##
           mathnormal | math(rm|sf|tt|it|bf|cal) |           #-Math font commands
           (display|text|script(script)?)style |             #-Math size commands
           alpha | beta | (g|G)amma | (d|D)elta |            #-Greek letters
@@ -504,14 +491,17 @@
           tau | (u|U)psilon | ((varp)|p|P)hi | chi |        ##
           (p|P)si | (o|O)mega |                             ##
           pm | mp | times | div | cdot | ast | star |       #-Binary operators
-          dd?agger | amalg | (sq)?c(a|u)p | uplus | vee |   ##
-          wedge | o(plus|minus|times) | (big)?circ |        ##
+          dd?agger | amalg | (big|sq)?c(a|u)p | uplus |     ##
+          vee | wedge | o(plus|minus|times) | (big)?circ |  ##
           bullet | (d|D)iamond | (un)?(l|r)hd |             ##
           o(slash|dot) | Box | bigtriangle(up|down) |       ##
           triangle(left|right) | setminus | wr |            ##
+          (g|l)eq(slant)? | (not)?in | neq |                ##
+          su(b|p)set((n)?eq)? |                             ##
           gets | to | ((u|U)p(down)? | (d|D)own)arrow |     #-Arrows and pointers
-          ((l|L)eft(right)?|(r|R)ight)arrow | (long)mapsto |##
-          hook(left|right)arrow | (ne|se|sw|nw)arrow |      ##
+          ((l|L)eft(right)? | (r|R)ight)arrow |             ##
+          (long)mapsto | hook(left|right)arrow |            ##
+          (ne|se|sw|nw)arrow |                              ##
           (left|right)harpoon(up|down) | rightleftharpoons |##
           (l|L)ong(left(right)?|right)arrow |               ##
           (wide)hat | check | dd?ot | breve | acute |       #-Accents in math mode
@@ -521,7 +511,7 @@
           deg | det | dim | exp | gcd | hom | inf | ker |   ##
           lg | lim(inf|sup)? | ln | log | max | min | Pr |  ##
           sec | sup                                         ##
-        )(?=\b)
+        )((?=[^\@[:alpha:]])|$)
       </match>
     </context>
 
@@ -579,7 +569,7 @@
     </context>
 
     <context id="math-env" style-ref="math" style-inside="true" class="no-spell-check">
-      <start>(\\begin)\{(math|displaymath|equation\*?|align\*?|eqnarray\*?)\}</start>
+      <start>(\\begin)\{(math|displaymath|equation\*?|align\*?|eqnarray\*?|multline\*?|gather\*?)\}</start>
       <end>(\\end)\{\%{2@start}\}</end>
       <include>
         <context sub-pattern="1" where="start" style-ref="common-commands"/>

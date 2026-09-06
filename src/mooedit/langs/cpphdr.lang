@@ -28,10 +28,11 @@
     <property name="line-comment-start">//</property>
     <property name="block-comment-start">/*</property>
     <property name="block-comment-end">*/</property>
+    <property name="suggested-suffix">.hh</property>
   </metadata>
 
   <definitions>
-    <context id="cpphdr">
+    <context id="cpphdr" class="no-spell-check">
       <include>
         <context ref="cpp:cpp-proper"/>
         <context ref="c:c"/>

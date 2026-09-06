@@ -30,10 +30,11 @@ http://www.opengl.org/registry/doc/GLSLangSpec.4.00.7.pdf
 <language id="glsl" _name="OpenGL Shading Language" version="2.0" _section="Source">
 
   <metadata>
-    <property name="globs">*.glslv;*.glslf</property>
+    <property name="globs">*.glslv;*.glslf;*.glsl</property>
     <property name="line-comment-start">//</property>
     <property name="block-comment-start">/*</property>
     <property name="block-comment-end">*/</property>
+    <property name="suggested-suffix">.glsl</property>
   </metadata>
 
   <styles>
@@ -455,7 +456,7 @@ http://www.opengl.org/registry/doc/GLSLangSpec.4.00.7.pdf
       <keyword>gl_Fog</keyword>
     </context>
 
-    <context id="glsl">
+    <context id="glsl" class="no-spell-check">
       <include>
         <context ref="def:c-like-comment"/>
         <context ref="def:c-like-comment-multiline"/>

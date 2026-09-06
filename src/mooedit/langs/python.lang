@@ -24,11 +24,12 @@
  along with this library; if not, see <http://www.gnu.org/licenses/>.
 
 -->
-<language id="python" name="Python" version="2.0" _section="Script">
+<language id="python" name="Python 2" version="2.0" _section="Script">
   <metadata>
     <property name="mimetypes">text/x-python;application/x-python</property>
-    <property name="globs">*.py</property>
+    <property name="globs">*.py;*.py2</property>
     <property name="line-comment-start">#</property>
+    <property name="suggested-suffix">.py2</property>
   </metadata>
 
   <styles>
@@ -51,6 +52,7 @@
     <style id="function-name"     name="Function Name"         map-to="def:function"/>
     <style id="class-name"        name="Class Name"            map-to="def:function"/>
     <style id="decorator"         name="Decorator"             map-to="def:preprocessor"/>
+    <style id="operator"          name="Operator"              map-to="def:operator"/>
   </styles>
 
   <definitions>
@@ -72,7 +74,7 @@
         [#0\-\ \+]*             # conversion flags
         (\-?\%{number}|\*)?     # minimum field width
         (\.(\-?\%{number}|\*))? # precision
-        (hlL)?                  # lentgh modifier
+        (hlL)?                  # length modifier
         [diouxXeEfFgGcrs%]      # conversion type
       </match>
     </context>
@@ -137,6 +139,7 @@
       <end>"""</end>
       <include>
         <context ref="format"/>
+        <context ref="escaped-char" ignore-style="true"/>
       </include>
     </context>
 
@@ -145,6 +148,7 @@
       <end>'''</end>
       <include>
         <context ref="format"/>
+        <context ref="escaped-char" ignore-style="true"/>
       </include>
     </context>
 
@@ -153,7 +157,8 @@
       <end>"</end>
       <include>
         <context ref="format"/>
-        <context ref="def:line-continue"/>
+        <context ref="escaped-char" ignore-style="true"/>
+        <context ref="def:line-continue" ignore-style="true"/>
       </include>
     </context>
 
@@ -162,7 +167,8 @@
       <end>'</end>
       <include>
         <context ref="format"/>
-        <context ref="def:line-continue"/>
+        <context ref="escaped-char" ignore-style="true"/>
+        <context ref="def:line-continue" ignore-style="true"/>
       </include>
     </context>
 
@@ -176,9 +182,12 @@
 
     <context id="special-variables" style-ref="special-variable">
       <prefix>(?&lt;![\w\.])</prefix>
-      <keyword>self</keyword>
-      <keyword>__name__</keyword>
       <keyword>__debug__</keyword>
+      <keyword>__doc__</keyword>
+      <keyword>__package__</keyword>
+      <keyword>__name__</keyword>
+      <keyword>cls</keyword>
+      <keyword>self</keyword>
     </context>
 
     <context id="boolean" style-ref="boolean">
@@ -259,7 +268,11 @@
     </context>
 
     <context id="decorator" style-ref="decorator">
-      <match>@\%{identifier-path}</match>
+      <match>(?:^\s*)(@\%{identifier-path})</match>
+    </context>
+
+    <context id="operator" style-ref="operator">
+      <match>[!%\&amp;\*\+\-/&lt;=&gt;@\^\|\~]+</match>
     </context>
 
     <context id="keywords" style-ref="keyword">
@@ -459,6 +472,7 @@
         <context ref="function-definition"/>
         <context ref="class-definition"/>
         <context ref="decorator"/>
+        <context ref="operator"/>
         <context ref="keywords"/>
         <context ref="2x-only-keywords"/>
         <context ref="builtin-constants"/>

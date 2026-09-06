@@ -98,11 +98,14 @@ install(FILES
     langs/actionscript.lang
     langs/ada.lang
     langs/ansforth94.lang
+    langs/asciidoc.lang
     langs/asp.lang
+    langs/astro.lang
     langs/automake.lang
     langs/awk.lang
     langs/bennugd.lang
     langs/bibtex.lang
+    langs/blueprint.lang
     langs/bluespec.lang
     langs/boo.lang
     langs/c.lang
@@ -114,6 +117,7 @@ install(FILES
     langs/cmake.lang
     langs/cobalt.xml
     langs/cobol.lang
+    langs/commonlisp.lang
     langs/cpp.lang
     langs/cpphdr.lang
     langs/csharp.lang
@@ -121,26 +125,38 @@ install(FILES
     langs/csv.lang
     langs/cuda.lang
     langs/d.lang
+    langs/dart.lang
     langs/def.lang
     langs/desktop.lang
     langs/diff.lang
     langs/docbook.lang
+    langs/docker.lang
     langs/dosbatch.lang
     langs/dot.lang
     langs/dpatch.lang
     langs/dtd.lang
     langs/dtl.lang
     langs/eiffel.lang
+    langs/elixir.lang
+    langs/erb-html.lang
+    langs/erb-js.lang
+    langs/erb.lang
     langs/erlang.lang
     langs/fcl.lang
+    langs/fish.lang
     langs/forth.lang
     langs/fortran.lang
     langs/fsharp.lang
+    langs/ftl.lang
     langs/gap.lang
     langs/gdb-log.lang
+    langs/gdscript.lang
     langs/genie.lang
     langs/glsl.lang
     langs/go.lang
+    langs/gradle.lang
+    langs/groff.lang
+    langs/groovy.lang
     langs/gtk-doc.lang
     langs/gtkrc.lang
     langs/haddock.lang
@@ -155,17 +171,28 @@ install(FILES
     langs/j.lang
     langs/jade.lang
     langs/java.lang
+    langs/javascript-expressions.lang
+    langs/javascript-functions-classes.lang
+    langs/javascript-literals.lang
+    langs/javascript-modules.lang
+    langs/javascript-statements.lang
+    langs/javascript-values.lang
     langs/javascript.lang
+    langs/jsdoc.lang
     langs/json.lang
+    langs/jsx.lang
     langs/julia.lang
     langs/kate.xml
     langs/kotlin.lang
     langs/language2.rng
     langs/latex.lang
+    langs/lean.lang
+    langs/less.lang
     langs/lex.lang
     langs/libtool.lang
     langs/llvm.lang
     langs/logcat.lang
+    langs/logtalk.lang
     langs/lua.lang
     langs/m4.lang
     langs/makefile.lang
@@ -180,6 +207,7 @@ install(FILES
     langs/mxml.lang
     langs/nemerle.lang
     langs/netrexx.lang
+    langs/nix.lang
     langs/nsis.lang
     langs/objc.lang
     langs/objj.lang
@@ -196,12 +224,14 @@ install(FILES
     langs/pig.lang
     langs/pkgconfig.lang
     langs/po.lang
+    langs/powershell.lang
     langs/prolog.lang
     langs/protobuf.lang
     langs/puppet.lang
     langs/python-console.lang
     langs/python.lang
     langs/python3.lang
+    langs/reasonml.lang
     langs/rpmspec.lang
     langs/rst.lang
     langs/ruby.lang
@@ -209,26 +239,48 @@ install(FILES
     langs/scala.lang
     langs/scheme.lang
     langs/scilab.lang
+    langs/scss.lang
     langs/sh.lang
     langs/sml.lang
     langs/solarized-dark.xml
     langs/solarized-light.xml
+    langs/solidity.lang
     langs/sparql.lang
+    langs/spice.lang
     langs/sql.lang
+    langs/star.lang
     langs/sweave.lang
     langs/swift.lang
     langs/systemverilog.lang
     langs/t2t.lang
     langs/tango.xml
     langs/tcl.lang
+    langs/tera.lang
+    langs/terraform.lang
     langs/texinfo.lang
     langs/thrift.lang
+    langs/todotxt.lang
+    langs/toml.lang
+    langs/twig.lang
+    langs/typescript-js-expressions.lang
+    langs/typescript-js-functions-classes.lang
+    langs/typescript-js-literals.lang
+    langs/typescript-js-modules.lang
+    langs/typescript-js-statements.lang
+    langs/typescript-jsx.lang
+    langs/typescript-type-expressions.lang
+    langs/typescript-type-generics.lang
+    langs/typescript-type-literals.lang
+    langs/typescript.lang
     langs/vala.lang
     langs/vbnet.lang
     langs/verilog.lang
     langs/vhdl.lang
+    langs/wren.lang
     langs/xml.lang
     langs/xslt.lang
     langs/yacc.lang
     langs/yaml.lang
+    langs/yara.lang
+    langs/zig.lang
     DESTINATION "${MOO_TEXT_LANG_FILES_DIR}")
