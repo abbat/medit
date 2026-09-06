@@ -575,7 +575,7 @@ Reading these first will usually identify the next one:
   `GtkCellView`, which has no `::activate` and is not a `GtkEntry`) and owns its own
   model. Symptom: the filter field in the file dialog stayed empty.
 
-- **`<title-fix>`** `_moo_edit_window_remove_doc()` ended with
+- **`3e59d41`** `_moo_edit_window_remove_doc()` ended with
   `edit_changed (window, nullptr)`, which looks like "refresh the window for
   whatever is active now". `edit_changed()` does its work only when its argument
   **is** the active document, and NULL is the active document only when the last
