@@ -822,6 +822,30 @@ client_capabilities (void)
     }
 
     {
+        JsonObject *completion = json_object_new ();
+        JsonObject *completion_item = json_object_new ();
+        static const char *doc_formats[] = { "plaintext", NULL };
+
+        /*
+         * No snippet support: a server told otherwise answers with
+         * placeholders like ${1:name}, and there is nothing here to step
+         * through them with.
+         */
+        lsp_json_set_bool (completion_item, "snippetSupport", FALSE);
+        lsp_json_set_bool (completion_item, "commitCharactersSupport", FALSE);
+        lsp_json_set_bool (completion_item, "deprecatedSupport", FALSE);
+        lsp_json_set_bool (completion_item, "preselectSupport", FALSE);
+        lsp_json_set_array (completion_item, "documentationFormat",
+                            lsp_json_string_array (doc_formats));
+
+        lsp_json_set_bool (completion, "dynamicRegistration", FALSE);
+        lsp_json_set_bool (completion, "contextSupport", TRUE);
+        lsp_json_set_object (completion, "completionItem", completion_item);
+
+        lsp_json_set_object (text_document, "completion", completion);
+    }
+
+    {
         JsonObject *document_symbol = json_object_new ();
 
         lsp_json_set_bool (document_symbol, "dynamicRegistration", FALSE);

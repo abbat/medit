@@ -31,6 +31,7 @@
 #include "plugins/lsp/lsp-diagnostics.h"
 #include "plugins/lsp/lsp-symbols.h"
 #include "plugins/lsp/lsp-navigate.h"
+#include "plugins/lsp/lsp-completion.h"
 
 #include "mooedit/mooplugin-macro.h"
 #include "mooedit/mooeditor.h"
@@ -42,6 +43,7 @@
 #include "plugins/support/moolineview.h"
 #include "mooutils/mooi18n.h"
 #include "mooutils/moopane.h"
+#include "mooutils/mooaccel.h"
 #include "mooutils/mooprefs.h"
 #include "mooutils/mooutils-misc.h"
 
@@ -118,6 +120,102 @@ _moo_lsp_debug (void)
 
 #define LSP_VIEW_HOOKED_QUARK "moo-lsp-view-hooked"
 
+/*
+ * moo_window_key_press_event() hands the key to the focused widget before it
+ * tries the accelerators, so the text view swallows Ctrl+Space and the
+ * LspComplete action never fires. The action's accelerator is therefore
+ * matched here by hand, the way the terminal matches its own -- and by
+ * reading it back from the accel map rather than from the default, so that a
+ * user who rebound it still gets what they bound.
+ */
+static gboolean
+complete_accel_pressed (MooEditView *view,
+                        GdkEventKey *event)
+{
+    MooEditWindow *window = moo_edit_view_get_window (view);
+    GtkAction *action;
+    const char *accel_path;
+    const char *accel;
+    guint key;
+    GdkModifierType mods;
+
+    if (!window)
+        return FALSE;
+
+    action = moo_window_get_action (MOO_WINDOW (window), "LspComplete");
+
+    if (!action)
+        return FALSE;
+
+    accel_path = gtk_action_get_accel_path (action);
+
+    if (!accel_path)
+        return FALSE;
+
+    /*
+     * _moo_get_accel() answers out of the map of accelerators that were
+     * actually set, which is empty for one that has only ever had its
+     * default; _moo_accel_register() puts the default in a map of its own.
+     */
+    accel = _moo_get_accel (accel_path);
+
+    if (!accel || !accel[0])
+        accel = _moo_get_default_accel (accel_path);
+
+    if (!accel || !accel[0] || !_moo_accel_parse (accel, &key, &mods))
+        return FALSE;
+
+    return moo_accel_check_event (GTK_WIDGET (view), event, key, mods);
+}
+
+
+static gboolean
+view_key_press (MooEditView            *view,
+                GdkEventKey            *event,
+                G_GNUC_UNUSED gpointer  data)
+{
+    /*
+     * Connected without _after, so this runs before MooTextView's own class
+     * handler and the popup gets Up, Down, Enter and Escape before the text
+     * view does anything with them.
+     */
+    if (lsp_completion_key_press (view, event))
+        return TRUE;
+
+    if (complete_accel_pressed (view, event))
+    {
+        lsp_completion_start (view, NULL);
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+
+static gboolean
+view_focus_out (G_GNUC_UNUSED MooEditView    *view,
+                G_GNUC_UNUSED GdkEventFocus *event,
+                G_GNUC_UNUSED gpointer       data)
+{
+    if (lsp_completion_visible ())
+        lsp_completion_cancel ();
+
+    return FALSE;
+}
+
+
+static gboolean
+view_button_press (G_GNUC_UNUSED MooEditView     *view,
+                   G_GNUC_UNUSED GdkEventButton *event,
+                   G_GNUC_UNUSED gpointer        data)
+{
+    if (lsp_completion_visible ())
+        lsp_completion_cancel ();
+
+    return FALSE;
+}
+
+
 static gboolean
 view_query_tooltip (MooEditView            *view,
                     int                     x,
@@ -149,6 +247,12 @@ hook_view (MooEditView *view)
 
     g_signal_connect (view, "query-tooltip",
                       G_CALLBACK (view_query_tooltip), NULL);
+    g_signal_connect (view, "key-press-event",
+                      G_CALLBACK (view_key_press), NULL);
+    g_signal_connect (view, "focus-out-event",
+                      G_CALLBACK (view_focus_out), NULL);
+    g_signal_connect (view, "button-press-event",
+                      G_CALLBACK (view_button_press), NULL);
 }
 
 
@@ -224,10 +328,36 @@ doc_changed_identity (LspDocPlugin *plugin)
 }
 
 
+/*
+ * After the text is in, so that the trigger character the server named is
+ * already part of the document when it is asked what could follow it.
+ */
+static void
+buffer_insert_text (G_GNUC_UNUSED GtkTextBuffer *buffer,
+                    G_GNUC_UNUSED GtkTextIter   *iter,
+                    const char                  *text,
+                    int                          len,
+                    MooEdit                     *doc)
+{
+    MooEditView *view = moo_edit_get_view (doc);
+    char *copy;
+
+    if (!view || !text)
+        return;
+
+    copy = len < 0 ? g_strdup (text) : g_strndup (text, len);
+    lsp_completion_text_inserted (view, copy);
+    g_free (copy);
+}
+
+
 static gboolean
 lsp_doc_plugin_create (LspDocPlugin *plugin)
 {
     MooEdit *doc = moo_doc_plugin_get_doc (MOO_DOC_PLUGIN (plugin));
+
+    g_signal_connect_after (moo_edit_get_buffer (doc), "insert-text",
+                            G_CALLBACK (buffer_insert_text), doc);
 
     g_signal_connect_swapped (doc, "filename-changed",
                               G_CALLBACK (doc_changed_identity), plugin);
@@ -248,6 +378,11 @@ lsp_doc_plugin_destroy (LspDocPlugin *plugin)
     MooEdit *doc = moo_doc_plugin_get_doc (MOO_DOC_PLUGIN (plugin));
 
     g_signal_handlers_disconnect_by_data (doc, plugin);
+    g_signal_handlers_disconnect_by_func (moo_edit_get_buffer (doc),
+                                          (gpointer) buffer_insert_text, doc);
+
+    if (lsp_completion_visible ())
+        lsp_completion_cancel ();
 
     lsp_manager_remove_doc (doc);
 }
@@ -589,6 +724,16 @@ symbols_mapped (LspWindowPlugin *stuff)
 
 
 static void
+complete_cb (MooEditWindow *window)
+{
+    MooEditView *view = moo_edit_window_get_active_view (window);
+
+    if (view)
+        lsp_completion_start (view, NULL);
+}
+
+
+static void
 goto_definition_cb (MooEditWindow *window)
 {
     lsp_goto_definition (window, "textDocument/definition");
@@ -836,6 +981,14 @@ lsp_plugin_init (LspPlugin *plugin)
         g_type_class_unref (edit_klass);
     }
 
+    moo_window_class_new_action (klass, "LspComplete", NULL,
+                                 "display-name", _("Complete Word"),
+                                 "label", _("_Complete Word"),
+                                 "tooltip", _("Ask the language server what could go here"),
+                                 "default-accel", MOO_EDIT_ACCEL_COMPLETE,
+                                 "closure-callback", complete_cb,
+                                 nullptr);
+
     moo_window_class_new_action (klass, "ShowLspSymbols", NULL,
                                  "display-name", _("Symbols"),
                                  "label", _("Symbols"),
@@ -853,6 +1006,9 @@ lsp_plugin_init (LspPlugin *plugin)
         moo_ui_xml_add_item (xml, plugin->ui_merge_id,
                              "Editor/Menubar/Tools",
                              "ShowLspSymbols", "ShowLspSymbols", -1);
+        moo_ui_xml_add_item (xml, plugin->ui_merge_id,
+                             "Editor/Menubar/Document",
+                             "LspComplete", "LspComplete", -1);
         moo_ui_xml_add_item (xml, plugin->ui_merge_id,
                              "Editor/Menubar/Document",
                              "GoToDefinition", "GoToDefinition", -1);
@@ -884,7 +1040,9 @@ lsp_plugin_deinit (LspPlugin *plugin)
     moo_window_class_remove_action (klass, "GoToDefinition");
     moo_window_class_remove_action (klass, "GoToTypeDefinition");
     moo_window_class_remove_action (klass, "GoToImplementation");
+    moo_window_class_remove_action (klass, "LspComplete");
 
+    lsp_completion_cancel ();
     lsp_navigate_reset ();
 
     if (plugin->ui_merge_id)

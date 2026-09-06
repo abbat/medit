@@ -1,6 +1,8 @@
 target_sources(medit PRIVATE
     lsp-client.cpp
     lsp-client.h
+    lsp-completion.cpp
+    lsp-completion.h
     lsp-config.cpp
     lsp-config.h
     lsp-diagnostics.cpp

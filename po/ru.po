@@ -2561,6 +2561,18 @@ msgstr "Диагностика"
 msgid "Symbols"
 msgstr "Символы"
 
+#: ../src/plugins/lsp/lsp-plugin.cpp:783
+msgid "Complete Word"
+msgstr "Дополнить слово"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:784
+msgid "_Complete Word"
+msgstr "_Дополнить слово"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:785
+msgid "Ask the language server what could go here"
+msgstr "Спросить у языкового сервера, что здесь может быть"
+
 #: ../src/plugins/lsp/lsp-plugin.cpp:790
 msgid "Go to Definition"
 msgstr "Перейти к определению"

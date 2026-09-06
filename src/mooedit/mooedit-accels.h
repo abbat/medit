@@ -58,7 +58,8 @@
 
 #define MOO_EDIT_ACCEL_STOP "<Ctrl>Cancel"
 
-#define MOO_EDIT_ACCEL_COMPLETE "<Ctrl>Space"
+/* The key name is case sensitive: "Space" does not parse, "space" does. */
+#define MOO_EDIT_ACCEL_COMPLETE "<Ctrl>space"
 
 #define MOO_EDIT_ACCEL_TERMINAL "<Ctrl>grave"
 
