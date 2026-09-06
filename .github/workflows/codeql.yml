@@ -1,0 +1,76 @@
+# CodeQL, the second layer over the compiler warnings in build.yml.
+#
+# It reads what the compiler cannot: paths through the program rather than one
+# translation unit at a time, which is where use-after-free, leaked allocations
+# and null dereferences live. Unlike a warning gate, it does not have to start
+# from a clean tree -- a pull request is judged on the alerts it introduces,
+# while what is already there waits in the Security tab. That is what makes it
+# usable on a fork carrying a machine-assisted GTK+3 port.
+#
+# The build is the gtk-3 one, which is what the packages install by default.
+# Code behind #if !GTK_CHECK_VERSION(3,0,0) is therefore not analyzed.
+name: codeql
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Weekly, so the tree is re-read with whatever queries CodeQL has gained
+    # since. Deliberately not on the hour: that is when everyone else runs.
+    - cron: "37 5 * * 3"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    name: analyze c-cpp
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          set -eux
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq --no-install-recommends \
+              build-essential cmake pkg-config intltool gettext \
+              libglib2.0-dev libxml2-dev libgtk-3-dev \
+              libjson-glib-dev libvte-2.91-dev \
+              libice-dev libsm-dev libxext-dev libxrender-dev
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: c-cpp
+          build-mode: manual
+          # The default suite is tuned for security holes in server code. The
+          # quality queries are the ones that matter for an editor: null
+          # dereferences, leaks, uninitialized reads, dead code.
+          queries: security-and-quality
+
+      # build-mode: manual, because autobuild would have to guess GTK_VERSION
+      # and would leave ENABLE_LSP and ENABLE_TERMINAL at AUTO, quietly
+      # analyzing a medit with no terminal pane and no language server client.
+      - name: Build
+        run: |
+          set -eux
+          cmake -S . -B build \
+              -DGTK_VERSION=3 \
+              -DENABLE_LSP=ON \
+              -DENABLE_TERMINAL=ON
+          cmake --build build -j"$(nproc)"
+
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:c-cpp"
