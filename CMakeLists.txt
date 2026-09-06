@@ -50,6 +50,9 @@ option(ENABLE_NLS "Native Language Support" ON)
 option(ENABLE_STRICT "Enable all warnings and -Werror" OFF)
 option(ENABLE_INSTALL_HOOKS "Run gtk-update-icon-cache during install" ON)
 
+# Comma-separated, passed straight to -fsanitize=. Empty means no sanitizer.
+set(ENABLE_SANITIZERS "" CACHE STRING "Sanitizers to build with, e.g. address,undefined")
+
 # Written for the analyze target below, and read by clangd -- including the one
 # medit's own LSP plugin starts on this tree.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)

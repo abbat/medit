@@ -107,6 +107,41 @@ if(ENABLE_STRICT)
     endforeach()
 endif()
 
+# ---------------------------------------------------------------------------
+# Sanitizers
+# ---------------------------------------------------------------------------
+#
+# -fsanitize has to reach the linker as well as the compiler, and the probe has
+# to link too -- a compile-only check accepts the flag on a toolchain that has
+# no runtime library to link against. Hence CMAKE_REQUIRED_LINK_OPTIONS around
+# the probe and add_link_options() after it; this file is included from the top
+# level, so the link options reach src/ as well.
+#
+# LeakSanitizer comes with -fsanitize=address and only reports at exit, so a run
+# that is killed rather than quit through the UI produces no leak report at all.
+# That is why the UI tests quit medit through its own File/Quit and wait for the
+# exit code instead of sending a signal.
+if(ENABLE_SANITIZERS)
+    set(_moo_sanitize "-fsanitize=${ENABLE_SANITIZERS}")
+
+    set(CMAKE_REQUIRED_LINK_OPTIONS ${_moo_sanitize})
+    check_c_compiler_flag(${_moo_sanitize} MOO_HAVE_SANITIZERS)
+    unset(CMAKE_REQUIRED_LINK_OPTIONS)
+
+    if(NOT MOO_HAVE_SANITIZERS)
+        message(FATAL_ERROR "The compiler does not accept ${_moo_sanitize}")
+    endif()
+
+    # -fno-omit-frame-pointer is what turns the sanitizer's stack traces from
+    # addresses into function names, and -g keeps that true for a build type
+    # that would otherwise carry no debug info.
+    list(APPEND MOO_C_FLAGS ${_moo_sanitize} -fno-omit-frame-pointer -g)
+    list(APPEND MOO_CXX_FLAGS ${_moo_sanitize} -fno-omit-frame-pointer -g)
+    add_link_options(${_moo_sanitize})
+
+    message(STATUS "Building with ${_moo_sanitize}")
+endif()
+
 set(MOO_COMPILE_DEFINITIONS
     XDG_PREFIX=_moo_edit_xdg
     G_LOG_DOMAIN="Moo"
