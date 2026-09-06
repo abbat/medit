@@ -602,6 +602,14 @@ _moo_line_mark_realize (MooLineMark *mark,
 }
 
 
+gboolean
+_moo_line_mark_get_realized (MooLineMark *mark)
+{
+    g_return_val_if_fail (MOO_IS_LINE_MARK (mark), FALSE);
+    return mark->priv->realized != 0;
+}
+
+
 void
 _moo_line_mark_unrealize (MooLineMark *mark, G_GNUC_UNUSED gpointer data)
 {

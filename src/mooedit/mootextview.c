@@ -2084,12 +2084,38 @@ lower_border_window (GtkTextView   *view,
 
 
 static void
+realize_line_mark (MooLineMark *mark,
+                   gpointer     data)
+{
+    if (!_moo_line_mark_get_realized (mark))
+        _moo_line_mark_realize (mark, GTK_WIDGET (data));
+}
+
+
+static void
+unrealize_line_mark (MooLineMark            *mark,
+                     G_GNUC_UNUSED gpointer  data)
+{
+    if (_moo_line_mark_get_realized (mark))
+        _moo_line_mark_unrealize (mark, NULL);
+}
+
+
+static void
 moo_text_view_realize (GtkWidget *widget)
 {
     MooTextView *view = MOO_TEXT_VIEW (widget);
     guint i;
 
     GTK_WIDGET_CLASS(moo_text_view_parent_class)->realize (widget);
+
+    /*
+     * A mark added while the view was not realized has no icon: it is
+     * moo_text_view_unrealize() that drops them, and line_mark_added() only
+     * realizes a mark when the view already is. Without this, marks put on a
+     * document before its window comes up stay blank for good.
+     */
+    g_slist_foreach (view->priv->line_marks, (GFunc) realize_line_mark, widget);
 
     update_tab_width (view);
     update_left_margin (view);
@@ -2116,7 +2142,7 @@ moo_text_view_unrealize (GtkWidget *widget)
 {
     MooTextView *view = MOO_TEXT_VIEW (widget);
 
-    g_slist_foreach (view->priv->line_marks, (GFunc) _moo_line_mark_unrealize, NULL);
+    g_slist_foreach (view->priv->line_marks, (GFunc) unrealize_line_mark, NULL);
     g_object_set_data (G_OBJECT (widget), "moo-line-mark-icons", NULL);
     g_object_set_data (G_OBJECT (widget), "moo-line-mark-colors", NULL);
 

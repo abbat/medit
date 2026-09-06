@@ -42,6 +42,7 @@ gboolean    _moo_line_mark_get_pretty               (MooLineMark        *mark);
 void        _moo_line_mark_realize                  (MooLineMark        *mark,
                                                      GtkWidget          *widget);
 void        _moo_line_mark_unrealize                (MooLineMark        *mark, gpointer);
+gboolean    _moo_line_mark_get_realized             (MooLineMark        *mark);
 
 void        _moo_line_mark_set_fold                 (MooLineMark        *mark,
                                                      MooFold            *fold);
