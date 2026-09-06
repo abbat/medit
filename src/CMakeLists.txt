@@ -150,7 +150,7 @@ target_compile_options(medit PRIVATE
     $<$<COMPILE_LANGUAGE:CXX>:${MOO_CXX_FLAGS}>)
 
 target_link_libraries(medit PRIVATE
-    PkgConfig::GTK
+    PkgConfig::GTKPKG
     PkgConfig::GLIB
     PkgConfig::XML
     ${MOO_X_TARGETS})

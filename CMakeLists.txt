@@ -84,7 +84,17 @@ else()
     message(FATAL_ERROR "Unsupported GTK version: ${GTK_VERSION}. Supported versions are 2, 3 and 4.")
 endif()
 
-pkg_check_modules(GTK REQUIRED IMPORTED_TARGET ${GTK_PACKAGE})
+# The prefix is GTKPKG and not GTK on purpose. pkg_check_modules writes
+# <prefix>_VERSION into the cache, so with a prefix of GTK it overwrites the
+# GTK_VERSION entry above -- the one that selects the toolkit -- with the
+# version of the module it found. The first configure still works, because the
+# selection has already been read by then; the second fails with
+#
+#   Unsupported GTK version: 3.24.38. Supported versions are 2, 3 and 4.
+#
+# and the choice of toolkit is gone from the cache for good.
+pkg_check_modules(GTKPKG REQUIRED IMPORTED_TARGET ${GTK_PACKAGE})
+message(STATUS "Building against ${GTK_PACKAGE} ${GTKPKG_VERSION}")
 pkg_check_modules(GLIB REQUIRED IMPORTED_TARGET glib-2.0 gthread-2.0 gmodule-2.0)
 pkg_check_modules(XML REQUIRED IMPORTED_TARGET libxml-2.0)
 
@@ -154,16 +164,12 @@ set(MOO_BUILD_CTAGS 1)
 
 # The terminal pane needs vte. vte dropped GTK+2 in 0.30 (2011), the last GTK+2
 # release being 0.28.2, so the pane is built for the GTK+3 build only.
-#
-# Test GTK_PACKAGE, not GTK_VERSION: pkg_check_modules(GTK ...) above defines
-# GTK_VERSION as the version of the module it found, shadowing the cache entry
-# that selects the toolkit, so by now it reads 3.24.38 rather than 3.
 set(ENABLE_TERMINAL "AUTO" CACHE STRING "Terminal pane, needs vte-2.91 (AUTO, ON or OFF)")
 set_property(CACHE ENABLE_TERMINAL PROPERTY STRINGS AUTO ON OFF)
 
 if(ENABLE_TERMINAL STREQUAL "OFF")
     message(STATUS "Building without the terminal pane")
-elseif(NOT GTK_PACKAGE STREQUAL "gtk+-3.0")
+elseif(NOT GTK_VERSION STREQUAL "3")
     if(ENABLE_TERMINAL STREQUAL "ON")
         message(FATAL_ERROR "ENABLE_TERMINAL=ON needs vte-2.91, which exists for GTK+3 only")
     endif()
