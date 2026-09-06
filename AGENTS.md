@@ -104,12 +104,13 @@ curl -sSLO https://download.gnome.org/sources/gtksourceview/5.20/gtksourceview-5
 cp <tarball>/data/language-specs/*.lang <tarball>/data/language-specs/language2.rng src/mooedit/langs/
 rm src/mooedit/langs/testv1.lang     # upstream's fixture for the retired v1 format,
                                      # not hidden, so it shows up in the language menu
-cd src/mooedit/langs && for f in *.lang; do xmllint --relaxng language2.rng --noout $f; done
+src/mooedit/langs/check.sh           # validates both schemas, .lang and .xml
 ```
 
 Then regenerate the two lists that name the files one by one — the `install(FILES …)`
 block in `src/mooedit/CMakeLists.txt` and `po-gsv/POTFILES.in` — from the directory
-listing. Packaging needs nothing: the specs take the whole data directory.
+listing. `check.sh` and `styles.rng` stay out of the install list: only `language2.rng`
+is read at run time. Packaging needs nothing: the specs take the whole data directory.
 
 The style schemes in the same directory are **ours**, not upstream's, and must not be
 overwritten with it. What they do have to keep up with is `def.lang`: a style id with no
@@ -365,6 +366,43 @@ Fortran flags `%cmake` passes unconditionally.
 in 2024, their repositories survive only on vault.centos.org, and what is there is glib
 2.56 / gtk 3.22 — below the floor this code needs. Stream 9 (gtk 3.24.31) and Stream 10
 (3.24.43) would work if anyone asks.
+
+### Cutting a release
+
+The version lives in six places and they all have to move together. `1.3.4` was cut
+like this:
+
+1. `CMakeLists.txt` — `MOO_MICRO_VERSION`. The comment above it says "keep in sync with
+   debian/changelog", and that is the whole of the coupling: nothing derives one from
+   the other.
+2. `NEWS` — a dated `* === Released 1.3.4 ===` block at the **top**, prose, wrapped the
+   way the file already is.
+3. `debian/changelog` — a `medit (1.3.4) unstable; urgency=low` stanza at the top.
+   `dch` is not used; the stanzas are written by hand, so mind the two-space indent,
+   the blank line before the signature and the RFC 2822 date (`date -R`).
+4. `rpm/medit.spec` — `Version:` and a `%changelog` entry, newest first, dated
+   `Day Mon DD YYYY`.
+5. `arch/PKGBUILD` — `pkgver`.
+6. `README.md` — "current release of this fork", and the two tag examples in the
+   paragraph about `git checkout`.
+
+Then commit, merge to `main`, push, and tag:
+
+```bash
+git tag -a v1.3.4 -m "medit 1.3.4"
+git push origin main v1.3.4
+```
+
+**The Arch checksum can only be filled in after the tag is pushed**, and it therefore
+lands in a commit of its own, after the tag — the tarball GitHub generates for a tag
+contains the PKGBUILD that would have to carry its own hash. Put
+`sha256sums=('0000…')` in the release commit rather than `SKIP`, so that forgetting it
+fails the build loudly. `git archive` does **not** reproduce GitHub's tarball (checked:
+v1.3.2 hashes differently), so fetch the real one:
+
+```bash
+curl -sSL https://github.com/abbat/medit/archive/refs/tags/v1.3.4.tar.gz | sha256sum
+```
 
 ---
 
