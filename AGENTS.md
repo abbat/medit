@@ -820,7 +820,21 @@ display number) and a session bus of its own. `UI_TEST_PARALLEL` says how many r
 once. Browsers are intercepted, not opened: a fake `x-scheme-handler/http` desktop entry
 appends the URL to a file, so "the license opened in a browser" is a string comparison.
 Failures leave everything in `<build>/ui-tests/<test>/` — `medit.log`, the X server's
-log, the sanitizer logs, `sanitizer.json`, and `failure.png`.
+log, the sanitizer logs, `sanitizer.json`, and `failure.png`. CI uploads that directory
+as an artifact, and `gh run download <id> -D <dir>` fetches it.
+
+**Reproducing a CI failure is a container away**, and much faster than pushing again:
+
+```bash
+docker build -t medit-ui-d13 -f <Dockerfile with ui.yml's apt lines> .
+docker run --rm -v "$PWD:/src:ro" -v /tmp/w:/w medit-ui-d13 bash -c '
+    cmake -S /src -B /w/build -DGTK_VERSION=3 -DENABLE_UI_TESTS=ON \
+          -DENABLE_SANITIZERS=address,undefined
+    cmake --build /w/build -j"$(nproc)" && cd /w/build && ctest -V'
+```
+
+This is worth doing rather than guessing: the toolkit and at-spi versions are what UI
+tests break on, and they are exactly what the local machine cannot vary.
 
 **No window manager.** The manual sandbox below starts `xfwm4`; the tests do not need to,
 and that is one moving part fewer.
@@ -866,6 +880,14 @@ falls back to finding URLs in the label's own text, which works because the labe
 puts links in show the address as the link text, and makes the GTK+2 assertion slightly
 stronger than the GTK+3 one.
 
+**Never match on a role name, only on the role constant.** at-spi renames them:
+`push button` became `button` in at-spi2-core 2.52, so a test written against debian 12
+finds nothing at all on debian 13 while a screenshot of the two is identical. This cost a
+red CI run to notice, and about a minute to diagnose once the failure started printing
+the tree it had searched — which is why `t.need()` and `t.toplevel()` do that. `a11y.find`
+resolves the name to the constant before comparing anything; role names are only ever
+printed.
+
 **An unrealised widget reports INT_MIN for its origin**, and `xdotool` then rejects the
 coordinate rather than clicking anywhere. The items of a menu that has not popped up yet
 are already in the tree, so lookups filter on `input.on_screen()` — that turns "still
@@ -876,13 +898,15 @@ consequence is asserted directly rather than worked around: `credits.c` fills th
 "Translated by" tab from `_("translator-credits")` and only when the lookup returns
 something other than the msgid, so in an untranslated locale the tab is there and empty.
 
-**Accessibility itself produces criticals, and they are not medit's.** Every run of the
-About test reports three on GTK+3 —
+**Accessibility itself produces criticals, and they are not medit's.** On this machine
+the About test reports three on GTK+3 —
 `gtk_notebook_get_tab_label: assertion 'list != NULL' failed`, as the credits notebook is
 destroyed — and one on GTK+2, `gail_notebook_real_remove_gtk: assertion 'obj' failed`.
 medit calls neither function; both are inside the toolkit's own accessible
-implementations, which only run because the bridge is loaded. The runner counts criticals
-and prints the count, but does not gate on it, for this reason.
+implementations, which only run because the bridge is loaded. The count also depends on
+the toolkit's version, not only on medit: debian 13's GTK+3 produces none of the three,
+and its GTK+2 still produces the one. So the runner counts criticals and prints the
+count, and does not gate on it.
 
 **Quit through the UI, never with a signal.** A sanitizer only reports at exit, so a
 killed medit reports nothing; the runner clicks File/Quit and waits for the exit code,

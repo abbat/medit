@@ -22,9 +22,15 @@ from . import input as ui
 
 MENU_ROLES = ("menu item", "check menu item", "radio menu item", "menu")
 
+_MENU_ROLE_CONSTS = None
+
 
 class Failed(AssertionError):
     pass
+
+
+def _menu_role_consts():
+    return tuple(a11y.role_const(name) for name in MENU_ROLES)
 
 
 class Test(object):
@@ -74,13 +80,28 @@ class Test(object):
     def need(self, root, what=None, timeout=a11y.TIMEOUT, **kwargs):
         """The first match, waited for, or a failure naming what was missing."""
         described = what or ", ".join("%s=%r" % kv for kv in sorted(kwargs.items()))
-        return self.wait(lambda: a11y.find(root, **kwargs), described, timeout)
+        return self._or_dump(lambda: a11y.find(root, **kwargs), described, timeout, root)
 
     def toplevel(self, name, role="dialog", timeout=a11y.TIMEOUT):
         """A toplevel window of the application, by title."""
-        return self.wait(
+        return self._or_dump(
             lambda: a11y.find(self.app, role=role, name=name, depth=2),
-            "the %s %s" % (name, role), timeout)
+            "the %s %s" % (name, role), timeout, self.app)
+
+    def _or_dump(self, fn, what, timeout, root):
+        """Wait for something, and print the tree if it never arrives.
+
+        A UI test that says only "did not find the Credits button" is nearly
+        undiagnosable at a distance -- the button may be missing, or named
+        something else, or the search may have been rooted in the wrong place,
+        and the screenshot looks the same in all three cases. The tree
+        distinguishes them in one line.
+        """
+        try:
+            return self.wait(fn, what, timeout)
+        except a11y.NotFound as missing:
+            raise Failed("%s\nthe tree it was looked for in:\n%s"
+                         % (missing, a11y.dump(root)))
 
     def dialog(self, name, timeout=a11y.TIMEOUT):
         return self.toplevel(name, "dialog", timeout)
@@ -111,7 +132,7 @@ class Test(object):
         # Read the description before clicking. A button that closes its dialog
         # takes its own accessible with it, and by the time the line is printed
         # the node is defunct and answers with an empty name.
-        described = "%s %r" % (a11y.role(node), a11y.name(node))
+        described = "%s %r" % (a11y.role_name(node), a11y.name(node))
         x, y = ui.click(node, button)
         self.log("click %s at (%d,%d)" % (described, x, y))
 
@@ -145,13 +166,18 @@ class Test(object):
         return node
 
     def _menu_item(self, parent, label):
+        global _MENU_ROLE_CONSTS
+
+        if _MENU_ROLE_CONSTS is None:
+            _MENU_ROLE_CONSTS = _menu_role_consts()
+
         # on_screen, because the items of a menu that has not popped up yet are
         # already in the tree and have no position. Filtering them out here is
         # what turns "the menu is still opening" into another poll rather than
         # into a click at INT_MIN.
         items = a11y.find_all(
             parent,
-            pred=lambda n: a11y.role(n) in MENU_ROLES and ui.on_screen(n),
+            pred=lambda n: a11y.role(n) in _MENU_ROLE_CONSTS and ui.on_screen(n),
             depth=3)
 
         exact = [n for n in items if a11y.name(n) == label]

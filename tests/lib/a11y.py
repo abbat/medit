@@ -67,7 +67,37 @@ def children(node):
     return out
 
 
+_ROLES = {}
+
+
+def role_const(name):
+    """The AT-SPI role constant a role name stands for.
+
+    Matching on the name is a trap. at-spi renames them: "push button" became
+    "button" in at-spi2-core 2.52, so a test written against debian 12 finds
+    nothing at all on debian 13 while the screenshot of the two looks
+    identical. The constants behind the names do not change, so everything
+    matches on those and the names are only ever printed.
+    """
+    if name not in _ROLES:
+        key = "ROLE_" + name.upper().replace(" ", "_").replace("-", "_")
+        if not hasattr(pyatspi, key):
+            raise KeyError("no AT-SPI role is called %r" % name)
+        _ROLES[name] = getattr(pyatspi, key)
+
+    return _ROLES[name]
+
+
 def role(node):
+    """The node's role, as a constant."""
+    try:
+        return node.getRole()
+    except Exception:
+        return None
+
+
+def role_name(node):
+    """The node's role, as whatever this at-spi calls it. For messages only."""
     try:
         return node.getRoleName()
     except Exception:
@@ -94,14 +124,19 @@ def _matches(node, want_role, want_name, name_prefix, pred):
 
 
 def find_all(root, role=None, name=None, name_prefix=None, pred=None, depth=16):
-    """Breadth-first search of the subtree, root itself excluded."""
+    """Breadth-first search of the subtree, root itself excluded.
+
+    role is a role name, resolved to its constant before anything is compared.
+    """
+    want_role = role_const(role) if role is not None else None
+
     out = []
     queue = [(root, 0)]
 
     while queue:
         node, level = queue.pop(0)
 
-        if node is not root and _matches(node, role, name, name_prefix, pred):
+        if node is not root and _matches(node, want_role, name, name_prefix, pred):
             out.append(node)
 
         if level < depth:
@@ -197,7 +232,7 @@ def dump(node, depth=0, maxdepth=8, out=None):
     if out is None:
         out = []
 
-    out.append("%s%s: %r" % ("  " * depth, role(node) or "?", name(node)))
+    out.append("%s%s: %r" % ("  " * depth, role_name(node) or "?", name(node)))
 
     if depth < maxdepth:
         for child in children(node):
