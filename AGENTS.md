@@ -69,16 +69,15 @@ git stash pop
 | `fedora` | fedora:44, gtk-3, with LTO, which is the only place `-Wodr` has anything to see |
 | `langs` | `src/mooedit/langs/check.sh` over the 187 language definitions and schemes |
 
-`.github/workflows/codeql.yml` runs CodeQL over both toolkits on every push and on pull
-requests, and weekly once the file reaches the default branch. It judges a pull request
-on the alerts it *introduces*, which is why it can be a gate while the analyzer's
-existing findings are not zero.
+`.github/workflows/codeql.yml` runs CodeQL over both toolkits on every push, on pull
+requests, and weekly. It judges a pull request on the alerts it *introduces*, which is
+why it can be a gate while the analyzer's existing findings are not zero.
 
 **A workflow takes its `schedule` and `workflow_dispatch` triggers from the default
 branch and nowhere else.** This one was written with `push: branches: [main]` while it
 existed only on a work branch, and the result was not a workflow that ran rarely — it
-was one that had never run at all: the cron does not fire off the default branch, the
-*Run workflow* button never appears, and no push ever matched. `build.yml` was green the
+was one that had never run at all: the cron did not fire off the default branch, the
+*Run workflow* button never appeared, and no push ever matched. `build.yml` was green the
 whole time, from its bare `push:`, and that is the trap — the Actions tab looks busy.
 Ask the API instead, which needs no token on a public repository:
 
@@ -118,6 +117,22 @@ null as an ordinary value. A query that is right but **wrong at one site** is le
 and the alert is dismissed in the Security tab: that is where the nine memory alerts
 belong, all of them one blind spot — a struct field reassigned after `g_free()` keeps
 its freed state, so every write through the new pointer reads as a use after free.
+
+The first pass, for calibration, since the ratio is what decides whether the Security
+tab is worth opening. 242 alerts. **Three were real** and are fixed: a null check that
+could not fire, `localtime()` behind the file list's mtime column, and an implicit
+double-to-int narrowing. Thirteen were the two filtered queries. Twelve were dismissed —
+nine the memory blind spot, one a lambda invented by a macro expansion, two in vendored
+code. **One is open on purpose**: `cpp/constant-comparison` at
+`mootextview-input.c:1086`, where `order == 1` sits inside `if (!order …)`, so the guard
+meant to reject a double-click just after a closing bracket has never run once. It
+arrived with the root commit, so it is upstream's rather than a port regression, and
+what to do with it is a decision about what double-click should select, not a cleanup.
+
+The remaining 214 are 172 notes and 41 `cpp/poorly-documented-function`. Neither is
+wrong, and neither is a finding: `cpp/fixme-comment` counts the 267 FIXME/TODO markers
+and the 50 `written by AI` blocks that `grep` already indexes better. Read them as a map
+of what is unfinished, not as a queue.
 
 `.github/workflows/package.yml` builds the three packaging trees the way a distribution
 would, also on every push:
