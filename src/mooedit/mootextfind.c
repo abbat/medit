@@ -936,7 +936,7 @@ moo_text_view_run_find_next (GtkTextView    *view,
         else
         {
             found = do_find (&start, &end, last_search_flags & ~MOO_FIND_BACKWARDS,
-                              last_regex, last_search, &match_start, &match_end);;
+                              last_regex, last_search, &match_start, &match_end);
         }
     }
 
@@ -1012,7 +1012,7 @@ moo_text_view_run_find_prev (GtkTextView    *view,
         else
         {
             found = do_find (&start, &end, last_search_flags | MOO_FIND_BACKWARDS,
-                             last_regex, last_search, &match_start, &match_end);;
+                             last_regex, last_search, &match_start, &match_end);
         }
     }
 

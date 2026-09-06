@@ -474,7 +474,6 @@ do_stat (MooFileWatch *watch)
     MonitorList *lm;
     GSList *list = NULL, *lid;
     GSList *to_remove = NULL;
-    gboolean result = TRUE;
 
     g_return_val_if_fail (watch != NULL, FALSE);
 
@@ -562,7 +561,8 @@ out:
        opaque to the analyzer, so every unref looks like a possible free. */
     /* NOLINTNEXTLINE(clang-analyzer-unix.Malloc) */
     moo_file_watch_unref (watch);
-    return result;
+    /* A GSourceFunc: TRUE keeps the timeout that drives the polling backend. */
+    return TRUE;
 }
 
 

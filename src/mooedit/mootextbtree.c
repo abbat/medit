@@ -57,7 +57,7 @@ _moo_text_btree_new (void)
 guint
 _moo_text_btree_size (BTree *tree)
 {
-    g_return_val_if_fail (tree != 0, 0);
+    g_return_val_if_fail (tree != NULL, 0);
     return tree->root->count;
 }
 
