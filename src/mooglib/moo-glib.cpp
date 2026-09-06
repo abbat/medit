@@ -126,13 +126,6 @@ mgw_lstat (const gchar *filename, MgwStatBuf *buf, mgw_errno_t *err)
 
 
 const struct tm *
-mgw_localtime (const mgw_time_t *timep)
-{
-    time_t t = timep->value;
-    return localtime(&t);
-}
-
-const struct tm *
 mgw_localtime_r (const mgw_time_t *timep, struct tm *result, mgw_errno_t *err)
 {
     time_t t = timep->value;
