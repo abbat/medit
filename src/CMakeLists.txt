@@ -101,6 +101,10 @@ if(MOO_BUILD_TERMINAL)
     target_link_libraries(medit PRIVATE PkgConfig::VTE)
 endif()
 
+if(MOO_BUILD_LSP)
+    target_link_libraries(medit PRIVATE PkgConfig::JSON_GLIB)
+endif()
+
 add_subdirectory(eggsmclient)
 add_subdirectory(gtksourceview)
 add_subdirectory(mooapp)
@@ -121,6 +125,12 @@ install(TARGETS medit RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 install(FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/plugins/usertools/filters.xml"
     DESTINATION "${MOO_DATA_DIR}")
+
+if(MOO_BUILD_LSP)
+    install(FILES
+        "${CMAKE_CURRENT_SOURCE_DIR}/plugins/lsp/lsp.xml"
+        DESTINATION "${MOO_DATA_DIR}")
+endif()
 
 install(FILES mooutils/pixmaps/medit.png
     DESTINATION "${CMAKE_INSTALL_DATADIR}/icons/hicolor/48x48/apps")

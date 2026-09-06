@@ -32,6 +32,7 @@
 #cmakedefine ENABLE_NLS 1
 #cmakedefine MOO_BUILD_CTAGS @MOO_BUILD_CTAGS@
 #cmakedefine MOO_BUILD_TERMINAL @MOO_BUILD_TERMINAL@
+#cmakedefine MOO_BUILD_LSP @MOO_BUILD_LSP@
 
 #cmakedefine HAVE_UNISTD_H 1
 #cmakedefine HAVE_SYS_UTSNAME_H 1

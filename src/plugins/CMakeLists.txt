@@ -15,3 +15,7 @@ add_subdirectory(usertools)
 if(MOO_BUILD_TERMINAL)
     add_subdirectory(terminal)
 endif()
+
+if(MOO_BUILD_LSP)
+    add_subdirectory(lsp)
+endif()

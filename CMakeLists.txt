@@ -167,6 +167,25 @@ else()
     endif()
 endif()
 
+# The LSP client needs json-glib to speak JSON-RPC. json-glib does not depend on
+# gtk, so unlike the terminal this is built for both toolkits.
+set(ENABLE_LSP "AUTO" CACHE STRING "LSP client, needs json-glib (AUTO, ON or OFF)")
+set_property(CACHE ENABLE_LSP PROPERTY STRINGS AUTO ON OFF)
+
+if(ENABLE_LSP STREQUAL "OFF")
+    message(STATUS "Building without the LSP client")
+else()
+    pkg_check_modules(JSON_GLIB IMPORTED_TARGET json-glib-1.0)
+
+    if(JSON_GLIB_FOUND)
+        set(MOO_BUILD_LSP 1)
+    elseif(ENABLE_LSP STREQUAL "ON")
+        message(FATAL_ERROR "ENABLE_LSP=ON, but json-glib-1.0 was not found")
+    else()
+        message(STATUS "json-glib-1.0 not found, building without the LSP client")
+    endif()
+endif()
+
 configure_file(cmake/config.h.in config.h @ONLY)
 
 # ---------------------------------------------------------------------------

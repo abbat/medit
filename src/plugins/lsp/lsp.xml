@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Language servers medit can talk to.
+
+    This file ships with medit. Your own copy lives in the user data directory
+    (~/.local/share/medit/lsp.xml on a normal unix install) and REPLACES this
+    one outright: there is no merging, so what your copy says is what medit
+    does. Tools -> LSP Servers... creates it from this file and opens it.
+
+    Each <server> element takes:
+
+      id          a name of your choosing, used in messages
+      enabled     "false" turns the entry off without deleting it
+
+      <filter>    which documents this server handles, in the same syntax the
+                  rest of medit uses for file filters:
+                      langs:c,cpp     by language, as named in the syntax files
+                      globs:*.py      by file name
+                      regex:...       by a regular expression on the name
+      <command>   the program and its arguments, quoted the way a shell would.
+                  An entry whose program is not installed is skipped in
+                  silence, which is why this file may list servers you do not
+                  have.
+      <root>      file names, separated by semicolons, that mark the root of a
+                  project. medit takes the nearest directory at or above the
+                  file holding one of them; failing that, the file's own
+                  directory.
+      <env>       one NAME=VALUE per element, added to the server's environment
+      <initialization-options>
+                  passed to the server verbatim as initializationOptions. It is
+                  JSON, written as ordinary XML text -- not a CDATA section,
+                  which medit's parser reads as a comment. Escape &lt; &gt; &amp;
+                  if the JSON needs them.
+
+    The first entry whose filter matches wins, so put the specific ones first.
+-->
+<medit-lsp version="1.0">
+
+  <server id="clangd">
+    <filter>langs:c,cpp,chdr,cpphdr,objc,cuda</filter>
+    <command>clangd --background-index</command>
+    <root>compile_commands.json;compile_flags.txt;.clangd;.git</root>
+  </server>
+
+  <server id="pylsp">
+    <filter>langs:python,python3</filter>
+    <command>pylsp</command>
+    <root>pyproject.toml;setup.py;setup.cfg;requirements.txt;.git</root>
+  </server>
+
+  <server id="gopls">
+    <filter>langs:go</filter>
+    <command>gopls serve</command>
+    <root>go.work;go.mod;.git</root>
+  </server>
+
+  <server id="rust-analyzer">
+    <filter>langs:rust</filter>
+    <command>rust-analyzer</command>
+    <root>Cargo.toml;.git</root>
+  </server>
+
+  <server id="typescript">
+    <filter>langs:js</filter>
+    <command>typescript-language-server --stdio</command>
+    <root>tsconfig.json;jsconfig.json;package.json;.git</root>
+  </server>
+
+  <server id="lua">
+    <filter>langs:lua</filter>
+    <command>lua-language-server</command>
+    <root>.luarc.json;.git</root>
+  </server>
+
+  <server id="bash">
+    <filter>langs:sh</filter>
+    <command>bash-language-server start</command>
+    <root>.git</root>
+  </server>
+
+  <server id="cmake">
+    <filter>langs:cmake</filter>
+    <command>cmake-language-server</command>
+    <root>CMakeLists.txt;.git</root>
+  </server>
+
+  <server id="texlab">
+    <filter>langs:latex,bibtex</filter>
+    <command>texlab</command>
+    <root>.latexmkrc;.git</root>
+  </server>
+
+</medit-lsp>

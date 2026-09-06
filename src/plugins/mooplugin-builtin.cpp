@@ -20,6 +20,7 @@
 #include "mooutils/mooutils-misc.h"
 #include "plugins/ctags/ctags-plugin.h"
 #include "plugins/terminal/terminal-plugin.h"
+#include "plugins/lsp/lsp-plugin.h"
 
 void
 moo_plugin_init (void)
@@ -32,6 +33,9 @@ moo_plugin_init (void)
 #endif
 #ifdef MOO_BUILD_TERMINAL
     moo_terminal_plugin_init ();
+#endif
+#ifdef MOO_BUILD_LSP
+    moo_lsp_plugin_init ();
 #endif
 
     moo_plugin_read_dirs ();
