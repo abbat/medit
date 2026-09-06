@@ -1924,10 +1924,12 @@ delete_page (MooNotebook *nb,
                              (GWeakNotify) moo_nullify_pointer,
                              &page->focus_child);
 
+    /* Off the list before it is freed: g_slist_remove() only compares the
+       pointer, but the value is indeterminate once g_free() has had it. */
+    nb->priv->pages = g_slist_remove (nb->priv->pages, page);
+
     g_free (page->label);
     g_free (page);
-
-    nb->priv->pages = g_slist_remove (nb->priv->pages, page);
 
     if (!nb->priv->current_page)
     {

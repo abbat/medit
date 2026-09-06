@@ -615,8 +615,10 @@ mgr_remove_user (MooBookmarkMgr *mgr,
                  UserInfo       *info)
 {
     destroy_menu (info);
-    user_info_free (info);
+    /* Off the list before it is freed, as in delete_page(): g_slist_remove()
+       only compares the pointer, but the value is indeterminate after free. */
     mgr->priv->users = g_slist_remove (mgr->priv->users, info);
+    user_info_free (info);
 }
 
 
