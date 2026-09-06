@@ -1,5 +1,5 @@
 Name:           medit
-Version:        1.3.3
+Version:        1.3.4
 Release:        1%{?dist}
 Summary:        Useful programming and around-programming text editor
 
@@ -61,6 +61,9 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 %{_mandir}/man1/%{name}.1*
 
 %changelog
+* Sun Sep 06 2026 Anton Batenev <antonbatenev@yandex.ru> - 1.3.4-1
+- Language server client, and the syntax definitions of gtksourceview 5.20.0
+
 * Sat Sep 05 2026 Anton Batenev <antonbatenev@yandex.ru> - 1.3.3-1
 - Terminal pane, built on vte-2.91
 

@@ -1,3 +1,31 @@
+medit (1.3.4) unstable; urgency=low
+
+  * Add a language server client, built the way the ctags plugin is. It ships
+    switched off and is turned on in Preferences / Plugins. Diagnostics
+    underlined in the text, marked in the gutter and listed in an output pane;
+    a document symbol tree; go to definition on F12 and from the context menu;
+    hover documentation; completion on Ctrl+Space. The server list lives in
+    lsp.xml and is edited through Tools / LSP Servers, and the copy written on
+    first use is a worked example for clangd, gopls, pylsp and rust-analyzer.
+    This adds a build dependency on libjson-glib-dev, and suggests clangd,
+    python3-pylsp and gopls.
+  * Replace the syntax highlighting definitions with gtksourceview 5.20.0's.
+    The copy in the tree came in with 1.2.92 in 2017; the refresh adds 52
+    languages, TOML, TypeScript, Zig, Nix, Dart, Elixir, Groovy, Terraform,
+    Docker, SCSS, Less, Fish and PowerShell among them, and nine years of
+    corrections to the rest -- fenced code blocks in Markdown, raw string
+    literals in C++, the *.glsl and *.sgml globs. The bundled style schemes
+    gained the markup styles the newer definitions ask for.
+  * Point Help / Help at the project page and drop the bundled manual, which
+    described the python and Windows era of medit.
+  * Fix the window title lagging a document behind after a tab was closed.
+  * Fix a line mark added to a view that was not realized yet never getting
+    its gutter icon.
+  * Fix the class_init signature MOO_DOC_PLUGIN_DEFINE declares, which
+    -Wcast-function-type reports.
+
+ -- Anton Batenev <antonbatenev@yandex.ru>  Sun, 06 Sep 2026 13:40:00 +0300
+
 medit (1.3.3) unstable; urgency=low
 
   * Bring back the terminal pane, which was a python plugin on top of the GTK+2
