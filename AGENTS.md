@@ -9,11 +9,6 @@ Run `grep -rc "written by AI" src` for the current count; they are concentrated 
 
 `moopaned.c`, `moonotebook.c` and `mooiconview.c` between them hold most of them.
 
-The `_DEAD_CODE_*.md` files in the root, if they are still there, are **not reliable**:
-their line numbers roughly hold but the descriptions are invented (they call a complete
-function an "incomplete stub", name a macro that does not exist, and claim working file
-copying is disabled). Re-read the code before acting on them.
-
 **The GTK+2 branch of every `#if GTK_CHECK_VERSION(3,0,0)` is the specification.**
 When GTK+3 misbehaves, read the `#else` branch first and ask what it achieved, then find
 the GTK+3 way to achieve the same. Do not invent new behaviour.
@@ -61,6 +56,60 @@ git stash push path/to/file
 cmake --build "$SRC/build3" -j8 && <screenshot>   # without
 git stash pop
 ```
+
+### What CI already does, and what it does not
+
+`.github/workflows/build.yml` runs on every push, all of it with
+`-DENABLE_STRICT=ON`, so warnings are errors:
+
+| job | what it covers |
+|---|---|
+| `deb` | ubuntu 26.04, 24.04, 22.04, debian 13, 12 — each for both toolkits, ten in all |
+| `clang` | clang on debian:trixie, both toolkits, plus the `analyze` target |
+| `fedora` | fedora:44, gtk-3, with LTO, which is the only place `-Wodr` has anything to see |
+| `langs` | `src/mooedit/langs/check.sh` over the 187 language definitions and schemes |
+
+`.github/workflows/codeql.yml` runs CodeQL over the gtk-3 build on pushes to `main`, on
+pull requests, and weekly. It judges a pull request on the alerts it *introduces*, which
+is why it can be a gate while the analyzer's existing findings are not zero.
+
+So a source change does not need a container to prove it compiles anywhere. What is
+still manual, and still worth a container: the **package** builds (`dpkg-buildpackage`,
+`rpmbuild`, `makepkg` — CI compiles but does not package), anything visual, and anything
+that has to actually run.
+
+### The analyze target
+
+The clang static analyzer over medit's own sources, the same command CI runs:
+
+```bash
+cmake -S . -B builda -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
+cmake --build builda --target analyze          # whole tree, about 2 minutes
+clang-tidy -p builda src/mooutils/moopaned.c   # one file, a couple of seconds
+```
+
+It needs a **clang-configured build directory of its own**, a third beside `build2` and
+`build3`. That is not taste: clang-tidy takes its flags from `compile_commands.json`,
+`CompilerFlags.cmake` probes every flag against the compiler that configured the tree,
+and a gcc tree therefore records gcc-only flags — `-fno-enforce-eh-specs` among them —
+that clang rejects outright on every C++ file. In a gcc build directory the target says
+so and stops rather than failing obscurely.
+
+`cmake/Analyze.cmake` holds the checker list and the reasons for every exclusion. The
+short version: the analyzer only, none of clang-tidy's lint families, and three of the
+analyzer's own checkers off because on this code base they are pure noise —
+`optin.core.EnumCastOutOfRange` fires once per cast to a GObject enum (502 times),
+`security.insecureAPI.DeprecatedOrUnsafeBufferHandling` recommends MSVC's `memcpy_s`, and
+`security.insecureAPI.strcpy` fires on the name of the function without looking at the
+length check on the line above it.
+
+**Most of what is left is false, and the reasons repeat.** The analyzer does not model
+glib: `g_strfreev()` is not seen as freeing, so it reports a leak on the closing brace
+one line after the call; reference counting is opaque to it, so any `..._unref()` looks
+like it might free; ownership passing into a GObject setter looks like a leak; a field
+set in `_init()` and never cleared still looks nullable; `g_strdupv()` returning NULL
+only for NULL is not known. Read the trace to the "Memory is released" or "Assuming ...
+is null" line before believing any of them.
 
 ### Code generation
 
@@ -176,10 +225,18 @@ happened once: the glob feeding the dependency covered `src/*/ui/*.ui` only, and
 plugins keep theirs one level deeper, so two rounds of "fixes" changed nothing.
 
 A missing id is only reported when the dialog is opened, and some dialogs are hard to
-reach (the drop dialog needs a real drag and drop). Cheap check for all of them at once:
-collect the ids each `.ui` declares, collect what the code asks
-`moo_builder_get/take/reparent` for, and compare. That is how the one stale id left in
-mootextprint.c was found.
+reach (the drop dialog needs a real drag and drop). That comparison — the ids each `.ui`
+declares against what the code asks `moo_builder_get/take/reparent` for — is how the one
+stale id left in mootextprint.c was found, and it is **a build step now**
+(`cmake/CheckBuilderIds.cmake`), so it happens whether or not anyone remembers. It scopes
+per source file, which is exact: every file that asks for an id also creates its own
+builder.
+
+Two other checks run with the build. `xml-stripblanks` in `src/resources.xml` puts 33
+files through xmllint on the way into the bundle, which is what makes malformed markup
+fail. `cmake/ValidateXml.cmake` covers what that misses: `lsp.xml`, which is bundled
+without stripblanks on purpose because its formatting is documentation, and the usertools
+descriptions, which are installed rather than bundled.
 
 ### Builtin plugins, and dependencies only one gtk version has
 
@@ -269,20 +326,23 @@ how this one was caught, in a container, after the local gtk2 build had gone sta
 
 ### Debian package build (old distros)
 
-The package targets **Debian 11, Ubuntu 20.04 and 22.04** — much older toolchains than
-this machine (gcc 12, cmake 3.25, glib 2.74+). The local build proves nothing about
-them, so check anything that touches build files or headers in containers:
+The package targets **Debian 12 and 13, Ubuntu 22.04, 24.04 and 26.04** — Debian 11 and
+Ubuntu 20.04 were dropped when their support ended. `.github/workflows/build.yml`
+compiles all five for both toolkits on every push, so ordinary source changes need no
+container. What CI does *not* do is build the package, so check anything that touches
+`debian/` by hand:
 
 ```bash
-docker build -t medit-u2004 - <<'EOF'
-FROM ubuntu:20.04
+docker build -t medit-deb - <<'EOF'
+FROM ubuntu:22.04
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -qq && apt-get install -y -qq build-essential debhelper cmake \
-    pkg-config intltool libgtk2.0-dev libgtk-3-dev libxml2-dev libjpeg-dev
+    pkg-config intltool libgtk2.0-dev libgtk-3-dev libxml2-dev libxml2-utils \
+    libjson-glib-dev libvte-2.91-dev libjpeg-dev
 EOF
 S=<scratch>                                                  # session scratch dir
 git ls-files -z | tar --null -T - -czf $S/medit-src.tar.gz   # tracked files + local edits
-docker run --rm -v $S:/w medit-u2004 bash -c 'set -o pipefail
+docker run --rm -v $S:/w medit-deb bash -c 'set -o pipefail
   mkdir /build && cd /build && tar xzf /w/medit-src.tar.gz
   dpkg-buildpackage -us -uc -b -j8 2>&1 | tail -25'
 ```
@@ -304,28 +364,22 @@ a few minutes. To collect **every** error in one pass instead of one per run, re
 `dpkg-buildpackage` with `cmake -S . -B b && cmake --build b -j8 -- -k 2>&1 | grep
 error: | sort -u` — `-k` keeps make going after the first failing file.
 
-The oldest cmake among the three is 3.16 (Ubuntu 20.04), which is what
-`cmake_minimum_required` targets. Ubuntu 20.04 (gcc 9, glib 2.64) is the strictest
-compiler of the three. Ubuntu images pull normally; **Debian 11 does not** — bullseye is
-past EOL, its `main` moved to archive.debian.org while `bullseye-security` is gone from
-deb.debian.org and not yet archived, so `apt-get install` dies with 404s. Use
-snapshot.debian.org on the `debian/eol:bullseye` image:
+The span the matrix covers is gcc 11 to gcc 15 and cmake 3.22 to cmake 4.2. The oldest
+is Ubuntu 22.04; `cmake_minimum_required` still asks for 3.16, which is lower than
+anything now tested and deliberately so — cmake 4 is the version that stops accepting
+compatibility with anything before 3.5, and 3.16 is above that line.
 
-```
-deb http://snapshot.debian.org/archive/debian/20250601T000000Z bullseye main
-deb http://snapshot.debian.org/archive/debian-security/20250601T000000Z bullseye-security main
-```
-plus `Acquire::Check-Valid-Until "false";`.
+What has actually broken on an old toolchain, none of it visible in a local build:
 
-What actually broke there — none of it visible in a local build:
-
-* **Unnamed parameters** in C function definitions (`static void f (Foo *x, gpointer)`) —
-  legal in C++ and C23 only. gcc 12 accepts them *silently* even at `-std=gnu17`; gcc 9
-  errors with "parameter name omitted". Write `G_GNUC_UNUSED gpointer data`.
 * **Symbols newer than the oldest target glib**, e.g. `G_REGEX_DEFAULT` (2.74) on Ubuntu
   22.04's 2.72. Use `(GRegexCompileFlags) 0`, as the rest of the tree does.
 * **`g_object_ref` in C++** returns `gpointer` on older glib (no `typeof` magic), so
   assigning it to a typed field needs an explicit cast.
+* **Unnamed parameters** in C function definitions (`static void f (Foo *x, gpointer)`) —
+  legal in C++ and C23 only. gcc 9 errored with "parameter name omitted" while gcc 12
+  accepted them silently at `-std=gnu17`. No compiler in the matrix rejects them any
+  more, so this one is history rather than a live trap; write
+  `G_GNUC_UNUSED gpointer data` anyway.
 
 ### Fedora and Arch packages
 
@@ -496,6 +550,54 @@ tests with:
 env XDG_DATA_HOME=$S/xdg/data XDG_CACHE_HOME=$S/xdg/cache XDG_CONFIG_HOME=$S/xdg/config ./src/medit ...
 ```
 
+### Two runtime checks worth turning on, and one not turned on yet
+
+Both need medit to actually run, which is why neither is in CI: there is no test that
+drives the program. Whoever writes that test should wire both into it.
+
+**`G_ENABLE_DIAGNOSTIC=1`** costs nothing and can be used today. It is an environment
+variable read by libgobject, not a build flag — there is nothing to enable in
+`CMakeLists.txt`. With it set, GObject warns when a **deprecated property or signal** is
+used, which is a class the compiler cannot see at all: `-Wdeprecated-declarations`
+catches deprecated *functions*, while these are named by string, through `g_object_set()`
+or from a `.ui` file. A bare startup produces four:
+
+```
+The property GtkSettings:gtk-toolbar-style is deprecated …
+The property GtkSettings:gtk-menu-images   is deprecated …
+The property GtkAlignment:left-padding     is deprecated …
+The property GtkAlignment:right-padding    is deprecated …
+```
+
+All four are things GTK+4 removes outright, so this is the cheapest survey of that work
+there is. Opening dialogs finds more.
+
+**Sanitizers are ready but deliberately not enabled.** Measured, so that nobody has to
+measure again:
+
+```bash
+cmake -S . -B <dir> -DGTK_VERSION=3 \
+    -DCMAKE_C_FLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer -g" \
+    -DCMAKE_CXX_FLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer -g" \
+    -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=address,undefined"
+```
+
+* **ASan and UBSan: clean.** The tree builds with both, and a run that opens the file
+  selector, the bookmark editor, the find dialog and the menus produces **zero** reports
+  from either. They could be a gate from day one, unlike the static analyzer.
+* **LSan: do not.** `detect_leaks=1` reports 633 records, 121 KB at a clean exit. 344 are
+  purely library, and the 289 that name our code do not mean what they look like: the
+  largest, 101 records from `mootextview.c:3554`, is `update_tab_width()`, which frees
+  all three of the things it allocates. What is retained is pango's font and shaping
+  cache, attributed to the nearest frame that is not a library. Run with
+  `detect_leaks=0`.
+* **TSan: pointless.** Nothing in our code creates a thread — no `g_thread_new`, no
+  `pthread_create`.
+* **MSan: impossible** without an instrumented glib, gtk and pango.
+
+Cost: the binary goes from 9 MB to 32 MB and startup is visibly slower, but well within
+what a test run can take.
+
 ### Backtraces
 
 ```bash
@@ -609,7 +711,12 @@ command line and kills the shell (exit 144). `pkill -x medit` is safe.
 | `git add -A` sweeps in hundreds of build artifacts — the tree is full of `.o`, `.deps/`, generated `*-gxml.h`, `src/medit`, and `.gitignore` does not cover them | `git add -u` (tracked files only), or name paths explicitly; check `git status --short \| grep -v '^??'` before committing |
 | The pane buttons are not always on the right — their side is remembered in the sandbox `state.xml`, so a coordinate that worked last run can miss entirely | screenshot first and locate the button; never reuse coordinates across sessions |
 | `cmd \| tail -n` reports the **exit code of `tail`**, so a failed build looks like `exit=0` | `set -o pipefail` before any pipeline whose status you intend to read |
-| gcc 12 accepts C constructs that gcc 9/10 reject (unnamed parameters), so a clean local build says nothing about Debian 11 / Ubuntu 20.04 | see "Debian package build (old distros)" |
+| `G_ENABLE_DIAGNOSTIC=` with an **empty** value turns the diagnostics **on**: glib compares the value against `"0"`, and empty is not `"0"`. A run meant as the control therefore has the feature enabled, and an A/B says the variable does nothing | `env -u G_ENABLE_DIAGNOSTIC` to turn it off |
+| Without `xmllint` on PATH, `glib-compile-resources` does not fail on `preprocess="xml-stripblanks"` — it prints one line and bundles the file **unchecked**, so malformed markup reaches the binary and surfaces only when the dialog is opened. `libxml2-utils` is merely *Suggested* by the glib dev package | the configure step requires `xmllint` by name now; do not make it optional again |
+| LSan stacks default to `fast_unwind_on_malloc=1` and system libraries have no frame pointers, so every stack is two frames deep and *no* leak appears to involve our code | `ASAN_OPTIONS=fast_unwind_on_malloc=0:malloc_context_size=25`, and expect it to be slow |
+| A per-line `grep` over a `-j8` build log miscounts: two compilers writing at once interleave mid-line, so one warning's text lands inside another's and a filter like `grep warning: \| grep -v deprecated` reports a warning that does not exist | check the surrounding lines before believing a count of one |
+| `gtk-builder-tool validate` stops at the **first** error, and 13 of our 30 `.ui` files fail immediately on `Invalid object type 'MooEntry'` and friends, because the standalone tool does not know the Moo widgets. Everything after that line in those files goes unchecked | it is still worth running on the 17 it can read; a full check needs a validator that registers the types first |
+| gcc 12 accepts C constructs that gcc 9/10 reject (unnamed parameters), so a clean local build says nothing about the oldest target | no compiler in the current matrix rejects them; see "Debian package build (old distros)" |
 | `pkg_check_modules(GTK … ${GTK_PACKAGE})` defines `GTK_VERSION` as the version it found (`3.24.38`), shadowing the cache entry of the same name that selects the toolkit | anywhere below the Dependencies section of the top `CMakeLists.txt`, branch on `GTK_PACKAGE STREQUAL "gtk+-3.0"`, never on `GTK_VERSION` |
 | A key name in an accelerator string is **case sensitive**: `"<Ctrl>Space"` does not parse and `"<Ctrl>space"` does. `_moo_accel_register()` drops an unparsable accelerator without a word, so the action simply has no key | test it: `gtk_accelerator_parse()` returns key 0. `MOO_EDIT_ACCEL_COMPLETE` carried this mistake unused since 1.2.92 |
 | `_moo_get_accel()` and `_moo_get_default_accel()` read **different maps**: the first holds accelerators that were actually set, the second the defaults registered with the action. An accelerator that has only ever had its default reads as empty from the first | ask the first, fall back to the second — that is what a plugin matching its own accelerator by hand has to do |
@@ -718,6 +825,24 @@ Reading these first will usually identify the next one:
   into "only when there is no document", which is rarely what a caller passing
   NULL intends.*
 
+- **Notebook frame gap** GTK+2 drew the page frame with `gtk_paint_box_gap (…,
+  GTK_POS_TOP, gap_x, gap_width)` — a frame with a hole where the active tab meets it.
+  The GTK+3 branch called `gtk_render_frame()` and explained in a comment that "themes
+  can create gaps by omitting borders via CSS". They cannot. The tell was three dead
+  stores: `moo_notebook_draw()` computes `gap_x` and `gap_width` over twenty-five lines
+  and then reads them nowhere. `gtk_render_frame_gap()` is the replacement, and it takes
+  the two **edges** of the gap, not an offset and a width.
+  → *A value computed carefully and never used means the call that consumed it was lost
+  in the port. The analyzer's dead-store reports are worth following for that reason
+  alone.*
+- **`moolineview.cpp` uninitialized read** The GTK+2 branch asked the parent for
+  `scrollbar-spacing` unconditionally. The GTK+3 branch added a NULL check around the
+  *call* and left the *read* of the value outside it, so a NULL parent put stack garbage
+  into the calculation. Found by clang's `-Wsometimes-uninitialized`; gcc says nothing
+  about it at any level, which is the argument for the clang job in CI.
+  → *When a port adds a guard, check that everything depending on the guarded call moved
+  inside it.*
+
 Known and deliberately left alone: `draw_entry()` in `mooiconview.c` still uses
 `gdk_cairo_create()` per row (deprecated since 3.22, bypasses the clip, works).
 
@@ -822,7 +947,12 @@ prints what these functions return settles such questions in one build.
   `#if GTK_CHECK_VERSION` split** when one code path is correct for both.
 - Remove the `/* FIXME: This code was written by AI */` marker on any block you fix.
 - Verify before claiming: build both, run both with the exit-code rule, screenshot when
-  the change is visual, and state what was *not* verified.
+  the change is visual, and state what was *not* verified. CI covers five distributions
+  and two compilers on push, so what is worth doing by hand is what CI cannot: running
+  the program, looking at it, and building the packages.
+- Run `--target analyze` on anything non-trivial before committing, and read the traces
+  rather than the summary lines — most of what it says about glib code is wrong, and the
+  reasons are listed under "The analyze target".
 - One logical fix per commit. Commit message: what the GTK+2 code did, why the GTK+3
   port broke it, the evidence (verbatim critical text / gdb output), and the fix.
 - Commit only source files — the tree is full of untracked build artifacts.
