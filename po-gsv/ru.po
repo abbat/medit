@@ -50,8 +50,14 @@ msgstr "Жирность текста установлена"
 msgid "Boolean value"
 msgstr "Булево (логическое) значение"
 
+msgid "C++ Header"
+msgstr "Заголовок C++"
+
 msgid "C/C++/ObjC Header"
 msgstr "Заголовок C/C++/ObjC"
+
+msgid "C/ObjC Header"
+msgstr "Заголовок C/ObjC"
 
 msgid "CG Shader Language"
 msgstr "Язык шейдеров CG"
@@ -80,6 +86,9 @@ msgstr "Цветовая схема, использующая палитру Tan
 msgid "Comment"
 msgstr "Комментарий"
 
+msgid "DOS Batch"
+msgstr "Командный файл DOS"
+
 msgid "Dark color scheme using the Tango color palette"
 msgstr "Тёмная цветовая схема, использующая палитру Tango"
 
@@ -92,8 +101,14 @@ msgstr "Десятичное число"
 msgid "Defaults"
 msgstr "По умолчанию"
 
+msgid "Django Template"
+msgstr "Шаблон Django"
+
 msgid "Dos Batch"
 msgstr "Командный файл DOS"
+
+msgid "Elixir"
+msgstr "Elixir"
 
 msgid "Error"
 msgstr "Ошибка"
@@ -112,6 +127,9 @@ msgstr "Цвет текста"
 
 msgid "Foreground set"
 msgstr "Цвет текста установлен"
+
+msgid "GDB Log"
+msgstr "Журнал GDB"
 
 msgid "Hexadecimal number"
 msgstr "Шестнадцатеричное число"
@@ -137,6 +155,9 @@ msgstr "Курсив установлен"
 
 msgid "Keyword"
 msgstr "Ключевое слово"
+
+msgid "LLVM IR"
+msgstr "Промежуточное представление LLVM"
 
 msgid "Language id"
 msgstr "Идентификатор языка"
@@ -184,6 +205,9 @@ msgstr "Разметка"
 msgid "Missing main language definition (id = \"%s\".)"
 msgstr "Отсутствует главное определение языка (id=\"%s\".)"
 
+msgid "Nix"
+msgstr "Nix"
+
 msgid "Objective Caml"
 msgstr "Объектный Caml (ocaml)"
 
@@ -192,6 +216,9 @@ msgstr "Язык шейдеров OpenGL"
 
 msgid "Operator"
 msgstr "Оператор"
+
+msgid "Other"
+msgstr "Прочее"
 
 msgid "Others"
 msgstr "Прочее"
@@ -208,8 +235,14 @@ msgstr "Идентификатор схемы"
 msgid "Scientific"
 msgstr "Научное"
 
+msgid "Script"
+msgstr "Языки сценариев"
+
 msgid "Scripts"
 msgstr "Языки сценариев"
+
+msgid "Source"
+msgstr "Исходные тексты"
 
 msgid "Sources"
 msgstr "Исходные тексты"
@@ -237,6 +270,9 @@ msgstr "Стилевая схема"
 
 msgid "Style scheme search path"
 msgstr "Пути поиска схем стиля"
+
+msgid "Tera Template"
+msgstr "Шаблон Tera"
 
 msgid "Underline"
 msgstr "Подчёркивание"
