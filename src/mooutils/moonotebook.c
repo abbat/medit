@@ -1360,26 +1360,22 @@ moo_notebook_draw_child_border (MooNotebook  *nb,
     if (draw_gap)
     {
 #if GTK_CHECK_VERSION(3,0,0)
-        /* FIXME: This code was written by AI and requires review */
-        GtkStyleContext *context = gtk_widget_get_style_context(widget);
-        gtk_style_context_save(context);
+        GtkStyleContext *context = gtk_widget_get_style_context (widget);
 
-        /* Set the state for rendering */
-        gtk_style_context_set_state(context, GTK_STATE_FLAG_NORMAL);
+        gtk_style_context_save (context);
+        gtk_style_context_set_state (context, GTK_STATE_FLAG_NORMAL);
 
-        /* Create a rectangle for the frame */
-        GdkRectangle frame_rect;
-        frame_rect.x = allocation.x + border_width;
-        frame_rect.y = allocation.y + border_width + nb->priv->tabs_height;
-        frame_rect.width = allocation.width - 2*border_width;
-        frame_rect.height = nb->priv->child_height;
+        /* gtk_render_frame_gap() is what gtk_paint_box_gap() became. It takes
+           the two edges of the gap rather than an offset and a width. */
+        gtk_render_frame_gap (context, cr,
+                              allocation.x + border_width,
+                              allocation.y + border_width + nb->priv->tabs_height,
+                              allocation.width - 2*border_width,
+                              nb->priv->child_height,
+                              GTK_POS_TOP,
+                              gap_x, gap_x + gap_width);
 
-        /* Render the frame - themes can create gaps by omitting borders via CSS */
-        gtk_render_frame(context, cr,
-                        frame_rect.x, frame_rect.y,
-                        frame_rect.width, frame_rect.height);
-
-        gtk_style_context_restore(context);
+        gtk_style_context_restore (context);
 #else
         gtk_paint_box_gap (widget->style,
                            window,

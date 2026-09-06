@@ -131,8 +131,12 @@ jobs:
       # the target runs. Reporting only: the findings it starts from are not a
       # gate yet, and CodeQL is the one that judges a pull request on what it
       # introduces.
+      # Both toolkits, though today the gtk-2 run finds nothing the gtk-3 run
+      # does not: its 29 findings are a strict subset of the other's 32, the
+      # three it lacks being dead stores in GTK+3-only code. It is here for the
+      # #else branches of the 263 GTK_CHECK_VERSION splits, which the gtk-3 run
+      # never compiles and which nothing else would analyze.
       - name: Static analysis
-        if: matrix.gtk == 3
         run: cmake --build build --target analyze
 
   # Fedora is gtk-3 only, and is here for its compiler rather than its

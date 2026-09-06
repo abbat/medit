@@ -180,7 +180,7 @@ moo_indenter_character (MooIndenter *indenter,
                         GtkTextIter *where)
 {
     char *indent_string = NULL;
-    GtkTextBuffer *buffer = gtk_text_iter_get_buffer (where);
+    GtkTextBuffer *buffer;
     guint offset;
     GtkTextIter iter;
 

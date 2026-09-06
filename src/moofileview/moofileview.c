@@ -1286,15 +1286,15 @@ init_actions (MooFileView *fileview)
                                           NULL);
     moo_bind_bool_property (action, "sensitive", fileview, "has-selection", FALSE);
 
-    action = moo_action_group_add_action (group, "Paste",
-                                          "label", GTK_STOCK_PASTE,
-                                          "tooltip", GTK_STOCK_PASTE,
-                                          "stock-id", GTK_STOCK_PASTE,
-                                          "default-accel", MOO_FILE_VIEW_ACCEL_PASTE,
-                                          "force-accel-label", TRUE,
-                                          "closure-object", fileview,
-                                          "closure-callback", file_view_paste_clipboard,
-                                          NULL);
+    moo_action_group_add_action (group, "Paste",
+                                 "label", GTK_STOCK_PASTE,
+                                 "tooltip", GTK_STOCK_PASTE,
+                                 "stock-id", GTK_STOCK_PASTE,
+                                 "default-accel", MOO_FILE_VIEW_ACCEL_PASTE,
+                                 "force-accel-label", TRUE,
+                                 "closure-object", fileview,
+                                 "closure-callback", file_view_paste_clipboard,
+                                 NULL);
 
     moo_action_group_add_action (group, "Reload",
                                  "label", _("Reload"),

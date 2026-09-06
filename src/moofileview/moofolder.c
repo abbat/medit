@@ -522,13 +522,11 @@ static gboolean
 get_stat_a_bit (MooFolderImpl *impl)
 {
     gboolean done = FALSE;
-    double elapsed;
 
     g_assert (impl->dir == NULL);
     g_assert (impl->done == STAGE_NAMES);
     g_assert (impl->path != NULL);
 
-    elapsed = g_timer_elapsed (impl->timer, NULL);
     g_timer_continue (impl->timer);
 
     if (!impl->files_copy)
@@ -561,7 +559,6 @@ get_stat_a_bit (MooFolderImpl *impl)
             break;
     }
 
-    elapsed = g_timer_elapsed (impl->timer, NULL) - elapsed;
     g_timer_stop (impl->timer);
 
     if (!done)
@@ -633,13 +630,11 @@ static gboolean
 get_icons_a_bit (MooFolderImpl *impl)
 {
     gboolean done = FALSE;
-    double elapsed;
 
     g_assert (impl->dir == NULL);
     g_assert (impl->done == STAGE_STAT);
     g_assert (impl->path != NULL);
 
-    elapsed = g_timer_elapsed (impl->timer, NULL);
     g_timer_continue (impl->timer);
 
     if (!impl->files_copy)
@@ -678,7 +673,6 @@ get_icons_a_bit (MooFolderImpl *impl)
             break;
     }
 
-    elapsed = g_timer_elapsed (impl->timer, NULL) - elapsed;
     TIMER_CLEAR (impl->timer);
 
     if (done)

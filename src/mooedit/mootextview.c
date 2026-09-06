@@ -2430,8 +2430,9 @@ moo_text_view_draw_whitespace (GtkTextView       *text_view,
 
     line = gtk_text_iter_get_line (&iter);
     moo_text_view_get_cursor (GTK_TEXT_VIEW (text_view), &cursor);
-    cursor_line = gtk_text_iter_get_line (&cursor);
-    cursor_line = -1; /* FIXME */
+    /* FIXME: was gtk_text_iter_get_line (&cursor), which disables the
+       whitespace-under-cursor exception below rather than computing it. */
+    cursor_line = -1;
 
     do
     {
