@@ -575,6 +575,18 @@ Reading these first will usually identify the next one:
   `GtkCellView`, which has no `::activate` and is not a `GtkEntry`) and owns its own
   model. Symptom: the filter field in the file dialog stayed empty.
 
+- **`<title-fix>`** `_moo_edit_window_remove_doc()` ended with
+  `edit_changed (window, nullptr)`, which looks like "refresh the window for
+  whatever is active now". `edit_changed()` does its work only when its argument
+  **is** the active document, and NULL is the active document only when the last
+  one has just been closed — so closing one of several left the title, the status
+  bar, the language menu and the encoding item all describing the document that
+  had just gone. Passing `ACTIVE_DOC (window)` says what was meant. Not a porting
+  bug; it predates the fork.
+  → *A guard of the form `if (doc == ACTIVE_DOC (window))` turns a NULL argument
+  into "only when there is no document", which is rarely what a caller passing
+  NULL intends.*
+
 Known and deliberately left alone: `draw_entry()` in `mooiconview.c` still uses
 `gdk_cairo_create()` per row (deprecated since 3.22, bypasses the clip, works).
 

@@ -3239,7 +3239,16 @@ _moo_edit_window_remove_doc (MooEditWindow *window,
             moo_edit_window_set_active_doc (window, (MooEdit*) window->priv->history->data);
     }
 
-    edit_changed (window, nullptr);
+    /*
+     * Everything that follows the active document -- the title, the status
+     * bar, the language and encoding menus -- has to be refreshed for whatever
+     * is active now that this one is gone. Passing NULL looks like it asks for
+     * exactly that, but edit_changed() only does the work when its argument is
+     * the active document, and NULL is the active document only when the last
+     * one has just been closed. Closing one of several therefore left the
+     * window still describing the document that had been closed.
+     */
+    edit_changed (window, ACTIVE_DOC (window));
 
     g_signal_emit (window, signals[CLOSE_DOC_AFTER], 0);
 
