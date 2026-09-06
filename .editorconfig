@@ -1,0 +1,51 @@
+# Editor defaults. This is not a reformatting: it states the mechanical half of
+# what the tree already does, which is the half an editor gets wrong on its own
+# -- indent width, tabs, trailing whitespace, final newline, encoding. The style
+# itself is the GTK+/GNOME C style and is written down in AGENTS.md section 7,
+# together with why there is no .clang-format next to this file.
+
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Four spaces, never a tab: 88570 indented lines against 205.
+[*.{c,h,cpp,hh}]
+indent_style = space
+indent_size = 4
+
+[{CMakeLists.txt,*.cmake}]
+indent_style = space
+indent_size = 4
+
+[*.sh]
+indent_style = space
+indent_size = 4
+
+[*.yml]
+indent_style = space
+indent_size = 2
+
+# debian/rules is a makefile: a recipe line has to start with a tab.
+[debian/rules]
+indent_style = tab
+
+# Not ours to reformat, and all three are rewritten by something upstream: the
+# .lang corpus is synced from gtksourceview and carries that project's
+# whitespace (ten of the files indent with tabs), the interfaces come out of
+# Glade, and the catalogues out of msgmerge. Trimming any of them would show up
+# in the next sync as a diff nobody made.
+[*.{lang,ui,po,pot}]
+trim_trailing_whitespace = false
+insert_final_newline = false
+
+# Vendored C we carry verbatim, exempt for the same reason the analyze target
+# excludes it. gtksourceview indents with tabs, the other two mostly do not;
+# rather than pick for them, impose nothing.
+[{src/gtksourceview/**,src/xdgmime/**,src/eggsmclient/**,src/plugins/ctags/readtags.c}]
+indent_style = unset
+indent_size = unset
+trim_trailing_whitespace = false
