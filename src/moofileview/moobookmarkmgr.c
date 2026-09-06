@@ -828,7 +828,7 @@ init_editor_dialog (GtkBuilder *builder)
     GtkCellRenderer *cell;
     GtkTreeSelection *selection;
     MooFileEntryCompletion *completion;
-    GtkTreeView *treeview = treeview;
+    GtkTreeView *treeview = GTK_TREE_VIEW (moo_builder_get (builder, "treeview"));
 
     init_icon_combo (GTK_COMBO_BOX (moo_builder_get (builder, "icon_combo")), builder);
 
