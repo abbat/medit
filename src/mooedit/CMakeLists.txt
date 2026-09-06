@@ -228,7 +228,6 @@ install(FILES
     langs/prolog.lang
     langs/protobuf.lang
     langs/puppet.lang
-    langs/python-console.lang
     langs/python.lang
     langs/python3.lang
     langs/reasonml.lang
