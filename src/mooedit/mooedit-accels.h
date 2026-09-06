@@ -62,4 +62,6 @@
 
 #define MOO_EDIT_ACCEL_TERMINAL "<Ctrl>grave"
 
+#define MOO_EDIT_ACCEL_GO_TO_DEFINITION "F12"
+
 #endif /* MOO_EDIT_ACCELS_H */

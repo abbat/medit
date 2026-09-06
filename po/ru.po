@@ -2561,6 +2561,42 @@ msgstr "Диагностика"
 msgid "Symbols"
 msgstr "Символы"
 
+#: ../src/plugins/lsp/lsp-plugin.cpp:790
+msgid "Go to Definition"
+msgstr "Перейти к определению"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:791
+msgid "Go to _Definition"
+msgstr "Перейти к _определению"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:792
+msgid "Go to the definition of what is under the cursor"
+msgstr "Перейти к определению того, что под курсором"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:798
+msgid "Go to Type Definition"
+msgstr "Перейти к определению типа"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:799
+msgid "Go to _Type Definition"
+msgstr "Перейти к определению _типа"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:800
+msgid "Go to the definition of the type of what is under the cursor"
+msgstr "Перейти к определению типа того, что под курсором"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:805
+msgid "Go to Implementation"
+msgstr "Перейти к реализации"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:806
+msgid "Go to _Implementation"
+msgstr "Перейти к _реализации"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:807
+msgid "Go to the implementation of what is under the cursor"
+msgstr "Перейти к реализации того, что под курсором"
+
 #: ../src/plugins/lsp/lsp-plugin.cpp:475
 msgid "Show the symbol tree"
 msgstr "Показать дерево символов"

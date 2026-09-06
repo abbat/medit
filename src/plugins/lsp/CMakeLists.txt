@@ -9,6 +9,8 @@ target_sources(medit PRIVATE
     lsp-doc.h
     lsp-json.cpp
     lsp-json.h
+    lsp-navigate.cpp
+    lsp-navigate.h
     lsp-manager.cpp
     lsp-manager.h
     lsp-plugin.cpp

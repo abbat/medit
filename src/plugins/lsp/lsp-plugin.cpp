@@ -30,11 +30,14 @@
 #include "plugins/lsp/lsp-manager.h"
 #include "plugins/lsp/lsp-diagnostics.h"
 #include "plugins/lsp/lsp-symbols.h"
+#include "plugins/lsp/lsp-navigate.h"
 
 #include "mooedit/mooplugin-macro.h"
 #include "mooedit/mooeditor.h"
 #include "mooedit/mooeditwindow.h"
 #include "mooedit/mooeditview.h"
+#include "mooedit/mooedit-accels.h"
+#include "mooedit/mooeditaction-factory.h"
 #include "mooedit/mootextview.h"
 #include "plugins/support/moolineview.h"
 #include "mooutils/mooi18n.h"
@@ -45,6 +48,7 @@
 typedef struct {
     MooPlugin parent;
     guint     ui_merge_id;
+    guint     doc_ui_merge_id;
 } LspPlugin;
 
 typedef struct {
@@ -109,8 +113,92 @@ _moo_lsp_debug (void)
 
 
 /**********************************************************************/
+/* Hooks on a document view
+ */
+
+#define LSP_VIEW_HOOKED_QUARK "moo-lsp-view-hooked"
+
+static gboolean
+view_query_tooltip (MooEditView            *view,
+                    int                     x,
+                    int                     y,
+                    gboolean                keyboard_mode,
+                    GtkTooltip             *tooltip,
+                    G_GNUC_UNUSED gpointer  data)
+{
+    return lsp_hover_query_tooltip (view, x, y, keyboard_mode, tooltip);
+}
+
+
+/*
+ * Views are hooked as they turn up rather than through a signal, since a
+ * window has no notification for a view being added and a split view is
+ * created long after the document is. The context menu is not done here:
+ * medit builds it from its own ui xml rather than from GtkTextView's
+ * ::populate-popup, so the entry is a document action instead.
+ */
+static void
+hook_view (MooEditView *view)
+{
+    if (!view || g_object_get_data (G_OBJECT (view), LSP_VIEW_HOOKED_QUARK))
+        return;
+
+    g_object_set_data (G_OBJECT (view), LSP_VIEW_HOOKED_QUARK, GINT_TO_POINTER (TRUE));
+
+    gtk_widget_set_has_tooltip (GTK_WIDGET (view), TRUE);
+
+    g_signal_connect (view, "query-tooltip",
+                      G_CALLBACK (view_query_tooltip), NULL);
+}
+
+
+static void
+hook_views_of_doc (MooEdit *doc)
+{
+    MooEditViewArray *views;
+    guint i;
+
+    if (!doc)
+        return;
+
+    views = moo_edit_get_views (doc);
+
+    for (i = 0; i < moo_edit_view_array_get_size (views); ++i)
+        hook_view (views->elms[i]);
+
+    moo_edit_view_array_free (views);
+}
+
+
+/**********************************************************************/
 /* The document
  */
+
+static void
+goto_definition_doc_cb (MooEdit *doc)
+{
+    MooEditView *view = moo_edit_get_view (doc);
+    MooEditWindow *window = view ? moo_edit_view_get_window (view) : NULL;
+
+    if (window)
+        lsp_goto_definition (window, "textDocument/definition");
+}
+
+
+/*
+ * The context menu entry is only worth showing on a document some server
+ * handles. Whether that server can answer the question is checked again when
+ * the entry is used, since it may still be starting up.
+ */
+static void
+update_doc_actions (MooEdit *doc)
+{
+    GtkAction *action = moo_edit_get_action_by_id (doc, "LspGoToDefinition");
+
+    if (action)
+        g_object_set (action, "visible",
+                      lsp_manager_lookup_doc (doc) != NULL, (const char*) NULL);
+}
 
 /*
  * Saving an untitled document, and choosing another language by hand, both
@@ -132,6 +220,7 @@ doc_changed_identity (LspDocPlugin *plugin)
 
     lsp_manager_remove_doc (doc);
     lsp_manager_add_doc (doc);
+    update_doc_actions (doc);
 }
 
 
@@ -146,6 +235,8 @@ lsp_doc_plugin_create (LspDocPlugin *plugin)
                               G_CALLBACK (doc_changed_identity), plugin);
 
     lsp_manager_add_doc (doc);
+    hook_views_of_doc (doc);
+    update_doc_actions (doc);
 
     return TRUE;
 }
@@ -275,6 +366,7 @@ active_doc_changed (LspWindowPlugin *stuff)
     queue_pane_update (stuff);
     watch_active_buffer (stuff);
     queue_symbols_update (stuff);
+    hook_views_of_doc (moo_edit_window_get_active_doc (stuff->window));
 }
 
 
@@ -497,6 +589,27 @@ symbols_mapped (LspWindowPlugin *stuff)
 
 
 static void
+goto_definition_cb (MooEditWindow *window)
+{
+    lsp_goto_definition (window, "textDocument/definition");
+}
+
+
+static void
+goto_type_definition_cb (MooEditWindow *window)
+{
+    lsp_goto_definition (window, "textDocument/typeDefinition");
+}
+
+
+static void
+goto_implementation_cb (MooEditWindow *window)
+{
+    lsp_goto_definition (window, "textDocument/implementation");
+}
+
+
+static void
 show_symbols_cb (MooEditWindow *window)
 {
     moo_edit_window_show_pane (window, MOO_LSP_SYMBOLS_PANE_ID);
@@ -674,6 +787,55 @@ lsp_plugin_init (LspPlugin *plugin)
                                  "closure-callback", show_diagnostics_cb,
                                  nullptr);
 
+    moo_window_class_new_action (klass, "GoToDefinition", NULL,
+                                 "display-name", _("Go to Definition"),
+                                 "label", _("Go to _Definition"),
+                                 "tooltip", _("Go to the definition of what is under the cursor"),
+                                 "default-accel", MOO_EDIT_ACCEL_GO_TO_DEFINITION,
+                                 "closure-callback", goto_definition_cb,
+                                 nullptr);
+
+    moo_window_class_new_action (klass, "GoToTypeDefinition", NULL,
+                                 "display-name", _("Go to Type Definition"),
+                                 "label", _("Go to _Type Definition"),
+                                 "tooltip", _("Go to the definition of the type of what is under the cursor"),
+                                 "closure-callback", goto_type_definition_cb,
+                                 nullptr);
+
+    moo_window_class_new_action (klass, "GoToImplementation", NULL,
+                                 "display-name", _("Go to Implementation"),
+                                 "label", _("Go to _Implementation"),
+                                 "tooltip", _("Go to the implementation of what is under the cursor"),
+                                 "closure-callback", goto_implementation_cb,
+                                 nullptr);
+
+    {
+        /*
+         * The document context menu is built from the document ui xml with
+         * document actions, so the entry there is registered separately from
+         * the window action above.
+         */
+        MooEditClass *edit_klass = (MooEditClass*) g_type_class_ref (MOO_TYPE_EDIT);
+        MooUiXml *doc_xml = moo_editor_get_doc_ui_xml (editor);
+
+        moo_edit_class_new_action (edit_klass, "LspGoToDefinition",
+                                   "display-name", _("Go to Definition"),
+                                   "label", _("Go to _Definition"),
+                                   "tooltip", _("Go to the definition of what is under the cursor"),
+                                   "closure-callback", goto_definition_doc_cb,
+                                   (char*) 0);
+
+        if (doc_xml)
+        {
+            plugin->doc_ui_merge_id = moo_ui_xml_new_merge_id (doc_xml);
+            moo_ui_xml_add_item (doc_xml, plugin->doc_ui_merge_id,
+                                 "Editor/Popup/PopupStart",
+                                 "LspGoToDefinition", "LspGoToDefinition", -1);
+        }
+
+        g_type_class_unref (edit_klass);
+    }
+
     moo_window_class_new_action (klass, "ShowLspSymbols", NULL,
                                  "display-name", _("Symbols"),
                                  "label", _("Symbols"),
@@ -691,6 +853,15 @@ lsp_plugin_init (LspPlugin *plugin)
         moo_ui_xml_add_item (xml, plugin->ui_merge_id,
                              "Editor/Menubar/Tools",
                              "ShowLspSymbols", "ShowLspSymbols", -1);
+        moo_ui_xml_add_item (xml, plugin->ui_merge_id,
+                             "Editor/Menubar/Document",
+                             "GoToDefinition", "GoToDefinition", -1);
+        moo_ui_xml_add_item (xml, plugin->ui_merge_id,
+                             "Editor/Menubar/Document",
+                             "GoToTypeDefinition", "GoToTypeDefinition", -1);
+        moo_ui_xml_add_item (xml, plugin->ui_merge_id,
+                             "Editor/Menubar/Document",
+                             "GoToImplementation", "GoToImplementation", -1);
     }
 
     g_type_class_unref (klass);
@@ -710,10 +881,28 @@ lsp_plugin_deinit (LspPlugin *plugin)
 
     moo_window_class_remove_action (klass, "ShowLspDiagnostics");
     moo_window_class_remove_action (klass, "ShowLspSymbols");
+    moo_window_class_remove_action (klass, "GoToDefinition");
+    moo_window_class_remove_action (klass, "GoToTypeDefinition");
+    moo_window_class_remove_action (klass, "GoToImplementation");
+
+    lsp_navigate_reset ();
 
     if (plugin->ui_merge_id)
         moo_ui_xml_remove_ui (xml, plugin->ui_merge_id);
     plugin->ui_merge_id = 0;
+
+    {
+        MooEditClass *edit_klass = (MooEditClass*) g_type_class_ref (MOO_TYPE_EDIT);
+        MooUiXml *doc_xml = moo_editor_get_doc_ui_xml (editor);
+
+        moo_edit_class_remove_action (edit_klass, "LspGoToDefinition");
+
+        if (plugin->doc_ui_merge_id && doc_xml)
+            moo_ui_xml_remove_ui (doc_xml, plugin->doc_ui_merge_id);
+        plugin->doc_ui_merge_id = 0;
+
+        g_type_class_unref (edit_klass);
+    }
 
     g_type_class_unref (klass);
 

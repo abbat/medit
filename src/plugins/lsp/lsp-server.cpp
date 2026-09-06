@@ -789,6 +789,39 @@ client_capabilities (void)
     lsp_json_set_bool (publish_diagnostics, "codeDescriptionSupport", FALSE);
 
     {
+        JsonObject *hover_caps = json_object_new ();
+        static const char *formats[] = { "plaintext", NULL };
+        guint i;
+        static const char *link_methods[] = {
+            "definition", "typeDefinition", "implementation", "declaration"
+        };
+
+        /*
+         * Markdown would have to be rendered somewhere, and a tooltip is
+         * plain text; asking for plaintext makes the server strip it instead.
+         */
+        lsp_json_set_bool (hover_caps, "dynamicRegistration", FALSE);
+        lsp_json_set_array (hover_caps, "contentFormat",
+                            lsp_json_string_array (formats));
+        lsp_json_set_object (text_document, "hover", hover_caps);
+
+        /*
+         * linkSupport lets a server answer with a LocationLink, whose
+         * targetSelectionRange points at the name rather than at the whole
+         * definition.
+         */
+        for (i = 0; i < G_N_ELEMENTS (link_methods); ++i)
+        {
+            JsonObject *caps = json_object_new ();
+
+            lsp_json_set_bool (caps, "dynamicRegistration", FALSE);
+            lsp_json_set_bool (caps, "linkSupport", TRUE);
+
+            lsp_json_set_object (text_document, link_methods[i], caps);
+        }
+    }
+
+    {
         JsonObject *document_symbol = json_object_new ();
 
         lsp_json_set_bool (document_symbol, "dynamicRegistration", FALSE);
