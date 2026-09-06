@@ -1,41 +1,35 @@
 #!/bin/sh
-# "./check.sh files..." will validate files given on command line.
-# "./check.sh" without arguments will validate all lang and styles files
-# in the source directory
+# Validate the language definitions and the style schemes in this directory.
+#
+#   ./check.sh             validate every .lang and .xml here
+#   ./check.sh files...    validate the files named
+#
+# Both schemas are gtksourceview's, like the .lang files themselves. styles.rng
+# is deliberately wider than what this fork reads: it allows scale and the
+# PangoUnderline names, which GtkSourceStyle here ignores and misreads. It
+# catches malformed schemes, not unsupported attributes.
 
-check_file() {
-  case $1 in
-  testv1.lang) ;; # skip test file for old format
-  *.xml)
-    xmllint --relaxng styles.rng --noout $file || exit 1
-    ;;
-  *)
-    xmllint --relaxng language2.rng --noout $file || exit 1
-    ;;
-  esac
-}
-
-if [ $1 ]; then
-  for file in $@; do
-    check_file $file
-  done
-  exit 0
+if [ $# -gt 0 ]; then
+    files=$@
+else
+    cd "$(dirname "$0")" || exit 1
+    files="*.lang *.xml"
 fi
 
-if [ "$srcdir" ]; then
-  cd $srcdir
-fi
+status=0
 
-langs=""
-for l in *.lang; do
-  case $l in
-    msil.lang) ;;
-    *)
-      langs="$langs $l"
-      ;;
-  esac
+for file in $files; do
+    case $file in
+    *.xml) schema=styles.rng    ;;
+    *)     schema=language2.rng ;;
+    esac
+
+    if ! output=$(xmllint --relaxng "$schema" --noout "$file" 2>&1); then
+        echo "$output" >&2
+        status=1
+    fi
 done
 
-for file in $langs *.xml; do
-  check_file $file
-done
+[ $status -eq 0 ] && echo "$(echo $files | wc -w) files, all valid"
+
+exit $status

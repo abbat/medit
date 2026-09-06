@@ -112,7 +112,6 @@ install(FILES
     langs/cg.lang
     langs/changelog.lang
     langs/chdr.lang
-    langs/check.sh
     langs/classic.xml
     langs/cmake.lang
     langs/cobalt.xml
