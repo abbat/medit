@@ -19,7 +19,6 @@
             <child>
               <object class="GtkProgressBar" id="progressbar">
                 <property name="visible">True</property>
-                <property name="activity_mode">True</property>
                 <property name="show_text">True</property>
                 <property name="text">Doing stuff</property>
               </object>
