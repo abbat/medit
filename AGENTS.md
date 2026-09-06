@@ -1035,3 +1035,69 @@ prints what these functions return settles such questions in one build.
   Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
   ```
 - Do not push unless asked.
+
+### Code style
+
+The tree is written in the **GTK+/GNOME C style**, which is the style of the API it
+calls on nearly every line: four spaces and never a tab, the brace of a function or a
+block on a line of its own and not indented past the statement it opens, a space before
+the parenthesis of a call, `char *p` rather than `char* p`, the return type of a
+definition on its own line, and multi-line parameter lists aligned into columns.
+
+```c
+static BTNode  *bt_node_new         (BTNode     *parent,
+                                     guint       n_children,
+                                     guint       count,
+                                     guint       n_marks);
+```
+
+This records the style rather than imposing it — the tree already follows it. Measured
+over the 344 own sources (150959 lines, the vendored directories excluded the way
+`--target analyze` excludes them): 88570 indented lines use spaces against 205 with a
+tab, calls are written `foo (x)` in 38891 places against 1180 without the space, 9462
+braces sit on a line of their own against 576 trailing a statement, and `char *p`
+outnumbers `char* p` 6139 to 97. Whitespace hygiene is at the same level — eleven lines
+in nine files carry trailing whitespace, one file ends without a newline, nothing is
+CRLF.
+
+**There is no `.clang-format`, and GNOME's own experience with one is the reason.** GTK
+ships a `.clang-format` at the top of gtk.git (`BasedOnStyle: GNU` plus eight
+overrides), and the job that runs it, `style-check-diff`, is `when: manual`, looks at
+the merge request's diff only, and prints this before exiting:
+
+> The style check is not infallible. The clang-format configuration cannot perfectly
+> describe GTK's coding style: in particular, it cannot align function arguments. The
+> documented coding style for GTK takes priority over clang-format suggestions. […]
+> That's why this CI check is OK to fail.
+
+That is not caution about somebody else's tree. Seven core files of GTK itself
+(`gtkwidget.c`, `gtkwindow.c`, `gtknotebook.c`, `gtklabel.c`, `gtkentry.c`,
+`gtkbutton.c`, `gtkcssnode.c` — 41601 lines) diverge from GTK's own configuration by 6%
+of their lines.
+
+The same measurement here, as the share of lines clang-format 19 rewrites:
+
+| configuration | rewritten |
+|---|---|
+| GNOME's `.clang-format` as it ships | 52% |
+| the same, with `IndentWidth: 4` and `BreakBeforeBraces: Allman` | **19%** |
+| a configuration fitted to this tree by hand | 20% |
+| Microsoft / WebKit / GNU | 38% / 48% / 53% |
+| Google / LLVM / Chromium / Mozilla | 61% / 62% / 63% / 63% |
+
+GNOME's file is the right starting point — adapting its two disagreements about indent
+width and brace placement beats anything fitted by hand — and 19% is the floor, for the
+reason their script names. Of the 28411 lines it removes, 12123 are the column-aligned
+parameter lists and 5141 are the second of the two blank lines between functions. The
+first group cannot be recovered by trying harder: `AlignConsecutiveDeclarations` builds
+an alignment of its own instead, and made the hand-fitted diff larger rather than
+smaller, 60010 changed lines against 69860.
+
+The cost of running it anyway is not the noise in one commit. What this fork does most
+is read a line against the GTK+2 code it was ported from — the 263 `GTK_CHECK_VERSION`
+splits and the blocks still marked `/* FIXME: This code was written by AI */` — and a
+tree-wide reformat puts one commit on top of every line of that history.
+
+What is enforced is the mechanical half only, through `.editorconfig`: indent width,
+tabs, trailing whitespace, final newline, encoding. It needs no tool in CI and reformats
+nothing, and it covers the drift that actually happens.
