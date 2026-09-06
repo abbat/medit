@@ -16,6 +16,8 @@ BuildRequires:  gettext
 BuildRequires:  glib2-devel
 BuildRequires:  gtk3-devel
 BuildRequires:  intltool
+# the language server client
+BuildRequires:  json-glib-devel
 # the session management code talks to the X session manager directly
 BuildRequires:  libICE-devel
 BuildRequires:  libSM-devel
@@ -37,7 +39,7 @@ the editor Yevgen Muntyan stopped working on in 2017, ported to GTK+3.
 # the icon cache is updated by a file trigger, not by us; --no-warn-unused-cli
 # silences the notice about the RELEASE and Fortran flags %%cmake always passes
 %cmake --no-warn-unused-cli -DGTK_VERSION=3 -DENABLE_INSTALL_HOOKS=OFF \
-    -DENABLE_TERMINAL=ON
+    -DENABLE_TERMINAL=ON -DENABLE_LSP=ON
 %cmake_build
 
 %install

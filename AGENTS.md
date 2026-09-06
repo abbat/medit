@@ -98,6 +98,12 @@ to know when touching them:
   widgets from elsewhere need a `g_type_ensure()` of their own.
 * **Placeholder windows must not be `visible`**, or GtkBuilder shows them: empty windows
   appear beside the real dialog and get drawn after their content was moved out.
+* **A `.ui` that has to load in the GTK+2 build cannot use `GtkBox` or `GtkGrid`.**
+  `GtkBox` is abstract in GTK+2 and `GtkGrid` does not exist there, so every
+  interface in the tree uses `GtkVBox`/`GtkHBox`/`GtkTable`, which still load in
+  GTK+3. The terminal's is the only exception, and only because the terminal is a
+  GTK+3-only feature. GtkBuilder reports the difference as "Invalid object type",
+  at the moment the dialog is opened.
 * **Do not describe a model or cell renderers** for a combo the code fills itself
   (`init_combo()` and friends). Two renderers draw the value twice — "Selected lines
   Selected lines" — and it looks like a theme glitch rather than a bug.
@@ -148,6 +154,38 @@ own `CMakeLists.txt`, and one call in `moo_plugin_init()` (`plugins/mooplugin-bu
   on the open file — a working directory, a path — has to wait. The terminal starts its
   shell from the pane's `::map` instead, which also means no shell is forked for a user
   who never opens the pane.
+
+Three more things the LSP plugin ran into, all of which apply to any plugin:
+
+* **The document context menu is not `GtkTextView::populate-popup`.**
+  `_moo_edit_view_do_popup()` (`mooeditview.cpp:387`) builds it from
+  `moo_editor_get_doc_ui_xml()` at the path `Editor/Popup`, out of *document*
+  actions (`moo_edit_class_new_action` on `MOO_TYPE_EDIT`). A handler connected to
+  the signal is simply never called; `MooTextView::populate_popup` prepends Undo
+  and Redo because it is the vfunc, which does still run. Add entries at
+  `Editor/Popup/PopupStart` or `PopupEnd`, the way usertools does.
+* **A document just opened has no document-plugin state yet.** `notify::lang`
+  arrives after the document is inserted into the window, so a plugin that
+  attaches on the language — as the LSP client does — has attached nothing at the
+  moment `moo_editor_open_path()` returns. Anything the caller needs about that
+  document has to come from what it already knew, not from a lookup.
+* **`moo_editor_open_file()` moves the cursor from an idle**, at
+  `G_PRIORITY_HIGH_IDLE + 9`, and `do_move_cursor()` removes whatever id is in
+  `view->priv->move_cursor_idle` when it runs. So a caller that wants a *column*
+  after opening a file cannot ask for it with `moo_text_view_move_cursor(...,
+  in_idle = TRUE)` — the earlier idle cancels it — and cannot ask immediately
+  either, since the earlier idle then overwrites it. Use a plain
+  `g_idle_add_full (G_PRIORITY_DEFAULT_IDLE, ...)`, which runs after it and which
+  nothing else touches.
+
+Line marks, for a plugin that wants something in the left margin:
+`MooLineMark:visible` defaults to **FALSE**, and `line_mark_added()` only makes a
+mark drawable if it is visible when it arrives, so `g_object_new (MOO_TYPE_LINE_MARK,
+"visible", TRUE, NULL)` is not optional — `MooEditBookmark` sets it in its own init,
+which is why bookmarks appear without anyone asking. The margin itself is hidden
+until a view is told `show-line-marks`, and that has to be set before the marks
+arrive. `moo_line_mark_set_markup()` is **not** a tooltip: the markup is drawn in
+the margin, in place of the icon.
 
 A dependency that only one gtk version has follows `MOO_BUILD_CTAGS` / `MOO_BUILD_TERMINAL`:
 a tri-state `ENABLE_<X>` cache variable (AUTO/ON/OFF), a `#cmakedefine` in
@@ -446,6 +484,10 @@ command line and kills the shell (exit 144). `pkill -x medit` is safe.
 | `cmd \| tail -n` reports the **exit code of `tail`**, so a failed build looks like `exit=0` | `set -o pipefail` before any pipeline whose status you intend to read |
 | gcc 12 accepts C constructs that gcc 9/10 reject (unnamed parameters), so a clean local build says nothing about Debian 11 / Ubuntu 20.04 | see "Debian package build (old distros)" |
 | `pkg_check_modules(GTK … ${GTK_PACKAGE})` defines `GTK_VERSION` as the version it found (`3.24.38`), shadowing the cache entry of the same name that selects the toolkit | anywhere below the Dependencies section of the top `CMakeLists.txt`, branch on `GTK_PACKAGE STREQUAL "gtk+-3.0"`, never on `GTK_VERSION` |
+| A key name in an accelerator string is **case sensitive**: `"<Ctrl>Space"` does not parse and `"<Ctrl>space"` does. `_moo_accel_register()` drops an unparsable accelerator without a word, so the action simply has no key | test it: `gtk_accelerator_parse()` returns key 0. `MOO_EDIT_ACCEL_COMPLETE` carried this mistake unused since 1.2.92 |
+| `_moo_get_accel()` and `_moo_get_default_accel()` read **different maps**: the first holds accelerators that were actually set, the second the defaults registered with the action. An accelerator that has only ever had its default reads as empty from the first | ask the first, fall back to the second — that is what a plugin matching its own accelerator by hand has to do |
+| The focused widget sees a key before the accelerators (`moo_window_key_press_event`), so a plugin action whose key the text view consumes — `Ctrl+Space` — never fires | match the accelerator by hand in the view's `key-press-event`, as the terminal and the LSP completion do |
+| `MooMarkup` turns a `<![CDATA[…]]>` section into a **comment node**, where `moo_markup_get_content()` cannot see it | put the text in as ordinary escaped element content; `GMarkup` unescapes it on the way in |
 | A build-tree run also reads data from an **installed** medit package (`/usr/share/medit/`), so its stale `menu.xml` produces warnings about our tree | reproduce with `MOO_DATA_DIRS=<dir>` holding the tree's own xml — but note it *replaces* the whole search list, so style schemes and the file-selector plugin stop loading; use it to attribute a warning, not to test the UI |
 
 ### Getting a backtrace for a warning or critical

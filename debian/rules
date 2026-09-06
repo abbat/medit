@@ -13,10 +13,12 @@ GTK_BUILDS = gtk2 gtk3
 	dh $@ --buildsystem=cmake
 
 override_dh_auto_configure:
-	dh_auto_configure --builddirectory=build-gtk2 -- -DGTK_VERSION=2
+	# ENABLE_LSP=ON so that a missing libjson-glib-dev fails the build
+	# instead of quietly dropping the language server client
+	dh_auto_configure --builddirectory=build-gtk2 -- -DGTK_VERSION=2 -DENABLE_LSP=ON
 	# ENABLE_TERMINAL=ON so that a missing libvte-2.91-dev fails the build
 	# instead of quietly dropping the terminal pane from the package
-	dh_auto_configure --builddirectory=build-gtk3 -- -DGTK_VERSION=3 -DENABLE_TERMINAL=ON
+	dh_auto_configure --builddirectory=build-gtk3 -- -DGTK_VERSION=3 -DENABLE_TERMINAL=ON -DENABLE_LSP=ON
 
 override_dh_auto_build:
 	dh_auto_build --builddirectory=build-gtk2

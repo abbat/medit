@@ -4,7 +4,8 @@
 
 A maintained fork of **medit** (also known as **mooedit**) — a light, fast GTK
 text editor with tabs, syntax highlighting, a file selector, find in files,
-ctags navigation, a terminal pane and user defined tools.
+ctags navigation, a terminal pane, language server support and user defined
+tools.
 
 Upstream stopped at 1.2.92 in 2017. Its author called the editor "rather dead
 than alive" [\[1\]](https://sourceforge.net/p/mooedit/discussion/571682/thread/87dbc94e/#2e8e),
@@ -45,6 +46,13 @@ Everything that kept medit out of the distributions is gone:
   `.ui` files now, loaded by GtkBuilder from a GResource bundle, so neither the
   build nor the editor needs an interpreter. python2 was the reason medit left
   Debian; nothing in the tree runs python of any version any more.
+* **Language servers.** A builtin client speaks the language server protocol to
+  whichever servers are installed: problems underlined in the text and listed in
+  a pane, a tree of what the document contains, go to definition, hover and
+  completion. Which server handles which files is one small xml file, and
+  `Tools → LSP Servers…` opens your copy of it. It needs json-glib, which does
+  not depend on gtk, so both builds have it (`-DENABLE_LSP=OFF` to leave it
+  out).
 * **The terminal pane is back.** It used to be a python plugin on top of the
   GTK+2 vte; it is a builtin C++ plugin on top of vte-2.91 now, with the same
   shell, color schemes and context menu, plus an entry in the Tools menu bound

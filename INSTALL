@@ -15,6 +15,9 @@ for older systems, needs libgtk2.0-dev instead.
 The terminal pane additionally needs vte (libvte-2.91-dev on Debian). It is optional
 and looked for only in the gtk3 build; see ENABLE_TERMINAL below.
 
+The language server client additionally needs json-glib (libjson-glib-dev on Debian).
+It is optional and built for both gtk versions; see ENABLE_LSP below.
+
 Build options:
 
   -DGTK_VERSION=2|3|4    GTK version to build against (default: 3, see below)
@@ -24,6 +27,8 @@ Build options:
                          run gtk-update-icon-cache on install (default: ON)
   -DENABLE_TERMINAL=AUTO|ON|OFF
                          terminal pane, needs vte-2.91 (default: AUTO, see below)
+  -DENABLE_LSP=AUTO|ON|OFF
+                         language server client, needs json-glib (default: AUTO)
   -DCMAKE_BUILD_TYPE=... Debug, Release, RelWithDebInfo (default: RelWithDebInfo)
 
 The build is out of source, so several configurations can live side by side:
@@ -46,6 +51,22 @@ GTK+2 in 0.30, back in 2011, so the pane exists in the gtk3 build only. AUTO, th
 default, builds it when pkg-config finds vte-2.91 and silently leaves it out when it
 does not; ON turns a missing vte into a configure error, which is what the packaging
 uses; OFF never builds it.
+
+the language server client
+--------------------------
+
+Diagnostics, a symbol tree, go to definition, hover and completion, spoken to a
+language server over the language server protocol. It needs json-glib, which does not
+depend on gtk, so unlike the terminal it is built for both toolkits. AUTO, the default,
+builds it when pkg-config finds json-glib-1.0 and silently leaves it out when it does
+not; ON turns a missing json-glib into a configure error, which is what the packaging
+uses; OFF never builds it.
+
+The servers themselves are separate programs and none of them is required: install the
+ones you want (clangd, pylsp, gopls, rust-analyzer and so on) and medit will use them.
+Which server handles which files is described in lsp.xml, installed next to the other
+data files; Tools -> LSP Servers... copies it into your own data directory and opens it
+for editing.
 
 gtk-4
 -----

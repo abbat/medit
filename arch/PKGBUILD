@@ -7,9 +7,12 @@ pkgdesc="Useful programming and around-programming text editor"
 arch=(x86_64)
 url="https://github.com/abbat/medit"
 license=(LGPL-2.1-only)
-depends=(glib2 gtk3 hicolor-icon-theme libice libsm libx11 libxml2 vte3)
+depends=(glib2 gtk3 hicolor-icon-theme json-glib libice libsm libx11 libxml2 vte3)
 makedepends=(cmake gdk-pixbuf2 gettext glib2-devel intltool)
-optdepends=('ctags: list the functions of the open document')
+optdepends=('ctags: list the functions of the open document'
+            'clang: clangd, the language server for C and C++'
+            'gopls: the language server for Go'
+            'python-lsp-server: the language server for Python')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
 sha256sums=('60621eeb0d0ff1a9be7049c40729fbd2ca41d08f97f701a6071ee628a8adcaec')
 
@@ -21,6 +24,7 @@ build() {
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DENABLE_INSTALL_HOOKS=OFF \
         -DENABLE_TERMINAL=ON \
+        -DENABLE_LSP=ON \
         -DGTK_VERSION=3
     cmake --build build
 }
