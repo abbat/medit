@@ -50,6 +50,10 @@ option(ENABLE_NLS "Native Language Support" ON)
 option(ENABLE_STRICT "Enable all warnings and -Werror" OFF)
 option(ENABLE_INSTALL_HOOKS "Run gtk-update-icon-cache during install" ON)
 
+# Written for the analyze target below, and read by clangd -- including the one
+# medit's own LSP plugin starts on this tree.
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     # -g -O2, matching what the autotools build used to default to
     set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING "Build type" FORCE)
@@ -199,6 +203,9 @@ include(cmake/CompilerFlags.cmake)
 
 add_subdirectory(src)
 add_subdirectory(doc)
+
+# After src/, because the target it adds depends on the medit target.
+include(cmake/Analyze.cmake)
 
 if(ENABLE_NLS)
     add_subdirectory(po)
