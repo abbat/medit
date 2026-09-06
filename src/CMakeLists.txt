@@ -104,6 +104,26 @@ add_custom_command(
 add_custom_target(validate-xml
     DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/xml-validated.stamp")
 
+# The ids the code asks GtkBuilder for, against the ids the .ui files declare.
+# GtkBuilder itself only reports a missing one when the dialog is opened, and
+# some of these dialogs are hard to reach.
+file(GLOB_RECURSE MOO_SRC_FILES CONFIGURE_DEPENDS
+     "${CMAKE_CURRENT_SOURCE_DIR}/*.c" "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
+
+add_custom_command(
+    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/builder-ids.stamp"
+    COMMAND ${CMAKE_COMMAND}
+            "-DSRCDIR=${CMAKE_CURRENT_SOURCE_DIR}"
+            -P "${CMAKE_SOURCE_DIR}/cmake/CheckBuilderIds.cmake"
+    COMMAND ${CMAKE_COMMAND} -E touch "${CMAKE_CURRENT_BINARY_DIR}/builder-ids.stamp"
+    DEPENDS ${MOO_UI_FILES} ${MOO_SRC_FILES}
+            "${CMAKE_SOURCE_DIR}/cmake/CheckBuilderIds.cmake"
+    COMMENT "Checking GtkBuilder ids against the .ui files"
+    VERBATIM)
+
+add_custom_target(check-builder-ids
+    DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/builder-ids.stamp")
+
 # ---------------------------------------------------------------------------
 # The application
 # ---------------------------------------------------------------------------
@@ -116,7 +136,7 @@ add_executable(medit
     "${CMAKE_CURRENT_BINARY_DIR}/moo-pixbufs.h"
     "${CMAKE_CURRENT_BINARY_DIR}/resources.c")
 
-add_dependencies(medit validate-xml)
+add_dependencies(medit validate-xml check-builder-ids)
 
 target_include_directories(medit PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}"
