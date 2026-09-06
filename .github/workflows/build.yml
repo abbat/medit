@@ -1,0 +1,121 @@
+# Compile medit everywhere it is expected to compile, with warnings fatal.
+#
+# The local machine says very little about the distributions this fork targets:
+# it has gcc 12 and glib 2.74, while the oldest package target has gcc 9 and
+# glib 2.64, and the Fedora package is built with LTO by gcc 14. Every class of
+# breakage recorded in AGENTS.md -- unnamed parameters that only gcc 9 rejects,
+# symbols newer than the oldest glib, structs that only -Wodr sees -- is
+# invisible until one of these jobs runs.
+name: build
+
+on:
+  push:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Both toolkits on every deb-based target. GTK+2 is still a supported build,
+  # and mooplugin-builtin.cpp includes the plugin headers unconditionally, so a
+  # green GTK+3 build proves nothing about it.
+  deb:
+    name: ${{ matrix.image }}, gtk${{ matrix.gtk }}
+    runs-on: ubuntu-latest
+    container: ${{ matrix.image }}
+    strategy:
+      fail-fast: false
+      matrix:
+        image:
+          - ubuntu:24.04
+          - ubuntu:22.04
+          - ubuntu:20.04
+          - debian/eol:bullseye
+        gtk: [2, 3]
+    env:
+      DEBIAN_FRONTEND: noninteractive
+    steps:
+      # Before checkout: actions/checkout wants git, and the container has none.
+      - name: Install build dependencies
+        run: |
+          set -eux
+          # bullseye is past EOL: its main moved to archive.debian.org and
+          # bullseye-security is gone from deb.debian.org altogether, so a plain
+          # apt-get update dies with 404s. Take both from snapshot.debian.org.
+          if grep -q bullseye /etc/os-release; then
+              cat >/etc/apt/sources.list <<'EOS'
+          deb http://snapshot.debian.org/archive/debian/20250601T000000Z bullseye main
+          deb http://snapshot.debian.org/archive/debian-security/20250601T000000Z bullseye-security main
+          EOS
+              cat >/etc/apt/apt.conf.d/99snapshot <<'EOS'
+          Acquire::Check-Valid-Until "false";
+          Acquire::Retries "5";
+          EOS
+          fi
+          apt-get update -qq
+          apt-get install -y -qq --no-install-recommends \
+              build-essential cmake git pkg-config intltool gettext \
+              libglib2.0-dev libxml2-dev libgtk2.0-dev libgtk-3-dev \
+              libjson-glib-dev libvte-2.91-dev \
+              libice-dev libsm-dev libxext-dev libxrender-dev
+
+      - uses: actions/checkout@v4
+
+      - name: Configure
+        run: |
+          set -eux
+          # ENABLE_LSP and ENABLE_TERMINAL default to AUTO, which turns a
+          # missing dependency into a build quietly lacking that feature. Ask
+          # for them by name so the job fails instead. vte-2.91 dropped GTK+2 in
+          # 2011, so the terminal pane exists for the GTK+3 build only.
+          cmake -S . -B build \
+              -DGTK_VERSION=${{ matrix.gtk }} \
+              -DENABLE_STRICT=ON \
+              -DENABLE_LSP=ON \
+              -DENABLE_TERMINAL=${{ matrix.gtk == 3 && 'ON' || 'OFF' }}
+
+      - name: Build
+        run: cmake --build build -j"$(nproc)"
+
+  # Fedora is gtk-3 only, and is here for its compiler rather than its
+  # packages: gcc 14 with LTO is what caught the two file-local structs sharing
+  # a name across translation units (-Wodr) and the identifiers that become
+  # keywords in C++20. Neither is visible without link time optimization, so
+  # this job turns it on the way the rpm build does.
+  fedora:
+    name: fedora:44, gtk3, LTO
+    runs-on: ubuntu-latest
+    container: fedora:44
+    steps:
+      - name: Install build dependencies
+        run: |
+          set -eux
+          # fedora-cisco-openh264 is frequently unreachable and a weak
+          # dependency drags it in, which fails the whole transaction.
+          dnf -y --setopt=install_weak_deps=False --disablerepo=fedora-cisco-openh264 install \
+              cmake make gcc gcc-c++ git \
+              gtk3-devel glib2-devel libxml2-devel gdk-pixbuf2-devel \
+              json-glib-devel vte291-devel \
+              libICE-devel libSM-devel \
+              intltool gettext
+
+      - uses: actions/checkout@v4
+
+      - name: Configure
+        run: |
+          set -eux
+          cmake -S . -B build \
+              -DGTK_VERSION=3 \
+              -DENABLE_STRICT=ON \
+              -DENABLE_LSP=ON \
+              -DENABLE_TERMINAL=ON \
+              -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
+
+      - name: Build
+        run: cmake --build build -j"$(nproc)"
