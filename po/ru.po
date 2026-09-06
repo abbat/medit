@@ -1914,6 +1914,10 @@ msgstr "Не удалось создать папку %s: %s"
 msgid "_Show:"
 msgstr "_Показывать:"
 
+#: ../src/mooutils/moohelp.c:35
+msgid "Could not open the medit web site"
+msgstr "Не удалось открыть сайт medit"
+
 #: ../src/mooutils/moohelp.c:205
 msgid "Help files not found"
 msgstr "Файлы справки не найдены"

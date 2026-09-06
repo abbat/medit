@@ -32,9 +32,6 @@
 #include "mooutils/mooutils-fs.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/moobuilder.h"
-#ifdef MOO_ENABLE_HELP
-#include "moo-help-sections.h"
-#endif
 #include <gtk/gtk.h>
 #include <string.h>
 #include <sys/wait.h>
@@ -360,9 +357,6 @@ create_grep_dialog (MooEditWindow *window,
                                              GTK_RESPONSE_CANCEL,
                                              -1);
 
-#ifdef MOO_ENABLE_HELP
-    moo_help_set_id (stuff->grep_dialog, HELP_SECTION_DIALOG_FIND_IN_FILES);
-#endif
     moo_help_connect_keys (stuff->grep_dialog);
 
     g_signal_connect (stuff->grep_dialog, "delete-event",
@@ -400,9 +394,6 @@ create_find_dialog (MooEditWindow *window,
                                              -1);
     moo_window_set_parent (stuff->find_dialog, GTK_WIDGET (window));
 
-#ifdef MOO_ENABLE_HELP
-    moo_help_set_id (stuff->find_dialog, HELP_SECTION_DIALOG_FIND_FILE);
-#endif
     moo_help_connect_keys (stuff->find_dialog);
 
     g_signal_connect (stuff->find_dialog, "delete-event",

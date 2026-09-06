@@ -24,9 +24,6 @@
 #include "mooutils/moohelp.h"
 #include "mooutils/mooutils-treeview.h"
 #include "mooutils/moocompat.h"
-#ifdef MOO_ENABLE_HELP
-#include "moo-help-sections.h"
-#endif
 
 
 enum {
@@ -64,7 +61,6 @@ static void pages_list_selection_changed    (MooPrefsDialog *dialog,
 
 static void init_page                       (MooPrefsPage   *page);
 
-static gboolean moo_prefs_dialog_help       (GtkWidget      *widget, gpointer);
 
 
 enum {
@@ -138,7 +134,6 @@ moo_prefs_dialog_init (MooPrefsDialog *dialog)
 {
     GtkWidget *hbox, *scrolledwindow, *notebook;
 
-    moo_help_set_func (GTK_WIDGET (dialog), moo_prefs_dialog_help);
     moo_help_connect_keys (GTK_WIDGET (dialog));
 
     _moo_window_set_remember_size (GTK_WINDOW (dialog), "Dialogs/Preferences", -1, -1, FALSE);
@@ -567,22 +562,3 @@ moo_prefs_dialog_remove_page (MooPrefsDialog     *dialog,
 }
 
 
-static gboolean
-moo_prefs_dialog_help (GtkWidget *widget, G_GNUC_UNUSED gpointer data)
-{
-    int index;
-    GtkWidget *current_page = NULL;
-    MooPrefsDialog *dialog = MOO_PREFS_DIALOG (widget);
-
-    if ((index = gtk_notebook_get_current_page (dialog->notebook)) >= 0)
-        current_page = gtk_notebook_get_nth_page (dialog->notebook, index);
-
-    if (!current_page || !moo_help_open (current_page))
-    {
-#ifdef MOO_ENABLE_HELP
-        moo_help_open_id (HELP_SECTION_PREFS_DIALOG, widget);
-#endif
-    }
-
-    return TRUE;
-}

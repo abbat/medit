@@ -26,9 +26,6 @@
 #include "mooutils/moohelp.h"
 #include "mooutils/moocompat.h"
 #include "mooutils/moobuilder.h"
-#ifdef MOO_ENABLE_HELP
-#include "moo-help-sections.h"
-#endif
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 #include <string.h>
@@ -860,9 +857,6 @@ _moo_accel_prefs_dialog_new (MooActionCollection *collection)
     gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), GTK_WIDGET (page), TRUE, TRUE, 0);
 #endif
 
-#ifdef MOO_ENABLE_HELP
-    moo_help_set_id (dialog, HELP_SECTION_PREFS_ACCELS);
-#endif
     moo_help_connect_keys (dialog);
 
     g_signal_connect_swapped (dialog, "response",

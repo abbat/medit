@@ -92,8 +92,9 @@ void            moo_file_dialog_set_encoding            (MooFileDialog  *dialog,
                                                          const char     *encoding);
 const char     *moo_file_dialog_get_encoding            (MooFileDialog  *dialog);
 
-void            moo_file_dialog_set_help_id             (MooFileDialog  *dialog,
-                                                         const char     *id);
+/* Adds a Help button, which opens the project page. */
+void            moo_file_dialog_set_show_help           (MooFileDialog  *dialog,
+                                                         gboolean        show_help);
 
 const char     *moo_file_dialog                         (GtkWidget      *parent,
                                                          MooFileDialogType type,

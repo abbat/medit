@@ -27,9 +27,6 @@
 #include "mooutils/mooencodings.h"
 #include "mooutils/mooi18n.h"
 #include "mooutils/moohelp.h"
-#ifdef MOO_ENABLE_HELP
-#include "moo-help-sections.h"
-#endif
 #include <string.h>
 
 
@@ -113,9 +110,6 @@ page_general_init_ui (MooPrefsPage *page)
     BIND_SETTING (indent_width, MOO_EDIT_PREFS_INDENT_WIDTH);
     BIND_SETTING (fontbutton, MOO_EDIT_PREFS_FONT);
 
-#ifdef MOO_ENABLE_HELP
-    moo_help_set_id (GTK_WIDGET (page), HELP_SECTION_PREFS_GENERAL);
-#endif
 }
 
 static void
@@ -184,9 +178,6 @@ page_filters_init_ui (MooPrefsPage *page)
     g_return_if_fail (gxml != NULL);
     moo_builder_reparent (gxml, "PrefsFilters", GTK_WIDGET (page));
     g_object_set_data_full (G_OBJECT (page), "moo-edit-prefs-page-xml", gxml, g_object_unref);
-#ifdef MOO_ENABLE_HELP
-    moo_help_set_id (GTK_WIDGET (page), HELP_SECTION_PREFS_FILTERS);
-#endif
 }
 
 static void
@@ -241,9 +232,6 @@ page_view_init_ui (MooPrefsPage *page)
     BIND_SETTING (draw_rigth_margin, MOO_EDIT_PREFS_DRAW_RIGHT_MARGIN);
     BIND_SETTING (spin_right_margin_offset, MOO_EDIT_PREFS_RIGHT_MARGIN_OFFSET);
 
-#ifdef MOO_ENABLE_HELP
-    moo_help_set_id (GTK_WIDGET (page), HELP_SECTION_PREFS_VIEW);
-#endif
 }
 
 static void
@@ -291,9 +279,6 @@ page_file_init_ui (MooPrefsPage *page)
     BIND_SETTING (check_open_dialog_follows_doc, MOO_EDIT_PREFS_DIALOGS_OPEN_FOLLOWS_DOC);
     BIND_SETTING (check_auto_sync, MOO_EDIT_PREFS_AUTO_SYNC);
 
-#ifdef MOO_ENABLE_HELP
-    moo_help_set_id (GTK_WIDGET (page), HELP_SECTION_PREFS_FILE);
-#endif
 }
 
 static void
@@ -334,9 +319,6 @@ page_langs_init_ui (MooPrefsPage *page)
     g_return_if_fail (gxml != NULL);
     moo_builder_reparent (gxml, "PrefsLangs", GTK_WIDGET (page));
     g_object_set_data_full (G_OBJECT (page), "moo-edit-prefs-page-xml", gxml, g_object_unref);
-#ifdef MOO_ENABLE_HELP
-    moo_help_set_id (GTK_WIDGET (page), HELP_SECTION_PREFS_LANGS);
-#endif
 }
 
 static void

@@ -42,7 +42,7 @@ struct _MooFileDialogPrivate {
     gboolean enable_encodings;
 
     char *size_prefs_key;
-    char *help_id;
+    gboolean show_help;
 
     GSList *uris;
     char *uri;
@@ -220,7 +220,6 @@ moo_file_dialog_finalize (GObject *object)
     g_free (dialog->priv->filter_mgr_id);
     g_free (dialog->priv->uri);
     g_free (dialog->priv->encoding);
-    g_free (dialog->priv->help_id);
     g_free (dialog->priv->size_prefs_key);
     string_slist_free (dialog->priv->uris);
 
@@ -295,7 +294,7 @@ GtkWidget *file_chooser_dialog_new (const char *title,
                                     GtkFileChooserAction action,
                                     const char *okbtn,
                                     const char *start_dir_uri,
-                                    const char *help_id)
+                                    gboolean    show_help)
 {
     GtkWidget *dialog =
             gtk_file_chooser_dialog_new (title, NULL, action,
@@ -313,9 +312,8 @@ GtkWidget *file_chooser_dialog_new (const char *title,
                                                  start_dir_uri);
 
 
-    if (help_id)
+    if (show_help)
     {
-        moo_help_set_id (dialog, help_id);
         moo_help_connect_keys (dialog);
         gtk_dialog_add_button (GTK_DIALOG (dialog), GTK_STOCK_HELP, GTK_RESPONSE_HELP);
     }
@@ -380,7 +378,7 @@ moo_file_dialog_create_widget (MooFileDialog *dialog)
                                               chooser_action,
                                               GTK_STOCK_OPEN,
                                               dialog->priv->current_dir,
-                                              dialog->priv->help_id);
+                                              dialog->priv->show_help);
             file_chooser_set_select_multiple (widget, dialog->priv->multiple);
             break;
 
@@ -391,7 +389,7 @@ moo_file_dialog_create_widget (MooFileDialog *dialog)
                                               chooser_action,
                                               GTK_STOCK_SAVE,
                                               dialog->priv->current_dir,
-                                              dialog->priv->help_id);
+                                              dialog->priv->show_help);
 
             if (dialog->priv->name)
                 file_chooser_set_name (widget, dialog->priv->name);
@@ -804,11 +802,11 @@ moo_file_dialog_set_filter_mgr_id (MooFileDialog *dialog,
 
 
 void
-moo_file_dialog_set_help_id (MooFileDialog *dialog,
-                             const char    *id)
+moo_file_dialog_set_show_help (MooFileDialog *dialog,
+                               gboolean       show_help)
 {
     g_return_if_fail (MOO_IS_FILE_DIALOG (dialog));
-    MOO_ASSIGN_STRING (dialog->priv->help_id, id);
+    dialog->priv->show_help = show_help != FALSE;
 }
 
 

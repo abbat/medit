@@ -154,7 +154,7 @@ static void
 moo_app_help (GtkWidget *window)
 {
   GtkWidget *focus = gtk_window_get_focus (GTK_WINDOW (window));
-  moo_help_open_any (focus ? focus : window);
+  moo_help_open (focus ? focus : window);
 }
 
 /*!

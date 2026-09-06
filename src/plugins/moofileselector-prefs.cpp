@@ -20,9 +20,6 @@
 #include "mooutils/mooi18n.h"
 #include "mooutils/moostock.h"
 #include "mooutils/moohelp.h"
-#ifdef MOO_ENABLE_HELP
-#include "moo-help-sections.h"
-#endif
 #include "mooutils/moobuilder.h"
 #include <gtk/gtk.h>
 #include <string.h>
@@ -83,9 +80,6 @@ _moo_file_selector_prefs_page (MooPlugin *plugin)
 
     g_signal_connect_swapped (page, "apply", G_CALLBACK (prefs_page_apply), builder);
     g_signal_connect_swapped (page, "init", G_CALLBACK (prefs_page_init), builder);
-#ifdef MOO_ENABLE_HELP
-    moo_help_set_id (page, HELP_SECTION_PREFS_FILE_SELECTOR);
-#endif
 
     column = gtk_tree_view_column_new ();
     GtkTreeView *treeview = GTK_TREE_VIEW (moo_builder_get (builder, "treeview"));

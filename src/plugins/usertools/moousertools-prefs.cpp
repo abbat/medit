@@ -23,9 +23,6 @@
 #include "mooutils/mooutils.h"
 #include "mooutils/moohelp.h"
 #include "mooutils/moobuilder.h"
-#ifdef MOO_ENABLE_HELP
-#include "moo-help-sections.h"
-#endif
 #include <string.h>
 
 enum {
@@ -595,9 +592,6 @@ moo_user_tools_prefs_page_new (void)
 
     g_signal_connect_swapped (page, "init", G_CALLBACK (main_page_init), builder);
     g_signal_connect_swapped (page, "apply", G_CALLBACK (main_page_apply), builder);
-#ifdef MOO_ENABLE_HELP
-    moo_help_set_id (page, HELP_SECTION_PREFS_USER_TOOLS);
-#endif
 
     /* the two command pages share one description, so each needs its own
        instance of it */

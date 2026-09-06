@@ -2,6 +2,7 @@
  *   moohelp.h
  *
  *   Copyright (C) 2004-2010 by Yevgen Muntyan <emuntyan@users.sourceforge.net>
+ *   Copyright (C) 2023-2026 by Anton Batenev <antonbatenev@yandex.ru>
  *
  *   This file is part of medit.  medit is free software; you can
  *   redistribute it and/or modify it under the terms of the
@@ -20,26 +21,13 @@
 
 G_BEGIN_DECLS
 
-#define MOO_HELP_ID_CONTENTS "contents"
-#define MOO_HELP_ID_INDEX    "index"
+/*
+ * Help is the project page. The html manual that used to ship with medit
+ * described the editor as it was in 2010 and had been wrong for years.
+ */
+void        moo_help_open               (GtkWidget     *parent);
 
-typedef gboolean (*MooHelpFunc) (GtkWidget *widget,
-                                 gpointer   data);
-
-gboolean    moo_help_open               (GtkWidget     *widget);
-void        moo_help_open_any           (GtkWidget     *widget);
-void        moo_help_open_id            (const char    *id,
-                                         GtkWidget     *parent);
-
-void        moo_help_set_id             (GtkWidget     *widget,
-                                         const char    *id);
-void        moo_help_set_func           (GtkWidget     *widget,
-                                         gboolean (*func) (GtkWidget*, gpointer));
-void        moo_help_set_func_full      (GtkWidget     *widget,
-                                         MooHelpFunc    func,
-                                         gpointer       func_data,
-                                         GDestroyNotify notify);
-
+/* Makes F1 on the widget open it. */
 void        moo_help_connect_keys       (GtkWidget     *widget);
 
 G_END_DECLS
