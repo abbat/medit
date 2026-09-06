@@ -117,6 +117,9 @@ rm_fr (const char *path,
 
     if (!WIFEXITED (status) || WEXITSTATUS (status))
     {
+        /* g_strfreev() above is not modelled as freeing, so the array is reported
+           as leaked. */
+        /* NOLINTNEXTLINE(clang-analyzer-unix.Malloc) */
         if (child_err && strlen (child_err) > 5000)
             strcpy (child_err + 4997, "...");
 

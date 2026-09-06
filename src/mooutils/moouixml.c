@@ -1096,6 +1096,7 @@ moo_ui_xml_insert_after (MooUiXml       *xml,
     if (!after)
         position = 0;
     else
+        /* NOLINTNEXTLINE(clang-analyzer-core.NullDereference) */
         position = g_slist_index (parent->children, after) + 1;
 
     moo_ui_xml_insert (xml, merge_id, parent, position, markup);
@@ -1128,8 +1129,13 @@ moo_ui_xml_insert_before (MooUiXml       *xml,
     g_return_if_fail (!before || before->parent == parent);
 
     if (!before)
+        /* parent falls back to xml->priv->ui, which moo_ui_xml_init() sets and
+           nothing clears. */
+        /* NOLINTNEXTLINE(clang-analyzer-core.NullDereference) */
         position = g_slist_length (parent->children);
     else
+        /* Same fallback as above. */
+        /* NOLINTNEXTLINE(clang-analyzer-core.NullDereference) */
         position = g_slist_index (parent->children, before);
 
     moo_ui_xml_insert (xml, merge_id, parent, position, markup);

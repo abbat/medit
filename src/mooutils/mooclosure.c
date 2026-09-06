@@ -80,6 +80,9 @@ moo_closure_ref_sink (MooClosure *closure)
 {
     moo_closure_ref (closure);
     moo_closure_sink (closure);
+    /* moo_closure_sink() drops only the reference moo_closure_ref() took on the
+       line above, so the closure returned here is alive. */
+    /* NOLINTNEXTLINE(clang-analyzer-unix.Malloc) */
     return closure;
 }
 

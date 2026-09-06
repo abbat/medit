@@ -498,6 +498,10 @@ do_stat (MooFileWatch *watch)
         mgw_time_t old;
         mgw_errno_t err;
 
+        /* moo_file_watch_emit_event() takes its own reference and drops it, and
+           this function holds one across the whole loop. Reference counting is
+           opaque to the analyzer, so every unref looks like a possible free. */
+        /* NOLINTNEXTLINE(clang-analyzer-unix.Malloc) */
         monitor = (Monitor*) g_hash_table_lookup (watch->requests, lid->data);
 
         if (!monitor || !monitor->alive)
@@ -542,6 +546,10 @@ do_stat (MooFileWatch *watch)
     }
 
     for (lid = to_remove; lid != NULL; lid = lid->next)
+        /* moo_file_watch_emit_event() takes its own reference and drops it, and
+           this function holds one across the whole loop. Reference counting is
+           opaque to the analyzer, so every unref looks like a possible free. */
+        /* NOLINTNEXTLINE(clang-analyzer-unix.Malloc) */
         if (g_hash_table_lookup (watch->requests, GUINT_TO_POINTER (lid->data)))
             moo_file_watch_cancel_monitor (watch, GPOINTER_TO_UINT (lid->data));
 
@@ -549,6 +557,10 @@ do_stat (MooFileWatch *watch)
     g_slist_free (list);
 
 out:
+    /* moo_file_watch_emit_event() takes its own reference and drops it, and
+       this function holds one across the whole loop. Reference counting is
+       opaque to the analyzer, so every unref looks like a possible free. */
+    /* NOLINTNEXTLINE(clang-analyzer-unix.Malloc) */
     moo_file_watch_unref (watch);
     return result;
 }

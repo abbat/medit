@@ -2178,6 +2178,9 @@ _moo_window_class_new_action_callback (MooWindowClass *klass,
     moo_window_class_install_action (klass, id, action_factory,
                                      group, conditions, closure_info);
 
+    /* closure_info is handed to moo_window_class_install_action(), which passes
+       it to action_info_new() and keeps it. Ownership left this function. */
+    /* NOLINTNEXTLINE(clang-analyzer-unix.Malloc) */
     g_object_unref (action_factory);
     g_strfreev (conditions);
 }

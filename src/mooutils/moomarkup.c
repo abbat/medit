@@ -321,6 +321,9 @@ moo_markup_element_new (MooMarkupDoc   *doc,
     elm->attr_names = g_strdupv ((char**) attribute_names);
     elm->attr_vals = g_strdupv ((char**) attribute_values);
     if (elm->attr_names)
+        /* The guard tests the g_strdupv() copy while the loop walks the original,
+           which is the same test: g_strdupv() returns NULL only for NULL. */
+        /* NOLINTNEXTLINE(clang-analyzer-core.NullDereference) */
         for (elm->n_attrs = 0; attribute_names[elm->n_attrs]; ++elm->n_attrs) ;
     else
         elm->n_attrs = 0;

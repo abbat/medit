@@ -171,6 +171,9 @@ combo_changed (GtkComboBox   *combo,
     }
 
     if (old_path)
+        /* moo_tree_helper_get_selected() writes *model in both branches of its
+           switch before returning, whether or not it returns TRUE. */
+        /* NOLINTNEXTLINE(clang-analyzer-core.CallAndMessage) */
         _moo_tree_helper_update_model (helper, model, old_path);
 
     moo_tree_helper_real_update_widgets (helper, model, path);

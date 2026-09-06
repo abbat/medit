@@ -2643,6 +2643,9 @@ set_selection_data_from_clipboard (GtkSelectionData *data,
     gtk_selection_data_set_uris (data, uris);
 
     g_strfreev (uris);
+/* g_strfreev() above is not modelled as freeing, so the array is reported
+   as leaked. */
+/* NOLINTNEXTLINE(clang-analyzer-unix.Malloc) */
 }
 
 static void

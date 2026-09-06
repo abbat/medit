@@ -355,6 +355,10 @@ apply_one (GtkAction *action,
 {
     const char *accel_path = _moo_action_get_accel_path (action);
     const char *default_accel = _moo_get_default_accel (accel_path);
+    /* Dead because the switch below assigns in every case. Kept so that removing
+       it cannot turn into -Wmaybe-uninitialized: the default case ends in
+       g_return_if_reached(). */
+    /* NOLINTNEXTLINE(clang-analyzer-deadcode.DeadStores) */
     const char *new_accel = "";
 
     switch (shortcut->choice)
@@ -528,6 +532,8 @@ tree_selection_changed (MooAccelPrefsPage *page)
     GtkAction *action = NULL;
     GtkTreePath *path;
     char *default_label;
+    /* Dead for the same reason as in apply_one(), and kept for the same reason. */
+    /* NOLINTNEXTLINE(clang-analyzer-deadcode.DeadStores) */
     const char *default_accel, *new_accel = "";
     GtkRadioButton *new_button = NULL;
     Shortcut *shortcut;

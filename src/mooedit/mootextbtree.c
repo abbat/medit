@@ -375,6 +375,9 @@ _moo_text_btree_delete (BTree          *tree,
 
     bt_data_free (data, deleted_marks);
 
+    /* node is data->parent, which is set for every BTData in the tree. The
+       g_assert() above says so, and a release build compiles it out. */
+    /* NOLINTNEXTLINE(clang-analyzer-core.NullDereference) */
     while (node->n_children < BTREE_NODE_MIN_CAPACITY)
     {
         guint node_index;

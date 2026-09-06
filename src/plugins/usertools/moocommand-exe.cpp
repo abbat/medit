@@ -512,6 +512,9 @@ run_sync (const char  *base_cmd_line,
     }
 
     g_strfreev (argv);
+    /* g_strfreev() above is not modelled as freeing, so the array is reported
+       as leaked. */
+    /* NOLINTNEXTLINE(clang-analyzer-unix.Malloc) */
     g_free (cmd_line);
     return result;
 }
@@ -606,6 +609,9 @@ run_async (const char     *cmd_line,
     }
 
     g_strfreev (argv);
+    /* g_strfreev() above is not modelled as freeing, so the array is reported
+       as leaked. */
+    /* NOLINTNEXTLINE(clang-analyzer-unix.Malloc) */
     return result;
 }
 

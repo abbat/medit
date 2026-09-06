@@ -215,6 +215,9 @@ split_list (const char *string)
     if (n == 0)
     {
         g_strfreev (result);
+        /* g_strfreev() above is not modelled as freeing, so the array is reported
+           as leaked. */
+        /* NOLINTNEXTLINE(clang-analyzer-unix.Malloc) */
         return NULL;
     }
 
