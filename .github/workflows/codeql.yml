@@ -7,8 +7,9 @@
 # while what is already there waits in the Security tab. That is what makes it
 # usable on a fork carrying a machine-assisted GTK+3 port.
 #
-# The build is the gtk-3 one, which is what the packages install by default.
-# Code behind #if !GTK_CHECK_VERSION(3,0,0) is therefore not analyzed.
+# Both toolkits are built, because the #else side of the 263
+# GTK_CHECK_VERSION splits is compiled nowhere else and is the specification
+# the gtk-3 side was ported from.
 name: codeql
 
 on:
