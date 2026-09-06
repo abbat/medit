@@ -130,6 +130,7 @@ set_state (LspServer      *server,
 }
 
 
+G_GNUC_PRINTF (2, 3)
 static void
 set_failed (LspServer  *server,
             const char *format,

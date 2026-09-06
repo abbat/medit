@@ -325,7 +325,7 @@ find_root_dir (const char  *file_dir,
 
         for (i = 0; markers[i]; ++i)
         {
-            char *candidate = g_build_filename (current, markers[i], NULL);
+            char *candidate = g_build_filename (current, markers[i], nullptr);
             gboolean found = g_file_test (candidate, G_FILE_TEST_EXISTS);
 
             g_free (candidate);

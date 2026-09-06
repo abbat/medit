@@ -739,7 +739,7 @@ init_plugins (MooApp *app)
  * \param app the MooApp instance
  * \return the UI XML object
  */
-MooUiXml *
+static MooUiXml *
 moo_app_get_ui_xml (MooApp *app)
 {
   g_return_val_if_fail (MOO_IS_APP (app), NULL);

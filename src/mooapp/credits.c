@@ -219,7 +219,7 @@ create_action_area (GtkDialog *dialog)
  * \param parent The parent widget (can be NULL)
  * \return The newly created credits dialog
  */
-GtkDialog *
+static GtkDialog *
 credits_dialog_new (GtkWidget *parent)
 {
   GtkWidget *widget;
