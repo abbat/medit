@@ -76,6 +76,29 @@ jobs:
       - name: Build
         run: cmake --build build -j"$(nproc)"
 
+  # The language definitions and the style schemes, against the two RELAX NG
+  # schemas that ship beside them. src/mooedit/langs/check.sh has existed for a
+  # while and was run by hand; 187 files take under a second, so there is no
+  # reason for it not to run on every push.
+  #
+  # A job of its own rather than a step in the matrix: it needs no compiler, no
+  # gtk and no build, and running it ten times would say the same thing ten
+  # times.
+  langs:
+    name: language definitions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install xmllint
+        run: |
+          set -eux
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq --no-install-recommends libxml2-utils
+
+      - name: Validate
+        run: src/mooedit/langs/check.sh
+
   # clang is not a target -- every distribution builds these packages with gcc,
   # and nothing in the tree selects a compiler. It is here as a second opinion,
   # and it earns its place: -Wsometimes-uninitialized caught a variable read on
