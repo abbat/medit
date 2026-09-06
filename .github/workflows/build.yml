@@ -1,11 +1,16 @@
 # Compile medit everywhere it is expected to compile, with warnings fatal.
 #
 # The local machine says very little about the distributions this fork targets:
-# it has gcc 12 and glib 2.74, while the oldest package target has gcc 9 and
-# glib 2.64, and the Fedora package is built with LTO by gcc 14. Every class of
-# breakage recorded in AGENTS.md -- unnamed parameters that only gcc 9 rejects,
-# symbols newer than the oldest glib, structs that only -Wodr sees -- is
-# invisible until one of these jobs runs.
+# it has gcc 12 and glib 2.74, while the matrix below spans gcc 11 to gcc 15
+# and cmake 3.22 to cmake 4.2, and the Fedora package is built with LTO. Every
+# class of breakage recorded in AGENTS.md -- symbols newer than the oldest glib,
+# structs that only -Wodr sees, constructs one compiler accepts silently and
+# another rejects -- is invisible until one of these jobs runs.
+#
+# Which distributions: the ones still supported. Debian 11 (its LTS ended in
+# August 2026) and Ubuntu 20.04 (standard support ended in May 2025) are gone,
+# and dropping bullseye removes the snapshot.debian.org workaround that its
+# dead archive needed.
 name: build
 
 on:
@@ -33,10 +38,11 @@ jobs:
       fail-fast: false
       matrix:
         image:
+          - ubuntu:26.04
           - ubuntu:24.04
           - ubuntu:22.04
-          - ubuntu:20.04
-          - debian/eol:bullseye
+          - debian:13
+          - debian:12
         gtk: [2, 3]
     env:
       DEBIAN_FRONTEND: noninteractive
@@ -45,19 +51,6 @@ jobs:
       - name: Install build dependencies
         run: |
           set -eux
-          # bullseye is past EOL: its main moved to archive.debian.org and
-          # bullseye-security is gone from deb.debian.org altogether, so a plain
-          # apt-get update dies with 404s. Take both from snapshot.debian.org.
-          if grep -q bullseye /etc/os-release; then
-              cat >/etc/apt/sources.list <<'EOS'
-          deb http://snapshot.debian.org/archive/debian/20250601T000000Z bullseye main
-          deb http://snapshot.debian.org/archive/debian-security/20250601T000000Z bullseye-security main
-          EOS
-              cat >/etc/apt/apt.conf.d/99snapshot <<'EOS'
-          Acquire::Check-Valid-Until "false";
-          Acquire::Retries "5";
-          EOS
-          fi
           apt-get update -qq
           apt-get install -y -qq --no-install-recommends \
               build-essential cmake git pkg-config intltool gettext \
