@@ -61,6 +61,7 @@ add_custom_command(
             --target "${CMAKE_CURRENT_BINARY_DIR}/resources.c" --generate-source
     DEPENDS resources.xml ${MOO_UI_FILES} "${CMAKE_SOURCE_DIR}/THANKS"
             mooedit/medit.xml mooedit/mooedit.xml moofileview/moofileview.xml
+            plugins/lsp/lsp.xml
     COMMENT "Generating resources.c"
     VERBATIM)
 

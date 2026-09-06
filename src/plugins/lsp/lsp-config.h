@@ -28,6 +28,9 @@ G_BEGIN_DECLS
 
 #define MOO_LSP_CONFIG_FILE "lsp.xml"
 
+/* The same file, compiled into the binary. */
+#define LSP_CONFIG_RESOURCE "/text/lsp.xml"
+
 typedef struct {
     char        *id;
     char        *filter;        /* a MooEditFilter string, "langs:c,cpp" */

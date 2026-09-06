@@ -48,5 +48,8 @@
   </gresource>
   <gresource prefix="/text">
     <file compressed="true" alias="THANKS">../THANKS</file>
+    <!-- Not stripped or reformatted: the comments in it are the documentation
+         the user gets when medit writes this file into their data directory. -->
+    <file compressed="true" alias="lsp.xml">plugins/lsp/lsp.xml</file>
   </gresource>
 </gresources>

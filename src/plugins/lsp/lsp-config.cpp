@@ -15,6 +15,7 @@
 
 #include "plugins/lsp/lsp-config.h"
 
+#include "mooutils/moobuilder.h"
 #include "mooutils/moomarkup.h"
 #include "mooutils/mooutils-fs.h"
 #include "mooutils/mooutils-misc.h"
@@ -97,6 +98,18 @@ lsp_config_system_file (void)
 }
 
 
+/*
+ * The file medit was built with, which is the same one it installs. Having it
+ * in the binary as well means the defaults do not depend on medit being
+ * installed, and that the copy handed to the user is never an empty stub.
+ */
+static char *
+builtin_config (gsize *len)
+{
+    return moo_resource_get_text (LSP_CONFIG_RESOURCE, len);
+}
+
+
 char *
 lsp_config_ensure_user_file (GError **error)
 {
@@ -115,30 +128,35 @@ lsp_config_ensure_user_file (GError **error)
     if (g_file_test (user_file, G_FILE_TEST_EXISTS))
         return user_file;
 
+    /*
+     * The installed file first, so that a distribution editing its defaults
+     * has the last word, and the built-in copy when medit is being run from a
+     * build directory or was installed without its data files.
+     */
     system_file = lsp_config_system_file ();
 
-    if (system_file && g_file_get_contents (system_file, &contents, &len, NULL))
+    if (!system_file || !g_file_get_contents (system_file, &contents, &len, NULL))
+        contents = builtin_config (&len);
+
+    g_free (system_file);
+
+    if (!contents)
     {
-        /* moo_save_config_file() creates the user data directory as needed. */
-        if (!moo_save_config_file (user_file, contents, len, error))
-        {
-            g_free (contents);
-            g_free (system_file);
-            g_free (user_file);
-            return NULL;
-        }
+        g_set_error (error, G_FILE_ERROR, G_FILE_ERROR_FAILED,
+                     "the built-in configuration is missing");
+        g_free (user_file);
+        return NULL;
     }
-    else if (!moo_save_config_file (user_file,
-                                    "<medit-lsp version=\"1.0\">\n</medit-lsp>\n",
-                                    -1, error))
+
+    /* moo_save_config_file() creates the user data directory as needed. */
+    if (!moo_save_config_file (user_file, contents, len, error))
     {
-        g_free (system_file);
+        g_free (contents);
         g_free (user_file);
         return NULL;
     }
 
     g_free (contents);
-    g_free (system_file);
 
     return user_file;
 }
@@ -295,28 +313,17 @@ parse_server (MooMarkupNode *node)
 
 
 static GSList *
-load_file (const char *filename)
+load_markup (MooMarkupDoc *doc,
+             const char   *name)
 {
-    MooMarkupDoc *doc;
     MooMarkupNode *root, *child;
     GSList *list = NULL;
-    GError *error = NULL;
-
-    doc = moo_markup_parse_file (filename, &error);
-
-    if (!doc)
-    {
-        g_warning ("%s: could not parse %s: %s", G_STRFUNC, filename,
-                   error ? error->message : "unknown error");
-        g_clear_error (&error);
-        return NULL;
-    }
 
     root = moo_markup_get_root_element (doc, "medit-lsp");
 
     if (!root)
     {
-        g_warning ("%s: %s has no <medit-lsp> element", G_STRFUNC, filename);
+        g_warning ("%s: %s has no <medit-lsp> element", G_STRFUNC, name);
         moo_markup_doc_unref (doc);
         return NULL;
     }
@@ -338,6 +345,55 @@ load_file (const char *filename)
 }
 
 
+static GSList *
+load_file (const char *filename)
+{
+    GError *error = NULL;
+    MooMarkupDoc *doc = moo_markup_parse_file (filename, &error);
+
+    if (!doc)
+    {
+        g_warning ("%s: could not parse %s: %s", G_STRFUNC, filename,
+                   error ? error->message : "unknown error");
+        g_clear_error (&error);
+        return NULL;
+    }
+
+    return load_markup (doc, filename);
+}
+
+
+static GSList *
+load_builtin (void)
+{
+    GError *error = NULL;
+    MooMarkupDoc *doc;
+    gsize len = 0;
+    char *contents = builtin_config (&len);
+
+    if (!contents)
+        return NULL;
+
+    doc = moo_markup_parse_memory (contents, len, &error);
+    g_free (contents);
+
+    if (!doc)
+    {
+        g_warning ("%s: could not parse the built-in configuration: %s", G_STRFUNC,
+                   error ? error->message : "unknown error");
+        g_clear_error (&error);
+        return NULL;
+    }
+
+    return load_markup (doc, LSP_CONFIG_RESOURCE);
+}
+
+
+/*
+ * The user's copy if there is one, the installed file if there is not, and the
+ * built-in copy when there is neither -- which is what a run from a build
+ * directory gets, and what an installation without its data files gets.
+ */
 GSList *
 lsp_config_load (void)
 {
@@ -351,7 +407,7 @@ lsp_config_load (void)
     }
 
     if (!filename)
-        return NULL;
+        return load_builtin ();
 
     list = load_file (filename);
     g_free (filename);
