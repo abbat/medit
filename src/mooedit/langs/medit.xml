@@ -59,6 +59,20 @@
   <!-- Types -->
   <style name="def:type"                    foreground="dark-red"/>
 
+  <!-- Markup -->
+  <style name="def:emphasis"                italic="true"/>
+  <style name="def:strong-emphasis"         bold="true"/>
+  <style name="def:inline-code"             foreground="#008080"/>
+  <style name="def:preformatted-section"    use-style="def:inline-code"/>
+  <style name="def:heading"                 foreground="dark-green" bold="true"/>
+  <style name="def:thematic-break"          use-style="def:heading"/>
+  <style name="def:list-marker"             foreground="dark-red" bold="true"/>
+  <style name="def:link-text"               foreground="blue"/>
+  <style name="def:link-symbol"             foreground="blue" bold="true"/>
+  <style name="def:link-destination"        italic="true" underline="true"/>
+  <style name="def:insertion"               underline="true"/>
+  <style name="def:deletion"                strikethrough="true"/>
+
   <!-- Constants -->
   <style name="def:constant"                foreground="dark-red"/>
   <style name="def:decimal"                 foreground="blue"/>
@@ -81,7 +95,8 @@
   <style name="def:preprocessor"            bold="true"/>
   <style name="def:note"                    foreground="white" background="#FFCCCC" bold="true" italic="false"/>
   <style name="def:error"                   foreground="red" underline="true"/>
-  <style name="def:underlined"              underline="true"/>
+  <style name="def:net-address"             italic="true" underline="true"/>
+  <style name="def:underlined"              use-style="def:net-address"/>
 
   <!-- Language specific styles -->
   <style name="c:preprocessor"              foreground="dark-green"/>

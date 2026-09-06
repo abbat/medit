@@ -81,6 +81,20 @@
   <!-- Types -->
   <style name="def:type"                    foreground="yellow"/>
 
+  <!-- Markup -->
+  <style name="def:emphasis"                italic="true"/>
+  <style name="def:strong-emphasis"         foreground="orange"/>
+  <style name="def:inline-code"             foreground="blue"/>
+  <style name="def:preformatted-section"    foreground="blue"/>
+  <style name="def:heading"                 foreground="yellow"/>
+  <style name="def:thematic-break"          foreground="yellow"/>
+  <style name="def:list-marker"             foreground="orange"/>
+  <style name="def:link-text"               foreground="base01"/>
+  <style name="def:link-symbol"             foreground="base01" bold="true"/>
+  <style name="def:link-destination"        italic="true" underline="true"/>
+  <style name="def:insertion"               underline="true"/>
+  <style name="def:deletion"                strikethrough="true"/>
+
   <!-- Operators -->
   <style name="def:operator"                foreground="green"/>
 
@@ -88,7 +102,8 @@
   <style name="def:preprocessor"            foreground="violet"/>
   <style name="def:error"                   foreground="red" bold="true"/>
   <style name="def:note"                    foreground="magenta" bold="true"/>
-  <style name="def:underlined"              italic="true" underline="single"/>
+  <style name="def:net-address"             italic="true" underline="true"/>
+  <style name="def:underlined"              use-style="def:net-address"/>
 
   <!-- Heading styles, uncomment to enable -->
   <!--

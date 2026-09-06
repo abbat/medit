@@ -100,12 +100,27 @@
   <!-- Types -->
   <style name="def:type"                    foreground="chameleon1" bold="true"/>
 
+  <!-- Markup -->
+  <style name="def:emphasis"                italic="true"/>
+  <style name="def:strong-emphasis"         foreground="white" bold="true"/>
+  <style name="def:inline-code"             foreground="skyblue1"/>
+  <style name="def:preformatted-section"    foreground="skyblue1"/>
+  <style name="def:heading"                 foreground="chameleon1" bold="true"/>
+  <style name="def:thematic-break"          foreground="chameleon1" bold="true"/>
+  <style name="def:list-marker"             foreground="white" bold="true"/>
+  <style name="def:link-text"               foreground="skyblue1"/>
+  <style name="def:link-symbol"             foreground="skyblue1" bold="true"/>
+  <style name="def:link-destination"        italic="true" underline="true"/>
+  <style name="def:insertion"               underline="true"/>
+  <style name="def:deletion"                strikethrough="true"/>
+
   <!-- Others -->
   <style name="def:preprocessor"            foreground="plum1"/>
   <style name="def:error"                   foreground="aluminium1" background="scarletred2" bold="true"/>
   <style name="def:warning"                 foreground="aluminium1" background="plum1"/>
   <style name="def:note"                    background="butter1" foreground="aluminium4" bold="true"/>
-  <style name="def:underlined"              italic="true" underline="single"/>
+  <style name="def:net-address"             italic="true" underline="true"/>
+  <style name="def:underlined"              use-style="def:net-address"/>
 
   <!-- Heading styles, uncomment to enable -->
   <!--
