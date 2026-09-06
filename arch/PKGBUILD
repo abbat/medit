@@ -14,8 +14,7 @@ optdepends=('ctags: list the functions of the open document'
             'gopls: the language server for Go'
             'python-lsp-server: the language server for Python')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
-# TODO: run updpkgsums once the v1.3.4 tag is pushed and GitHub has the tarball
-sha256sums=('0000000000000000000000000000000000000000000000000000000000000000')
+sha256sums=('93b32bde68b6e484b85586f6fd12032d5c75c66c61ce2445c09bfb6513c6c07f')
 
 build() {
     # CMAKE_BUILD_TYPE=None keeps the flags makepkg exports; the install hook
