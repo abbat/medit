@@ -517,7 +517,11 @@ _moo_value_convert (const GValue *src,
 
     if (src_type == G_TYPE_DOUBLE && dest_type == G_TYPE_INT)
     {
-        g_value_set_int (dest, g_value_get_double (src));
+        /* Truncating, the way glib's own double-to-int transform does it. The
+           cast is what says so: without it this is the one implicit narrowing
+           in the function, and it reads like an oversight rather than the
+           conversion the branch exists to perform. */
+        g_value_set_int (dest, (int) g_value_get_double (src));
         return TRUE;
     }
 
