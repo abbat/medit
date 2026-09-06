@@ -2557,6 +2557,144 @@ msgstr "Клиент протокола языковых серверов"
 msgid "Diagnostics"
 msgstr "Диагностика"
 
+#: ../src/plugins/lsp/lsp-plugin.cpp:472
+msgid "Symbols"
+msgstr "Символы"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:475
+msgid "Show the symbol tree"
+msgstr "Показать дерево символов"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:33
+msgctxt "symbol kind"
+msgid "file"
+msgstr "файл"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:34
+msgctxt "symbol kind"
+msgid "module"
+msgstr "модуль"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:35
+msgctxt "symbol kind"
+msgid "namespace"
+msgstr "пространство имён"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:36
+msgctxt "symbol kind"
+msgid "package"
+msgstr "пакет"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:37
+msgctxt "symbol kind"
+msgid "class"
+msgstr "класс"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:38
+msgctxt "symbol kind"
+msgid "method"
+msgstr "метод"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:39
+msgctxt "symbol kind"
+msgid "property"
+msgstr "свойство"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:40
+msgctxt "symbol kind"
+msgid "field"
+msgstr "поле"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:41
+msgctxt "symbol kind"
+msgid "constructor"
+msgstr "конструктор"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:42
+msgctxt "symbol kind"
+msgid "enum"
+msgstr "перечисление"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:43
+msgctxt "symbol kind"
+msgid "interface"
+msgstr "интерфейс"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:44
+msgctxt "symbol kind"
+msgid "function"
+msgstr "функция"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:45
+msgctxt "symbol kind"
+msgid "variable"
+msgstr "переменная"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:46
+msgctxt "symbol kind"
+msgid "constant"
+msgstr "константа"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:47
+msgctxt "symbol kind"
+msgid "string"
+msgstr "строка"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:48
+msgctxt "symbol kind"
+msgid "number"
+msgstr "число"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:49
+msgctxt "symbol kind"
+msgid "boolean"
+msgstr "логическое"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:50
+msgctxt "symbol kind"
+msgid "array"
+msgstr "массив"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:51
+msgctxt "symbol kind"
+msgid "object"
+msgstr "объект"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:52
+msgctxt "symbol kind"
+msgid "key"
+msgstr "ключ"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:53
+msgctxt "symbol kind"
+msgid "null"
+msgstr "null"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:54
+msgctxt "symbol kind"
+msgid "enum member"
+msgstr "элемент перечисления"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:55
+msgctxt "symbol kind"
+msgid "struct"
+msgstr "структура"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:56
+msgctxt "symbol kind"
+msgid "event"
+msgstr "событие"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:57
+msgctxt "symbol kind"
+msgid "operator"
+msgstr "оператор"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:58
+msgctxt "symbol kind"
+msgid "type parameter"
+msgstr "параметр типа"
+
 #: ../src/plugins/lsp/lsp-plugin.cpp:359
 msgid "Show the diagnostics pane"
 msgstr "Показать панель диагностики"

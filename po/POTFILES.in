@@ -64,6 +64,7 @@ src/plugins/support/mooeditwindowoutput.cpp
 src/plugins/lsp/lsp-diagnostics.cpp
 src/plugins/lsp/lsp-plugin.cpp
 src/plugins/lsp/lsp-server.cpp
+src/plugins/lsp/lsp-symbols.cpp
 src/plugins/terminal/terminal-colors.cpp
 src/plugins/terminal/terminal-plugin.cpp
 src/plugins/terminal/terminal-prefs.cpp

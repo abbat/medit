@@ -788,6 +788,15 @@ client_capabilities (void)
     lsp_json_set_bool (publish_diagnostics, "versionSupport", FALSE);
     lsp_json_set_bool (publish_diagnostics, "codeDescriptionSupport", FALSE);
 
+    {
+        JsonObject *document_symbol = json_object_new ();
+
+        lsp_json_set_bool (document_symbol, "dynamicRegistration", FALSE);
+        lsp_json_set_bool (document_symbol, "hierarchicalDocumentSymbolSupport", TRUE);
+
+        lsp_json_set_object (text_document, "documentSymbol", document_symbol);
+    }
+
     lsp_json_set_object (text_document, "synchronization", synchronization);
     lsp_json_set_object (text_document, "publishDiagnostics", publish_diagnostics);
     lsp_json_set_object (capabilities, "textDocument", text_document);

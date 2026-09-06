@@ -29,6 +29,7 @@
 #include "plugins/lsp/lsp-plugin.h"
 #include "plugins/lsp/lsp-manager.h"
 #include "plugins/lsp/lsp-diagnostics.h"
+#include "plugins/lsp/lsp-symbols.h"
 
 #include "mooedit/mooplugin-macro.h"
 #include "mooedit/mooeditor.h"
@@ -54,15 +55,35 @@ typedef struct {
     MooWinPlugin   parent;
 
     MooEditWindow *window;
+
     MooLineView   *output;
     MooPane       *pane;
-
     GtkTextTag    *location_tag;
     GtkTextTag    *severity_tag[4];
     GtkTextTag    *detail_tag;
-
     guint          update_idle;
+
+    GtkTreeView   *symbols;
+    GtkTreeStore  *symbol_store;
+    MooPane       *symbols_pane;
+    MooEdit       *symbols_doc;         /* what the pending request is about */
+    GtkTextBuffer *symbols_buffer;      /* connected to ::changed */
+    gint64         symbols_request;
+    guint          symbols_timeout;
 } LspWindowPlugin;
+
+#define MOO_LSP_SYMBOLS_PANE_ID "LspSymbols"
+
+/*
+ * Every live window plugin. A reply from a server can arrive after its window
+ * is gone, so a callback checks that its own is still in here first.
+ */
+static GSList *lsp_windows;
+
+static void     watch_active_buffer     (LspWindowPlugin *stuff);
+static void     queue_symbols_update    (LspWindowPlugin *stuff);
+static void     clear_symbols_doc       (LspWindowPlugin *stuff);
+static GtkWidget *create_symbols_pane   (LspWindowPlugin *stuff);
 
 /* Where a line of the pane points, in the document's own coordinates. */
 typedef struct {
@@ -252,6 +273,8 @@ static void
 active_doc_changed (LspWindowPlugin *stuff)
 {
     queue_pane_update (stuff);
+    watch_active_buffer (stuff);
+    queue_symbols_update (stuff);
 }
 
 
@@ -291,6 +314,232 @@ pane_activate (LspWindowPlugin *stuff,
 }
 
 
+/**********************************************************************/
+/* The symbol tree
+ */
+
+static void
+symbols_reply (JsonNode   *result,
+               JsonObject *error,
+               gpointer    data)
+{
+    LspWindowPlugin *stuff = (LspWindowPlugin*) data;
+    MooEdit *doc;
+    LspDoc *ldoc;
+
+    /* The window may have gone away while the server was thinking. */
+    if (!g_slist_find (lsp_windows, stuff))
+        return;
+
+    stuff->symbols_request = 0;
+
+    if (error || !stuff->symbols_doc)
+        return;
+
+    /* And the active document may have changed under the reply. */
+    doc = moo_edit_window_get_active_doc (stuff->window);
+
+    if (doc != stuff->symbols_doc)
+        return;
+
+    ldoc = lsp_manager_lookup_doc (doc);
+
+    if (!ldoc)
+        return;
+
+    lsp_symbols_fill (stuff->symbol_store, result, moo_edit_get_buffer (doc),
+                      lsp_server_get_position_encoding (lsp_doc_get_server (ldoc)));
+
+    gtk_tree_view_expand_all (stuff->symbols);
+}
+
+
+static void
+clear_symbols_doc (LspWindowPlugin *stuff)
+{
+    if (stuff->symbols_doc)
+    {
+        g_object_remove_weak_pointer (G_OBJECT (stuff->symbols_doc),
+                                      (gpointer*) &stuff->symbols_doc);
+        stuff->symbols_doc = NULL;
+    }
+}
+
+
+static void
+request_symbols (LspWindowPlugin *stuff)
+{
+    MooEdit *doc = moo_edit_window_get_active_doc (stuff->window);
+    LspDoc *ldoc = doc ? lsp_manager_lookup_doc (doc) : NULL;
+    LspServer *server = ldoc ? lsp_doc_get_server (ldoc) : NULL;
+    JsonObject *params;
+
+    if (stuff->symbols_request)
+    {
+        lsp_server_cancel (server, stuff->symbols_request);
+        stuff->symbols_request = 0;
+    }
+
+    clear_symbols_doc (stuff);
+
+    if (!server || !lsp_server_is_ready (server) ||
+        !lsp_server_has_provider (server, "documentSymbolProvider"))
+    {
+        gtk_tree_store_clear (stuff->symbol_store);
+        return;
+    }
+
+    /* The server must be looking at the text the answer will be matched
+       against, or the positions come back for the previous version. */
+    lsp_doc_flush (ldoc);
+
+    stuff->symbols_doc = doc;
+    g_object_add_weak_pointer (G_OBJECT (doc), (gpointer*) &stuff->symbols_doc);
+
+    params = json_object_new ();
+    lsp_json_set_object (params, "textDocument",
+                         lsp_json_text_document (lsp_doc_get_uri (ldoc)));
+
+    stuff->symbols_request = lsp_server_call (server, "textDocument/documentSymbol",
+                                              params, symbols_reply, stuff, NULL);
+}
+
+
+static gboolean
+symbols_timeout (gpointer data)
+{
+    LspWindowPlugin *stuff = (LspWindowPlugin*) data;
+
+    stuff->symbols_timeout = 0;
+    request_symbols (stuff);
+
+    return G_SOURCE_REMOVE;
+}
+
+
+/*
+ * Nothing is asked for while the pane is closed: the tree is the only thing
+ * the answer is used for, and a document symbol request is real work for the
+ * server.
+ */
+static void
+queue_symbols_update (LspWindowPlugin *stuff)
+{
+    if (!stuff->symbols || !gtk_widget_get_mapped (GTK_WIDGET (stuff->symbols)))
+        return;
+
+    if (stuff->symbols_timeout)
+        g_source_remove (stuff->symbols_timeout);
+
+    stuff->symbols_timeout = g_timeout_add (500, symbols_timeout, stuff);
+}
+
+
+static void
+symbols_buffer_changed (LspWindowPlugin *stuff)
+{
+    queue_symbols_update (stuff);
+}
+
+
+static void
+watch_active_buffer (LspWindowPlugin *stuff)
+{
+    MooEdit *doc = moo_edit_window_get_active_doc (stuff->window);
+    GtkTextBuffer *buffer = doc ? moo_edit_get_buffer (doc) : NULL;
+
+    if (buffer == stuff->symbols_buffer)
+        return;
+
+    if (stuff->symbols_buffer)
+        g_signal_handlers_disconnect_by_func (stuff->symbols_buffer,
+                                              (gpointer) symbols_buffer_changed, stuff);
+
+    stuff->symbols_buffer = buffer;
+
+    if (buffer)
+        g_signal_connect_swapped (buffer, "changed",
+                                  G_CALLBACK (symbols_buffer_changed), stuff);
+}
+
+
+static void
+symbols_row_activated (LspWindowPlugin *stuff,
+                       GtkTreePath     *path)
+{
+    GtkTreeIter iter;
+    MooEditView *view;
+    int line = 0, character = 0;
+
+    if (!gtk_tree_model_get_iter (GTK_TREE_MODEL (stuff->symbol_store), &iter, path))
+        return;
+
+    gtk_tree_model_get (GTK_TREE_MODEL (stuff->symbol_store), &iter,
+                        LSP_SYMBOL_COLUMN_LINE, &line,
+                        LSP_SYMBOL_COLUMN_CHARACTER, &character,
+                        -1);
+
+    view = moo_edit_window_get_active_view (stuff->window);
+
+    if (!view)
+        return;
+
+    gtk_widget_grab_focus (GTK_WIDGET (view));
+    moo_text_view_move_cursor (MOO_TEXT_VIEW (view), line, character, FALSE, FALSE);
+}
+
+
+static void
+symbols_mapped (LspWindowPlugin *stuff)
+{
+    request_symbols (stuff);
+}
+
+
+static void
+show_symbols_cb (MooEditWindow *window)
+{
+    moo_edit_window_show_pane (window, MOO_LSP_SYMBOLS_PANE_ID);
+}
+
+
+static GtkWidget *
+create_symbols_pane (LspWindowPlugin *stuff)
+{
+    GtkWidget *swin;
+    GtkCellRenderer *cell;
+    GtkTreeViewColumn *column;
+
+    stuff->symbol_store = lsp_symbols_new_store ();
+    stuff->symbols = GTK_TREE_VIEW (gtk_tree_view_new_with_model (
+                                        GTK_TREE_MODEL (stuff->symbol_store)));
+    g_object_unref (stuff->symbol_store);
+
+    gtk_tree_view_set_headers_visible (stuff->symbols, FALSE);
+    gtk_tree_view_set_search_column (stuff->symbols, LSP_SYMBOL_COLUMN_NAME);
+
+    cell = gtk_cell_renderer_text_new ();
+    column = gtk_tree_view_column_new_with_attributes (NULL, cell,
+                                                       "markup", LSP_SYMBOL_COLUMN_MARKUP,
+                                                       (const char*) NULL);
+    gtk_tree_view_append_column (stuff->symbols, column);
+
+    g_signal_connect_swapped (stuff->symbols, "row-activated",
+                              G_CALLBACK (symbols_row_activated), stuff);
+    g_signal_connect_swapped (stuff->symbols, "map",
+                              G_CALLBACK (symbols_mapped), stuff);
+
+    swin = gtk_scrolled_window_new (NULL, NULL);
+    gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (swin), GTK_SHADOW_IN);
+    gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (swin),
+                                    GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+    gtk_container_add (GTK_CONTAINER (swin), GTK_WIDGET (stuff->symbols));
+    gtk_widget_show_all (swin);
+
+    return swin;
+}
+
+
 static void
 show_diagnostics_cb (MooEditWindow *window)
 {
@@ -307,6 +556,10 @@ lsp_window_plugin_create (LspWindowPlugin *stuff)
     static const char *severity_colors[] = { "#c01c28", "#b5820a", "#1c71d8", "#77767b" };
 
     stuff->window = MOO_WIN_PLUGIN (stuff)->window;
+
+    /* Before anything can issue a request: a reply looks itself up in here. */
+    lsp_windows = g_slist_prepend (lsp_windows, stuff);
+
     stuff->output = MOO_LINE_VIEW (g_object_new (MOO_TYPE_LINE_VIEW,
                                                  "highlight-current-line", TRUE,
                                                  "highlight-current-line-unfocused", TRUE,
@@ -340,10 +593,20 @@ lsp_window_plugin_create (LspWindowPlugin *stuff)
                                             swin, label, MOO_PANE_POS_BOTTOM);
     moo_pane_label_free (label);
 
+    label = moo_pane_label_new (GTK_STOCK_INDEX, NULL,
+                                _("Symbols"), _("Symbols"));
+    stuff->symbols_pane = moo_edit_window_add_pane (stuff->window,
+                                                    MOO_LSP_SYMBOLS_PANE_ID,
+                                                    create_symbols_pane (stuff),
+                                                    label, MOO_PANE_POS_RIGHT);
+    moo_pane_label_free (label);
+
     g_signal_connect_swapped (stuff->window, "notify::active-doc",
                               G_CALLBACK (active_doc_changed), stuff);
 
     lsp_manager_add_listener (diagnostics_changed, stuff);
+
+    watch_active_buffer (stuff);
 
     return TRUE;
 }
@@ -352,18 +615,34 @@ lsp_window_plugin_create (LspWindowPlugin *stuff)
 static void
 lsp_window_plugin_destroy (LspWindowPlugin *stuff)
 {
+    lsp_windows = g_slist_remove (lsp_windows, stuff);
+
     lsp_manager_remove_listener (diagnostics_changed, stuff);
 
     if (stuff->update_idle)
         g_source_remove (stuff->update_idle);
     stuff->update_idle = 0;
 
+    if (stuff->symbols_timeout)
+        g_source_remove (stuff->symbols_timeout);
+    stuff->symbols_timeout = 0;
+
+    clear_symbols_doc (stuff);
+
+    if (stuff->symbols_buffer)
+        g_signal_handlers_disconnect_by_data (stuff->symbols_buffer, stuff);
+    stuff->symbols_buffer = NULL;
+
     g_signal_handlers_disconnect_by_data (stuff->window, stuff);
 
     stuff->output = NULL;
     stuff->pane = NULL;
+    stuff->symbols = NULL;
+    stuff->symbol_store = NULL;
+    stuff->symbols_pane = NULL;
 
     moo_edit_window_remove_pane (stuff->window, MOO_LSP_PLUGIN_ID);
+    moo_edit_window_remove_pane (stuff->window, MOO_LSP_SYMBOLS_PANE_ID);
 }
 
 
@@ -395,12 +674,23 @@ lsp_plugin_init (LspPlugin *plugin)
                                  "closure-callback", show_diagnostics_cb,
                                  nullptr);
 
+    moo_window_class_new_action (klass, "ShowLspSymbols", NULL,
+                                 "display-name", _("Symbols"),
+                                 "label", _("Symbols"),
+                                 "tooltip", _("Show the symbol tree"),
+                                 "stock-id", GTK_STOCK_INDEX,
+                                 "closure-callback", show_symbols_cb,
+                                 nullptr);
+
     if (xml)
     {
         plugin->ui_merge_id = moo_ui_xml_new_merge_id (xml);
         moo_ui_xml_add_item (xml, plugin->ui_merge_id,
                              "Editor/Menubar/Tools",
                              "ShowLspDiagnostics", "ShowLspDiagnostics", -1);
+        moo_ui_xml_add_item (xml, plugin->ui_merge_id,
+                             "Editor/Menubar/Tools",
+                             "ShowLspSymbols", "ShowLspSymbols", -1);
     }
 
     g_type_class_unref (klass);
@@ -419,6 +709,7 @@ lsp_plugin_deinit (LspPlugin *plugin)
     MooUiXml *xml = moo_editor_get_ui_xml (editor);
 
     moo_window_class_remove_action (klass, "ShowLspDiagnostics");
+    moo_window_class_remove_action (klass, "ShowLspSymbols");
 
     if (plugin->ui_merge_id)
         moo_ui_xml_remove_ui (xml, plugin->ui_merge_id);
