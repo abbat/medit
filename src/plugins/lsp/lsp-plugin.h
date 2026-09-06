@@ -47,6 +47,14 @@ gboolean    moo_lsp_plugin_init     (void);
  */
 gboolean    _moo_lsp_debug          (void);
 
+GtkWidget  *_moo_lsp_prefs_page     (MooPlugin      *plugin);
+
+/* Opens the user's copy of lsp.xml, creating it from the installed one. */
+void        _moo_lsp_edit_config    (GtkWidget      *parent);
+
+/* Makes a change of preferences take effect on what is already running. */
+void        _moo_lsp_apply_prefs    (void);
+
 G_END_DECLS
 
 #endif /* MOO_LSP_PLUGIN_H */

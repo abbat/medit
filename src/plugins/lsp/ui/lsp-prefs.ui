@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<interface>
+  <object class="GtkAdjustment" id="sync_delay_adjustment">
+    <property name="value">300</property>
+    <property name="lower">50</property>
+    <property name="upper">5000</property>
+    <property name="step_increment">50</property>
+    <property name="page_increment">100</property>
+    <property name="page_size">0</property>
+  </object>
+  <object class="GtkWindow" id="window1">
+    <property name="title">window1</property>
+    <child>
+      <object class="GtkVBox" id="PrefsPage">
+        <property name="visible">True</property>
+        <property name="border_width">12</property>
+        <property name="spacing">6</property>
+        <child>
+          <object class="GtkCheckButton" id="enabled">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="label" translatable="yes">_Enable language server support</property>
+            <property name="use_underline">True</property>
+            <property name="draw_indicator">True</property>
+            <property name="tooltip_text" translatable="yes">Servers are started for documents the configuration file matches. Takes effect at once.</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="diagnostics">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="label" translatable="yes">Underline problems and list them in the _Diagnostics pane</property>
+            <property name="use_underline">True</property>
+            <property name="draw_indicator">True</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="completion">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="label" translatable="yes">_Complete words</property>
+            <property name="use_underline">True</property>
+            <property name="draw_indicator">True</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="hover">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="label" translatable="yes">Describe what is under the _pointer</property>
+            <property name="use_underline">True</property>
+            <property name="draw_indicator">True</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkHBox" id="delay_box">
+            <property name="visible">True</property>
+            <property name="spacing">6</property>
+            <child>
+              <object class="GtkLabel" id="delay_label">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">Send changes to the server _after:</property>
+                <property name="use_underline">True</property>
+                <property name="mnemonic_widget">sync_delay</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSpinButton" id="sync_delay">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="adjustment">sync_delay_adjustment</property>
+                <property name="numeric">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="delay_units">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">milliseconds of quiet</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="debug">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="label" translatable="yes">_Log the protocol to standard error</property>
+            <property name="use_underline">True</property>
+            <property name="draw_indicator">True</property>
+            <property name="tooltip_text" translatable="yes">Every message to and from every server. The MEDIT_LSP_DEBUG environment variable does the same.</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkHBox" id="button_box">
+            <property name="visible">True</property>
+            <property name="spacing">6</property>
+            <child>
+              <object class="GtkButton" id="edit_config">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="label" translatable="yes">_Edit the Server List</property>
+                <property name="use_underline">True</property>
+                <property name="tooltip_text" translatable="yes">Opens your copy of lsp.xml, creating it from the installed one if you have none.</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="restart">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="label" translatable="yes">_Restart Servers</property>
+                <property name="use_underline">True</property>
+                <property name="tooltip_text" translatable="yes">Re-reads the configuration file and starts over with every server.</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

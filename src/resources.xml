@@ -24,6 +24,7 @@
     <file compressed="true" preprocess="xml-stripblanks" alias="moofileselector-prefs.ui">plugins/ui/moofileselector-prefs.ui</file>
     <file compressed="true" preprocess="xml-stripblanks" alias="moofind.ui">plugins/ui/moofind.ui</file>
     <file compressed="true" preprocess="xml-stripblanks" alias="moogrep.ui">plugins/ui/moogrep.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="lsp-prefs.ui">plugins/lsp/ui/lsp-prefs.ui</file>
     <file compressed="true" preprocess="xml-stripblanks" alias="terminal-prefs.ui">plugins/terminal/ui/terminal-prefs.ui</file>
     <file compressed="true" preprocess="xml-stripblanks" alias="mooedittools-exe.ui">plugins/usertools/ui/mooedittools-exe.ui</file>
     <file compressed="true" preprocess="xml-stripblanks" alias="moousertools.ui">plugins/usertools/ui/moousertools.ui</file>

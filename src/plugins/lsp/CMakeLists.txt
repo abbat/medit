@@ -15,6 +15,7 @@ target_sources(medit PRIVATE
     lsp-navigate.h
     lsp-manager.cpp
     lsp-manager.h
+    lsp-prefs.cpp
     lsp-plugin.cpp
     lsp-plugin.h
     lsp-server.cpp

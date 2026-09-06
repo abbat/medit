@@ -43,6 +43,7 @@
 #include "plugins/support/moolineview.h"
 #include "mooutils/mooi18n.h"
 #include "mooutils/moopane.h"
+#include "mooutils/moostock.h"
 #include "mooutils/mooaccel.h"
 #include "mooutils/mooprefs.h"
 #include "mooutils/mooutils-misc.h"
@@ -104,6 +105,41 @@ MOO_PLUGIN_DEFINE_INFO (lsp,
 
 MOO_DOC_PLUGIN_DEFINE (Lsp, lsp)
 MOO_WIN_PLUGIN_DEFINE (Lsp, lsp)
+
+
+/*
+ * A change of preferences reaches what is already running here. Turning the
+ * client off stops every server; turning it on again has to walk the open
+ * documents, since the ones opened while it was off were never attached.
+ */
+void
+_moo_lsp_apply_prefs (void)
+{
+    gboolean enabled = moo_prefs_get_bool (MOO_LSP_PREFS_ENABLED);
+
+    if (!enabled)
+    {
+        if (lsp_manager_is_running ())
+            lsp_manager_shutdown ();
+        return;
+    }
+
+    if (!lsp_manager_is_running ())
+    {
+        MooEditArray *docs = moo_editor_get_docs (moo_editor_instance ());
+        guint i;
+
+        lsp_manager_init ();
+
+        for (i = 0; i < moo_edit_array_get_size (docs); ++i)
+            lsp_manager_add_doc (docs->elms[i]);
+
+        moo_edit_array_free (docs);
+        return;
+    }
+
+    lsp_manager_refresh_diagnostics ();
+}
 
 
 gboolean
@@ -724,6 +760,20 @@ symbols_mapped (LspWindowPlugin *stuff)
 
 
 static void
+edit_config_cb (MooEditWindow *window)
+{
+    _moo_lsp_edit_config (GTK_WIDGET (window));
+}
+
+
+static void
+restart_servers_cb (G_GNUC_UNUSED MooEditWindow *window)
+{
+    lsp_manager_reload ();
+}
+
+
+static void
 complete_cb (MooEditWindow *window)
 {
     MooEditView *view = moo_edit_window_get_active_view (window);
@@ -981,6 +1031,21 @@ lsp_plugin_init (LspPlugin *plugin)
         g_type_class_unref (edit_klass);
     }
 
+    moo_window_class_new_action (klass, "LspEditConfig", NULL,
+                                 "display-name", _("LSP Servers"),
+                                 "label", _("LSP _Servers..."),
+                                 "tooltip", _("Edit the list of language servers"),
+                                 "closure-callback", edit_config_cb,
+                                 nullptr);
+
+    moo_window_class_new_action (klass, "LspRestartServers", NULL,
+                                 "display-name", _("Restart Language Servers"),
+                                 "label", _("Restart Language Servers"),
+                                 "tooltip", _("Re-read the configuration and start every server again"),
+                                 "stock-id", MOO_STOCK_RESTART,
+                                 "closure-callback", restart_servers_cb,
+                                 nullptr);
+
     moo_window_class_new_action (klass, "LspComplete", NULL,
                                  "display-name", _("Complete Word"),
                                  "label", _("_Complete Word"),
@@ -1006,6 +1071,12 @@ lsp_plugin_init (LspPlugin *plugin)
         moo_ui_xml_add_item (xml, plugin->ui_merge_id,
                              "Editor/Menubar/Tools",
                              "ShowLspSymbols", "ShowLspSymbols", -1);
+        moo_ui_xml_add_item (xml, plugin->ui_merge_id,
+                             "Editor/Menubar/Tools",
+                             "LspEditConfig", "LspEditConfig", -1);
+        moo_ui_xml_add_item (xml, plugin->ui_merge_id,
+                             "Editor/Menubar/Tools",
+                             "LspRestartServers", "LspRestartServers", -1);
         moo_ui_xml_add_item (xml, plugin->ui_merge_id,
                              "Editor/Menubar/Document",
                              "LspComplete", "LspComplete", -1);
@@ -1041,6 +1112,8 @@ lsp_plugin_deinit (LspPlugin *plugin)
     moo_window_class_remove_action (klass, "GoToTypeDefinition");
     moo_window_class_remove_action (klass, "GoToImplementation");
     moo_window_class_remove_action (klass, "LspComplete");
+    moo_window_class_remove_action (klass, "LspEditConfig");
+    moo_window_class_remove_action (klass, "LspRestartServers");
 
     lsp_completion_cancel ();
     lsp_navigate_reset ();
@@ -1071,7 +1144,7 @@ lsp_plugin_deinit (LspPlugin *plugin)
 
 MOO_PLUGIN_DEFINE (Lsp, lsp,
                    NULL, NULL, NULL, NULL,
-                   NULL,
+                   _moo_lsp_prefs_page,
                    lsp_window_plugin_get_type (), lsp_doc_plugin_get_type ())
 
 

@@ -28,6 +28,7 @@ G_BEGIN_DECLS
 
 void        lsp_manager_init            (void);
 void        lsp_manager_shutdown        (void);
+gboolean    lsp_manager_is_running      (void);
 
 /* Re-reads the configuration file and starts over with every server. */
 void        lsp_manager_reload          (void);

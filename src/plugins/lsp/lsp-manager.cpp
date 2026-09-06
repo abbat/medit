@@ -506,6 +506,13 @@ lsp_manager_init (void)
 }
 
 
+gboolean
+lsp_manager_is_running (void)
+{
+    return manager.initialized;
+}
+
+
 void
 lsp_manager_shutdown (void)
 {

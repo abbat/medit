@@ -2561,6 +2561,97 @@ msgstr "Диагностика"
 msgid "Symbols"
 msgstr "Символы"
 
+#: ../src/plugins/lsp/lsp-prefs.cpp:42
+msgid "Could not create the LSP configuration file"
+msgstr "Не удалось создать файл настройки LSP"
+
+#: ../src/plugins/lsp/lsp-prefs.cpp:85
+msgid "Language Servers"
+msgstr "Языковые серверы"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:760
+msgid "LSP Servers"
+msgstr "Языковые серверы"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:761
+msgid "LSP _Servers..."
+msgstr "Языковые _серверы..."
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:762
+msgid "Edit the list of language servers"
+msgstr "Изменить список языковых серверов"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:767
+msgid "Restart Language Servers"
+msgstr "Перезапустить языковые серверы"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:769
+msgid "Re-read the configuration and start every server again"
+msgstr "Перечитать настройки и запустить все серверы заново"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:22
+msgid "_Enable language server support"
+msgstr "_Включить поддержку языковых серверов"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:25
+msgid ""
+"Servers are started for documents the configuration file matches. Takes "
+"effect at once."
+msgstr ""
+"Серверы запускаются для документов, подходящих под файл настройки. "
+"Применяется сразу."
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:36
+msgid "Underline problems and list them in the _Diagnostics pane"
+msgstr "Подчёркивать ошибки и показывать их в панели _диагностики"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:48
+msgid "_Complete words"
+msgstr "_Дополнять слова"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:60
+msgid "Describe what is under the _pointer"
+msgstr "Пояснять то, что _под указателем"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:76
+msgid "Send changes to the server _after:"
+msgstr "Отправлять изменения серверу _после:"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:100
+msgid "milliseconds of quiet"
+msgstr "мс без правок"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:110
+msgid "_Log the protocol to standard error"
+msgstr "_Писать протокол в стандартный поток ошибок"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:113
+msgid ""
+"Every message to and from every server. The MEDIT_LSP_DEBUG environment "
+"variable does the same."
+msgstr ""
+"Все сообщения ко всем серверам и от них. Переменная окружения "
+"MEDIT_LSP_DEBUG делает то же самое."
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:127
+msgid "_Edit the Server List"
+msgstr "_Изменить список серверов"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:130
+msgid ""
+"Opens your copy of lsp.xml, creating it from the installed one if you have "
+"none."
+msgstr ""
+"Открывает вашу копию lsp.xml, создавая её из установленной, если её ещё нет."
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:138
+msgid "_Restart Servers"
+msgstr "_Перезапустить серверы"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:141
+msgid "Re-reads the configuration file and starts over with every server."
+msgstr "Перечитывает файл настройки и запускает все серверы заново."
+
 #: ../src/plugins/lsp/lsp-plugin.cpp:783
 msgid "Complete Word"
 msgstr "Дополнить слово"
