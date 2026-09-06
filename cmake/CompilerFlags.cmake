@@ -45,10 +45,18 @@ foreach(flag
         -fno-strict-aliasing
         -Wno-missing-field-initializers
         -Wno-format-y2k
-        -Wno-overlength-strings
-        -Wno-deprecated-declarations)
+        -Wno-overlength-strings)
     moo_try_flag(${flag})
 endforeach()
+
+# Deprecated GTK+ and glib API is used all over the tree; porting away from it
+# is the GTK+4 work, not something an ordinary build should shout about. So an
+# ordinary build stays quiet, and a strict build shows the warnings without
+# failing on them -- they are the measure of how much of that work is left, and
+# -Wno-error for this one warning is added after -Werror below.
+if(NOT ENABLE_STRICT)
+    moo_try_flag(-Wno-deprecated-declarations)
+endif()
 
 moo_try_cxx_flag(-fno-rtti)
 
@@ -82,6 +90,9 @@ if(ENABLE_STRICT)
     foreach(flag -Wmissing-prototypes -Wnested-externs)
         moo_try_c_flag(${flag})
     endforeach()
+
+    # After -Werror above, so that deprecations warn but do not fail the build.
+    moo_try_flag(-Wno-error=deprecated-declarations)
 
     foreach(flag
             -fno-nonansi-builtins
