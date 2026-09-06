@@ -106,7 +106,17 @@ find_program(GLIB_GENMARSHAL NAMES glib-genmarshal)
 find_program(GLIB_COMPILE_RESOURCES NAMES glib-compile-resources)
 find_program(GDK_PIXBUF_CSOURCE NAMES gdk-pixbuf-csource)
 
-foreach(tool GLIB_GENMARSHAL GLIB_COMPILE_RESOURCES GDK_PIXBUF_CSOURCE)
+# xmllint is required, not optional. resources.xml asks glib-compile-resources
+# to preprocess 33 files with xml-stripblanks, which is how malformed markup in
+# a .ui or a menu description fails the build today. Without xmllint on PATH
+# glib-compile-resources does not fail: it prints "xml-stripblanks preprocessing
+# requested, but XMLLINT is not set, and xmllint is not in PATH" and bundles the
+# file unchecked, so the breakage only shows when the dialog is opened. It is
+# libxml2-utils on debian, libxml2 on fedora and arch, and only Suggested by the
+# glib development package, so it has to be asked for by name.
+find_program(XMLLINT NAMES xmllint)
+
+foreach(tool GLIB_GENMARSHAL GLIB_COMPILE_RESOURCES GDK_PIXBUF_CSOURCE XMLLINT)
     if(NOT ${tool})
         message(FATAL_ERROR "${tool} not found")
     endif()

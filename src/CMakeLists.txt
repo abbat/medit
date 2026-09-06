@@ -66,6 +66,45 @@ add_custom_command(
     VERBATIM)
 
 # ---------------------------------------------------------------------------
+# XML the resource bundle does not check
+# ---------------------------------------------------------------------------
+#
+# Everything listed in resources.xml with preprocess="xml-stripblanks" is run
+# through xmllint on the way into the bundle, which is what makes malformed
+# markup fail the build. Two sets of files miss that:
+#
+#   lsp.xml is bundled deliberately without stripblanks, because its formatting
+#   is documentation for a file the user edits -- and it is exactly the file
+#   most likely to be hand-edited. GMarkup, which medit parses it with, accepts
+#   a "--" inside an XML comment that expat and every conforming parser reject,
+#   so a file that loads here can be broken everywhere else.
+#
+#   The usertools descriptions are installed rather than bundled, so nothing
+#   looks at them at build time at all.
+set(MOO_UNCHECKED_XML
+    plugins/lsp/lsp.xml
+    plugins/usertools/menu.xml
+    plugins/usertools/context.xml
+    plugins/usertools/filters.xml)
+
+list(TRANSFORM MOO_UNCHECKED_XML PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/"
+     OUTPUT_VARIABLE MOO_UNCHECKED_XML_PATHS)
+
+add_custom_command(
+    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/xml-validated.stamp"
+    COMMAND ${CMAKE_COMMAND}
+            "-DXMLLINT=${XMLLINT}"
+            "-DFILES=${MOO_UNCHECKED_XML_PATHS}"
+            -P "${CMAKE_SOURCE_DIR}/cmake/ValidateXml.cmake"
+    COMMAND ${CMAKE_COMMAND} -E touch "${CMAKE_CURRENT_BINARY_DIR}/xml-validated.stamp"
+    DEPENDS ${MOO_UNCHECKED_XML_PATHS} "${CMAKE_SOURCE_DIR}/cmake/ValidateXml.cmake"
+    COMMENT "Validating the xml that is not preprocessed into the bundle"
+    VERBATIM)
+
+add_custom_target(validate-xml
+    DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/xml-validated.stamp")
+
+# ---------------------------------------------------------------------------
 # The application
 # ---------------------------------------------------------------------------
 
@@ -76,6 +115,8 @@ add_executable(medit
     "${CMAKE_CURRENT_BINARY_DIR}/marshals.h"
     "${CMAKE_CURRENT_BINARY_DIR}/moo-pixbufs.h"
     "${CMAKE_CURRENT_BINARY_DIR}/resources.c")
+
+add_dependencies(medit validate-xml)
 
 target_include_directories(medit PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}"

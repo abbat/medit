@@ -9,6 +9,7 @@ Build-Depends: debhelper (>= 10), cmake, pkg-config, intltool,
  libvte-2.91-dev,
  libjson-glib-dev,
  libxml2-dev,
+ libxml2-utils,
 Standards-Version: 4.1.2
 Vcs-Git: https://github.com/abbat/medit.git
 Vcs-Browser: https://github.com/abbat/medit
