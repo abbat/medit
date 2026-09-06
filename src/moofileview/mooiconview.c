@@ -419,7 +419,6 @@ _moo_icon_view_class_init (MooIconViewClass *klass)
                                 G_TYPE_NONE, 0);
 
     signals[MOVE_CURSOR] =
-            // codeql[cpp/unterminated-variadic-call]
             _moo_signal_new_cb ("move-cursor",
                                 G_OBJECT_CLASS_TYPE (klass),
                                 G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,

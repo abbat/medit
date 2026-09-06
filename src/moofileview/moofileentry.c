@@ -563,7 +563,6 @@ completion_parse_text (MooFileEntryCompletion *cmpl,
 
         g_free (cmpl->priv->display_dirname);
         cmpl->priv->display_dirname = g_strndup (text, text_len - cmpl->priv->display_basename_len);
-        // codeql[cpp/double-free]
         TAKE_STRING (cmpl->priv->dirname, dirname);
 
         completion_connect_folder (cmpl, folder);
