@@ -28,11 +28,16 @@
       <env>       one NAME=VALUE per element, added to the server's environment
       <initialization-options>
                   passed to the server verbatim as initializationOptions. It is
-                  JSON, written as ordinary XML text -- not a CDATA section,
-                  which medit's parser reads as a comment. Escape &lt; &gt; &amp;
-                  if the JSON needs them.
+                  JSON, written as ordinary XML text rather than as a CDATA
+                  section, which medit's parser reads as a comment. Escape
+                  &lt; &gt; &amp; if the JSON needs them.
 
     The first entry whose filter matches wins, so put the specific ones first.
+
+    The entries below are the plain ones: a filter, a command and the markers
+    that find the project root. The "example" entry at the end is switched off
+    and uses every element there is, including the two most servers document
+    their own settings under; copy it, change the id and set enabled="true".
 -->
 <medit-lsp version="1.0">
 
@@ -88,6 +93,35 @@
     <filter>langs:latex,bibtex</filter>
     <command>texlab</command>
     <root>.latexmkrc;.git</root>
+  </server>
+
+  <!--
+      A worked example, switched off. This is the python server again, this
+      time told to keep lines under a hundred characters, to leave the naming
+      checks alone and to import from a directory of its own. Every element a
+      <server> can have is here.
+
+      The settings inside <initialization-options> are the server's own, not
+      medit's: what goes in there is whatever that particular server documents.
+      The ones below are pylsp's.
+  -->
+  <server id="example" enabled="false">
+    <filter>langs:python,python3</filter>
+    <command>pylsp --check-parent-process</command>
+    <root>pyproject.toml;setup.py;.git</root>
+    <env>PYTHONPATH=/opt/mylib/python</env>
+    <env>PYLSP_LOG_LEVEL=WARNING</env>
+    <initialization-options>
+      {
+        "pylsp": {
+          "plugins": {
+            "pycodestyle": { "enabled": true, "maxLineLength": 100 },
+            "pylint":      { "enabled": false },
+            "jedi_completion": { "include_params": false }
+          }
+        }
+      }
+    </initialization-options>
   </server>
 
 </medit-lsp>
