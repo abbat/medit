@@ -62,6 +62,9 @@ builds it when pkg-config finds json-glib-1.0 and silently leaves it out when it
 not; ON turns a missing json-glib into a configure error, which is what the packaging
 uses; OFF never builds it.
 
+The client is a plugin and it is registered switched off, the same way the ctags plugin
+is: turn it on in Preferences -> Plugins. Nothing is started before that.
+
 The servers themselves are separate programs and none of them is required: install the
 ones you want (clangd, pylsp, gopls, rust-analyzer and so on) and medit will use them.
 Which server handles which files is described in lsp.xml, installed next to the other

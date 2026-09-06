@@ -108,36 +108,13 @@ MOO_WIN_PLUGIN_DEFINE (Lsp, lsp)
 
 
 /*
- * A change of preferences reaches what is already running here. Turning the
- * client off stops every server; turning it on again has to walk the open
- * documents, since the ones opened while it was off were never attached.
+ * A change of preferences reaches what is already running here. Switching the
+ * client as a whole on and off is not one of them: that is the plugin's own
+ * enabled state, and the framework attaches and detaches everything itself.
  */
 void
 _moo_lsp_apply_prefs (void)
 {
-    gboolean enabled = moo_prefs_get_bool (MOO_LSP_PREFS_ENABLED);
-
-    if (!enabled)
-    {
-        if (lsp_manager_is_running ())
-            lsp_manager_shutdown ();
-        return;
-    }
-
-    if (!lsp_manager_is_running ())
-    {
-        MooEditArray *docs = moo_editor_get_docs (moo_editor_instance ());
-        guint i;
-
-        lsp_manager_init ();
-
-        for (i = 0; i < moo_edit_array_get_size (docs); ++i)
-            lsp_manager_add_doc (docs->elms[i]);
-
-        moo_edit_array_free (docs);
-        return;
-    }
-
     lsp_manager_refresh_diagnostics ();
 }
 
@@ -979,7 +956,6 @@ lsp_plugin_init (LspPlugin *plugin)
 
     g_return_val_if_fail (klass != NULL, FALSE);
 
-    moo_prefs_new_key_bool (MOO_LSP_PREFS_ENABLED, TRUE);
     moo_prefs_new_key_bool (MOO_LSP_PREFS_DIAGNOSTICS, TRUE);
     moo_prefs_new_key_bool (MOO_LSP_PREFS_COMPLETION, TRUE);
     moo_prefs_new_key_bool (MOO_LSP_PREFS_HOVER, TRUE);
@@ -1163,8 +1139,17 @@ MOO_PLUGIN_DEFINE (Lsp, lsp,
 gboolean
 moo_lsp_plugin_init (void)
 {
+    /*
+     * Off until asked for, unlike the other builtin plugins. This one runs
+     * other people's programs -- one per project root, kept alive as long as a
+     * document of that project is open -- and doing that on a first run
+     * because a language server happens to be installed is not medit's
+     * decision to make. Preferences -> Plugins turns it on.
+     */
+    MooPluginParams params = { FALSE, TRUE };
+
     return moo_plugin_register (MOO_LSP_PLUGIN_ID,
                                 lsp_plugin_get_type (),
                                 &lsp_plugin_info,
-                                NULL);
+                                &params);
 }

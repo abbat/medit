@@ -28,7 +28,12 @@ G_BEGIN_DECLS
  * top CMakeLists.txt.
  */
 
-#define MOO_LSP_PREFS_ENABLED       "Plugins/Lsp/enabled"
+/*
+ * There is no key here for the client as a whole: that is the plugin's own
+ * enabled state, which the framework keeps at Plugins/Lsp/enabled and which
+ * Preferences -> Plugins switches. The plugin is registered disabled, so
+ * nothing is started until somebody asks for it.
+ */
 #define MOO_LSP_PREFS_DIAGNOSTICS   "Plugins/Lsp/diagnostics"
 #define MOO_LSP_PREFS_COMPLETION    "Plugins/Lsp/completion"
 #define MOO_LSP_PREFS_HOVER         "Plugins/Lsp/hover"

@@ -16,19 +16,6 @@
         <property name="border_width">12</property>
         <property name="spacing">6</property>
         <child>
-          <object class="GtkCheckButton" id="enabled">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="label" translatable="yes">_Enable language server support</property>
-            <property name="use_underline">True</property>
-            <property name="draw_indicator">True</property>
-            <property name="tooltip_text" translatable="yes">Servers are started for documents the configuration file matches. Takes effect at once.</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-          </packing>
-        </child>
-        <child>
           <object class="GtkCheckButton" id="diagnostics">
             <property name="visible">True</property>
             <property name="can_focus">True</property>

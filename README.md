@@ -52,7 +52,9 @@ Everything that kept medit out of the distributions is gone:
   completion. Which server handles which files is one small xml file, and
   `Tools → LSP Servers…` opens your copy of it. It needs json-glib, which does
   not depend on gtk, so both builds have it (`-DENABLE_LSP=OFF` to leave it
-  out).
+  out). **It is off until you switch it on** in `Preferences → Plugins`, the
+  same as the ctags module: it runs other people's programs, one per project,
+  and that is not something to start behind your back.
 * **The terminal pane is back.** It used to be a python plugin on top of the
   GTK+2 vte; it is a builtin C++ plugin on top of vte-2.91 now, with the same
   shell, color schemes and context menu, plus an entry in the Tools menu bound

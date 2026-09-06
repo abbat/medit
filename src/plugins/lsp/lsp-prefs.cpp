@@ -92,9 +92,6 @@ _moo_lsp_prefs_page (G_GNUC_UNUSED MooPlugin *plugin)
     g_object_set_data_full (G_OBJECT (page), "moo-builder", builder, g_object_unref);
 
     moo_prefs_page_bind_setting (MOO_PREFS_PAGE (page),
-                                 GTK_WIDGET (moo_builder_get (builder, "enabled")),
-                                 MOO_LSP_PREFS_ENABLED);
-    moo_prefs_page_bind_setting (MOO_PREFS_PAGE (page),
                                  GTK_WIDGET (moo_builder_get (builder, "diagnostics")),
                                  MOO_LSP_PREFS_DIAGNOSTICS);
     moo_prefs_page_bind_setting (MOO_PREFS_PAGE (page),

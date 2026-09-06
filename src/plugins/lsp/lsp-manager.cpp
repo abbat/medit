@@ -406,7 +406,7 @@ lsp_manager_add_doc (MooEdit *doc)
 
     g_return_if_fail (MOO_IS_EDIT (doc));
 
-    if (!manager.initialized || !moo_prefs_get_bool (MOO_LSP_PREFS_ENABLED))
+    if (!manager.initialized)
         return;
 
     if (lsp_manager_lookup_doc (doc))
