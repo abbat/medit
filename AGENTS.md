@@ -86,6 +86,45 @@ looked at, not the first. Two things to get right when adding one:
   documentation, and the copy in the binary should be the same bytes as the copy on
   disk — `gresource extract <binary> /text/<name>` against `wc -c` says whether it is.
 
+### The language corpus
+
+`src/mooedit/langs/` is a **verbatim copy of gtksourceview's `data/language-specs/`**.
+There is not one local modification in it, and there should not be: the way to update it
+is to overwrite it from an upstream tag, which is what commit "Refresh the language
+corpus from gtksourceview 5.20.0" did after nine years of drift. The format has not
+moved since the 2.x fork — every file still declares `version="2.0"` and the
+`language2.rng` they are validated against is, whitespace aside, the same file — so it
+really is a `cp`.
+
+Refreshing one:
+
+```bash
+curl -sSLO https://download.gnome.org/sources/gtksourceview/5.20/gtksourceview-5.20.0.tar.xz
+# check it against the .sha256sum file next to it, then
+cp <tarball>/data/language-specs/*.lang <tarball>/data/language-specs/language2.rng src/mooedit/langs/
+rm src/mooedit/langs/testv1.lang     # upstream's fixture for the retired v1 format,
+                                     # not hidden, so it shows up in the language menu
+cd src/mooedit/langs && for f in *.lang; do xmllint --relaxng language2.rng --noout $f; done
+```
+
+Then regenerate the two lists that name the files one by one — the `install(FILES …)`
+block in `src/mooedit/CMakeLists.txt` and `po-gsv/POTFILES.in` — from the directory
+listing. Packaging needs nothing: the specs take the whole data directory.
+
+The style schemes in the same directory are **ours**, not upstream's, and must not be
+overwritten with it. What they do have to keep up with is `def.lang`: a style id with no
+`map-to` fallback that no scheme defines leaves the text unstyled, which is how the
+markup group (`def:emphasis`, `def:heading`, `def:inline-code`, `def:link-*`, …) arrived
+silently unpainted in Markdown and reStructuredText. After a refresh, resolve every
+`style-ref="def:…"` in the corpus through `def.lang`'s `map-to` chains and check the
+roots against each of the eight schemes.
+
+This fork's `GtkSourceStyle` understands only `foreground background line-background
+bold italic underline strikethrough`. `scale` does nothing (which is why `def:heading0`
+… `def:heading6` are commented out), and `underline` goes through `get_bool()`, which
+accepts `true`/`yes`/`1` and reads **everything else, upstream's `underline="single"`
+included, as "underline off"**. Translate upstream's values, do not paste them.
+
 ### Dialogs
 
 Interfaces live in `src/*/ui/*.ui` (GtkBuilder XML), are compiled into the binary by
@@ -542,6 +581,7 @@ command line and kills the shell (exit 144). `pkill -x medit` is safe.
 | GTK+3 hides images in menus unless `gtk-menu-images` is on. It is off in a bare sandbox and commonly on in a real desktop, so a screenshot from the sandbox showing no icon says nothing about what the user sees, and GTK+2 shows them always | to check an icon on GTK+3, write `[Settings]\ngtk-menu-images=1` into `$XDG_CONFIG_HOME/gtk-3.0/settings.ini` for the run |
 | A hover tooltip and a synthetic right click do not mix: with the pointer left resting on the target, the tooltip comes up and the context menu does not, and the run reads as a regression in whatever the menu was going to do (mechanism not established — the click may be swallowed, or the menu covered and dismissed) | move the pointer and click in the same breath, without a dwell, then screenshot and confirm the menu is up before clicking an item in it |
 | A build-tree run also reads data from an **installed** medit package (`/usr/share/medit/`), so its stale `menu.xml` produces warnings about our tree | reproduce with `MOO_DATA_DIRS=<dir>` holding the tree's own xml — but note it *replaces* the whole search list, so style schemes and the file-selector plugin stop loading; use it to attribute a warning, not to test the UI |
+| The same run takes **languages from the first** directory of the search path and **style schemes from the last**: `gtksourcelanguagemanager.c` keeps the first `.lang` it sees for an id, `gtksourcestyleschememanager.c` lets a later file replace an earlier scheme of the same id. A corpus dropped into `$XDG_DATA_HOME/medit/language-specs` is therefore used while the schemes sitting next to it are still overridden by the installed `/usr/share/medit/` — the new languages appear, the styles they need do not, and it reads as "the new lang file does not work" | point `MOO_DATA_DIRS` at a directory whose `language-specs` is a symlink to `src/mooedit/langs`: that drops the install prefix from the list, so both halves come from the tree |
 
 ### Getting a backtrace for a warning or critical
 
