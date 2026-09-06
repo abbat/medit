@@ -58,10 +58,70 @@ forget_hover_target (void)
 }
 
 
+/*
+ * Where the last right click on a view landed, in that document's own
+ * coordinates. The context menu is opened by that very press, so by the time
+ * one of its entries is used this is the place the user pointed at. Anything
+ * else that moves the cursor clears it, so a menu opened from the keyboard is
+ * answered about the cursor and not about an old click.
+ */
+static struct {
+    MooEditView *view;          /* weak */
+    int          line;
+    int          character;
+} click;
+
+static void     forget_click        (void);
+
+
+void
+lsp_navigate_forget_click (void)
+{
+    forget_click ();
+}
+
+
+static void
+forget_click (void)
+{
+    if (click.view)
+    {
+        g_object_remove_weak_pointer (G_OBJECT (click.view), (gpointer*) &click.view);
+        click.view = NULL;
+    }
+}
+
+
+void
+lsp_navigate_note_click (MooEditView *view,
+                         int          x,
+                         int          y)
+{
+    GtkTextIter iter;
+    int buffer_x = 0, buffer_y = 0;
+
+    g_return_if_fail (MOO_IS_EDIT_VIEW (view));
+
+    gtk_text_view_window_to_buffer_coords (GTK_TEXT_VIEW (view),
+                                           GTK_TEXT_WINDOW_WIDGET,
+                                           x, y, &buffer_x, &buffer_y);
+    gtk_text_view_get_iter_at_location (GTK_TEXT_VIEW (view), &iter,
+                                        buffer_x, buffer_y);
+
+    forget_click ();
+
+    click.view = view;
+    click.line = gtk_text_iter_get_line (&iter);
+    click.character = gtk_text_iter_get_line_offset (&iter);
+    g_object_add_weak_pointer (G_OBJECT (view), (gpointer*) &click.view);
+}
+
+
 void
 lsp_navigate_reset (void)
 {
     forget_hover_target ();
+    forget_click ();
 
     if (hover.request && hover.server)
         lsp_server_cancel (hover.server, hover.request);
@@ -363,22 +423,14 @@ goto_reply (JsonNode   *result,
 }
 
 
-void
-lsp_goto_definition (MooEditWindow *window,
-                     const char    *method)
+static void
+ask_where (MooEditWindow *window,
+           LspDoc        *ldoc,
+           const char    *method,
+           int            line,
+           int            character)
 {
-    LspDoc *ldoc = NULL;
     LspGotoRequest *request;
-    int line = 0, character = 0;
-
-    g_return_if_fail (MOO_IS_EDIT_WINDOW (window));
-    g_return_if_fail (method != NULL);
-
-    if (!lsp_can_goto (window, method))
-        return;
-
-    if (!get_cursor_position (window, &ldoc, NULL, &line, &character))
-        return;
 
     /* The server has to have the text the position refers to. */
     lsp_doc_flush (ldoc);
@@ -391,6 +443,79 @@ lsp_goto_definition (MooEditWindow *window,
     lsp_server_call (lsp_doc_get_server (ldoc), method,
                      position_params (ldoc, line, character),
                      goto_reply, request, goto_request_free);
+}
+
+
+void
+lsp_goto_definition (MooEditWindow *window,
+                     const char    *method)
+{
+    LspDoc *ldoc = NULL;
+    int line = 0, character = 0;
+
+    g_return_if_fail (MOO_IS_EDIT_WINDOW (window));
+    g_return_if_fail (method != NULL);
+
+    if (!lsp_can_goto (window, method))
+        return;
+
+    if (!get_cursor_position (window, &ldoc, NULL, &line, &character))
+        return;
+
+    ask_where (window, ldoc, method, line, character);
+}
+
+
+void
+lsp_goto_definition_at_click (MooEditView *view,
+                              const char  *method)
+{
+    MooEditWindow *window;
+    MooEdit *doc;
+    LspDoc *ldoc;
+    GtkTextBuffer *buffer;
+    GtkTextIter iter;
+    int line = 0, character = 0;
+
+    g_return_if_fail (MOO_IS_EDIT_VIEW (view));
+    g_return_if_fail (method != NULL);
+
+    window = moo_edit_view_get_window (view);
+
+    if (!window || !lsp_can_goto (window, method))
+        return;
+
+    /*
+     * Without a press to go by -- the menu was opened with the keyboard --
+     * the cursor is the right thing to ask about.
+     */
+    if (click.view != view)
+    {
+        lsp_goto_definition (window, method);
+        return;
+    }
+
+    doc = moo_edit_view_get_doc (view);
+    ldoc = doc ? lsp_manager_lookup_doc (doc) : NULL;
+
+    if (!ldoc)
+        return;
+
+    buffer = moo_edit_get_buffer (doc);
+    gtk_text_buffer_get_iter_at_line (buffer, &iter, click.line);
+
+    if (click.character > 0)
+    {
+        int chars = gtk_text_iter_get_chars_in_line (&iter);
+
+        gtk_text_iter_set_line_offset (&iter, MIN (click.character, MAX (chars - 1, 0)));
+    }
+
+    lsp_iter_to_position (&iter,
+                          lsp_server_get_position_encoding (lsp_doc_get_server (ldoc)),
+                          &line, &character);
+
+    ask_where (window, ldoc, method, line, character);
 }
 
 

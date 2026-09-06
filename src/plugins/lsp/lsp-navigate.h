@@ -35,6 +35,26 @@ G_BEGIN_DECLS
 void        lsp_goto_definition     (MooEditWindow  *window,
                                      const char     *method);
 
+/*
+ * The same, but about the place the last button press landed rather than about
+ * the cursor. GtkTextView does not move the cursor on a right click, so an
+ * entry in the context menu that went by the cursor would answer about
+ * wherever the cursor happened to be left, and would look as though it needed
+ * the word selected first.
+ */
+void        lsp_goto_definition_at_click (MooEditView *view,
+                                          const char  *method);
+
+/*
+ * Records where a right click landed, and forgets it again on anything else
+ * that moves the cursor -- another click, a key -- so that a menu opened from
+ * the keyboard goes by the cursor rather than by an old click.
+ */
+void        lsp_navigate_note_click (MooEditView    *view,
+                                     int             x,
+                                     int             y);
+void        lsp_navigate_forget_click (void);
+
 /* Whether the active document has a server that can answer that method. */
 gboolean    lsp_can_goto            (MooEditWindow  *window,
                                      const char     *method);

@@ -215,6 +215,8 @@ view_key_press (MooEditView            *view,
      * handler and the popup gets Up, Down, Enter and Escape before the text
      * view does anything with them.
      */
+    lsp_navigate_forget_click ();
+
     if (lsp_completion_key_press (view, event))
         return TRUE;
 
@@ -241,12 +243,23 @@ view_focus_out (G_GNUC_UNUSED MooEditView    *view,
 
 
 static gboolean
-view_button_press (G_GNUC_UNUSED MooEditView     *view,
-                   G_GNUC_UNUSED GdkEventButton *event,
-                   G_GNUC_UNUSED gpointer        data)
+view_button_press (MooEditView            *view,
+                   GdkEventButton         *event,
+                   G_GNUC_UNUSED gpointer  data)
 {
     if (lsp_completion_visible ())
         lsp_completion_cancel ();
+
+    /*
+     * Remembered for the context menu: GtkTextView leaves the cursor where it
+     * was on a right click, so an entry that went by the cursor would answer
+     * about the wrong place unless the word had been selected first. Any other
+     * button moves the cursor itself, and then the cursor is the truth.
+     */
+    if (event->button == 3)
+        lsp_navigate_note_click (view, (int) event->x, (int) event->y);
+    else
+        lsp_navigate_forget_click ();
 
     return FALSE;
 }
@@ -318,10 +331,9 @@ static void
 goto_definition_doc_cb (MooEdit *doc)
 {
     MooEditView *view = moo_edit_get_view (doc);
-    MooEditWindow *window = view ? moo_edit_view_get_window (view) : NULL;
 
-    if (window)
-        lsp_goto_definition (window, "textDocument/definition");
+    if (view)
+        lsp_goto_definition_at_click (view, "textDocument/definition");
 }
 
 
