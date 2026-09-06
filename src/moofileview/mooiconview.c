@@ -1602,7 +1602,12 @@ static gboolean moo_icon_view_update_layout     (MooIconView    *view)
     calculate_pixbuf_size (view);
     calculate_row_height (view);
 
-    layout->num_rows = MAX (gtk_widget_get_allocated_height (widget) / layout->row_height, 1);
+    /* row_height is MAX (pixbuf_height, text_height) and both can be zero,
+       which moo_icon_view_size_allocate() already guards against before
+       dividing by it. */
+    layout->num_rows = layout->row_height > 0
+            ? MAX (gtk_widget_get_allocated_height (widget) / layout->row_height, 1)
+            : 1;
     layout->height = layout->row_height * layout->num_rows;
     layout->width = 0;
 

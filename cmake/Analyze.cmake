@@ -56,11 +56,15 @@ set(_moo_analyze_filter "^(?!.*(${_moo_analyze_exclude})).*\\.(c|cpp)$")
 #   security.insecureAPI.
 #     DeprecatedOrUnsafeBufferHandling
 #                                    15, "use memcpy_s", which is MSVC's
-#
-# That leaves 33: 12 unix.Malloc, 10 deadcode.DeadStores, 5 core.NullDereference
-# and a handful of others.
+#   security.insecureAPI.strcpy       3, and it fires on the name of the
+#                                       function without looking at the guard
+#                                       above it. All three sites here check the
+#                                       length immediately before copying: two
+#                                       against sizeof addr.sun_path in
+#                                       mooappinput-unix.c, one against a 5000
+#                                       byte string in mooutils-fs.cpp.
 set(MOO_ANALYZE_CHECKS
-    "-*,clang-analyzer-*,-clang-analyzer-optin.*,-clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling")
+    "-*,clang-analyzer-*,-clang-analyzer-optin.*,-clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling,-clang-analyzer-security.insecureAPI.strcpy")
 
 # -w turns off the compiler's own diagnostics, leaving only the analyzer's.
 # They are not lost: the target depends on medit, so the build that runs first
