@@ -151,14 +151,12 @@ jobs:
       # (cmake/Analyze.cmake). clang-tidy and run-clang-tidy are installed with
       # the rest above rather than here, because Analyze.cmake looks for them
       # with find_program() -- that is, when the tree is configured, not when
-      # the target runs. Reporting only: the findings it starts from are not a
-      # gate yet, and CodeQL is the one that judges a pull request on what it
-      # introduces.
-      # Both toolkits, though today the gtk-2 run finds nothing the gtk-3 run
-      # does not: its 29 findings are a strict subset of the other's 32, the
-      # three it lacks being dead stores in GTK+3-only code. It is here for the
-      # #else branches of the 263 GTK_CHECK_VERSION splits, which the gtk-3 run
-      # never compiles and which nothing else would analyze.
+      # the target runs.
+      # Both toolkits. It is a gate: the analyzer reports nothing on this tree,
+      # every finding it used to have being either fixed or marked at its line
+      # with a NOLINTNEXTLINE and the reason. gtk-2 is here for the #else
+      # branches of the 263 GTK_CHECK_VERSION splits, which the gtk-3 run never
+      # compiles and which nothing else would analyze.
       - name: Static analysis
         run: cmake --build build --target analyze
 

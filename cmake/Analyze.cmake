@@ -71,6 +71,17 @@ set(MOO_ANALYZE_CHECKS
 # has just printed every one of them.
 set(MOO_ANALYZE_EXTRA_ARG "-w")
 
+# The target fails on any finding. It can, because there are none left: the
+# handful the analyzer still reports are all wrong about glib, and each is
+# marked at its own line with a NOLINTNEXTLINE and the reason -- reference
+# counting it cannot follow, g_strfreev() it does not model, ownership passing
+# into a GObject setter, a field set in _init(), g_strdupv()'s NULL-in-NULL-out
+# contract.
+#
+# So a new report means new code, which is the point. When one is wrong, say
+# why at the line rather than widening this list; when it is right, fix it.
+set(MOO_ANALYZE_WARNINGS_AS_ERRORS "*")
+
 if(NOT CMAKE_C_COMPILER_ID MATCHES "Clang")
     add_custom_target(analyze
         COMMAND ${CMAKE_COMMAND} -E echo
@@ -105,6 +116,7 @@ else()
                 -quiet
                 -checks=${MOO_ANALYZE_CHECKS}
                 -extra-arg=${MOO_ANALYZE_EXTRA_ARG}
+                -warnings-as-errors=${MOO_ANALYZE_WARNINGS_AS_ERRORS}
                 "${_moo_analyze_filter}")
     else()
         # Without the driver, hand clang-tidy the database and let it walk it.
@@ -115,7 +127,8 @@ else()
                 -p "${CMAKE_BINARY_DIR}"
                 --quiet
                 --checks=${MOO_ANALYZE_CHECKS}
-                --extra-arg=${MOO_ANALYZE_EXTRA_ARG})
+                --extra-arg=${MOO_ANALYZE_EXTRA_ARG}
+                --warnings-as-errors=${MOO_ANALYZE_WARNINGS_AS_ERRORS})
     endif()
 
     add_custom_target(analyze
