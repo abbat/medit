@@ -502,6 +502,13 @@ window coordinates, `import -window root` gives screen coordinates — clicks wi
 `xdotool` always take the latter. Mixing them up types into the editor instead of the
 widget you meant.
 
+**A crop that is a few pixels too wide compares the wrong thing.** Two menu entries were
+given the same icon, and `compare -metric AE` on a 20x16 crop of each reported 26
+differing pixels — the first letter of the label, `С` against `Я`, had come along for
+the ride. On 16x16, the icon and nothing else, it is 0. Find the extent of what is being
+compared first: dump the region with `txt:` and look for the rows and columns that are
+not background, rather than guessing a box around it.
+
 ### Teardown
 
 **Kill by PID from `$S/pids`, never by name.** `pkill -x xfwm4` once killed the user's
@@ -532,6 +539,7 @@ command line and kills the shell (exit 144). `pkill -x medit` is safe.
 | The focused widget sees a key before the accelerators (`moo_window_key_press_event`), so a plugin action whose key the text view consumes — `Ctrl+Space` — never fires | match the accelerator by hand in the view's `key-press-event`, as the terminal and the LSP completion do |
 | `MooMarkup` turns a `<![CDATA[…]]>` section into a **comment node**, where `moo_markup_get_content()` cannot see it | put the text in as ordinary escaped element content; `GMarkup` unescapes it on the way in |
 | `GMarkup` accepts a `--` **inside an XML comment**; expat and every other conforming parser reject it. A comment mentioning a command line like `clangd --background-index` therefore loads in medit and fails everywhere else | check any xml the user is meant to edit with a real parser: `python3 -c "import xml.dom.minidom as m; m.parse('f.xml')"` |
+| GTK+3 hides images in menus unless `gtk-menu-images` is on. It is off in a bare sandbox and commonly on in a real desktop, so a screenshot from the sandbox showing no icon says nothing about what the user sees, and GTK+2 shows them always | to check an icon on GTK+3, write `[Settings]\ngtk-menu-images=1` into `$XDG_CONFIG_HOME/gtk-3.0/settings.ini` for the run |
 | A hover tooltip and a synthetic right click do not mix: with the pointer left resting on the target, the tooltip comes up and the context menu does not, and the run reads as a regression in whatever the menu was going to do (mechanism not established — the click may be swallowed, or the menu covered and dismissed) | move the pointer and click in the same breath, without a dwell, then screenshot and confirm the menu is up before clicking an item in it |
 | A build-tree run also reads data from an **installed** medit package (`/usr/share/medit/`), so its stale `menu.xml` produces warnings about our tree | reproduce with `MOO_DATA_DIRS=<dir>` holding the tree's own xml — but note it *replaces* the whole search list, so style schemes and the file-selector plugin stop loading; use it to attribute a warning, not to test the UI |
 
