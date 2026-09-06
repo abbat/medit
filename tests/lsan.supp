@@ -1,0 +1,23 @@
+# LeakSanitizer suppressions for the UI tests.
+#
+# Leak checking is off by default; UI_TEST_LEAK_CHECK=1 turns it on. This file
+# is what makes that opt-in usable, and it is deliberately almost empty.
+#
+# A clean startup and exit already reports 633 records and 121 KB. 344 of them
+# are purely library, and the ones that name our code mostly do not mean what
+# they look like: LSan blames the nearest frame that is not in a system library,
+# so pango's font and shaping caches are reported against whichever of our
+# functions first asked pango to lay text out. The largest single group, 101
+# records, is attributed to update_tab_width() in mootextview.c, which frees all
+# three of the things it allocates.
+#
+# So suppressing by the name of the function a leak is blamed on would suppress
+# the next real leak in that same function, which is the opposite of what a
+# suppression file is for. Entries here should name the library that actually
+# retains the memory, not the frame of ours it is charged to.
+#
+# Syntax: one "leak:<substring of a frame>" per line.
+
+# Fontconfig builds its pattern and charset caches on first use and keeps them
+# for the life of the process by design.
+leak:libfontconfig

@@ -49,8 +49,12 @@ set_property(CACHE GTK_VERSION PROPERTY STRINGS 2 3 4)
 option(ENABLE_NLS "Native Language Support" ON)
 option(ENABLE_STRICT "Enable all warnings and -Werror" OFF)
 option(ENABLE_INSTALL_HOOKS "Run gtk-update-icon-cache during install" ON)
+option(ENABLE_UI_TESTS "Register the UI tests under tests/ with ctest" OFF)
 
 # Comma-separated, passed straight to -fsanitize=. Empty means no sanitizer.
+# The UI tests read the logs it produces, so a test build normally sets it:
+#
+#   cmake -S . -B build3 -DENABLE_UI_TESTS=ON -DENABLE_SANITIZERS=address,undefined
 set(ENABLE_SANITIZERS "" CACHE STRING "Sanitizers to build with, e.g. address,undefined")
 
 # Written for the analyze target below, and read by clangd -- including the one
@@ -229,4 +233,9 @@ include(cmake/Analyze.cmake)
 if(ENABLE_NLS)
     add_subdirectory(po)
     add_subdirectory(po-gsv)
+endif()
+
+if(ENABLE_UI_TESTS)
+    enable_testing()
+    add_subdirectory(tests)
 endif()

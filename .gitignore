@@ -1,3 +1,4 @@
 doxygen
 .vscode
 /build*/
+__pycache__/
