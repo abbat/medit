@@ -423,8 +423,27 @@ in 2024, their repositories survive only on vault.centos.org, and what is there 
 
 ### Cutting a release
 
-The version lives in six places and they all have to move together. `1.3.4` was cut
-like this:
+**Before anything else, check that the distributions are still the right ones.** They
+age between releases and nothing notices on its own. Compare what is claimed against
+what is supported *today*, and fix both directions — drop what has reached end of life,
+add what has been released since:
+
+* `README.md` — the "DEB packages for …" line under **download**.
+* `.github/workflows/build.yml` — the `deb` job's `image:` matrix, and the Fedora
+  release in the `fedora` job.
+* `.github/workflows/codeql.yml` — the runner and its dependency list.
+* `AGENTS.md` — "Debian package build (old distros)", which names the targets and the
+  compiler span they cover.
+* `debian/control`, `rpm/medit.spec`, `arch/PKGBUILD` — dependency names occasionally
+  move between packages across releases.
+
+A dropped distribution usually takes a workaround with it: retiring Debian 11 removed
+the whole `snapshot.debian.org` recipe its dead archive needed. A new one is worth a
+container run before it goes in the matrix — Ubuntu 26.04 arrived with gcc 15 and cmake
+4.2, two and three major versions ahead of anything the tree had been built with.
+
+The version itself lives in six places and they all have to move together. `1.3.4` was
+cut like this:
 
 1. `CMakeLists.txt` — `MOO_MICRO_VERSION`. The comment above it says "keep in sync with
    debian/changelog", and that is the whole of the coupling: nothing derives one from
