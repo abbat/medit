@@ -45,7 +45,11 @@ Everything that kept medit out of the distributions is gone:
   script and parsed at runtime by a bundled copy of libglade. They are plain
   `.ui` files now, loaded by GtkBuilder from a GResource bundle, so neither the
   build nor the editor needs an interpreter. python2 was the reason medit left
-  Debian; nothing in the tree runs python of any version any more.
+  Debian, and none of it is left: no interpreter is started at build time, none
+  at run time, and no package medit produces depends on one. The one python in
+  the tree is the UI test harness under `tests/`, which is a developer's tool —
+  it is not built, not installed, not packaged, and `cmake` never looks for
+  python unless `-DENABLE_UI_TESTS=ON` asks it to.
 * **Language servers.** A builtin client speaks the language server protocol to
   whichever servers are installed: problems underlined in the text and listed in
   a pane, a tree of what the document contains, go to definition, hover and

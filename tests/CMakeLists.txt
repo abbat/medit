@@ -14,6 +14,13 @@
 #   cmake --build buildu3 --target ui-test        # ctest -j UI_TEST_PARALLEL
 #
 # ../tests/run.sh --gtk both runs both toolkits from the source tree.
+#
+# The harness is python, and it is the only python in the tree. It is a
+# developer's tool: not built, not installed, not packaged, and nothing below
+# runs unless ENABLE_UI_TESTS was asked for, which is off by default -- so an
+# ordinary build never looks for an interpreter. medit was dropped from Debian
+# over python2 once; "no interpreter at build time, none at run time" is a
+# property of this fork, and a test harness is not a reason to give it up.
 
 include(ProcessorCount)
 ProcessorCount(_moo_nproc)

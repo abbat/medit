@@ -42,7 +42,17 @@ correctly on both.**
 the leftovers of a package build under `debian/`; it touches nothing else.
 
 Other options: `-DENABLE_NLS=OFF`, `-DENABLE_STRICT=ON` (all warnings and `-Werror`),
-`-DCMAKE_BUILD_TYPE=Debug` (the default is RelWithDebInfo, i.e. `-g -O2`).
+`-DCMAKE_BUILD_TYPE=Debug` (the default is RelWithDebInfo, i.e. `-g -O2`),
+`-DENABLE_SANITIZERS=address,undefined`, `-DENABLE_UI_TESTS=ON` (§3).
+
+**Python is a developer's tool here, never a dependency.** The UI tests under `tests/`
+are written in python, and that is the only python in the tree. It is not built, not
+installed, not packaged, and nothing in `debian/`, `rpm/` or `arch/` mentions it;
+`CMakeLists.txt` does not so much as look for an interpreter unless `ENABLE_UI_TESTS=ON`
+asks it to, and the default is off. This matters more than it would elsewhere: python2
+is why medit was dropped from Debian in the first place, and "no interpreter at build
+time, none at run time" is a property of this fork worth not quietly losing. If
+something ever needs python to *build*, it does not belong in the build.
 
 ### A/B comparison of one change
 
@@ -68,6 +78,14 @@ git stash pop
 | `clang` | clang on debian:trixie, both toolkits, plus the `analyze` target |
 | `fedora` | fedora:44, gtk-3, with LTO, which is the only place `-Wodr` has anything to see |
 | `langs` | `src/mooedit/langs/check.sh` over the 187 language definitions and schemes |
+
+`.github/workflows/ui.yml` is the only job that runs the program rather than reading it.
+It builds debian:13 with `-DENABLE_UI_TESTS=ON -DENABLE_SANITIZERS=address,undefined` for
+both toolkits and runs the `ui-test` target — a real X server, a real accessibility bus,
+real clicks, sanitizers underneath. It is the only place a dialog that stopped opening
+can fail anything. See §3 for what the tests are and how to write one; the evidence a
+failure leaves is uploaded as an artifact, because a UI failure is close to
+undiagnosable without it.
 
 `.github/workflows/codeql.yml` runs CodeQL over both toolkits on every push, on pull
 requests, and weekly. It judges a pull request on the alerts it *introduces*, which is
@@ -242,7 +260,7 @@ read the files where such a rule would matter.
 Only three things are generated: `marshals.[ch]` (glib-genmarshal), `moo-pixbufs.h`
 (gdk-pixbuf-csource) and `resources.c` (glib-compile-resources). Everything else that
 used to be generated — interfaces, menu descriptions, the credits text — is a resource
-now, listed in `src/resources.xml` and read at runtime. The build needs no python.
+now, listed in `src/resources.xml` and read at runtime. The build needs no python (§1).
 Adding a source file means adding it to the `target_sources()` list in that directory's
 `CMakeLists.txt`.
 
@@ -707,12 +725,13 @@ tests with:
 env XDG_DATA_HOME=$S/xdg/data XDG_CACHE_HOME=$S/xdg/cache XDG_CONFIG_HOME=$S/xdg/config ./src/medit ...
 ```
 
-### Two runtime checks worth turning on, and one not turned on yet
+### Two runtime checks, now wired into the UI tests
 
-Both need medit to actually run, which is why neither is in CI: there is no test that
-drives the program. Whoever writes that test should wire both into it.
+Both need medit to actually run. That is now what `tests/` does, and both are set for
+every test in `tests/lib/runner.py` — so the numbers below are printed by every run,
+and the sanitizer half of them is a gate.
 
-**`G_ENABLE_DIAGNOSTIC=1`** costs nothing and can be used today. It is an environment
+**`G_ENABLE_DIAGNOSTIC=1`** costs nothing. It is an environment
 variable read by libgobject, not a build flag — there is nothing to enable in
 `CMakeLists.txt`. With it set, GObject warns when a **deprecated property or signal** is
 used, which is a class the compiler cannot see at all: `-Wdeprecated-declarations`
@@ -729,25 +748,26 @@ The property GtkAlignment:right-padding    is deprecated …
 All four are things GTK+4 removes outright, so this is the cheapest survey of that work
 there is. Opening dialogs finds more.
 
-**Sanitizers are ready but deliberately not enabled.** Measured, so that nobody has to
+**Sanitizers are a build option now**, `-DENABLE_SANITIZERS=address,undefined`, which
+puts the flag on the compile and the link together. Measured, so that nobody has to
 measure again:
 
-```bash
-cmake -S . -B <dir> -DGTK_VERSION=3 \
-    -DCMAKE_C_FLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer -g" \
-    -DCMAKE_CXX_FLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer -g" \
-    -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=address,undefined"
-```
-
-* **ASan and UBSan: clean.** The tree builds with both, and a run that opens the file
-  selector, the bookmark editor, the find dialog and the menus produces **zero** reports
-  from either. They could be a gate from day one, unlike the static analyzer.
-* **LSan: do not.** `detect_leaks=1` reports 633 records, 121 KB at a clean exit. 344 are
-  purely library, and the 289 that name our code do not mean what they look like: the
-  largest, 101 records from `mootextview.c:3554`, is `update_tab_width()`, which frees
-  all three of the things it allocates. What is retained is pango's font and shaping
-  cache, attributed to the nearest frame that is not a library. Run with
-  `detect_leaks=0`.
+* **ASan and UBSan: clean, and therefore a gate.** The tree builds with both, and a run
+  that opens the file selector, the bookmark editor, the find dialog and the menus
+  produces **zero** reports from either — as does the whole About dialog test. Unlike the
+  static analyzer they could be a gate from day one, and they are: `tests/lib/sanitizer.py`
+  parses the logs and fails the test on any finding.
+* **LSan: opt-in, `UI_TEST_LEAK_CHECK=1`, and off by default.** `detect_leaks=1` reports
+  633 records, 121 KB at a clean exit. 344 are purely library, and the 289 that name our
+  code do not mean what they look like: the largest, 101 records from `mootextview.c:3554`,
+  is `update_tab_width()`, which frees all three of the things it allocates. What is
+  retained is pango's font and shaping cache, attributed to the nearest frame that is not
+  a library. That is also why `tests/lsan.supp` is nearly empty — suppressing by the name
+  of the function a leak is blamed on would suppress the next real leak in that same
+  function. Note that leak checking is *on* by default in the runtime, so a sanitized
+  binary run without `ASAN_OPTIONS` exits non-zero over fontconfig's caches; the runner
+  sets the options whether or not it was told the build is sanitized, for exactly that
+  reason.
 * **TSan: pointless.** Nothing in our code creates a thread — no `g_thread_new`, no
   `pthread_create`.
 * **MSan: impossible** without an instrumented glib, gtk and pango.
@@ -763,7 +783,115 @@ G_DEBUG=fatal-criticals gdb -batch -ex run -ex "bt 25" --args ./src/medit --new-
 
 ---
 
-## 3. UI sandbox (headless X + screenshots + synthetic input)
+## 3. Driving the program
+
+### The UI tests
+
+```bash
+cmake -S . -B buildu3 -DGTK_VERSION=3 -DENABLE_UI_TESTS=ON \
+      -DENABLE_SANITIZERS=address,undefined
+cmake --build buildu3 -j"$(nproc)"
+
+cd buildu3 && ctest -j8                       # every test of this toolkit
+ctest -R about_dialog --output-on-failure      # one test
+ctest -L app                                   # one subsystem
+cmake --build buildu3 --target ui-test         # ctest -j UI_TEST_PARALLEL
+
+tests/run.sh --gtk both                        # both toolkits, from the source tree
+tests/run.sh --gtk 2 -L terminal
+```
+
+Build directories of their own, `buildu2` and `buildu3` beside `build2` and `build3`: a
+sanitized binary is three times the size and visibly slower, which is not what an
+ordinary build should become.
+
+A test is `tests/<subsystem>/<name>/test.py`, one `run(t)` function, and it imports
+nothing — the whole vocabulary is on `t` (`tests/lib/context.py`). ctest labels each test
+with its subsystem and its toolkit. One file serves both toolkits, because the tree gail
+exposes for GTK+2 and the one GTK+3 exposes natively are the same tree.
+
+**Reading and acting are different mechanisms, on purpose.** Everything asserted comes
+from AT-SPI, so a test says "the Credits button is there" rather than comparing pixels,
+and says it identically on both toolkits. Input is `xdotool` at coordinates AT-SPI has
+just given, and there is not one fixed coordinate anywhere.
+
+Each test gets a temp root, an X server (`Xvfb -displayfd`, so no two tests race for a
+display number) and a session bus of its own. `UI_TEST_PARALLEL` says how many run at
+once. Browsers are intercepted, not opened: a fake `x-scheme-handler/http` desktop entry
+appends the URL to a file, so "the license opened in a browser" is a string comparison.
+Failures leave everything in `<build>/ui-tests/<test>/` — `medit.log`, the X server's
+log, the sanitizer logs, `sanitizer.json`, and `failure.png`.
+
+**No window manager.** The manual sandbox below starts `xfwm4`; the tests do not need to,
+and that is one moving part fewer.
+
+What it cost to get there, so nobody pays twice:
+
+**The sandbox root must be a short path.** The at-spi bus socket is created under
+`XDG_RUNTIME_DIR`, and a UNIX socket path is limited to about 108 bytes. A root under a
+build or scratch directory goes over it, and the only symptom is one line on stderr —
+`atk-bridge: Couldn't listen on dbus server: Socket name too long` — after which medit
+comes up, the accessibility tree never does, and the test times out looking for a window
+that is on screen. Hence `mktemp -d /tmp/mui.XXXXXX`, and `UI_TEST_TMP_ROOT` if `/tmp` is
+not where it should go.
+
+**AT-SPI can describe a widget but not operate one.** `queryAction().doAction("click")`
+on a menu item produces `Gtk-WARNING: no trigger event for menu popup` and
+`Gdk-CRITICAL: gdk_window_get_window_type: assertion 'GDK_IS_WINDOW (window)' failed`,
+opens nothing, and leaves the application with no toplevel at all. gtk wants a real event
+to open a menu from and the action interface has none to give it. That is why the
+coordinates come from AT-SPI and the click from `xdotool`.
+
+**Park the pointer before every click.** `xdotool mousemove x y click 1` warps and presses
+in the same instant, and GTK+2 then acts on what it thought was under the pointer
+beforehand. A link in the About dialog does not open on the first click after a button in
+the same dialog was clicked, and opens on the second. Measured, one variant per row:
+
+| what was done | result |
+|---|---|
+| move to the link, click | does not open |
+| the same click again | opens |
+| park the pointer elsewhere first, then move and click | opens |
+| move onto the label twice, then click | opens |
+
+So `input.click_at()` parks at the far corner, moves to the target, then presses, with a
+pause between each — which is what a hand produces and a warp does not.
+
+**A link in a label is not a widget.** It has no `Component` interface, so it has no
+extents: `queryComponent()` on it raises `NotImplementedError`. It is a range of the
+label's text, and its position comes from `queryText().getRangeExtents(start, end, ...)`.
+Worse, GTK+2 does not expose links at all — gail's label accessible implements `AtkText`
+but not `AtkHypertext`, so the same dialog reports zero links there. `a11y.links_of()`
+falls back to finding URLs in the label's own text, which works because the labels medit
+puts links in show the address as the link text, and makes the GTK+2 assertion slightly
+stronger than the GTK+3 one.
+
+**An unrealised widget reports INT_MIN for its origin**, and `xdotool` then rejects the
+coordinate rather than clicking anywhere. The items of a menu that has not popped up yet
+are already in the tree, so lookups filter on `input.on_screen()` — that turns "still
+opening" into another poll instead of a crash.
+
+**The locale is pinned to `C.UTF-8`**, because tests match on widget names. One
+consequence is asserted directly rather than worked around: `credits.c` fills the
+"Translated by" tab from `_("translator-credits")` and only when the lookup returns
+something other than the msgid, so in an untranslated locale the tab is there and empty.
+
+**Accessibility itself produces criticals, and they are not medit's.** Every run of the
+About test reports three on GTK+3 —
+`gtk_notebook_get_tab_label: assertion 'list != NULL' failed`, as the credits notebook is
+destroyed — and one on GTK+2, `gail_notebook_real_remove_gtk: assertion 'obj' failed`.
+medit calls neither function; both are inside the toolkit's own accessible
+implementations, which only run because the bridge is loaded. The runner counts criticals
+and prints the count, but does not gate on it, for this reason.
+
+**Quit through the UI, never with a signal.** A sanitizer only reports at exit, so a
+killed medit reports nothing; the runner clicks File/Quit and waits for the exit code,
+and a medit that will not quit fails the test. This is the exit-code rule of §2 as a
+mechanism rather than a habit.
+
+### The ad-hoc sandbox (headless X + screenshots + synthetic input)
+
+For poking at something by hand, rather than for a test.
 
 Everything needed is installed: `Xvfb`, `xfwm4`, `x11vnc`, `Xephyr`, `xdotool`,
 ImageMagick (`import`, `convert`, `compare`), `gcc`, `libX11`/`libXtst` dev.
