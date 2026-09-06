@@ -187,7 +187,8 @@ static void name__##_doc_plugin_destroy (Name__##DocPlugin *plugin);        \
 static gpointer name__##_doc_plugin_parent_class = NULL;                    \
                                                                             \
 static void                                                                 \
-name__##_doc_plugin_class_init (MooDocPluginClass *klass)                   \
+name__##_doc_plugin_class_init (MooDocPluginClass *klass,                   \
+                                G_GNUC_UNUSED gpointer data)                \
 {                                                                           \
     name__##_doc_plugin_parent_class = g_type_class_peek_parent (klass);    \
     klass->create = (MooDocPluginCreateFunc) name__##_doc_plugin_create;    \
