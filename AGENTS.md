@@ -71,6 +71,21 @@ now, listed in `src/resources.xml` and read at runtime. The build needs no pytho
 Adding a source file means adding it to the `target_sources()` list in that directory's
 `CMakeLists.txt`.
 
+**A data file a feature cannot work without belongs in the bundle, not only in the
+install.** `lsp.xml` is the defaults for the language server client; it was installed
+into `MOO_DATA_DIR` and read from there, so a run from a build directory found no
+configuration at all and started no server, and the menu item that hands the user a copy
+of it wrote an empty stub. It is a resource now and the install is the second place
+looked at, not the first. Two things to get right when adding one:
+
+* **The dependency list is not a glob.** `file(GLOB_RECURSE MOO_UI_FILES … *.ui)` in
+  `src/CMakeLists.txt` covers interfaces only; anything else has to be named in the
+  `DEPENDS` of the `resources.c` command by hand, or editing it rebuilds nothing.
+* **Do not `preprocess="xml-stripblanks"` a file the user is meant to read.** It is
+  there to shrink interfaces. For a configuration file the formatting *is* the
+  documentation, and the copy in the binary should be the same bytes as the copy on
+  disk — `gresource extract <binary> /text/<name>` against `wc -c` says whether it is.
+
 ### Dialogs
 
 Interfaces live in `src/*/ui/*.ui` (GtkBuilder XML), are compiled into the binary by
@@ -164,6 +179,21 @@ Three more things the LSP plugin ran into, all of which apply to any plugin:
   the signal is simply never called; `MooTextView::populate_popup` prepends Undo
   and Redo because it is the vfunc, which does still run. Add entries at
   `Editor/Popup/PopupStart` or `PopupEnd`, the way usertools does.
+* **`Plugins/<id>/enabled` is the framework's, not yours.** `moo_plugin_register()`
+  registers that key and reads the plugin's enabled state from it, so a plugin whose id
+  is `Lsp` must not define a preference called `Plugins/Lsp/enabled` of its own: it
+  collides with the switch in Preferences → Plugins, and both registrations then argue
+  over the default. A plugin that should not run until it is asked for passes
+  `MooPluginParams { FALSE, TRUE }` — disabled, but listed — as ctags and the LSP client
+  do; there is no need for a switch of its own, and the framework attaches and detaches
+  window and document plugins on the change, including for documents that are already
+  open.
+* **A right click does not move the cursor.** GtkTextView leaves it where it was, so
+  a context menu entry that goes by the cursor answers about wherever the cursor was
+  last left. The entry then looks as though it needs the word selected first — selecting
+  is simply what moves the cursor into it. Record the press and go by that; clear the
+  record on any other button and on any key, since those move the cursor themselves and
+  the cursor is then the truth.
 * **A document just opened has no document-plugin state yet.** `notify::lang`
   arrives after the document is inserted into the window, so a plugin that
   attaches on the language — as the LSP client does — has attached nothing at the
@@ -314,6 +344,19 @@ timeout 15 ./src/medit --new-app FILE >log 2>&1; echo "exit=$?"
 
 `--new-app` is mandatory — medit is single-instance and will otherwise hand the file to
 a running copy and exit.
+
+### A fixture that props the feature up hides the bug in it
+
+Every test of the language server client began by copying `lsp.xml` into the sandbox's
+data directory, because without it nothing started. That is precisely the bug: the
+defaults were only read from the install, so a build-tree run had none, and the menu
+item meant to hand the user a copy of them wrote an empty file. Every green run said
+nothing about it, because every one of them had quietly supplied by hand the thing that
+was missing.
+
+When a test needs a step to make the feature work at all, ask what a user's first run
+does instead of that step. Set the sandbox up the way an untouched machine is — empty
+`XDG_DATA_HOME`, nothing installed — and see what happens before adding anything to it.
 
 ### Translations
 
@@ -488,6 +531,8 @@ command line and kills the shell (exit 144). `pkill -x medit` is safe.
 | `_moo_get_accel()` and `_moo_get_default_accel()` read **different maps**: the first holds accelerators that were actually set, the second the defaults registered with the action. An accelerator that has only ever had its default reads as empty from the first | ask the first, fall back to the second — that is what a plugin matching its own accelerator by hand has to do |
 | The focused widget sees a key before the accelerators (`moo_window_key_press_event`), so a plugin action whose key the text view consumes — `Ctrl+Space` — never fires | match the accelerator by hand in the view's `key-press-event`, as the terminal and the LSP completion do |
 | `MooMarkup` turns a `<![CDATA[…]]>` section into a **comment node**, where `moo_markup_get_content()` cannot see it | put the text in as ordinary escaped element content; `GMarkup` unescapes it on the way in |
+| `GMarkup` accepts a `--` **inside an XML comment**; expat and every other conforming parser reject it. A comment mentioning a command line like `clangd --background-index` therefore loads in medit and fails everywhere else | check any xml the user is meant to edit with a real parser: `python3 -c "import xml.dom.minidom as m; m.parse('f.xml')"` |
+| A hover tooltip and a synthetic right click do not mix: with the pointer left resting on the target, the tooltip comes up and the context menu does not, and the run reads as a regression in whatever the menu was going to do (mechanism not established — the click may be swallowed, or the menu covered and dismissed) | move the pointer and click in the same breath, without a dwell, then screenshot and confirm the menu is up before clicking an item in it |
 | A build-tree run also reads data from an **installed** medit package (`/usr/share/medit/`), so its stale `menu.xml` produces warnings about our tree | reproduce with `MOO_DATA_DIRS=<dir>` holding the tree's own xml — but note it *replaces* the whole search list, so style schemes and the file-selector plugin stop loading; use it to attribute a warning, not to test the UI |
 
 ### Getting a backtrace for a warning or critical
@@ -511,7 +556,7 @@ Then locate the message text in the log and take the block printed just above it
 
 ---
 
-## 5. Bug patterns already found (all from AI-ported blocks)
+## 5. Bug patterns already found (mostly, not all, from AI-ported blocks)
 
 Reading these first will usually identify the next one:
 
