@@ -1029,12 +1029,6 @@ parse_mode_string (MooEdit    *edit,
         value = sep + 1;
         g_strstrip (value);
 
-        if (!value)
-        {
-            g_free (var);
-            goto out;
-        }
-
         func (edit, var, value);
 
         g_free (var);
