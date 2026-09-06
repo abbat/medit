@@ -43,7 +43,7 @@ jobs:
         gtk: [3, 2]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Install build dependencies
         run: |
@@ -56,7 +56,7 @@ jobs:
               libice-dev libsm-dev libxext-dev libxrender-dev
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@v4
         with:
           languages: c-cpp
           build-mode: manual
@@ -85,6 +85,6 @@ jobs:
       # 263 GTK_CHECK_VERSION splits is compiled in the gtk-2 run and nowhere
       # else.
       - name: Perform CodeQL analysis
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@v4
         with:
           category: "/language:c-cpp/gtk:${{ matrix.gtk }}"

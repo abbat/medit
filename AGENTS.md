@@ -437,6 +437,14 @@ add what has been released since:
 * `debian/control`, `rpm/medit.spec`, `arch/PKGBUILD` — dependency names occasionally
   move between packages across releases.
 
+The same check applies to the actions the workflows pin. GitHub retires the Node
+runtime under them on its own schedule, and the first sign is a warning in a green
+job rather than a failure: `actions/checkout@v4` targets Node 20, which was
+deprecated in September 2025, and jobs kept passing while being force-run on Node 24.
+Read `uses:` in both workflows against the current major of each action
+(`actions/checkout`, `github/codeql-action`); a bump costs nothing when the tree is
+quiet and is a surprise when the runtime is finally withdrawn.
+
 A dropped distribution usually takes a workaround with it: retiring Debian 11 removed
 the whole `snapshot.debian.org` recipe its dead archive needed. A new one is worth a
 container run before it goes in the matrix — Ubuntu 26.04 arrived with gcc 15 and cmake

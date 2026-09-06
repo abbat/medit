@@ -58,7 +58,7 @@ jobs:
               libjson-glib-dev libvte-2.91-dev \
               libice-dev libsm-dev libxext-dev libxrender-dev
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Configure
         run: |
@@ -88,7 +88,7 @@ jobs:
     name: language definitions
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Install xmllint
         run: |
@@ -130,7 +130,7 @@ jobs:
               libjson-glib-dev libvte-2.91-dev \
               libice-dev libsm-dev libxext-dev libxrender-dev
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Configure
         env:
@@ -182,7 +182,7 @@ jobs:
               libICE-devel libSM-devel \
               intltool gettext
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Configure
         run: |
