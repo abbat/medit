@@ -306,7 +306,8 @@ _moo_fold_tree_free (MooFoldTree *tree)
 }
 
 
-inline static int
+/* Only ever called from g_assert(), which a release build compiles out. */
+G_GNUC_UNUSED inline static int
 get_line_count (MooFoldTree *tree)
 {
     return gtk_text_buffer_get_line_count (GTK_TEXT_BUFFER (tree->buffer));
@@ -772,26 +773,3 @@ _moo_fold_tree_toggle (MooFoldTree *tree)
 }
 
 
-static GSList *
-get_folds_in_range (MooFoldTree    *tree,
-                    MooFold        *parent,
-                    int             first_line,
-                    int             last_line,
-                    GSList         *list)
-{
-    MooFold *child;
-
-    if (parent && first_line <= _moo_fold_get_start (parent) && last_line >= _moo_fold_get_start (parent))
-        list = g_slist_prepend (list, parent);
-
-    for (child = parent ? parent->children : tree->folds; child != NULL; child = child->next)
-    {
-        if (last_line < _moo_fold_get_start (child))
-            break;
-        if (first_line >= _moo_fold_get_end (child))
-            continue;
-        list = get_folds_in_range (tree, child, first_line, last_line, list);
-    }
-
-    return list;
-}

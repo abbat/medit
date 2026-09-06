@@ -2472,6 +2472,9 @@ moo_text_view_draw_whitespace (GtkTextView       *text_view,
 }
 
 
+#if !GTK_CHECK_VERSION(3,0,0)
+/* Every caller is in the GTK+2 branch of moo_text_view_expose(); GTK+3 is
+   handed a cairo_t and never has to make one. */
 static inline cairo_t* moo_cairo_create(cairo_t *cr, GdkWindow *window)
 {
     if (cr)
@@ -2479,6 +2482,7 @@ static inline cairo_t* moo_cairo_create(cairo_t *cr, GdkWindow *window)
 
     return gdk_cairo_create (window);
 }
+#endif
 
 #if GTK_CHECK_VERSION(3,0,0)
 static gboolean

@@ -1454,7 +1454,7 @@ update_doc_line_end_item (MooEditWindow *window)
     g_return_if_fail (action != nullptr);
 
     le = moo_edit_get_line_end_type (doc);
-    g_return_if_fail (le > 0 && le < G_N_ELEMENTS(line_end_menu_items));
+    g_return_if_fail (le > 0 && (guint) le < G_N_ELEMENTS (line_end_menu_items));
 
     moo_menu_mgr_set_active (moo_menu_action_get_mgr (MOO_MENU_ACTION (action)),
                              line_end_menu_items[le], TRUE);

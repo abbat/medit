@@ -823,7 +823,7 @@ parse_file_simple (const char     *filename,
     GSList *list = NULL;
 
     g_return_val_if_fail (filename != NULL, NULL);
-    g_return_val_if_fail (type < N_TOOLS, NULL);
+    g_return_val_if_fail ((int) type < N_TOOLS, NULL);
 
     doc = moo_markup_parse_file (filename, &error);
 
@@ -915,7 +915,7 @@ parse_user_tools (MooUserToolType type,
     GHashTable *ids = NULL;
     char **p;
 
-    g_return_val_if_fail (type < N_TOOLS, NULL);
+    g_return_val_if_fail ((int) type < N_TOOLS, NULL);
 
     _moo_command_init ();
 
@@ -946,7 +946,7 @@ GSList *
 _moo_edit_parse_user_tools (MooUserToolType type,
                             gboolean        all)
 {
-    g_return_val_if_fail (type < N_TOOLS, NULL);
+    g_return_val_if_fail ((int) type < N_TOOLS, NULL);
     return parse_user_tools (type, NULL, FALSE, all);
 }
 
@@ -1104,7 +1104,7 @@ _moo_edit_save_user_tools (MooUserToolType  type,
     MooFileWriter *writer;
     char *filename;
 
-    g_return_if_fail (type < N_TOOLS);
+    g_return_if_fail ((int) type < N_TOOLS);
 
     filename = moo_get_user_data_file (FILENAMES[type]);
     g_return_if_fail (filename != NULL);
