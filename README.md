@@ -26,7 +26,7 @@ ships packages for the distributions that lost it.
 ## download
 
 [**DEB packages**](http://software.opensuse.org/download.html?project=home:antonbatenev:medit&package=medit)
-for Debian 11, 12, 13 and Ubuntu 20.04, 22.04, 24.04. The page has the
+for Debian 12, 13 and Ubuntu 22.04, 24.04, 26.04. The page has the
 repository setup instructions.
 
 `medit` is a metapackage that pulls in `medit-gtk3`, or leaves `medit-gtk2` in
