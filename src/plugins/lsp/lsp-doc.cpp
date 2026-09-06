@@ -14,6 +14,7 @@
  */
 
 #include "plugins/lsp/lsp-doc.h"
+#include "plugins/lsp/lsp-diagnostics.h"
 #include "plugins/lsp/lsp-plugin.h"
 
 #include "mooedit/moolang.h"
@@ -33,6 +34,8 @@ struct LspDoc {
     int            version;
     guint          change_timeout;
     gboolean       opened;
+
+    GSList        *diagnostics;     /* LspDiagnostic* */
 };
 
 
@@ -313,6 +316,40 @@ lsp_doc_open (LspDoc *ldoc)
 }
 
 
+void
+lsp_doc_refresh_diagnostics (LspDoc *ldoc)
+{
+    g_return_if_fail (ldoc != NULL);
+
+    if (moo_prefs_get_bool (MOO_LSP_PREFS_DIAGNOSTICS))
+        lsp_diagnostics_apply (ldoc->doc, ldoc->diagnostics,
+                               lsp_server_get_position_encoding (ldoc->server));
+    else
+        lsp_diagnostics_clear (ldoc->doc);
+}
+
+
+void
+lsp_doc_set_diagnostics (LspDoc    *ldoc,
+                         JsonArray *array)
+{
+    g_return_if_fail (ldoc != NULL);
+
+    lsp_diagnostics_free (ldoc->diagnostics);
+    ldoc->diagnostics = lsp_diagnostics_parse (array);
+
+    lsp_doc_refresh_diagnostics (ldoc);
+}
+
+
+GSList *
+lsp_doc_get_diagnostics (LspDoc *ldoc)
+{
+    g_return_val_if_fail (ldoc != NULL, NULL);
+    return ldoc->diagnostics;
+}
+
+
 gboolean
 lsp_doc_is_current (LspDoc *ldoc)
 {
@@ -399,6 +436,11 @@ lsp_doc_free (LspDoc *ldoc)
 
     if (ldoc->opened)
         lsp_server_did_close (ldoc->server, ldoc->uri);
+
+    if (ldoc->doc)
+        lsp_diagnostics_clear (ldoc->doc);
+
+    lsp_diagnostics_free (ldoc->diagnostics);
 
     g_free (ldoc->uri);
     g_free (ldoc->language_id);

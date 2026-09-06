@@ -3,6 +3,8 @@ target_sources(medit PRIVATE
     lsp-client.h
     lsp-config.cpp
     lsp-config.h
+    lsp-diagnostics.cpp
+    lsp-diagnostics.h
     lsp-doc.cpp
     lsp-doc.h
     lsp-json.cpp

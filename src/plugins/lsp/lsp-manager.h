@@ -44,6 +44,21 @@ LspDoc     *lsp_manager_lookup_doc      (MooEdit    *doc);
 /* Borrowed, in no particular order. */
 GSList     *lsp_manager_list_servers    (void);
 
+/*
+ * Told whenever a server pushes a new set of diagnostics for a document, so
+ * that a window showing that document can refresh its pane.
+ */
+typedef void (*LspDiagnosticsNotifyFunc) (MooEdit    *doc,
+                                          gpointer    data);
+
+void        lsp_manager_add_listener    (LspDiagnosticsNotifyFunc  func,
+                                         gpointer                  data);
+void        lsp_manager_remove_listener (LspDiagnosticsNotifyFunc  func,
+                                         gpointer                  data);
+
+/* Re-applies what is already known, after a change of preferences. */
+void        lsp_manager_refresh_diagnostics (void);
+
 G_END_DECLS
 
 #endif /* MOO_LSP_MANAGER_H */

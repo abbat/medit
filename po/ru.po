@@ -2525,6 +2525,75 @@ msgstr "По _умолчанию"
 msgid "Use the system monospace font"
 msgstr "Использовать системный моноширинный шрифт"
 
+#: ../src/plugins/lsp/lsp-diagnostics.cpp:68
+msgctxt "diagnostic severity"
+msgid "warning"
+msgstr "предупреждение"
+
+#: ../src/plugins/lsp/lsp-diagnostics.cpp:70
+msgctxt "diagnostic severity"
+msgid "information"
+msgstr "сообщение"
+
+#: ../src/plugins/lsp/lsp-diagnostics.cpp:72
+msgctxt "diagnostic severity"
+msgid "hint"
+msgstr "подсказка"
+
+#: ../src/plugins/lsp/lsp-diagnostics.cpp:75
+msgctxt "diagnostic severity"
+msgid "error"
+msgstr "ошибка"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:44
+msgid "LSP"
+msgstr "LSP"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:44
+msgid "Language server protocol client"
+msgstr "Клиент протокола языковых серверов"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:329
+msgid "Diagnostics"
+msgstr "Диагностика"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:359
+msgid "Show the diagnostics pane"
+msgstr "Показать панель диагностики"
+
+#: ../src/plugins/lsp/lsp-server.cpp:723
+#, c-format
+msgid "%s failed to start: %s"
+msgstr "%s не удалось запустить: %s"
+
+#: ../src/plugins/lsp/lsp-server.cpp:725
+msgid "unknown error"
+msgstr "неизвестная ошибка"
+
+#: ../src/plugins/lsp/lsp-server.cpp:731
+#, c-format
+msgid "%s answered the initialize request with no capabilities"
+msgstr "%s ответил на запрос initialize без списка возможностей"
+
+#: ../src/plugins/lsp/lsp-server.cpp:754
+#, c-format
+msgid "%s did not answer the initialize request in %d seconds"
+msgstr "%s не ответил на запрос initialize за %d с"
+
+#: ../src/plugins/lsp/lsp-server.cpp:871
+#, c-format
+msgid ""
+"%s exited immediately %d times in a row; check the command in the LSP "
+"configuration file"
+msgstr ""
+"%s завершился сразу же %d раза подряд; проверьте команду в файле настройки "
+"LSP"
+
+#: ../src/plugins/lsp/lsp-server.cpp:906
+#, c-format
+msgid "could not run %s: %s"
+msgstr "не удалось запустить %s: %s"
+
 #~ msgid ""
 #~ "console message|in file %s, line %d, function %s:\n"
 #~ "%s"

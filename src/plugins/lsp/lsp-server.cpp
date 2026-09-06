@@ -772,13 +772,24 @@ client_capabilities (void)
     JsonObject *capabilities = json_object_new ();
     JsonObject *text_document = json_object_new ();
     JsonObject *synchronization = json_object_new ();
+    JsonObject *publish_diagnostics = json_object_new ();
 
     lsp_json_set_bool (synchronization, "dynamicRegistration", FALSE);
     lsp_json_set_bool (synchronization, "willSave", FALSE);
     lsp_json_set_bool (synchronization, "willSaveWaitUntil", FALSE);
     lsp_json_set_bool (synchronization, "didSave", TRUE);
 
+    /*
+     * relatedInformation and codeDescription would each need somewhere to show
+     * a second location or a url, and there is nowhere yet; saying no keeps
+     * servers from computing them.
+     */
+    lsp_json_set_bool (publish_diagnostics, "relatedInformation", FALSE);
+    lsp_json_set_bool (publish_diagnostics, "versionSupport", FALSE);
+    lsp_json_set_bool (publish_diagnostics, "codeDescriptionSupport", FALSE);
+
     lsp_json_set_object (text_document, "synchronization", synchronization);
+    lsp_json_set_object (text_document, "publishDiagnostics", publish_diagnostics);
     lsp_json_set_object (capabilities, "textDocument", text_document);
 
     return capabilities;

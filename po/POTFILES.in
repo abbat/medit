@@ -61,6 +61,7 @@ src/plugins/moofileselector.cpp
 src/plugins/moofileselector-prefs.cpp
 src/plugins/moofind.cpp
 src/plugins/support/mooeditwindowoutput.cpp
+src/plugins/lsp/lsp-diagnostics.cpp
 src/plugins/lsp/lsp-plugin.cpp
 src/plugins/lsp/lsp-server.cpp
 src/plugins/terminal/terminal-colors.cpp

@@ -35,11 +35,17 @@ typedef struct {
     guint      idle_timeout;
 } LspServerEntry;
 
+typedef struct {
+    LspDiagnosticsNotifyFunc func;
+    gpointer                 data;
+} LspListener;
+
 static struct {
     gboolean    initialized;
     GSList     *configs;        /* LspServerConfig* */
     GHashTable *servers;        /* "id\nroot" -> LspServerEntry* */
     GSList     *docs;           /* LspDoc* */
+    GSList     *listeners;      /* LspListener* */
 } manager;
 
 
@@ -144,13 +150,99 @@ server_state_changed (LspServer *server,
 }
 
 
+void
+lsp_manager_add_listener (LspDiagnosticsNotifyFunc  func,
+                          gpointer                  data)
+{
+    LspListener *listener = g_new0 (LspListener, 1);
+
+    listener->func = func;
+    listener->data = data;
+
+    manager.listeners = g_slist_prepend (manager.listeners, listener);
+}
+
+
+void
+lsp_manager_remove_listener (LspDiagnosticsNotifyFunc  func,
+                             gpointer                  data)
+{
+    GSList *l;
+
+    for (l = manager.listeners; l != NULL; l = l->next)
+    {
+        LspListener *listener = (LspListener*) l->data;
+
+        if (listener->func == func && listener->data == data)
+        {
+            manager.listeners = g_slist_delete_link (manager.listeners, l);
+            g_free (listener);
+            return;
+        }
+    }
+}
+
+
 static void
-server_diagnostics (G_GNUC_UNUSED LspServer  *server,
-                    G_GNUC_UNUSED const char *uri,
-                    G_GNUC_UNUSED JsonArray  *diagnostics,
+notify_listeners (MooEdit *doc)
+{
+    GSList *listeners = g_slist_copy (manager.listeners);
+    GSList *l;
+
+    /* Over a copy: a listener may attach or detach while being told. */
+    for (l = listeners; l != NULL; l = l->next)
+    {
+        LspListener *listener = (LspListener*) l->data;
+
+        if (g_slist_find (manager.listeners, listener))
+            listener->func (doc, listener->data);
+    }
+
+    g_slist_free (listeners);
+}
+
+
+static void
+server_diagnostics (LspServer                *server,
+                    const char               *uri,
+                    JsonArray                *diagnostics,
                     G_GNUC_UNUSED gpointer    data)
 {
-    /* Shown in the next commit; ignored rather than dropped on the floor. */
+    GSList *l;
+
+    /*
+     * Servers push diagnostics for files that are not open too -- gopls
+     * reports every file of a package after one of them changes -- and there
+     * is nothing to show them on, so those are dropped.
+     */
+    for (l = manager.docs; l != NULL; l = l->next)
+    {
+        LspDoc *ldoc = (LspDoc*) l->data;
+
+        if (lsp_doc_get_server (ldoc) != server)
+            continue;
+        if (strcmp (lsp_doc_get_uri (ldoc), uri) != 0)
+            continue;
+
+        lsp_doc_set_diagnostics (ldoc, diagnostics);
+        notify_listeners (lsp_doc_get_doc (ldoc));
+        return;
+    }
+}
+
+
+void
+lsp_manager_refresh_diagnostics (void)
+{
+    GSList *l;
+
+    for (l = manager.docs; l != NULL; l = l->next)
+    {
+        LspDoc *ldoc = (LspDoc*) l->data;
+
+        lsp_doc_refresh_diagnostics (ldoc);
+        notify_listeners (lsp_doc_get_doc (ldoc));
+    }
 }
 
 

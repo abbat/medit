@@ -43,6 +43,17 @@ void        lsp_doc_open            (LspDoc     *ldoc);
 void        lsp_doc_flush           (LspDoc     *ldoc);
 
 /*
+ * Takes the diagnostics the server pushed, shows them on the document and
+ * keeps them for the pane. The list belongs to the LspDoc.
+ */
+void        lsp_doc_set_diagnostics (LspDoc     *ldoc,
+                                     JsonArray  *array);
+GSList     *lsp_doc_get_diagnostics (LspDoc     *ldoc);
+
+/* Shows the diagnostics already stored again, after a preference changed. */
+void        lsp_doc_refresh_diagnostics (LspDoc *ldoc);
+
+/*
  * Whether the document still has the file and the language this was built for.
  * Saving under a new name or picking another language invalidates it.
  */
