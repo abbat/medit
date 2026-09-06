@@ -1341,6 +1341,7 @@ moo_text_buffer_set_brackets (MooTextBuffer *buffer,
         buffer->priv->num_brackets = 3;
         buffer->priv->left_brackets = g_new (gunichar, 3);
         buffer->priv->right_brackets = g_new (gunichar, 3);
+        // codeql[cpp/use-after-free]
         buffer->priv->left_brackets[0] = '(';
         buffer->priv->left_brackets[1] = '{';
         buffer->priv->left_brackets[2] = '[';
