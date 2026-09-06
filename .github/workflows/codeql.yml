@@ -76,6 +76,42 @@ jobs:
           # quality queries are the ones that matter for an editor: null
           # dereferences, leaks, uninitialized reads, dead code.
           queries: security-and-quality
+          # Two queries dropped, and this is the only mechanism that drops
+          # anything: `// codeql[rule-id]` comments are recognised by the
+          # engine but code scanning never reads the SARIF suppression they
+          # produce -- measured, and recorded in AGENTS.md -- and paths-ignore
+          # does not apply to a language that is built, which is why the
+          # vendored directories are still analyzed here while the analyze
+          # target skips them.
+          #
+          # Both of these are statistical queries, and this tree breaks their
+          # statistics by construction rather than by accident:
+          #
+          # cpp/unterminated-variadic-call infers the terminator from the
+          #   other call sites. glib and GTK count their variadic arguments
+          #   instead of terminating them -- g_signal_new(), and
+          #   gtk_binding_entry_add_signal(), take an n_args and then that
+          #   many entries -- and since most signals have none, the query sees
+          #   "34 of 36 calls end in 0" and reads the count as a terminator.
+          #   All three findings were the two calls that do pass arguments.
+          #
+          # cpp/inconsistent-null-check flags a call whose result is usually
+          #   checked. g_slist_prepend() cannot return null and
+          #   g_list_delete_link() returns it whenever the list empties, so
+          #   the ratio it measures says nothing. Two of its ten findings were
+          #   in gtksourceview, which is not ours to change.
+          #
+          # Not excluded: cpp/use-after-free and cpp/double-free. Their nine
+          # findings here are all one blind spot -- a struct field reassigned
+          # after g_free() keeps the freed state -- but the query is worth
+          # having armed for a tenth that is real, so those are dismissed one
+          # by one in the Security tab instead.
+          config: |
+            query-filters:
+              - exclude:
+                  id: cpp/unterminated-variadic-call
+              - exclude:
+                  id: cpp/inconsistent-null-check
 
       # build-mode: manual, because autobuild would have to guess GTK_VERSION
       # and would leave ENABLE_LSP and ENABLE_TERMINAL at AUTO, quietly

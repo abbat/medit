@@ -87,6 +87,38 @@ curl -s https://api.github.com/repos/abbat/medit/actions/workflows   # what is r
 curl -s https://api.github.com/repos/abbat/medit/actions/runs        # what has actually run
 ```
 
+Two more things about reading its output. Alerts are per branch and the API defaults to
+the **default** branch, so `code-scanning/alerts` answers "0" for a fork whose work
+lives elsewhere; pass the ref. And `gh` needs to be logged in — `repo` scope is enough
+to read them, and enough to dismiss one.
+
+```sh
+gh api "/repos/abbat/medit/code-scanning/analyses?per_page=10"          # what was uploaded, per ref
+gh api "/repos/abbat/medit/code-scanning/alerts?ref=refs/heads/strict&state=open" --paginate
+```
+
+**There is no `NOLINTNEXTLINE` for CodeQL.** `// codeql[rule-id]` on the line above an
+alert is real syntax and C++ does have an `AlertSuppression.ql`, but all it produces is a
+`suppressions[]` entry in the SARIF, and code scanning does not read that entry —
+converting those into dismissals is what `advanced-security/dismiss-alerts` is for, a
+separate action that has to run on the default branch. Measured rather than assumed:
+three comments, one per rule, each with its siblings left in place as a control, moved
+nothing — `cpp/use-after-free` 8 → 8, `cpp/double-free` 1 → 1, and
+`cpp/unterminated-variadic-call` 3 → 3 — in the same run where the two alerts that were
+actually *fixed* closed, 242 → 240. A comment left in the tree would suppress nothing
+while reading as though it did. `paths-ignore` is no help either: it does not apply to a
+language that is built, which is why the vendored directories the `analyze` target skips
+are analyzed here.
+
+That leaves two mechanisms, answering different questions. A query that is wrong on this
+tree **by construction** goes in `query-filters` in the workflow, where the reason can
+be written beside it; `cpp/unterminated-variadic-call` and `cpp/inconsistent-null-check`
+are there, both defeated by glib's habit of counting variadic arguments and of returning
+null as an ordinary value. A query that is right but **wrong at one site** is left armed
+and the alert is dismissed in the Security tab: that is where the nine memory alerts
+belong, all of them one blind spot — a struct field reassigned after `g_free()` keeps
+its freed state, so every write through the new pointer reads as a use after free.
+
 `.github/workflows/package.yml` builds the three packaging trees the way a distribution
 would, also on every push:
 
