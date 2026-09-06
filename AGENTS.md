@@ -111,6 +111,50 @@ set in `_init()` and never cleared still looks nullable; `g_strdupv()` returning
 only for NULL is not known. Read the trace to the "Memory is released" or "Assuming ...
 is null" line before believing any of them.
 
+### Two analyzers measured and not adopted
+
+Both were run over the whole tree; neither earns a place beside `analyze`, and the
+reasons are worth keeping so the question is not reopened from scratch.
+
+**Semgrep** (`semgrep --config=p/c --config=p/default`, 6 s in the official container).
+Its community ruleset is 1074 rules, of which **four** target C at all: `gets`, `scanf`
+and `strtok` misuse plus a `/dev/random` fd check. medit calls none of the three, so C
+findings are zero -- verified against a file that does call them, where all three fire,
+because a check nobody has seen fail proves nothing. The seven findings it does report
+are all in `.github/workflows/`, flagging `uses:` pinned to a mutable tag rather than a
+commit sha. That is a real category, and deliberately not acted on: the two actions here
+are GitHub's own, and the compromises the rule cites were third-party.
+
+The disqualifying part is quieter. Semgrep has no preprocessor, and it **drops a file it
+cannot parse without failing** -- the scan prints "Parsed lines: ~99.9%" and exits green.
+Four files are dropped: `mootextview.c`, `mooiconview.c`, `moonotebook.c`, `moopaned.c`.
+Those are exactly the top four by `GTK_CHECK_VERSION` count (58, 51, 34 and 25; the fifth
+has 14 and parses), because they put `#if` inside argument lists. The blind spot is
+precisely the code the GTK+3 port touched hardest. A custom rule written against the
+"style calls silently dead on GTK+3" table finds one of its five call sites for that
+reason -- and would in any case have flagged the three `gdk_window_set_background()`
+calls that are correct, since they sit in the `#else` branch it cannot see.
+
+**Coccinelle** with the kernel's 76 semantic patches (`scripts/coccinelle`, 82 s).
+Nothing ships with the Debian/Ubuntu package -- the rules have to be fetched. 74 of the
+76 are usable: `api/kmalloc_objs` is patch-only and rejects `-D report`, and
+`hid/ff_race` does not compile under coccinelle 1.3. Two more (`null/badzero`,
+`api/check_bq27xxx_data`) need an OCaml compiler; on Ubuntu 26.04 the package is `ocaml`,
+`ocaml-nox` is gone.
+
+It found four things, all cosmetic and all fixed: two doubled semicolons, one dead
+`result` variable, one pointer compared against `0`. Most of the ruleset is about kernel
+APIs that do not exist here. But it reads this code far better than Semgrep does: 61 of
+76 files parse perfectly and 99.3% of lines are read, and it skips the region it cannot
+handle rather than the file. A small header defining `G_STMT_START`/`G_STMT_END`,
+`G_BEGIN_DECLS` and the `G_GNUC_*` attributes, passed as `--macro-file-builtins`, takes
+that to 64 of 76. It never sees the 70 `.cpp` files at all; `--c++` is documented as "a
+small attempt to parse C++ files".
+
+So if a pattern checker is ever wanted for a rule specific to this tree -- a GTK+2 idiom
+that must not appear on the GTK+3 side, say -- Coccinelle is the one that can actually
+read the files where such a rule would matter.
+
 ### Code generation
 
 Only three things are generated: `marshals.[ch]` (glib-genmarshal), `moo-pixbufs.h`
