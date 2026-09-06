@@ -31,31 +31,31 @@ Regex::~Regex()
 }
 
 Regex::Regex(Regex&& other)
-	: m_p(other.m_p)
+    : m_p(other.m_p)
 {
-	other.m_p = nullptr;
+    other.m_p = nullptr;
 }
 
 Regex& Regex::operator=(Regex&& other)
 {
-	std::swap(m_p, other.m_p);
-	return *this;
+    std::swap(m_p, other.m_p);
+    return *this;
 }
 
 bool Regex::is_valid() const
 {
-	return m_p != nullptr;
+    return m_p != nullptr;
 }
 
 Regex::operator bool() const
 {
-	return m_p != nullptr;
+    return m_p != nullptr;
 }
 
 Regex Regex::compile(const char* pattern, CompileFlags compile_options, MatchFlags match_options, GError** error)
 {
     GRegex* p = g_regex_new(pattern, GRegexCompileFlags(compile_options), GRegexMatchFlags(match_options), error);
-	return Regex{p};
+    return Regex{p};
 }
 
 const char* Regex::get_pattern() const
@@ -127,7 +127,7 @@ MatchInfo Regex::match(const char* string, ssize_t string_len, int start_positio
 {
     GMatchInfo* match_info = nullptr;
     if (!g_regex_match_full(m_p, string, string_len, start_position, GRegexMatchFlags(match_options), &match_info, error))
-		return MatchInfo(*this);
+        return MatchInfo(*this);
     return MatchInfo(*this, match_info, true);
 }
 
@@ -188,7 +188,7 @@ struct EvalFuncData
 {
     const Regex& regex;
     const EvalFunc& func;
-    
+
     EvalFuncData(const Regex& regex, const EvalFunc& func)
         : regex(regex)
         , func(func)
@@ -228,7 +228,7 @@ bool Regex::check_replacement(const char* replacement, bool& has_references, GEr
 
 
 MatchInfo::MatchInfo(const Regex& regex)
-	: MatchInfo(regex, nullptr, false)
+    : MatchInfo(regex, nullptr, false)
 {
 }
 
@@ -237,7 +237,7 @@ MatchInfo::MatchInfo(const Regex& regex, GMatchInfo* p, bool take_ownership)
     , m_p(p)
     , m_own(take_ownership)
 {
-	moo_assert(m_p || !m_own);
+    moo_assert(m_p || !m_own);
 }
 
 MatchInfo::~MatchInfo()
@@ -247,29 +247,29 @@ MatchInfo::~MatchInfo()
 }
 
 MatchInfo::MatchInfo(MatchInfo&& other)
-	: m_regex(other.m_regex)
-	, m_p(other.m_p)
-	, m_own(other.m_own)
+    : m_regex(other.m_regex)
+    , m_p(other.m_p)
+    , m_own(other.m_own)
 {
-	other.m_own = false;
+    other.m_own = false;
 }
 
 MatchInfo& MatchInfo::operator=(MatchInfo&& other)
 {
-	std::swap(m_regex, other.m_regex);
-	std::swap(m_p, other.m_p);
-	std::swap(m_own, other.m_own);
-	return *this;
+    std::swap(m_regex, other.m_regex);
+    std::swap(m_p, other.m_p);
+    std::swap(m_own, other.m_own);
+    return *this;
 }
 
 bool MatchInfo::is_match() const
 {
-	return m_p != nullptr;
+    return m_p != nullptr;
 }
 
 MatchInfo::operator bool() const
 {
-	return is_match();
+    return is_match();
 }
 
 const Regex& MatchInfo::get_regex() const
@@ -279,7 +279,7 @@ const Regex& MatchInfo::get_regex() const
 
 const char* MatchInfo::get_string() const
 {
-	g_return_val_if_fail(m_p != nullptr, nullptr);
+    g_return_val_if_fail(m_p != nullptr, nullptr);
     return g_match_info_get_string(m_p);
 }
 

@@ -4,9 +4,9 @@
 #pragma align 4 (MOO_FILE_ICON)
 #endif
 #ifdef __GNUC__
-static const guint8 MOO_FILE_ICON[] __attribute__ ((__aligned__ (4))) = 
+static const guint8 MOO_FILE_ICON[] __attribute__ ((__aligned__ (4))) =
 #else
-static const guint8 MOO_FILE_ICON[] = 
+static const guint8 MOO_FILE_ICON[] =
 #endif
 { ""
   /* Pixbuf magic (0x47646b50) */

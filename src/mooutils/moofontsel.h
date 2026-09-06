@@ -16,7 +16,7 @@
  *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
@@ -56,10 +56,10 @@ G_BEGIN_DECLS
 #define MOO_FONT_SELECTION_DIALOG_GET_CLASS(obj)    (G_TYPE_INSTANCE_GET_CLASS ((obj), MOO_TYPE_FONT_SELECTION_DIALOG, MooFontSelectionDialogClass))
 
 
-typedef struct _MooFontSelection	     MooFontSelection;
-typedef struct _MooFontSelectionClass	     MooFontSelectionClass;
+typedef struct _MooFontSelection             MooFontSelection;
+typedef struct _MooFontSelectionClass        MooFontSelectionClass;
 
-typedef struct _MooFontSelectionDialog	     MooFontSelectionDialog;
+typedef struct _MooFontSelectionDialog       MooFontSelectionDialog;
 typedef struct _MooFontSelectionDialogClass  MooFontSelectionDialogClass;
 
 struct _MooFontSelection
@@ -77,8 +77,8 @@ struct _MooFontSelection
   GtkWidget *filter_button;
   GtkWidget *preview_entry;
 
-  PangoFontFamily *family;	/* Current family */
-  PangoFontFace *face;		/* Current face */
+  PangoFontFamily *family;      /* Current family */
+  PangoFontFace *face;          /* Current face */
 
   gint size;
 
@@ -139,15 +139,15 @@ struct _MooFontSelectionDialogClass
  *   see the comments in the MooFontSelectionDialog functions.
  *****************************************************************************/
 
-GType	   moo_font_selection_get_type		(void) G_GNUC_CONST;
-GtkWidget* moo_font_selection_new		(void);
-gchar*	   moo_font_selection_get_font_name	(MooFontSelection *fontsel);
+GType      moo_font_selection_get_type          (void) G_GNUC_CONST;
+GtkWidget* moo_font_selection_new               (void);
+gchar*     moo_font_selection_get_font_name     (MooFontSelection *fontsel);
 
 gboolean              moo_font_selection_set_font_name    (MooFontSelection *fontsel,
-							   const gchar      *fontname);
+                                                           const gchar      *fontname);
 const gchar* moo_font_selection_get_preview_text (MooFontSelection *fontsel);
 void                  moo_font_selection_set_preview_text (MooFontSelection *fontsel,
-							   const gchar      *text);
+                                                           const gchar      *text);
 
 void       moo_font_selection_set_monospace         (MooFontSelection *fontsel,
                                                      gboolean          monospace);
@@ -160,22 +160,22 @@ void       moo_font_selection_set_filter_visible    (MooFontSelection *fontsel,
  *   MooFontSelection.
  *****************************************************************************/
 
-GType	   moo_font_selection_dialog_get_type	(void) G_GNUC_CONST;
-GtkWidget* moo_font_selection_dialog_new	(const gchar	  *title);
+GType      moo_font_selection_dialog_get_type   (void) G_GNUC_CONST;
+GtkWidget* moo_font_selection_dialog_new        (const gchar      *title);
 
 /* This returns the X Logical Font Description fontname, or NULL if no font
    is selected. Note that there is a slight possibility that the font might not
    have been loaded OK. You should call moo_font_selection_dialog_get_font()
    to see if it has been loaded OK.
    You should g_free() the returned font name after you're done with it. */
-gchar*	 moo_font_selection_dialog_get_font_name    (MooFontSelectionDialog *fsd);
+gchar*   moo_font_selection_dialog_get_font_name    (MooFontSelectionDialog *fsd);
 
 /* This sets the currently displayed font. It should be a valid X Logical
    Font Description font name (anything else will be ignored), e.g.
    "-adobe-courier-bold-o-normal--25-*-*-*-*-*-*-*"
    It returns TRUE on success. */
 gboolean moo_font_selection_dialog_set_font_name    (MooFontSelectionDialog *fsd,
-						     const gchar	*fontname);
+                                                     const gchar        *fontname);
 
 /* This returns the text in the preview entry. You should copy the returned
    text if you need it. */
@@ -183,8 +183,8 @@ const gchar* moo_font_selection_dialog_get_preview_text (MooFontSelectionDialog 
 
 /* This sets the text in the preview entry. It will be copied by the entry,
    so there's no need to g_strdup() it first. */
-void	 moo_font_selection_dialog_set_preview_text (MooFontSelectionDialog *fsd,
-						     const gchar	    *text);
+void     moo_font_selection_dialog_set_preview_text (MooFontSelectionDialog *fsd,
+                                                     const gchar            *text);
 
 
 

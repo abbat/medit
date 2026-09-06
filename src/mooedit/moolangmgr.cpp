@@ -1027,7 +1027,7 @@ list_to_string (GSList *list)
 
 namespace {
 
-struct SaveOneData 
+struct SaveOneData
 {
     MooLangMgr *mgr;
     MooMarkupNode *xml;

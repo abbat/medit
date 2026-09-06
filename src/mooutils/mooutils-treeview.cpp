@@ -855,7 +855,7 @@ static gboolean
 moo_tree_helper_set_valist (MooTreeHelper *helper,
                             GtkTreeModel  *model,
                             GtkTreeIter   *iter,
-                            va_list	   var_args)
+                            va_list        var_args)
 {
     int column;
     int n_columns;
@@ -931,7 +931,7 @@ typedef struct {
 #define MOO_TYPE_EXPANDER_CELL              (moo_expander_cell_get_type ())
 #define MOO_EXPANDER_CELL(obj)              (G_TYPE_CHECK_INSTANCE_CAST ((obj), MOO_TYPE_EXPANDER_CELL, MooExpanderCell))
 #define MOO_EXPANDER_CELL_CLASS(klass)      (G_TYPE_CHECK_CLASS_CAST ((klass), MOO_TYPE_EXPANDER_CELL, MooExpanderCellClass))
-#define MOO_IS_EXPANDER_CELL(obj)	    (G_TYPE_CHECK_INSTANCE_TYPE ((obj), MOO_TYPE_EXPANDER_CELL))
+#define MOO_IS_EXPANDER_CELL(obj)           (G_TYPE_CHECK_INSTANCE_TYPE ((obj), MOO_TYPE_EXPANDER_CELL))
 #define MOO_IS_EXPANDER_CELL_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE ((klass), MOO_TYPE_EXPANDER_CELL))
 #define MOO_EXPANDER_CELL_GET_CLASS(obj)    (G_TYPE_INSTANCE_GET_CLASS ((obj), MOO_TYPE_EXPANDER_CELL, MooExpanderCellClass))
 

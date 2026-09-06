@@ -152,7 +152,7 @@ private:
     FooObject* m_p;
 };
 
-namespace g 
+namespace g
 {
 
 template<typename T>

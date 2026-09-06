@@ -21,8 +21,8 @@
 #define STYLE_HAS_FOREGROUND(s) ((s) && ((s)->mask & GTK_SOURCE_STYLE_USE_FOREGROUND))
 #define STYLE_HAS_BACKGROUND(s) ((s) && ((s)->mask & GTK_SOURCE_STYLE_USE_BACKGROUND))
 
-#define STYLE_BRACKET_MATCH	"bracket-match"
-#define STYLE_BRACKET_MISMATCH	"bracket-mismatch"
+#define STYLE_BRACKET_MATCH     "bracket-match"
+#define STYLE_BRACKET_MISMATCH  "bracket-mismatch"
 #define STYLE_CURRENT_LINE      "current-line"
 #define STYLE_RIGHT_MARGIN      "right-margin"
 

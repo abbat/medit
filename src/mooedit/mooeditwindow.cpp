@@ -2148,9 +2148,9 @@ copy_full_path_activated (GtkWidget     *item,
 {
     MooEdit *doc = widget_doc.get(item);
     GtkClipboard *clipboard = gtk_widget_get_clipboard(item, GDK_SELECTION_CLIPBOARD);
-	char *filename = moo_edit_get_filename(doc);
-	gtk_clipboard_set_text(clipboard, filename, -1);
-	g_free(filename);
+    char *filename = moo_edit_get_filename(doc);
+    gtk_clipboard_set_text(clipboard, filename, -1);
+    g_free(filename);
 }
 
 
@@ -2582,7 +2582,7 @@ edit_changed (MooEditWindow *window,
         update_lang_menu (window);
         update_doc_view_actions (window);
         update_doc_encoding_item (window);
-	update_doc_line_end_item (window);
+    update_doc_line_end_item (window);
     }
 
     if (doc)

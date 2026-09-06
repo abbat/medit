@@ -887,7 +887,7 @@ _moo_text_view_button_release_event (GtkWidget      *widget,
     MooTextView *view = MOO_TEXT_VIEW (widget);
     GtkTextIter iter;
 
-	stop_drag_scroll (view);
+    stop_drag_scroll (view);
 
     switch (view->priv->dnd.type)
     {

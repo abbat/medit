@@ -936,9 +936,9 @@ moo_notebook_size_allocate (GtkWidget     *widget,
     if (nb->priv->tabs_visible)
     {
         int height;
-    	GtkRequisition left_req = {0};
-    	GtkRequisition right_req = {0};
-    	GtkRequisition arrows_req = {0};
+        GtkRequisition left_req = {0};
+        GtkRequisition right_req = {0};
+        GtkRequisition arrows_req = {0};
 
         /* only reports height needed for tab labels */
         height = labels_get_height_request (nb);

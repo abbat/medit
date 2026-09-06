@@ -456,7 +456,7 @@ get_row_recent (GtkTreeStore *store)
 
 static void
 set_row_recent (GtkTreeStore *store,
-		int           row)
+                int           row)
 {
     g_object_set_data (G_OBJECT (store),
                        "moo-encodings-model-row-recent",
@@ -656,7 +656,7 @@ row_separator_func (GtkTreeModel *model,
 
 static void
 cell_data_func (G_GNUC_UNUSED GtkCellLayout *layout,
-		GtkCellRenderer *cell,
+                GtkCellRenderer *cell,
                 GtkTreeModel    *model,
                 GtkTreeIter     *iter, gpointer)
 {
@@ -669,7 +669,7 @@ static void
 setup_combo (GtkComboBox      *combo,
              EncodingsManager *enc_mgr,
              gboolean          save_mode,
-	     gboolean	       use_separators)
+             gboolean          use_separators)
 {
     GtkCellRenderer *cell;
     GtkTreeStore *store;
@@ -688,8 +688,8 @@ setup_combo (GtkComboBox      *combo,
                             COLUMN_ENCODING, MOO_ENCODING_AUTO,
                             -1);
 
-	if (use_separators)
-	    gtk_tree_store_append (store, &iter, NULL);
+        if (use_separators)
+            gtk_tree_store_append (store, &iter, NULL);
 
         set_row_recent (store, use_separators ? 2 : 1);
     }
@@ -745,11 +745,11 @@ setup_combo (GtkComboBox      *combo,
                                     "text", COLUMN_DISPLAY, (char*)NULL);
     gtk_cell_layout_set_cell_data_func (GTK_CELL_LAYOUT (combo), cell,
                                         (GtkCellLayoutDataFunc) cell_data_func,
-					NULL, NULL);
+                                        NULL, NULL);
 
     if (use_separators)
-	gtk_combo_box_set_row_separator_func (combo, (GtkTreeViewRowSeparatorFunc) row_separator_func,
-					      NULL, NULL);
+        gtk_combo_box_set_row_separator_func (combo, (GtkTreeViewRowSeparatorFunc) row_separator_func,
+                                              NULL, NULL);
 
     if (save_mode)
     {
@@ -778,12 +778,12 @@ setup_combo (GtkComboBox      *combo,
 void
 _moo_encodings_combo_init (GtkComboBox          *combo,
                            MooEncodingComboType  type,
-			   gboolean		 use_separators)
+                           gboolean              use_separators)
 {
     g_return_if_fail (GTK_IS_COMBO_BOX (combo));
     setup_combo (combo, get_enc_mgr (),
-		 type == MOO_ENCODING_COMBO_SAVE,
-		 use_separators);
+                 type == MOO_ENCODING_COMBO_SAVE,
+                 use_separators);
 }
 
 void

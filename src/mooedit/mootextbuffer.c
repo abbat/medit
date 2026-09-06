@@ -392,21 +392,21 @@ moo_text_buffer_dispose (GObject *object)
 
     if (buffer->priv->engine)
     {
-    	_gtk_source_engine_attach_buffer (buffer->priv->engine, NULL);
-    	g_object_unref (buffer->priv->engine);
-    	buffer->priv->engine = NULL;
+        _gtk_source_engine_attach_buffer (buffer->priv->engine, NULL);
+        g_object_unref (buffer->priv->engine);
+        buffer->priv->engine = NULL;
     }
 
     if (buffer->priv->style_scheme)
     {
-    	g_object_unref (buffer->priv->style_scheme);
-    	buffer->priv->style_scheme = NULL;
+        g_object_unref (buffer->priv->style_scheme);
+        buffer->priv->style_scheme = NULL;
     }
 
     if (buffer->priv->lang)
     {
-    	g_object_unref (buffer->priv->lang);
-    	buffer->priv->engine = NULL;
+        g_object_unref (buffer->priv->lang);
+        buffer->priv->engine = NULL;
     }
 
     if (buffer->priv->line_buf)
@@ -777,9 +777,9 @@ moo_text_buffer_set_lang (MooTextBuffer  *buffer,
 
     if (buffer->priv->engine)
     {
-    	_gtk_source_engine_attach_buffer (buffer->priv->engine, NULL);
-    	g_object_unref (buffer->priv->engine);
-    	buffer->priv->engine = NULL;
+        _gtk_source_engine_attach_buffer (buffer->priv->engine, NULL);
+        g_object_unref (buffer->priv->engine);
+        buffer->priv->engine = NULL;
     }
 
     if (buffer->priv->lang)
@@ -791,17 +791,17 @@ moo_text_buffer_set_lang (MooTextBuffer  *buffer,
     {
         g_object_ref (lang);
 
-    	buffer->priv->engine = _moo_lang_get_engine (lang);
+        buffer->priv->engine = _moo_lang_get_engine (lang);
 
-    	if (buffer->priv->engine)
-    	{
+        if (buffer->priv->engine)
+        {
             _gtk_source_engine_attach_buffer (buffer->priv->engine,
-    						  GTK_TEXT_BUFFER (buffer));
+                                              GTK_TEXT_BUFFER (buffer));
 
             if (buffer->priv->style_scheme)
                 _gtk_source_engine_set_style_scheme (buffer->priv->engine,
                                                      GTK_SOURCE_STYLE_SCHEME (buffer->priv->style_scheme));
-    	}
+        }
     }
 
     moo_text_buffer_set_brackets (buffer, lang ? _moo_lang_get_brackets (lang) : NULL);
@@ -950,11 +950,11 @@ _moo_text_buffer_update_highlight (MooTextBuffer      *buffer,
                                    const GtkTextIter  *end,
                                    gboolean            synchronous)
 {
-	g_return_if_fail (MOO_IS_TEXT_BUFFER (buffer));
+    g_return_if_fail (MOO_IS_TEXT_BUFFER (buffer));
 
-	if (buffer->priv->engine != NULL)
-		_gtk_source_engine_update_highlight (buffer->priv->engine,
-						     start, end, synchronous);
+    if (buffer->priv->engine != NULL)
+        _gtk_source_engine_update_highlight (buffer->priv->engine,
+                                             start, end, synchronous);
 }
 
 

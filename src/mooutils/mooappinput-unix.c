@@ -542,7 +542,7 @@ try_connect (const char *filename,
     {
         unlink (filename);
         close (fd);
-    	return FALSE;
+        return FALSE;
     }
 
     if (fdp)
@@ -597,15 +597,15 @@ input_channel_start (InputChannel *ch,
     {
         g_warning ("in listen for %s: %s", ch->path, g_strerror (errno));
         close (ch->fd);
-    	ch->fd = -1;
-    	return FALSE;
+        ch->fd = -1;
+        return FALSE;
     }
 
     ch->owns_file = TRUE;
 
     if (!input_channel_start_io (ch->fd, (GIOFunc) accept_connection, ch,
                                  &ch->io, &ch->io_watch))
-    	return FALSE;
+        return FALSE;
 
     return TRUE;
 }

@@ -94,7 +94,7 @@ public:
 
     Value get(Owner* owner) const
     {
-        return (Value) (m_prop_name ? 
+        return (Value) (m_prop_name ?
                         g_object_get_data (G_OBJECT (owner), m_prop_name) :
                         g_object_get_qdata (G_OBJECT (owner), m_prop_quark));
     }

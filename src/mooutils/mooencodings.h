@@ -45,7 +45,7 @@ typedef enum {
 
 void         _moo_encodings_combo_init      (GtkComboBox            *combo,
                                              MooEncodingComboType    type,
-					     gboolean		     use_separators);
+                                             gboolean                use_separators);
 void         _moo_encodings_combo_set_enc   (GtkComboBox            *combo,
                                              const char             *enc,
                                              MooEncodingComboType    type);

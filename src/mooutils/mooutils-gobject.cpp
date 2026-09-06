@@ -1060,7 +1060,7 @@ _moo_add_property_watch (gpointer            target,
     g_return_val_if_fail (source_prop != NULL, 0);
     g_return_val_if_fail (transform != NULL, 0);
 
-    watch = prop_watch_new (G_OBJECT (target), target_prop, 
+    watch = prop_watch_new (G_OBJECT (target), target_prop,
                             G_OBJECT (source), source_prop,
                             NULL, transform, transform_data,
                             destroy_notify, transform_data);

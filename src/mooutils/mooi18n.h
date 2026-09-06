@@ -49,13 +49,13 @@ G_END_DECLS
  //#define Q_(String) g_strip_context ((String), moo_gettext (String))
 inline static const char* Q_(const char* msgid)
 {
-	return g_strip_context(msgid, _(msgid));
+    return g_strip_context(msgid, _(msgid));
 }
 
 //#define QD_(String,Domain) g_strip_context ((String), D_ (String, Domain))
 inline static const char* QD_(const char* msgid, const char* domain)
 {
-	return g_strip_context(msgid, D_(msgid, domain));
+    return g_strip_context(msgid, D_(msgid, domain));
 }
 
 #else /* !ENABLE_NLS */
