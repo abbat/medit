@@ -13,8 +13,13 @@
 name: codeql
 
 on:
+  # Every branch, not only main. `schedule` and `workflow_dispatch` are read
+  # from the default branch and nowhere else, and this file has never been on
+  # it, so with `branches: [main]` here the analysis had never run once: no
+  # cron, no Run workflow button in the UI, and no push to match. `push` and
+  # `pull_request` are the two triggers that fire from the branch they arrive
+  # on, which is why build.yml has been running all along and this has not.
   push:
-    branches: [main]
   pull_request:
     branches: [main]
   schedule:
@@ -28,6 +33,12 @@ on:
 
 permissions:
   contents: read
+
+# Two toolkits at up to an hour each, now that every branch is analyzed: drop
+# a run the moment a newer commit makes it pointless.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   analyze:

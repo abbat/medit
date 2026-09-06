@@ -69,9 +69,23 @@ git stash pop
 | `fedora` | fedora:44, gtk-3, with LTO, which is the only place `-Wodr` has anything to see |
 | `langs` | `src/mooedit/langs/check.sh` over the 187 language definitions and schemes |
 
-`.github/workflows/codeql.yml` runs CodeQL over the gtk-3 build on pushes to `main`, on
-pull requests, and weekly. It judges a pull request on the alerts it *introduces*, which
-is why it can be a gate while the analyzer's existing findings are not zero.
+`.github/workflows/codeql.yml` runs CodeQL over both toolkits on every push and on pull
+requests, and weekly once the file reaches the default branch. It judges a pull request
+on the alerts it *introduces*, which is why it can be a gate while the analyzer's
+existing findings are not zero.
+
+**A workflow takes its `schedule` and `workflow_dispatch` triggers from the default
+branch and nowhere else.** This one was written with `push: branches: [main]` while it
+existed only on a work branch, and the result was not a workflow that ran rarely — it
+was one that had never run at all: the cron does not fire off the default branch, the
+*Run workflow* button never appears, and no push ever matched. `build.yml` was green the
+whole time, from its bare `push:`, and that is the trap — the Actions tab looks busy.
+Ask the API instead, which needs no token on a public repository:
+
+```sh
+curl -s https://api.github.com/repos/abbat/medit/actions/workflows   # what is registered
+curl -s https://api.github.com/repos/abbat/medit/actions/runs        # what has actually run
+```
 
 So a source change does not need a container to prove it compiles anywhere. What is
 still manual, and still worth a container: the **package** builds (`dpkg-buildpackage`,
