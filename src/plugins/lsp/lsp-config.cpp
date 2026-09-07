@@ -163,6 +163,62 @@ lsp_config_ensure_user_file (GError **error)
 
 
 /*
+ * The root of the project a file belongs to: the nearest directory at or above
+ * it holding one of the markers. Without markers, and when nothing matches all
+ * the way up, the file's own directory is the root -- which is what a server
+ * falls back to anyway.
+ *
+ * Here rather than in the manager because it is a walk over path strings and
+ * one g_file_test, and the manager is where servers are started.
+ */
+char *
+lsp_config_find_root (const char  *file_dir,
+                      char       **markers)
+{
+    char *current;
+
+    g_return_val_if_fail (file_dir != NULL, NULL);
+
+    if (!markers || !markers[0])
+        return g_strdup (file_dir);
+
+    current = g_strdup (file_dir);
+
+    while (TRUE)
+    {
+        char *parent;
+        guint i;
+
+        for (i = 0; markers[i]; ++i)
+        {
+            char *candidate = g_build_filename (current, markers[i], nullptr);
+            gboolean found = g_file_test (candidate, G_FILE_TEST_EXISTS);
+
+            g_free (candidate);
+
+            if (found)
+                return current;
+        }
+
+        parent = g_path_get_dirname (current);
+
+        if (strcmp (parent, current) == 0)
+        {
+            g_free (parent);
+            break;
+        }
+
+        g_free (current);
+        current = parent;
+    }
+
+    g_free (current);
+
+    return g_strdup (file_dir);
+}
+
+
+/*
  * The content of a child element, or NULL when there is no such child. The
  * text is not CDATA: MooMarkup turns a CDATA section into a comment node,
  * where moo_markup_get_content() cannot see it. Ordinary escaped text works,
@@ -348,8 +404,8 @@ load_markup (MooMarkupDoc *doc,
 }
 
 
-static GSList *
-load_file (const char *filename)
+GSList *
+lsp_config_parse_file (const char *filename)
 {
     GError *error = NULL;
     MooMarkupDoc *doc = moo_markup_parse_file (filename, &error);
@@ -412,7 +468,7 @@ lsp_config_load (void)
     if (!filename)
         return load_builtin ();
 
-    list = load_file (filename);
+    list = lsp_config_parse_file (filename);
     g_free (filename);
 
     return list;

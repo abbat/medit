@@ -323,57 +323,6 @@ lsp_manager_list_servers (void)
 /* Matching a document
  */
 
-/*
- * The root of the project the file belongs to: the nearest directory at or
- * above it holding one of the entry's markers. Without markers, and when
- * nothing matches all the way up, the file's own directory is the root, which
- * is what a server falls back to anyway.
- */
-static char *
-find_root_dir (const char  *file_dir,
-               char       **markers)
-{
-    char *current;
-
-    if (!markers || !markers[0])
-        return g_strdup (file_dir);
-
-    current = g_strdup (file_dir);
-
-    while (TRUE)
-    {
-        char *parent;
-        guint i;
-
-        for (i = 0; markers[i]; ++i)
-        {
-            char *candidate = g_build_filename (current, markers[i], nullptr);
-            gboolean found = g_file_test (candidate, G_FILE_TEST_EXISTS);
-
-            g_free (candidate);
-
-            if (found)
-                return current;
-        }
-
-        parent = g_path_get_dirname (current);
-
-        if (strcmp (parent, current) == 0)
-        {
-            g_free (parent);
-            break;
-        }
-
-        g_free (current);
-        current = parent;
-    }
-
-    g_free (current);
-
-    return g_strdup (file_dir);
-}
-
-
 static LspServerConfig *
 find_config (MooEdit *doc)
 {
@@ -474,7 +423,7 @@ lsp_manager_add_doc (MooEdit *doc)
     }
 
     dir = g_path_get_dirname (path);
-    root = find_root_dir (dir, config->root_markers);
+    root = lsp_config_find_root (dir, config->root_markers);
 
     entry = get_server (config, root);
 

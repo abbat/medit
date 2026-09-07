@@ -36,6 +36,9 @@
 
 #ifdef MOO_ENABLE_UNIT_TESTS
 
+#include "plugins/lsp/lsp-completion.h"
+#include "plugins/lsp/lsp-config.h"
+#include "plugins/lsp/lsp-diagnostics.h"
 #include "plugins/lsp/lsp-doc.h"
 #include "plugins/lsp/lsp-json.h"
 #include "plugins/lsp/lsp-symbols.h"
@@ -359,9 +362,265 @@ test_symbols_empty (void)
 }
 
 
+/* -------------------------------------------------------------------------
+ * lsp.xml, and the walk that finds the root of a project
+ */
+
+static char *
+write_temp (const char *dir,
+            const char *name,
+            const char *contents)
+{
+    char *path = g_build_filename (dir, name, nullptr);
+    GError *error = NULL;
+
+    g_assert_true (g_file_set_contents (path, contents, -1, &error));
+    g_assert_no_error (error);
+
+    return path;
+}
+
+
+static void
+test_config_parse (void)
+{
+    static const char *xml =
+        "<?xml version=\"1.0\"?>\n"
+        "<medit-lsp version=\"1.0\">\n"
+        "  <server id=\"first\">\n"
+        "    <filter>langs:c,cpp</filter>\n"
+        "    <command>clangd --background-index</command>\n"
+        "    <root>compile_commands.json;.git</root>\n"
+        "    <env>PATH_EXTRA=/opt/bin</env>\n"
+        "    <env>QUIET=1</env>\n"
+        "    <initialization-options>{ \"a\": 1 }</initialization-options>\n"
+        "  </server>\n"
+        "  <server id=\"off\" enabled=\"false\">\n"
+        "    <filter>globs:*.txt</filter>\n"
+        "    <command>nothing</command>\n"
+        "  </server>\n"
+        "</medit-lsp>\n";
+
+    char *dir = g_dir_make_tmp ("medit-unit-XXXXXX", NULL);
+    char *path = write_temp (dir, "lsp.xml", xml);
+    GSList *list = lsp_config_parse_file (path);
+    LspServerConfig *first, *off;
+
+    g_assert_cmpuint (g_slist_length (list), ==, 2);
+
+    first = (LspServerConfig*) list->data;
+    off = (LspServerConfig*) list->next->data;
+
+    /* In file order, which is what makes "the first match wins" a rule. */
+    g_assert_cmpstr (first->id, ==, "first");
+    g_assert_cmpstr (off->id, ==, "off");
+
+    g_assert_true (first->enabled);
+    g_assert_false (off->enabled);
+
+    g_assert_cmpstr (first->filter, ==, "langs:c,cpp");
+
+    /* The command is split the way a shell would, and kept as written for
+       the messages. */
+    g_assert_cmpstr (first->command, ==, "clangd --background-index");
+    g_assert_cmpstr (first->argv[0], ==, "clangd");
+    g_assert_cmpstr (first->argv[1], ==, "--background-index");
+    g_assert_null (first->argv[2]);
+
+    /* Semicolons, because a file name may contain a comma. */
+    g_assert_cmpstr (first->root_markers[0], ==, "compile_commands.json");
+    g_assert_cmpstr (first->root_markers[1], ==, ".git");
+    g_assert_null (first->root_markers[2]);
+
+    g_assert_cmpstr (first->env[0], ==, "PATH_EXTRA=/opt/bin");
+    g_assert_cmpstr (first->env[1], ==, "QUIET=1");
+    g_assert_null (first->env[2]);
+
+    /* Ordinary text rather than CDATA, which MooMarkup would read as a
+       comment and hand back as nothing. */
+    g_assert_nonnull (first->init_options);
+    g_assert_nonnull (strstr (first->init_options, "\"a\": 1"));
+
+    lsp_config_list_free (list);
+
+    g_remove (path);
+    g_rmdir (dir);
+    g_free (path);
+    g_free (dir);
+}
+
+
+static void
+test_config_parse_bad (void)
+{
+    char *dir = g_dir_make_tmp ("medit-unit-XXXXXX", NULL);
+    char *path = write_temp (dir, "lsp.xml", "<medit-lsp><server id=\"x\">");
+
+    /* Malformed: a warning and an empty list, not a crash and not half a
+       server. The warning is the point of the g_test_expect_message. */
+    g_test_expect_message ("Moo", G_LOG_LEVEL_WARNING, "*could not parse*");
+    g_assert_null (lsp_config_parse_file (path));
+    g_test_assert_expected_messages ();
+
+    g_remove (path);
+    g_rmdir (dir);
+    g_free (path);
+    g_free (dir);
+}
+
+
+static void
+test_config_root (void)
+{
+    char *dir = g_dir_make_tmp ("medit-unit-XXXXXX", NULL);
+    char *sub = g_build_filename (dir, "a", "b", nullptr);
+    char *marker;
+    char *markers[] = { (char*) ".git", (char*) "go.mod", NULL };
+    char *none[] = { NULL };
+    char *root;
+
+    g_assert_cmpint (g_mkdir_with_parents (sub, 0700), ==, 0);
+    marker = write_temp (dir, ".git", "gitdir: elsewhere\n");
+
+    /* Two directories down, and the marker at the top: the top is the root. */
+    root = lsp_config_find_root (sub, markers);
+    g_assert_cmpstr (root, ==, dir);
+    g_free (root);
+
+    /* The directory holding the marker is its own root. */
+    root = lsp_config_find_root (dir, markers);
+    g_assert_cmpstr (root, ==, dir);
+    g_free (root);
+
+    /* No markers at all: the file's own directory, without a walk. */
+    root = lsp_config_find_root (sub, none);
+    g_assert_cmpstr (root, ==, sub);
+    g_free (root);
+
+    root = lsp_config_find_root (sub, NULL);
+    g_assert_cmpstr (root, ==, sub);
+    g_free (root);
+
+    /* Nothing matches anywhere above, and the walk stops at / rather than
+       going round for ever. */
+    g_remove (marker);
+    root = lsp_config_find_root (sub, markers);
+    g_assert_cmpstr (root, ==, sub);
+    g_free (root);
+
+    g_rmdir (sub);
+    g_free (sub);
+    sub = g_build_filename (dir, "a", nullptr);
+    g_rmdir (sub);
+    g_rmdir (dir);
+
+    g_free (marker);
+    g_free (sub);
+    g_free (dir);
+}
+
+
+/* -------------------------------------------------------------------------
+ * The bracketed detail the pane puts after a message
+ */
+
+static void
+check_detail (const char *source,
+              const char *code,
+              const char *expected)
+{
+    LspDiagnostic diagnostic;
+    char *detail;
+
+    memset (&diagnostic, 0, sizeof diagnostic);
+    diagnostic.source = (char*) source;
+    diagnostic.code = (char*) code;
+
+    detail = lsp_diagnostic_detail (&diagnostic);
+
+    if (!expected)
+        g_assert_null (detail);
+    else
+        g_assert_cmpstr (detail, ==, expected);
+
+    g_free (detail);
+}
+
+
+static void
+test_diagnostic_detail (void)
+{
+    /* All four of them, which is three more than the pane test can drive in
+       one run: a server may send either, both or neither. */
+    check_detail ("clangd", "E42", "  [clangd E42]");
+    check_detail ("clangd", NULL, "  [clangd]");
+    check_detail (NULL, "E42", "  [E42]");
+    check_detail (NULL, NULL, NULL);
+}
+
+
+/* -------------------------------------------------------------------------
+ * Where the word being completed starts
+ */
+
+static int
+word_start_of (const char *text,
+               int         cursor)
+{
+    GtkTextBuffer *buffer = buffer_with (text);
+    GtkTextIter iter, start;
+    int offset;
+
+    gtk_text_buffer_get_iter_at_offset (buffer, &iter, cursor);
+    gtk_text_buffer_place_cursor (buffer, &iter);
+
+    lsp_completion_word_start (buffer, &start);
+    offset = gtk_text_iter_get_offset (&start);
+
+    g_object_unref (buffer);
+
+    return offset;
+}
+
+
+static void
+test_completion_word_start (void)
+{
+    /* In the middle of a word, and at the end of one. */
+    g_assert_cmpint (word_start_of ("alpha beta", 10), ==, 6);
+    g_assert_cmpint (word_start_of ("alpha beta", 8), ==, 6);
+
+    /* Just after a space there is no word yet, so the prefix is empty and the
+       server's answer is not narrowed at all -- which is why a test that means
+       to check the narrowing has to put the cursor at the end of a word. */
+    g_assert_cmpint (word_start_of ("alpha beta", 6), ==, 6);
+
+    /* Digits and the underscore are part of it, a dot is not: that is what
+       makes completion after "obj." offer everything and after "obj.fi"
+       offer what starts with "fi". */
+    g_assert_cmpint (word_start_of ("foo_bar9", 8), ==, 0);
+    g_assert_cmpint (word_start_of ("obj.field", 9), ==, 4);
+
+    /* The line is the limit, so a word does not reach into the one above. */
+    g_assert_cmpint (word_start_of ("alpha\nbeta", 10), ==, 6);
+    g_assert_cmpint (word_start_of ("alpha\nbeta", 6), ==, 6);
+
+    /* Letters are letters in any alphabet: g_unichar_isalnum, not isalpha of
+       the C locale. */
+    g_assert_cmpint (word_start_of ("\xd0\xbf\xd1\x80\xd0\xb8\xd0\xb2\xd0\xb5\xd1\x82", 6), ==, 0);
+}
+
+
 void
 _moo_lsp_add_unit_tests (void)
 {
+    g_test_add_func ("/lsp/completion/word-start", test_completion_word_start);
+    g_test_add_func ("/lsp/diagnostics/detail", test_diagnostic_detail);
+
+    g_test_add_func ("/lsp/config/parse", test_config_parse);
+    g_test_add_func ("/lsp/config/malformed", test_config_parse_bad);
+    g_test_add_func ("/lsp/config/root", test_config_root);
+
     g_test_add_func ("/lsp/position/utf16", test_position_utf16);
     g_test_add_func ("/lsp/position/utf8", test_position_utf8);
     g_test_add_func ("/lsp/position/utf32", test_position_utf32);

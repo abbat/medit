@@ -57,6 +57,21 @@ get_severity_info (int severity)
 }
 
 
+char *
+lsp_diagnostic_detail (const LspDiagnostic *diagnostic)
+{
+    g_return_val_if_fail (diagnostic != NULL, NULL);
+
+    if (!diagnostic->source && !diagnostic->code)
+        return NULL;
+
+    return g_strdup_printf ("  [%s%s%s]",
+                            diagnostic->source ? diagnostic->source : "",
+                            diagnostic->source && diagnostic->code ? " " : "",
+                            diagnostic->code ? diagnostic->code : "");
+}
+
+
 const char *
 lsp_severity_name (int severity)
 {

@@ -44,6 +44,16 @@ typedef struct {
 
 /* The list is in file order; the first matching entry wins. */
 GSList     *lsp_config_load             (void);
+
+/* One named file, whatever it is: what lsp_config_load() ends up calling. */
+GSList     *lsp_config_parse_file       (const char         *filename);
+
+/*
+ * The nearest directory at or above file_dir holding one of the markers, and
+ * file_dir itself when there are no markers or nothing matches.
+ */
+char       *lsp_config_find_root        (const char         *file_dir,
+                                         char              **markers);
 void        lsp_config_list_free        (GSList             *list);
 void        lsp_config_free             (LspServerConfig    *config);
 

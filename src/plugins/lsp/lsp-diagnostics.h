@@ -52,6 +52,12 @@ void        lsp_diagnostics_free    (GSList             *list);
 const char *lsp_severity_name       (int                 severity);
 
 /*
+ * What the pane shows after the message: the source and the code the server
+ * gave, in brackets, or NULL when it gave neither.
+ */
+char       *lsp_diagnostic_detail   (const LspDiagnostic *diagnostic);
+
+/*
  * Replaces whatever was shown on the document with this list. The positions
  * are the server's, so the encoding it agreed to is needed to place them.
  */

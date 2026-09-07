@@ -943,7 +943,19 @@ python's `splitlines()`. `moocmdview` writes every element it gets into the outp
 which is why a chunk of output ending in a newline draws a blank line. The test pins the
 behaviour rather than changing it.
 
-What is in them for the LSP client is its arithmetic and reply shapes: the UTF-16
+For the LSP client there are three more, each of which needed a few lines moved somewhere
+a test could reach them: `lsp_config_parse_file()` (an `lsp.xml` written into a temp
+directory: the command split the way a shell would, semicolon-separated markers, `<env>`,
+`initialization-options` as ordinary text, `enabled="false"`, and a malformed file, which
+must be a warning and an empty list rather than half a server), `lsp_config_find_root()`
+(the walk up to a marker, which used to be `find_root_dir()` in the manager), and
+`lsp_completion_word_start()` (what counts as the word being completed — the rule that
+makes `obj.` offer everything and `obj.fi` offer what starts with `fi`, and that a cursor
+just after a space has no prefix at all, which is what a UI test asserting the narrowing
+has to know). `lsp_diagnostic_detail()` is the fourth and needed no walk: the bracketed
+`[source code]` after a message has four cases and a UI test can drive one per run.
+
+What is in them for the rest of the LSP client is its arithmetic and reply shapes: the UTF-16
 crossing (an emoji is one character and two code units), the UTF-8 one (Cyrillic is one
 character and two bytes), the clamps for a line or a column the document does not have,
 and `documentSymbol` in both the flat `SymbolInformation` and the nested `DocumentSymbol`
@@ -951,8 +963,15 @@ form — the flat one being what older servers answer with and what no UI test d
 UI test under `tests/lsp` is written in ASCII, where all three encodings agree, so none of
 that was covered by anything before.
 
-The next candidate is `lsp.xml` itself: `lsp_config_load()` reads the user's file and takes
-no path, so parsing cannot be tested without giving it one.
+**Extracting for a test is worth it when the extraction is a walk over strings.** Every one
+of those four was a `static` function or an inline block that no test could call, and each
+came out as a free function with no widget in its signature. What did *not* come out is
+anything that would have lost something on the way: the pane still writes its line in
+pieces, because the severity is coloured and a single string would have taken the colour
+with it.
+
+`gdk/gdkkeysyms.h` has to be included for `GDK_KEY_s` on GTK+2 — the compat names live
+there, and a test that only ever built against GTK+3 does not find out.
 
 ### The UI tests
 

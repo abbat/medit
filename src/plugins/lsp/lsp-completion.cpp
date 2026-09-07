@@ -616,10 +616,9 @@ lsp_completion_key_press (MooEditView *view,
 /* Asking
  */
 
-/* The start of the word the cursor is in the middle of. */
-static void
-find_word_start (GtkTextBuffer *buffer,
-                 GtkTextIter   *iter)
+void
+lsp_completion_word_start (GtkTextBuffer *buffer,
+                           GtkTextIter   *iter)
 {
     gtk_text_buffer_get_iter_at_mark (buffer, iter,
                                       gtk_text_buffer_get_insert (buffer));
@@ -724,7 +723,7 @@ lsp_completion_start (MooEditView *view,
      * list; the mark moves with the text, so an edit anywhere before it does
      * not throw the popup off.
      */
-    find_word_start (buffer, &start);
+    lsp_completion_word_start (buffer, &start);
     popup.start_mark = gtk_text_buffer_create_mark (buffer, NULL, &start, TRUE);
 
     popup.view = view;

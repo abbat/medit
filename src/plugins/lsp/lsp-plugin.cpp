@@ -510,12 +510,10 @@ fill_pane (LspWindowPlugin *stuff)
         moo_line_view_write (stuff->output, ": ", -1, NULL);
         moo_line_view_write (stuff->output, diagnostic->message, -1, NULL);
 
-        if (diagnostic->source || diagnostic->code)
+        text = lsp_diagnostic_detail (diagnostic);
+
+        if (text)
         {
-            text = g_strdup_printf ("  [%s%s%s]",
-                                    diagnostic->source ? diagnostic->source : "",
-                                    diagnostic->source && diagnostic->code ? " " : "",
-                                    diagnostic->code ? diagnostic->code : "");
             moo_line_view_write (stuff->output, text, -1, stuff->detail_tag);
             g_free (text);
         }

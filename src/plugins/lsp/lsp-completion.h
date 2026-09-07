@@ -37,6 +37,15 @@ void        lsp_completion_start        (MooEditView    *view,
                                          const char     *trigger_char);
 
 void        lsp_completion_cancel       (void);
+
+/*
+ * The start of the word the cursor is in the middle of, which is both what is
+ * sent to the server and what the answer is narrowed by. Letters, digits and
+ * the underscore are a word; anything else ends it, and so does the start of
+ * the line.
+ */
+void        lsp_completion_word_start   (GtkTextBuffer  *buffer,
+                                         GtkTextIter    *iter);
 gboolean    lsp_completion_visible      (void);
 
 /* Returns TRUE when the key belonged to the popup. */

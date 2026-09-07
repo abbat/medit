@@ -34,6 +34,7 @@
 #include "mooutils/mooutils-fs.h"
 #include "mooutils/mooutils-misc.h"
 
+#include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
 #include <string.h>
 
