@@ -44,6 +44,7 @@ class Setup(object):
         self.root = root
         self.data_home = data_home
         self.log_dir = log_dir
+        self.files = []
         self._prefs = {}
 
     def path(self, *parts):
@@ -60,6 +61,7 @@ class Setup(object):
 
     def write(self, name, body):
         path = self.path(name)
+        os.makedirs(os.path.dirname(path), exist_ok=True)
         with open(path, "w") as f:
             f.write(body)
         return path
@@ -68,6 +70,16 @@ class Setup(object):
         """An executable file in the sandbox, by path."""
         path = self.write(name, body)
         os.chmod(path, os.stat(path).st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+        return path
+
+    def open(self, path):
+        """A file for medit to open at startup, by path.
+
+        On the command line rather than through the Open dialog: a test that
+        needs a document in the window is not a test of the file chooser, and
+        driving one to say so would make it a test of two things.
+        """
+        self.files.append(path)
         return path
 
     def pref(self, key, value):

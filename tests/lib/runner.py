@@ -159,12 +159,13 @@ def load_test(path):
     return module
 
 
-def start_medit(binary, log_dir):
+def start_medit(binary, log_dir, files=()):
     log = open(os.path.join(log_dir, "medit.log"), "wb")
 
     # --new-app is not optional: medit is single instance, and without it a
     # second copy hands its arguments to the first and exits immediately.
-    return subprocess.Popen([binary, "--new-app"], stdout=log, stderr=subprocess.STDOUT)
+    argv = [binary, "--new-app"] + list(files)
+    return subprocess.Popen(argv, stdout=log, stderr=subprocess.STDOUT)
 
 
 def quit_medit(t, proc):
@@ -235,7 +236,7 @@ def inner(args):
     module = load_test(args.test)
     sandbox = prepare(module, log_dir)
 
-    proc = start_medit(args.binary, log_dir)
+    proc = start_medit(args.binary, log_dir, sandbox.files)
     failure = None
     clean_exit = False
     code = None
