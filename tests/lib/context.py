@@ -197,6 +197,35 @@ class Test(object):
 
         return node
 
+    def popup(self, timeout=a11y.TIMEOUT):
+        """Open the context menu of whatever has the focus, and return it.
+
+        Shift+F10 and not a right click: a click needs coordinates, and the
+        widget the menu belongs to may be one AT-SPI cannot point at. A menu
+        pops up in a toplevel window of its own rather than inside the frame,
+        which is where this looks for it -- so it finds a menu the menu bar has
+        open just as readily, and is meant to be called when none is.
+        """
+        ui.key("shift+F10")
+        return self.wait(self._popup_menu, "a context menu", timeout)
+
+    def _popup_menu(self):
+        for top in a11y.children(self.app):
+            if a11y.role_name(top) != "window":
+                continue
+
+            menu = a11y.find(top, role="menu", depth=1)
+
+            if menu is not None and ui.on_screen(menu):
+                return menu
+
+        return None
+
+    def item(self, menu, label, timeout=a11y.TIMEOUT):
+        """One item of a menu that is already open."""
+        return self._or_dump(lambda: self._menu_item(menu, label),
+                             "the %r item" % label, timeout, menu)
+
     def _menu_item(self, parent, label):
         global _MENU_ROLE_CONSTS
 
