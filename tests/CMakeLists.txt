@@ -78,6 +78,36 @@ if(NOT _moo_ui_tests)
     message(WARNING "ENABLE_UI_TESTS is on, but tests/*/*/test.py matched nothing")
 endif()
 
+# A test can name the cmake variables its subsystem needs in its header:
+#
+#     # requires: MOO_BUILD_TERMINAL
+#
+# A build without them still registers the test, disabled, so that "ctest -N"
+# on a GTK+2 build lists the terminal tests and says why they did not run,
+# rather than silently listing fewer tests than the other build.
+function(moo_ui_test_requirements path out)
+    file(STRINGS "${path}" _lines REGEX "^# *requires:")
+    set(_missing "")
+
+    foreach(_line ${_lines})
+        string(REGEX REPLACE "^# *requires: *" "" _names "${_line}")
+        string(REPLACE "," " " _names "${_names}")
+        separate_arguments(_names)
+
+        foreach(_name ${_names})
+            set(_value "")
+            if(DEFINED ${_name})
+                set(_value "${${_name}}")
+            endif()
+            if(NOT _value)
+                list(APPEND _missing ${_name})
+            endif()
+        endforeach()
+    endforeach()
+
+    set(${out} "${_missing}" PARENT_SCOPE)
+endfunction()
+
 foreach(_test ${_moo_ui_tests})
     get_filename_component(_dir "${_test}" DIRECTORY)
     string(REPLACE "/" ";" _parts "${_dir}")
@@ -105,6 +135,18 @@ foreach(_test ${_moo_ui_tests})
     set_tests_properties(${_test_name} PROPERTIES
         LABELS "${_subsystem};gtk${GTK_VERSION}"
         TIMEOUT ${UI_TEST_TIMEOUT})
+
+    # The header is read at configure time, so cmake has to re-run when it
+    # changes; the glob above only notices files coming and going.
+    set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
+        "${CMAKE_CURRENT_SOURCE_DIR}/${_test}")
+
+    moo_ui_test_requirements("${CMAKE_CURRENT_SOURCE_DIR}/${_test}" _missing)
+
+    if(_missing)
+        set_tests_properties(${_test_name} PROPERTIES DISABLED TRUE)
+        message(STATUS "UI test ${_test_name} is disabled: this build has no ${_missing}")
+    endif()
 endforeach()
 
 add_custom_target(ui-test
