@@ -1347,6 +1347,11 @@ python3 tests/coverage.py buildc2/coverage/medit.info buildc3/coverage/medit.inf
         --floor tests/coverage.floor           # both toolkits as one number
 ```
 
+`tests/run.sh` is not part of this: it drives `buildu2` and `buildu3`, which are the
+ordinary test build directories and are better left uninstrumented. A coverage run is
+`ctest` or the `ui-test` target inside the coverage build directory, and then the target
+above.
+
 `ENABLE_COVERAGE` needs clang and refuses gcc outright: gcc's `--coverage` writes a format
 `llvm-cov` cannot read, and a build that quietly measured something else would be worse
 than one that stops. It also needs `llvm-profdata` and `llvm-cov` of **the same version as
@@ -1392,6 +1397,31 @@ the display, timers and idle handlers fire or do not, and the tests run in paral
 it by hand, in the commit that earned the rise; the job prints the line to write. Lowering
 it is also a legitimate commit — covered code was deleted, a test was retired — and the
 reason belongs in the file beside the number.
+
+**What it says today**, from the first run of the whole thing: 41.57% of lines and 27.45%
+of functions, GTK+2 at 38.56% and GTK+3 at 41.37%. Merging the two is worth only 0.2 pp
+over GTK+3 alone — the lines only the GTK+2 build runs are few, which is a fact about this
+tree rather than a reason to stop measuring it, since they are exactly the `#else` branches
+nothing else exercises.
+
+The interesting part is not the total but where it is spent, and it maps onto what has been
+written recently rather than onto what matters:
+
+| | lines |
+|---|---|
+| `src/plugins/terminal` | 85.6% |
+| `src/plugins/lsp` | 82.2% |
+| `src/mooapp` | 70.1% |
+| `src/mooutils` | 46.9% |
+| `src/mooedit` | 41.9% |
+| `src/moofileview` | 26.4% |
+| `src/plugins/usertools` | 6.5% |
+| `src/plugins/ctags` | 3.1% |
+
+The two subsystems with tests of their own are at 80%+; the file view, which every
+open-file dialog goes through, is at a quarter; the user tools and the ctags plugin are
+effectively unmeasured. That is where a test buys the most, and the floor is what keeps the
+number from quietly going the other way while features are added.
 
 ### The ad-hoc sandbox (headless X + screenshots + synthetic input)
 

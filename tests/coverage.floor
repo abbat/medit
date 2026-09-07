@@ -1,0 +1,16 @@
+# The line coverage the tests must not fall below, in percent, as
+# tests/coverage.py measures it over both toolkits merged. The coverage job in
+# .github/workflows/ui.yml fails when the number is under it; see AGENTS.md §3.
+#
+# It sits about 0.3 pp under what the tests actually reach, because a UI run is
+# not deterministic to the hundredth: medit is started again when it could not
+# open the display, timers and idle handlers fire or do not, and the tests run
+# in parallel.
+#
+# Raise it in the commit that earns the rise -- the job prints the line to
+# write. Lowering it is a legitimate commit too, when covered code was deleted
+# or a test was retired, with the reason written here beside the number.
+#
+# 2026-09-07  41.57% measured on the first run: 32 UI tests and 17 unit tests,
+#             gtk2 at 38.56% and gtk3 at 41.37%.
+41.2
