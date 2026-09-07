@@ -51,6 +51,7 @@ static struct {
 
 static void     server_state_changed    (LspServer  *server,
                                          gpointer    data);
+static void     notify_listeners        (MooEdit    *doc);
 
 
 /**********************************************************************/
@@ -130,12 +131,33 @@ update_idle_timeout (LspServerEntry *entry)
 /*
  * A restarted server has forgotten every document it had open, so each one is
  * announced again as soon as it is ready to hear about them.
+ *
+ * The other state worth acting on is the one it never comes back from. What
+ * set_failed() wrote is the only account of why the client stopped trying --
+ * the command could not be run, the handshake was never answered, the server
+ * exited immediately once too often -- and it reaches the user through the
+ * listeners, which is to say through the diagnostics pane of every window
+ * looking at a document of that server. The line on medit's own output is
+ * set_failed()'s own doing, where the message is written.
  */
 static void
 server_state_changed (LspServer *server,
                       G_GNUC_UNUSED gpointer data)
 {
     GSList *l;
+
+    if (lsp_server_get_state (server) == LSP_SERVER_FAILED)
+    {
+        for (l = manager.docs; l != NULL; l = l->next)
+        {
+            LspDoc *ldoc = (LspDoc*) l->data;
+
+            if (lsp_doc_get_server (ldoc) == server)
+                notify_listeners (lsp_doc_get_doc (ldoc));
+        }
+
+        return;
+    }
 
     if (!lsp_server_is_ready (server))
         return;

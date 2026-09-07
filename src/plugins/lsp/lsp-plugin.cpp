@@ -442,6 +442,7 @@ fill_pane (LspWindowPlugin *stuff)
     LspDoc *ldoc = doc ? lsp_manager_lookup_doc (doc) : NULL;
     GtkTextBuffer *buffer = doc ? moo_edit_get_buffer (doc) : NULL;
     LspPositionEncoding encoding = LSP_POSITION_ENCODING_UTF16;
+    LspServer *server;
     GSList *l;
 
     moo_line_view_clear (stuff->output);
@@ -449,7 +450,25 @@ fill_pane (LspWindowPlugin *stuff)
     if (!ldoc)
         return;
 
-    encoding = lsp_server_get_position_encoding (lsp_doc_get_server (ldoc));
+    server = lsp_doc_get_server (ldoc);
+
+    /*
+     * A server that has given up says why, and here is where it is said. This
+     * is not a diagnostic and is not switched off with them below: it is the
+     * reason there are none, and without it the pane is empty in exactly the
+     * way a document with nothing wrong with it is.
+     */
+    if (lsp_server_get_state (server) == LSP_SERVER_FAILED)
+    {
+        const char *message = lsp_server_get_error (server);
+
+        if (message)
+            moo_line_view_write_line (stuff->output, message, -1,
+                                      severity_tag (stuff, LSP_SEVERITY_ERROR));
+        return;
+    }
+
+    encoding = lsp_server_get_position_encoding (server);
 
     for (l = lsp_doc_get_diagnostics (ldoc); l != NULL; l = l->next)
     {
@@ -889,6 +908,14 @@ lsp_window_plugin_create (LspWindowPlugin *stuff)
     stuff->pane = moo_edit_window_add_pane (stuff->window, MOO_LSP_PLUGIN_ID,
                                             swin, label, MOO_PANE_POS_BOTTOM);
     moo_pane_label_free (label);
+
+    /*
+     * Filled when it is opened, and not only when something changes: a server
+     * that failed while the pane was closed has nothing left to announce, and
+     * the pane would come up empty on the one occasion the user opens it to
+     * find out why.
+     */
+    g_signal_connect_swapped (swin, "map", G_CALLBACK (queue_pane_update), stuff);
 
     label = moo_pane_label_new (GTK_STOCK_INDEX, NULL,
                                 _("Symbols"), _("Symbols"));

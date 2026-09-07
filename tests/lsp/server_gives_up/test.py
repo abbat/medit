@@ -1,24 +1,21 @@
-"""A server that dies as soon as it starts is not started forever.
+"""A server that dies as soon as it starts is not started forever, and says so.
 
 # requires: MOO_BUILD_LSP
 
-The counter that stops it, and nothing else -- because nothing else is
-observable. When it gives up, lsp_server set_failed() puts a sentence in
-error_message saying which server it was and where to fix it, and
-lsp_server_get_error() exists to hand that sentence over, but nothing calls it:
-there is no pane, no status bar and no line in the log where a user could find
-out that the client has stopped trying. The terminal, which had the same bug in
-the same shape, writes it into the pane where the user is looking.
+The counter that stops it, and the sentence that explains why nothing is
+happening. set_failed() has always written that sentence; for a while nothing
+read it back, so the client simply went quiet -- three processes in two seconds
+and then an editor that never mentions language servers again.
 
-So this test asserts the count of processes, which is the whole of what the
-outside world can see. If the message ever reaches the user, this is where the
-assertion for it belongs.
-
-Both toolkits.
+Here it is asserted on medit's own output, which is the half of the report that
+works on both toolkits. The other half, the line in the diagnostics pane, is
+what failure_pane tests.
 """
 
 # LSP_MAX_QUICK_EXITS in lsp-server.cpp
 MAX_STARTS = 3
+
+GAVE_UP = "exited immediately %d times in a row" % MAX_STARTS
 
 
 def setup(s):
@@ -38,6 +35,11 @@ def run(t):
     t.settle(3)
 
     t.check(t.lsp_starts() == MAX_STARTS, "and not once more after it gave up")
+
+    t.wait(lambda: GAVE_UP in t.medit_log(),
+           "the reason it stopped trying to reach medit's output")
+    t.check("check the command in the LSP configuration file" in t.medit_log(),
+            "and the message says where to fix it")
 
     # The window is still usable, which is not obvious: the client has a failed
     # server attached to the document it is showing.

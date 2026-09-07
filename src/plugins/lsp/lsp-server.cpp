@@ -136,6 +136,7 @@ set_failed (LspServer  *server,
             const char *format,
             ...)
 {
+    gboolean again = server->state == LSP_SERVER_FAILED;
     va_list args;
 
     va_start (args, format);
@@ -143,10 +144,26 @@ set_failed (LspServer  *server,
     server->error_message = g_strdup_vprintf (format, args);
     va_end (args);
 
+    /*
+     * On medit's own output as well as wherever the owner shows it, the way
+     * the terminal reports a shell it could not run. Said here rather than
+     * from the state callback so that each message is said exactly once, and
+     * so that the last one is said at all: a server that fails again while it
+     * is already failed changes no state, and it is that message -- the one
+     * that says the client has stopped trying and where to fix it -- that a
+     * user needs.
+     */
+    g_warning ("%s", server->error_message);
+
     clear_queue (server);
     g_hash_table_remove_all (server->docs);
 
     set_state (server, LSP_SERVER_FAILED);
+
+    /* set_state() answers a change of state, and this time only the message
+       changed; the owner still has to hear about it. */
+    if (again && server->on_state)
+        server->on_state (server, server->cb_data);
 }
 
 
