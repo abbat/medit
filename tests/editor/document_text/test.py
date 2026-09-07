@@ -1,12 +1,11 @@
 """The document being edited is readable, and what is typed goes into it.
 
-# requires: MOO_BUILD_TERMINAL
+# requires: GTK3
 
-The requirement is not about the terminal: it is how this test says GTK+3 only.
-The editor's notebook keeps its own pages and inherits GtkNotebook's accessible,
-which reads GtkNotebook's -- so until MooNotebookAccessible the document was not
-in the tree at all, and on GTK+2, where gail's classes cannot be subclassed, it
-still is not.
+The editor's notebook keeps its own pages and inherited GtkNotebook's
+accessible, which reads GtkNotebook's -- so until MooNotebookAccessible the
+document was not in the tree at all, and on GTK+2, where gail's classes cannot
+be subclassed by linking against them, it still is not.
 """
 
 CONTENT = "hello from the document\n"

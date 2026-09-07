@@ -1,8 +1,8 @@
 """Two open documents are told apart, and switching between them switches views.
 
-# requires: MOO_BUILD_TERMINAL
+# requires: GTK3
 
-GTK+3 only, as document_text explains -- the requirement is how a test says so.
+GTK+3 only, for the reason document_text gives.
 """
 
 FIRST = "first document\n"
