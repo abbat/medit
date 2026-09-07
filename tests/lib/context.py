@@ -108,6 +108,32 @@ class Test(object):
     def dialog(self, name, timeout=a11y.TIMEOUT):
         return self.toplevel(name, "dialog", timeout)
 
+    def preferences(self, page, timeout=a11y.TIMEOUT):
+        """Open Edit/Preferences at one of its pages, and return the dialog.
+
+        The pages are a list beside a notebook, so the page is picked by its
+        row rather than by a tab; the caller gets the dialog, since everything
+        it will want -- the widgets of the page, and the dialog's own buttons --
+        hangs off that.
+        """
+        self.menu("Edit", "Preferences")
+        dialog = self.dialog("Preferences", timeout)
+
+        self.click(self.need(dialog, role="table cell", name=page,
+                             what="the %s row of the preferences" % page))
+
+        return dialog
+
+    def on_screen(self, nodes):
+        """Those of the nodes that are drawn somewhere.
+
+        A dialog holds every page of it at once, and the widgets of the pages
+        that are not shown are in the tree with no position -- so anything
+        looked up across a dialog has to be filtered by this or it will find
+        the same widget on four other pages.
+        """
+        return [node for node in nodes if ui.on_screen(node)]
+
     def no_toplevel(self, name, role="dialog", timeout=a11y.TIMEOUT):
         """Wait until a toplevel with that title is gone."""
         self.wait(
