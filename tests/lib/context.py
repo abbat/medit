@@ -239,6 +239,12 @@ class Test(object):
         """
         ui.focus_window()
 
+    def hover(self, node, start, end):
+        """Rest the pointer over a range of the node's text and let it settle."""
+        x, y = ui.hover_range(node, start, end)
+        self.log("hover %s[%d:%d] at (%d,%d)" % (a11y.role_name(node), start, end, x, y))
+        return x, y
+
     def key(self, *keys):
         ui.key(*keys)
 

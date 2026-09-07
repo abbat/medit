@@ -162,6 +162,24 @@ def click_range(node, start, end, button=1, settle=SETTLE, times=1):
     return x, y
 
 
+def hover_range(node, start, end, settle=1.0):
+    """Rest the pointer where a range of a node's text is drawn.
+
+    Parked elsewhere first and then moved, like a click, because what a
+    tooltip waits for is the pointer arriving and then staying still: a warp
+    straight onto the target produces no crossing event to start the timer.
+    """
+    box = node.queryText().getRangeExtents(start, end, pyatspi.DESKTOP_COORDS)
+    x, y = box[0] + box[2] // 2, box[1] + box[3] // 2
+
+    park_pointer()
+    time.sleep(POINTER)
+    _xdotool("mousemove", x, y)
+    time.sleep(settle)
+
+    return x, y
+
+
 def key(*keys, settle=SETTLE):
     for k in keys:
         _xdotool("key", k)
