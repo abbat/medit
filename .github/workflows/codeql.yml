@@ -10,6 +10,14 @@
 # Both toolkits are built, because the #else side of the 263
 # GTK_CHECK_VERSION splits is compiled nowhere else and is the specification
 # the gtk-3 side was ported from.
+#
+# There is a second language here, and it is not built at all: the UI test
+# harness under tests/. It is the only python in the tree and it is nobody's
+# dependency, but it is what says whether medit still opens its dialogs, and
+# until it was added here nothing read it -- `languages: c-cpp` analyzed the
+# program and nothing else. flake8 in ui.yml reads the same files for the
+# defects a linter can see; this is for the ones that need the whole file --
+# a command line built out of a path, a caught exception that hides a failure.
 name: codeql
 
 on:
@@ -136,3 +144,32 @@ jobs:
         uses: github/codeql-action/analyze@v4
         with:
           category: "/language:c-cpp/gtk:${{ matrix.gtk }}"
+
+  # No build, because there is nothing to build: build-mode "none" is what
+  # CodeQL calls a language it reads straight off the disk. One job rather than
+  # one per toolkit -- the harness is the same file in both -- and a category of
+  # its own, or its results would replace a toolkit's instead of sitting beside
+  # them.
+  analyze-python:
+    name: analyze python
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: python
+          build-mode: none
+          queries: security-and-quality
+
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@v4
+        with:
+          category: "/language:python"

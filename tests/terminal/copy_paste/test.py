@@ -90,4 +90,3 @@ def back_into_the_shell(t, terminal):
 
     t.wait_text(terminal, "not found", squeeze=True,
                 what="the shell's answer to the pasted word")
-

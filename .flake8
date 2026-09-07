@@ -1,0 +1,18 @@
+# The UI test harness under tests/ is the only python in the tree, and this is
+# what it is checked with -- flake8, which is pyflakes (real defects: an unused
+# import, a name that is not defined, a variable assigned and never read) plus
+# pycodestyle (layout). See tests/CMakeLists.txt for the ui-lint target and
+# .github/workflows/ui.yml for the job that gates on it.
+#
+# This file is not a sign that anything here is a python package. Nothing is
+# installed, nothing is built, and flake8 simply reads its configuration from
+# the top of the tree it is pointed at.
+
+[flake8]
+# 79 is pycodestyle's default and nothing in this tree has ever been written to
+# it: the C sources run to 100 and the python beside them was written in the
+# same shape. 96 is what the longest line already is, so this is a description
+# of the tree rather than a target to reformat it towards.
+max-line-length = 96
+
+exclude = .git,__pycache__,build*,debian

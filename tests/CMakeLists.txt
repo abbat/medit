@@ -164,3 +164,28 @@ add_custom_target(ui-test
     USES_TERMINAL)
 
 add_dependencies(ui-test medit)
+
+# The harness read rather than run: flake8 is pyflakes (an unused import, a name
+# that is not defined, a variable assigned and never read) plus pycodestyle. The
+# settings are in .flake8 at the top of the tree, and the same command is what
+# the ui workflow gates on.
+#
+# Optional, and quietly so. It is a developer's tool for a developer's tool, and
+# a machine without it must still be able to run the tests -- which is also why
+# nothing here is a configure error the way Xvfb and pyatspi are.
+find_program(UI_TEST_FLAKE8 NAMES flake8)
+
+if(UI_TEST_FLAKE8)
+    add_custom_target(ui-lint
+        COMMAND ${UI_TEST_FLAKE8} "${CMAKE_CURRENT_SOURCE_DIR}"
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+        COMMENT "Reading the UI test harness with flake8"
+        USES_TERMINAL)
+else()
+    add_custom_target(ui-lint
+        # No semicolon in the message: cmake reads one as a list separator and
+        # would take the rest of the sentence for another command to run.
+        COMMAND ${CMAKE_COMMAND} -E echo
+            "flake8 was not found -- it is python3-flake8 on debian and fedora"
+        COMMENT "Reading the UI test harness with flake8")
+endif()

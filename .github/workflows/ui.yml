@@ -39,6 +39,30 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # The harness read rather than run, and first, because it is seconds against
+  # the ui job's half hour and a NameError in a test file is a failure that job
+  # would report as "the dialog never opened".
+  #
+  # flake8 is pyflakes plus pycodestyle: the first half is the one that matters
+  # -- an unused import, a name that is not defined, a variable assigned and
+  # never read -- and the second half is configured in .flake8 to describe the
+  # tree rather than to reformat it. python3-pyatspi is installed for the same
+  # reason the tests need it: without it pyflakes reports the import itself.
+  harness:
+    name: harness, flake8
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install flake8
+        run: |
+          set -eux
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq --no-install-recommends flake8 python3-pyatspi
+
+      - name: Read the harness
+        run: flake8 tests
+
   ui:
     name: debian:13, clang, gtk${{ matrix.gtk }}
     runs-on: ubuntu-latest
