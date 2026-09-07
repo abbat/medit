@@ -306,6 +306,14 @@ static void     model_remove_moo_file   (MooFile        *file,
                                          MooFolderModel *model);
 
 
+G_GNUC_UNUSED inline static gboolean
+model_contains_file (MooFolderModel *model,
+                     MooFile        *file)
+{
+    return file_list_contains (model->priv->files, file);
+}
+
+
 #define ITER_MODEL(ip)      ((ip)->user_data)
 #define ITER_FILE(ip)       ((ip)->user_data2)
 #define ITER_GET_MODEL(ip)  ((MooFolderModel*) ITER_MODEL (ip))

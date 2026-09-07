@@ -176,6 +176,20 @@ static MooFile  *file_list_nth          (FileList   *flist,
 }
 
 
+/*
+ * Only ever asked by the assertions in moofoldermodel.c, which a release build
+ * compiles away -- hence G_GNUC_UNUSED, and hence the two of these having been
+ * removed once as unused code. They are not unused; they are the invariant the
+ * model is written against, checked in the builds that check things.
+ */
+G_GNUC_UNUSED static gboolean
+                 file_list_contains     (FileList   *flist,
+                                         MooFile    *file)
+{
+    return g_hash_table_lookup (flist->file_to_link, file) != NULL;
+}
+
+
 /* TODO */
 static int       file_list_position     (FileList   *flist,
                                          MooFile    *file)

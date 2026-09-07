@@ -35,6 +35,13 @@
 #include "mooutils-misc.h"
 #include "mooutils-debug.h"
 
+/*
+ * Per translation unit, because what MOO_DEBUG_INIT defines is static: the one
+ * in mooappinput-common.c is that file's own, and without this the moo_dmsg()
+ * calls below are an undefined reference in every build where DEBUG is on.
+ */
+MOO_DEBUG_INIT (input, FALSE)
+
 #define INPUT_PREFIX "in-"
 
 
