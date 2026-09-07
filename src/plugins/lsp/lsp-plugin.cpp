@@ -468,6 +468,14 @@ fill_pane (LspWindowPlugin *stuff)
         return;
     }
 
+    /*
+     * "Underline problems and list them in the Diagnostics pane" -- the second
+     * half of that sentence is this. Without it the marks came off the document
+     * and the pane went on listing them.
+     */
+    if (!moo_prefs_get_bool (MOO_LSP_PREFS_DIAGNOSTICS))
+        return;
+
     encoding = lsp_server_get_position_encoding (server);
 
     for (l = lsp_doc_get_diagnostics (ldoc); l != NULL; l = l->next)

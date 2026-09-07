@@ -88,6 +88,41 @@ def run(t):
            "the pane to empty for a document no server handles")
     t.log("ok: the pane follows whichever document is active")
 
+    # "Underline problems and list them in the Diagnostics pane" is one setting
+    # for both halves of that sentence. It used to be one for the first half:
+    # the marks came off the document and the pane went on listing them.
+    t.menu("Window", "hello.txt")
+    t.menu("Tools", "Diagnostics")
+    t.wait_text(pane, EXPECTED[0], what="the diagnostics, before they are switched off")
+
+    diagnostics(t, False)
+    t.menu("Tools", "Diagnostics")
+
+    t.wait(lambda: t.text(pane).strip() == "",
+           "the pane to empty when the setting is unticked")
+    t.log("ok: unticking the setting empties the pane as well")
+
+    diagnostics(t, True)
+    t.menu("Tools", "Diagnostics")
+
+    t.wait_text(pane, EXPECTED[0], what="the diagnostics, ticked back on")
+
+
+def diagnostics(t, on):
+    """Tick or untick the setting on the client's page of the preferences."""
+    dialog = t.preferences("Language Servers")
+
+    box = t.need(dialog, role="check box",
+                 name="Underline problems and list them in the Diagnostics pane",
+                 what="the diagnostics check box")
+
+    if t.state(box, "checked") != on:
+        t.click(box)
+
+    t.click(t.button(dialog, "OK"))
+    t.no_toplevel("Preferences")
+    t.log("the setting is now %s" % ("on" if on else "off"))
+
 
 def diagnostics_pane(t):
     """The pane's text view: the one on screen that cannot be typed into.
