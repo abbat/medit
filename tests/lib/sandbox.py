@@ -72,6 +72,12 @@ def start_x(root, log_path, screen="1400x900x24", timeout=20):
     picked here: two tests starting at the same moment would otherwise both find
     :99 free and both try to take it.
     """
+    # Xvfb writes the display number it settled on, with a newline after it,
+    # which is the only thing that says the number is complete: a two digit
+    # number arrives in two writes often enough to matter, and reading "1" out
+    # of "12" hands the test a display belonging to another test, or to nobody
+    # at all -- the symptom is a test that fails a minute later with "cannot
+    # open display" while every other test passes.
     handshake = os.path.join(root, "displayfd")
     fd = os.open(handshake, os.O_RDWR | os.O_CREAT, 0o600)
     log = open(log_path, "wb")
@@ -89,9 +95,10 @@ def start_x(root, log_path, screen="1400x900x24", timeout=20):
         if proc.poll() is not None:
             raise RuntimeError("Xvfb exited with %d, see %s" % (proc.returncode, log_path))
         with open(handshake) as f:
-            text = f.read().strip()
-        if text.isdigit():
-            return proc, ":" + text
+            text = f.read()
+
+        if text.endswith("\n") and text.strip().isdigit():
+            return proc, ":" + text.strip()
         time.sleep(0.1)
 
     stop(proc)
