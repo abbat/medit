@@ -173,6 +173,24 @@ def type_text(text, delay=25, settle=SETTLE):
     time.sleep(settle)
 
 
+# ImageMagick 6 installs "import"; in 7 the same thing is "magick import", and
+# which one a distribution ships is not something a test should have to know.
+_IMPORT = (["import"], ["magick", "import"])
+
+
+def _import(*args):
+    last = None
+
+    for command in _IMPORT:
+        try:
+            return subprocess.run(command + [str(a) for a in args],
+                                  capture_output=True, text=True, check=True)
+        except (FileNotFoundError, subprocess.CalledProcessError) as error:
+            last = error
+
+    raise last
+
+
 def pixel(x, y):
     """The colour of one pixel of the screen, as "#rrggbb".
 
@@ -182,10 +200,8 @@ def pixel(x, y):
     between looking and testing that a setting was written rather than that it
     did something.
     """
-    out = subprocess.check_output(
-        ["import", "-window", "root", "-crop", "1x1+%d+%d" % (x, y),
-         "-depth", "8", "txt:-"],
-        stderr=subprocess.DEVNULL, text=True)
+    out = _import("-window", "root", "-crop", "1x1+%d+%d" % (x, y),
+                  "-depth", "8", "txt:-").stdout
 
     found = re.search(r"#[0-9A-Fa-f]{6}", out)
 
@@ -198,8 +214,7 @@ def pixel(x, y):
 def screenshot(path):
     """Best effort -- ImageMagick is useful here but not worth requiring."""
     try:
-        subprocess.run(["import", "-window", "root", path],
-                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+        _import("-window", "root", path)
         return path
     except (FileNotFoundError, subprocess.CalledProcessError):
         return None
