@@ -168,6 +168,14 @@ class Test(object):
         x, y = ui.click(node, button)
         self.log("click %s at (%d,%d)" % (described, x, y))
 
+    def click_range(self, node, start, end, times=1):
+        """Click where a range of the node's text is drawn."""
+        x, y = ui.click_range(node, start, end, times=times)
+        self.log("click %s[%d:%d] at (%d,%d)%s"
+                 % (a11y.role_name(node), start, end, x, y,
+                    ", twice" if times == 2 else ""))
+        return x, y
+
     def click_link(self, label, link):
         """Click one of the links returned by t.links()."""
         x, y = ui.click_range(label, link["start"], link["end"])

@@ -104,25 +104,29 @@ def park_pointer():
     _xdotool("mousemove", width - 1, height - 1)
 
 
-def click_at(x, y, button=1, settle=SETTLE):
+def click_at(x, y, button=1, settle=SETTLE, times=1):
     park_pointer()
     time.sleep(POINTER)
     _xdotool("mousemove", x, y)
     time.sleep(POINTER)
-    _xdotool("click", button)
+    if times > 1:
+        _xdotool("click", "--repeat", times, button)
+    else:
+        _xdotool("click", button)
     time.sleep(settle)
 
 
-def click_range(label, start, end, settle=SETTLE):
-    """Click a range of a label's text.
+def click_range(node, start, end, settle=SETTLE, times=1):
+    """Click a range of a node's text.
 
     This is how a hyperlink inside a label is clicked: it has no extents of its
     own, so the label's Text interface is asked where the characters it covers
-    are drawn.
+    are drawn. Words on a terminal have no widget of their own either, and are
+    reached the same way -- twice over, to select one.
     """
-    box = label.queryText().getRangeExtents(start, end, pyatspi.DESKTOP_COORDS)
+    box = node.queryText().getRangeExtents(start, end, pyatspi.DESKTOP_COORDS)
     x, y = box[0] + box[2] // 2, box[1] + box[3] // 2
-    click_at(x, y, settle=settle)
+    click_at(x, y, settle=settle, times=times)
     return x, y
 
 
