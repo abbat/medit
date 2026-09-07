@@ -29,6 +29,9 @@
 #include "mooutils/moocompat.h"
 #include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
+#if GTK_CHECK_VERSION(3,0,0)
+#include <gtk/gtk-a11y.h>
+#endif
 #include <string.h>
 
 #if defined(MOO_BROKEN_GTK_THEME)
@@ -348,6 +351,106 @@ enum {
 static guint signals[NUM_SIGNALS];
 static gpointer moo_notebook_grand_parent_class;
 
+
+/**********************************************************************/
+/* Accessibility
+ */
+
+#if GTK_CHECK_VERSION(3,0,0)
+
+/*
+ * MooNotebook is a GtkNotebook by inheritance and by nothing else: it keeps its
+ * own list of pages and never calls a gtk_notebook_* function, so GtkNotebook's
+ * own page list is empty for the whole life of the widget. The accessible it
+ * inherits reads that empty list, while the number of children comes from the
+ * container -- so the notebook reported one child and handed back nothing when
+ * asked for it, and everything below it, the document being edited included,
+ * was missing from the accessibility tree on both toolkits.
+ *
+ * The pages are what gtk_container_get_children() returns, so that is where the
+ * children come from here. What is still missing is a page tab of its own for
+ * each page: gtk_notebook_page_accessible_new() would build one, but it asks
+ * gtk_notebook_get_tab_label() for the name, which is the same empty list
+ * again -- with a Gtk-CRITICAL to go with it.
+ */
+
+typedef GtkNotebookAccessible MooNotebookAccessible;
+typedef GtkNotebookAccessibleClass MooNotebookAccessibleClass;
+
+/* G_DEFINE_TYPE defines this with external linkage and declares it nowhere,
+   which a strict build rejects; the type is used in this file only */
+GType moo_notebook_accessible_get_type (void);
+
+G_DEFINE_TYPE (MooNotebookAccessible, moo_notebook_accessible, GTK_TYPE_NOTEBOOK_ACCESSIBLE)
+
+
+static GList *
+moo_notebook_accessible_children (AtkObject *object)
+{
+    GtkWidget *widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (object));
+
+    if (widget == NULL)
+        return NULL;
+
+    return gtk_container_get_children (GTK_CONTAINER (widget));
+}
+
+
+static gint
+moo_notebook_accessible_get_n_children (AtkObject *object)
+{
+    GList *children = moo_notebook_accessible_children (object);
+    gint n_children = g_list_length (children);
+
+    g_list_free (children);
+
+    return n_children;
+}
+
+
+static AtkObject *
+moo_notebook_accessible_ref_child (AtkObject *object,
+                                   gint       index)
+{
+    GList *children = moo_notebook_accessible_children (object);
+    GtkWidget *child = NULL;
+    AtkObject *accessible = NULL;
+
+    if (index >= 0)
+        child = (GtkWidget*) g_list_nth_data (children, index);
+
+    g_list_free (children);
+
+    if (child != NULL)
+    {
+        accessible = gtk_widget_get_accessible (child);
+
+        if (accessible != NULL)
+            g_object_ref (accessible);
+    }
+
+    return accessible;
+}
+
+
+static void
+moo_notebook_accessible_class_init (MooNotebookAccessibleClass *klass)
+{
+    AtkObjectClass *atk_class = ATK_OBJECT_CLASS (klass);
+
+    atk_class->get_n_children = moo_notebook_accessible_get_n_children;
+    atk_class->ref_child = moo_notebook_accessible_ref_child;
+}
+
+
+static void
+moo_notebook_accessible_init (G_GNUC_UNUSED MooNotebookAccessible *accessible)
+{
+}
+
+#endif /* GTK_CHECK_VERSION(3,0,0) */
+
+
 static void moo_notebook_class_init (MooNotebookClass *klass)
 {
     GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
@@ -367,6 +470,11 @@ static void moo_notebook_class_init (MooNotebookClass *klass)
     gobject_class->get_property = moo_notebook_get_property;
 
     gtkobject_class->destroy = moo_notebook_destroy;
+
+#if GTK_CHECK_VERSION(3,0,0)
+    /* the one it inherits reads GtkNotebook's page list, which is empty here */
+    gtk_widget_class_set_accessible_type (widget_class, moo_notebook_accessible_get_type ());
+#endif
 
     widget_class->style_set = moo_notebook_style_set;
     widget_class->realize = moo_notebook_realize;
