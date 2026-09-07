@@ -810,15 +810,31 @@ nothing — the whole vocabulary is on `t` (`tests/lib/context.py`). ctest label
 with its subsystem and its toolkit. One file serves both toolkits, because the tree gail
 exposes for GTK+2 and the one GTK+3 exposes natively are the same tree.
 
+A test may also define `setup(s)`, which runs **before medit starts**: `s.pref()` writes a
+setting into `prefs.xml`, `s.script()` an executable into the sandbox, `s.open()` a file
+for medit to open on its command line. The same object is `t.sandbox` afterwards, so a
+script and the file it wrote are named the same way from both halves
+(`tests/lib/setup.py`). Some things cannot be arranged any later — the terminal reads its
+shell when the pane is first shown, and there is no moment in between.
+
+A test that needs something this build may not have says so in its header,
+`# requires: MOO_BUILD_TERMINAL`. A build without it registers the test **disabled**
+rather than not at all, so `ctest -N` lists the same tests either way and says which ones
+this build cannot run.
+
 **Reading and acting are different mechanisms, on purpose.** Everything asserted comes
 from AT-SPI, so a test says "the Credits button is there" rather than comparing pixels,
 and says it identically on both toolkits. Input is `xdotool` at coordinates AT-SPI has
 just given, and there is not one fixed coordinate anywhere.
 
-Each test gets a temp root, an X server (`Xvfb -displayfd`, so no two tests race for a
-display number) and a session bus of its own. `UI_TEST_PARALLEL` says how many run at
-once. Browsers are intercepted, not opened: a fake `x-scheme-handler/http` desktop entry
-appends the URL to a file, so "the license opened in a browser" is a string comparison.
+Each test gets a temp root, a home directory, an X server (`Xvfb -displayfd`, so no two
+tests race for a display number — see the trap below) and a session bus of its own. HOME
+is sandboxed too, which only began to matter with the terminal: a shell reads the rc files
+of whoever runs the tests, so with the real one it came up with the developer's prompt,
+wrote to the developer's history, and behaved differently again in CI.
+`UI_TEST_PARALLEL` says how many run at once. Browsers are intercepted, not opened: a
+fake `x-scheme-handler/http` desktop entry appends the URL to a file, so "the license
+opened in a browser" is a string comparison.
 Failures leave everything in `<build>/ui-tests/<test>/` — `medit.log`, the X server's
 log, the sanitizer logs, `sanitizer.json`, and `failure.png`. CI uploads that directory
 as an artifact, and `gh run download <id> -D <dir>` fetches it.
@@ -836,8 +852,13 @@ docker run --rm -v "$PWD:/src:ro" -v /tmp/w:/w medit-ui-d13 bash -c '
 This is worth doing rather than guessing: the toolkit and at-spi versions are what UI
 tests break on, and they are exactly what the local machine cannot vary.
 
-**No window manager.** The manual sandbox below starts `xfwm4`; the tests do not need to,
-and that is one moving part fewer.
+**No window manager**, which is one moving part fewer and costs exactly one thing:
+nothing hands the input focus on when a window disappears. After a menu is dismissed the
+focus belongs to the menu's window, which no longer exists — `xdotool getwindowfocus` then
+answers nothing at all and the application stops seeing keys, so the next `Shift+F10`
+opens no menu and the test times out waiting for one. `t.popup()` points the focus at the
+application first (`input.focus_window()`). The manual sandbox below starts `xfwm4` and
+has none of this.
 
 What it cost to get there, so nobody pays twice:
 
@@ -848,6 +869,13 @@ build or scratch directory goes over it, and the only symptom is one line on std
 comes up, the accessibility tree never does, and the test times out looking for a window
 that is on screen. Hence `mktemp -d /tmp/mui.XXXXXX`, and `UI_TEST_TMP_ROOT` if `/tmp` is
 not where it should go.
+
+**Wait for the newline when reading `-displayfd`.** Xvfb writes the display number with a
+newline after it, and a two-digit number arrives in two writes often enough to matter:
+reading `1` out of `12` hands the test a display belonging to another test, or to nobody.
+The symptom is one random test failing a minute later with `cannot open display` on a run
+where the other twelve passed — twice in five parallel runs before the read was changed to
+require the newline.
 
 **AT-SPI can describe a widget but not operate one.** `queryAction().doAction("click")`
 on a menu item produces `Gtk-WARNING: no trigger event for menu popup` and
@@ -898,6 +926,27 @@ consequence is asserted directly rather than worked around: `credits.c` fills th
 "Translated by" tab from `_("translator-credits")` and only when the lookup returns
 something other than the msgid, so in an untranslated locale the tab is there and empty.
 
+**The panes reach the bus through an accessible of their own.** A pane and the button
+that opens it are internal children of `MooPaned`, and `GtkContainerAccessible` builds its
+child list from `gtk_container_get_children()`, which skips internal children. Before
+`MooPanedAccessible` (`moopaned.c`) the paned reported a single child, the document area:
+the file selector, the file list and the terminal were not in the tree at all, so a screen
+reader could not reach them and neither could a test. It is GTK+3 only — GTK+2 keeps those
+types inside the gail module, which cannot be subclassed by linking against it — so
+anything inside a pane is a GTK+3 test.
+
+**The document view is still not in the tree.** The editor's notebook says it has one
+child and hands back nothing for it, on both toolkits; that is a separate defect from the
+panes and is not diagnosed yet. Until it is, a test asserts about the document through the
+status bar, whose `Chars: N` is an ordinary label — which is what `focus_toggle` and
+`copy_paste` do.
+
+**A modified document blocks the quit at the end of a test.** File/Quit opens a dialog
+asking about saving, nothing answers it, and the test fails with "medit did not quit when
+asked" twenty seconds after the part it was testing passed. A test that types into a
+document saves it first, with `Ctrl+S` and a file put there by `s.open()`, so that no file
+chooser is involved.
+
 **Accessibility itself produces criticals, and they are not medit's.** On this machine
 the About test reports three on GTK+3 —
 `gtk_notebook_get_tab_label: assertion 'list != NULL' failed`, as the credits notebook is
@@ -912,6 +961,48 @@ count, and does not gate on it.
 killed medit reports nothing; the runner clicks File/Quit and waits for the exit code,
 and a medit that will not quit fails the test. This is the exit-code rule of §2 as a
 mechanism rather than a habit.
+
+### What the terminal tests know
+
+`tests/terminal/` drives the pane through the shell that is actually running in it. The
+pane is GTK+3 only, so every test there carries `# requires: MOO_BUILD_TERMINAL`.
+
+**vte's accessible is the oracle.** `VteTerminal` implements `AtkText`, so the screen is
+readable: `t.text(terminal)` is what the shell printed. A word on it is no more a widget
+than a link in a label is, so `t.click_range(terminal, start, end, times=2)` double-clicks
+where those characters are drawn — that is how the copy test makes a selection.
+
+**Pin the shell.** `Plugins/Terminal/shell` is read when the pane is first shown, so
+`setup()` sets it before medit starts. Without it a test runs the login shell of whoever
+runs it, which is fish on some developer's machine and root's bash in CI. `/bin/sh` where
+only the answer matters; a script that appends a byte and `exec`s a shell where the test
+needs to know how many shells were started; a script that exits at once where the test is
+about a shell that fails.
+
+**Nothing may depend on the prompt** — it comes from the shell and from
+`/etc/bash.bashrc`, and root gets `#` where a developer gets `$`. Tests wait for any
+non-empty text, and then for the answer to a command whose echo cannot be mistaken for its
+output: `echo ready$((21*2))` prints `ready42`.
+
+**The pushd item is offered by the name of the shell** (`basename == "bash"`), since there
+is no way to ask a shell what it supports. The context menu test uses that rather than
+working around it: its shell is a script called `bash`, which also lets it start the real
+bash somewhere other than the document's directory, so that "cd went there" is a change
+and not a coincidence.
+
+**A colour is the one thing read off the screen.** Nothing in the accessibility tree says
+what colour anything is drawn in, so `input.pixel()` reads a pixel of the corner the shell
+never writes in. It is the only pixel in the tests, and it is there so that the colour
+scheme test asserts the terminal was repainted rather than that a setting was written.
+`import` on ImageMagick 6, `magick import` on 7; both are tried.
+
+**The pane adds deprecations, and they are ours.** Counted on debian 13, where
+`G_ENABLE_DIAGNOSTIC=1` is loudest: `VteTerminal::window-title-changed` twice per run, the
+signal having been deprecated in vte 0.68; `GtkImageMenuItem:use-stock` and `:accel-group`
+in the two tests that open the context menu, from `gtk_image_menu_item_new_from_stock()`;
+and `GtkFontButton:font-name` in the two that open the preferences, from the `g_object_set`
+in `terminal-prefs.cpp`. All three are in the plugin's own code and all three have
+replacements; none of them fails a test, in the same way criticals do not.
 
 ### The ad-hoc sandbox (headless X + screenshots + synthetic input)
 
