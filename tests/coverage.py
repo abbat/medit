@@ -24,6 +24,18 @@ import os
 import sys
 
 
+# How far under the measured number the floor is written, and how much room has
+# to open up above it before raising it is worth a commit.
+#
+# The margin is what a UI run's jitter costs: medit is started again when it
+# could not open the display, timers and idle handlers fire or do not, and the
+# tests run in parallel. The step is comfortably above that, so a raise is
+# always a real gain rather than a lucky run -- and no more than a point of
+# ground is left undefended before the ratchet tightens again.
+MARGIN = 0.3
+RAISE = 1.0
+
+
 class File(object):
     """One source file's counters, as lcov records them.
 
@@ -195,16 +207,21 @@ def markdown(named, merged, floor):
 
     if floor is None:
         out.append("No floor to compare with. Write `%.1f` into "
-                   "`tests/coverage.floor` to make this one." % (total - 0.3))
+                   "`tests/coverage.floor` to make this one." % (total - MARGIN))
     elif total < floor:
         out.append("**Below the floor of %.2f%% by %.2f pp.** If the drop is meant --"
                    " covered code was deleted, a test was retired -- lower"
                    " `tests/coverage.floor` in the same commit, with the reason."
                    % (floor, floor - total))
+    elif total - floor >= RAISE:
+        out.append("**Raise the floor to `%.1f`.** It is %.2f%% and there is %.2f pp"
+                   " above it, which is more than a run can wander: the gain is real"
+                   " and belongs in the commit that earned it."
+                   % (total - MARGIN, floor, total - floor))
     else:
-        out.append("Floor is %.2f%%, so there is %.2f pp of room. Raise it to `%.1f`"
-                   " when this number is where it stays."
-                   % (floor, total - floor, total - 0.3))
+        out.append("Floor is %.2f%%, with %.2f pp above it -- under the %.1f pp that"
+                   " makes raising it worth a commit."
+                   % (floor, total - floor, RAISE))
 
     out += ["", "<details><summary>By directory</summary>", "",
             "| directory | lines | functions |", "|---|---|---|"]

@@ -7,9 +7,12 @@
 # open the display, timers and idle handlers fire or do not, and the tests run
 # in parallel.
 #
-# Raise it in the commit that earns the rise -- the job prints the line to
-# write. Lowering it is a legitimate commit too, when covered code was deleted
-# or a test was retired, with the reason written here beside the number.
+# Raise it when a full point has opened up above it, to the new number less the
+# same margin, in the commit that earns the rise -- the job says so and prints
+# the line to write. A tenth would be chasing jitter; a point is the most this
+# file ever leaves undefended. Lowering it is a legitimate commit too, when
+# covered code was deleted or a test was retired, with the reason written here
+# beside the number.
 #
 # 2026-09-07  41.57% measured on the first run: 32 UI tests and 17 unit tests,
 #             gtk2 at 38.56% and gtk3 at 41.37%.

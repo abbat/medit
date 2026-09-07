@@ -1393,10 +1393,18 @@ number is under the floor.
 
 The floor sits a little under what the tests actually reach, and 0.3 pp is the margin: a UI
 run is not deterministic to the hundredth — medit is started again when it could not open
-the display, timers and idle handlers fire or do not, and the tests run in parallel. Raise
-it by hand, in the commit that earned the rise; the job prints the line to write. Lowering
-it is also a legitimate commit — covered code was deleted, a test was retired — and the
-reason belongs in the file beside the number.
+the display, timers and idle handlers fire or do not, and the tests run in parallel.
+
+**Raise it when a full point has opened up above it**, to the new number less the same 0.3
+margin, in the commit that earned the rise; the job says so in as many words and prints the
+line to write. A point rather than a tenth because a tenth is jitter and would have the
+floor chasing noise, and rather than five because the whole purpose of the file is that the
+ground already taken stays taken — a point is the most this arrangement ever leaves
+undefended. Adding a test is usually worth more than that on its own: `tests/lsp` moved
+`src/plugins/lsp` from nothing to 82%.
+
+Lowering it is a legitimate commit too — covered code was deleted, a test was retired — and
+the reason belongs in the file beside the number.
 
 **What it says today**, from the first run of the whole thing: 41.57% of lines and 27.45%
 of functions, GTK+2 at 38.56% and GTK+3 at 41.37%. Merging the two is worth only 0.2 pp
