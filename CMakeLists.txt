@@ -63,6 +63,15 @@ if(ENABLE_UNIT_TESTS)
     set(MOO_ENABLE_UNIT_TESTS 1)
 endif()
 
+# clang's source-based coverage, which the tests are measured with. Off by
+# default and only ever on beside the tests: it is the same binary the UI tests
+# drive and the unit tests run in, instrumented once, so that one build answers
+# what was executed as well as what went wrong in it.
+#
+#   cmake -S . -B buildc3 -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ \
+#         -DENABLE_UI_TESTS=ON -DENABLE_COVERAGE=ON
+option(ENABLE_COVERAGE "Compile with clang's coverage instrumentation" OFF)
+
 # Comma-separated, passed straight to -fsanitize=. Empty means no sanitizer.
 # The UI tests read the logs it produces, so a test build normally sets it:
 #
@@ -242,6 +251,10 @@ add_subdirectory(doc)
 # After src/, because the target it adds depends on the medit target.
 include(cmake/Analyze.cmake)
 
+# Also after src/: the coverage target reads the medit binary, for the map from
+# counter to source line that -fcoverage-mapping put in it.
+include(cmake/Coverage.cmake)
+
 if(ENABLE_NLS)
     add_subdirectory(po)
     add_subdirectory(po-gsv)
@@ -272,4 +285,11 @@ if(ENABLE_UNIT_TESTS)
         LABELS "unit;gtk${GTK_VERSION}"
         ENVIRONMENT "LC_ALL=C.UTF-8;LANGUAGE="
         TIMEOUT 120)
+
+    # The same binary the UI tests drive, so the same pool of profiles: what the
+    # unit tests reach and what the clicks reach are one measurement.
+    if(ENABLE_COVERAGE)
+        set_property(TEST unit.all APPEND PROPERTY ENVIRONMENT
+            "LLVM_PROFILE_FILE=${MOO_COVERAGE_DIR}/raw/unit.all-%p.profraw")
+    endif()
 endif()

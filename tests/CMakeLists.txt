@@ -144,6 +144,23 @@ foreach(_test ${_moo_ui_tests})
         LABELS "${_subsystem};gtk${GTK_VERSION}"
         TIMEOUT ${UI_TEST_TIMEOUT})
 
+    # Where this test's coverage counters go. Named after the test, so that a
+    # profile left behind by a run that went wrong says which one it was, and
+    # with the pid in it because the harness starts medit again when it could
+    # not open the display.
+    #
+    # An absolute path into the build directory, and deliberately not into the
+    # sandbox: the sandbox root is removed when the test ends, and the counters
+    # are written by medit at exit, inside it. The path outlives the sandbox;
+    # nothing else here would.
+    #
+    # runner.py needs no part in this. It builds medit's environment from its
+    # own, so what ctest sets here reaches the program three processes down.
+    if(ENABLE_COVERAGE)
+        set_property(TEST ${_test_name} APPEND PROPERTY ENVIRONMENT
+            "LLVM_PROFILE_FILE=${MOO_COVERAGE_DIR}/raw/${_test_name}-%p.profraw")
+    endif()
+
     # The header is read at configure time, so cmake has to re-run when it
     # changes; the glob above only notices files coming and going.
     set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS

@@ -156,6 +156,51 @@ if(ENABLE_SANITIZERS)
     message(STATUS "Building with ${_moo_sanitize}")
 endif()
 
+# ---------------------------------------------------------------------------
+# Coverage
+# ---------------------------------------------------------------------------
+#
+# clang's source-based coverage: -fprofile-instr-generate puts the counters in
+# the binary, -fcoverage-mapping puts the map from counter to source range in
+# it, and both have to reach the linker as well -- hence the same
+# CMAKE_REQUIRED_LINK_OPTIONS dance the sanitizers do above.
+#
+# gcc has no such thing. Its --coverage writes .gcda files beside the objects,
+# in a format llvm-cov cannot read, so a gcc build here is refused rather than
+# quietly given a different kind of coverage: what reads the result is
+# llvm-profdata and llvm-cov, and they and the compiler have to be the same
+# version of llvm.
+#
+# The counters are written by an atexit handler, which is the same property the
+# leak checker has and the same reason it works here: the UI tests quit medit
+# through File/Quit and wait for its exit code instead of sending a signal. A
+# test that times out and is killed contributes nothing -- and it has failed
+# anyway.
+if(ENABLE_COVERAGE)
+    set(_moo_coverage -fprofile-instr-generate -fcoverage-mapping)
+
+    # The probe takes the two flags as one space-separated string, because that
+    # is what CMAKE_REQUIRED_FLAGS is; the list above is what the link options
+    # and the per-language flags want.
+    set(CMAKE_REQUIRED_LINK_OPTIONS ${_moo_coverage})
+    check_c_compiler_flag("-fprofile-instr-generate -fcoverage-mapping"
+                          MOO_HAVE_COVERAGE)
+    unset(CMAKE_REQUIRED_LINK_OPTIONS)
+
+    if(NOT MOO_HAVE_COVERAGE)
+        message(FATAL_ERROR
+            "ENABLE_COVERAGE needs clang: ${CMAKE_C_COMPILER} does not accept "
+            "-fprofile-instr-generate -fcoverage-mapping. Configure with "
+            "-DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++.")
+    endif()
+
+    list(APPEND MOO_C_FLAGS ${_moo_coverage})
+    list(APPEND MOO_CXX_FLAGS ${_moo_coverage})
+    add_link_options(${_moo_coverage})
+
+    message(STATUS "Building with ${_moo_coverage}")
+endif()
+
 set(MOO_COMPILE_DEFINITIONS
     XDG_PREFIX=_moo_edit_xdg
     G_LOG_DOMAIN="Moo"
