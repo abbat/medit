@@ -5,6 +5,8 @@ Every test gets its own copy of all three, which is what makes running them in
 parallel safe: two tests never share a settings file, a display or a bus name.
 """
 
+import contextlib
+import fcntl
 import os
 import shutil
 import signal
@@ -103,12 +105,35 @@ def display_answers(display, timeout=5, interval=0.2):
     return False
 
 
+# Only one X server may be choosing a display number at a time. Xvfb picks a
+# number, binds, and only then reports it, but a server that cannot create the
+# socket file for a number still starts if it got the abstract socket -- it
+# prints "server already running" and carries on -- so two servers starting
+# together can end up sharing a number, one of them serving the socket file and
+# the other the abstract socket. Everything then works until the first of the
+# two exits and takes the socket file with it, and the symptom is a test whose
+# display answers xdotool and refuses medit half a second later.
+XVFB_LOCK = "mui.xvfb.lock"
+
+
+@contextlib.contextmanager
+def display_lock(tmp_root):
+    fd = os.open(os.path.join(tmp_root, XVFB_LOCK), os.O_RDWR | os.O_CREAT, 0o600)
+
+    try:
+        fcntl.flock(fd, fcntl.LOCK_EX)
+        yield
+    finally:
+        os.close(fd)
+
+
 def start_x(root, log_path, screen="1400x900x24", timeout=20, attempts=3):
     """Start an Xvfb, check that it serves what it reported, and return it."""
     ensure_x_socket_dir()
 
     for attempt in range(attempts):
-        proc, display = _start_x_once(root, log_path, screen, timeout)
+        with display_lock(os.path.dirname(root)):
+            proc, display = _start_x_once(root, log_path, screen, timeout)
 
         if display_answers(display):
             return proc, display

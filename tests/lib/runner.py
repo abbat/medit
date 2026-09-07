@@ -180,13 +180,57 @@ def load_test(path):
     return module
 
 
-def start_medit(binary, log_dir, files=()):
-    log = open(os.path.join(log_dir, "medit.log"), "wb")
+# What gtk prints when gdk_display_open() returns nothing.
+NO_DISPLAY = "cannot open display"
+
+
+def start_medit(binary, log_dir, files=(), attempts=3, settle=2.0):
+    """Start medit, and start it again if it could not open the display.
+
+    Not a retry of anything else: only this one failure, and only when medit
+    said that is why it went. It happens perhaps once in five runs of the whole
+    suite in parallel, never once on its own -- forty starts in a row on one
+    display, none of them refused -- and both this process and the outer one
+    have asked the display and been answered, before and after, so the server
+    is there and it is the connection to it that fails.
+
+    A medit that crashes at startup exits with a different message, is not
+    retried, and its log is the same log this appends to.
+    """
+    path = os.path.join(log_dir, "medit.log")
 
     # --new-app is not optional: medit is single instance, and without it a
     # second copy hands its arguments to the first and exits immediately.
     argv = [binary, "--new-app"] + list(files)
-    return subprocess.Popen(argv, stdout=log, stderr=subprocess.STDOUT)
+
+    for attempt in range(attempts):
+        # Where this attempt's output starts, so that the attempt is judged by
+        # what it said and not by what the one before it said.
+        written = os.path.getsize(path) if os.path.exists(path) else 0
+
+        log = open(path, "ab")
+        proc = subprocess.Popen(argv, stdout=log, stderr=subprocess.STDOUT)
+        log.close()
+
+        time.sleep(settle)
+
+        if proc.poll() is None or not refused_the_display(path, written):
+            return proc
+
+        print("    medit could not open %s and exited with %s; starting it again "
+              "(attempt %d of %d)"
+              % (os.environ.get("DISPLAY"), proc.returncode, attempt + 1, attempts))
+
+    return proc
+
+
+def refused_the_display(path, since=0):
+    try:
+        with open(path, errors="replace") as f:
+            f.seek(since)
+            return NO_DISPLAY in f.read()
+    except (FileNotFoundError, OSError):
+        return False
 
 
 def quit_medit(t, proc):
@@ -291,12 +335,21 @@ def inner(args):
 
     log_dir = args.log_dir
 
+    # The display, from in here, before anything is started on it. The outer
+    # phase checked it too, but in its own environment; if the two disagree the
+    # answer is that environment, and that is worth one xdotool call to know.
+    if not sandbox.display_answers(os.environ.get("DISPLAY", ""), timeout=10):
+        print("FAIL: the display %s does not answer inside the test's environment"
+              % os.environ.get("DISPLAY"))
+        return 1
+
     # Loaded before medit starts, not after: a test may have a setup function,
     # and what it puts in place has to be there when medit reads its settings.
     module = load_test(args.test)
     prepared = prepare(module, log_dir)
 
     proc = start_medit(args.binary, log_dir, prepared.files)
+
     failure = None
     clean_exit = False
     code = None

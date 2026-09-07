@@ -886,9 +886,21 @@ in `sandbox.py`:
   once, before the server is started.
 
 And then, because the first fix looked convincing and was not enough, the display is
-checked before medit is started — `xdotool getdisplaygeometry` on it, and another server
-if it does not answer. A test that cannot get a display now says so in a second instead of
-timing out in a minute.
+checked before medit is started — `xdotool getdisplaygeometry` on it, from the outer phase
+and again from inside the test's own environment. A test that cannot get a display now
+says so in a second instead of timing out in a minute.
+
+**And one part of it is still not understood**, so medit's start is retried. About once in
+five parallel runs of the whole suite, one medit exits with `cannot open display` on a
+display that both processes have just been answered by and that answers again a minute
+later, in CI as well as here. What has been ruled out: the display number (read whole
+now), the socket directory (created first), two servers on one number (the start of a
+server is serialised across tests), and the environment (the same `xdotool` call, in the
+same environment medit is given, succeeds immediately before). Forty medits started one
+after another on one display were all refused nothing. `start_medit()` therefore starts it
+again — up to three times, only for this message, saying so each time it does — and a
+medit that crashes for any other reason is not retried. If the line about starting it
+again shows up in a passing run, that is this, and it is still worth chasing.
 
 **AT-SPI can describe a widget but not operate one.** `queryAction().doAction("click")`
 on a menu item produces `Gtk-WARNING: no trigger event for menu popup` and
