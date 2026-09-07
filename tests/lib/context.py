@@ -12,6 +12,7 @@ of a test is in this one class, and a test reads as the scenario rather than as
 plumbing.
 """
 
+import json
 import os
 import time
 
@@ -307,6 +308,75 @@ class Test(object):
 
     def settle(self, seconds=0.5):
         time.sleep(seconds)
+
+    # -- what medit said to a language server ------------------------------
+
+    def lsp(self, method=None, server="test"):
+        """Every message medit has sent that server, oldest first.
+
+        The other half of what an LSP test can assert. Half of the protocol
+        never reaches the screen -- a document announced, a change sent after
+        the quiet the preferences ask for, a document closed -- and the log the
+        fake server keeps is the only place it can be seen.
+        """
+        messages = []
+
+        try:
+            with open(self.sandbox.lsp_log_path(server), errors="replace") as f:
+                lines = f.readlines()
+        except FileNotFoundError:
+            return messages
+
+        for line in lines:
+            line = line.strip()
+
+            if not line:
+                continue
+
+            try:
+                message = json.loads(line)
+            except ValueError:
+                # The last line of a log being written while it is read.
+                continue
+
+            if method is None or message.get("method") == method:
+                messages.append(message)
+
+        return messages
+
+    def wait_lsp(self, method, server="test", timeout=a11y.TIMEOUT, count=1):
+        """Wait until medit has sent that message, and return the last of them."""
+        described = "%s to reach the %s server" % (method, server)
+
+        def arrived():
+            found = self.lsp(method, server)
+            return found[-1] if len(found) >= count else None
+
+        try:
+            message = self.wait(arrived, described, timeout)
+        except a11y.NotFound as missing:
+            raise Failed("%s\nwhat did reach it:\n    %s"
+                         % (missing, "\n    ".join(self.lsp_methods(server)) or "nothing"))
+
+        self.log("ok: medit sent %s" % method)
+
+        return message
+
+    def lsp_methods(self, server="test"):
+        """The methods medit has sent, in order, for a failure to print."""
+        return [m.get("method") or "(reply)" for m in self.lsp(None, server)]
+
+    def lsp_starts(self, server="test"):
+        """How many times that server's process has been started."""
+        return len(self.sandbox.read_path(self.sandbox.lsp_starts_path(server)))
+
+    def medit_log(self):
+        """Everything medit has printed, which is where its own diagnosis is."""
+        try:
+            with open(os.path.join(self.log_dir, "medit.log"), errors="replace") as f:
+                return f.read()
+        except FileNotFoundError:
+            return ""
 
     # -- the outside world -------------------------------------------------
 
