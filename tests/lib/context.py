@@ -119,6 +119,27 @@ class Test(object):
     def text(self, node):
         return a11y.text_of(node)
 
+    def state(self, node, name):
+        """Whether the node carries the named AT-SPI state."""
+        return a11y.state(node, name)
+
+    def wait_text(self, node, needle, timeout=a11y.TIMEOUT, what=None):
+        """Wait until the node's text contains needle, and say what it held.
+
+        For anything that fills in by itself -- a terminal waiting for its
+        shell, a view waiting for a file -- where the failure is unreadable
+        without the text that did arrive.
+        """
+        described = what or "%r" % needle
+
+        try:
+            self.wait(lambda: needle in a11y.text_of(node), described, timeout)
+        except a11y.NotFound as missing:
+            raise Failed("%s\nthe text it was looked for in:\n%s"
+                         % (missing, a11y.text_of(node)))
+
+        self.log("ok: %s appeared" % described)
+
     def links(self, node):
         return a11y.links_of(node)
 

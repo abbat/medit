@@ -164,6 +164,18 @@ def application(name="medit", timeout=TIMEOUT):
     return wait(look, "the %s application to appear on the a11y bus" % name, timeout)
 
 
+def state(node, name):
+    """Whether the node carries the named state, e.g. state(node, "showing").
+
+    A widget that exists but has never been on screen is VISIBLE and not
+    SHOWING, which is how a pane that was never opened is told from an open one.
+    """
+    try:
+        return node.getState().contains(getattr(pyatspi, "STATE_" + name.upper()))
+    except Exception:
+        return False
+
+
 def text_of(node):
     """The text of a node, through the Text interface or the name."""
     try:
