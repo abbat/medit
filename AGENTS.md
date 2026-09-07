@@ -43,7 +43,17 @@ the leftovers of a package build under `debian/`; it touches nothing else.
 
 Other options: `-DENABLE_NLS=OFF`, `-DENABLE_STRICT=ON` (all warnings and `-Werror`),
 `-DCMAKE_BUILD_TYPE=Debug` (the default is RelWithDebInfo, i.e. `-g -O2`),
-`-DENABLE_SANITIZERS=address,undefined`, `-DENABLE_UI_TESTS=ON` (§3).
+`-DENABLE_SANITIZERS=address,undefined`, `-DENABLE_UI_TESTS=ON` (§3),
+`-DENABLE_UNIT_TESTS=ON` (§3, and it follows `ENABLE_UI_TESTS` unless set).
+
+**A Debug build had not linked for months**, and nothing noticed because every job in CI
+builds RelWithDebInfo. Two symbols were referenced only from code a release build compiles
+away — `model_contains_file()` from four `g_assert()`s in `moofoldermodel.c`, `moo_dmsg()`
+from `mooappinput-unix.c`, which calls it without the `MOO_DEBUG_INIT` that defines it —
+and both had been deleted as unused, which in a release build they truthfully look. Both
+are back, marked `G_GNUC_UNUSED` so the release build stays quiet. Anything that is only
+called from an assertion has this shape; `-DCMAKE_BUILD_TYPE=Debug` is the thing to build
+before believing otherwise.
 
 **Python is a developer's tool here, never a dependency.** The UI tests under `tests/`
 are written in python, and that is the only python in the tree. It is not built, not
@@ -82,7 +92,7 @@ happens, and `-Wodr` has caught defects there that nothing else sees.
 
 | job | what it covers |
 |---|---|
-| `deb` | ubuntu 22.04, both toolkits — the low end of everything: gtk 3.24.33, glib 2.72, gcc 11, cmake 3.22 |
+| `deb` | ubuntu 22.04, both toolkits — the low end of everything: gtk 3.24.33, glib 2.72, gcc 11, cmake 3.22 — and the unit tests (§3), which run here because they need nothing but the binary |
 | `langs` | `src/mooedit/langs/check.sh` over the 187 language definitions and schemes |
 
 `.github/workflows/package.yml` is the other half of the compiling: the deb on Debian 12
@@ -828,6 +838,68 @@ G_DEBUG=fatal-criticals gdb -batch -ex run -ex "bt 25" --args ./src/medit --new-
 ---
 
 ## 3. Driving the program
+
+### The unit tests
+
+Inside medit, behind a hidden option:
+
+```bash
+cmake -S . -B buildu3 -DGTK_VERSION=3 -DENABLE_UI_TESTS=ON \
+      -DENABLE_SANITIZERS=address,undefined      # unit tests follow UI tests
+cmake --build buildu3 -j"$(nproc)"
+
+buildu3/src/medit --unit-test                    # all of them, ~30 ms
+buildu3/src/medit --unit-test /lsp/position      # one subtree
+buildu3/src/medit --unit-test-list               # what there is
+cd buildu3 && ctest -L unit                      # the same, as one ctest entry
+```
+
+There is no test binary and no second build. `ENABLE_UNIT_TESTS` compiles the tests into
+medit itself, `--unit-test` runs them before anything else happens — before the single
+instance is looked for, before the session is read, before `gtk_init()` — and the process
+exits with the result. Which means the binary running them is the sanitized binary the UI
+tests already build, so the address sanitizer is watching what they touch and a leak in a
+test fails it. An ordinary build has none of it compiled: `--unit-test` there is an
+unknown option, and no package build has ever heard of any of this.
+
+The framework is glib's own (`g_test_add_func`, `g_assert_cmpint`), so it costs no
+dependency at all — which is the reason this fork can have unit tests again after the lua
+ones went with the interpreter they needed.
+
+**What belongs here is what a UI test cannot reach**: arithmetic, the shapes a reply can
+take, a parser. Not widgets. Drawing, events and the GTK+2/GTK+3 split are what `tests/`
+is for, and a unit test that mocks a toolkit tests the mock.
+
+**No display is needed, and that is a measured fact rather than a hope**: `GtkTextBuffer`
+and `GtkTreeStore` are objects rather than widgets and work with no `gtk_init()` and no
+`DISPLAY`, which is what makes the text side of the LSP client testable this way.
+
+**A build with the unit tests keeps its assertions live.** glib's test framework refuses
+to start when it is compiled with `G_DISABLE_ASSERT` — rightly, since `g_assert_cmpint()`
+would be nothing and the suite would report that no-ops passed — so `CompilerFlags.cmake`
+leaves that one definition out when `ENABLE_UNIT_TESTS` is on. `NDEBUG` and
+`G_DISABLE_CAST_CHECKS` stay. This is also how the broken Debug link above was found.
+
+**Pin nothing to an English string.** The kind names in the symbol tree are translated, so
+a test comparing against "function" passes in the C locale and fails on a Russian machine;
+compare against `lsp_symbol_kind_name()` instead. The ctest entry pins `LC_ALL=C.UTF-8`
+anyway, and the point is that the test should not need it.
+
+**They run where the UI tests cannot**, which is the argument for having them: `build.yml`
+turns them on for ubuntu 22.04, both toolkits — gtk 3.24.33, glib 2.72, gcc 11 — where an
+assumption about an API is most likely to be wrong and where no X server, no accessibility
+bus and no python are available. Milliseconds against that job's minutes.
+
+What is in them so far is the LSP client's arithmetic and reply shapes: the UTF-16
+crossing (an emoji is one character and two code units), the UTF-8 one (Cyrillic is one
+character and two bytes), the clamps for a line or a column the document does not have,
+and `documentSymbol` in both the flat `SymbolInformation` and the nested `DocumentSymbol`
+form — the flat one being what older servers answer with and what no UI test drives. Every
+UI test under `tests/lsp` is written in ASCII, where all three encodings agree, so none of
+that was covered by anything before.
+
+The next candidate is `lsp.xml` itself: `lsp_config_load()` reads the user's file and takes
+no path, so parsing cannot be tested without giving it one.
 
 ### The UI tests
 
