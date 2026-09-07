@@ -1,6 +1,6 @@
 """Two open documents are told apart, and switching between them switches views.
 
-# requires: GTK3
+# requires: MOO_GTK3
 
 GTK+3 only, for the reason document_text gives.
 """

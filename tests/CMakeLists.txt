@@ -81,9 +81,9 @@ endif()
 # So that a test can require the toolkit itself, which is not otherwise a
 # variable that says yes or no -- GTK_VERSION is "2" or "3" and both are true.
 if(GTK_VERSION STREQUAL "3")
-    set(GTK3 1)
+    set(MOO_GTK3 1)
 else()
-    set(GTK2 1)
+    set(MOO_GTK2 1)
 endif()
 
 # A test can name the cmake variables its subsystem needs in its header:

@@ -1,6 +1,6 @@
 """The document being edited is readable, and what is typed goes into it.
 
-# requires: GTK3
+# requires: MOO_GTK3
 
 The editor's notebook keeps its own pages and inherited GtkNotebook's
 accessible, which reads GtkNotebook's -- so until MooNotebookAccessible the
