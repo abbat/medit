@@ -234,9 +234,9 @@ def inner(args):
     # Loaded before medit starts, not after: a test may have a setup function,
     # and what it puts in place has to be there when medit reads its settings.
     module = load_test(args.test)
-    sandbox = prepare(module, log_dir)
+    prepared = prepare(module, log_dir)
 
-    proc = start_medit(args.binary, log_dir, sandbox.files)
+    proc = start_medit(args.binary, log_dir, prepared.files)
     failure = None
     clean_exit = False
     code = None
@@ -244,7 +244,7 @@ def inner(args):
     try:
         app = a11y.application("medit", timeout=60)
         t = Test(app, args.gtk, os.environ["MUI_URL_LOG"], log_dir, sys.stdout,
-                 sandbox=sandbox)
+                 sandbox=prepared)
 
         module.run(t)
 
