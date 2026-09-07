@@ -42,6 +42,10 @@
 #cmakedefine HAVE_GETC_UNLOCKED 1
 #cmakedefine HAVE_BIND_TEXTDOMAIN_CODESET 1
 
+/* The unit tests are compiled in only when they were asked for; see
+   ENABLE_UNIT_TESTS in the top CMakeLists.txt and mooutils/moo-unit-tests.h. */
+#cmakedefine MOO_ENABLE_UNIT_TESTS 1
+
 #define MOO_CONFIG_H_INCLUDED 1
 
 #include <moo-config.h>

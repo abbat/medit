@@ -121,6 +121,8 @@ target_sources(medit PRIVATE
     mooutils-messages.h
     mooutils-misc.cpp
     mooutils-misc.h
+    moo-unit-tests.cpp
+    moo-unit-tests.h
     mooutils-script.c
     mooutils-script.h
     mooutils-treeview.cpp

@@ -21,6 +21,7 @@
 #include "mooutils/mooi18n.h"
 #include "mooutils/mooutils-fs.h"
 #include "mooutils/mooutils-misc.h"
+#include "mooutils/moo-unit-tests.h"
 #include "plugins/mooplugin-builtin.h"
 
 /*!
@@ -47,6 +48,10 @@ struct MeditOpts
   gboolean reload = false;             /*!< \brief Whether to automatically reload files if modified on disk */
   gboolean log_window = false;         /*!< \brief Whether to show debug output in a window */
   gboolean show_version = false;       /*!< \brief Whether to display version information and exit */
+#ifdef MOO_ENABLE_UNIT_TESTS
+  gboolean unit_test = false;          /*!< \brief Whether to run the unit tests and exit */
+  gboolean unit_test_list = false;     /*!< \brief Whether to list the unit tests and exit */
+#endif
 };
 
 /*!
@@ -217,6 +222,33 @@ check_plus_line_arg (void)
  * \param error Pointer to error structure (not used)
  * \return TRUE on success
  */
+#ifdef MOO_ENABLE_UNIT_TESTS
+/*
+ * What is left on the command line names the tests to run ("/lsp/position"),
+ * each of which may be a whole subtree; with nothing named, everything runs.
+ * That is how upstream's --ut took them too, before the lua interpreter it
+ * needed was dropped from this fork.
+ */
+static int
+run_unit_tests (void)
+{
+  GPtrArray *paths = g_ptr_array_new ();
+  int result;
+
+  for (size_t i = 0; i < medit_opts.files.size (); ++i)
+    g_ptr_array_add (paths, (gpointer) medit_opts.files[i].get ());
+
+  g_ptr_array_add (paths, NULL);
+
+  result = moo_unit_tests_run ((char **) paths->pdata);
+
+  g_ptr_array_free (paths, TRUE);
+
+  return result;
+}
+#endif
+
+
 static gboolean
 post_parse_func (GOptionContext *, GOptionGroup *, void *, GError **)
 {
@@ -228,6 +260,22 @@ post_parse_func (GOptionContext *, GOptionGroup *, void *, GError **)
       g_print ("medit " MOO_DISPLAY_VERSION "\n");
       exit (EXIT_SUCCESS);
     }
+
+#ifdef MOO_ENABLE_UNIT_TESTS
+  /*
+   * Here, where --version answers too: before the single instance is looked
+   * for, before the session is read and before gtk_init(). The unit tests need
+   * no display and must not touch the settings of whoever runs them.
+   */
+  if (medit_opts.unit_test_list)
+    {
+      moo_unit_tests_list ();
+      exit (EXIT_SUCCESS);
+    }
+
+  if (medit_opts.unit_test)
+    exit (run_unit_tests ());
+#endif
 
   if (medit_opts.pid > 0 && medit_opts.instance_name)
     {
@@ -278,6 +326,10 @@ parse_args (int argc, char *argv[])
     { "debug", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_STRING, (gpointer) &medit_opts.debug, "Run in debug mode", NULL },
     { "geometry", 0, 0, G_OPTION_ARG_STRING, (gpointer) &medit_opts.geometry, N_ ("Default window size and position"), N_ ("WIDTHxHEIGHT[+X+Y]") },
     { "version", 0, 0, G_OPTION_ARG_NONE, &medit_opts.show_version, N_ ("Show version information and exit"), NULL },
+#ifdef MOO_ENABLE_UNIT_TESTS
+    { "unit-test", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_NONE, &medit_opts.unit_test, "Run the unit tests and exit", NULL },
+    { "unit-test-list", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_NONE, &medit_opts.unit_test_list, "List the unit tests and exit", NULL },
+#endif
     { G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_FILENAME_ARRAY, &medit_opts.filesp, NULL, N_ ("FILES") },
     { NULL, 0, 0, G_OPTION_ARG_NONE, NULL, NULL, NULL }
   };

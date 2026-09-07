@@ -167,6 +167,15 @@ set(MOO_COMPILE_DEFINITIONS
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     list(APPEND MOO_COMPILE_DEFINITIONS
         ENABLE_DEBUG ENABLE_PROFILE G_ENABLE_DEBUG G_ENABLE_PROFILE MOO_DEBUG DEBUG)
+elseif(ENABLE_UNIT_TESTS)
+    # Everything the release build defines except G_DISABLE_ASSERT, which turns
+    # g_assert_cmpint() and its family into nothing at all -- and glib's test
+    # framework, which is what --unit-test runs, refuses to start when it finds
+    # them disabled rather than quietly reporting that no-ops passed. So a
+    # build with the unit tests compiled in keeps its assertions live, in
+    # medit's own code as well as in the tests.
+    list(APPEND MOO_COMPILE_DEFINITIONS
+        NDEBUG=1 G_DISABLE_CAST_CHECKS)
 else()
     list(APPEND MOO_COMPILE_DEFINITIONS
         NDEBUG=1 G_DISABLE_CAST_CHECKS G_DISABLE_ASSERT)

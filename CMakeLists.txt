@@ -51,6 +51,18 @@ option(ENABLE_STRICT "Enable all warnings and -Werror" OFF)
 option(ENABLE_INSTALL_HOOKS "Run gtk-update-icon-cache during install" ON)
 option(ENABLE_UI_TESTS "Register the UI tests under tests/ with ctest" OFF)
 
+# The unit tests are compiled into medit itself, behind --unit-test, and default
+# to following the UI tests: a test build has them, an ordinary build and every
+# package build does not. That is deliberate rather than tidy -- it means the
+# binary the unit tests run in is the same sanitized binary the UI tests drive,
+# built once, and that nothing about them reaches a user's medit.
+option(ENABLE_UNIT_TESTS "Compile the unit tests into medit, behind --unit-test"
+       ${ENABLE_UI_TESTS})
+
+if(ENABLE_UNIT_TESTS)
+    set(MOO_ENABLE_UNIT_TESTS 1)
+endif()
+
 # Comma-separated, passed straight to -fsanitize=. Empty means no sanitizer.
 # The UI tests read the logs it produces, so a test build normally sets it:
 #
@@ -238,4 +250,26 @@ endif()
 if(ENABLE_UI_TESTS)
     enable_testing()
     add_subdirectory(tests)
+endif()
+
+# The unit tests are one ctest entry of their own, and not part of tests/: they
+# are inside the binary rather than under tests/, they need no X server, no
+# accessibility bus and no sandbox, and they finish in milliseconds. Registered
+# here so that a build with ENABLE_UNIT_TESTS but not ENABLE_UI_TESTS still has
+# something to run.
+#
+# The locale is pinned for the same reason the UI tests pin it: a name a test
+# compares is translated, and a suite that passes in English and fails in
+# Russian is worse than no suite. The sanitizer options are left alone on
+# purpose -- what the runtime does by default, including reporting leaks and
+# exiting non-zero over them, is exactly what this should be judged on.
+if(ENABLE_UNIT_TESTS)
+    enable_testing()
+
+    add_test(NAME unit.all COMMAND medit --unit-test)
+
+    set_tests_properties(unit.all PROPERTIES
+        LABELS "unit;gtk${GTK_VERSION}"
+        ENVIRONMENT "LC_ALL=C.UTF-8;LANGUAGE="
+        TIMEOUT 120)
 endif()
