@@ -291,6 +291,10 @@ static guint paned_signals[PANED_NUM_SIGNALS];
 typedef GtkContainerAccessible MooPanedAccessible;
 typedef GtkContainerAccessibleClass MooPanedAccessibleClass;
 
+/* G_DEFINE_TYPE defines this one with external linkage and declares it
+   nowhere, which a strict build rejects; the type is used in this file only */
+GType moo_paned_accessible_get_type (void);
+
 G_DEFINE_TYPE (MooPanedAccessible, moo_paned_accessible, GTK_TYPE_CONTAINER_ACCESSIBLE)
 
 
