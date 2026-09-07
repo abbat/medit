@@ -205,7 +205,10 @@ clang-tidy -p builda src/mooutils/moopaned.c   # one file, a couple of seconds
 ```
 
 It needs a **clang-configured build directory of its own**, a third beside `build2` and
-`build3`. That is not taste: clang-tidy takes its flags from `compile_commands.json`,
+`build3` — or, on a machine with no clang at all, the ui container of §3, which has clang
+and clang-tidy already and where `cmake --build <dir> --target analyze` is the same gate CI
+runs. Worth doing before a push that touches C or C++: it is a gate, and it reports nothing
+on this tree, so anything it does report is new. That is not taste: clang-tidy takes its flags from `compile_commands.json`,
 `CompilerFlags.cmake` probes every flag against the compiler that configured the tree,
 and a gcc tree therefore records gcc-only flags — `-fno-enforce-eh-specs` among them —
 that clang rejects outright on every C++ file. In a gcc build directory the target says
@@ -907,7 +910,9 @@ clang while a local build almost certainly does not.
 window disappears. After a menu is dismissed the focus belongs to the menu's dead window,
 `xdotool getwindowfocus` answers nothing, and the application stops seeing keys — the next
 `Shift+F10` opens no menu. `t.popup()` points the focus back first
-(`input.focus_window()`). The manual sandbox below starts `xfwm4` and has none of this.
+(`input.focus_window()`), and `t.focus()` is the same thing for a test that uses the menu
+bar and then types — opening a file from a menu and typing into it silently types nowhere.
+The manual sandbox below starts `xfwm4` and has none of this.
 
 What it cost to get there, so nobody pays twice:
 
@@ -999,6 +1004,15 @@ file list and the terminal were off the bus entirely, for a screen reader as muc
 test. GTK+3 only — GTK+2 keeps those types inside the gail module, which cannot be
 subclassed by linking against it — so anything inside a pane is a GTK+3 test.
 
+**A pane hides itself when it loses the focus, and its accessible does not.** A pane that
+is not sticky is closed the moment the document takes the focus back — which is what the
+panes are for — and what a test sees afterwards is a widget that still answers with its
+text, still reports its position, and is not on screen: a click at coordinates taken from
+it lands in the document drawn where it was. The symptom is a cursor somewhere nobody
+clicked and nothing in any log. `t.pin_pane()` presses the Sticky button in the pane's own
+toolbar (which has no name, only a tooltip) and is what a test that wants to watch a pane
+while typing needs; without it, a pane is good for one click per opening.
+
 **The document reaches the bus the same way**, and for a related reason: `MooNotebook`
 inherits from `GtkNotebook` and uses none of it — it keeps its own pages and calls no
 `gtk_notebook_` function — so the accessible it inherited read GtkNotebook's empty page
@@ -1010,6 +1024,12 @@ changes. A page tab object of its own is what is still missing —
 `gtk_notebook_page_accessible_new()` asks `gtk_notebook_get_tab_label()` for the name,
 which is that same empty list, with a Gtk-CRITICAL to go with it. GTK+3 only, as above, so
 the status bar's `Chars: N` label is still how a GTK+2 test would count characters.
+
+**A test that asserts a fix should be seen failing without it.** The cheapest way, and the
+one that costs no thinking: `git stash push -- src`, rebuild the test tree (incremental,
+seconds), run the test, `git stash pop`, rebuild. All four assertions written for the three
+LSP fixes were confirmed red that way before the fixes were committed. A green new test
+next to a new fix proves only that the two were written by the same person.
 
 **A modified document blocks the quit at the end of a test**: File/Quit asks about saving,
 nothing answers, and the test fails with "medit did not quit when asked" twenty seconds
@@ -1105,12 +1125,11 @@ is invisible by construction. The scenario is re-read before every message, so t
 question can get a different answer without restarting anything, and every record carries
 the pid — which is how `root_markers` tells two servers sharing one log apart.
 
-**A pane hides when it loses the focus, and its accessible does not.** Activating a line
-in the diagnostics pane hands the focus to the document; the pane closes, the document is
-drawn where it was, and a second click at coordinates taken from the pane's still-readable
-`AtkText` lands in the text instead. The symptom is a cursor at the end of the file and
-nothing in any log. One click per opening, or `t.pin_pane()`, which is the Sticky button
-in the pane's own toolbar — it has no name, only a tooltip.
+**Activating a line in the diagnostics pane closes it**, which is the general pane
+behaviour above arriving where it costs most: the click hands the focus to the document,
+so the next click at coordinates taken from the pane lands in the text. One click per
+opening, or `t.pin_pane()` — which is what the symbol tree needs, since it asks the server
+for nothing while it is not mapped.
 
 **The completion popup is a toplevel window of its own**, so it is looked for among the
 application's children rather than inside the frame, and *on screen* rather than merely in
