@@ -21,5 +21,7 @@ target_sources(medit PRIVATE
     lsp-server.cpp
     lsp-server.h
     lsp-symbols.cpp
+    lsp-tests.cpp
+    lsp-tests.h
     lsp-symbols.h
 )

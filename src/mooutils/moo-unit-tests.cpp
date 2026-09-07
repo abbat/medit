@@ -17,14 +17,21 @@
 
 #ifdef MOO_ENABLE_UNIT_TESTS
 
+#ifdef MOO_BUILD_LSP
+#include "plugins/lsp/lsp-tests.h"
+#endif
+
 /*
  * Every suite in one place, so that what is compiled in is a list somebody can
  * read rather than a set of constructors running in whatever order the linker
- * chose. Empty until a module has tests of its own to add.
+ * chose.
  */
 static void
 add_all_tests (void)
 {
+#ifdef MOO_BUILD_LSP
+    _moo_lsp_add_unit_tests ();
+#endif
 }
 
 
