@@ -78,12 +78,12 @@ gcc 15 — the same coverage, minus the gate, since the spec does not ask for
 | job | what it covers |
 |---|---|
 | `deb` | ubuntu 22.04, both toolkits — the low end of everything: gtk 3.24.33, glib 2.72, gcc 11, cmake 3.22 |
-| `clang` | clang on debian:trixie, both toolkits, plus the `analyze` target |
 | `langs` | `src/mooedit/langs/check.sh` over the 187 language definitions and schemes |
 
-`.github/workflows/ui.yml` is the only job that runs the program rather than reading it.
-It builds debian:13 with `-DENABLE_UI_TESTS=ON -DENABLE_SANITIZERS=address,undefined` for
-both toolkits and runs the `ui-test` target — a real X server, a real accessibility bus,
+`.github/workflows/ui.yml` compiles with clang, runs the static analyzer, and is the only
+job that runs the program rather than reading it. It builds debian:13 with
+`-DENABLE_STRICT=ON -DENABLE_UI_TESTS=ON -DENABLE_SANITIZERS=address,undefined` for both
+toolkits, runs `analyze`, then the `ui-test` target — a real X server, a real accessibility bus,
 real clicks, sanitizers underneath. It is the only place a dialog that stopped opening
 can fail anything. See §3 for what the tests are and how to write one; the evidence a
 failure leaves is uploaded as an artifact, because a UI failure is close to
