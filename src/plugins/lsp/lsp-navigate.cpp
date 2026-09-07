@@ -15,6 +15,7 @@
 
 #include "plugins/lsp/lsp-navigate.h"
 #include "plugins/lsp/lsp-manager.h"
+#include "plugins/lsp/lsp-references.h"
 #include "plugins/lsp/lsp-plugin.h"
 
 #include "mooedit/mooeditor.h"
@@ -138,25 +139,58 @@ lsp_navigate_reset (void)
 /* Where a position is, and what the server should be asked about it
  */
 
-static gboolean
-get_cursor_position (MooEditWindow  *window,
-                     LspDoc        **ldoc_out,
-                     MooEdit       **doc_out,
-                     int            *line,
-                     int            *character)
+gboolean
+lsp_ask_position (MooEditWindow  *window,
+                  MooEditView    *view,
+                  LspDoc        **ldoc_out,
+                  GtkTextIter    *iter_out,
+                  int            *line,
+                  int            *character)
 {
-    MooEdit *doc = moo_edit_window_get_active_doc (window);
-    MooEditView *view = moo_edit_window_get_active_view (window);
-    LspDoc *ldoc = doc ? lsp_manager_lookup_doc (doc) : NULL;
+    MooEdit *doc;
+    LspDoc *ldoc;
     GtkTextBuffer *buffer;
     GtkTextIter iter;
 
-    if (!ldoc || !view)
-        return FALSE;
+    g_return_val_if_fail (MOO_IS_EDIT_WINDOW (window), FALSE);
 
-    buffer = moo_edit_get_buffer (doc);
-    gtk_text_buffer_get_iter_at_mark (buffer, &iter,
-                                      gtk_text_buffer_get_insert (buffer));
+    /*
+     * A context menu was opened by the very click it is being used after, so
+     * that click is where the user pointed. Without one -- the menu came from
+     * the keyboard, or there is no menu in this at all -- the cursor is the
+     * truth.
+     */
+    if (view && click.view == view)
+    {
+        doc = moo_edit_view_get_doc (view);
+        ldoc = doc ? lsp_manager_lookup_doc (doc) : NULL;
+
+        if (!ldoc)
+            return FALSE;
+
+        buffer = moo_edit_get_buffer (doc);
+        gtk_text_buffer_get_iter_at_line (buffer, &iter, click.line);
+
+        if (click.character > 0)
+        {
+            int chars = gtk_text_iter_get_chars_in_line (&iter);
+
+            gtk_text_iter_set_line_offset (&iter, MIN (click.character,
+                                                       MAX (chars - 1, 0)));
+        }
+    }
+    else
+    {
+        doc = moo_edit_window_get_active_doc (window);
+        ldoc = doc ? lsp_manager_lookup_doc (doc) : NULL;
+
+        if (!ldoc || !moo_edit_window_get_active_view (window))
+            return FALSE;
+
+        buffer = moo_edit_get_buffer (doc);
+        gtk_text_buffer_get_iter_at_mark (buffer, &iter,
+                                          gtk_text_buffer_get_insert (buffer));
+    }
 
     lsp_iter_to_position (&iter,
                           lsp_server_get_position_encoding (lsp_doc_get_server (ldoc)),
@@ -164,17 +198,17 @@ get_cursor_position (MooEditWindow  *window,
 
     if (ldoc_out)
         *ldoc_out = ldoc;
-    if (doc_out)
-        *doc_out = doc;
+    if (iter_out)
+        *iter_out = iter;
 
     return TRUE;
 }
 
 
-static JsonObject *
-position_params (LspDoc *ldoc,
-                 int     line,
-                 int     character)
+JsonObject *
+lsp_position_params (LspDoc *ldoc,
+                     int     line,
+                     int     character)
 {
     JsonObject *params = json_object_new ();
 
@@ -186,7 +220,13 @@ position_params (LspDoc *ldoc,
 }
 
 
-/* "textDocument/definition" -> "definitionProvider" */
+/*
+ * "textDocument/definition" -> "definitionProvider".
+ *
+ * Not every capability is named after its method that way -- formatting is
+ * "documentFormattingProvider" -- so a caller whose method does not follow the
+ * pattern asks lsp_server_has_provider() for the name itself.
+ */
 static char *
 provider_name (const char *method)
 {
@@ -197,8 +237,8 @@ provider_name (const char *method)
 
 
 gboolean
-lsp_can_goto (MooEditWindow *window,
-              const char    *method)
+lsp_can_ask (MooEditWindow *window,
+             const char    *method)
 {
     MooEdit *doc = moo_edit_window_get_active_doc (window);
     LspDoc *ldoc = doc ? lsp_manager_lookup_doc (doc) : NULL;
@@ -295,73 +335,6 @@ goto_request_free (gpointer data)
 }
 
 
-/*
- * The reply is a Location, an array of them, or an array of LocationLink,
- * depending on the server and on what it found. Only the first is used: going
- * somewhere is the point, and a list of candidates needs a pane of its own.
- */
-static gboolean
-first_location (JsonNode  *result,
-                char     **uri,
-                int       *line,
-                int       *character)
-{
-    JsonObject *object = NULL;
-    JsonObject *range;
-    const char *target;
-
-    if (!result)
-        return FALSE;
-
-    if (JSON_NODE_HOLDS_OBJECT (result))
-    {
-        object = json_node_get_object (result);
-    }
-    else if (JSON_NODE_HOLDS_ARRAY (result))
-    {
-        JsonArray *array = json_node_get_array (result);
-
-        if (json_array_get_length (array) == 0)
-            return FALSE;
-
-        {
-            JsonNode *first = json_array_get_element (array, 0);
-
-            if (!first || !JSON_NODE_HOLDS_OBJECT (first))
-                return FALSE;
-
-            object = json_node_get_object (first);
-        }
-    }
-
-    if (!object)
-        return FALSE;
-
-    /* A LocationLink names its target differently from a Location. */
-    if (lsp_json_has (object, "targetUri"))
-    {
-        target = lsp_json_get_string (object, "targetUri");
-        range = lsp_json_get_object (object, "targetSelectionRange");
-
-        if (!range)
-            range = lsp_json_get_object (object, "targetRange");
-    }
-    else
-    {
-        target = lsp_json_get_string (object, "uri");
-        range = lsp_json_get_object (object, "range");
-    }
-
-    if (!target || !range)
-        return FALSE;
-
-    *uri = g_strdup (target);
-
-    return lsp_json_get_position (lsp_json_get_object (range, "start"),
-                                  line, character);
-}
-
-
 static void
 goto_reply (JsonNode   *result,
             JsonObject *error,
@@ -369,26 +342,48 @@ goto_reply (JsonNode   *result,
 {
     LspGotoRequest *request = (LspGotoRequest*) data;
     MooEditWindow *window = request->window;
-    MooEditor *editor;
-    MooEdit *doc;
-    char *uri = NULL;
-    char *path;
-    GFile *file;
-    int line = 0, character = 0;
+    GSList *found;
 
     if (error || !window || !MOO_IS_EDIT_WINDOW (window))
         return;
 
-    if (!first_location (result, &uri, &line, &character))
-        return;
+    /*
+     * The encoding comes from the request rather than from the document that
+     * is opened below: a document only just added to a window has no LspDoc
+     * yet, because its language is settled after it is inserted and the plugin
+     * attaches on notify::lang. The server that answered is the one whose
+     * coordinates these are anyway.
+     */
+    found = lsp_locations_parse (result, request->encoding);
 
-    file = g_file_new_for_uri (uri);
-    path = g_file_get_path (file);
-    moo_file_free (file);
-    g_free (uri);
+    /*
+     * Only the first of them. Going somewhere is the point here, and a reply
+     * with several places in it is what Find References is for.
+     */
+    if (found)
+    {
+        LspLocation *first = (LspLocation*) found->data;
 
-    if (!path)
-        return;
+        lsp_go_to_place (window, first->path, first->line, first->character,
+                         first->encoding);
+    }
+
+    lsp_locations_free (found);
+}
+
+
+void
+lsp_go_to_place (MooEditWindow      *window,
+                 const char         *path,
+                 int                 line,
+                 int                 character,
+                 LspPositionEncoding encoding)
+{
+    MooEditor *editor;
+    MooEdit *doc;
+
+    g_return_if_fail (MOO_IS_EDIT_WINDOW (window));
+    g_return_if_fail (path != NULL);
 
     /*
      * The line is opened first and the column applied afterwards:
@@ -398,25 +393,16 @@ goto_reply (JsonNode   *result,
     editor = moo_edit_window_get_editor (window);
     doc = moo_editor_open_path (editor, path, NULL, line, window);
 
-    g_free (path);
-
     if (!doc)
         return;
 
-    /*
-     * The encoding comes from the request rather than from the document that
-     * was opened: a document only just added to a window has no LspDoc yet,
-     * because its language is settled after it is inserted and the plugin
-     * attaches on notify::lang. The server that answered is the one whose
-     * coordinates these are anyway.
-     */
     if (character > 0)
     {
         MooEditView *view = moo_edit_window_get_active_view (window);
         GtkTextIter iter;
 
         if (view && lsp_position_to_iter (moo_edit_get_buffer (doc), line, character,
-                                          request->encoding, &iter))
+                                          encoding, &iter))
             place_cursor_later (view, gtk_text_iter_get_line (&iter),
                                 gtk_text_iter_get_line_offset (&iter));
     }
@@ -441,7 +427,7 @@ ask_where (MooEditWindow *window,
     g_object_add_weak_pointer (G_OBJECT (window), (gpointer*) &request->window);
 
     lsp_server_call (lsp_doc_get_server (ldoc), method,
-                     position_params (ldoc, line, character),
+                     lsp_position_params (ldoc, line, character),
                      goto_reply, request, goto_request_free);
 }
 
@@ -456,10 +442,10 @@ lsp_goto_definition (MooEditWindow *window,
     g_return_if_fail (MOO_IS_EDIT_WINDOW (window));
     g_return_if_fail (method != NULL);
 
-    if (!lsp_can_goto (window, method))
+    if (!lsp_can_ask (window, method))
         return;
 
-    if (!get_cursor_position (window, &ldoc, NULL, &line, &character))
+    if (!lsp_ask_position (window, NULL, &ldoc, NULL, &line, &character))
         return;
 
     ask_where (window, ldoc, method, line, character);
@@ -471,10 +457,7 @@ lsp_goto_definition_at_click (MooEditView *view,
                               const char  *method)
 {
     MooEditWindow *window;
-    MooEdit *doc;
-    LspDoc *ldoc;
-    GtkTextBuffer *buffer;
-    GtkTextIter iter;
+    LspDoc *ldoc = NULL;
     int line = 0, character = 0;
 
     g_return_if_fail (MOO_IS_EDIT_VIEW (view));
@@ -482,38 +465,11 @@ lsp_goto_definition_at_click (MooEditView *view,
 
     window = moo_edit_view_get_window (view);
 
-    if (!window || !lsp_can_goto (window, method))
+    if (!window || !lsp_can_ask (window, method))
         return;
 
-    /*
-     * Without a press to go by -- the menu was opened with the keyboard --
-     * the cursor is the right thing to ask about.
-     */
-    if (click.view != view)
-    {
-        lsp_goto_definition (window, method);
+    if (!lsp_ask_position (window, view, &ldoc, NULL, &line, &character))
         return;
-    }
-
-    doc = moo_edit_view_get_doc (view);
-    ldoc = doc ? lsp_manager_lookup_doc (doc) : NULL;
-
-    if (!ldoc)
-        return;
-
-    buffer = moo_edit_get_buffer (doc);
-    gtk_text_buffer_get_iter_at_line (buffer, &iter, click.line);
-
-    if (click.character > 0)
-    {
-        int chars = gtk_text_iter_get_chars_in_line (&iter);
-
-        gtk_text_iter_set_line_offset (&iter, MIN (click.character, MAX (chars - 1, 0)));
-    }
-
-    lsp_iter_to_position (&iter,
-                          lsp_server_get_position_encoding (lsp_doc_get_server (ldoc)),
-                          &line, &character);
 
     ask_where (window, ldoc, method, line, character);
 }
@@ -689,7 +645,7 @@ lsp_hover_query_tooltip (MooEditView *view,
     g_object_add_weak_pointer (G_OBJECT (view), (gpointer*) &hover.view);
 
     hover.request = lsp_server_call (server, "textDocument/hover",
-                                     position_params (ldoc, line, character),
+                                     lsp_position_params (ldoc, line, character),
                                      hover_reply, NULL, NULL);
 
     return FALSE;

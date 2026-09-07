@@ -214,6 +214,15 @@ class Test(object):
     def text(self, node):
         return a11y.text_of(node)
 
+    def attributes(self, node, offset):
+        """The text attributes at one character: what the tags there say.
+
+        For anything drawn with a GtkTextTag rather than built out of widgets
+        -- a highlighted range, an underlined diagnostic -- which has nothing
+        in the accessibility tree of its own.
+        """
+        return a11y.attributes_of(node, offset)
+
     def state(self, node, name):
         """Whether the node carries the named AT-SPI state."""
         return a11y.state(node, name)

@@ -1,4 +1,4 @@
-"""The client's page of the preferences: five settings and two buttons.
+"""The client's page of the preferences: seven settings and two buttons.
 
 # requires: MOO_BUILD_LSP
 
@@ -16,6 +16,8 @@ Both toolkits.
 
 SETTINGS = ("Underline problems and list them in the Diagnostics pane",
             "Complete words",
+            "Show the parameters of a call",
+            "Mark the other uses of what the cursor is in",
             "Describe what is under the pointer",
             "Log the protocol to standard error")
 
@@ -36,10 +38,10 @@ def run(t):
     boxes = {name: t.need(dialog, role="check box", name=name,
                           what="the %r check box" % name) for name in SETTINGS}
 
-    for name in SETTINGS[:3]:
+    for name in SETTINGS[:5]:
         t.check(t.state(boxes[name], "checked"), "%r is on to begin with" % name)
 
-    t.check(not t.state(boxes[SETTINGS[3]], "checked"),
+    t.check(not t.state(boxes[SETTINGS[5]], "checked"),
             "and the protocol is not logged until it is asked for")
 
     delay = t.need(dialog, role="spin button", what="the sync delay")
@@ -56,7 +58,7 @@ def run(t):
 
     # Ticked here, and it reaches the servers only when they are started again,
     # which is what the button next to it is for.
-    t.click(boxes[SETTINGS[3]])
+    t.click(boxes[SETTINGS[5]])
     t.click(t.button(dialog, "Apply"))
 
     t.check("lsp: " not in t.medit_log(),

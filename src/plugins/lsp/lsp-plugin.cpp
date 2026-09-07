@@ -31,7 +31,11 @@
 #include "plugins/lsp/lsp-diagnostics.h"
 #include "plugins/lsp/lsp-symbols.h"
 #include "plugins/lsp/lsp-navigate.h"
+#include "plugins/lsp/lsp-references.h"
+#include "plugins/lsp/lsp-edits.h"
 #include "plugins/lsp/lsp-completion.h"
+#include "plugins/lsp/lsp-highlight.h"
+#include "plugins/lsp/lsp-signature.h"
 
 #include "mooedit/mooplugin-macro.h"
 #include "mooedit/mooeditor.h"
@@ -70,6 +74,11 @@ typedef struct {
     GtkTextTag    *detail_tag;
     guint          update_idle;
 
+    MooLineView   *references;
+    MooPane       *references_pane;
+    GtkTextTag    *reference_place_tag;
+    GtkTextTag    *reference_none_tag;
+
     GtkTreeView   *symbols;
     GtkTreeStore  *symbol_store;
     MooPane       *symbols_pane;
@@ -80,6 +89,7 @@ typedef struct {
 } LspWindowPlugin;
 
 #define MOO_LSP_SYMBOLS_PANE_ID "LspSymbols"
+#define MOO_LSP_REFERENCES_PANE_ID "LspReferences"
 
 /*
  * Every live window plugin. A reply from a server can arrive after its window
@@ -91,6 +101,7 @@ static void     watch_active_buffer     (LspWindowPlugin *stuff);
 static void     queue_symbols_update    (LspWindowPlugin *stuff);
 static void     clear_symbols_doc       (LspWindowPlugin *stuff);
 static GtkWidget *create_symbols_pane   (LspWindowPlugin *stuff);
+static GtkWidget *create_references_pane (LspWindowPlugin *stuff);
 
 /* Where a line of the pane points, in the document's own coordinates. */
 typedef struct {
@@ -116,6 +127,14 @@ void
 _moo_lsp_apply_prefs (void)
 {
     lsp_manager_refresh_diagnostics ();
+
+    /*
+     * The marks are already on the text, and nothing else would take them off:
+     * with the setting gone the next question is never asked, and the answer
+     * to the last one would stay on screen.
+     */
+    if (!moo_prefs_get_bool (MOO_LSP_PREFS_HIGHLIGHT))
+        lsp_highlight_clear ();
 }
 
 
@@ -142,8 +161,9 @@ _moo_lsp_debug (void)
  * user who rebound it still gets what they bound.
  */
 static gboolean
-complete_accel_pressed (MooEditView *view,
-                        GdkEventKey *event)
+accel_pressed (MooEditView *view,
+               GdkEventKey *event,
+               const char  *action_id)
 {
     MooEditWindow *window = moo_edit_view_get_window (view);
     GtkAction *action;
@@ -155,7 +175,7 @@ complete_accel_pressed (MooEditView *view,
     if (!window)
         return FALSE;
 
-    action = moo_window_get_action (MOO_WINDOW (window), "LspComplete");
+    action = moo_window_get_action (MOO_WINDOW (window), action_id);
 
     if (!action)
         return FALSE;
@@ -197,9 +217,18 @@ view_key_press (MooEditView            *view,
     if (lsp_completion_key_press (view, event))
         return TRUE;
 
-    if (complete_accel_pressed (view, event))
+    if (lsp_signature_key_press (view, event))
+        return TRUE;
+
+    if (accel_pressed (view, event, "LspComplete"))
     {
         lsp_completion_start (view, NULL);
+        return TRUE;
+    }
+
+    if (accel_pressed (view, event, "LspSignature"))
+    {
+        lsp_signature_start (view, NULL);
         return TRUE;
     }
 
@@ -215,6 +244,8 @@ view_focus_out (G_GNUC_UNUSED MooEditView    *view,
     if (lsp_completion_visible ())
         lsp_completion_cancel ();
 
+    lsp_signature_cancel ();
+
     return FALSE;
 }
 
@@ -226,6 +257,10 @@ view_button_press (MooEditView            *view,
 {
     if (lsp_completion_visible ())
         lsp_completion_cancel ();
+
+    /* A click is the cursor going somewhere else, which is the end of the call
+       that was being typed. */
+    lsp_signature_cancel ();
 
     /*
      * Remembered for the context menu: GtkTextView leaves the cursor where it
@@ -315,6 +350,46 @@ goto_definition_doc_cb (MooEdit *doc)
 
 
 /*
+ * The window the view is in, which is where the answer will be shown. A view
+ * that is in none is a document being taken apart, and there is nothing to
+ * ask about it.
+ */
+static MooEditWindow *
+window_of_doc (MooEdit      *doc,
+               MooEditView **view_out)
+{
+    MooEditView *view = moo_edit_get_view (doc);
+
+    if (view_out)
+        *view_out = view;
+
+    return view ? moo_edit_view_get_window (view) : NULL;
+}
+
+
+static void
+find_references_doc_cb (MooEdit *doc)
+{
+    MooEditView *view = NULL;
+    MooEditWindow *window = window_of_doc (doc, &view);
+
+    if (window)
+        lsp_find_references (window, view);
+}
+
+
+static void
+rename_doc_cb (MooEdit *doc)
+{
+    MooEditView *view = NULL;
+    MooEditWindow *window = window_of_doc (doc, &view);
+
+    if (window)
+        lsp_rename (window, view);
+}
+
+
+/*
  * The context menu entry is only worth showing on a document some server
  * handles. Whether that server can answer the question is checked again when
  * the entry is used, since it may still be starting up.
@@ -322,11 +397,19 @@ goto_definition_doc_cb (MooEdit *doc)
 static void
 update_doc_actions (MooEdit *doc)
 {
-    GtkAction *action = moo_edit_get_action_by_id (doc, "LspGoToDefinition");
+    static const char *ids[] = {
+        "LspGoToDefinition", "LspFindReferences", "LspRename"
+    };
+    gboolean handled = lsp_manager_lookup_doc (doc) != NULL;
+    guint i;
 
-    if (action)
-        g_object_set (action, "visible",
-                      lsp_manager_lookup_doc (doc) != NULL, (const char*) NULL);
+    for (i = 0; i < G_N_ELEMENTS (ids); ++i)
+    {
+        GtkAction *action = moo_edit_get_action_by_id (doc, ids[i]);
+
+        if (action)
+            g_object_set (action, "visible", handled, (const char*) NULL);
+    }
 }
 
 /*
@@ -372,7 +455,20 @@ buffer_insert_text (G_GNUC_UNUSED GtkTextBuffer *buffer,
 
     copy = len < 0 ? g_strdup (text) : g_strndup (text, len);
     lsp_completion_text_inserted (view, copy);
+    lsp_signature_text_inserted (view, copy);
     g_free (copy);
+}
+
+
+/*
+ * Where the cursor is is what the highlights are about, and a buffer says so
+ * through a property rather than a signal of its own -- ::mark-set fires for
+ * every mark there is, several times per keystroke.
+ */
+static void
+buffer_cursor_moved (MooEdit *doc)
+{
+    lsp_highlight_cursor_moved (doc);
 }
 
 
@@ -383,6 +479,8 @@ lsp_doc_plugin_create (LspDocPlugin *plugin)
 
     g_signal_connect_after (moo_edit_get_buffer (doc), "insert-text",
                             G_CALLBACK (buffer_insert_text), doc);
+    g_signal_connect_swapped (moo_edit_get_buffer (doc), "notify::cursor-position",
+                              G_CALLBACK (buffer_cursor_moved), doc);
 
     g_signal_connect_swapped (doc, "filename-changed",
                               G_CALLBACK (doc_changed_identity), plugin);
@@ -405,9 +503,14 @@ lsp_doc_plugin_destroy (LspDocPlugin *plugin)
     g_signal_handlers_disconnect_by_data (doc, plugin);
     g_signal_handlers_disconnect_by_func (moo_edit_get_buffer (doc),
                                           (gpointer) buffer_insert_text, doc);
+    g_signal_handlers_disconnect_by_func (moo_edit_get_buffer (doc),
+                                          (gpointer) buffer_cursor_moved, doc);
 
     if (lsp_completion_visible ())
         lsp_completion_cancel ();
+
+    lsp_signature_cancel ();
+    lsp_highlight_clear ();
 
     lsp_manager_remove_doc (doc);
 }
@@ -588,6 +691,130 @@ pane_activate (LspWindowPlugin *stuff,
                                location->character, FALSE, FALSE);
 
     return TRUE;
+}
+
+
+/**********************************************************************/
+/* The references pane
+ */
+
+/* The window plugin of a window, for a reply that has to find its way back. */
+static LspWindowPlugin *
+window_plugin_of (MooEditWindow *window)
+{
+    GSList *l;
+
+    for (l = lsp_windows; l != NULL; l = l->next)
+    {
+        LspWindowPlugin *stuff = (LspWindowPlugin*) l->data;
+
+        if (stuff->window == window)
+            return stuff;
+    }
+
+    return NULL;
+}
+
+
+static gboolean
+references_activate (LspWindowPlugin *stuff,
+                     int              line)
+{
+    LspLocation *location;
+
+    location = (LspLocation*) moo_line_view_get_data (stuff->references, line);
+
+    if (!location)
+        return FALSE;
+
+    lsp_go_to_place (stuff->window, location->path, location->line,
+                     location->character, location->encoding);
+
+    return TRUE;
+}
+
+
+void
+_moo_lsp_show_references (MooEditWindow *window,
+                          GSList        *locations,
+                          const char    *message)
+{
+    LspWindowPlugin *stuff = window_plugin_of (window);
+    GSList *l;
+
+    if (!stuff || !stuff->references)
+    {
+        lsp_locations_free (locations);
+        return;
+    }
+
+    moo_line_view_clear (stuff->references);
+
+    if (!locations)
+        moo_line_view_write_line (stuff->references, message, -1,
+                                  stuff->reference_none_tag);
+
+    for (l = locations; l != NULL; l = l->next)
+    {
+        LspLocation *location = (LspLocation*) l->data;
+        int view_line = moo_line_view_start_line (stuff->references);
+
+        moo_line_view_write (stuff->references, location->display, -1,
+                             stuff->reference_place_tag);
+
+        if (location->text)
+        {
+            moo_line_view_write (stuff->references, "  ", -1, NULL);
+            moo_line_view_write (stuff->references, location->text, -1, NULL);
+        }
+
+        moo_line_view_end_line (stuff->references);
+
+        /* The line owns the location from here, and takes it with it when the
+           pane is cleared or the window closed. */
+        moo_line_view_set_data (stuff->references, view_line, location,
+                                (GDestroyNotify) lsp_location_free);
+        moo_line_view_set_cursor (stuff->references, view_line, MOO_TEXT_CURSOR_LINK);
+    }
+
+    g_slist_free (locations);
+
+    /*
+     * Presented rather than merely filled: nobody opened this pane, and an
+     * answer that arrives where it cannot be seen is the same as no answer.
+     */
+    moo_edit_window_show_pane (window, MOO_LSP_REFERENCES_PANE_ID);
+}
+
+
+static GtkWidget *
+create_references_pane (LspWindowPlugin *stuff)
+{
+    GtkWidget *swin;
+
+    stuff->references = MOO_LINE_VIEW (g_object_new (MOO_TYPE_LINE_VIEW,
+                                                     "highlight-current-line", TRUE,
+                                                     "highlight-current-line-unfocused", TRUE,
+                                                     (const char*) NULL));
+
+    stuff->reference_place_tag = moo_line_view_create_tag (stuff->references, NULL,
+                                                           "weight", PANGO_WEIGHT_BOLD,
+                                                           (const char*) NULL);
+    stuff->reference_none_tag = moo_line_view_create_tag (stuff->references, NULL,
+                                                          "foreground", "#777777",
+                                                          (const char*) NULL);
+
+    g_signal_connect_swapped (stuff->references, "activate",
+                              G_CALLBACK (references_activate), stuff);
+
+    swin = gtk_scrolled_window_new (NULL, NULL);
+    gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (swin), GTK_SHADOW_IN);
+    gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (swin),
+                                    GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+    gtk_container_add (GTK_CONTAINER (swin), GTK_WIDGET (stuff->references));
+    gtk_widget_show_all (swin);
+
+    return swin;
 }
 
 
@@ -819,6 +1046,44 @@ goto_implementation_cb (MooEditWindow *window)
 
 
 static void
+find_references_cb (MooEditWindow *window)
+{
+    lsp_find_references (window, NULL);
+}
+
+
+static void
+rename_cb (MooEditWindow *window)
+{
+    lsp_rename (window, NULL);
+}
+
+
+static void
+format_cb (MooEditWindow *window)
+{
+    lsp_format (window);
+}
+
+
+static void
+show_references_cb (MooEditWindow *window)
+{
+    moo_edit_window_show_pane (window, MOO_LSP_REFERENCES_PANE_ID);
+}
+
+
+static void
+signature_cb (MooEditWindow *window)
+{
+    MooEditView *view = moo_edit_window_get_active_view (window);
+
+    if (view)
+        lsp_signature_start (view, NULL);
+}
+
+
+static void
 show_symbols_cb (MooEditWindow *window)
 {
     moo_edit_window_show_pane (window, MOO_LSP_SYMBOLS_PANE_ID);
@@ -923,6 +1188,14 @@ lsp_window_plugin_create (LspWindowPlugin *stuff)
      */
     g_signal_connect_swapped (swin, "map", G_CALLBACK (queue_pane_update), stuff);
 
+    label = moo_pane_label_new (MOO_STOCK_FIND_IN_FILES, NULL,
+                                _("References"), _("References"));
+    stuff->references_pane = moo_edit_window_add_pane (stuff->window,
+                                                       MOO_LSP_REFERENCES_PANE_ID,
+                                                       create_references_pane (stuff),
+                                                       label, MOO_PANE_POS_BOTTOM);
+    moo_pane_label_free (label);
+
     label = moo_pane_label_new (GTK_STOCK_INDEX, NULL,
                                 _("Symbols"), _("Symbols"));
     stuff->symbols_pane = moo_edit_window_add_pane (stuff->window,
@@ -967,11 +1240,14 @@ lsp_window_plugin_destroy (LspWindowPlugin *stuff)
 
     stuff->output = NULL;
     stuff->pane = NULL;
+    stuff->references = NULL;
+    stuff->references_pane = NULL;
     stuff->symbols = NULL;
     stuff->symbol_store = NULL;
     stuff->symbols_pane = NULL;
 
     moo_edit_window_remove_pane (stuff->window, MOO_LSP_PLUGIN_ID);
+    moo_edit_window_remove_pane (stuff->window, MOO_LSP_REFERENCES_PANE_ID);
     moo_edit_window_remove_pane (stuff->window, MOO_LSP_SYMBOLS_PANE_ID);
 }
 
@@ -992,6 +1268,8 @@ lsp_plugin_init (LspPlugin *plugin)
     moo_prefs_new_key_bool (MOO_LSP_PREFS_DIAGNOSTICS, TRUE);
     moo_prefs_new_key_bool (MOO_LSP_PREFS_COMPLETION, TRUE);
     moo_prefs_new_key_bool (MOO_LSP_PREFS_HOVER, TRUE);
+    moo_prefs_new_key_bool (MOO_LSP_PREFS_SIGNATURE, TRUE);
+    moo_prefs_new_key_bool (MOO_LSP_PREFS_HIGHLIGHT, TRUE);
     moo_prefs_new_key_bool (MOO_LSP_PREFS_DEBUG, FALSE);
     moo_prefs_new_key_int (MOO_LSP_PREFS_SYNC_DELAY, MOO_LSP_SYNC_DELAY_DEFAULT);
 
@@ -1009,6 +1287,30 @@ lsp_plugin_init (LspPlugin *plugin)
                                  "tooltip", _("Go to the definition of what is under the cursor"),
                                  "default-accel", MOO_EDIT_ACCEL_GO_TO_DEFINITION,
                                  "closure-callback", goto_definition_cb,
+                                 nullptr);
+
+    moo_window_class_new_action (klass, "FindReferences", NULL,
+                                 "display-name", _("Find References"),
+                                 "label", _("Find _References"),
+                                 "tooltip", _("List every use of what is under the cursor"),
+                                 "stock-id", MOO_STOCK_FIND_IN_FILES,
+                                 "default-accel", MOO_EDIT_ACCEL_FIND_REFERENCES,
+                                 "closure-callback", find_references_cb,
+                                 nullptr);
+
+    moo_window_class_new_action (klass, "LspFormat", NULL,
+                                 "display-name", _("Format Document"),
+                                 "label", _("_Format Document"),
+                                 "tooltip", _("Let the language server lay the document out"),
+                                 "closure-callback", format_cb,
+                                 nullptr);
+
+    moo_window_class_new_action (klass, "RenameSymbol", NULL,
+                                 "display-name", _("Rename"),
+                                 "label", _("_Rename..."),
+                                 "tooltip", _("Rename what is under the cursor everywhere"),
+                                 "default-accel", MOO_EDIT_ACCEL_RENAME,
+                                 "closure-callback", rename_cb,
                                  nullptr);
 
     moo_window_class_new_action (klass, "GoToTypeDefinition", NULL,
@@ -1041,12 +1343,32 @@ lsp_plugin_init (LspPlugin *plugin)
                                    "closure-callback", goto_definition_doc_cb,
                                    (char*) 0);
 
+        moo_edit_class_new_action (edit_klass, "LspFindReferences",
+                                   "display-name", _("Find References"),
+                                   "label", _("Find _References"),
+                                   "tooltip", _("List every use of what is under the cursor"),
+                                   "closure-callback", find_references_doc_cb,
+                                   (char*) 0);
+
+        moo_edit_class_new_action (edit_klass, "LspRename",
+                                   "display-name", _("Rename"),
+                                   "label", _("_Rename..."),
+                                   "tooltip", _("Rename what is under the cursor everywhere"),
+                                   "closure-callback", rename_doc_cb,
+                                   (char*) 0);
+
         if (doc_xml)
         {
             plugin->doc_ui_merge_id = moo_ui_xml_new_merge_id (doc_xml);
             moo_ui_xml_add_item (doc_xml, plugin->doc_ui_merge_id,
                                  "Editor/Popup/PopupStart",
                                  "LspGoToDefinition", "LspGoToDefinition", -1);
+            moo_ui_xml_add_item (doc_xml, plugin->doc_ui_merge_id,
+                                 "Editor/Popup/PopupStart",
+                                 "LspFindReferences", "LspFindReferences", -1);
+            moo_ui_xml_add_item (doc_xml, plugin->doc_ui_merge_id,
+                                 "Editor/Popup/PopupStart",
+                                 "LspRename", "LspRename", -1);
         }
 
         g_type_class_unref (edit_klass);
@@ -1076,6 +1398,22 @@ lsp_plugin_init (LspPlugin *plugin)
                                  "closure-callback", complete_cb,
                                  nullptr);
 
+    moo_window_class_new_action (klass, "LspSignature", NULL,
+                                 "display-name", _("Parameter Hints"),
+                                 "label", _("_Parameter Hints"),
+                                 "tooltip", _("Show what the call being typed takes"),
+                                 "default-accel", MOO_EDIT_ACCEL_SIGNATURE,
+                                 "closure-callback", signature_cb,
+                                 nullptr);
+
+    moo_window_class_new_action (klass, "ShowLspReferences", NULL,
+                                 "display-name", _("References"),
+                                 "label", _("References"),
+                                 "tooltip", _("Show the references pane"),
+                                 "stock-id", MOO_STOCK_FIND_IN_FILES,
+                                 "closure-callback", show_references_cb,
+                                 nullptr);
+
     moo_window_class_new_action (klass, "ShowLspSymbols", NULL,
                                  "display-name", _("Symbols"),
                                  "label", _("Symbols"),
@@ -1092,6 +1430,9 @@ lsp_plugin_init (LspPlugin *plugin)
                              "ShowLspDiagnostics", "ShowLspDiagnostics", -1);
         moo_ui_xml_add_item (xml, plugin->ui_merge_id,
                              "Editor/Menubar/Tools",
+                             "ShowLspReferences", "ShowLspReferences", -1);
+        moo_ui_xml_add_item (xml, plugin->ui_merge_id,
+                             "Editor/Menubar/Tools",
                              "ShowLspSymbols", "ShowLspSymbols", -1);
         moo_ui_xml_add_item (xml, plugin->ui_merge_id,
                              "Editor/Menubar/Tools",
@@ -1104,6 +1445,9 @@ lsp_plugin_init (LspPlugin *plugin)
                              "LspComplete", "LspComplete", -1);
         moo_ui_xml_add_item (xml, plugin->ui_merge_id,
                              "Editor/Menubar/Document",
+                             "LspSignature", "LspSignature", -1);
+        moo_ui_xml_add_item (xml, plugin->ui_merge_id,
+                             "Editor/Menubar/Document",
                              "GoToDefinition", "GoToDefinition", -1);
         moo_ui_xml_add_item (xml, plugin->ui_merge_id,
                              "Editor/Menubar/Document",
@@ -1111,6 +1455,15 @@ lsp_plugin_init (LspPlugin *plugin)
         moo_ui_xml_add_item (xml, plugin->ui_merge_id,
                              "Editor/Menubar/Document",
                              "GoToImplementation", "GoToImplementation", -1);
+        moo_ui_xml_add_item (xml, plugin->ui_merge_id,
+                             "Editor/Menubar/Document",
+                             "FindReferences", "FindReferences", -1);
+        moo_ui_xml_add_item (xml, plugin->ui_merge_id,
+                             "Editor/Menubar/Document",
+                             "RenameSymbol", "RenameSymbol", -1);
+        moo_ui_xml_add_item (xml, plugin->ui_merge_id,
+                             "Editor/Menubar/Document",
+                             "LspFormat", "LspFormat", -1);
     }
 
     g_type_class_unref (klass);
@@ -1129,15 +1482,22 @@ lsp_plugin_deinit (LspPlugin *plugin)
     MooUiXml *xml = moo_editor_get_ui_xml (editor);
 
     moo_window_class_remove_action (klass, "ShowLspDiagnostics");
+    moo_window_class_remove_action (klass, "ShowLspReferences");
     moo_window_class_remove_action (klass, "ShowLspSymbols");
     moo_window_class_remove_action (klass, "GoToDefinition");
     moo_window_class_remove_action (klass, "GoToTypeDefinition");
     moo_window_class_remove_action (klass, "GoToImplementation");
+    moo_window_class_remove_action (klass, "FindReferences");
+    moo_window_class_remove_action (klass, "RenameSymbol");
+    moo_window_class_remove_action (klass, "LspFormat");
     moo_window_class_remove_action (klass, "LspComplete");
+    moo_window_class_remove_action (klass, "LspSignature");
     moo_window_class_remove_action (klass, "LspEditConfig");
     moo_window_class_remove_action (klass, "LspRestartServers");
 
     lsp_completion_cancel ();
+    lsp_signature_cancel ();
+    lsp_highlight_clear ();
     lsp_navigate_reset ();
 
     if (plugin->ui_merge_id)
@@ -1149,6 +1509,8 @@ lsp_plugin_deinit (LspPlugin *plugin)
         MooUiXml *doc_xml = moo_editor_get_doc_ui_xml (editor);
 
         moo_edit_class_remove_action (edit_klass, "LspGoToDefinition");
+        moo_edit_class_remove_action (edit_klass, "LspFindReferences");
+        moo_edit_class_remove_action (edit_klass, "LspRename");
 
         if (plugin->doc_ui_merge_id && doc_xml)
             moo_ui_xml_remove_ui (doc_xml, plugin->doc_ui_merge_id);

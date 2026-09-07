@@ -51,7 +51,12 @@ DEFAULT_CAPABILITIES = {
     "typeDefinitionProvider": True,
     "implementationProvider": True,
     "documentSymbolProvider": True,
+    "documentHighlightProvider": True,
+    "documentFormattingProvider": True,
+    "referencesProvider": True,
+    "renameProvider": True,
     "hoverProvider": True,
+    "signatureHelpProvider": {"triggerCharacters": ["(", ","]},
     "completionProvider": {"triggerCharacters": ["."]},
 }
 

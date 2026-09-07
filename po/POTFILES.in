@@ -63,9 +63,12 @@ src/plugins/moofind.cpp
 src/plugins/support/mooeditwindowoutput.cpp
 src/plugins/lsp/lsp-completion.cpp
 src/plugins/lsp/lsp-diagnostics.cpp
+src/plugins/lsp/lsp-edits.cpp
 src/plugins/lsp/lsp-plugin.cpp
 src/plugins/lsp/lsp-server.cpp
+src/plugins/lsp/lsp-signature.cpp
 src/plugins/lsp/lsp-prefs.cpp
+src/plugins/lsp/lsp-references.cpp
 src/plugins/lsp/lsp-symbols.cpp
 [type: gettext/glade]src/plugins/lsp/ui/lsp-prefs.ui
 src/plugins/terminal/terminal-colors.cpp

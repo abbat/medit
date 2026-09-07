@@ -187,6 +187,42 @@ def text_of(node):
         return ""
 
 
+def attributes_of(node, offset):
+    """The text attributes at one character of a node, as a dict.
+
+    What a GtkTextTag applied to that character says about it, which is the
+    only way a test can see a tag at all: a tag has no name, no position and no
+    accessible, and the only other evidence of one is the colour of pixels --
+    which depends on the theme, the font and where the line is drawn.
+
+    Only what is actually set on that character: asked for the defaults as
+    well, at-spi answers with the colours and the font of the widget itself, and
+    then every character in the document has a background and nothing can be
+    told from having one.
+
+    at-spi has offered this under two names; the older one hands back the
+    attributes as one semicolon-separated string.
+    """
+    text = node.queryText()
+
+    try:
+        pairs, _start, _end = text.getAttributeRun(offset, False)
+    except Exception:
+        raw, _start, _end = text.getAttributes(offset)
+        pairs = raw.split(";")
+
+    found = {}
+
+    for pair in pairs:
+        name, _, value = pair.partition(":")
+        name = name.strip()
+
+        if name:
+            found[name] = value.strip()
+
+    return found
+
+
 # A bare URL in a label's text, for the GTK+2 fallback below. The trailing
 # class excludes the punctuation a sentence puts after a URL.
 _URL = re.compile(r"https?://[^\s<>]+?(?=[\s<>]|[.,;:)]?$)", re.MULTILINE)

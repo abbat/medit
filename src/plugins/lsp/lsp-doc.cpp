@@ -470,3 +470,20 @@ lsp_doc_get_uri (LspDoc *ldoc)
     g_return_val_if_fail (ldoc != NULL, NULL);
     return ldoc->uri;
 }
+
+
+char *
+lsp_path_from_uri (const char *uri)
+{
+    GFile *file;
+    char *path;
+
+    if (!uri || !uri[0])
+        return NULL;
+
+    file = g_file_new_for_uri (uri);
+    path = g_file_get_path (file);
+    moo_file_free (file);
+
+    return path;
+}

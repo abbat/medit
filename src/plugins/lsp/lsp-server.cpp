@@ -864,6 +864,77 @@ client_capabilities (void)
     }
 
     {
+        JsonObject *highlight = json_object_new ();
+
+        lsp_json_set_bool (highlight, "dynamicRegistration", FALSE);
+        lsp_json_set_object (text_document, "documentHighlight", highlight);
+    }
+
+    {
+        JsonObject *signature = json_object_new ();
+        JsonObject *information = json_object_new ();
+        JsonObject *parameter = json_object_new ();
+        static const char *doc_formats[] = { "plaintext", NULL };
+
+        /*
+         * labelOffsetSupport is the half of this worth saying out loud: a
+         * parameter named by offsets into the signature is unusable to a
+         * client that cannot count UTF-16 units, and a server told nothing
+         * sends the text of the parameter instead and hopes it occurs once.
+         */
+        lsp_json_set_bool (parameter, "labelOffsetSupport", TRUE);
+
+        lsp_json_set_array (information, "documentationFormat",
+                            lsp_json_string_array (doc_formats));
+        lsp_json_set_object (information, "parameterInformation", parameter);
+        lsp_json_set_bool (information, "activeParameterSupport", TRUE);
+
+        lsp_json_set_bool (signature, "dynamicRegistration", FALSE);
+        lsp_json_set_bool (signature, "contextSupport", TRUE);
+        lsp_json_set_object (signature, "signatureInformation", information);
+
+        lsp_json_set_object (text_document, "signatureHelp", signature);
+    }
+
+    {
+        JsonObject *references = json_object_new ();
+        JsonObject *rename = json_object_new ();
+
+        lsp_json_set_bool (references, "dynamicRegistration", FALSE);
+        lsp_json_set_object (text_document, "references", references);
+
+        /*
+         * No prepareSupport: that is the second round trip which asks whether
+         * a position can be renamed at all and what the old name is, and medit
+         * takes the old name off the buffer instead. A server told otherwise
+         * may answer the rename itself with an error, which is said out loud.
+         */
+        lsp_json_set_bool (rename, "dynamicRegistration", FALSE);
+        lsp_json_set_bool (rename, "prepareSupport", FALSE);
+        lsp_json_set_object (text_document, "rename", rename);
+    }
+
+    {
+        JsonObject *workspace = json_object_new ();
+        JsonObject *workspace_edit = json_object_new ();
+
+        /*
+         * A rename comes back as a WorkspaceEdit, and the "changes" half of
+         * one is all medit does: documentChanges also carries creating,
+         * renaming and deleting files, which is not something an editor should
+         * do on a server's say-so. Servers send it anyway, and it is read when
+         * they do -- claiming it here would only ask for the file operations
+         * as well. applyEdit is the server asking to change the workspace on
+         * its own initiative, which nothing here answers.
+         */
+        lsp_json_set_bool (workspace_edit, "documentChanges", FALSE);
+        lsp_json_set_object (workspace, "workspaceEdit", workspace_edit);
+        lsp_json_set_bool (workspace, "applyEdit", FALSE);
+
+        lsp_json_set_object (capabilities, "workspace", workspace);
+    }
+
+    {
         JsonObject *document_symbol = json_object_new ();
 
         lsp_json_set_bool (document_symbol, "dynamicRegistration", FALSE);

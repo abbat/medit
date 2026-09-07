@@ -17,6 +17,7 @@
 #define MOO_LSP_PLUGIN_H
 
 #include "mooedit/mooplugin.h"
+#include "mooedit/mooeditwindow.h"
 
 G_BEGIN_DECLS
 
@@ -37,6 +38,8 @@ G_BEGIN_DECLS
 #define MOO_LSP_PREFS_DIAGNOSTICS   "Plugins/Lsp/diagnostics"
 #define MOO_LSP_PREFS_COMPLETION    "Plugins/Lsp/completion"
 #define MOO_LSP_PREFS_HOVER         "Plugins/Lsp/hover"
+#define MOO_LSP_PREFS_SIGNATURE     "Plugins/Lsp/signature"
+#define MOO_LSP_PREFS_HIGHLIGHT     "Plugins/Lsp/highlight"
 #define MOO_LSP_PREFS_SYNC_DELAY    "Plugins/Lsp/sync_delay"
 #define MOO_LSP_PREFS_DEBUG         "Plugins/Lsp/debug"
 
@@ -59,6 +62,17 @@ void        _moo_lsp_edit_config    (GtkWidget      *parent);
 
 /* Makes a change of preferences take effect on what is already running. */
 void        _moo_lsp_apply_prefs    (void);
+
+/*
+ * Lists those places in the References pane of that window and presents it;
+ * an empty list is shown as the message instead, a pane with nothing in it
+ * being what a question nobody asked looks like. Takes ownership of the list,
+ * whose elements are LspLocation -- named as a GSList here because this header
+ * is included where json-glib is not.
+ */
+void        _moo_lsp_show_references (MooEditWindow *window,
+                                      GSList        *locations,
+                                      const char    *message);
 
 G_END_DECLS
 

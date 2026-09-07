@@ -9,6 +9,10 @@ target_sources(medit PRIVATE
     lsp-diagnostics.h
     lsp-doc.cpp
     lsp-doc.h
+    lsp-edits.cpp
+    lsp-edits.h
+    lsp-highlight.cpp
+    lsp-highlight.h
     lsp-json.cpp
     lsp-json.h
     lsp-navigate.cpp
@@ -18,8 +22,12 @@ target_sources(medit PRIVATE
     lsp-prefs.cpp
     lsp-plugin.cpp
     lsp-plugin.h
+    lsp-references.cpp
+    lsp-references.h
     lsp-server.cpp
     lsp-server.h
+    lsp-signature.cpp
+    lsp-signature.h
     lsp-symbols.cpp
     lsp-tests.cpp
     lsp-tests.h

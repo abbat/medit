@@ -77,6 +77,13 @@ gboolean    lsp_position_to_iter    (GtkTextBuffer       *buffer,
 /* The languageId the protocol expects for a medit language id. */
 const char *lsp_language_id         (const char *moo_lang_id);
 
+/*
+ * The local path a document uri names, or NULL when it names none: a server
+ * may answer with a uri for a document that is not a file at all, and there
+ * is nothing to open in that.
+ */
+char       *lsp_path_from_uri       (const char *uri);
+
 G_END_DECLS
 
 #endif /* MOO_LSP_DOC_H */

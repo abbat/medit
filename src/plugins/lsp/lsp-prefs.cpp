@@ -98,6 +98,12 @@ _moo_lsp_prefs_page (G_GNUC_UNUSED MooPlugin *plugin)
                                  GTK_WIDGET (moo_builder_get (builder, "completion")),
                                  MOO_LSP_PREFS_COMPLETION);
     moo_prefs_page_bind_setting (MOO_PREFS_PAGE (page),
+                                 GTK_WIDGET (moo_builder_get (builder, "signature")),
+                                 MOO_LSP_PREFS_SIGNATURE);
+    moo_prefs_page_bind_setting (MOO_PREFS_PAGE (page),
+                                 GTK_WIDGET (moo_builder_get (builder, "highlight")),
+                                 MOO_LSP_PREFS_HIGHLIGHT);
+    moo_prefs_page_bind_setting (MOO_PREFS_PAGE (page),
                                  GTK_WIDGET (moo_builder_get (builder, "hover")),
                                  MOO_LSP_PREFS_HOVER);
     moo_prefs_page_bind_setting (MOO_PREFS_PAGE (page),

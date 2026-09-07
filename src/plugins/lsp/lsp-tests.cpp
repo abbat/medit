@@ -25,7 +25,10 @@
  *
  * The other half is the shape of a reply. documentSymbol comes back as a flat
  * SymbolInformation list from older servers and a nested DocumentSymbol tree
- * from newer ones; a UI test can drive one of those per run, and both are here
+ * from newer ones; a place is a Location from one server and a LocationLink
+ * from another; a rename is a WorkspaceEdit written as "changes" or as
+ * "documentChanges", and its edits have to come out in the order they can be
+ * applied in. A UI test can drive one shape per run, and all of them are here
  * in a millisecond.
  *
  * No display is needed for any of it: GtkTextBuffer and GtkTreeStore are
@@ -40,7 +43,11 @@
 #include "plugins/lsp/lsp-config.h"
 #include "plugins/lsp/lsp-diagnostics.h"
 #include "plugins/lsp/lsp-doc.h"
+#include "plugins/lsp/lsp-highlight.h"
 #include "plugins/lsp/lsp-json.h"
+#include "plugins/lsp/lsp-references.h"
+#include "plugins/lsp/lsp-edits.h"
+#include "plugins/lsp/lsp-signature.h"
 #include "plugins/lsp/lsp-symbols.h"
 
 #include <gtk/gtk.h>
@@ -611,6 +618,517 @@ test_completion_word_start (void)
 }
 
 
+/* -------------------------------------------------------------------------
+ * The places a question about a position is answered with
+ */
+
+static GSList *
+locations_of (const char *json)
+{
+    GError *error = NULL;
+    JsonNode *node = lsp_json_parse (json, -1, &error);
+    GSList *found;
+
+    g_assert_no_error (error);
+    g_assert_nonnull (node);
+
+    found = lsp_locations_parse (node, LSP_POSITION_ENCODING_UTF16);
+
+    json_node_unref (node);
+
+    return found;
+}
+
+
+static void
+check_location (GSList     *locations,
+                guint       index,
+                const char *path,
+                int         line,
+                int         character)
+{
+    LspLocation *location = (LspLocation*) g_slist_nth_data (locations, index);
+
+    g_assert_nonnull (location);
+    g_assert_cmpstr (location->path, ==, path);
+    g_assert_cmpint (location->line, ==, line);
+    g_assert_cmpint (location->character, ==, character);
+}
+
+
+static void
+test_locations_array (void)
+{
+    /* What a references reply is: an array of Location, in the server's own
+       order, which is the order the pane lists them in. */
+    static const char *reply =
+        "[{\"uri\": \"file:///tmp/a.txt\","
+        "  \"range\": {\"start\": {\"line\": 0, \"character\": 0},"
+        "              \"end\": {\"line\": 0, \"character\": 5}}},"
+        " {\"uri\": \"file:///tmp/b.txt\","
+        "  \"range\": {\"start\": {\"line\": 2, \"character\": 4},"
+        "              \"end\": {\"line\": 2, \"character\": 9}}}]";
+
+    GSList *found = locations_of (reply);
+
+    g_assert_cmpuint (g_slist_length (found), ==, 2);
+    check_location (found, 0, "/tmp/a.txt", 0, 0);
+    check_location (found, 1, "/tmp/b.txt", 2, 4);
+
+    lsp_locations_free (found);
+}
+
+
+static void
+test_locations_single (void)
+{
+    /* A definition reply is often one object rather than an array of one, and
+       it is the same thing: one place. */
+    static const char *reply =
+        "{\"uri\": \"file:///tmp/a.txt\","
+        " \"range\": {\"start\": {\"line\": 3, \"character\": 2},"
+        "             \"end\": {\"line\": 3, \"character\": 7}}}";
+
+    GSList *found = locations_of (reply);
+
+    g_assert_cmpuint (g_slist_length (found), ==, 1);
+    check_location (found, 0, "/tmp/a.txt", 3, 2);
+
+    lsp_locations_free (found);
+}
+
+
+static void
+test_locations_link (void)
+{
+    /* A LocationLink, which is what linkSupport asks servers for: the target
+       is named differently, and the selection range -- the name itself -- is
+       what to go to, the whole range being the entire definition. */
+    static const char *reply =
+        "[{\"targetUri\": \"file:///tmp/a.txt\","
+        "  \"targetRange\": {\"start\": {\"line\": 4, \"character\": 0},"
+        "                    \"end\": {\"line\": 9, \"character\": 1}},"
+        "  \"targetSelectionRange\": {\"start\": {\"line\": 4, \"character\": 6},"
+        "                             \"end\": {\"line\": 4, \"character\": 11}}}]";
+
+    GSList *found = locations_of (reply);
+
+    g_assert_cmpuint (g_slist_length (found), ==, 1);
+    check_location (found, 0, "/tmp/a.txt", 4, 6);
+
+    lsp_locations_free (found);
+}
+
+
+static void
+test_locations_nothing (void)
+{
+    /* Null is what a server that found nothing answers, an empty array is
+       what another one answers, and a uri that names no file on this machine
+       is a place nothing can be done with. */
+    GSList *found = locations_of ("null");
+
+    g_assert_null (found);
+
+    found = locations_of ("[]");
+    g_assert_null (found);
+
+    found = locations_of ("[{\"uri\": \"untitled:Untitled-1\","
+                          "  \"range\": {\"start\": {\"line\": 0, \"character\": 0},"
+                          "              \"end\": {\"line\": 0, \"character\": 1}}}]");
+    g_assert_null (found);
+}
+
+
+/* -------------------------------------------------------------------------
+ * The edits a rename comes back as
+ */
+
+static GSList *
+edits_of (const char *json)
+{
+    GError *error = NULL;
+    JsonNode *node = lsp_json_parse (json, -1, &error);
+    GSList *edits;
+
+    g_assert_no_error (error);
+    g_assert_nonnull (node);
+
+    edits = lsp_workspace_edit_parse (node);
+
+    json_node_unref (node);
+
+    return edits;
+}
+
+
+static void
+check_edit (GSList     *edits,
+            guint       index,
+            const char *path,
+            int         line,
+            int         character,
+            const char *new_text)
+{
+    LspTextEdit *edit = (LspTextEdit*) g_slist_nth_data (edits, index);
+
+    g_assert_nonnull (edit);
+    g_assert_cmpstr (edit->path, ==, path);
+    g_assert_cmpint (edit->start_line, ==, line);
+    g_assert_cmpint (edit->start_character, ==, character);
+    g_assert_cmpstr (edit->new_text, ==, new_text);
+}
+
+
+static void
+test_workspace_edit_order (void)
+{
+    /*
+     * Three edits of one file, listed by the server in the order it found
+     * them, which is the order they must not be applied in: replacing the
+     * first name on a line moves every range after it on that line, and the
+     * second edit would then land in the wrong place -- or, with a longer
+     * name, over the text that follows.
+     */
+    static const char *reply =
+        "{\"changes\": {\"file:///tmp/a.txt\": ["
+        "  {\"range\": {\"start\": {\"line\": 0, \"character\": 0},"
+        "               \"end\": {\"line\": 0, \"character\": 5}},"
+        "   \"newText\": \"omega\"},"
+        "  {\"range\": {\"start\": {\"line\": 2, \"character\": 3},"
+        "               \"end\": {\"line\": 2, \"character\": 8}},"
+        "   \"newText\": \"omega\"},"
+        "  {\"range\": {\"start\": {\"line\": 0, \"character\": 11},"
+        "               \"end\": {\"line\": 0, \"character\": 16}},"
+        "   \"newText\": \"omega\"}]}}";
+
+    GSList *edits = edits_of (reply);
+
+    g_assert_cmpuint (g_slist_length (edits), ==, 3);
+    check_edit (edits, 0, "/tmp/a.txt", 2, 3, "omega");
+    check_edit (edits, 1, "/tmp/a.txt", 0, 11, "omega");
+    check_edit (edits, 2, "/tmp/a.txt", 0, 0, "omega");
+
+    lsp_text_edits_free (edits);
+}
+
+
+static void
+test_workspace_edit_files (void)
+{
+    /* Two files, whose edits have to come out grouped: each file is opened
+       once and changed in one undo step, and that is only true of a list
+       where a file's edits are together. */
+    static const char *reply =
+        "{\"changes\": {"
+        "  \"file:///tmp/b.txt\": ["
+        "    {\"range\": {\"start\": {\"line\": 1, \"character\": 0},"
+        "                 \"end\": {\"line\": 1, \"character\": 5}},"
+        "     \"newText\": \"omega\"}],"
+        "  \"file:///tmp/a.txt\": ["
+        "    {\"range\": {\"start\": {\"line\": 0, \"character\": 0},"
+        "                 \"end\": {\"line\": 0, \"character\": 5}},"
+        "     \"newText\": \"omega\"},"
+        "    {\"range\": {\"start\": {\"line\": 3, \"character\": 2},"
+        "                 \"end\": {\"line\": 3, \"character\": 7}},"
+        "     \"newText\": \"omega\"}]}}";
+
+    GSList *edits = edits_of (reply);
+
+    g_assert_cmpuint (g_slist_length (edits), ==, 3);
+    check_edit (edits, 0, "/tmp/a.txt", 3, 2, "omega");
+    check_edit (edits, 1, "/tmp/a.txt", 0, 0, "omega");
+    check_edit (edits, 2, "/tmp/b.txt", 1, 0, "omega");
+
+    lsp_text_edits_free (edits);
+}
+
+
+static void
+test_workspace_edit_document_changes (void)
+{
+    /*
+     * The other shape. medit asks for "changes" -- it does nothing with the
+     * file operations documentChanges can carry -- and servers send this one
+     * anyway, so it is read too. A textDocument here also carries a version,
+     * which is ignored: the document medit would check it against is the one
+     * on screen, and it has not changed since the request went out.
+     */
+    static const char *reply =
+        "{\"documentChanges\": ["
+        "  {\"textDocument\": {\"uri\": \"file:///tmp/a.txt\", \"version\": 3},"
+        "   \"edits\": ["
+        "     {\"range\": {\"start\": {\"line\": 0, \"character\": 0},"
+        "                  \"end\": {\"line\": 0, \"character\": 5}},"
+        "      \"newText\": \"omega\"},"
+        "     {\"range\": {\"start\": {\"line\": 0, \"character\": 11},"
+        "                  \"end\": {\"line\": 0, \"character\": 16}},"
+        "      \"newText\": \"omega\"}]},"
+        "  {\"kind\": \"rename\", \"oldUri\": \"file:///tmp/a.txt\","
+        "   \"newUri\": \"file:///tmp/c.txt\"}]}";
+
+    GSList *edits = edits_of (reply);
+
+    /* The file operation is not one of them. */
+    g_assert_cmpuint (g_slist_length (edits), ==, 2);
+    check_edit (edits, 0, "/tmp/a.txt", 0, 11, "omega");
+    check_edit (edits, 1, "/tmp/a.txt", 0, 0, "omega");
+
+    lsp_text_edits_free (edits);
+}
+
+
+static void
+test_workspace_edit_nothing (void)
+{
+    /* A server that cannot rename what was asked about answers null, and one
+       that can rename it into itself answers an edit with nothing in it. */
+    g_assert_null (edits_of ("null"));
+    g_assert_null (edits_of ("{}"));
+    g_assert_null (edits_of ("{\"changes\": {}}"));
+}
+
+
+/* -------------------------------------------------------------------------
+ * The signature of a call, as the popup shows it
+ */
+
+static char *
+markup_of (const char *json)
+{
+    GError *error = NULL;
+    JsonNode *node = lsp_json_parse (json, -1, &error);
+    char *markup;
+
+    g_assert_no_error (error);
+    g_assert_nonnull (node);
+
+    markup = lsp_signature_markup (node);
+
+    json_node_unref (node);
+
+    return markup;
+}
+
+
+static void
+test_signature_active_parameter (void)
+{
+    /*
+     * The parameter being typed is emboldened inside the signature, and the
+     * line under it is that parameter's own documentation. Which parameter it
+     * is comes from the server: the client sends a position and is told.
+     */
+    static const char *reply =
+        "{\"signatures\": [{\"label\": \"add(alpha: int, beta: int) -> int\","
+        "  \"documentation\": \"Adds two numbers\","
+        "  \"parameters\": [{\"label\": \"alpha: int\","
+        "                    \"documentation\": \"the number to start from\"},"
+        "                   {\"label\": \"beta: int\","
+        "                    \"documentation\": \"the number to add\"}]}],"
+        " \"activeSignature\": 0, \"activeParameter\": 1}";
+
+    char *markup = markup_of (reply);
+
+    g_assert_cmpstr (markup, ==,
+                     /* "&gt;" because everything the server sent is escaped:
+                        what pango is handed is markup, and a signature full
+                        of arrows and templates is not. */
+                     "add(alpha: int, <b>beta: int</b>) -&gt; int\n"
+                     "<span foreground=\"#888888\">the number to add</span>");
+
+    g_free (markup);
+}
+
+
+static void
+test_signature_offsets (void)
+{
+    /*
+     * A parameter label may be a pair of offsets into the signature instead of
+     * the text of it, and the offsets are UTF-16 code units like every other
+     * position the protocol sends. The emoji in the name is one character and
+     * two of those, so a client that counted characters would embolden one
+     * character too few and cut the label in half.
+     */
+    static const char *reply =
+        "{\"signatures\": [{\"label\": \"f(\xf0\x9f\x98\x80x: int, y: int)\","
+        "  \"parameters\": [{\"label\": [2, 10]}, {\"label\": [12, 18]}]}],"
+        " \"activeParameter\": 1}";
+
+    char *markup = markup_of (reply);
+
+    g_assert_cmpstr (markup, ==, "f(\xf0\x9f\x98\x80x: int, <b>y: int</b>)");
+
+    g_free (markup);
+}
+
+
+static void
+test_signature_escaping (void)
+{
+    /* A C++ signature is mostly punctuation pango would read as markup. */
+    static const char *reply =
+        "{\"signatures\": [{\"label\": \"sort(std::vector<int>& v, bool a && b)\","
+        "  \"parameters\": [{\"label\": \"std::vector<int>& v\"}]}],"
+        " \"activeParameter\": 0}";
+
+    char *markup = markup_of (reply);
+
+    g_assert_cmpstr (markup, ==,
+                     "sort(<b>std::vector&lt;int&gt;&amp; v</b>, bool a &amp;&amp; b)");
+
+    g_free (markup);
+}
+
+
+static void
+test_signature_choices (void)
+{
+    /*
+     * Three things a server decides and the client only reports: which of
+     * several overloads is the active one, that a signature's own
+     * activeParameter wins over the one for the whole reply, and that
+     * documentation may arrive as a MarkupContent rather than as a string.
+     */
+    static const char *reply =
+        "{\"signatures\": ["
+        "   {\"label\": \"f(a)\", \"parameters\": [{\"label\": \"a\"}]},"
+        "   {\"label\": \"f(a, b)\", \"activeParameter\": 1,"
+        "    \"documentation\": {\"kind\": \"plaintext\", \"value\": \"two of them\"},"
+        "    \"parameters\": [{\"label\": \"a\"}, {\"label\": \"b\"}]}],"
+        " \"activeSignature\": 1, \"activeParameter\": 0}";
+
+    char *markup = markup_of (reply);
+
+    /* The second signature, its own second parameter, and the signature's
+       documentation, that parameter having none of its own. */
+    g_assert_cmpstr (markup, ==,
+                     "f(a, <b>b</b>)\n"
+                     "<span foreground=\"#888888\">two of them</span>");
+
+    g_free (markup);
+}
+
+
+static void
+test_signature_nothing (void)
+{
+    char *markup;
+
+    /* A server with nothing to say answers one of these three, and none of
+       them is a popup. */
+    g_assert_null (markup_of ("null"));
+    g_assert_null (markup_of ("{\"signatures\": []}"));
+    g_assert_null (markup_of ("{\"signatures\": [{\"label\": \"\"}]}"));
+
+    /* An activeParameter that names no parameter -- past the end of the list,
+       or a call with none -- is a signature with nothing emboldened, not a
+       reason to show nothing. */
+    markup = markup_of ("{\"signatures\": [{\"label\": \"f(a)\","
+                        "  \"parameters\": [{\"label\": \"a\"}]}],"
+                        " \"activeParameter\": 7}");
+
+    g_assert_cmpstr (markup, ==, "f(a)");
+    g_free (markup);
+
+    markup = markup_of ("{\"signatures\": [{\"label\": \"f()\"}]}");
+
+    g_assert_cmpstr (markup, ==, "f()");
+    g_free (markup);
+}
+
+
+/* -------------------------------------------------------------------------
+ * The other uses of what the cursor is in
+ */
+
+static void
+test_highlight_kinds (void)
+{
+    /*
+     * The kind is what tells a place a symbol is written to from a place it is
+     * read from, and the two are marked differently. A server that sends none
+     * means Text, which is the specification's own default rather than a
+     * guess made here.
+     */
+    static const char *reply =
+        "[{\"range\": {\"start\": {\"line\": 0, \"character\": 0},"
+        "             \"end\": {\"line\": 0, \"character\": 5}}, \"kind\": 2},"
+        " {\"range\": {\"start\": {\"line\": 1, \"character\": 6},"
+        "             \"end\": {\"line\": 1, \"character\": 11}}, \"kind\": 3},"
+        " {\"range\": {\"start\": {\"line\": 2, \"character\": 0},"
+        "             \"end\": {\"line\": 2, \"character\": 5}}}]";
+
+    GError *error = NULL;
+    JsonNode *node = lsp_json_parse (reply, -1, &error);
+    GSList *found;
+    LspHighlight *third;
+
+    g_assert_no_error (error);
+    found = lsp_highlight_parse (node);
+
+    g_assert_cmpuint (g_slist_length (found), ==, 3);
+    g_assert_cmpint (((LspHighlight*) found->data)->kind, ==, 2);
+    g_assert_cmpint (((LspHighlight*) found->data)->start_character, ==, 0);
+    g_assert_cmpint (((LspHighlight*) found->next->data)->kind, ==, 3);
+
+    third = (LspHighlight*) found->next->next->data;
+    g_assert_cmpint (third->kind, ==, 1);
+    g_assert_cmpint (third->start_line, ==, 2);
+    g_assert_cmpint (third->end_character, ==, 5);
+
+    lsp_highlight_free (found);
+    json_node_unref (node);
+}
+
+
+static void
+test_highlight_tags (void)
+{
+    /*
+     * Which tag a kind is drawn with: a place a symbol is written to is not a
+     * place it is read from, and the two are marked differently.
+     *
+     * The names rather than the tags, because the tags cannot be made here.
+     * These tests run before gtk_init() and need no display -- a GtkTextBuffer
+     * and a GtkTreeStore are objects, and both are built above -- but a
+     * GtkTextTag is not: its class installs properties of gdk's colour types,
+     * and without gdk initialised that is a fatal critical from
+     * g_param_spec_boxed(). Where the tags land is what the UI test sees.
+     */
+    g_assert_cmpstr (lsp_highlight_tag_name (2), ==, LSP_HIGHLIGHT_TAG_READ);
+    g_assert_cmpstr (lsp_highlight_tag_name (3), ==, LSP_HIGHLIGHT_TAG_WRITE);
+
+    /* Text, and a kind no version of the protocol has: neither is a write. */
+    g_assert_cmpstr (lsp_highlight_tag_name (1), ==, LSP_HIGHLIGHT_TAG_READ);
+    g_assert_cmpstr (lsp_highlight_tag_name (99), ==, LSP_HIGHLIGHT_TAG_READ);
+}
+
+
+static void
+test_highlight_nothing (void)
+{
+    GError *error = NULL;
+    JsonNode *node = lsp_json_parse ("null", -1, &error);
+
+    g_assert_no_error (error);
+    g_assert_null (lsp_highlight_parse (node));
+    json_node_unref (node);
+
+    node = lsp_json_parse ("[]", -1, &error);
+    g_assert_no_error (error);
+    g_assert_null (lsp_highlight_parse (node));
+    json_node_unref (node);
+
+    /* A range that is not one is a highlight nothing can be put on. */
+    node = lsp_json_parse ("[{\"kind\": 2}]", -1, &error);
+    g_assert_no_error (error);
+    g_assert_null (lsp_highlight_parse (node));
+    json_node_unref (node);
+}
+
+
 void
 _moo_lsp_add_unit_tests (void)
 {
@@ -630,6 +1148,26 @@ _moo_lsp_add_unit_tests (void)
     g_test_add_func ("/lsp/symbols/flat", test_symbols_flat);
     g_test_add_func ("/lsp/symbols/positions", test_symbols_positions);
     g_test_add_func ("/lsp/symbols/empty", test_symbols_empty);
+
+    g_test_add_func ("/lsp/locations/array", test_locations_array);
+    g_test_add_func ("/lsp/locations/single", test_locations_single);
+    g_test_add_func ("/lsp/locations/link", test_locations_link);
+    g_test_add_func ("/lsp/locations/nothing", test_locations_nothing);
+
+    g_test_add_func ("/lsp/rename/order", test_workspace_edit_order);
+    g_test_add_func ("/lsp/rename/files", test_workspace_edit_files);
+    g_test_add_func ("/lsp/rename/document-changes", test_workspace_edit_document_changes);
+    g_test_add_func ("/lsp/rename/nothing", test_workspace_edit_nothing);
+
+    g_test_add_func ("/lsp/signature/active-parameter", test_signature_active_parameter);
+    g_test_add_func ("/lsp/signature/offsets", test_signature_offsets);
+    g_test_add_func ("/lsp/signature/escaping", test_signature_escaping);
+    g_test_add_func ("/lsp/signature/choices", test_signature_choices);
+    g_test_add_func ("/lsp/signature/nothing", test_signature_nothing);
+
+    g_test_add_func ("/lsp/highlight/kinds", test_highlight_kinds);
+    g_test_add_func ("/lsp/highlight/tags", test_highlight_tags);
+    g_test_add_func ("/lsp/highlight/nothing", test_highlight_nothing);
 }
 
 #endif /* MOO_ENABLE_UNIT_TESTS */

@@ -904,6 +904,14 @@ is for, and a unit test that mocks a toolkit tests the mock.
 and `GtkTreeStore` are objects rather than widgets and work with no `gtk_init()` and no
 `DISPLAY`, which is what makes the text side of the LSP client testable this way.
 
+**A `GtkTextTag` is not one of them.** Its class installs properties of gdk's colour
+types, so creating one before `gtk_init()` is a fatal
+`g_param_spec_boxed: assertion 'G_TYPE_IS_BOXED (boxed_type)' failed` — with a display as
+much as without one, since it is the initialisation that is missing and not the screen.
+Anything about tags therefore splits in two: the part that is a decision (which tag a
+highlight kind gets) is a function returning a name and is tested here, and the part that
+is a buffer wearing tags is a UI test.
+
 **A build with the unit tests keeps its assertions live.** glib's test framework refuses
 to start when it is compiled with `G_DISABLE_ASSERT` — rightly, since `g_assert_cmpint()`
 would be nothing and the suite would report that no-ops passed — so `CompilerFlags.cmake`
@@ -1283,8 +1291,10 @@ a real server answers depends on its version, on the index it built and on the m
 runs on, and the CI container has no server at all.
 
 **Both toolkits**, unlike the terminal — the client is compiled for GTK+2 too, and only
-the four tests that look inside a pane or click a particular word of the document carry
-`# requires: MOO_GTK3`. All of them carry `# requires: MOO_BUILD_LSP`, which is off where
+the tests that need the document's own accessible or a pane's carry
+`# requires: MOO_GTK3`: clicking a particular word, reading the text attributes of one,
+looking inside a pane. Everything that can be asserted from the server's log, from a
+dialog, from a popup window or from the bytes of a saved file runs on both. All of them carry `# requires: MOO_BUILD_LSP`, which is off where
 json-glib is missing.
 
 **The client is off until it is asked for.** It runs other people's programs, so it
@@ -1332,6 +1342,74 @@ it, and says so rather than pretending to check the answer.
 `MEDIT_LSP_DEBUG`) prints every message as `lsp: <argv[0]> <- {...}` — the interpreter or
 the wrapper, never the `id` from `lsp.xml`. It is also read where a server is *started*,
 so ticking it does nothing until the servers are restarted.
+
+**A capability is not always named after its method.** `lsp_can_ask()` derives one from
+the other — `textDocument/definition` asks about `definitionProvider` — and that holds for
+every question the client asks except formatting, whose capability is
+`documentFormattingProvider` and not `formattingProvider`. The symptom is a menu item that
+does nothing and a test that times out waiting for a request that was never sent; the fix
+is to ask `lsp_server_has_provider()` for the name itself, which is what `lsp_format()`
+does and says why.
+
+**A tag is not in the accessibility tree, but it is in the text attributes.** A highlighted
+range, an underlined diagnostic: none of them is a widget, has a name or has a position, so
+`t.attributes(view, offset)` reads what the tags at one character say about it instead —
+which is the only evidence short of reading pixels. Two things about it, both measured.
+The defaults have to be left out (`getAttributeRun(offset, False)`), or at-spi answers with
+the colours of the widget itself and every character in the document has a background. And
+the value is useless on GTK+3: the colour reported for any tag at all is `0,0,0`, so a test
+can say a character is marked and not how. Hence `highlight`, which asserts that the two
+uses are marked and the word between them is not, while which of the two marks a *write*
+gets is a name compared in `lsp-tests.cpp`.
+
+**The signature popup is a window with a label in it**, looked for among the application's
+toplevels the way the completion popup is — and a menu is a toplevel window too, whose
+items gail describes with labels of their own, so the search skips any window with a menu
+anywhere in it. What the popup says is asserted from the text: the signature, and under it
+the documentation of the parameter being typed, which is what changes when the server moves
+`activeParameter` along. That the parameter is emboldened *inside* the signature is a
+markup string in `lsp-tests.cpp`, since pango markup does not survive into the
+accessibility tree.
+
+**The server ends that popup, not the client.** While it is up every keystroke asks again
+and an empty answer is what closes it: the alternative is a client guessing where a call
+ends, and a popup describing a call that stopped being typed three lines ago. With nothing
+open it is the other way round — only the characters the server named in
+`signatureHelpProvider.triggerCharacters` open it, or every key pressed in a document is a
+request. `signature_help` asserts both halves, which is the whole of the policy.
+
+**Renaming and formatting are the two things here that write**, and they are one file
+(`lsp-edits.cpp`) because the reply is the same thing: a rename answers with edits to
+several files, `textDocument/formatting` with edits to one, and applying either is the same
+three rules. The edits of a file go in **back to front**, or the first replacement moves the
+ranges of the ones after it and the second lands in the wrong place; a file that is not open
+is opened rather than written behind the user's back; and a file's edits are one undo step,
+not one per range. Nothing is saved, deliberately -- a rename reaching files the user never
+chose is exactly what should be looked at before it is on disk -- so `rename` saves each
+document by hand and asserts on the bytes in the sandbox (`t.sandbox.read()`), which is also
+what makes it a test both toolkits run: nothing in it reads the document's text out of the
+accessibility tree.
+
+`formatting` is the same test one size smaller, plus the half that is its own: what medit
+*sends*. A formatter told nothing about the editor's settings undoes them, so the request
+carries the document's own indent width and tabs-or-spaces, and the two options that say
+what medit does when it saves. The reply shapes are cheaper to cover in `lsp-tests.cpp` than
+through the UI: a WorkspaceEdit written as `changes` and one written as `documentChanges`
+are one scenario each in a UI run and both in a millisecond there, and so is the ordering.
+
+**The References pane reads the files it lists.** A reply is positions in files, and a
+position on its own says nothing to read; the line comes from the open document when the
+file is open and off the disk when it is not — which is also how the column gets out of the
+server's UTF-16 counting and into the character medit counts everywhere else. The path is
+relative to the project root that server was started for. So `references` has a file it
+never opens and asserts the line that came back from it; GTK+3 only, being a pane.
+
+**A message dialog cannot be looked up by name.** `moo_error_dialog()` produces a
+GtkMessageDialog, which has no title at all and whose role is `alert` rather than `dialog`
+— both toolkits, measured — so `t.dialog("...")` finds nothing. The rename test looks for
+the text of its labels among the toplevels with that role instead. It is worth having: a
+server that refuses a rename has to say so, and a client that swallowed the refusal would
+leave the user with a dialog they filled in and a document nothing happened to.
 
 Three things the tests found, all of them the client's rather than the harness's, and all
 three fixed here — with the test that failed first written down beside each:

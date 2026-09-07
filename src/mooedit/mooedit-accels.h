@@ -60,9 +60,13 @@
 
 /* The key name is case sensitive: "Space" does not parse, "space" does. */
 #define MOO_EDIT_ACCEL_COMPLETE "<Ctrl>space"
+#define MOO_EDIT_ACCEL_SIGNATURE "<Ctrl><Shift>space"
 
 #define MOO_EDIT_ACCEL_TERMINAL "<Ctrl>grave"
 
 #define MOO_EDIT_ACCEL_GO_TO_DEFINITION "F12"
+#define MOO_EDIT_ACCEL_FIND_REFERENCES "<Shift>F12"
+/* F2 is what every editor with this feature uses, and nothing here had it. */
+#define MOO_EDIT_ACCEL_RENAME "F2"
 
 #endif /* MOO_EDIT_ACCELS_H */

@@ -40,6 +40,31 @@
           </packing>
         </child>
         <child>
+          <object class="GtkCheckButton" id="signature">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="label" translatable="yes">Show the _parameters of a call</property>
+            <property name="use_underline">True</property>
+            <property name="draw_indicator">True</property>
+            <property name="tooltip_text" translatable="yes">While the call is being typed, and on Ctrl+Shift+Space.</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="highlight">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="label" translatable="yes">_Mark the other uses of what the cursor is in</property>
+            <property name="use_underline">True</property>
+            <property name="draw_indicator">True</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+          </packing>
+        </child>
+        <child>
           <object class="GtkCheckButton" id="hover">
             <property name="visible">True</property>
             <property name="can_focus">True</property>

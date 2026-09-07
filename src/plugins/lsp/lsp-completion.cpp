@@ -16,6 +16,7 @@
 #include "plugins/lsp/lsp-completion.h"
 #include "plugins/lsp/lsp-manager.h"
 #include "plugins/lsp/lsp-plugin.h"
+#include "plugins/lsp/lsp-signature.h"
 #include "plugins/lsp/lsp-symbols.h"
 
 #include "mooedit/mootextview.h"
@@ -710,6 +711,10 @@ lsp_completion_start (MooEditView *view,
         return;
 
     lsp_completion_cancel ();
+
+    /* The two popups are placed in the same spot, and this is the one being
+       chosen from. */
+    lsp_signature_cancel ();
 
     /* The server must have the text the position refers to. */
     lsp_doc_flush (ldoc);
