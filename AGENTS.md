@@ -1003,6 +1003,12 @@ working around it: its shell is a script called `bash`, which also lets it start
 bash somewhere other than the document's directory, so that "cd went there" is a change
 and not a coincidence.
 
+**Two windows is not a test here.** Without a window manager a second toplevel is placed
+where the first one is, and a click at coordinates AT-SPI gave lands on whichever window X
+happened to stack on top — so there is no test for two terminals in two windows, however
+much the list of live panes deserves one. A test that needs that needs a window manager in
+the sandbox first.
+
 **A colour is the one thing read off the screen.** Nothing in the accessibility tree says
 what colour anything is drawn in, so `input.pixel()` reads a pixel of the corner the shell
 never writes in. It is the only pixel in the tests, and it is there so that the colour

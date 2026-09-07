@@ -30,7 +30,15 @@ def run(t):
     t.check(ask(t, terminal, "pwd", "cwd") == "/",
             "the shell started in / and not in the document's directory")
 
-    t.click(t.item(t.popup(), CD))
+    menu = t.popup()
+
+    # Nothing is selected in the terminal, and Copy says so. The item is made
+    # sensitive from vte_terminal_get_has_selection() every time the menu is
+    # built, which is why the menu is built every time it is opened.
+    t.check(not t.state(t.item(menu, "Copy"), "sensitive"),
+            "Copy is insensitive while nothing is selected")
+
+    t.click(t.item(menu, CD))
     t.check(ask(t, terminal, "pwd", "cwd") == t.sandbox.path("workdir"),
             "cd took the shell to the directory of the document")
 

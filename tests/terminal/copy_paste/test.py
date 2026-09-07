@@ -30,6 +30,13 @@ def run(t):
     t.wait_text(terminal, MARKER, what="the word to copy")
 
     select_word(t, terminal)
+
+    # And with something selected the menu offers to copy it, which is the
+    # other half of the same check in the context_menu test.
+    t.check(t.state(t.item(t.popup(), "Copy"), "sensitive"),
+            "Copy is sensitive now that there is a selection")
+    t.escape()
+
     t.key("ctrl+shift+c")
 
     into_the_document(t)
