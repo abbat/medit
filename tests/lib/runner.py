@@ -209,11 +209,32 @@ def scan_log(log_dir):
     return counts
 
 
+def prepare(module, log_dir):
+    """Run the test's setup function, if it has one, before medit starts."""
+    from lib.setup import Setup
+
+    sandbox = Setup(os.environ["MUI_ROOT"], os.environ["XDG_DATA_HOME"], log_dir)
+
+    if hasattr(module, "setup"):
+        module.setup(sandbox)
+        written = sandbox.commit()
+        if written:
+            print("    settings written to %s" % written)
+
+    return sandbox
+
+
 def inner(args):
     from lib import a11y
     from lib.context import Test
 
     log_dir = args.log_dir
+
+    # Loaded before medit starts, not after: a test may have a setup function,
+    # and what it puts in place has to be there when medit reads its settings.
+    module = load_test(args.test)
+    sandbox = prepare(module, log_dir)
+
     proc = start_medit(args.binary, log_dir)
     failure = None
     clean_exit = False
@@ -221,9 +242,9 @@ def inner(args):
 
     try:
         app = a11y.application("medit", timeout=60)
-        t = Test(app, args.gtk, os.environ["MUI_URL_LOG"], log_dir, sys.stdout)
+        t = Test(app, args.gtk, os.environ["MUI_URL_LOG"], log_dir, sys.stdout,
+                 sandbox=sandbox)
 
-        module = load_test(args.test)
         module.run(t)
 
     except BaseException as error:          # noqa: BLE001 -- the report is the point

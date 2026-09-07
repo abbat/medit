@@ -34,11 +34,13 @@ def _menu_role_consts():
 
 
 class Test(object):
-    def __init__(self, app, gtk, url_log, log_dir, out):
+    def __init__(self, app, gtk, url_log, log_dir, out, sandbox=None):
         self._started = time.time()
         self.app = app
         self.gtk = int(gtk)
         self.log_dir = log_dir
+        # what the test's setup function put in place, see lib/setup.py
+        self.sandbox = sandbox
         self._url_log = url_log
         self._out = out
 
@@ -123,17 +125,26 @@ class Test(object):
         """Whether the node carries the named AT-SPI state."""
         return a11y.state(node, name)
 
-    def wait_text(self, node, needle, timeout=a11y.TIMEOUT, what=None):
+    def wait_text(self, node, needle, timeout=a11y.TIMEOUT, what=None, squeeze=False):
         """Wait until the node's text contains needle, and say what it held.
 
         For anything that fills in by itself -- a terminal waiting for its
         shell, a view waiting for a file -- where the failure is unreadable
         without the text that did arrive.
+
+        squeeze collapses every run of whitespace to one space before looking,
+        which is how a sentence is matched in a terminal: the width of the pane
+        decides where the line breaks, so any long enough needle would otherwise
+        be split by a newline that depends on the size of the window.
         """
         described = what or "%r" % needle
 
+        def holds():
+            text = a11y.text_of(node)
+            return needle in (" ".join(text.split()) if squeeze else text)
+
         try:
-            self.wait(lambda: needle in a11y.text_of(node), described, timeout)
+            self.wait(holds, described, timeout)
         except a11y.NotFound as missing:
             raise Failed("%s\nthe text it was looked for in:\n%s"
                          % (missing, a11y.text_of(node)))
