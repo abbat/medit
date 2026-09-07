@@ -140,6 +140,15 @@ gh api "/repos/abbat/medit/code-scanning/analyses?per_page=10"          # what w
 gh api "/repos/abbat/medit/code-scanning/alerts?ref=refs/heads/strict&state=open" --paginate
 ```
 
+**A python `# codeql[rule-id]` comment suppresses nothing either**, measured the same way
+as the C++ one below: four alerts annotated, two left as controls, and the two annotated
+alerts that were not `py/empty-except` came back open. The two that did go were the
+query's own doing — `py/empty-except` does not fire when the block carries a comment
+explaining itself — which the controls then confirmed by going quiet with a plain comment
+and no marker. What is left is dismissed in the Security tab with the reason written
+there: 1777 on `/tmp/.X11-unix` is what X requires, and the runner's `except BaseException`
+is what makes a failed test leave its evidence.
+
 **There is no `NOLINTNEXTLINE` for CodeQL.** `// codeql[rule-id]` on the line above an
 alert is real syntax and C++ does have an `AlertSuppression.ql`, but all it produces is a
 `suppressions[]` entry in the SARIF, and code scanning does not read that entry —
@@ -878,7 +887,23 @@ and `GtkTreeStore` are objects rather than widgets and work with no `gtk_init()`
 to start when it is compiled with `G_DISABLE_ASSERT` — rightly, since `g_assert_cmpint()`
 would be nothing and the suite would report that no-ops passed — so `CompilerFlags.cmake`
 leaves that one definition out when `ENABLE_UNIT_TESTS` is on. `NDEBUG` and
-`G_DISABLE_CAST_CHECKS` stay. This is also how the broken Debug link above was found.
+`G_DISABLE_CAST_CHECKS` stay.
+
+**Everything inside an assertion had therefore never been compiled**, and turning them on
+found three things in one afternoon, all of the same shape and none of them a regression:
+two undefined symbols (the Debug link above) and, from clang only,
+`-Wtautological-constant-out-of-range-compare` on `g_assert (type < N_FILTERS)` and
+`g_assert (type < N_TOOLS)`. A C++ enum holds the smallest bit-field that fits its
+enumerators, so with two of them the comparison is true by construction; with three it is
+not, which is why `MOO_ACTION_CHECK_*` says nothing. In **C** an enum has the range of its
+underlying type, so the same shape in `moowindow.c` is silent — the same rule the
+`operator~` note in §2 turns on. `(int) type < N_TOOLS` is what the rest of the tree
+already writes.
+
+Two things follow for anyone adding to this. A strict build **with gcc proves less than it
+looks**: that whole class is clang's, and the ui job is where it lands. And `g_return_*` is
+not `g_assert` — the checks are compiled in every build, so only what an assertion guards
+is at risk of having rotted.
 
 **Pin nothing to an English string.** The kind names in the symbol tree are translated, so
 a test comparing against "function" passes in the C locale and fails on a Russian machine;
