@@ -65,7 +65,63 @@ def remove_root(root):
         shutil.rmtree(root, ignore_errors=True)
 
 
-def start_x(root, log_path, screen="1400x900x24", timeout=20):
+# X puts its sockets in a directory it insists on creating itself, and several
+# servers starting at the same second race to create it: one wins, the others
+# print "_XSERVTransmkdir: ERROR: Cannot create /tmp/.X11-unix" and then treat
+# every display as taken. Creating it first, once, costs nothing and is the
+# difference between thirteen tests starting and twelve.
+X_SOCKET_DIR = "/tmp/.X11-unix"
+
+
+def ensure_x_socket_dir():
+    try:
+        os.makedirs(X_SOCKET_DIR, mode=0o1777, exist_ok=True)
+        os.chmod(X_SOCKET_DIR, 0o1777)
+    except OSError:
+        # Not ours to fix -- somebody else's, with the right permissions
+        # already, or a system where this is not where the sockets go.
+        pass
+
+
+def display_answers(display, timeout=5, interval=0.2):
+    """Whether anything is actually listening on that display.
+
+    Asked because a display number is not a promise: under a race Xvfb has
+    reported a number and then not served it, and the only symptom, a minute
+    later, is medit's "cannot open display" in a log nobody reads.
+    """
+    env = dict(os.environ, DISPLAY=display)
+    deadline = time.time() + timeout
+
+    while time.time() < deadline:
+        done = subprocess.run(["xdotool", "getdisplaygeometry"],
+                              env=env, capture_output=True)
+        if done.returncode == 0:
+            return True
+        time.sleep(interval)
+
+    return False
+
+
+def start_x(root, log_path, screen="1400x900x24", timeout=20, attempts=3):
+    """Start an Xvfb, check that it serves what it reported, and return it."""
+    ensure_x_socket_dir()
+
+    for attempt in range(attempts):
+        proc, display = _start_x_once(root, log_path, screen, timeout)
+
+        if display_answers(display):
+            return proc, display
+
+        print("    the X server reported %s and does not answer on it, starting "
+              "another (attempt %d of %d)" % (display, attempt + 1, attempts))
+        stop(proc)
+
+    raise RuntimeError("no X server that answers on the display it reported, "
+                       "see %s" % log_path)
+
+
+def _start_x_once(root, log_path, screen, timeout):
     """Start an Xvfb and return (process, display).
 
     The display number comes from Xvfb through -displayfd rather than being
@@ -79,8 +135,11 @@ def start_x(root, log_path, screen="1400x900x24", timeout=20):
     # at all -- the symptom is a test that fails a minute later with "cannot
     # open display" while every other test passes.
     handshake = os.path.join(root, "displayfd")
-    fd = os.open(handshake, os.O_RDWR | os.O_CREAT, 0o600)
-    log = open(log_path, "wb")
+    fd = os.open(handshake, os.O_RDWR | os.O_CREAT | os.O_TRUNC, 0o600)
+
+    # Appended to, not truncated: a second attempt would otherwise throw away
+    # what the first one said about why there had to be a second attempt.
+    log = open(log_path, "ab")
 
     try:
         proc = subprocess.Popen(

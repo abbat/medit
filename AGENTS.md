@@ -870,12 +870,25 @@ comes up, the accessibility tree never does, and the test times out looking for 
 that is on screen. Hence `mktemp -d /tmp/mui.XXXXXX`, and `UI_TEST_TMP_ROOT` if `/tmp` is
 not where it should go.
 
-**Wait for the newline when reading `-displayfd`.** Xvfb writes the display number with a
-newline after it, and a two-digit number arrives in two writes often enough to matter:
-reading `1` out of `12` hands the test a display belonging to another test, or to nobody.
-The symptom is one random test failing a minute later with `cannot open display` on a run
-where the other twelve passed — twice in five parallel runs before the read was changed to
-require the newline.
+**A display number is not a promise, and it took two goes to believe that.** The symptom
+is one random test out of thirteen failing a minute later with `cannot open display` on a
+run where every other test passed, twice in five parallel runs. Two separate causes, both
+in `sandbox.py`:
+
+- Xvfb writes the number with a newline after it, and a two-digit number arrives in two
+  writes often enough to matter — reading `1` out of `12` hands the test a display
+  belonging to another test, or to nobody. The read waits for the newline.
+- X creates `/tmp/.X11-unix` itself if it is missing, and thirteen servers starting in the
+  same second race to do it: one wins, the others print
+  `_XSERVTransmkdir: ERROR: Cannot create /tmp/.X11-unix` and then find every display
+  taken. This is the one that kept CI red after the first fix, because a container starts
+  without that directory and a developer's machine has had it since login. It is created
+  once, before the server is started.
+
+And then, because the first fix looked convincing and was not enough, the display is
+checked before medit is started — `xdotool getdisplaygeometry` on it, and another server
+if it does not answer. A test that cannot get a display now says so in a second instead of
+timing out in a minute.
 
 **AT-SPI can describe a widget but not operate one.** `queryAction().doAction("click")`
 on a menu item produces `Gtk-WARNING: no trigger event for menu popup` and
