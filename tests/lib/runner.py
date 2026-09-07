@@ -14,9 +14,11 @@ is left in the log directory whether it passed or not.
 """
 
 import argparse
+import collections
 import glob
 import importlib.util
 import os
+import re
 import subprocess
 import sys
 import time
@@ -213,10 +215,21 @@ def last_words(log_dir, was_alive, code, lines=10):
         state, "\n".join("      " + line for line in tail))
 
 
+# What G_ENABLE_DIAGNOSTIC prints: "The property GtkFoo:bar is deprecated and
+# shouldn't be used anymore", and the same sentence for a signal.
+DEPRECATED = re.compile(r"The (?:property|signal) ([\w.:-]+) is deprecated")
+
+
 def scan_log(log_dir):
-    """Count what glib printed. Reported, not a verdict -- yet."""
+    """Count what glib printed, and name the deprecations. Reported, not a verdict.
+
+    Named, because a count alone cannot be acted on: the number moves with the
+    toolkit's version as much as with medit's code, and the only question worth
+    asking of it -- which of these are ours -- needs the names.
+    """
     path = os.path.join(log_dir, "medit.log")
     counts = {"criticals": 0, "warnings": 0, "deprecated": 0}
+    deprecated = collections.Counter()
 
     try:
         with open(path, errors="replace") as f:
@@ -225,10 +238,15 @@ def scan_log(log_dir):
                     counts["criticals"] += 1
                 elif "is deprecated" in line:
                     counts["deprecated"] += 1
+                    found = DEPRECATED.search(line)
+                    if found:
+                        deprecated[found.group(1)] += 1
                 elif any(marker in line for marker in WARNING_MARKERS):
                     counts["warnings"] += 1
     except FileNotFoundError:
         pass
+
+    counts["names"] = deprecated
 
     return counts
 
@@ -314,6 +332,12 @@ def inner(args):
     counts = scan_log(log_dir)
     print("glib: %d criticals, %d warnings, %d deprecated properties"
           % (counts["criticals"], counts["warnings"], counts["deprecated"]))
+
+    if counts["names"]:
+        print("    deprecated: %s" % ", ".join(
+            name if n == 1 else "%s (%d)" % (name, n)
+            for name, n in sorted(counts["names"].items(),
+                                  key=lambda item: (-item[1], item[0]))))
 
     if not sanitizers_ok:
         print("FAIL: the sanitizers reported findings, see %s" % log_dir)
