@@ -31,6 +31,13 @@ typedef enum {
     FILTER_VISIBLE
 } FilterType;
 
+/*
+ * Two enumerators, so in C++ the type holds one bit and "type < N_FILTERS" is
+ * true by construction -- which clang says out loud, as an error under
+ * ENABLE_STRICT. The cast is what the same assertion elsewhere in the tree
+ * uses (moousertools.cpp), and it keeps the line as the statement of intent it
+ * is. It only ever mattered once assertions were compiled in at all.
+ */
 #define N_FILTERS 2
 
 struct MooEditActionPrivate {
@@ -89,7 +96,7 @@ static const char *
 moo_edit_action_get_filter (MooEditAction *action,
                             FilterType     type)
 {
-    g_assert (type < N_FILTERS);
+    g_assert ((int) type < N_FILTERS);
     return action->priv->filters[type] ?
             g_regex_get_pattern (action->priv->filters[type]) : NULL;
 }
@@ -153,7 +160,7 @@ moo_edit_action_set_filter (MooEditAction *action,
 {
     GRegex *tmp;
 
-    g_assert (type < N_FILTERS);
+    g_assert ((int) type < N_FILTERS);
 
     tmp = action->priv->filters[type];
     action->priv->filters[type] = filter ? get_filter_regex (filter) : NULL;

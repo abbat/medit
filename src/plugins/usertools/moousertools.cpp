@@ -96,7 +96,7 @@ unload_user_tools (int type)
     GSList *list;
     gpointer klass;
 
-    g_assert (type < N_TOOLS);
+    g_assert ((int) type < N_TOOLS);
 
     if (!store)
         return;
@@ -141,7 +141,7 @@ tools_store_add (MooUserToolType type,
 {
     ToolInfo *info;
 
-    g_assert (type < N_TOOLS);
+    g_assert ((int) type < N_TOOLS);
 
     info = g_new0 (ToolInfo, 1);
     info->id = g_strdup (id);
