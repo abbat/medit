@@ -36,7 +36,26 @@ PREFS_XML = """<?xml version="1.0" encoding="UTF-8"?>
 </moo-prefs>
 """
 
-PREFS_ITEM = '    <item name="%s" type="string">%s</item>'
+PREFS_ITEM = '    <item name="%s" type="%s">%s</item>'
+
+
+def _typed(value):
+    """The type name and the text prefs.xml would carry for a value.
+
+    Not everything is a string. moo_prefs_new_key_bool() and the plugin
+    framework's enabled key register their type, and a file that calls a
+    boolean a string makes item_set_type() convert it and complain -- one
+    Moo-CRITICAL per run, in every test that writes one, drowning the
+    criticals a test is there to notice. The words are the ones medit writes
+    itself.
+    """
+    if isinstance(value, bool):
+        return "bool", "TRUE" if value else "FALSE"
+
+    if isinstance(value, int):
+        return "int", str(value)
+
+    return "string", escape(str(value))
 
 
 class Setup(object):
@@ -93,7 +112,7 @@ class Setup(object):
         path = os.path.join(self.data_home, PREFS_FILE)
         os.makedirs(os.path.dirname(path), exist_ok=True)
 
-        items = "\n".join(PREFS_ITEM % (escape(key), escape(str(value)))
+        items = "\n".join(PREFS_ITEM % ((escape(key),) + _typed(value))
                           for key, value in sorted(self._prefs.items()))
 
         with open(path, "w") as f:
