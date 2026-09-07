@@ -18,13 +18,16 @@ sha256sums=('93b32bde68b6e484b85586f6fd12032d5c75c66c61ce2445c09bfb6513c6c07f')
 
 build() {
     # CMAKE_BUILD_TYPE=None keeps the flags makepkg exports; the install hook
-    # is off because pacman updates the icon cache itself
+    # is off because pacman updates the icon cache itself; ENABLE_STRICT so a
+    # warning from those flags, or from a compiler newer than anything in CI,
+    # fails the build rather than scrolling past
     cmake -S "$pkgname-$pkgver" -B build -Wno-dev \
         -DCMAKE_BUILD_TYPE=None \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DENABLE_INSTALL_HOOKS=OFF \
         -DENABLE_TERMINAL=ON \
         -DENABLE_LSP=ON \
+        -DENABLE_STRICT=ON \
         -DGTK_VERSION=3
     cmake --build build
 }

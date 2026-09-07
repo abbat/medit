@@ -37,9 +37,14 @@ the editor Yevgen Muntyan stopped working on in 2017, ported to GTK+3.
 
 %build
 # the icon cache is updated by a file trigger, not by us; --no-warn-unused-cli
-# silences the notice about the RELEASE and Fortran flags %%cmake always passes
+# silences the notice about the RELEASE and Fortran flags %%cmake always passes.
+#
+# ENABLE_STRICT because this is the only build of medit that uses LTO, and -Wodr
+# has caught real defects in this tree that no other compiler sees; without it a
+# report would be a line in a log nobody reads. It does mean a new gcc can fail
+# the package build over a warning, which is the trade that was made knowingly.
 %cmake --no-warn-unused-cli -DGTK_VERSION=3 -DENABLE_INSTALL_HOOKS=OFF \
-    -DENABLE_TERMINAL=ON -DENABLE_LSP=ON
+    -DENABLE_TERMINAL=ON -DENABLE_LSP=ON -DENABLE_STRICT=ON
 %cmake_build
 
 %install
