@@ -69,16 +69,19 @@ git stash pop
 
 ### What CI already does, and what it does not
 
-`.github/workflows/build.yml` runs on every push, all of it with
-`-DENABLE_STRICT=ON`, so warnings are errors. Fedora is not among its jobs:
-`package.yml` builds the rpm on fedora:44, where `%cmake` compiles with LTO and
-gcc 15 — the same coverage, minus the gate, since the spec does not ask for
-`ENABLE_STRICT` and an `-Wodr` report there is a log line rather than a failure.
+Every job that compiles anything does it with `-DENABLE_STRICT=ON`, so warnings are
+errors everywhere — `build.yml` asks for it, and so do `debian/rules`, `rpm/medit.spec`
+and `arch/PKGBUILD`. Which means the package builds are gates too: Fedora is where LTO
+happens, and `-Wodr` has caught defects there that nothing else sees.
 
 | job | what it covers |
 |---|---|
 | `deb` | ubuntu 22.04, both toolkits — the low end of everything: gtk 3.24.33, glib 2.72, gcc 11, cmake 3.22 |
 | `langs` | `src/mooedit/langs/check.sh` over the 187 language definitions and schemes |
+
+`.github/workflows/package.yml` is the other half of the compiling: the deb on Debian 12
+and Ubuntu 26.04 (both toolkits each), the rpm on fedora:44 with LTO, the Arch package,
+and a check that the version is the same in all six places it is written.
 
 `.github/workflows/ui.yml` compiles with clang, runs the static analyzer, and is the only
 job that runs the program rather than reading it. It builds debian:13 with
