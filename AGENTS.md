@@ -872,15 +872,22 @@ as an artifact, and `gh run download <id> -D <dir>` fetches it.
 **Reproducing a CI failure is a container away**, and much faster than pushing again:
 
 ```bash
-docker build -t medit-ui-d13 -f <Dockerfile with ui.yml's apt lines> .
-docker run --rm -v "$PWD:/src:ro" -v /tmp/w:/w medit-ui-d13 bash -c '
-    cmake -S /src -B /w/build -DGTK_VERSION=3 -DENABLE_UI_TESTS=ON \
-          -DENABLE_SANITIZERS=address,undefined
-    cmake --build /w/build -j"$(nproc)" && cd /w/build && ctest -V'
+docker run --rm -v "$PWD:/src:ro" -v /tmp/w:/w debian:13 bash -c '
+    apt-get update -qq && apt-get install -y -qq --no-install-recommends <ui.yml apt lines>
+    dbus-uuidgen --ensure
+    export CC=clang CXX=clang++
+    cmake -S /src -B /w/build -DGTK_VERSION=3 -DENABLE_STRICT=ON \
+          -DENABLE_UI_TESTS=ON -DENABLE_SANITIZERS=address,undefined
+    cmake --build /w/build -j"$(nproc)" && cd /w/build && ctest -j4 --output-on-failure'
 ```
 
+Copy the two apt lines out of `ui.yml` rather than writing a list: `libclang-rt-dev` is in
+them and is not obvious — without it clang accepts `-fsanitize=` and then fails to link,
+which cmake reports as a compiler that does not accept the flag at all.
+
 This is worth doing rather than guessing: the toolkit and at-spi versions are what UI
-tests break on, and they are exactly what the local machine cannot vary.
+tests break on, they are exactly what the local machine cannot vary, and CI compiles with
+clang while a local build almost certainly does not.
 
 **No window manager**, which costs one thing: nothing hands the input focus on when a
 window disappears. After a menu is dismissed the focus belongs to the menu's dead window,
@@ -1287,7 +1294,7 @@ Reading these first will usually identify the next one:
   `scrollbar-spacing` unconditionally. The GTK+3 branch added a NULL check around the
   *call* and left the *read* of the value outside it, so a NULL parent put stack garbage
   into the calculation. Found by clang's `-Wsometimes-uninitialized`; gcc says nothing
-  about it at any level, which is the argument for the clang job in CI.
+  about it at any level, which is why the UI job compiles with clang.
   → *When a port adds a guard, check that everything depending on the guarded call moved
   inside it.*
 
@@ -1395,9 +1402,10 @@ prints what these functions return settles such questions in one build.
   `#if GTK_CHECK_VERSION` split** when one code path is correct for both.
 - Remove the `/* FIXME: This code was written by AI */` marker on any block you fix.
 - Verify before claiming: build both, run both with the exit-code rule, screenshot when
-  the change is visual, and state what was *not* verified. CI covers five distributions
-  and two compilers on push, so what is worth doing by hand is what CI cannot: running
-  the program, looking at it, and building the packages.
+  the change is visual, and state what was *not* verified. On a push CI compiles every
+  supported distribution but one, with both compilers, builds every package, and drives
+  the program through the UI tests — so what is worth doing by hand is looking at what it
+  did, and anything the tests do not cover yet.
 - Run `--target analyze` on anything non-trivial before committing, and read the traces
   rather than the summary lines — most of what it says about glib code is wrong, and the
   reasons are listed under "The analyze target".
