@@ -70,13 +70,15 @@ git stash pop
 ### What CI already does, and what it does not
 
 `.github/workflows/build.yml` runs on every push, all of it with
-`-DENABLE_STRICT=ON`, so warnings are errors:
+`-DENABLE_STRICT=ON`, so warnings are errors. Fedora is not among its jobs:
+`package.yml` builds the rpm on fedora:44, where `%cmake` compiles with LTO and
+gcc 15 — the same coverage, minus the gate, since the spec does not ask for
+`ENABLE_STRICT` and an `-Wodr` report there is a log line rather than a failure.
 
 | job | what it covers |
 |---|---|
 | `deb` | ubuntu 22.04 and 26.04, both toolkits — the two ends of the range: gtk 3.24.33 / glib 2.72 / gcc 11 / cmake 3.22 against 3.24.52 / 2.88 / 15 / 4.2 |
 | `clang` | clang on debian:trixie, both toolkits, plus the `analyze` target |
-| `fedora` | fedora:44, gtk-3, with LTO, which is the only place `-Wodr` has anything to see |
 | `langs` | `src/mooedit/langs/check.sh` over the 187 language definitions and schemes |
 
 `.github/workflows/ui.yml` is the only job that runs the program rather than reading it.
@@ -547,7 +549,8 @@ EOF
 `--disablerepo=fedora-cisco-openh264` is not optional: that repository is frequently
 unreachable and a weak dependency drags it in, failing the image build.
 
-Fedora compiles with **LTO and gcc 14**, which see things the Debian build cannot:
+Fedora compiles with **LTO and gcc 15**, which see things the Debian build cannot — in
+`package.yml`'s rpm job, the only place in CI that builds this way:
 
 * **`-Wodr`** catches two file-local structs sharing a name across translation units
   with different fields. They are only file-local by convention — C gives them external
@@ -577,7 +580,7 @@ add what has been released since:
 * `README.md` — the "DEB packages for …" line under **download**.
 * `.github/workflows/build.yml` — the `deb` job's `image:` matrix, which is the oldest
   and the newest target and nothing between, so an aged image there loses an end of the
-  range rather than one point of it; and the Fedora release in the `fedora` job.
+  range rather than one point of it.
 * `.github/workflows/codeql.yml` — the runner and its dependency list.
 * `.github/workflows/package.yml` — the `deb` matrix, which carries the oldest and the
   newest deb target, and the Fedora release in the `rpm` job.

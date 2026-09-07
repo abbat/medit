@@ -1,11 +1,16 @@
 # Compile medit everywhere it is expected to compile, with warnings fatal.
 #
 # The local machine says very little about the distributions this fork targets:
-# it has gcc 12 and glib 2.74, while the matrix below spans gcc 11 to gcc 15
-# and cmake 3.22 to cmake 4.2, and the Fedora package is built with LTO. Every
-# class of breakage recorded in AGENTS.md -- symbols newer than the oldest glib,
-# structs that only -Wodr sees, constructs one compiler accepts silently and
-# another rejects -- is invisible until one of these jobs runs.
+# it has gcc 12 and glib 2.74, while the matrix below spans gcc 11 to gcc 15 and
+# cmake 3.22 to cmake 4.2. Every class of breakage recorded in AGENTS.md --
+# symbols newer than the oldest glib, constructs one compiler accepts silently
+# and another rejects -- is invisible until one of these jobs runs.
+#
+# Fedora is not here: package.yml builds the rpm on fedora:44, and %cmake
+# compiles it with LTO and gcc 15, which is what this job was for. It is not
+# quite the same thing -- the spec does not ask for ENABLE_STRICT, so an -Wodr
+# report there is a line in the log rather than a failure -- but a second full
+# build of the tree is a lot to pay for that difference.
 #
 # Which distributions: the two ends of the range, not every point in it. What
 # breaks a build is the age of the toolchain and of GTK+3, and the images below
@@ -160,40 +165,3 @@ jobs:
       # compiles and which nothing else would analyze.
       - name: Static analysis
         run: cmake --build build --target analyze
-
-  # Fedora is gtk-3 only, and is here for its compiler rather than its
-  # packages: gcc 14 with LTO is what caught the two file-local structs sharing
-  # a name across translation units (-Wodr) and the identifiers that become
-  # keywords in C++20. Neither is visible without link time optimization, so
-  # this job turns it on the way the rpm build does.
-  fedora:
-    name: fedora:44, gtk3, LTO
-    runs-on: ubuntu-latest
-    container: fedora:44
-    steps:
-      - name: Install build dependencies
-        run: |
-          set -eux
-          # fedora-cisco-openh264 is frequently unreachable and a weak
-          # dependency drags it in, which fails the whole transaction.
-          dnf -y --setopt=install_weak_deps=False --disablerepo=fedora-cisco-openh264 install \
-              cmake make gcc gcc-c++ git \
-              gtk3-devel glib2-devel libxml2-devel gdk-pixbuf2-devel \
-              json-glib-devel vte291-devel \
-              libICE-devel libSM-devel \
-              intltool gettext
-
-      - uses: actions/checkout@v7
-
-      - name: Configure
-        run: |
-          set -eux
-          cmake -S . -B build \
-              -DGTK_VERSION=3 \
-              -DENABLE_STRICT=ON \
-              -DENABLE_LSP=ON \
-              -DENABLE_TERMINAL=ON \
-              -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
-
-      - name: Build
-        run: cmake --build build -j"$(nproc)"
