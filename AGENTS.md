@@ -92,7 +92,7 @@ happens, and `-Wodr` has caught defects there that nothing else sees.
 
 | job | what it covers |
 |---|---|
-| `deb` | ubuntu 22.04, both toolkits — the low end of everything: gtk 3.24.33, glib 2.72, gcc 11, cmake 3.22 — and the unit tests (§3), which run here because they need nothing but the binary |
+| `deb` | ubuntu 22.04, both toolkits — the low end of everything: gtk 3.24.33, glib 2.72, gcc 11, cmake 3.22 |
 | `langs` | `src/mooedit/langs/check.sh` over the 187 language definitions and schemes |
 
 `.github/workflows/package.yml` is the other half of the compiling: the deb on Debian 12
@@ -910,10 +910,12 @@ a test comparing against "function" passes in the C locale and fails on a Russia
 compare against `lsp_symbol_kind_name()` instead. The ctest entry pins `LC_ALL=C.UTF-8`
 anyway, and the point is that the test should not need it.
 
-**They run where the UI tests cannot**, which is the argument for having them: `build.yml`
-turns them on for ubuntu 22.04, both toolkits — gtk 3.24.33, glib 2.72, gcc 11 — where an
-assumption about an API is most likely to be wrong and where no X server, no accessibility
-bus and no python are available. Milliseconds against that job's minutes.
+**In CI they run in `ui.yml` and nowhere else**, as part of the same `ctest` the UI tests
+go through — the binary is already built there, already sanitized, and the unit tests add
+milliseconds to a job that takes minutes. They were briefly wired into `build.yml` as well,
+for the oldest distribution medit supports, and taken back out: turning them on there meant
+compiling that job with assertions live, which stops it being the build a distribution
+does, and the point of `build.yml` is that it is exactly that build.
 
 What is in them so far is the LSP client's arithmetic and reply shapes: the UTF-16
 crossing (an emoji is one character and two code units), the UTF-8 one (Cyrillic is one

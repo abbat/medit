@@ -78,21 +78,10 @@ jobs:
               -DGTK_VERSION=${{ matrix.gtk }} \
               -DENABLE_STRICT=ON \
               -DENABLE_LSP=ON \
-              -DENABLE_TERMINAL=${{ matrix.gtk == 3 && 'ON' || 'OFF' }} \
-              -DENABLE_UNIT_TESTS=ON
+              -DENABLE_TERMINAL=${{ matrix.gtk == 3 && 'ON' || 'OFF' }}
 
       - name: Build
         run: cmake --build build -j"$(nproc)"
-
-      # The unit tests run here and not only in ui.yml, and this is the whole
-      # reason they are inside the binary rather than in a harness of their
-      # own: they need no X server, no accessibility bus and no python, so
-      # they run on the oldest distribution medit supports -- the one whose
-      # gtk is 3.24.33 and whose glib is 2.72, where an assumption about an
-      # API is most likely to be wrong and where a UI test cannot run at all.
-      # Milliseconds against the build's minutes.
-      - name: Unit tests
-        run: ctest --test-dir build -L unit --output-on-failure
 
   # The language definitions and the style schemes, against the two RELAX NG
   # schemas that ship beside them. src/mooedit/langs/check.sh has existed for a
