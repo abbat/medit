@@ -476,8 +476,9 @@ The package targets **Debian 12 and 13, Ubuntu 22.04, 24.04 and 26.04** — Debi
 Ubuntu 20.04 were dropped when their support ended. `build.yml` compiles the two ends of
 that range, Ubuntu 22.04 and 26.04, for both toolkits; the middle is not unbuilt either —
 debian:13 goes through the clang job, the UI tests and `package.yml`, and debian:12 is
-what this is developed on. `package.yml` runs `dpkg-buildpackage` on the oldest and the
-newest, so ordinary source changes need no container. What is worth doing by hand is the faster loop while *writing* a
+what this is developed on. `package.yml` runs `dpkg-buildpackage` on four of the five —
+everything except Ubuntu 26.04, which `build.yml` compiles — and `debian/rules` asks for
+`ENABLE_STRICT`, so a warning on Debian 12 or Ubuntu 24.04 is caught there or nowhere. What is worth doing by hand is the faster loop while *writing* a
 packaging change, and the apt scenarios below, which CI does not reach:
 
 ```bash
@@ -582,8 +583,8 @@ add what has been released since:
   and the newest target and nothing between, so an aged image there loses an end of the
   range rather than one point of it.
 * `.github/workflows/codeql.yml` — the runner and its dependency list.
-* `.github/workflows/package.yml` — the `deb` matrix, which carries the oldest and the
-  newest deb target, and the Fedora release in the `rpm` job.
+* `.github/workflows/package.yml` — the `deb` matrix, which carries every deb target
+  build.yml does not compile, and the Fedora release in the `rpm` job.
 * `AGENTS.md` — "Debian package build (old distros)", which names the targets and the
   compiler span they cover.
 * `debian/control`, `rpm/medit.spec`, `arch/PKGBUILD` — dependency names occasionally

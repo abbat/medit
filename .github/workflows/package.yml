@@ -64,11 +64,14 @@ jobs:
               exit 1
           fi
 
-  # Two releases rather than all five: a package build costs two compiles,
-  # because debian/rules configures a build directory per gtk version. The
-  # oldest target and the newest are where the dependency names differ -- the
-  # `libjpeg62-turbo-dev | libjpeg-dev` alternative in debian/control is there
-  # for exactly that.
+  # Four of the five deb targets, which together with build.yml's two ends
+  # covers all of them. A package build costs two compiles, because
+  # debian/rules configures a build directory per gtk version, so this used to
+  # be the oldest target and the newest -- they are where the dependency names
+  # differ, which is what the `libjpeg62-turbo-dev | libjpeg-dev` alternative in
+  # debian/control is for. Debian 12 and Ubuntu 24.04 are here because build.yml
+  # no longer compiles them, and debian/rules asks for ENABLE_STRICT, so a
+  # warning on either of them is caught here or nowhere.
   deb:
     name: dpkg-buildpackage, ${{ matrix.image }}
     runs-on: ubuntu-latest
@@ -79,6 +82,10 @@ jobs:
         include:
           - image: ubuntu:22.04
             tag: ubuntu2204
+          - image: ubuntu:24.04
+            tag: ubuntu2404
+          - image: debian:12
+            tag: debian12
           - image: debian:13
             tag: debian13
     env:
