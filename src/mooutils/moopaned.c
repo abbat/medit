@@ -35,6 +35,9 @@
 #include <string.h>
 #include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
+#if GTK_CHECK_VERSION(3,0,0)
+#include <gtk/gtk-a11y.h>
+#endif
 
 # include "mooutils-misc.h"
 # include "moocompat.h"
@@ -262,6 +265,131 @@ enum {
 
 static guint paned_signals[PANED_NUM_SIGNALS];
 
+
+/**********************************************************************/
+/* Accessibility
+ */
+
+#if GTK_CHECK_VERSION(3,0,0)
+
+/*
+ * The panes, and the buttons that switch between them, are internal children of
+ * the paned, and GtkContainerAccessible builds its list of children from
+ * gtk_container_get_children(), which by definition leaves internal children
+ * out. Without an accessible of its own the paned therefore reports one child,
+ * the document area, and everything that lives in a pane -- the file selector,
+ * the file list, the terminal -- is off the accessibility bus entirely: a
+ * screen reader cannot reach it, and neither can the UI tests.
+ *
+ * Making the panes ordinary children instead would change far more than the
+ * accessibility tree: gtk_container_destroy() destroys the non-internal
+ * children and gtk_container_focus() builds the Tab chain out of the same list,
+ * and MooPaned does both of those itself. So the fix belongs here, in the
+ * accessible, where it changes only what is reported.
+ */
+
+typedef GtkContainerAccessible MooPanedAccessible;
+typedef GtkContainerAccessibleClass MooPanedAccessibleClass;
+
+G_DEFINE_TYPE (MooPanedAccessible, moo_paned_accessible, GTK_TYPE_CONTAINER_ACCESSIBLE)
+
+
+static void
+prepend_child (GtkWidget *child,
+               gpointer   data)
+{
+    GSList **children = (GSList**) data;
+    *children = g_slist_prepend (*children, child);
+}
+
+
+/*
+ * Every child of the paned, internal ones included, in forall order. A pane the
+ * user has detached is left out: it keeps its place in the paned's list of
+ * panes while its frame lives in a window of its own, and reporting it here
+ * would give it two parents in the accessibility tree.
+ */
+static GSList *
+moo_paned_accessible_children (AtkObject *object)
+{
+    GtkWidget *widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (object));
+    GSList *all = NULL, *ours = NULL, *l;
+
+    if (widget == NULL)
+        return NULL;
+
+    gtk_container_forall (GTK_CONTAINER (widget), prepend_child, &all);
+
+    /* prepended a second time, so this comes out in forall order again */
+    for (l = all; l != NULL; l = l->next)
+    {
+        GtkWidget *child = (GtkWidget*) l->data;
+
+        if (child != NULL && gtk_widget_get_parent (child) == widget)
+            ours = g_slist_prepend (ours, child);
+    }
+
+    g_slist_free (all);
+
+    return ours;
+}
+
+
+static gint
+moo_paned_accessible_get_n_children (AtkObject *object)
+{
+    GSList *children = moo_paned_accessible_children (object);
+    gint n_children = g_slist_length (children);
+
+    g_slist_free (children);
+
+    return n_children;
+}
+
+
+static AtkObject *
+moo_paned_accessible_ref_child (AtkObject *object,
+                                gint       index)
+{
+    GSList *children = moo_paned_accessible_children (object);
+    GtkWidget *child = NULL;
+    AtkObject *accessible = NULL;
+
+    if (index >= 0)
+        child = (GtkWidget*) g_slist_nth_data (children, index);
+
+    g_slist_free (children);
+
+    if (child != NULL)
+    {
+        accessible = gtk_widget_get_accessible (child);
+
+        if (accessible != NULL)
+            g_object_ref (accessible);
+    }
+
+    return accessible;
+}
+
+
+static void
+moo_paned_accessible_class_init (MooPanedAccessibleClass *klass)
+{
+    AtkObjectClass *atk_class = ATK_OBJECT_CLASS (klass);
+
+    atk_class->get_n_children = moo_paned_accessible_get_n_children;
+    atk_class->ref_child = moo_paned_accessible_ref_child;
+}
+
+
+static void
+moo_paned_accessible_init (G_GNUC_UNUSED MooPanedAccessible *accessible)
+{
+}
+
+#endif /* GTK_CHECK_VERSION(3,0,0) */
+
+
 static void
 moo_paned_class_init (MooPanedClass *klass)
 {
@@ -279,6 +407,11 @@ moo_paned_class_init (MooPanedClass *klass)
     gobject_class->constructor = moo_paned_constructor;
 
     gtkobject_class->destroy = moo_paned_destroy;
+
+#if GTK_CHECK_VERSION(3,0,0)
+    /* the panes are internal children, and nothing else would report them */
+    gtk_widget_class_set_accessible_type (widget_class, moo_paned_accessible_get_type ());
+#endif
 
     widget_class->realize = moo_paned_realize;
     widget_class->unrealize = moo_paned_unrealize;
