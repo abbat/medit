@@ -16,11 +16,16 @@ positions: a fixed coordinate is only correct for one window size, one theme and
 one toolkit.
 """
 
+import re
 import subprocess
 import time
 
 import pyatspi
 
+
+# What medit sets as the WM_CLASS of its windows; matched as a regex, since
+# the two halves of a class differ in case.
+APP_CLASS = "[Mm]edit"
 
 SETTLE = 0.4
 
@@ -49,6 +54,33 @@ POINTER = 0.15
 
 def _xdotool(*args):
     subprocess.run(["xdotool"] + [str(a) for a in args], check=True)
+
+
+def _xdotool_out(*args):
+    done = subprocess.run(["xdotool"] + [str(a) for a in args],
+                          capture_output=True, text=True)
+    return done.stdout.strip()
+
+
+def focus_window(pattern=APP_CLASS):
+    """Point the X input focus at the application's window.
+
+    There is no window manager in the sandbox, and nothing else hands the focus
+    on when a window goes away: after a menu has been dismissed the input focus
+    belongs to the menu's window, which no longer exists, "xdotool
+    getwindowfocus" answers nothing at all, and the application stops receiving
+    keys -- it does not even see the key that would open the next menu. A window
+    manager, which is to say everywhere except here, deals with this.
+    """
+    windows = _xdotool_out("search", "--onlyvisible", "--class", pattern).split()
+
+    if not windows:
+        return None
+
+    _xdotool("windowfocus", windows[-1])
+    time.sleep(POINTER)
+
+    return windows[-1]
 
 
 def extents(node):
@@ -139,6 +171,28 @@ def key(*keys, settle=SETTLE):
 def type_text(text, delay=25, settle=SETTLE):
     _xdotool("type", "--delay", delay, text)
     time.sleep(settle)
+
+
+def pixel(x, y):
+    """The colour of one pixel of the screen, as "#rrggbb".
+
+    The one thing in these tests that is read off the screen rather than out of
+    the accessibility tree, and only because a colour has no other evidence:
+    nothing in the tree says what colour anything is drawn in, so the choice is
+    between looking and testing that a setting was written rather than that it
+    did something.
+    """
+    out = subprocess.check_output(
+        ["import", "-window", "root", "-crop", "1x1+%d+%d" % (x, y),
+         "-depth", "8", "txt:-"],
+        stderr=subprocess.DEVNULL, text=True)
+
+    found = re.search(r"#[0-9A-Fa-f]{6}", out)
+
+    if not found:
+        raise AssertionError("could not read the pixel at (%d,%d): %r" % (x, y, out))
+
+    return found.group(0).lower()
 
 
 def screenshot(path):

@@ -214,7 +214,12 @@ class Test(object):
         which is where this looks for it -- so it finds a menu the menu bar has
         open just as readily, and is meant to be called when none is.
         """
+        # The focus first: a menu dismissed earlier took the X input focus
+        # into a window that no longer exists, and without a window manager
+        # nothing gives it back, so the key below would go nowhere.
+        ui.focus_window()
         ui.key("shift+F10")
+
         return self.wait(self._popup_menu, "a context menu", timeout)
 
     def _popup_menu(self):
