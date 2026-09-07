@@ -82,8 +82,12 @@ jobs:
           # libclang-rt-dev is not optional and not obvious: without it clang
           # accepts -fsanitize= and fails to link, which cmake reports as a
           # compiler that does not accept the flag at all.
+          # llvm is llvm-profdata and llvm-cov, which read what the coverage
+          # instrumentation writes. They have to be the same llvm the compiler
+          # came from -- a .profraw carries a version -- and on debian:13 the
+          # clang and llvm packages are the same 1:19.0-63.
           apt-get install -y -qq --no-install-recommends \
-              clang clang-tidy clang-tools libclang-rt-dev cmake make git \
+              clang clang-tidy clang-tools libclang-rt-dev llvm cmake make git \
               pkg-config intltool gettext \
               libglib2.0-dev libxml2-dev libxml2-utils libgtk2.0-dev libgtk-3-dev \
               libjson-glib-dev libvte-2.91-dev \
@@ -131,6 +135,7 @@ jobs:
               -DENABLE_STRICT=ON \
               -DENABLE_UI_TESTS=ON \
               -DENABLE_SANITIZERS=address,undefined \
+              -DENABLE_COVERAGE=ON \
               -DENABLE_LSP=ON \
               -DENABLE_TERMINAL=${{ matrix.gtk == 3 && 'ON' || 'OFF' }}
 
@@ -155,6 +160,25 @@ jobs:
       - name: Run
         run: cmake --build build --target ui-test
 
+      # What the run executed, merged into one report. After the tests and not
+      # instead of them: the target only reads the profiles the tests left
+      # behind, so a red run never gets this far and never reports a number for
+      # a suite that did not finish.
+      #
+      # The file is named after the toolkit here rather than in cmake, because
+      # what needs the two names apart is the job that downloads both of them.
+      - name: Merge the coverage
+        run: |
+          set -eux
+          cmake --build build --target coverage
+          cp build/coverage/medit.info coverage-gtk${{ matrix.gtk }}.info
+
+      - name: Keep it
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-gtk${{ matrix.gtk }}
+          path: coverage-gtk${{ matrix.gtk }}.info
+
       # medit's own output, the X server's, the sanitizer logs, sanitizer.json
       # and a screenshot of the moment it went wrong. A UI failure is close to
       # undiagnosable without them, and they are a few hundred kilobytes.
@@ -164,4 +188,49 @@ jobs:
         with:
           name: ui-logs-gtk${{ matrix.gtk }}
           path: build/ui-tests/
+          if-no-files-found: warn
+
+  # The two toolkits are two builds, so they are two profiles and two reports;
+  # this is where they become one number. GTK+2 is not a lesser half of it: it
+  # is what runs the #else branch of every GTK_CHECK_VERSION split, and lines
+  # only it executes are covered lines.
+  #
+  # Not in the container: nothing here needs a compiler, and the job that has
+  # tests/coverage.py and tests/coverage.floor already checked out is cheaper
+  # on a plain runner.
+  #
+  # The gate is tests/coverage.floor -- a percentage in the tree, raised by hand
+  # with the change that earned it. See §3 of AGENTS.md for why that rather than
+  # a cache or a service: it is the only arrangement where the number the gate
+  # compares against is visible in the same commit as the code, and where the
+  # same command gives the same answer on a developer's machine.
+  coverage:
+    name: coverage
+    needs: ui
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: coverage-gtk*
+          path: reports
+          merge-multiple: true
+
+      - name: Merge, report, compare
+        run: |
+          set -eux
+          python3 tests/coverage.py reports/*.info \
+              --output reports/coverage.info \
+              --floor tests/coverage.floor \
+              --summary "$GITHUB_STEP_SUMMARY"
+
+      # Uploaded whether the comparison passed or not: when it did not, the
+      # merged report is what says which files went quiet.
+      - name: Keep the merged report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: reports/coverage.info
           if-no-files-found: warn

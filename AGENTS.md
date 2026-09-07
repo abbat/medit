@@ -119,6 +119,13 @@ can fail anything. See §3 for what the tests are and how to write one; the evid
 failure leaves is uploaded as an artifact, because a UI failure is close to
 undiagnosable without it.
 
+The same build is instrumented for coverage (`-DENABLE_COVERAGE=ON`, clang's own), so what
+the clicks and the unit tests reached is measured without a second compile of anything. A
+third job merges the two toolkits' reports, writes the table into the run's summary, and
+compares the total with `tests/coverage.floor` — a percentage kept in the tree, raised by
+hand with the change that earned it. §3 has the commands and what the number does not
+mean.
+
 `.github/workflows/codeql.yml` runs CodeQL over both toolkits on every push, on pull
 requests, and weekly. It judges a pull request on the alerts it *introduces*, which is
 why it can be a gate while the analyzer's existing findings are not zero. A third job
@@ -1319,6 +1326,72 @@ three fixed here — with the test that failed first written down beside each:
   in the Diagnostics pane" took the marks off the document and left the pane listing them;
   `fill_pane()` reads the preference now. A failed server still says so with the setting
   off — that is not a diagnostic, it is the reason there are none. In `diagnostics_pane`.
+
+### Coverage
+
+What the tests executed, measured by clang's own instrumentation — the same binary the UI
+tests drive and the unit tests run in, so one build answers both what went wrong and what
+was reached.
+
+```bash
+cmake -S . -B buildc3 -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ \
+      -DGTK_VERSION=3 -DENABLE_UI_TESTS=ON -DENABLE_COVERAGE=ON \
+      -DENABLE_SANITIZERS=address,undefined
+cmake --build buildc3 -j"$(nproc)"
+
+cmake --build buildc3 --target ui-test         # or ctest -R lsp, or ctest -L unit
+cmake --build buildc3 --target coverage        # merge, export, print the TOTAL line
+cmake --build buildc3 --target coverage-html   # the same, plus annotated source
+
+python3 tests/coverage.py buildc2/coverage/medit.info buildc3/coverage/medit.info \
+        --floor tests/coverage.floor           # both toolkits as one number
+```
+
+`ENABLE_COVERAGE` needs clang and refuses gcc outright: gcc's `--coverage` writes a format
+`llvm-cov` cannot read, and a build that quietly measured something else would be worse
+than one that stops. It also needs `llvm-profdata` and `llvm-cov` of **the same version as
+the compiler** — a `.profraw` carries a version number and the tools refuse anything else.
+Debian and Fedora ship them in `llvm`, next to `clang`; `cmake/Coverage.cmake` asks for the
+versioned name first, so a machine with several llvms still gets the matching one.
+
+**The target reads profiles, it does not produce them.** Every run of the program leaves a
+`.profraw` in `<build>/coverage/raw`; ctest names each one after the test (and the runtime
+adds the pid, because the harness may start medit twice). `coverage` merges whatever is
+there, exports lcov, prints the summary — and takes the raw files away, so the next run
+answers about the next run rather than about everything since the build directory was
+made. Run it after `ctest -R lsp` and it is the LSP tests' number, which is often the
+question actually being asked.
+
+The counters are written at exit, which is the same property the leak checker has and the
+same reason both work here: a test quits medit through File/Quit and waits for its exit
+code. A test that hangs and is killed contributes nothing to the number — and it has
+failed anyway.
+
+Two toolkits are two builds, hence two profiles and two reports, and merging them needs
+neither binary: `tests/coverage.py` unions the lcov files line by line. That is why
+`llvm-cov` is told to name files relative to the top of the tree — the two halves were
+built in two containers, and an absolute path would have made them two different files.
+GTK+2 is not the lesser half: it is what runs the `#else` branch of every
+`GTK_CHECK_VERSION` split, and a line only it executed is a covered line. The script lives
+under `tests/` because that is where the harness lives and where `flake8` already reads.
+
+Vendored code is not measured — `src/gtksourceview`, `src/xdgmime`, `src/eggsmclient` and
+`readtags.c`, the same four the `analyze` target skips — and neither is anything the build
+generates or any system header glib inlines into every file.
+
+**`tests/coverage.floor` is the gate.** One number, in the tree, next to the tests it is
+about: line coverage must not fall below it. Not a cache, not a service — this is the only
+arrangement where what the gate compares against is visible in the same commit as the code,
+survives a week of quiet, and gives the same answer on a developer's machine as in CI. The
+`coverage` job in `ui.yml` writes the table into the run's summary and fails when the
+number is under the floor.
+
+The floor sits a little under what the tests actually reach, and 0.3 pp is the margin: a UI
+run is not deterministic to the hundredth — medit is started again when it could not open
+the display, timers and idle handlers fire or do not, and the tests run in parallel. Raise
+it by hand, in the commit that earned the rise; the job prints the line to write. Lowering
+it is also a legitimate commit — covered code was deleted, a test was retired — and the
+reason belongs in the file beside the number.
 
 ### The ad-hoc sandbox (headless X + screenshots + synthetic input)
 
