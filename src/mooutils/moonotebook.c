@@ -396,6 +396,54 @@ moo_notebook_accessible_children (AtkObject *object)
 }
 
 
+/* The text of a tab label, which is a box with an icon and a label in it for
+   every tab this widget has ever been given. */
+static const char *
+label_text (GtkWidget *widget)
+{
+    GList *children, *l;
+    const char *text = NULL;
+
+    if (widget == NULL)
+        return NULL;
+
+    if (GTK_IS_LABEL (widget))
+        return gtk_label_get_text (GTK_LABEL (widget));
+
+    if (!GTK_IS_CONTAINER (widget))
+        return NULL;
+
+    children = gtk_container_get_children (GTK_CONTAINER (widget));
+
+    for (l = children; l != NULL && text == NULL; l = l->next)
+        text = label_text ((GtkWidget*) l->data);
+
+    g_list_free (children);
+
+    return text;
+}
+
+
+/*
+ * The page carries the name that would be on its tab. Without a page tab of its
+ * own there is nowhere else to put it, and an unnamed page is a document a
+ * screen reader can read and cannot identify -- it is also what tells one open
+ * document from another to a test. Set on every lookup rather than once, because
+ * the text follows the file: its name, and whether it has unsaved changes.
+ */
+static void
+name_after_the_tab (GtkWidget *notebook,
+                    GtkWidget *child,
+                    AtkObject *accessible)
+{
+    const char *text = label_text (moo_notebook_get_tab_label (MOO_NOTEBOOK (notebook),
+                                                               child));
+
+    if (text != NULL && text[0] != 0)
+        atk_object_set_name (accessible, text);
+}
+
+
 static gint
 moo_notebook_accessible_get_n_children (AtkObject *object)
 {
@@ -412,6 +460,7 @@ static AtkObject *
 moo_notebook_accessible_ref_child (AtkObject *object,
                                    gint       index)
 {
+    GtkWidget *widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (object));
     GList *children = moo_notebook_accessible_children (object);
     GtkWidget *child = NULL;
     AtkObject *accessible = NULL;
@@ -426,7 +475,10 @@ moo_notebook_accessible_ref_child (AtkObject *object,
         accessible = gtk_widget_get_accessible (child);
 
         if (accessible != NULL)
+        {
+            name_after_the_tab (widget, child, accessible);
             g_object_ref (accessible);
+        }
     }
 
     return accessible;
