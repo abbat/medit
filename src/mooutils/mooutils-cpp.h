@@ -29,12 +29,27 @@ inline T *object_ref(T *obj)
 
 } // namespace g
 
+/*
+ * The operators a flags enum needs, with one asymmetry that matters: ~ returns
+ * an int and not the enum. An unscoped enum can only hold the values its
+ * enumerators span -- MooEditStatus runs to 16, so five bits -- and ~ sets every
+ * other bit of the word, which no value of the type can represent. Making that
+ * an enum value is undefined behaviour, reported by clang's -fsanitize=enum as
+ * "load of value 4294967291, which is not a valid value for type
+ * 'MooEditStatus'"; gcc has no such check and said nothing for years.
+ *
+ * As an int it is a mask, which is what it was always meant to be, and the &
+ * that follows brings the result back into the enum: f & ~g can only have bits
+ * f already had.
+ */
 #define MOO_DEFINE_FLAGS(Flags)                                                                                 \
     inline Flags operator | (Flags f1, Flags f2) { return static_cast<Flags>(static_cast<int>(f1) | f2); }      \
     inline Flags operator & (Flags f1, Flags f2) { return static_cast<Flags>(static_cast<int>(f1) & f2); }      \
+    inline Flags operator & (Flags f1, int mask) { return static_cast<Flags>(static_cast<int>(f1) & mask); }    \
     inline Flags& operator |= (Flags& f1, Flags f2) { f1 = f1 | f2; return f1; }                                \
     inline Flags& operator &= (Flags& f1, Flags f2) { f1 = f1 & f2; return f1; }                                \
-    inline Flags operator ~ (Flags f) { return static_cast<Flags>(~static_cast<int>(f)); }                      \
+    inline Flags& operator &= (Flags& f1, int mask) { f1 = f1 & mask; return f1; }                              \
+    inline int operator ~ (Flags f) { return ~static_cast<int>(f); }                                            \
 
 
 template<typename GObjType>

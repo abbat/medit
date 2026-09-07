@@ -142,22 +142,10 @@ inline static gboolean is_embedded(MooEditor *editor)
 
 inline static void set_flag(MooEditor *editor, MooEditorOptions flag, gboolean set_or_not)
 {
-    /*
-     * Through an unsigned rather than with the enum's own operators: ~flag is
-     * every bit the enum does not use, which no value of the enum can hold --
-     * a MooEditorOptions runs to 32, so its values are those of six bits -- and
-     * storing it makes every later load of the field undefined. clang's
-     * -fsanitize=enum reports exactly that; gcc's has no such check, which is
-     * why this stood for as long as it did.
-     */
-    unsigned opts = editor->priv->opts;
-
     if (set_or_not)
-        opts |= (unsigned) flag;
+        editor->priv->opts |= flag;
     else
-        opts &= ~((unsigned) flag);
-
-    editor->priv->opts = (MooEditorOptions) opts;
+        editor->priv->opts &= ~flag;
 }
 
 static void
