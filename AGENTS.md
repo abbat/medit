@@ -810,8 +810,8 @@ Build directories of their own, `buildu2` and `buildu3` beside `build2` and `bui
 sanitized binary is three times the size and visibly slower, which is not what an
 ordinary build should become.
 
-A test is `tests/<subsystem>/<name>/test.py`, one `run(t)` function, and it imports
-nothing — the whole vocabulary is on `t` (`tests/lib/context.py`). ctest labels each test
+A test is `tests/<subsystem>/<name>/test.py` — `app`, `editor`, `terminal` so far — one
+`run(t)` function, and it imports nothing — the whole vocabulary is on `t` (`tests/lib/context.py`). ctest labels each test
 with its subsystem and its toolkit. One file serves both toolkits, because the tree gail
 exposes for GTK+2 and the one GTK+3 exposes natively are the same tree.
 
@@ -956,10 +956,12 @@ inherits from `GtkNotebook` and uses none of it — it keeps its own pages and c
 `gtk_notebook_` function — so the accessible it inherited read GtkNotebook's empty page
 list while the child count came from the container. One child, and nothing returned for
 it. `MooNotebookAccessible` takes the container's children instead, and the document is a
-`text` node with the text in it. Page tabs are still not exposed:
+`text` node with the text in it. Each page is named after its tab, refreshed at every
+lookup, so an open document is `hello.txt` and becomes `*hello.txt` while it has unsaved
+changes. A page tab object of its own is what is still missing —
 `gtk_notebook_page_accessible_new()` asks `gtk_notebook_get_tab_label()` for the name,
-which is that same empty list, with a Gtk-CRITICAL to go with it. GTK+3 only, as above,
-so the status bar's `Chars: N` label is still how a GTK+2 test would count characters.
+which is that same empty list, with a Gtk-CRITICAL to go with it. GTK+3 only, as above, so
+the status bar's `Chars: N` label is still how a GTK+2 test would count characters.
 
 **A modified document blocks the quit at the end of a test**: File/Quit asks about saving,
 nothing answers, and the test fails with "medit did not quit when asked" twenty seconds
