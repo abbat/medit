@@ -81,13 +81,13 @@ prefs_page_init (GtkBuilder *builder)
 
     if (font_name && font_name[0])
     {
-        g_object_set (button, "font-name", font_name, nullptr);
+        gtk_font_chooser_set_font (GTK_FONT_CHOOSER (button), font_name);
     }
     else
     {
         /* so that clearing the check box starts from the font in the pane */
         char *fallback = _moo_terminal_get_default_font ();
-        g_object_set (button, "font-name", fallback, nullptr);
+        gtk_font_chooser_set_font (GTK_FONT_CHOOSER (button), fallback);
         g_free (fallback);
     }
 
@@ -117,8 +117,7 @@ prefs_page_apply (GtkBuilder *builder)
     }
     else
     {
-        char *font_name = NULL;
-        g_object_get (button, "font-name", &font_name, nullptr);
+        char *font_name = gtk_font_chooser_get_font (GTK_FONT_CHOOSER (button));
         moo_prefs_set_string (MOO_TERMINAL_PREFS_FONT, font_name);
         g_free (font_name);
     }
