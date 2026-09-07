@@ -362,6 +362,7 @@ find_config (MooEdit *doc)
         LspServerConfig *config = (LspServerConfig*) l->data;
         MooEditFilter *filter;
         gboolean matched;
+        char *program;
 
         if (!config->enabled)
             continue;
@@ -374,8 +375,25 @@ find_config (MooEdit *doc)
         matched = _moo_edit_filter_match (filter, doc);
         _moo_edit_filter_free (filter);
 
-        if (matched)
-            return config;
+        if (!matched)
+            continue;
+
+        /*
+         * Not installed: skipped, and the next entry that matches gets its
+         * chance. The shipped file lists nine servers and nobody has nine, so
+         * an entry for a program that is not there is the ordinary case rather
+         * than a mistake -- and a fallback after a preferred one is the reason
+         * to write two entries for a language at all. Skipping the document
+         * instead would mean the first entry silently decided for the rest.
+         */
+        program = lsp_config_find_program (config);
+
+        if (!program)
+            continue;
+
+        g_free (program);
+
+        return config;
     }
 
     return NULL;
@@ -402,7 +420,7 @@ lsp_manager_add_doc (MooEdit *doc)
     LspServerEntry *entry;
     LspDoc *ldoc;
     GFile *file;
-    char *path, *dir, *root, *program;
+    char *path, *dir, *root;
 
     g_return_if_fail (MOO_IS_EDIT (doc));
 
@@ -421,6 +439,10 @@ lsp_manager_add_doc (MooEdit *doc)
     if (!path)
         return;
 
+    /* Nothing matched, or nothing that names a program this machine has:
+       find_config() answers both the same way, and in silence, since the
+       shipped configuration lists more servers than anyone has and saying so
+       on every file that opens would be noise. */
     config = find_config (doc);
 
     if (!config)
@@ -428,18 +450,6 @@ lsp_manager_add_doc (MooEdit *doc)
         g_free (path);
         return;
     }
-
-    /* Not installed: the shipped configuration lists more servers than anyone
-       has, and saying so on every file that opens would be noise. */
-    program = lsp_config_find_program (config);
-
-    if (!program)
-    {
-        g_free (path);
-        return;
-    }
-
-    g_free (program);
 
     dir = g_path_get_dirname (path);
     root = find_root_dir (dir, config->root_markers);

@@ -21,21 +21,27 @@ def setup(s):
     s.open(s.write("workdir/hello.txt", MATCHING))
     s.open(s.write("workdir/notes.md", OTHER))
 
-    # Two entries for two languages: one that can be run, one whose program is
-    # not installed. The shipped file names nine servers and nobody has nine,
-    # so the second is the ordinary case rather than the odd one.
+    # Three entries, and the first two are not installed. The shipped file
+    # names nine servers and nobody has nine, so an entry for a program that is
+    # not there is the ordinary case -- and the first of them matches the same
+    # documents as the working one, which is what says a skipped entry does not
+    # decide for the entries after it.
     s.lsp_config("""<?xml version="1.0" encoding="UTF-8"?>
 <medit-lsp version="1.0">
-  <server id="missing">
-    <filter>globs:*.md</filter>
+  <server id="missing-for-txt">
+    <filter>globs:*.txt</filter>
     <command>%s/no-such-language-server</command>
+  </server>
+  <server id="missing-for-md">
+    <filter>globs:*.md</filter>
+    <command>%s/no-such-language-server-either</command>
   </server>
   <server id="test">
     <filter>globs:*.txt</filter>
     <command>%s</command>
   </server>
 </medit-lsp>
-""" % (s.root, s.lsp_command("test")))
+""" % (s.root, s.root, s.lsp_command("test")))
 
     s.lsp_scenario("test")
 
@@ -52,7 +58,8 @@ def run(t):
     opened = t.wait_lsp("textDocument/didOpen")["params"]["textDocument"]
 
     t.check(opened["uri"] == "file://" + t.sandbox.path("workdir/hello.txt"),
-            "the matching document was announced to it")
+            "the matching document was announced to it, and not to the entry "
+            "before it whose program is not installed")
     t.check(opened["text"] == MATCHING,
             "with the text the file holds")
 
@@ -63,7 +70,8 @@ def run(t):
     announced = [m["params"]["textDocument"]["uri"] for m in t.lsp("textDocument/didOpen")]
 
     t.check(not any(uri.endswith("notes.md") for uri in announced),
-            "the document whose server is not installed was not announced: %s" % announced)
+            "the document whose every entry is not installed was not announced: %s"
+            % announced)
 
     t.check("no-such-language-server" not in t.medit_log(),
-            "and medit said nothing about the program it could not find")
+            "and medit said nothing about either program it could not find")
