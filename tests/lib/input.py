@@ -196,21 +196,29 @@ def type_text(text, delay=25, settle=SETTLE):
 _IMPORT = (["import"], ["magick", "import"])
 
 
-def _import(*args):
-    last = len(_IMPORT) - 1
+def _run_import(argv):
+    return subprocess.run(argv, capture_output=True, text=True, check=True)
 
-    for i, command in enumerate(_IMPORT):
+
+def _import(*args):
+    """Run whichever spelling of ImageMagick's import this machine has.
+
+    Every spelling but the last is tried and forgiven; the last one is run
+    outside the loop, so its failure is what the caller is shown and there is
+    no way out of this function that neither returns nor raises. Keeping the
+    error in a variable and raising it afterwards read as though the loop might
+    not run at all, and then it is a TypeError from "raise None" that arrives
+    in place of the failure being reported.
+    """
+    argv = [str(a) for a in args]
+
+    for command in _IMPORT[:-1]:
         try:
-            return subprocess.run(command + [str(a) for a in args],
-                                  capture_output=True, text=True, check=True)
+            return _run_import(command + argv)
         except (FileNotFoundError, subprocess.CalledProcessError):
-            # The last spelling is the one whose failure the caller sees, and a
-            # bare re-raise is what says so: keeping the error in a variable and
-            # raising it after the loop reads as though the loop might not run,
-            # in which case the variable is None and the TypeError replaces the
-            # failure it was supposed to report.
-            if i == last:
-                raise
+            continue
+
+    return _run_import(_IMPORT[-1] + argv)
 
 
 def pixel(x, y):

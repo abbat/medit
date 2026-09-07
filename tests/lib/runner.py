@@ -306,7 +306,7 @@ def scan_log(log_dir):
                         deprecated[found.group(1)] += 1
                 elif any(marker in line for marker in WARNING_MARKERS):
                     counts["warnings"] += 1
-    except FileNotFoundError:  # codeql[py/empty-except]
+    except FileNotFoundError:
         # No log means medit printed nothing, which the counts already say.
         pass
 
@@ -365,7 +365,7 @@ def inner(args):
 
     # Everything, deliberately: the report is the point, and a test that fails
     # by raising KeyboardInterrupt still has to leave its evidence behind.
-    except BaseException as error:  # noqa: BLE001  # codeql[py/catch-base-exception]
+    except BaseException as error:  # noqa: BLE001
         failure = error
         # Before anything below stops it: "medit exited with -15" would only
         # say that this is what stopped it.
@@ -374,6 +374,8 @@ def inner(args):
             from lib import input as ui
             ui.screenshot(os.path.join(log_dir, "failure.png"))
         except Exception:
+            # Best effort: a screenshot of a display that has gone is not
+            # worth failing the failure report over.
             pass
 
     finally:

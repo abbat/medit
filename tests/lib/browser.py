@@ -61,6 +61,8 @@ def install(root, data_home, config_home):
         subprocess.run(["update-desktop-database", applications],
                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False)
     except FileNotFoundError:
+        # No update-desktop-database on this machine; GIO finds the entry
+        # anyway, just by scanning, which is the comment above.
         pass
 
     return log

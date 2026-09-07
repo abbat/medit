@@ -123,7 +123,8 @@ class FakeServer(object):
         try:
             with open(self.scenario_path) as f:
                 self.scenario = json.load(f)
-        except (FileNotFoundError, ValueError):  # codeql[py/empty-except]
+        except (FileNotFoundError, ValueError):
+            # The scenario already in hand is the answer to both.
             pass
 
     def get(self, name, fallback=None):
