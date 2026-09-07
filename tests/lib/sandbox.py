@@ -28,10 +28,21 @@ TMP_PREFIX = "mui."
 
 
 def make_root(tmp_root=TMP_ROOT):
-    """Create the sandbox root and the XDG directories inside it."""
+    """Create the sandbox root and the per-test directories inside it.
+
+    The keys are the names of the environment variables that point at them, so
+    the caller hands the whole dict to the environment of the test.
+    """
     root = tempfile.mkdtemp(prefix=TMP_PREFIX, dir=tmp_root)
 
     dirs = {
+        # A home of its own, not only XDG directories. medit itself is happy
+        # with the XDG ones, but the terminal pane starts a login-less shell
+        # that reads the rc files of whoever runs the tests: with the real HOME
+        # the shell came up with the developer's prompt, wrote to the
+        # developer's history file, and behaved differently in CI, where that
+        # home does not exist.
+        "HOME": os.path.join(root, "home"),
         "XDG_DATA_HOME": os.path.join(root, "data"),
         "XDG_CONFIG_HOME": os.path.join(root, "config"),
         "XDG_CACHE_HOME": os.path.join(root, "cache"),
