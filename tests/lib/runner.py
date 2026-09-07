@@ -76,6 +76,21 @@ def clean_log_dir(path):
             os.unlink(stale)
 
 
+def x_server_state(xvfb, display):
+    """Whether the display the test was given is still there.
+
+    Printed after a failure, because "cannot open display" in medit.log leaves
+    two very different possibilities open: the server died under the test, or it
+    was never the server the number pointed at.
+    """
+    alive = xvfb is not None and xvfb.poll() is None
+
+    return "    the X server on %s: %s, and it %s answer now" % (
+        display,
+        "still running" if alive else "gone",
+        "does" if sandbox.display_answers(display, timeout=1) else "does not")
+
+
 def outer(args):
     log_dir = os.path.abspath(args.log_dir)
     clean_log_dir(log_dir)
@@ -133,6 +148,10 @@ def outer(args):
         try:
             done = subprocess.run(["dbus-run-session", "--"] + inner,
                                   env=env, timeout=args.timeout)
+
+            if done.returncode != 0:
+                print(x_server_state(xvfb, display))
+
             return done.returncode
         except subprocess.TimeoutExpired:
             print("FAIL: the test did not finish within %ds" % args.timeout)
