@@ -789,11 +789,12 @@ measure again:
   reports sixteen places, all of them how a GObject callback is called: `g_signal_connect`
   takes a `G_CALLBACK` and the marshaller casts it back. That is the idiom, not sixteen
   defects, so `CompilerFlags.cmake` turns that one check off when the compiler has it.
-  `enum` found a real one: `opts &= ~flag` on a six-bit flags enum stores every bit
-  outside it, which makes each later load undefined (`mooeditor.cpp`, fixed by going
-  through an unsigned). **In C++ files only** — C gives an enum the range of its
-  underlying type, so the same line in a `.c` file is legal, which is why
-  `moofile.c`'s `flags &= ~MOO_FILE_HAS_STAT` stays as it is.
+  `enum` found a real one, and in the flags helpers themselves: an unscoped enum holds
+  only the values its enumerators span, so `~flag` is not one of them, and
+  `MOO_DEFINE_FLAGS`'s `operator~` was casting it back to the enum — undefined, and so is
+  every load after it. `operator~` returns an `int` now (`mooutils-cpp.h`), which a
+  following `&` brings back into range. **C++ only** — C gives an enum the range of its
+  underlying type, so `moofile.c`'s `flags &= ~MOO_FILE_HAS_STAT` is fine as it stands.
 * **TSan: pointless.** Nothing in our code creates a thread — no `g_thread_new`, no
   `pthread_create`.
 * **MSan: impossible** without an instrumented glib, gtk and pango.
