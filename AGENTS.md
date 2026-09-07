@@ -46,6 +46,15 @@ Other options: `-DENABLE_NLS=OFF`, `-DENABLE_STRICT=ON` (all warnings and `-Werr
 `-DENABLE_SANITIZERS=address,undefined`, `-DENABLE_UI_TESTS=ON` (§3),
 `-DENABLE_UNIT_TESTS=ON` (§3, and it follows `ENABLE_UI_TESTS` unless set).
 
+**`medit file.c:42` opened nothing for eight months.** The command line takes a place in a
+file as `file.c:42` or `file.c(100)`, and the rewrite in "remove debugs" left three lines
+in the wrong order — `path = NULL` one line *before* `filename = path` — so every such
+argument became a null filename and two criticals. The splitting is
+`_moo_parse_file_line()` in `mooutils-fs.cpp` now, where a unit test can reach it, and the
+caller is six lines. Anything with this shape is worth suspecting: a `static` helper in
+`main.cpp` that no test can call and no user reports on, because the failure looks like
+"medit did nothing".
+
 **A Debug build had not linked for months**, and nothing noticed because every job in CI
 builds RelWithDebInfo. Two symbols were referenced only from code a release build compiles
 away — `model_contains_file()` from four `g_assert()`s in `moofoldermodel.c`, `moo_dmsg()`
@@ -858,10 +867,15 @@ cmake -S . -B buildu3 -DGTK_VERSION=3 -DENABLE_UI_TESTS=ON \
 cmake --build buildu3 -j"$(nproc)"
 
 buildu3/src/medit --unit-test                    # all of them, ~30 ms
-buildu3/src/medit --unit-test /lsp/position      # one subtree
+buildu3/src/medit --unit-test /lsp/position      # the four tests under it
 buildu3/src/medit --unit-test-list               # what there is
 cd buildu3 && ctest -L unit                      # the same, as one ctest entry
 ```
+
+A path names the tests **directly** under it and not the whole subtree beneath: measured,
+`/lsp/position` runs its four and `/lsp` runs nothing at all, printing `1..0` and looking
+for all the world like a pass. That is glib's `-p`, not ours; `--unit-test-list` is the
+way to find out what a path would select.
 
 There is no test binary and no second build. `ENABLE_UNIT_TESTS` compiles the tests into
 medit itself, `--unit-test` runs them before anything else happens — before the single
@@ -917,7 +931,19 @@ for the oldest distribution medit supports, and taken back out: turning them on 
 compiling that job with assertions live, which stops it being the build a distribution
 does, and the point of `build.yml` is that it is exactly that build.
 
-What is in them so far is the LSP client's arithmetic and reply shapes: the UTF-16
+What is in them, besides the LSP client below: `_moo_parse_file_line()`, `moo_splitlines()`,
+`_moo_accel_parse()` and `MooFileWriter`. The last three are the suites this fork used to
+have — `moo_test_mooaccel`, `moo_test_mooutils_misc` and `moo_test_moo_file_writer` went
+with the lua interpreter that ran them, while the functions they were about stayed exactly
+where they were. The first is new, and is why the file exists: see §1 on `file.c:42`.
+
+`moo_splitlines()` is worth knowing about before using it. A terminator ends a line and
+starts another, so `"one\n"` is **two** lines, the second empty — split-on-separator, not
+python's `splitlines()`. `moocmdview` writes every element it gets into the output pane,
+which is why a chunk of output ending in a newline draws a blank line. The test pins the
+behaviour rather than changing it.
+
+What is in them for the LSP client is its arithmetic and reply shapes: the UTF-16
 crossing (an emoji is one character and two code units), the UTF-8 one (Cyrillic is one
 character and two bytes), the clamps for a line or a column the document does not have,
 and `documentSymbol` in both the flat `SymbolInformation` and the nested `DocumentSymbol`

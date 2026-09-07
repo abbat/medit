@@ -123,6 +123,8 @@ target_sources(medit PRIVATE
     mooutils-misc.h
     moo-unit-tests.cpp
     moo-unit-tests.h
+    mooutils-tests.cpp
+    mooutils-tests.h
     mooutils-script.c
     mooutils-script.h
     mooutils-treeview.cpp

@@ -59,6 +59,22 @@ char           *_moo_filename_to_uri        (const char *file,
                                              GError    **error);
 
 char           *_moo_normalize_file_path    (const char *filename);
+
+/*
+ * Splits "file.c:42" or "file.c(42)" into the name and the line, which is how
+ * medit's command line and half the world's compilers name a place in a file.
+ *
+ * Answers FALSE, leaving both outputs alone, when the name carries no line.
+ * The decision whether to ask at all belongs to the caller: a file may
+ * legitimately have a colon in its name, and for one that exists on disk the
+ * answer is the file.
+ *
+ * The line is 1-based as written, and 0 when the name ends in a separator
+ * with no number after it ("file.c:").
+ */
+gboolean        _moo_parse_file_line        (const char *filename,
+                                             char      **path,
+                                             int        *line);
 gboolean        _moo_path_is_absolute       (const char *path);
 
 gboolean        _moo_copy_files_ui          (GList      *filenames,

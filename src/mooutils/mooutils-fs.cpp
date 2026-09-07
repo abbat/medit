@@ -394,6 +394,70 @@ _moo_normalize_file_path (const char *filename)
     return normalize_path (filename);
 }
 
+
+gboolean
+_moo_parse_file_line (const char *filename,
+                      char      **path,
+                      int        *line)
+{
+    static const char *pattern =
+        "((?P<path>.*):(?P<line>\\d+)?|(?P<path>.*)\\((?P<line>\\d+)\\))$";
+
+    GRegex *re;
+    GMatchInfo *match_info = NULL;
+    GError *error = NULL;
+    gboolean found = FALSE;
+
+    g_return_val_if_fail (filename != NULL, FALSE);
+    g_return_val_if_fail (path != NULL && line != NULL, FALSE);
+
+    re = g_regex_new (pattern,
+                      GRegexCompileFlags (G_REGEX_OPTIMIZE | G_REGEX_DUPNAMES),
+                      GRegexMatchFlags (0), &error);
+
+    if (!re)
+    {
+        g_critical ("could not compile regex: %s", error->message);
+        g_error_free (error);
+        return FALSE;
+    }
+
+    if (g_regex_match (re, filename, GRegexMatchFlags (0), &match_info))
+    {
+        char *matched_path = g_match_info_fetch_named (match_info, "path");
+        char *matched_line = g_match_info_fetch_named (match_info, "line");
+
+        if (matched_path && matched_path[0])
+        {
+            *line = 0;
+
+            if (matched_line && matched_line[0])
+            {
+                errno = 0;
+                *line = strtol (matched_line, NULL, 10);
+
+                if (errno)
+                    *line = 0;
+            }
+
+            /* Handed over, and not freed below: the caller owns it now. This
+               is the line that was the other way round in main.cpp, where it
+               made every "file.c:42" a null filename. */
+            *path = matched_path;
+            matched_path = NULL;
+            found = TRUE;
+        }
+
+        g_free (matched_line);
+        g_free (matched_path);
+    }
+
+    g_match_info_free (match_info);
+    g_regex_unref (re);
+
+    return found;
+}
+
 gboolean
 _moo_path_is_absolute (const char *path)
 {

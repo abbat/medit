@@ -458,47 +458,23 @@ parse_filename (const char *filename)
       return NULL;
     }
 
+  /*
+   * Only for a name that is not a file: one that is, is the file, colon and
+   * all. _moo_parse_file_line() is where the splitting lives, and is tested --
+   * these six lines were forty, and among them "path = NULL" one line before
+   * "filename = path", which made every "file.c:42" on the command line a null
+   * filename and two criticals.
+   */
   if (!g_file_test (filename, G_FILE_TEST_EXISTS) && g_utf8_validate (filename, -1, NULL))
     {
-      GError *error = NULL;
-      GRegex *re = g_regex_new ("((?P<path>.*):(?P<line>\\d+)?|(?P<path>.*)\\((?P<line>\\d+)\\))$",
-                                GRegexCompileFlags (G_REGEX_OPTIMIZE | G_REGEX_DUPNAMES),
-                                GRegexMatchFlags (0), &error);
-      if (!re)
+      char *parsed_path = NULL;
+      int parsed_line = 0;
+
+      if (_moo_parse_file_line (filename, &parsed_path, &parsed_line))
         {
-          g_critical ("could not compile regex: %s", error->message);
-          g_error_free (error);
-        }
-      else
-        {
-          GMatchInfo *match_info = NULL;
-
-          if (g_regex_match (re, filename, GRegexMatchFlags (0), &match_info))
-            {
-              char *path = g_match_info_fetch_named (match_info, "path");
-              char *line_string = g_match_info_fetch_named (match_info, "line");
-
-              if (path && *path)
-                {
-                  path = NULL;
-                  filename = path;
-                  freeme2 = path;
-
-                  if (line_string && *line_string)
-                    {
-                      errno = 0;
-                      line = strtol (line_string, NULL, 10);
-                      if (errno)
-                        line = 0;
-                    }
-                }
-
-              g_free (line_string);
-              g_free (path);
-            }
-
-          g_match_info_free (match_info);
-          g_regex_unref (re);
+          filename = parsed_path;
+          freeme2 = parsed_path;
+          line = parsed_line;
         }
     }
 

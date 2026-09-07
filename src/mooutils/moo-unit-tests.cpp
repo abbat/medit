@@ -17,6 +17,8 @@
 
 #ifdef MOO_ENABLE_UNIT_TESTS
 
+#include "mooutils/mooutils-tests.h"
+
 #ifdef MOO_BUILD_LSP
 #include "plugins/lsp/lsp-tests.h"
 #endif
@@ -29,6 +31,8 @@
 static void
 add_all_tests (void)
 {
+    _moo_add_mooutils_unit_tests ();
+
 #ifdef MOO_BUILD_LSP
     _moo_lsp_add_unit_tests ();
 #endif
@@ -41,10 +45,11 @@ add_all_tests (void)
  * path the caller named. What medit itself was started with has been parsed
  * already and is none of its business.
  *
- * The array is freed and the strings in it are not: g_test_init() keeps
- * argv[0] and shifts the rest about, so the block is ours to release and what
- * it pointed at is not. Both halves matter -- this runs inside a sanitized
- * binary, and a harness that leaks is a harness that reports leaks.
+ * Nothing in it is allocated: the name and the option are literals, the paths
+ * belong to the caller and outlive this, and only the array of pointers is
+ * ours to free. Strdup'ing them instead leaked whatever g_test_init() consumed
+ * and dropped -- three bytes, reported by the sanitizer this very binary is
+ * built with, which is the argument for running the tests in it.
  */
 static int
 run (char    **paths,
@@ -57,15 +62,15 @@ run (char    **paths,
     int result;
     guint i;
 
-    g_ptr_array_add (args, g_strdup ("medit --unit-test"));
+    g_ptr_array_add (args, (gpointer) "medit --unit-test");
 
     if (list_only)
-        g_ptr_array_add (args, g_strdup ("-l"));
+        g_ptr_array_add (args, (gpointer) "-l");
 
     for (i = 0; paths && paths[i]; ++i)
     {
-        g_ptr_array_add (args, g_strdup ("-p"));
-        g_ptr_array_add (args, g_strdup (paths[i]));
+        g_ptr_array_add (args, (gpointer) "-p");
+        g_ptr_array_add (args, (gpointer) paths[i]);
     }
 
     argc = (int) args->len;
