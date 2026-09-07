@@ -135,6 +135,20 @@ if(ENABLE_SANITIZERS)
     # -fno-omit-frame-pointer is what turns the sanitizer's stack traces from
     # addresses into function names, and -g keeps that true for a build type
     # that would otherwise carry no debug info.
+    #
+    # Except for the function check, which clang's undefined behaviour
+    # sanitizer includes and gcc's does not. It reports a call made through a
+    # pointer of a different type, and that is how every GObject callback is
+    # called: g_signal_connect takes a G_CALLBACK, the marshaller casts it back
+    # to the signature the signal has, and the sixteen it reports on this tree
+    # are that pattern rather than sixteen defects. Turning it off keeps the
+    # rest of the sanitizer, which does find real things -- the enum load in
+    # mooeditor.cpp was one.
+    check_c_compiler_flag(-fno-sanitize=function MOO_HAVE_NO_SANITIZE_FUNCTION)
+    if(MOO_HAVE_NO_SANITIZE_FUNCTION)
+        list(APPEND _moo_sanitize -fno-sanitize=function)
+    endif()
+
     list(APPEND MOO_C_FLAGS ${_moo_sanitize} -fno-omit-frame-pointer -g)
     list(APPEND MOO_CXX_FLAGS ${_moo_sanitize} -fno-omit-frame-pointer -g)
     add_link_options(${_moo_sanitize})
