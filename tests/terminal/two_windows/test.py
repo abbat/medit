@@ -34,11 +34,15 @@ BLACK = "#000000"
 AFTER = "Black on Light Yellow"
 YELLOW = "#ffffdd"
 
-# Side by side on the 1400x900 screen, with nothing overlapping: a pixel read
-# out of one window has to belong to that window, and a click meant for one of
-# them must not be able to land in the other.
-LEFT = (0, 0, 680, 600)
-RIGHT = (700, 0, 680, 600)
+# Side by side, with nothing overlapping: a pixel read out of one window has to
+# belong to that window, and a click meant for one of them must not be able to
+# land in the other. Small enough that two of them fit on the 1400x900 screen,
+# and no smaller than that: what a window actually gets is its minimum size,
+# which is the theme's and the fonts' business -- 690 wide in the CI container
+# against 680 here -- so the second window is placed where the first one turned
+# out to end, and side_by_side() says whether that worked.
+NARROW = (600, 600)
+GAP = 10
 
 
 def setup(s):
@@ -47,14 +51,15 @@ def setup(s):
 
 def run(t):
     first = t.frame
-    t.place_window(first, *LEFT)
+    left = t.place_window(first, 0, 0, *NARROW)
 
     # The second window before either terminal, because Ctrl+Shift+N is an
     # accelerator and the pane eats it: a focused vte widget sees a key before
     # the window's accelerators do, so the same keystroke that opens a window
     # from the document view does nothing at all from the terminal.
     second = new_window(t, first)
-    t.place_window(second, *RIGHT)
+    t.place_window(second, left[0] + left[2] + GAP, 0, *NARROW)
+    side_by_side(t, first, second)
 
     terminal = open_terminal(t, first)
     other = open_terminal(t, second)
@@ -95,6 +100,18 @@ def run(t):
 
     answers(t, first, terminal, "still")
     t.log("ok: the pane of the closed window is off the list, the other one is not")
+
+
+def side_by_side(t, left, right):
+    """The two windows are on the screen, one beside the other, not touching."""
+    lx, ly, lw, lh = ui.extents(left)
+    rx, ry, rw, rh = ui.extents(right)
+    width, height = ui.display_size()
+
+    t.check(lx + lw <= rx, "the windows do not overlap: %s beside %s"
+            % ((lx, ly, lw, lh), (rx, ry, rw, rh)))
+    t.check(rx + rw <= width and max(ly + lh, ry + rh) <= height,
+            "both windows are inside the %dx%d screen" % (width, height))
 
 
 def open_terminal(t, frame):

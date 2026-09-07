@@ -101,7 +101,7 @@ class Test(object):
         return ui.window_of(frame)
 
     def place_window(self, frame, x, y, width, height):
-        """Put a frame's window somewhere, at a size, and wait for it to be there.
+        """Put a frame's window somewhere, ask for a size, and say what it got.
 
         For tests with two windows, which is the only place this is any use.
         Where a window manager puts a second window is its own business --
@@ -109,23 +109,32 @@ class Test(object):
         click ambiguous and a pixel unreadable, so a test that has two of them
         says where they go rather than hoping.
 
-        Waited for rather than assumed: the request goes to the window manager,
-        which answers when it gets to it, and the coordinates the test uses
-        afterwards come from the accessibility tree, which learns the new
+        The position is waited for and the size is not, because a size is a
+        request: a window has a minimum, the window manager clamps to it, and
+        the minimum is a property of the theme and the fonts rather than of
+        medit -- 680x600 asked for here is 690x634 in the CI container. So the
+        extents this returns are what the window actually has, and a test that
+        needs the two of them to fit somewhere reads them rather than assuming
+        it got what it asked for.
+
+        Waited for rather than assumed even so: the request goes to the window
+        manager, which answers when it gets to it, and the coordinates the test
+        uses afterwards come from the accessibility tree, which learns the new
         geometry from the toolkit one step further still.
         """
         window = self.window_of(frame)
         ui.resize_window(window, width, height)
         ui.move_window(window, x, y)
 
-        want = (x, y, width, height)
-        self.wait(lambda: ui.extents(frame) == want,
-                  "%r to be placed at %s, it is at %s"
-                  % (frame.name, want, ui.extents(frame)))
+        self.wait(lambda: ui.extents(frame)[:2] == (x, y),
+                  "%r to be moved to (%d,%d), it is at %s"
+                  % (frame.name, x, y, ui.extents(frame)))
 
-        self.log("%r is at %s" % (frame.name, want))
+        got = ui.extents(frame)
+        self.log("%r is at %s, having been asked for %s"
+                 % (frame.name, got, (x, y, width, height)))
 
-        return window
+        return got
 
     def activate(self, frame):
         """Hand a window to the window manager as the active one.
