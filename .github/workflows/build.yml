@@ -7,10 +7,14 @@
 # structs that only -Wodr sees, constructs one compiler accepts silently and
 # another rejects -- is invisible until one of these jobs runs.
 #
-# Which distributions: the ones still supported. Debian 11 (its LTS ended in
-# August 2026) and Ubuntu 20.04 (standard support ended in May 2025) are gone,
-# and dropping bullseye removes the snapshot.debian.org workaround that its
-# dead archive needed.
+# Which distributions: the two ends of the range, not every point in it. What
+# breaks a build is the age of the toolchain and of GTK+3, and the images below
+# are the oldest and the newest still supported -- 3.24.33 with gcc 11, glib
+# 2.72 and cmake 3.22 against 3.24.52 with gcc 15, glib 2.88 and cmake 4.2.
+# Nothing has ever broken in the middle of that range without breaking at one
+# of its ends, and the middle is not unbuilt anyway: debian:13 is compiled by
+# the clang job, the UI tests and the deb packaging, and debian:12 is what this
+# is developed on.
 name: build
 
 on:
@@ -38,11 +42,8 @@ jobs:
       fail-fast: false
       matrix:
         image:
-          - ubuntu:26.04
-          - ubuntu:24.04
-          - ubuntu:22.04
-          - debian:13
-          - debian:12
+          - ubuntu:22.04   # gtk 3.24.33, glib 2.72, gcc 11, cmake 3.22
+          - ubuntu:26.04   # gtk 3.24.52, glib 2.88, gcc 15, cmake 4.2
         gtk: [2, 3]
     env:
       DEBIAN_FRONTEND: noninteractive
