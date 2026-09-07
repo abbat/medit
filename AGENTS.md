@@ -74,7 +74,7 @@ git stash pop
 
 | job | what it covers |
 |---|---|
-| `deb` | ubuntu 26.04, 24.04, 22.04, debian 13, 12 — each for both toolkits, ten in all |
+| `deb` | ubuntu 22.04 and 26.04, both toolkits — the two ends of the range: gtk 3.24.33 / glib 2.72 / gcc 11 / cmake 3.22 against 3.24.52 / 2.88 / 15 / 4.2 |
 | `clang` | clang on debian:trixie, both toolkits, plus the `analyze` target |
 | `fedora` | fedora:44, gtk-3, with LTO, which is the only place `-Wodr` has anything to see |
 | `langs` | `src/mooedit/langs/check.sh` over the 187 language definitions and schemes |
@@ -471,10 +471,11 @@ how this one was caught, in a container, after the local gtk2 build had gone sta
 ### Debian package build (old distros)
 
 The package targets **Debian 12 and 13, Ubuntu 22.04, 24.04 and 26.04** — Debian 11 and
-Ubuntu 20.04 were dropped when their support ended. `.github/workflows/build.yml`
-compiles all five for both toolkits on every push, and `package.yml` runs
-`dpkg-buildpackage` on the oldest and the newest of them, so ordinary source changes
-need no container. What is worth doing by hand is the faster loop while *writing* a
+Ubuntu 20.04 were dropped when their support ended. `build.yml` compiles the two ends of
+that range, Ubuntu 22.04 and 26.04, for both toolkits; the middle is not unbuilt either —
+debian:13 goes through the clang job, the UI tests and `package.yml`, and debian:12 is
+what this is developed on. `package.yml` runs `dpkg-buildpackage` on the oldest and the
+newest, so ordinary source changes need no container. What is worth doing by hand is the faster loop while *writing* a
 packaging change, and the apt scenarios below, which CI does not reach:
 
 ```bash
@@ -574,8 +575,9 @@ what is supported *today*, and fix both directions — drop what has reached end
 add what has been released since:
 
 * `README.md` — the "DEB packages for …" line under **download**.
-* `.github/workflows/build.yml` — the `deb` job's `image:` matrix, and the Fedora
-  release in the `fedora` job.
+* `.github/workflows/build.yml` — the `deb` job's `image:` matrix, which is the oldest
+  and the newest target and nothing between, so an aged image there loses an end of the
+  range rather than one point of it; and the Fedora release in the `fedora` job.
 * `.github/workflows/codeql.yml` — the runner and its dependency list.
 * `.github/workflows/package.yml` — the `deb` matrix, which carries the oldest and the
   newest deb target, and the Fedora release in the `rpm` job.
@@ -798,7 +800,7 @@ ctest -L app                                   # one subsystem
 cmake --build buildu3 --target ui-test         # ctest -j UI_TEST_PARALLEL
 
 tests/run.sh --gtk both                        # both toolkits, from the source tree
-tests/run.sh --gtk 2 -L terminal
+tests/run.sh --gtk 3 -L terminal                # one subsystem of one toolkit
 ```
 
 Build directories of their own, `buildu2` and `buildu3` beside `build2` and `build3`: a
@@ -810,17 +812,15 @@ nothing — the whole vocabulary is on `t` (`tests/lib/context.py`). ctest label
 with its subsystem and its toolkit. One file serves both toolkits, because the tree gail
 exposes for GTK+2 and the one GTK+3 exposes natively are the same tree.
 
-A test may also define `setup(s)`, which runs **before medit starts**: `s.pref()` writes a
-setting into `prefs.xml`, `s.script()` an executable into the sandbox, `s.open()` a file
-for medit to open on its command line. The same object is `t.sandbox` afterwards, so a
-script and the file it wrote are named the same way from both halves
-(`tests/lib/setup.py`). Some things cannot be arranged any later — the terminal reads its
-shell when the pane is first shown, and there is no moment in between.
+A test may also define `setup(s)`, run **before medit starts** (`tests/lib/setup.py`):
+`s.pref()` writes a setting into `prefs.xml`, `s.script()` an executable, `s.open()` a
+file for medit's command line. Nothing later would do — the terminal reads its shell when
+the pane is first shown. The same object is `t.sandbox` in `run(t)`, so both halves name a
+file the same way.
 
-A test that needs something this build may not have says so in its header,
-`# requires: MOO_BUILD_TERMINAL`. A build without it registers the test **disabled**
-rather than not at all, so `ctest -N` lists the same tests either way and says which ones
-this build cannot run.
+A test names what this build may lack in its header, `# requires: MOO_BUILD_TERMINAL`;
+without it the test is registered **disabled**, so `ctest -N` lists the same tests in
+every build and says which cannot run.
 
 **Reading and acting are different mechanisms, on purpose.** Everything asserted comes
 from AT-SPI, so a test says "the Credits button is there" rather than comparing pixels,
@@ -852,13 +852,11 @@ docker run --rm -v "$PWD:/src:ro" -v /tmp/w:/w medit-ui-d13 bash -c '
 This is worth doing rather than guessing: the toolkit and at-spi versions are what UI
 tests break on, and they are exactly what the local machine cannot vary.
 
-**No window manager**, which is one moving part fewer and costs exactly one thing:
-nothing hands the input focus on when a window disappears. After a menu is dismissed the
-focus belongs to the menu's window, which no longer exists — `xdotool getwindowfocus` then
-answers nothing at all and the application stops seeing keys, so the next `Shift+F10`
-opens no menu and the test times out waiting for one. `t.popup()` points the focus at the
-application first (`input.focus_window()`). The manual sandbox below starts `xfwm4` and
-has none of this.
+**No window manager**, which costs one thing: nothing hands the input focus on when a
+window disappears. After a menu is dismissed the focus belongs to the menu's dead window,
+`xdotool getwindowfocus` answers nothing, and the application stops seeing keys — the next
+`Shift+F10` opens no menu. `t.popup()` points the focus back first
+(`input.focus_window()`). The manual sandbox below starts `xfwm4` and has none of this.
 
 What it cost to get there, so nobody pays twice:
 
@@ -870,37 +868,28 @@ comes up, the accessibility tree never does, and the test times out looking for 
 that is on screen. Hence `mktemp -d /tmp/mui.XXXXXX`, and `UI_TEST_TMP_ROOT` if `/tmp` is
 not where it should go.
 
-**A display number is not a promise, and it took two goes to believe that.** The symptom
-is one random test out of thirteen failing a minute later with `cannot open display` on a
-run where every other test passed, twice in five parallel runs. Two separate causes, both
-in `sandbox.py`:
+**A display number is not a promise.** One test in thirteen fails a minute later with
+`cannot open display` while the rest pass. Three fixes in `sandbox.py`, two causes found
+and one not:
 
-- Xvfb writes the number with a newline after it, and a two-digit number arrives in two
-  writes often enough to matter — reading `1` out of `12` hands the test a display
-  belonging to another test, or to nobody. The read waits for the newline.
-- X creates `/tmp/.X11-unix` itself if it is missing, and thirteen servers starting in the
-  same second race to do it: one wins, the others print
-  `_XSERVTransmkdir: ERROR: Cannot create /tmp/.X11-unix` and then find every display
-  taken. This is the one that kept CI red after the first fix, because a container starts
-  without that directory and a developer's machine has had it since login. It is created
-  once, before the server is started.
+- Xvfb writes the number with a trailing newline; a two-digit number can arrive in two
+  writes, and reading `1` out of `12` hands the test somebody else's display. The read
+  waits for the newline.
+- X creates `/tmp/.X11-unix` when it is missing, and servers starting together race to do
+  it: one wins, the rest print `_XSERVTransmkdir: ERROR: Cannot create /tmp/.X11-unix` and
+  then find every display taken. This is what kept CI red after the first fix — a
+  container starts without that directory, a developer's machine has had it since login.
+  It is created once, up front. Server starts are serialised on a lock too, so two cannot
+  settle on one number.
+- The rest is open. About once in five full parallel runs, here and in CI, one medit is
+  refused a display that answered `xdotool` immediately before — in medit's own
+  environment — and answers again a minute later; forty sequential starts on one display
+  were never refused. `start_medit()` retries up to three times, only on that message,
+  logging each retry; anything else that dies at startup is not retried. The retry line in
+  a green run means this is still live.
 
-And then, because the first fix looked convincing and was not enough, the display is
-checked before medit is started — `xdotool getdisplaygeometry` on it, from the outer phase
-and again from inside the test's own environment. A test that cannot get a display now
+The display is also checked before medit starts, from both phases, so a test without one
 says so in a second instead of timing out in a minute.
-
-**And one part of it is still not understood**, so medit's start is retried. About once in
-five parallel runs of the whole suite, one medit exits with `cannot open display` on a
-display that both processes have just been answered by and that answers again a minute
-later, in CI as well as here. What has been ruled out: the display number (read whole
-now), the socket directory (created first), two servers on one number (the start of a
-server is serialised across tests), and the environment (the same `xdotool` call, in the
-same environment medit is given, succeeds immediately before). Forty medits started one
-after another on one display were all refused nothing. `start_medit()` therefore starts it
-again — up to three times, only for this message, saying so each time it does — and a
-medit that crashes for any other reason is not retried. If the line about starting it
-again shows up in a passing run, that is this, and it is still worth chasing.
 
 **AT-SPI can describe a widget but not operate one.** `queryAction().doAction("click")`
 on a menu item produces `Gtk-WARNING: no trigger event for menu popup` and
@@ -951,26 +940,23 @@ consequence is asserted directly rather than worked around: `credits.c` fills th
 "Translated by" tab from `_("translator-credits")` and only when the lookup returns
 something other than the msgid, so in an untranslated locale the tab is there and empty.
 
-**The panes reach the bus through an accessible of their own.** A pane and the button
-that opens it are internal children of `MooPaned`, and `GtkContainerAccessible` builds its
-child list from `gtk_container_get_children()`, which skips internal children. Before
-`MooPanedAccessible` (`moopaned.c`) the paned reported a single child, the document area:
-the file selector, the file list and the terminal were not in the tree at all, so a screen
-reader could not reach them and neither could a test. It is GTK+3 only — GTK+2 keeps those
-types inside the gail module, which cannot be subclassed by linking against it — so
-anything inside a pane is a GTK+3 test.
+**The panes reach the bus through an accessible of their own.** A pane and its button are
+internal children of `MooPaned`, and `GtkContainerAccessible` lists children from
+`gtk_container_get_children()`, which skips internal ones. Before `MooPanedAccessible`
+(`moopaned.c`) the paned reported one child, the document area: the file selector, the
+file list and the terminal were off the bus entirely, for a screen reader as much as for a
+test. GTK+3 only — GTK+2 keeps those types inside the gail module, which cannot be
+subclassed by linking against it — so anything inside a pane is a GTK+3 test.
 
-**The document view is still not in the tree.** The editor's notebook says it has one
-child and hands back nothing for it, on both toolkits; that is a separate defect from the
-panes and is not diagnosed yet. Until it is, a test asserts about the document through the
-status bar, whose `Chars: N` is an ordinary label — which is what `focus_toggle` and
-`copy_paste` do.
+**The document view is still not in the tree**, on either toolkit: the editor's notebook
+claims one child and returns nothing for it. A separate defect from the panes, not yet
+diagnosed. Until it is, tests read the document through the status bar, whose `Chars: N`
+is an ordinary label (`focus_toggle`, `copy_paste`).
 
-**A modified document blocks the quit at the end of a test.** File/Quit opens a dialog
-asking about saving, nothing answers it, and the test fails with "medit did not quit when
-asked" twenty seconds after the part it was testing passed. A test that types into a
-document saves it first, with `Ctrl+S` and a file put there by `s.open()`, so that no file
-chooser is involved.
+**A modified document blocks the quit at the end of a test**: File/Quit asks about saving,
+nothing answers, and the test fails with "medit did not quit when asked" twenty seconds
+after the part it tested passed. A test that types into a document saves it first —
+`Ctrl+S` on a file from `s.open()`, so no chooser appears.
 
 **Accessibility itself produces criticals, and they are not medit's.** On this machine
 the About test reports three on GTK+3 —
@@ -989,51 +975,45 @@ mechanism rather than a habit.
 
 ### What the terminal tests know
 
-`tests/terminal/` drives the pane through the shell that is actually running in it. The
-pane is GTK+3 only, so every test there carries `# requires: MOO_BUILD_TERMINAL`.
+`tests/terminal/` drives the pane through the shell running in it. GTK+3 only, so every
+test there carries `# requires: MOO_BUILD_TERMINAL`.
 
-**vte's accessible is the oracle.** `VteTerminal` implements `AtkText`, so the screen is
-readable: `t.text(terminal)` is what the shell printed. A word on it is no more a widget
-than a link in a label is, so `t.click_range(terminal, start, end, times=2)` double-clicks
-where those characters are drawn — that is how the copy test makes a selection.
+**vte's accessible is the oracle**: `VteTerminal` implements `AtkText`, so
+`t.text(terminal)` is the screen. A word on it is no more a widget than a link in a label,
+so `t.click_range(terminal, start, end, times=2)` double-clicks where those characters are
+drawn — that is how the copy test selects one.
 
 **Pin the shell.** `Plugins/Terminal/shell` is read when the pane is first shown, so
-`setup()` sets it before medit starts. Without it a test runs the login shell of whoever
-runs it, which is fish on some developer's machine and root's bash in CI. `/bin/sh` where
-only the answer matters; a script that appends a byte and `exec`s a shell where the test
-needs to know how many shells were started; a script that exits at once where the test is
-about a shell that fails.
+`setup()` sets it; otherwise a test runs the login shell of whoever runs it (fish here,
+root's bash in CI). `/bin/sh` where only the answer matters, a script that appends a byte
+and `exec`s a shell where starts must be counted, a script that exits at once where the
+test is about a shell that fails.
 
-**Nothing may depend on the prompt** — it comes from the shell and from
-`/etc/bash.bashrc`, and root gets `#` where a developer gets `$`. Tests wait for any
-non-empty text, and then for the answer to a command whose echo cannot be mistaken for its
-output: `echo ready$((21*2))` prints `ready42`.
+**Nothing may depend on the prompt** — root gets `#` where a developer gets `$`. Wait for
+any non-empty text, then for an answer whose echo cannot be mistaken for it:
+`echo ready$((21*2))` prints `ready42`.
 
-**The pushd item is offered by the name of the shell** (`basename == "bash"`), since there
-is no way to ask a shell what it supports. The context menu test uses that rather than
-working around it: its shell is a script called `bash`, which also lets it start the real
-bash somewhere other than the document's directory, so that "cd went there" is a change
-and not a coincidence.
+**The pushd item is offered by the shell's name** (`basename == "bash"`), there being no
+way to ask a shell what it supports. The context menu test uses that: its shell is a script
+called `bash`, which also starts the real bash outside the document's directory, so "cd
+went there" is a change rather than a coincidence.
 
-**Two windows is not a test here.** Without a window manager a second toplevel is placed
-where the first one is, and a click at coordinates AT-SPI gave lands on whichever window X
-happened to stack on top — so there is no test for two terminals in two windows, however
-much the list of live panes deserves one. A test that needs that needs a window manager in
-the sandbox first.
+**Two windows is not a test here.** Without a window manager the second toplevel lands on
+the first, at the same coordinates, and a click goes to whichever X stacked on top — hence
+no test for two terminals in two windows, however much the list of live panes deserves one.
 
-**A colour is the one thing read off the screen.** Nothing in the accessibility tree says
-what colour anything is drawn in, so `input.pixel()` reads a pixel of the corner the shell
-never writes in. It is the only pixel in the tests, and it is there so that the colour
-scheme test asserts the terminal was repainted rather than that a setting was written.
-`import` on ImageMagick 6, `magick import` on 7; both are tried.
+**A colour is the one thing read off the screen** — nothing in the tree says what colour
+anything is drawn in. `input.pixel()` reads a pixel of the corner the shell never writes
+in, so the scheme test asserts a repaint rather than a stored setting. `import` on
+ImageMagick 6, `magick import` on 7; both are tried.
 
-**The pane adds deprecations, and they are ours.** Counted on debian 13, where
-`G_ENABLE_DIAGNOSTIC=1` is loudest: `VteTerminal::window-title-changed` twice per run, the
-signal having been deprecated in vte 0.68; `GtkImageMenuItem:use-stock` and `:accel-group`
-in the two tests that open the context menu, from `gtk_image_menu_item_new_from_stock()`;
-and `GtkFontButton:font-name` in the two that open the preferences, from the `g_object_set`
-in `terminal-prefs.cpp`. All three are in the plugin's own code and all three have
-replacements; none of them fails a test, in the same way criticals do not.
+**The pane's deprecations are ours**, counted on debian 13 where `G_ENABLE_DIAGNOSTIC=1`
+is loudest: `VteTerminal::window-title-changed` twice per run (deprecated in vte 0.68, and
+vte 0.80 has moved the whole window-title API to `vtedeprecated.h` — the replacement,
+termprops, needs 0.78, so fixing it means a version branch);
+`GtkImageMenuItem:use-stock` and `:accel-group` from `gtk_image_menu_item_new_from_stock()`
+in `create_popup_menu()`, whose replacement drops the icons. `GtkFontButton:font-name` was
+the third and is fixed. None of them fails a test, as criticals do not.
 
 ### The ad-hoc sandbox (headless X + screenshots + synthetic input)
 
@@ -1148,7 +1128,7 @@ command line and kills the shell (exit 144). `pkill -x medit` is safe.
 | A per-line `grep` over a `-j8` build log miscounts: two compilers writing at once interleave mid-line, so one warning's text lands inside another's and a filter like `grep warning: \| grep -v deprecated` reports a warning that does not exist | check the surrounding lines before believing a count of one |
 | `gtk-builder-tool validate` stops at the **first** error, and 13 of our 30 `.ui` files fail immediately on `Invalid object type 'MooEntry'` and friends, because the standalone tool does not know the Moo widgets. Everything after that line in those files goes unchecked | it is still worth running on the 17 it can read; a full check needs a validator that registers the types first |
 | gcc 12 accepts C constructs that gcc 9/10 reject (unnamed parameters), so a clean local build says nothing about the oldest target | no compiler in the current matrix rejects them; see "Debian package build (old distros)" |
-| `pkg_check_modules(GTK … ${GTK_PACKAGE})` defines `GTK_VERSION` as the version it found (`3.24.38`), shadowing the cache entry of the same name that selects the toolkit | anywhere below the Dependencies section of the top `CMakeLists.txt`, branch on `GTK_PACKAGE STREQUAL "gtk+-3.0"`, never on `GTK_VERSION` |
+| `pkg_check_modules(<prefix> …)` writes `<prefix>_VERSION` into the **cache**, so a prefix of `GTK` overwrote the `GTK_VERSION` entry that selects the toolkit — the first configure worked, the second failed with "Unsupported GTK version: 3.24.38" | fixed: the prefix is `GTKPKG`, and `GTK_VERSION` is again the toolkit choice and safe to branch on. Never give `pkg_check_modules` a prefix that names an option |
 | A key name in an accelerator string is **case sensitive**: `"<Ctrl>Space"` does not parse and `"<Ctrl>space"` does. `_moo_accel_register()` drops an unparsable accelerator without a word, so the action simply has no key | test it: `gtk_accelerator_parse()` returns key 0. `MOO_EDIT_ACCEL_COMPLETE` carried this mistake unused since 1.2.92 |
 | `_moo_get_accel()` and `_moo_get_default_accel()` read **different maps**: the first holds accelerators that were actually set, the second the defaults registered with the action. An accelerator that has only ever had its default reads as empty from the first | ask the first, fall back to the second — that is what a plugin matching its own accelerator by hand has to do |
 | The focused widget sees a key before the accelerators (`moo_window_key_press_event`), so a plugin action whose key the text view consumes — `Ctrl+Space` — never fires | match the accelerator by hand in the view's `key-press-event`, as the terminal and the LSP completion do |
