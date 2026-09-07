@@ -306,7 +306,8 @@ def scan_log(log_dir):
                         deprecated[found.group(1)] += 1
                 elif any(marker in line for marker in WARNING_MARKERS):
                     counts["warnings"] += 1
-    except FileNotFoundError:
+    except FileNotFoundError:  # codeql[py/empty-except]
+        # No log means medit printed nothing, which the counts already say.
         pass
 
     counts["names"] = deprecated
@@ -362,7 +363,9 @@ def inner(args):
 
         module.run(t)
 
-    except BaseException as error:          # noqa: BLE001 -- the report is the point
+    # Everything, deliberately: the report is the point, and a test that fails
+    # by raising KeyboardInterrupt still has to leave its evidence behind.
+    except BaseException as error:  # noqa: BLE001  # codeql[py/catch-base-exception]
         failure = error
         # Before anything below stops it: "medit exited with -15" would only
         # say that this is what stopped it.

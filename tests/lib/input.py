@@ -197,16 +197,20 @@ _IMPORT = (["import"], ["magick", "import"])
 
 
 def _import(*args):
-    last = None
+    last = len(_IMPORT) - 1
 
-    for command in _IMPORT:
+    for i, command in enumerate(_IMPORT):
         try:
             return subprocess.run(command + [str(a) for a in args],
                                   capture_output=True, text=True, check=True)
-        except (FileNotFoundError, subprocess.CalledProcessError) as error:
-            last = error
-
-    raise last
+        except (FileNotFoundError, subprocess.CalledProcessError):
+            # The last spelling is the one whose failure the caller sees, and a
+            # bare re-raise is what says so: keeping the error in a variable and
+            # raising it after the loop reads as though the loop might not run,
+            # in which case the variable is None and the TypeError replaces the
+            # failure it was supposed to report.
+            if i == last:
+                raise
 
 
 def pixel(x, y):

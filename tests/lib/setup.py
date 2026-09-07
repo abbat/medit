@@ -22,7 +22,6 @@ from both halves.
 import json
 import os
 import shlex
-import stat
 import sys
 
 from xml.sax.saxutils import escape
@@ -107,9 +106,14 @@ class Setup(object):
         return path
 
     def script(self, name, body):
-        """An executable file in the sandbox, by path."""
+        """An executable file in the sandbox, by path.
+
+        Readable and runnable by this user and nobody else: the sandbox belongs
+        to whoever runs the tests, and the only thing that executes what is in
+        it is the medit started from here.
+        """
         path = self.write(name, body)
-        os.chmod(path, os.stat(path).st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+        os.chmod(path, 0o700)
         return path
 
     def open(self, path):

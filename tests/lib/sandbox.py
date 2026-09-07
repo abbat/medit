@@ -77,8 +77,12 @@ X_SOCKET_DIR = "/tmp/.X11-unix"
 
 def ensure_x_socket_dir():
     try:
+        # 1777 is what this directory is required to be -- every user's X
+        # server puts a socket in it, and the sticky bit is what keeps them
+        # from removing each other's. It is also what the system's own copy
+        # already is.
         os.makedirs(X_SOCKET_DIR, mode=0o1777, exist_ok=True)
-        os.chmod(X_SOCKET_DIR, 0o1777)
+        os.chmod(X_SOCKET_DIR, 0o1777)  # codeql[py/overly-permissive-file]
     except OSError:
         # Not ours to fix -- somebody else's, with the right permissions
         # already, or a system where this is not where the sockets go.

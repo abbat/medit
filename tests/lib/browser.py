@@ -40,7 +40,9 @@ def install(root, data_home, config_home):
     handler = os.path.join(root, "urlcatch")
     with open(handler, "w") as f:
         f.write(_HANDLER.format(log=log))
-    os.chmod(handler, 0o755)
+    # Nobody else runs it: the sandbox root is a mkdtemp of this user's, and
+    # the only thing that executes the handler is medit, started from here.
+    os.chmod(handler, 0o700)
 
     applications = os.path.join(data_home, "applications")
     os.makedirs(applications, exist_ok=True)
