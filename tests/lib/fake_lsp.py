@@ -16,8 +16,9 @@ Started as
 
     python3 fake_lsp.py <scenario.json>
 
-and the scenario is re-read at every start, so a server that is restarted can
-be told to behave differently the second time.
+and the scenario is re-read before every message, so a test can change what the
+server answers between one request and the next -- and a server that is
+restarted can be told to behave differently the second time.
 
 The scenario, all of it optional:
 
@@ -111,11 +112,19 @@ class FakeServer(object):
     # -- the scenario ------------------------------------------------------
 
     def load(self):
+        """Read the scenario again, keeping the last good one if it cannot be.
+
+        Read before every message rather than once at startup, so that a test
+        can change what the server answers -- where a definition is, what the
+        symbols are -- between one request and the next, without having to make
+        medit start the process again. A half-written file is a ValueError, and
+        the answer to that is the scenario already in hand.
+        """
         try:
             with open(self.scenario_path) as f:
                 self.scenario = json.load(f)
         except (FileNotFoundError, ValueError):
-            self.scenario = {}
+            pass
 
     def get(self, name, fallback=None):
         return self.scenario.get(name, fallback)
@@ -241,6 +250,7 @@ class FakeServer(object):
             if message is None:
                 return 0
 
+            self.load()
             self.note(message)
 
             method = message.get("method")

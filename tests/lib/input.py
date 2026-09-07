@@ -148,7 +148,7 @@ def click_at(x, y, button=1, settle=SETTLE, times=1):
     time.sleep(settle)
 
 
-def click_range(node, start, end, settle=SETTLE, times=1):
+def click_range(node, start, end, button=1, settle=SETTLE, times=1):
     """Click a range of a node's text.
 
     This is how a hyperlink inside a label is clicked: it has no extents of its
@@ -158,7 +158,7 @@ def click_range(node, start, end, settle=SETTLE, times=1):
     """
     box = node.queryText().getRangeExtents(start, end, pyatspi.DESKTOP_COORDS)
     x, y = box[0] + box[2] // 2, box[1] + box[3] // 2
-    click_at(x, y, settle=settle, times=times)
+    click_at(x, y, button=button, settle=settle, times=times)
     return x, y
 
 

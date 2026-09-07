@@ -195,12 +195,12 @@ class Test(object):
         x, y = ui.click(node, button)
         self.log("click %s at (%d,%d)" % (described, x, y))
 
-    def click_range(self, node, start, end, times=1):
+    def click_range(self, node, start, end, times=1, button=1):
         """Click where a range of the node's text is drawn."""
-        x, y = ui.click_range(node, start, end, times=times)
-        self.log("click %s[%d:%d] at (%d,%d)%s"
-                 % (a11y.role_name(node), start, end, x, y,
-                    ", twice" if times == 2 else ""))
+        x, y = ui.click_range(node, start, end, button=button, times=times)
+        self.log("click %s%s[%d:%d] at (%d,%d)%s"
+                 % (a11y.role_name(node), "" if button == 1 else " (button %d)" % button,
+                    start, end, x, y, ", twice" if times == 2 else ""))
         return x, y
 
     def click_link(self, label, link):
@@ -289,6 +289,19 @@ class Test(object):
                 return menu
 
         return None
+
+    def popup_at(self, node, start, end, timeout=a11y.TIMEOUT):
+        """Right-click where a range of the node's text is drawn, and take the menu.
+
+        Not the same thing as t.popup(), which asks the focused widget for its
+        menu from the keyboard. GtkTextView leaves the cursor where it was on a
+        right click, so an entry that goes by the click rather than by the
+        cursor can only be told apart from one that does not by opening the menu
+        somewhere the cursor is not.
+        """
+        self.click_range(node, start, end, button=3)
+
+        return self.wait(self._popup_menu, "a context menu", timeout)
 
     def item(self, menu, label, timeout=a11y.TIMEOUT):
         """One item of a menu that is already open."""
