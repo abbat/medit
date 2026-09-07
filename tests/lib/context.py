@@ -209,6 +209,16 @@ class Test(object):
                  % (link["index"], link["uri"], x, y, link["source"]))
         return link["uri"]
 
+    def focus(self):
+        """Point the X input focus back at the application's window.
+
+        There is no window manager, so nothing hands the focus on when a window
+        goes away: after a menu is dismissed it belongs to the menu's dead
+        window, and the keys that follow reach nobody. t.popup() does this for
+        itself; a test that types straight after using a menu has to say so.
+        """
+        ui.focus_window()
+
     def key(self, *keys):
         ui.key(*keys)
 
