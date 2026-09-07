@@ -1132,26 +1132,30 @@ it, and says so rather than pretending to check the answer.
 the wrapper, never the `id` from `lsp.xml`. It is also read where a server is *started*,
 so ticking it does nothing until the servers are restarted.
 
-Three things the tests found and did not fix, all of them the client's rather than the
-harness's:
+Three things the tests found, all of them the client's rather than the harness's, and all
+three fixed here — with the test that failed first written down beside each:
 
-* **`lsp_server_get_error()` has no caller.** When a server fails to start, answers
-  `initialize` with no capabilities, or exits immediately three times, `set_failed()`
-  writes a sentence saying which server it was and where to fix it — and nothing shows it.
-  No pane, no status bar, no line in the log. `server_gives_up` therefore asserts the
-  count of processes, which is all the outside world can see; the terminal, which had this
-  bug in the same shape, writes the same class of failure into the pane the user is
-  looking at.
-* **An entry whose program is not installed shadows the entries after it.**
-  `find_config()` returns the first entry whose *filter* matches and
-  `lsp_manager_add_doc()` then gives up on finding no program, so a second entry for the
-  same language never gets a chance. `lsp.xml` says such an entry "is skipped in silence",
-  which reads as "move on to the next one". `starts_server` avoids the overlap rather than
-  asserting either reading.
-* **The diagnostics preference does not reach the pane.** Unticking "Underline problems
-  and list them in the Diagnostics pane" runs `lsp_doc_refresh_diagnostics()`, which clears
-  the marks in the document; `fill_pane()` lists `lsp_doc_get_diagnostics()` whatever the
-  preference says, so the second half of that sentence does not happen.
+* **`lsp_server_get_error()` had no caller.** `set_failed()` has always written a sentence
+  saying what went wrong; nothing read it back, so the client went quiet and an editor
+  that never mentions language servers again looks exactly like one with none configured.
+  It is said twice now, the way the terminal says it: on medit's own output and in the
+  diagnostics pane. Two things about where, both learned by getting them wrong first — the
+  log line belongs in `set_failed()`, not in the state callback, because a server that
+  fails again while already failed changes no state and it is the *last* message ("exited
+  immediately 3 times in a row, check the command") that a user needs; and the pane has to
+  fill itself on `::map`, because a server that gave up before anyone opened it has
+  nothing left to notify anybody with. `server_gives_up` covers the log on both toolkits,
+  `failure_pane` the pane.
+* **An entry whose program was not installed shadowed the entries after it.**
+  `find_config()` returned the first entry whose *filter* matched and
+  `lsp_manager_add_doc()` then gave up on finding no program, so a fallback entry after a
+  preferred one never ran. The check is inside the matching loop now — `lsp.xml`'s "skipped
+  in silence" means the entry is skipped, not the document. `starts_server` puts an
+  uninstalled entry for `*.txt` before the working one and watches which gets the file.
+* **The diagnostics preference did not reach the pane.** "Underline problems and list them
+  in the Diagnostics pane" took the marks off the document and left the pane listing them;
+  `fill_pane()` reads the preference now. A failed server still says so with the setting
+  off — that is not a diagnostic, it is the reason there are none. In `diagnostics_pane`.
 
 ### The ad-hoc sandbox (headless X + screenshots + synthetic input)
 
