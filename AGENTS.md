@@ -812,9 +812,11 @@ sanitized binary is three times the size and visibly slower, which is not what a
 ordinary build should become.
 
 A test is `tests/<subsystem>/<name>/test.py` — `app`, `editor`, `terminal` so far — one
-`run(t)` function, and it imports nothing — the whole vocabulary is on `t` (`tests/lib/context.py`). ctest labels each test
-with its subsystem and its toolkit. One file serves both toolkits, because the tree gail
-exposes for GTK+2 and the one GTK+3 exposes natively are the same tree.
+`run(t)` function, and it imports nothing: the whole vocabulary is on `t`
+(`tests/lib/context.py`). ctest labels each test with its subsystem and its toolkit. One
+file serves both toolkits wherever the two trees agree, which for dialogs they do, gail's
+and GTK+3's being the same tree there; the panes, the document and the terminal are GTK+3
+only, and those tests say so.
 
 A test may also define `setup(s)`, run **before medit starts** (`tests/lib/setup.py`):
 `s.pref()` writes a setting into `prefs.xml`, `s.script()` an executable, `s.open()` a
@@ -822,9 +824,9 @@ file for medit's command line. Nothing later would do — the terminal reads its
 the pane is first shown. The same object is `t.sandbox` in `run(t)`, so both halves name a
 file the same way.
 
-A test names what this build may lack in its header, `# requires: MOO_BUILD_TERMINAL`;
-without it the test is registered **disabled**, so `ctest -N` lists the same tests in
-every build and says which cannot run.
+A test names what this build may lack in its header — `# requires: MOO_BUILD_TERMINAL`,
+`# requires: MOO_GTK3` — and a build without it registers the test **disabled**, so
+`ctest -N` lists the same tests in every build and says which cannot run.
 
 **Reading and acting are different mechanisms, on purpose.** Everything asserted comes
 from AT-SPI, so a test says "the Credits button is there" rather than comparing pixels,
