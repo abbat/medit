@@ -106,13 +106,17 @@ jobs:
       #   fonts-dejavu-core      a container has no fonts at all, and a test
       #                          that clicks a link clicks where the text is
       #   imagemagick            the screenshot taken when a test fails
+      #   xfwm4, x11-utils       a window manager and xprop, for the one test
+      #                          that needs two windows in two places at once.
+      #                          Without them that test is registered and
+      #                          disabled, the same as a terminal test on GTK+2
       - name: Install what the UI tests need
         run: |
           set -eux
           apt-get install -y -qq --no-install-recommends \
               xvfb xdotool dbus-daemon at-spi2-core python3-pyatspi \
               libatk-adaptor libgail-common desktop-file-utils \
-              fonts-dejavu-core imagemagick
+              fonts-dejavu-core imagemagick xfwm4 x11-utils
 
           # dbus refuses to start without one, and a container image ships an
           # empty /etc/machine-id.

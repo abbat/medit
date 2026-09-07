@@ -193,6 +193,82 @@ def _start_x_once(root, log_path, screen, timeout):
     raise RuntimeError("Xvfb did not report a display number within %ds" % timeout)
 
 
+# A window manager, for the tests that cannot do without one.
+#
+# Not for the rest: a window manager is the largest single change that can be
+# made to what the tests run in -- it decides where windows go, who has the
+# focus and what a close button does -- and thirty-odd tests that pass without
+# one are not worth re-verifying under one. So a test asks for it by name
+# (NEEDS_WM in the test module) and gets one of its own, in its own sandbox,
+# for the length of that test.
+#
+# xfwm4 rather than something smaller: it is what the manual sandbox in
+# AGENTS.md has always started, so it is the one whose behaviour here is
+# already known, and UI_TEST_WM overrides it on a machine that has another.
+# The flags are looked up by name because they are not portable between window
+# managers -- the compositor is off because there is nothing to composite on a
+# virtual screen, and the session manager because there is none.
+WM = os.environ.get("UI_TEST_WM") or "xfwm4"
+
+WM_FLAGS = {
+    "xfwm4": ["--compositor=off", "--sm-client-disable"],
+}
+
+
+def wm_is_running(display, timeout=0):
+    """Whether a window manager owns that screen.
+
+    _NET_SUPPORTING_WM_CHECK is the property a window manager puts on the root
+    window to say it is there, and it is the same kind of answer medit itself
+    asks X for: _moo_get_top_window() reads _NET_CLIENT_LIST_STACKING, which
+    nothing sets when there is no window manager, and reports a critical.
+    """
+    env = dict(os.environ, DISPLAY=display)
+    deadline = time.time() + timeout
+
+    while True:
+        try:
+            done = subprocess.run(
+                ["xprop", "-root", "-notype", "_NET_SUPPORTING_WM_CHECK"],
+                env=env, capture_output=True, text=True)
+        except FileNotFoundError:
+            raise RuntimeError(
+                "xprop was not found, and it is how a window manager is waited "
+                "for. It is x11-utils on debian; cmake looks for it too, and a "
+                "build that did not find it disables the tests that need one.")
+
+        if done.returncode == 0 and "window id" in done.stdout:
+            return True
+
+        if time.time() >= deadline:
+            return False
+
+        time.sleep(0.2)
+
+
+def start_wm(display, log_path, timeout=20):
+    """Start a window manager on that display and wait until it has the screen."""
+    log = open(log_path, "ab")
+
+    try:
+        proc = subprocess.Popen([WM] + WM_FLAGS.get(os.path.basename(WM), []),
+                                env=dict(os.environ, DISPLAY=display),
+                                stdout=log, stderr=subprocess.STDOUT)
+    except FileNotFoundError:
+        raise RuntimeError(
+            "%s was not found, and this test asked for a window manager. "
+            "Install it, or name another one in UI_TEST_WM." % WM)
+    finally:
+        log.close()
+
+    if wm_is_running(display, timeout):
+        return proc
+
+    stop(proc)
+    raise RuntimeError("%s did not take the screen within %ds, see %s"
+                       % (WM, timeout, log_path))
+
+
 def stop(proc, timeout=5):
     """Stop a process by PID, politely first.
 

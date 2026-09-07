@@ -62,7 +62,64 @@ def _xdotool_out(*args):
     return done.stdout.strip()
 
 
-def focus_window(pattern=APP_CLASS):
+def windows(pattern=APP_CLASS):
+    """The X windows of the application, as xdotool lists them."""
+    return _xdotool_out("search", "--onlyvisible", "--class", pattern).split()
+
+
+def window_of(frame):
+    """The X window a toplevel of the accessibility tree is drawn in.
+
+    By title and not by position in the list: with more than one window open,
+    which of them is "the first" is not something either X or AT-SPI promises,
+    and the title is what the two views of the same window agree on. medit puts
+    the document in it, so the second window of a fresh instance is "medit -
+    Untitled 2" -- unique, and unique is the whole requirement.
+    """
+    found = _xdotool_out("search", "--onlyvisible", "--name",
+                         "^%s$" % re.escape(frame.name)).split()
+
+    if len(found) != 1:
+        raise AssertionError("%r names %d X windows, expected one"
+                             % (frame.name, len(found)))
+
+    return found[0]
+
+
+def activate_window(window, settle=SETTLE):
+    """Make a window the one the window manager considers active.
+
+    Not the same as focus_window(), and the difference is what a window manager
+    is: XSetInputFocus, which is what that does, moves the keys and tells the
+    window manager nothing, so the window it thinks is active -- the one it
+    would close on Alt+F4, the one it raises -- is still the other one. This
+    asks the window manager instead, and there has to be one to ask.
+    """
+    _xdotool("windowactivate", "--sync", window)
+    time.sleep(settle)
+
+
+def resize_window(window, width, height, settle=SETTLE):
+    """Give a window a size of the test's choosing."""
+    _xdotool("windowsize", window, width, height)
+    time.sleep(settle)
+
+
+def move_window(window, x, y, settle=SETTLE):
+    """Put a window where the test wants it.
+
+    Windows are placed by the window manager, and where it puts a second one is
+    its business rather than anything a test may rely on: xfwm4 cascades it
+    over the first -- measured at (600,300) against (0,0), two 800x600 windows
+    overlapping over most of both -- and an overlap is a click that lands in
+    whichever of them X stacked on top. A test with two windows says where it
+    wants them.
+    """
+    _xdotool("windowmove", window, x, y)
+    time.sleep(settle)
+
+
+def focus_window(pattern=APP_CLASS, window=None):
     """Point the X input focus at the application's window.
 
     There is no window manager in the sandbox, and nothing else hands the focus
@@ -71,16 +128,23 @@ def focus_window(pattern=APP_CLASS):
     getwindowfocus" answers nothing at all, and the application stops receiving
     keys -- it does not even see the key that would open the next menu. A window
     manager, which is to say everywhere except here, deals with this.
+
+    Which window, when there are several, is the caller's to say: the default
+    is the last one xdotool lists, and a test driving two windows names the one
+    it means.
     """
-    windows = _xdotool_out("search", "--onlyvisible", "--class", pattern).split()
+    if window is None:
+        found = windows(pattern)
 
-    if not windows:
-        return None
+        if not found:
+            return None
 
-    _xdotool("windowfocus", windows[-1])
+        window = found[-1]
+
+    _xdotool("windowfocus", window)
     time.sleep(POINTER)
 
-    return windows[-1]
+    return window
 
 
 def extents(node):

@@ -85,6 +85,63 @@ class Test(object):
         described = what or ", ".join("%s=%r" % kv for kv in sorted(kwargs.items()))
         return self._or_dump(lambda: a11y.find(root, **kwargs), described, timeout, root)
 
+    def frames(self):
+        """Every main window of the application, in the order the tree lists them.
+
+        self.frame is the one the test started with; this is what a test that
+        opens a second window uses to tell them apart. A frame is a window with
+        a menu bar and documents in it -- dialogs are toplevels too, and are
+        not these.
+        """
+        return [node for node in a11y.children(self.app)
+                if a11y.role_name(node) == "frame"]
+
+    def window_of(self, frame):
+        """The X window a frame is drawn in, for the things AT-SPI cannot do."""
+        return ui.window_of(frame)
+
+    def place_window(self, frame, x, y, width, height):
+        """Put a frame's window somewhere, at a size, and wait for it to be there.
+
+        For tests with two windows, which is the only place this is any use.
+        Where a window manager puts a second window is its own business --
+        xfwm4 cascades it over the first -- and two overlapping windows make a
+        click ambiguous and a pixel unreadable, so a test that has two of them
+        says where they go rather than hoping.
+
+        Waited for rather than assumed: the request goes to the window manager,
+        which answers when it gets to it, and the coordinates the test uses
+        afterwards come from the accessibility tree, which learns the new
+        geometry from the toolkit one step further still.
+        """
+        window = self.window_of(frame)
+        ui.resize_window(window, width, height)
+        ui.move_window(window, x, y)
+
+        want = (x, y, width, height)
+        self.wait(lambda: ui.extents(frame) == want,
+                  "%r to be placed at %s, it is at %s"
+                  % (frame.name, want, ui.extents(frame)))
+
+        self.log("%r is at %s" % (frame.name, want))
+
+        return window
+
+    def activate(self, frame):
+        """Hand a window to the window manager as the active one.
+
+        What a test with two windows uses before typing into one of them or
+        closing it: the keys follow the active window, and so does everything
+        the window manager itself does. Only for tests that asked for a window
+        manager -- with none there is nothing to ask, and xdotool says so and
+        fails rather than quietly leaving the keys where they were.
+        """
+        window = self.window_of(frame)
+        ui.activate_window(window)
+        self.log("%r is the active window" % frame.name)
+
+        return window
+
     def toplevel(self, name, role="dialog", timeout=a11y.TIMEOUT):
         """A toplevel window of the application, by title."""
         return self._or_dump(
@@ -229,15 +286,20 @@ class Test(object):
 
         self.log("ok: the pane is pinned open")
 
-    def focus(self):
+    def focus(self, frame=None):
         """Point the X input focus back at the application's window.
 
         There is no window manager, so nothing hands the focus on when a window
         goes away: after a menu is dismissed it belongs to the menu's dead
         window, and the keys that follow reach nobody. t.popup() does this for
         itself; a test that types straight after using a menu has to say so.
+
+        With a window manager and two windows there is a second reason to call
+        it: which of them has the keys is then a matter of what was clicked
+        last, and a test that means the other one says so with frame=.
         """
-        ui.focus_window()
+        return ui.focus_window(
+            window=self.window_of(frame) if frame is not None else None)
 
     def hover(self, node, start, end):
         """Rest the pointer over a range of the node's text and let it settle."""
@@ -251,12 +313,14 @@ class Test(object):
     def type_text(self, text):
         ui.type_text(text)
 
-    def menu(self, *path):
+    def menu(self, *path, frame=None):
         """Walk a menu path, clicking each step.
 
         The first name is a menu on the menu bar, the rest are items inside it.
+        The menu bar is the one of self.frame unless a test with two windows
+        says which window it means: frame=.
         """
-        node = self.need(self.frame, role="menu", name=path[0],
+        node = self.need(frame or self.frame, role="menu", name=path[0],
                          what="the %r menu" % path[0])
         self.click(node)
 
@@ -267,7 +331,7 @@ class Test(object):
 
         return node
 
-    def popup(self, timeout=a11y.TIMEOUT):
+    def popup(self, timeout=a11y.TIMEOUT, frame=None):
         """Open the context menu of whatever has the focus, and return it.
 
         Shift+F10 and not a right click: a click needs coordinates, and the
@@ -278,8 +342,10 @@ class Test(object):
         """
         # The focus first: a menu dismissed earlier took the X input focus
         # into a window that no longer exists, and without a window manager
-        # nothing gives it back, so the key below would go nowhere.
-        ui.focus_window()
+        # nothing gives it back, so the key below would go nowhere. With two
+        # windows the caller says which one it means, since the default -- the
+        # last window xdotool lists -- is the other one as often as not.
+        self.focus(frame)
         ui.key("shift+F10")
 
         return self.wait(self._popup_menu, "a context menu", timeout)

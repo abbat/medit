@@ -349,6 +349,18 @@ def inner(args):
     module = load_test(args.test)
     prepared = prepare(module, log_dir)
 
+    # Before medit, so that its first window is managed like every other: a
+    # window manager that arrives second adopts what is already mapped, but
+    # only after having missed the map, and where a window ends up is then a
+    # race. A test says NEEDS_WM = True when it needs one; see sandbox.start_wm
+    # for why the other thirty do not get one.
+    wm = None
+
+    if getattr(module, "NEEDS_WM", False):
+        wm = sandbox.start_wm(os.environ["DISPLAY"],
+                              os.path.join(log_dir, "wm.log"))
+        print("    %s has the screen" % sandbox.WM)
+
     proc = start_medit(args.binary, log_dir, prepared.files)
 
     failure = None
@@ -386,6 +398,11 @@ def inner(args):
             code = proc.returncode
         else:
             code = proc.returncode
+
+        # After medit and not before: taking the window manager away from a
+        # running application is a thing no user does, and the sanitizer report
+        # that came out of it would be about that rather than about the test.
+        sandbox.stop(wm)
 
     ok = failure is None
 

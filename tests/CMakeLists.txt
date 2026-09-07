@@ -56,6 +56,25 @@ foreach(_tool ${_moo_ui_test_tools})
     endif()
 endforeach()
 
+# A window manager, which almost nothing here wants: the tests run without one
+# and are written for that. One test needs a second window to be somewhere
+# other than on top of the first, and asks for one -- see lib/sandbox.py -- so
+# this is looked up rather than required, and the test that asks is registered
+# and disabled where it is not found, the way the terminal tests are on GTK+2.
+#
+# xprop with it: it is how the harness knows the window manager has the screen
+# before medit's first window is mapped.
+#
+# UI_TEST_WM is passed to the test in the environment below, so pointing it at
+# another window manager is a matter of configuring with
+# -DUI_TEST_WM=/usr/bin/openbox; lib/sandbox.py reads the same variable.
+find_program(UI_TEST_WM NAMES xfwm4 DOC "Window manager for the tests that need one")
+find_program(UI_TEST_XPROP NAMES xprop)
+
+if(UI_TEST_WM AND UI_TEST_XPROP)
+    set(MOO_UI_TEST_WM 1)
+endif()
+
 execute_process(
     COMMAND ${Python3_EXECUTABLE} -c "import pyatspi"
     RESULT_VARIABLE _moo_pyatspi
@@ -159,6 +178,14 @@ foreach(_test ${_moo_ui_tests})
     if(ENABLE_COVERAGE)
         set_property(TEST ${_test_name} APPEND PROPERTY ENVIRONMENT
             "LLVM_PROFILE_FILE=${MOO_COVERAGE_DIR}/raw/${_test_name}-%p.profraw")
+    endif()
+
+    # Which window manager to start, for the tests that ask for one. Set for
+    # every test because it costs nothing: a test that does not ask never
+    # starts it.
+    if(UI_TEST_WM)
+        set_property(TEST ${_test_name} APPEND PROPERTY ENVIRONMENT
+            "UI_TEST_WM=${UI_TEST_WM}")
     endif()
 
     # The header is read at configure time, so cmake has to re-run when it

@@ -1065,6 +1065,24 @@ window disappears. After a menu is dismissed the focus belongs to the menu's dea
 bar and then types — opening a file from a menu and typing into it silently types nowhere.
 The manual sandbox below starts `xfwm4` and has none of this.
 
+**Unless the test asks**, which one of them does. `NEEDS_WM = True` in the test module
+starts `xfwm4` in that test's sandbox, before medit, and stops it after — `UI_TEST_WM`
+names another one, and cmake passes what it found there. It is opt-in because a window
+manager is the largest single change that can be made to what these tests run in: it
+decides where windows go, who has the keys, and what closing a window means. Thirty-odd
+tests that pass without one are not worth re-verifying under one, and a test that needs
+one says `# requires: MOO_UI_TEST_WM` so that a machine without it lists the test as
+disabled rather than failing it.
+
+With a window manager there is a second thing to know: **activating a window and focusing
+it are different**. `t.focus(frame)` is `XSetInputFocus` and tells the window manager
+nothing, so the window it still considers active is the other one — and `Alt+F4` then
+closes nothing at all, which is an hour spent on a test that seemed to be about closing
+windows. `t.activate(frame)` asks the window manager instead (`xdotool windowactivate
+--sync`), and that is what a test with two windows uses before typing into one or closing
+it. Typing works after a plain click too, xfwm4 giving the keys to what was clicked, but
+that is its policy rather than a promise.
+
 What it cost to get there, so nobody pays twice:
 
 **The sandbox root must be a short path.** The at-spi bus socket is created under
@@ -1227,9 +1245,22 @@ way to ask a shell what it supports. The context menu test uses that: its shell 
 called `bash`, which also starts the real bash outside the document's directory, so "cd
 went there" is a change rather than a coincidence.
 
-**Two windows is not a test here.** Without a window manager the second toplevel lands on
-the first, at the same coordinates, and a click goes to whichever X stacked on top — hence
-no test for two terminals in two windows, however much the list of live panes deserves one.
+**Two windows needed a window manager, and now have one.** Without one the second toplevel
+lands on the first, at the same coordinates, and a click goes to whichever X stacked on
+top; `tests/terminal/two_windows` therefore carries `NEEDS_WM = True`, places the two
+windows side by side itself (`t.place_window()` — where a window manager puts a second
+window is its own business, and xfwm4 cascades it over the first), and is the only test
+that does. What it is for is `terminal_panes`, the plugin's static list of live panes:
+picking a colour scheme in one window repaints the terminal in the other, and closing a
+window takes its pane off the list while the pane that is left keeps working — a
+use-after-free when it goes wrong, with the sanitizer watching.
+
+It also runs two things nothing else here reaches. `_moo_get_top_window()` reads
+`_NET_CLIENT_LIST_STACKING` off the root window, which only a window manager sets: with
+none, a second window makes it print `Moo-CRITICAL: !nitems_return` and fall back on the
+first window it knows, so the branch that picks the top window has never run in these
+tests. And a window closed with `Alt+F4` is closed through `WM_DELETE_WINDOW`, which is
+the only way medit's own UI closes a window at all — there is no menu item for it.
 
 **A colour is the one thing read off the screen** — nothing in the tree says what colour
 anything is drawn in. `input.pixel()` reads a pixel of the corner the shell never writes
