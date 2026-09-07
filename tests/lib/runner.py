@@ -190,6 +190,29 @@ def quit_medit(t, proc):
     return proc.returncode, False
 
 
+def last_words(log_dir, was_alive, code, lines=10):
+    """What medit was saying when the test gave up on it.
+
+    A test that fails because the program is not there -- it died at startup,
+    or it never reached the accessibility bus -- says nothing about why on its
+    own, and the reason is usually the last line medit printed.
+    """
+    path = os.path.join(log_dir, "medit.log")
+    state = "medit was still running" if was_alive else "medit had exited with %s" % code
+
+    try:
+        with open(path, errors="replace") as f:
+            tail = [line.rstrip() for line in f if line.strip()][-lines:]
+    except FileNotFoundError:
+        tail = []
+
+    if not tail:
+        return "    %s, and printed nothing" % state
+
+    return "    %s, and its last words were:\n%s" % (
+        state, "\n".join("      " + line for line in tail))
+
+
 def scan_log(log_dir):
     """Count what glib printed. Reported, not a verdict -- yet."""
     path = os.path.join(log_dir, "medit.log")
@@ -240,6 +263,7 @@ def inner(args):
     failure = None
     clean_exit = False
     code = None
+    alive_at_failure = None
 
     try:
         app = a11y.application("medit", timeout=60)
@@ -250,6 +274,9 @@ def inner(args):
 
     except BaseException as error:          # noqa: BLE001 -- the report is the point
         failure = error
+        # Before anything below stops it: "medit exited with -15" would only
+        # say that this is what stopped it.
+        alive_at_failure = proc.poll() is None
         try:
             from lib import input as ui
             ui.screenshot(os.path.join(log_dir, "failure.png"))
@@ -271,6 +298,7 @@ def inner(args):
         print("FAIL: %s" % failure)
         if not isinstance(failure, AssertionError):
             traceback.print_exc()
+        print(last_words(log_dir, alive_at_failure, proc.returncode))
 
     elif not clean_exit:
         print("FAIL: medit did not quit when asked")
