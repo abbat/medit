@@ -210,6 +210,25 @@ class Test(object):
                  % (link["index"], link["uri"], x, y, link["source"]))
         return link["uri"]
 
+    def pin_pane(self):
+        """Make the open pane sticky, so that it stays open when it loses focus.
+
+        A pane hides itself the moment the document takes the focus back, which
+        is what the panes are for and is also why a test that wants to watch one
+        while typing has to pin it first. The button is the one in the pane's own
+        toolbar; it carries no name, only the tooltip the description comes from.
+        """
+        button = self.need(
+            self.frame, role="toggle button", depth=30,
+            pred=lambda node: node.description == "Sticky" and ui.on_screen(node),
+            what="the Sticky button of the open pane")
+
+        if not self.state(button, "checked"):
+            self.click(button)
+            self.wait(lambda: self.state(button, "checked"), "the pane to be pinned")
+
+        self.log("ok: the pane is pinned open")
+
     def focus(self):
         """Point the X input focus back at the application's window.
 
