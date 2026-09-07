@@ -64,14 +64,18 @@ jobs:
               exit 1
           fi
 
-  # Four of the five deb targets, which together with build.yml's two ends
-  # covers all of them. A package build costs two compiles, because
-  # debian/rules configures a build directory per gtk version, so this used to
-  # be the oldest target and the newest -- they are where the dependency names
-  # differ, which is what the `libjpeg62-turbo-dev | libjpeg-dev` alternative in
-  # debian/control is for. Debian 12 and Ubuntu 24.04 are here because build.yml
-  # no longer compiles them, and debian/rules asks for ENABLE_STRICT, so a
-  # warning on either of them is caught here or nowhere.
+  # Debian 12 and Ubuntu 26.04. A package build costs two compiles, because
+  # debian/rules configures a build directory per gtk version, so this is two
+  # of the five deb targets rather than all of them, picked for what each adds:
+  # Ubuntu 26.04 is the newest GTK+3 and the newest compiler anywhere in CI, and
+  # Debian 12 is the oldest packaging -- and the two are where the dependency
+  # names differ, which is what the `libjpeg62-turbo-dev | libjpeg-dev`
+  # alternative in debian/control is for.
+  #
+  # What the rest get: Ubuntu 22.04 is compiled by build.yml, Debian 13 by
+  # ui.yml, and Ubuntu 24.04 by neither -- the release procedure builds every
+  # target by hand on OBS, and Debian rarely moves its packaging under a stable
+  # release. debian/rules asks for ENABLE_STRICT, so these are gates.
   deb:
     name: dpkg-buildpackage, ${{ matrix.image }}
     runs-on: ubuntu-latest
@@ -80,14 +84,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - image: ubuntu:22.04
-            tag: ubuntu2204
-          - image: ubuntu:24.04
-            tag: ubuntu2404
           - image: debian:12
             tag: debian12
-          - image: debian:13
-            tag: debian13
+          - image: ubuntu:26.04
+            tag: ubuntu2604
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:

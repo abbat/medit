@@ -12,14 +12,16 @@
 # report there is a line in the log rather than a failure -- but a second full
 # build of the tree is a lot to pay for that difference.
 #
-# Which distributions: the two ends of the range, not every point in it. What
-# breaks a build is the age of the toolchain and of GTK+3, and the images below
-# are the oldest and the newest still supported -- 3.24.33 with gcc 11, glib
-# 2.72 and cmake 3.22 against 3.24.52 with gcc 15, glib 2.88 and cmake 4.2.
-# Nothing has ever broken in the middle of that range without breaking at one
-# of its ends, and the middle is not unbuilt anyway: debian:13 is compiled by
-# the clang job, the UI tests and the deb packaging, and debian:12 is what this
-# is developed on.
+# One distribution here, and it is the oldest: Ubuntu 22.04, gtk 3.24.33 with
+# glib 2.72, gcc 11 and cmake 3.22. What breaks a build is the age of the
+# toolchain and of GTK+3, and this is the low end of both.
+#
+# The high end is compiled in package.yml, which builds the deb on Ubuntu 26.04
+# (3.24.52, glib 2.88, gcc 15, cmake 4.2), the rpm on Fedora and the package on
+# Arch; debian:13 is compiled by ui.yml; debian:12 by package.yml as well.
+# Ubuntu 24.04 is between the two ends and is compiled nowhere on a push -- the
+# release procedure builds it by hand on OBS, and nothing has ever broken in the
+# middle of a range without breaking at one of its ends.
 name: build
 
 on:
@@ -48,7 +50,6 @@ jobs:
       matrix:
         image:
           - ubuntu:22.04   # gtk 3.24.33, glib 2.72, gcc 11, cmake 3.22
-          - ubuntu:26.04   # gtk 3.24.52, glib 2.88, gcc 15, cmake 4.2
         gtk: [2, 3]
     env:
       DEBIAN_FRONTEND: noninteractive

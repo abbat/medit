@@ -77,7 +77,7 @@ gcc 15 — the same coverage, minus the gate, since the spec does not ask for
 
 | job | what it covers |
 |---|---|
-| `deb` | ubuntu 22.04 and 26.04, both toolkits — the two ends of the range: gtk 3.24.33 / glib 2.72 / gcc 11 / cmake 3.22 against 3.24.52 / 2.88 / 15 / 4.2 |
+| `deb` | ubuntu 22.04, both toolkits — the low end of everything: gtk 3.24.33, glib 2.72, gcc 11, cmake 3.22 |
 | `clang` | clang on debian:trixie, both toolkits, plus the `analyze` target |
 | `langs` | `src/mooedit/langs/check.sh` over the 187 language definitions and schemes |
 
@@ -473,12 +473,20 @@ how this one was caught, in a container, after the local gtk2 build had gone sta
 ### Debian package build (old distros)
 
 The package targets **Debian 12 and 13, Ubuntu 22.04, 24.04 and 26.04** — Debian 11 and
-Ubuntu 20.04 were dropped when their support ended. `build.yml` compiles the two ends of
-that range, Ubuntu 22.04 and 26.04, for both toolkits; the middle is not unbuilt either —
-debian:13 goes through the clang job, the UI tests and `package.yml`, and debian:12 is
-what this is developed on. `package.yml` runs `dpkg-buildpackage` on four of the five —
-everything except Ubuntu 26.04, which `build.yml` compiles — and `debian/rules` asks for
-`ENABLE_STRICT`, so a warning on Debian 12 or Ubuntu 24.04 is caught there or nowhere. What is worth doing by hand is the faster loop while *writing* a
+Ubuntu 20.04 were dropped when their support ended. Each is covered once, and by the job
+that adds the most:
+
+| target | compiled by | why there |
+|---|---|---|
+| Ubuntu 22.04 | `build.yml` | the oldest gtk, glib, gcc and cmake of the five |
+| Ubuntu 26.04 | `package.yml` | the newest of all four, and the packaging of the LTS most users are on |
+| Debian 12 | `package.yml` | the oldest packaging; `debian/rules` is a gate there |
+| Debian 13 | `ui.yml` | where the UI tests run anyway |
+| Ubuntu 24.04 | nothing, on a push | between two ends that are both built; the release builds it by hand on OBS |
+
+A package build costs two compiles, one per toolkit, which is why `package.yml` carries
+two targets rather than five. `debian/rules`, `rpm/medit.spec` and `arch/PKGBUILD` all ask
+for `ENABLE_STRICT`, so every one of those builds is a gate rather than a smoke test. What is worth doing by hand is the faster loop while *writing* a
 packaging change, and the apt scenarios below, which CI does not reach:
 
 ```bash
@@ -579,12 +587,14 @@ what is supported *today*, and fix both directions — drop what has reached end
 add what has been released since:
 
 * `README.md` — the "DEB packages for …" line under **download**.
-* `.github/workflows/build.yml` — the `deb` job's `image:` matrix, which is the oldest
-  and the newest target and nothing between, so an aged image there loses an end of the
-  range rather than one point of it.
+* `.github/workflows/build.yml` — the `deb` job's `image:`, which is the oldest target
+  and only that, so an aged image there loses the low end of the range rather than one
+  point of it.
 * `.github/workflows/codeql.yml` — the runner and its dependency list.
-* `.github/workflows/package.yml` — the `deb` matrix, which carries every deb target
-  build.yml does not compile, and the Fedora release in the `rpm` job.
+* `.github/workflows/package.yml` — the `deb` matrix, which carries the newest target and
+  the oldest packaging, and the Fedora release in the `rpm` job. **Build the targets no
+  workflow covers by hand at release time**, on OBS: Ubuntu 24.04 is compiled nowhere on a
+  push, and Ubuntu 22.04 and Debian 13 are compiled but not packaged.
 * `AGENTS.md` — "Debian package build (old distros)", which names the targets and the
   compiler span they cover.
 * `debian/control`, `rpm/medit.spec`, `arch/PKGBUILD` — dependency names occasionally
