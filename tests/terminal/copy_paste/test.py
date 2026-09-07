@@ -66,9 +66,10 @@ def into_the_document(t):
     t.key("ctrl+grave")
     t.key("ctrl+v")
 
-    t.wait(lambda: chars(t) == "Chars: %d" % len(MARKER),
-           "the document to hold the %d characters that were copied" % len(MARKER))
-    t.log("ok: what the terminal copied arrived in the document")
+    view = t.on_screen(t.find_all(t.frame, role="text", depth=25))[0]
+    t.wait(lambda: t.text(view) == MARKER,
+           "the document to hold the word that was copied")
+    t.log("ok: what the terminal copied arrived in the document, character for character")
 
     # Saved rather than left dirty: a modified document turns the quit at the
     # end of every test into a dialog asking about it, and the test would wait
@@ -90,7 +91,3 @@ def back_into_the_shell(t, terminal):
     t.wait_text(terminal, "not found", squeeze=True,
                 what="the shell's answer to the pasted word")
 
-
-def chars(t):
-    label = t.find(t.frame, role="label", name_prefix="Chars:", depth=25)
-    return label.name if label is not None else None

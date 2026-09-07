@@ -951,10 +951,15 @@ file list and the terminal were off the bus entirely, for a screen reader as muc
 test. GTK+3 only — GTK+2 keeps those types inside the gail module, which cannot be
 subclassed by linking against it — so anything inside a pane is a GTK+3 test.
 
-**The document view is still not in the tree**, on either toolkit: the editor's notebook
-claims one child and returns nothing for it. A separate defect from the panes, not yet
-diagnosed. Until it is, tests read the document through the status bar, whose `Chars: N`
-is an ordinary label (`focus_toggle`, `copy_paste`).
+**The document reaches the bus the same way**, and for a related reason: `MooNotebook`
+inherits from `GtkNotebook` and uses none of it — it keeps its own pages and calls no
+`gtk_notebook_` function — so the accessible it inherited read GtkNotebook's empty page
+list while the child count came from the container. One child, and nothing returned for
+it. `MooNotebookAccessible` takes the container's children instead, and the document is a
+`text` node with the text in it. Page tabs are still not exposed:
+`gtk_notebook_page_accessible_new()` asks `gtk_notebook_get_tab_label()` for the name,
+which is that same empty list, with a Gtk-CRITICAL to go with it. GTK+3 only, as above,
+so the status bar's `Chars: N` label is still how a GTK+2 test would count characters.
 
 **A modified document blocks the quit at the end of a test**: File/Quit asks about saving,
 nothing answers, and the test fails with "medit did not quit when asked" twenty seconds
