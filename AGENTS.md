@@ -54,6 +54,12 @@ is why medit was dropped from Debian in the first place, and "no interpreter at 
 time, none at run time" is a property of this fork worth not quietly losing. If
 something ever needs python to *build*, it does not belong in the build.
 
+That harness is read as well as run: `flake8` in `.flake8`'s configuration (96 columns,
+which is what the tree already is), through `cmake --build <dir> --target ui-lint` or the
+`harness` job in `ui.yml`, and by CodeQL's python queries in a job of its own. The target
+is optional and says so when flake8 is missing — a linter for a developer's tool is
+itself a developer's tool, and no test may need one to run.
+
 ### A/B comparison of one change
 
 **Do not use a pre-session build as the "GTK+2 reference".** Since the translations fix
@@ -84,7 +90,9 @@ and Ubuntu 26.04 (both toolkits each), the rpm on fedora:44 with LTO, the Arch p
 and a check that the version is the same in all six places it is written.
 
 `.github/workflows/ui.yml` compiles with clang, runs the static analyzer, and is the only
-job that runs the program rather than reading it. It builds debian:13 with
+job that runs the program rather than reading it. Its `harness` job goes first and takes
+seconds: `flake8` over `tests/`, because a name that is not defined in a test file is a
+failure the ui job reports half an hour later as "the dialog never opened". It builds debian:13 with
 `-DENABLE_STRICT=ON -DENABLE_UI_TESTS=ON -DENABLE_SANITIZERS=address,undefined` for both
 toolkits, runs `analyze`, then the `ui-test` target — a real X server, a real accessibility bus,
 real clicks, sanitizers underneath. It is the only place a dialog that stopped opening
@@ -94,7 +102,10 @@ undiagnosable without it.
 
 `.github/workflows/codeql.yml` runs CodeQL over both toolkits on every push, on pull
 requests, and weekly. It judges a pull request on the alerts it *introduces*, which is
-why it can be a gate while the analyzer's existing findings are not zero.
+why it can be a gate while the analyzer's existing findings are not zero. A third job
+reads the python of `tests/` (`build-mode: none`, a category of its own so its results
+sit beside the toolkits' rather than replacing one) — until it was added, `languages:
+c-cpp` meant the harness was analyzed by nothing at all.
 
 **A workflow takes its `schedule` and `workflow_dispatch` triggers from the default
 branch and nowhere else.** This one was written with `push: branches: [main]` while it
@@ -835,7 +846,7 @@ Build directories of their own, `buildu2` and `buildu3` beside `build2` and `bui
 sanitized binary is three times the size and visibly slower, which is not what an
 ordinary build should become.
 
-A test is `tests/<subsystem>/<name>/test.py` — `app`, `editor`, `terminal` so far — one
+A test is `tests/<subsystem>/<name>/test.py` — `app`, `editor`, `terminal`, `lsp` so far — one
 `run(t)` function, and it imports nothing: the whole vocabulary is on `t`
 (`tests/lib/context.py`). ctest labels each test with its subsystem and its toolkit. One
 file serves both toolkits wherever the two trees agree, which for dialogs they do, gail's
@@ -844,7 +855,10 @@ only, and those tests say so.
 
 A test may also define `setup(s)`, run **before medit starts** (`tests/lib/setup.py`):
 `s.pref()` writes a setting into `prefs.xml`, `s.script()` an executable, `s.open()` a
-file for medit's command line. Nothing later would do — the terminal reads its shell when
+file for medit's command line, `s.plugin()` switches a plugin on and `s.lsp_server()`
+writes an entry in `lsp.xml`. `s.pref()` writes the type the key was registered with —
+a boolean written as `type="string"` still arrives, through `item_set_type()`, which
+converts it and prints `oops` as a critical in every run that does it. Nothing later would do — the terminal reads its shell when
 the pane is first shown. The same object is `t.sandbox` in `run(t)`, so both halves name a
 file the same way.
 
@@ -1058,6 +1072,86 @@ termprops, needs 0.78, so fixing it means a version branch);
 `GtkImageMenuItem:use-stock` and `:accel-group` from `gtk_image_menu_item_new_from_stock()`
 in `create_popup_menu()`, whose replacement drops the icons. `GtkFontButton:font-name` was
 the third and is fixed. None of them fails a test, as criticals do not.
+
+### What the LSP tests know
+
+`tests/lsp/` drives the language server client against a server the harness carries,
+`tests/lib/fake_lsp.py`. A test about the client cannot be a test of clangd as well: what
+a real server answers depends on its version, on the index it built and on the machine it
+runs on, and the CI container has no server at all.
+
+**Both toolkits**, unlike the terminal — the client is compiled for GTK+2 too, and only
+the four tests that look inside a pane or click a particular word of the document carry
+`# requires: MOO_GTK3`. All of them carry `# requires: MOO_BUILD_LSP`, which is off where
+json-glib is missing.
+
+**The client is off until it is asked for.** It runs other people's programs, so it
+registers itself disabled; every test says `s.plugin("Lsp")` except `plugin_toggle`,
+which drives the toggle in Preferences → Plugins the way a user would. That toggle's cell
+exposes no checked state over AT-SPI, and it takes effect on Apply rather than on the
+click, so what it did is read from what followed: a process, the items in the Tools menu,
+the shutdown reaching the server.
+
+**`lsp.xml` is read once**, by `lsp_manager_init()`, when the plugin is switched on — so
+`s.lsp_server()` writes it in `setup()`, as the terminal writes its shell. The two things
+that make medit read it again are `Tools → Restart Language Servers` and the button on the
+preferences page, and both are covered.
+
+**Half of the protocol never reaches the screen**, and there the server's own log is the
+oracle: `t.lsp(method)`, `t.wait_lsp(method)`, `t.lsp_starts()`. A document announced to a
+server looks exactly like one that was not; a burst of typing coalesced into one
+`didChange` looks exactly like six of them; the position a context-menu entry asks about
+is invisible by construction. The scenario is re-read before every message, so the same
+question can get a different answer without restarting anything, and every record carries
+the pid — which is how `root_markers` tells two servers sharing one log apart.
+
+**A pane hides when it loses the focus, and its accessible does not.** Activating a line
+in the diagnostics pane hands the focus to the document; the pane closes, the document is
+drawn where it was, and a second click at coordinates taken from the pane's still-readable
+`AtkText` lands in the text instead. The symptom is a cursor at the end of the file and
+nothing in any log. One click per opening, or `t.pin_pane()`, which is the Sticky button
+in the pane's own toolbar — it has no name, only a tooltip.
+
+**The completion popup is a toplevel window of its own**, so it is looked for among the
+application's children rather than inside the frame, and *on screen* rather than merely in
+the tree: a closed popup is hidden, not destroyed, and its accessible outlives it.
+
+**What is offered depends on the prefix under the cursor**, not only on what the server
+sent. `Ctrl+Space` after `alpha` narrows the reply to the words that start with it; the
+same key after a space offers everything. A test that means to assert the narrowing has to
+put the cursor at the end of a word — `End`, not a word motion, which lands *before* the
+next one.
+
+**A tooltip is not on the accessibility bus.** Measured on GTK+3: the pointer resting on a
+word produces the `textDocument/hover` requests and no node with the "tool tip" role
+anywhere in the tree. So the hover test asserts the question and the preference that gates
+it, and says so rather than pretending to check the answer.
+
+**The debug log names the program, not the entry.** `Plugins/Lsp/debug` (or
+`MEDIT_LSP_DEBUG`) prints every message as `lsp: <argv[0]> <- {...}` — the interpreter or
+the wrapper, never the `id` from `lsp.xml`. It is also read where a server is *started*,
+so ticking it does nothing until the servers are restarted.
+
+Three things the tests found and did not fix, all of them the client's rather than the
+harness's:
+
+* **`lsp_server_get_error()` has no caller.** When a server fails to start, answers
+  `initialize` with no capabilities, or exits immediately three times, `set_failed()`
+  writes a sentence saying which server it was and where to fix it — and nothing shows it.
+  No pane, no status bar, no line in the log. `server_gives_up` therefore asserts the
+  count of processes, which is all the outside world can see; the terminal, which had this
+  bug in the same shape, writes the same class of failure into the pane the user is
+  looking at.
+* **An entry whose program is not installed shadows the entries after it.**
+  `find_config()` returns the first entry whose *filter* matches and
+  `lsp_manager_add_doc()` then gives up on finding no program, so a second entry for the
+  same language never gets a chance. `lsp.xml` says such an entry "is skipped in silence",
+  which reads as "move on to the next one". `starts_server` avoids the overlap rather than
+  asserting either reading.
+* **The diagnostics preference does not reach the pane.** Unticking "Underline problems
+  and list them in the Diagnostics pane" runs `lsp_doc_refresh_diagnostics()`, which clears
+  the marks in the document; `fill_pane()` lists `lsp_doc_get_diagnostics()` whatever the
+  preference says, so the second half of that sentence does not happen.
 
 ### The ad-hoc sandbox (headless X + screenshots + synthetic input)
 
