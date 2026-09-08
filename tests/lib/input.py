@@ -200,15 +200,31 @@ def park_pointer():
     _xdotool("mousemove", width - 1, height - 1)
 
 
-def click_at(x, y, button=1, settle=SETTLE, times=1):
+def click_at(x, y, button=1, settle=SETTLE, times=1, modifiers=()):
+    """Click a point, optionally with modifier keys held down over the click.
+
+    The modifiers are held around the click rather than passed to xdotool as
+    part of it, because what has to see them is the button event: a Shift+click
+    that extends a selection is a button press whose state has the shift bit,
+    and xdotool's own "key shift+click" is not that.
+    """
     park_pointer()
     time.sleep(POINTER)
     _xdotool("mousemove", x, y)
     time.sleep(POINTER)
-    if times > 1:
-        _xdotool("click", "--repeat", times, button)
-    else:
-        _xdotool("click", button)
+
+    for name in modifiers:
+        _xdotool("keydown", name)
+
+    try:
+        if times > 1:
+            _xdotool("click", "--repeat", times, button)
+        else:
+            _xdotool("click", button)
+    finally:
+        for name in reversed(list(modifiers)):
+            _xdotool("keyup", name)
+
     time.sleep(settle)
 
 
@@ -281,6 +297,21 @@ def click_range(node, start, end, button=1, settle=SETTLE, times=1, at=0.5):
     x, y = box[0] + int(box[2] * at), box[1] + box[3] // 2
     click_at(x, y, button=button, settle=settle, times=times)
     return x, y
+
+
+def range_extents(node, start, end):
+    """Where a range of a node's text is drawn, as (x, y, width, height).
+
+    Screen coordinates, the same as extents(). For a test that has to point at
+    something beside the text rather than at it -- the line-number margin of a
+    particular line, say -- or that wants a coordinate without clicking it.
+
+    Subscripted rather than read by name, unlike extents() above: getExtents()
+    answers with a boxed object and getRangeExtents() with a plain tuple, which
+    is why click_range() indexes its box too.
+    """
+    box = node.queryText().getRangeExtents(start, end, pyatspi.DESKTOP_COORDS)
+    return box[0], box[1], box[2], box[3]
 
 
 def hover_range(node, start, end, settle=1.0, at=0.5):

@@ -327,15 +327,21 @@ class Test(object):
         x, y = ui.click(node, button)
         self.log("click %s at (%d,%d)" % (described, x, y))
 
-    def click_at(self, x, y, button=1, times=1):
+    def click_at(self, x, y, button=1, times=1, modifiers=()):
         """Click a point the test worked out for itself.
 
         For what has no accessible to point at: a tab drawn on a notebook's
         own window, a cell a view paints itself. A test that can name the
         widget clicks the widget.
+
+        modifiers are key names held down over the click, for the Shift+click
+        and Ctrl+click a widget tells apart from a plain one.
         """
-        ui.click_at(x, y, button=button, times=times)
-        self.log("click (%d,%d)%s" % (x, y, ", twice" if times == 2 else ""))
+        ui.click_at(x, y, button=button, times=times, modifiers=modifiers)
+        self.log("click (%d,%d)%s%s"
+                 % (x, y,
+                    " with " + "+".join(modifiers) if modifiers else "",
+                    ", twice" if times == 2 else ""))
         return x, y
 
     def click_range(self, node, start, end, times=1, button=1, at=0.5):
@@ -383,6 +389,10 @@ class Test(object):
     def extents(self, node):
         """Where the widget is on the screen, as (x, y, width, height)."""
         return ui.extents(node)
+
+    def range_extents(self, node, start, end):
+        """Where a range of a node's text is drawn: (x, y, width, height)."""
+        return ui.range_extents(node, start, end)
 
     def pixel(self, x, y):
         """The colour of one pixel of the screen, as "#rrggbb".
