@@ -1483,17 +1483,14 @@ msgstr "VIM-Farben"
 msgid "White on Black"
 msgstr "Weiß auf Schwarz"
 
-#. Translators: remove the part before and including |
 #: ../src/mooutils/glade/mooaccelprefs.glade.h:2
 msgid "Shortcut|None"
 msgstr "Keinen"
 
-#. Translators: remove the part before and including |
 #: ../src/mooutils/glade/mooaccelprefs.glade.h:4
 msgid "Shortcut|Default"
 msgstr "Standard"
 
-#. Translators: remove the part before and including |
 #: ../src/mooutils/glade/mooaccelprefs.glade.h:6
 msgid "Shortcut|Custom"
 msgstr "Benutzerdefiniert"

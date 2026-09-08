@@ -8,6 +8,7 @@
         <property name="spacing">3</property>
         <child>
           <object class="GtkHBox" id="hbox9">
+            <property name="visible">True</property>
             <property name="spacing">3</property>
             <child>
               <object class="GtkLabel" id="label64">
@@ -72,7 +73,7 @@
                         <child>
                           <object class="GtkRadioButton" id="shortcut_none">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes" context="yes" comments="Translators: remove the part before and including |">Shortcut|None</property>
+                            <property name="label" translatable="yes" context="Shortcut">None</property>
                             <property name="use_underline">True</property>
                             <property name="focus_on_click">False</property>
                             <property name="draw_indicator">True</property>
@@ -85,7 +86,7 @@
                         <child>
                           <object class="GtkRadioButton" id="shortcut_default">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes" context="yes" comments="Translators: remove the part before and including |">Shortcut|Default</property>
+                            <property name="label" translatable="yes" context="Shortcut">Default</property>
                             <property name="use_underline">True</property>
                             <property name="focus_on_click">False</property>
                             <property name="draw_indicator">True</property>
@@ -101,7 +102,7 @@
                         <child>
                           <object class="GtkRadioButton" id="shortcut_custom">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes" context="yes" comments="Translators: remove the part before and including |">Shortcut|Custom</property>
+                            <property name="label" translatable="yes" context="Shortcut">Custom</property>
                             <property name="use_underline">True</property>
                             <property name="focus_on_click">False</property>
                             <property name="draw_indicator">True</property>

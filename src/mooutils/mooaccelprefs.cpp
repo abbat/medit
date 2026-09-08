@@ -268,11 +268,23 @@ _moo_accel_prefs_page_init (MooAccelPrefsPage *page)
     page->shortcut_frame = GTK_WIDGET (moo_builder_get (builder, "shortcut_frame"));
     page->default_label = GTK_LABEL (moo_builder_get (builder, "default_label"));
 
+    /*
+     * The Search box beside the list, which has always been in the .ui file
+     * with nothing behind it: the tree has a search column, so typing into the
+     * *list* searched and typing into the box that says "Search:" did nothing.
+     * Here rather than below, where the rest of the tree is set up: the
+     * builder is gone by then, and asking it for a widget afterwards is a
+     * use-after-free the sanitizer catches in the first test that opens this
+     * dialog. ("seach" is the id it has been misspelled with all along.)
+     */
+    gtk_tree_view_set_search_column (page->treeview, 0);
+    gtk_tree_view_set_search_entry (page->treeview,
+                                    GTK_ENTRY (moo_builder_get (builder, "seach")));
+
     gtk_widget_destroy (window);
     g_object_unref (builder);
     g_object_set (page, "label", "Shortcuts", "icon-stock-id", MOO_STOCK_KEYBOARD, (char*)NULL);
 
-    gtk_tree_view_set_search_column (page->treeview, 0);
 
     g_signal_connect_swapped (page->treeview, "row-activated",
                               G_CALLBACK (row_activated),

@@ -1531,22 +1531,19 @@ msgstr "Цвета VIM"
 msgid "White on Black"
 msgstr "Белое на чёрном"
 
-#. Translators: remove the part before and including |
 #: ../src/mooutils/glade/mooaccelprefs.glade.h:2
-msgctxt "yes"
-msgid "Shortcut|None"
+msgctxt "Shortcut"
+msgid "None"
 msgstr "Нет"
 
-#. Translators: remove the part before and including |
 #: ../src/mooutils/glade/mooaccelprefs.glade.h:4
-msgctxt "yes"
-msgid "Shortcut|Default"
+msgctxt "Shortcut"
+msgid "Default"
 msgstr "По умолчанию"
 
-#. Translators: remove the part before and including |
 #: ../src/mooutils/glade/mooaccelprefs.glade.h:6
-msgctxt "yes"
-msgid "Shortcut|Custom"
+msgctxt "Shortcut"
+msgid "Custom"
 msgstr "Особая"
 
 #: ../src/mooutils/glade/mooaccelprefs.glade.h:7
