@@ -536,7 +536,6 @@ static void moo_notebook_class_init (MooNotebookClass *klass)
     widget_class->focus_in_event = moo_notebook_focus_in;
     widget_class->focus_out_event = moo_notebook_focus_out;
 #if GTK_CHECK_VERSION(3,0,0)
-    /* FIXME: This code was written by AI and requires review */
     widget_class->draw = moo_notebook_draw;
     widget_class->get_preferred_width = moo_notebook_get_preferred_width;
     widget_class->get_preferred_height = moo_notebook_get_preferred_height;
@@ -1009,7 +1008,6 @@ moo_notebook_size_request (GtkWidget      *widget,
 }
 
 #if GTK_CHECK_VERSION(3,0,0)
-/* FIXME: This code was written by AI and requires review */
 static void
 moo_notebook_get_preferred_width (GtkWidget *widget,
                                   gint      *minimum_width,
@@ -1020,7 +1018,6 @@ moo_notebook_get_preferred_width (GtkWidget *widget,
     *minimum_width = *natural_width = requisition.width;
 }
 
-/* FIXME: This code was written by AI and requires review */
 static void
 moo_notebook_get_preferred_height (GtkWidget *widget,
                                    gint      *minimum_height,
@@ -1269,7 +1266,6 @@ moo_notebook_realize (GtkWidget *widget)
     g_object_ref (gtk_widget_get_window (widget));
 
 #if GTK_CHECK_VERSION(3,0,0)
-    /* FIXME: This code was written by AI and requires review */
     /* In GTK+3, style handling is done through GtkStyleContext and styles are automatically attached */
     /* No explicit style attachment needed in GTK+3 */
 #else
@@ -1300,7 +1296,6 @@ moo_notebook_realize (GtkWidget *widget)
     attributes.wclass = GDK_INPUT_OUTPUT;
 
 #if GTK_CHECK_VERSION(3,0,0)
-    /* FIXME: This code was written by AI and requires review */
     /* In GTK+3, colormap is no longer used in GdkWindowAttr */
     attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL;
 #else
@@ -1555,7 +1550,9 @@ moo_notebook_draw_child_border (MooNotebook  *nb,
     else
     {
 #if GTK_CHECK_VERSION(3,0,0)
-        /* FIXME: This code was written by AI and requires review */
+        /* FIXME: gtk_paint_box() drew a background and a frame; this draws
+           only the frame. The gap branch above has the same gap and was left
+           that way on purpose, the child covering the area either way. */
         GtkStyleContext *context = gtk_widget_get_style_context(widget);
         gtk_style_context_save(context);
 
@@ -2551,8 +2548,12 @@ moo_notebook_draw_label (MooNotebook    *nb,
     height = nb->priv->tabs_height - y;
 
 #if GTK_CHECK_VERSION(3,0,0)
-    /* FIXME: This code was written by AI and requires review */
-    /* GTK3 equivalent of gtk_paint_extension */
+    /* FIXME: gtk_paint_extension() drew a tab -- three sides and the fourth
+       open towards the page. gtk_render_background()+gtk_render_frame() on a
+       context carrying no style class draws a plain rectangle instead, so
+       every tab has a line between it and its own page. What GTK+3 wants is
+       GTK_STYLE_CLASS_NOTEBOOK plus gtk_render_extension(). The selected tab
+       also asks for GTK_STATE_FLAG_ACTIVE, which a theme paints as pressed. */
     GtkStyleContext *context = gtk_widget_get_style_context(widget);
     gtk_style_context_save(context);
 
@@ -2590,8 +2591,10 @@ moo_notebook_draw_label (MooNotebook    *nb,
         gtk_widget_get_allocation (page->label->widget, &allocation);
 
 #if GTK_CHECK_VERSION(3,0,0)
-        /* FIXME: This code was written by AI and requires review */
-        /* GTK3 equivalent of gtk_paint_focus */
+        /* FIXME: state here is the one computed for the tab, so the focus
+           rectangle inherits it; gtk_paint_focus() was given the tab's state
+           too, so this much is faithful. It shares the style-class gap of the
+           block above. */
         GtkStyleContext *context = gtk_widget_get_style_context(widget);
         gtk_style_context_save(context);
 
@@ -2707,8 +2710,13 @@ moo_notebook_draw_dragged_label (MooNotebook    *nb,
                                  8, width, height);
 
 #if GTK_CHECK_VERSION(3,0,0)
-        /* FIXME: This code was written by AI and requires review */
-        /* GTK3 equivalent of gdk_pixbuf_get_from_drawable */
+        /* FIXME: pixbuf is never filled. gdk_pixbuf_new() does not clear the
+           memory it allocates, the window is copied into temp_pixbuf, and it
+           is temp_pixbuf that gets unref'd below while pixbuf becomes
+           snapshot_pixbuf -- so the tab dragged across the strip is whatever
+           was in that heap block, with its alpha set to LABEL_ALPHA. Either
+           make gdk_pixbuf_get_from_surface()'s result the snapshot, or copy
+           the window straight into pixbuf. */
         cairo_surface_t *surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, width, height);
         cairo_t *cr = cairo_create (surface);
         gdk_cairo_set_source_window (cr, nb->priv->tab_window,
@@ -2734,8 +2742,12 @@ moo_notebook_draw_dragged_label (MooNotebook    *nb,
             g_object_unref (pixbuf);
 
 #if GTK_CHECK_VERSION(3,0,0)
-            /* FIXME: This code was written by AI and requires review */
-            /* GTK3 equivalent of gdk_pixmap_new and gdk_draw_drawable */
+            /* FIXME: this branch does nothing and leaks. GTK+2 put the copy
+               in snapshot_pixmap, which the caller below requires to be
+               non-NULL; here the surface is drawn, destroyed, and never
+               stored, and snapshot_pixmap stays NULL. Note also that
+               snapshot_pixmap is a cairo_surface_t* in the GTK+3 struct while
+               moo_notebook_drag_end() still frees it with g_object_unref(). */
             cairo_surface_t *surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, width, height);
             cairo_t *cr = cairo_create (surface);
             gdk_cairo_set_source_window (cr, nb->priv->tab_window,
@@ -2789,8 +2801,6 @@ moo_notebook_draw_dragged_label (MooNotebook    *nb,
         if (nb->priv->snapshot_pixbuf)
 #if GTK_CHECK_VERSION(3,0,0)
         {
-            /* FIXME: This code was written by AI and requires review */
-            /* GTK3 equivalent of gdk_draw_pixbuf */
             gdk_cairo_set_source_pixbuf (cr, nb->priv->snapshot_pixbuf,
                                         intersect_area.x - nb->priv->drag_tab_x + nb->priv->labels_offset,
                                         intersect_area.y);

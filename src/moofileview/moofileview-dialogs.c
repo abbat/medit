@@ -79,7 +79,6 @@ _moo_file_props_dialog_init (MooFilePropsDialog *dialog)
                           dialog->notebook);
 
 #if GTK_CHECK_VERSION(3,0,0)
-    /* FIXME: This code was written by AI and requires review */
     gtk_container_add (GTK_CONTAINER(gtk_dialog_get_content_area(GTK_DIALOG(dialog))), dialog->notebook);
 #else
     gtk_container_add (GTK_CONTAINER(GTK_DIALOG(dialog)->vbox), dialog->notebook);

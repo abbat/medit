@@ -833,7 +833,6 @@ moo_paned_realize (GtkWidget *widget)
     attributes.wclass = GDK_INPUT_OUTPUT;
 
 #if GTK_CHECK_VERSION(3,0,0)
-    /* FIXME: This code was written by AI and requires review */
     /* colormap is not used in GTK+3 */
     attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL;
 #else
@@ -846,7 +845,6 @@ moo_paned_realize (GtkWidget *widget)
     gdk_window_set_user_data (paned->priv->bin_window, widget);
 
 #if GTK_CHECK_VERSION(3,0,0)
-    /* FIXME: This code was written by AI and requires review */
     /* Style is handled differently in GTK+3 */
 #else
     widget->style = gtk_style_attach (widget->style, gtk_widget_get_window (widget));
@@ -917,7 +915,6 @@ realize_handle (MooPaned *paned)
     attributes.wclass = GDK_INPUT_OUTPUT;
 
 #if GTK_CHECK_VERSION(3,0,0)
-    /* FIXME: This code was written by AI and requires review */
     /* colormap is not used in GTK+3 */
     attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL | GDK_WA_CURSOR;
 #else
@@ -1014,7 +1011,6 @@ realize_pane (MooPaned *paned)
     attributes.wclass = GDK_INPUT_OUTPUT;
 
 #if GTK_CHECK_VERSION(3,0,0)
-    /* FIXME: This code was written by AI and requires review */
     /* colormap is not used in GTK+3 */
     attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL;
 #else
@@ -1198,7 +1194,6 @@ moo_paned_size_request (GtkWidget      *widget,
     if (gtk_bin_get_child (bin) && gtk_widget_get_visible (gtk_bin_get_child (bin)))
     {
 #if GTK_CHECK_VERSION(3,0,0)
-        /* FIXME: This code was written by AI and requires review */
         gtk_widget_get_preferred_size (gtk_bin_get_child (bin), &child_requisition, NULL);
 #else
         gtk_widget_size_request (gtk_bin_get_child (bin), &child_requisition);
@@ -1210,7 +1205,6 @@ moo_paned_size_request (GtkWidget      *widget,
     if (paned->priv->button_box_visible)
     {
 #if GTK_CHECK_VERSION(3,0,0)
-        /* FIXME: This code was written by AI and requires review */
         gtk_widget_get_preferred_size (paned->button_box, &child_requisition, NULL);
 #else
         gtk_widget_size_request (paned->button_box, &child_requisition);
@@ -1244,7 +1238,10 @@ moo_paned_size_request (GtkWidget      *widget,
             case MOO_PANE_POS_LEFT:
             case MOO_PANE_POS_RIGHT:
 #if GTK_CHECK_VERSION(3,0,0)
-                /* FIXME: This code was written by AI and requires review */
+                /* FIXME: measured 0. A widget with no CSS border of its own
+                   gets none from gtk_style_context_get_border(), where GTK+2's
+                   style->xthickness was 1, so enable_border reserves nothing
+                   and draw_border() has nothing to draw. */
                 context = gtk_widget_get_style_context (widget);
                 gtk_style_context_get_border (context, GTK_STATE_FLAG_NORMAL, &border);
                 paned->priv->border_size = border.left;
@@ -1256,7 +1253,7 @@ moo_paned_size_request (GtkWidget      *widget,
             case MOO_PANE_POS_TOP:
             case MOO_PANE_POS_BOTTOM:
 #if GTK_CHECK_VERSION(3,0,0)
-                /* FIXME: This code was written by AI and requires review */
+                /* FIXME: measured 0, as for border.left above. */
                 context = gtk_widget_get_style_context (widget);
                 gtk_style_context_get_border (context, GTK_STATE_FLAG_NORMAL, &border);
                 paned->priv->border_size = border.top;
@@ -1274,7 +1271,6 @@ moo_paned_size_request (GtkWidget      *widget,
 }
 
 #if GTK_CHECK_VERSION(3,0,0)
-/* FIXME: This code was written by AI and requires review */
 static void
 moo_paned_get_preferred_width(GtkWidget      *widget,
                               gint           *minimum_width,
@@ -1285,7 +1281,6 @@ moo_paned_get_preferred_width(GtkWidget      *widget,
     *minimum_width = *natural_width = requisition.width;
 }
 
-/* FIXME: This code was written by AI and requires review */
 static void
 moo_paned_get_preferred_height(GtkWidget     *widget,
                                gint           *minimum_height,
@@ -1591,7 +1586,6 @@ moo_paned_size_allocate (GtkWidget     *widget,
 
     if (gtk_bin_get_child (bin) && gtk_widget_get_visible (gtk_bin_get_child (bin)))
 #if GTK_CHECK_VERSION(3,0,0)
-        /* FIXME: This code was written by AI and requires review */
         gtk_widget_get_preferred_size (gtk_bin_get_child (bin), &child_requisition, NULL);
 #else
         gtk_widget_get_child_requisition (gtk_bin_get_child (bin), &child_requisition);
@@ -1812,6 +1806,12 @@ moo_paned_expose (GtkWidget      *widget,
                                         event);
 #endif
 
+    /* FIXME: on GTK+3 neither draw_handle() nor draw_border() below is ever
+       reached. gdk_cairo_get_drawing_context() answers the window the frame is
+       being drawn on, which is the toplevel, so it never equals a child window
+       of this widget -- measured: event_window is the same pointer for all four
+       MooPaneds of a window, while gtk_cairo_should_draw_window() answers TRUE
+       for both handle_window and bin_window. That is the call to use here. */
     if (paned->priv->handle_visible && event_window == paned->priv->handle_window)
 #if GTK_CHECK_VERSION(3,0,0)
         draw_handle (paned, cr);
@@ -1888,7 +1888,8 @@ draw_handle (MooPaned       *paned,
         case MOO_PANE_POS_LEFT:
         case MOO_PANE_POS_RIGHT:
 #if GTK_CHECK_VERSION(3,0,0)
-            /* FIXME: This code was written by AI and requires review */
+            /* FIXME: 0, the same measurement as in moo_paned_size_request();
+               the two lines drawn below are dead while it is. */
             context = gtk_widget_get_style_context (widget);
             gtk_style_context_get_border (context, GTK_STATE_FLAG_NORMAL, &border);
             shadow_size = border.left;
@@ -1906,7 +1907,7 @@ draw_handle (MooPaned       *paned,
         case MOO_PANE_POS_TOP:
         case MOO_PANE_POS_BOTTOM:
 #if GTK_CHECK_VERSION(3,0,0)
-            /* FIXME: This code was written by AI and requires review */
+            /* FIXME: 0, as border.left above. */
             context = gtk_widget_get_style_context (widget);
             gtk_style_context_get_border (context, GTK_STATE_FLAG_NORMAL, &border);
             shadow_size = border.top;
@@ -1925,6 +1926,10 @@ draw_handle (MooPaned       *paned,
 
     if (gtk_widget_is_focus (widget))
 #if GTK_CHECK_VERSION(3,0,0)
+        /* FIXME: GTK_STATE_SELECTED is a GtkStateType, and state is a
+           GtkStateFlags. The value is 3, so this asks for ACTIVE|PRELIGHT
+           rather than for GTK_STATE_FLAG_SELECTED (4). The PRELIGHT line
+           below is right only by accident: both spellings are 2. */
         state |= GTK_STATE_SELECTED;
 #else
         state = GTK_STATE_SELECTED;
@@ -1937,14 +1942,12 @@ draw_handle (MooPaned       *paned,
 #endif
     else
 #if GTK_CHECK_VERSION(3,0,0)
-        /* FIXME: This code was written by AI and requires review */
         state = gtk_widget_get_state_flags (widget);
 #else
         state = gtk_widget_get_state (widget);
 #endif
 
 #if GTK_CHECK_VERSION(3,0,0)
-    /* FIXME: This code was written by AI and requires review */
     context = gtk_widget_get_style_context (widget);
     gtk_style_context_save (context);
     gtk_style_context_set_state (context, state);
@@ -1972,7 +1975,6 @@ draw_handle (MooPaned       *paned,
             area.width = shadow_size;
 
 #if GTK_CHECK_VERSION(3,0,0)
-            /* FIXME: This code was written by AI and requires review */
             context = gtk_widget_get_style_context (widget);
             gtk_style_context_save (context);
             gtk_style_context_set_state (context, GTK_STATE_FLAG_NORMAL);
@@ -2021,7 +2023,6 @@ draw_handle (MooPaned       *paned,
             area.height = shadow_size;
 
 #if GTK_CHECK_VERSION(3,0,0)
-            /* FIXME: This code was written by AI and requires review */
             context = gtk_widget_get_style_context (widget);
             gtk_style_context_save (context);
             gtk_style_context_set_state (context, GTK_STATE_FLAG_NORMAL);
@@ -2100,7 +2101,6 @@ draw_border (MooPaned       *paned,
             rect.width = paned->priv->border_size;
 
 #if GTK_CHECK_VERSION(3,0,0)
-            /* FIXME: This code was written by AI and requires review */
             context = gtk_widget_get_style_context (widget);
             gtk_style_context_save (context);
             gtk_style_context_set_state (context, GTK_STATE_FLAG_NORMAL);
@@ -2133,7 +2133,6 @@ draw_border (MooPaned       *paned,
             rect.height = paned->priv->border_size;
 
 #if GTK_CHECK_VERSION(3,0,0)
-            /* FIXME: This code was written by AI and requires review */
             context = gtk_widget_get_style_context (widget);
             gtk_style_context_save (context);
             gtk_style_context_set_state (context, GTK_STATE_FLAG_NORMAL);
@@ -3649,7 +3648,6 @@ handle_expose (GtkWidget      *widget,
     height = MIN (gtk_widget_get_allocated_height (widget), HANDLE_HEIGHT);
 
 #if GTK_CHECK_VERSION(3,0,0)
-    /* FIXME: This code was written by AI and requires review */
     GtkStyleContext *context = gtk_widget_get_style_context (widget);
     gtk_style_context_save (context);
     gtk_style_context_set_state (context, gtk_widget_get_state_flags (widget));

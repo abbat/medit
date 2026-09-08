@@ -1257,7 +1257,6 @@ init_icon_combo (GtkComboBox *combo,
                                          G_TYPE_STRING, G_TYPE_STRING);
 
 #if GTK_CHECK_VERSION(3,0,0)
-        /* FIXME: This code was written by AI and requires review */
         GtkStyleContext *context = gtk_widget_get_style_context (dialog);
         fill_icon_store (icon_store, context);
 #else

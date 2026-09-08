@@ -317,7 +317,6 @@ _moo_icon_view_class_init (MooIconViewClass *klass)
     widget_class->size_allocate = moo_icon_view_size_allocate;
 
 #if GTK_CHECK_VERSION(3,0,0)
-    /* FIXME: This code was written by AI and requires review */
     widget_class->draw = moo_icon_view_draw;
     widget_class->get_preferred_width = moo_icon_view_get_preferred_width;
     widget_class->get_preferred_height = moo_icon_view_get_preferred_height;
@@ -401,10 +400,13 @@ _moo_icon_view_class_init (MooIconViewClass *klass)
                           GTK_TYPE_ADJUSTMENT,
                           GTK_TYPE_ADJUSTMENT);
 #if GTK_CHECK_VERSION(3,0,0)
-    /* FIXME: This code was written by AI and requires review */
-    /* In GTK+3, set_scroll_adjustments_signal is deprecated.
-     * Scrollable interface should be implemented instead.
-     * For now, we just skip this assignment for GTK+3 compatibility. */
+    /* FIXME: skipping it leaves nothing in its place. The scrolled window
+     * this view is put into hands its adjustments to a child through
+     * GtkScrollable on GTK+3, which MooIconView does not implement, so
+     * moo_icon_view_set_scroll_adjustments() is never called, priv->adjustment
+     * stays NULL, and the horizontal scrollbar of the file selector's icon
+     * view -- its default view -- moves nothing. GtkScrollable is the port:
+     * hadjustment/vadjustment/hscroll-policy/vscroll-policy as properties. */
 #else
     widget_class->set_scroll_adjustments_signal = signals[SET_SCROLL_ADJUSTMENTS];
 #endif
@@ -973,7 +975,6 @@ moo_icon_view_unrealize (GtkWidget *widget)
 
 
 #if GTK_CHECK_VERSION(3,0,0)
-/* FIXME: This code was written by AI and requires review */
 static void
 moo_icon_view_get_preferred_width (G_GNUC_UNUSED GtkWidget *widget,
                                    gint *minimum_width,
@@ -1439,7 +1440,6 @@ static void     draw_entry                  (MooIconView    *view,
         cell_area.width = view->priv->layout->pixbuf_width;
 
 #if GTK_CHECK_VERSION(3,0,0)
-        /* FIXME: This code was written by AI and requires review */
         gtk_cell_renderer_render (view->priv->pixbuf.cell,
                                   cr,
                                   widget,
@@ -1467,7 +1467,6 @@ static void     draw_entry                  (MooIconView    *view,
         cell_area.width = entry_rect->width - view->priv->layout->pixbuf_width;
 
 #if GTK_CHECK_VERSION(3,0,0)
-        /* FIXME: This code was written by AI and requires review */
         gtk_cell_renderer_render (view->priv->text.cell,
                                   cr,
                                   widget,
@@ -1488,7 +1487,6 @@ static void     draw_entry                  (MooIconView    *view,
     if (cursor || drop)
     {
 #if GTK_CHECK_VERSION(3,0,0)
-        /* FIXME: This code was written by AI and requires review */
         gtk_style_context_save (context);
         gtk_style_context_set_state (context, GTK_STATE_FLAG_SELECTED);
         gtk_render_focus (context, cr,

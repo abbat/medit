@@ -3,11 +3,18 @@
 Fork of medit (GTK+ text editor) **ported from GTK+2 to GTK+3**; both builds are kept
 alive. Work branch: `main`.
 
-The port was largely done by an AI and is buggy. Most defects found so far sit inside
-blocks marked `/* FIXME: This code was written by AI and requires review */`.
-Run `grep -rc "written by AI" src` for the current count; they are concentrated in:
+The port was largely done by an AI and is buggy. It left 53 blocks marked
+`/* FIXME: This code was written by AI and requires review */`, a marker that said
+only who wrote the code, not what was wrong with it. All 53 have now been read
+against their GTK+2 branch: 33 were faithful translations and lost the marker, and
+the other 20 say what the review found instead of who to blame. **Grep for `FIXME:`
+in a file you are about to change and read the ones that are there** — each is a
+defect somebody has already located, with the measurement that located it. Nearly
+every one of them is a case of §6's two mistakes; the survivors are indexed at the
+end of §5.
 
-`moopaned.c`, `moonotebook.c` and `mooiconview.c` between them hold most of them.
+One is still a blanket: `mootextview.c:21` warns about the whole file and has not
+been gone through block by block.
 
 **The GTK+2 branch of every `#if GTK_CHECK_VERSION(3,0,0)` is the specification.**
 When GTK+3 misbehaves, read the `#else` branch first and ask what it achieved, then find
@@ -200,7 +207,7 @@ what to do with it is a decision about what double-click should select, not a cl
 
 The remaining 214 are 172 notes and 41 `cpp/poorly-documented-function`. Neither is
 wrong, and neither is a finding: `cpp/fixme-comment` counts the 267 FIXME/TODO markers
-and the 50 `written by AI` blocks that `grep` already indexes better. Read them as a map
+and the `FIXME:` blocks that `grep` already indexes better. Read them as a map
 of what is unfinished, not as a queue.
 
 `.github/workflows/package.yml` builds the three packaging trees the way a distribution
@@ -1875,6 +1882,27 @@ Reading these first will usually identify the next one:
   → *When a port adds a guard, check that everything depending on the guarded call moved
   inside it.*
 
+### What the marker sweep found and did not fix
+
+Reading all 53 `written by AI` blocks against their GTK+2 branch turned up 19 defects,
+each of which is now a `FIXME:` naming itself. None is fixed. Ordered by what a user
+would notice:
+
+| where | what |
+|---|---|
+| `moopaned.c` `moo_paned_draw()` | §6a exactly: `draw_handle()` and `draw_border()` are never called. **Measured** — `event_window` is one pointer shared by all four MooPaneds of a window, while `gtk_cairo_should_draw_window()` answers TRUE for both child windows |
+| `moopaned.c` ×4 | `gtk_style_context_get_border()` is **0** where `style->xthickness` was 1, so `border_size` and the handle's `shadow_size` are 0 and there is nothing to draw even once the above is fixed |
+| `moonotebook.c` drag snapshot | `gdk_pixbuf_new()` does not clear; the window is copied into a *second* pixbuf which is then unref'd, so a dragged tab paints uninitialised heap. Its failure branch stores nothing and leaks, and `snapshot_pixmap` is a `cairo_surface_t*` that `drag_end()` frees with `g_object_unref()` |
+| `mooiconview.c` | `set_scroll_adjustments` was dropped and GtkScrollable not implemented, so the file selector's icon view — its **default** view — never gets an adjustment and its scrollbar moves nothing |
+| `mooutils-misc.cpp` | `accel_label_set_string()` sets accel 0/0 and stores the text in object data it feeds back to itself: every menu item going through `_moo_menu_item_set_accel_label()` shows an empty shortcut column |
+| `moonotebook.c` tabs | `gtk_render_background()`+`gtk_render_frame()` with no style class where `gtk_paint_extension()` drew a tab, so each tab has a line between it and its own page |
+| `moobigpaned.c` ×2 | the drop indicator draws on `outer`'s `cr` instead of the shaped `drop_outline` window (§6a again), and its mask unions *filled* rectangles where GTK+2 drew outlines |
+| `moopane.c` | the five state-tinted copies of a button icon are all made with the widget's *current* state, so they are identical |
+| `moopaned.c` `draw_handle()` | `state \|= GTK_STATE_SELECTED` mixes a `GtkStateType` (3) into a `GtkStateFlags`, asking for ACTIVE\|PRELIGHT. The PRELIGHT line beside it is right only because both spellings are 2 |
+| `mooutils-treeview.cpp` | expander lines stroked at cairo's default width 2.0 on integer coordinates — grey and doubled where `gdk_draw_line()` was one pixel (§6c) |
+| `moofileentry.c` | entry borders from `gtk_style_context_get_border()` alone, 0 on the themes measured; the completion popup is positioned with them |
+| `moocommand-exe.cpp` | the `DISPLAY` set around `g_spawn_async()` is never read — the child is given an explicit `real_env` — while the process-wide environment is modified anyway |
+
 Known and deliberately left alone: `draw_entry()` in `mooiconview.c` still uses
 `gdk_cairo_create()` per row (deprecated since 3.22, bypasses the clip, works).
 
@@ -1954,6 +1982,7 @@ These compile, run, and do nothing — no warning:
 | `gdk_window_set_background[_rgba]()` | no-op; GDK does not paint window backgrounds |
 | `gtk_style_context_add_region()` | no-op since 3.14 |
 | `gtk_style_context_get_background_color()` | returns **fully transparent** on a bare widget context |
+| `gtk_style_context_get_border()` | returns **0** on a bare widget context, where GTK+2's `style->xthickness`/`ythickness` were 1 — measured on `MooPaned`, and the reason four separate thickness translations in it draw nothing |
 
 That last one is worth measuring rather than assuming. On this machine's theme:
 
@@ -1977,7 +2006,10 @@ prints what these functions return settles such questions in one build.
 
 - Fix both GTK versions in one change where the API allows it, and **delete the
   `#if GTK_CHECK_VERSION` split** when one code path is correct for both.
-- Remove the `/* FIXME: This code was written by AI */` marker on any block you fix.
+- Remove the `FIXME:` on any block you fix, and if you review one and find nothing,
+  remove it too — a marker that survives a reading it passed costs the next reader the
+  same reading. If you find something and are not fixing it now, replace the marker
+  with what you found and how you found it.
 - Verify before claiming: build both, run both with the exit-code rule, screenshot when
   the change is visual, and state what was *not* verified. On a push CI compiles every
   supported distribution but one, with both compilers, builds every package, and drives
@@ -2057,8 +2089,8 @@ smaller, 60010 changed lines against 69860.
 
 The cost of running it anyway is not the noise in one commit. What this fork does most
 is read a line against the GTK+2 code it was ported from — the 263 `GTK_CHECK_VERSION`
-splits and the blocks still marked `/* FIXME: This code was written by AI */` — and a
-tree-wide reformat puts one commit on top of every line of that history.
+splits and the blocks still marked `FIXME:` — and a tree-wide reformat puts one
+commit on top of every line of that history.
 
 What is enforced is the mechanical half only, through `.editorconfig`: indent width,
 tabs, trailing whitespace, final newline, encoding. It needs no tool in CI and reformats

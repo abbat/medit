@@ -1372,7 +1372,12 @@ moo_big_paned_draw (GtkWidget   *widget,
                     cairo_t     *cr,
                     MooBigPaned *paned)
 {
-    /* FIXME: This code was written by AI and needs review */
+    /* FIXME: wrong window. This runs on priv->outer's "draw", so cr belongs
+       to outer, and the two rectangles below land at outer's top-left corner
+       instead of on priv->drop_outline -- the shaped child window GTK+2 drew
+       them into, positioned at drop_rect. It wants
+       gtk_cairo_should_draw_window (cr, priv->drop_outline) and
+       gtk_cairo_transform_to_window() before drawing. */
 
     /* Call parent draw handler */
     GTK_WIDGET_CLASS(G_OBJECT_GET_CLASS (widget))->draw (widget, cr);
@@ -1439,7 +1444,11 @@ create_rect_mask (int           width,
                   int           height,
                   GdkRectangle *rect)
 {
-    /* FIXME: This code was written by AI and needs review */
+    /* FIXME: the two rect_ regions are unioned in filled, where GTK+2 drew
+       them with filled=FALSE -- an outline two pixels wide. So the shape of
+       the drop indicator is a solid block over the button area rather than a
+       frame around it. The outer border also comes out one pixel wide against
+       GTK+2's two. */
 
     /* Create rectangles for the mask */
     cairo_rectangle_int_t outer_rect = {0, 0, width, height};

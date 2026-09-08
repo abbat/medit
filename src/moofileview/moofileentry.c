@@ -1333,7 +1333,11 @@ entry_get_borders (GtkEntry *entry,
     if (gtk_entry_get_has_frame (entry))
     {
 #if GTK_CHECK_VERSION(3,0,0)
-        /* FIXME: This code was written by AI and requires review */
+        /* FIXME: 0 on the themes measured, where GTK+2's xthickness/ythickness
+           were 1. A GtkEntry's frame lives in its CSS border *and* padding on
+           GTK+3, and gtk_style_context_get_border() alone answers for neither
+           when the theme spells the frame as padding. The completion popup is
+           positioned with these, so it sits a pixel or two off. */
         GtkBorder border;
         GtkStyleContext *context = gtk_widget_get_style_context(widget);
         gtk_style_context_get_border(context, GTK_STATE_FLAG_NORMAL, &border);

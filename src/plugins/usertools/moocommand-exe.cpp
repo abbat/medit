@@ -569,8 +569,12 @@ run_async (const char     *cmd_line,
         if (screen)
         {
 #if GTK_CHECK_VERSION(3, 0, 0)
-            /* FIXME: This code was written by AI and requires review */
-            /* In GTK3, gdk_spawn_on_screen was removed, use g_spawn_async with display setup */
+            /* FIXME: the DISPLAY dance has no effect. g_spawn_async() is given
+               real_env, and a child spawned with an explicit environment does
+               not inherit the parent's, so what g_setenv() writes here is never
+               read -- while the process-wide environment is modified anyway,
+               which nothing else in this call needs. Putting DISPLAY into
+               real_env is what gdk_spawn_on_screen() did. */
             const char *display_name = gdk_display_get_name(gdk_screen_get_display(screen));
             const char *old_display = g_getenv("DISPLAY");
 

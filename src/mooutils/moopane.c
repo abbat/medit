@@ -1629,7 +1629,12 @@ get_pixbuf (MooIconWidget *icon)
             rowstride = gdk_pixbuf_get_rowstride (pixbuf);
 
 #if GTK_CHECK_VERSION(3,0,0)
-            /* FIXME: This code was written by AI and requires review */
+            /* FIXME: this ignores the loop variable. GTK+2 read
+               style->fg[state] and so gave each of the five states its own
+               tinted copy of the icon; here every iteration asks for the
+               colour of the widget's current state, so all five copies come
+               out the same and the button icons stop reacting to prelight,
+               active and insensitive. */
             GtkStyleContext *context = gtk_widget_get_style_context(widget);
             GdkRGBA rgba_color;
             GdkColor color_struct;

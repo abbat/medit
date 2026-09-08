@@ -972,7 +972,6 @@ moo_expander_cell_init (MooExpanderCell *cell)
 }
 
 #if GTK_CHECK_VERSION(3,0,0)
-/* FIXME: This code was written by AI and requires review */
 static void
 moo_expander_cell_get_size (GtkCellRenderer      *cell,
                             GtkWidget            *widget,
@@ -1100,8 +1099,11 @@ moo_expander_cell_render (GtkCellRenderer      *cell,
     }
 
 #if GTK_CHECK_VERSION(3,0,0)
-    /* FIXME: This code was written by AI and requires review */
-    /* GTK-3 code - use Cairo for drawing instead of gdk_draw_* functions */
+    /* FIXME: faithful to the GTK+2 drawing except for the pen. gdk_draw_line()
+       was one pixel wide on pixel boundaries; cairo defaults to 2.0 and these
+       coordinates are integers, so every line straddles two rows of pixels and
+       comes out grey and two wide. cairo_set_line_width (cr, 1.0) and half-pixel
+       coordinates are what that asks for. */
     cairo_save (cr);
 
     /* Set the color based on the widget state */

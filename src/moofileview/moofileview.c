@@ -1617,7 +1617,6 @@ create_filter_combo (G_GNUC_UNUSED MooFileView *fileview)
     gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 
 #if GTK_CHECK_VERSION(3,0,0)
-    /* FIXME: This code was written by AI and requires review */
     combo = gtk_combo_box_new_with_entry ();
 #else
     combo = gtk_combo_box_entry_new ();

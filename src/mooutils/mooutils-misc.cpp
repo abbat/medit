@@ -857,11 +857,14 @@ accel_label_set_string (GtkWidget  *accel_label,
     g_return_if_fail (GTK_IS_ACCEL_LABEL (accel_label));
 
 #if GTK_CHECK_VERSION(3,0,0)
-    /* FIXME: This code was written by AI and requires review */
-    /* GTK-3 code - accel_string is now private, use public API */
-    /* In GTK-3, we need to set the accelerator differently */
-    /* This is a simplified approach - in a real implementation you might need
-       to parse the label string and set the actual accelerator key */
+    /* FIXME: this shows nothing. Passing 0/0 to gtk_accel_label_set_accel()
+       clears the accelerator, and the string is only put in object data that
+       accel_label_screen_changed() feeds back to this same function -- so on
+       GTK+3 every item that goes through _moo_menu_item_set_accel_label() (the
+       file selector's and the file view's context menus) has an empty
+       accelerator column where GTK+2 printed one. The label reaching here is
+       display text; gtk_accelerator_parse() turns it back into a keyval and
+       modifiers, which is what the public API wants. */
     gtk_accel_label_set_accel(GTK_ACCEL_LABEL(accel_label), 0, static_cast<GdkModifierType>(0));
     /* Store the label for later use in accel_label_screen_changed */
     g_object_set_data_full(G_OBJECT(accel_label), "moo-accel-label-accel",

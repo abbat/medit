@@ -166,7 +166,6 @@ moo_line_view_parent_set (GtkWidget *widget,
     view->priv->hscrollbar = NULL;
 
 #if GTK_CHECK_VERSION(3,0,0)
-    // FIXME: This code was written by AI and requires review
     GtkWidget *parent = gtk_widget_get_parent(widget);
     if (parent && GTK_IS_SCROLLED_WINDOW(parent))
         view->priv->hscrollbar = gtk_scrolled_window_get_hscrollbar(GTK_SCROLLED_WINDOW(parent));
