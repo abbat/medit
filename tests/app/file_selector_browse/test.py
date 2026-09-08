@@ -73,9 +73,8 @@ def open_the_pane(t):
     view = t.wait(lambda: the_icon_view(t), "the icon view of the file selector")
     t.log("the icon view is at %s" % (t.extents(view),))
 
-    bar = t.need(t.frame, role="scroll bar", depth=30,
-                 pred=lambda n: on_screen_under(t, n, view),
-                 what="the scroll bar under the icon view")
+    bar = t.wait(lambda: horizontal_bar(t, view),
+                 "the scroll bar of the window the icon view is in")
 
     return view, bar
 
@@ -96,14 +95,36 @@ def the_icon_view(t):
     return found[0] if len(found) == 1 else None
 
 
-def on_screen_under(t, node, view):
-    if not ui.on_screen(node):
-        return False
+def horizontal_bar(t, view):
+    """The sideways scroll bar of the scrolled window the view is in.
 
-    x, y, width, height = t.extents(node)
-    vx, vy, vwidth, vheight = t.extents(view)
+    Found by walking up from the view rather than by where it is on screen: the
+    window is a different size in CI than here, and a bar picked out by
+    coordinates was picked out wrongly there. Walking up is also what survives
+    the fix -- a child that is not GtkScrollable gets a GtkViewport put between
+    it and the scrolled window, so the number of steps is one of the things
+    that changes.
+    """
+    node = view
 
-    return width > height and y >= vy + vheight - 4 and x >= vx - 4
+    for _ in range(4):
+        node = node.parent
+
+        if node is None:
+            return None
+
+        if node.getRoleName() == "scroll pane":
+            break
+    else:
+        return None
+
+    for bar in t.find_all(node, role="scroll bar", depth=1):
+        width, height = t.extents(bar)[2:]
+
+        if width > height and ui.on_screen(bar):
+            return bar
+
+    return None
 
 
 def at_the_left(t, view, bar):

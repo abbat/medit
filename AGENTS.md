@@ -2058,6 +2058,8 @@ These compile, run, and do nothing — no warning:
 | `gtk_style_context_add_region()` | no-op since 3.14 |
 | `gtk_style_context_get_background_color()` | returns **fully transparent** on a bare widget context |
 | `gtk_style_context_get_border()` | **0** on a container with no CSS border of its own, where GTK+2's `style->xthickness`/`ythickness` were 1 — measured on `MooPaned`, and the reason four thickness translations in it drew nothing. Not a blanket rule: a realized `GtkEntry` answers 1, so measure the widget rather than assuming either way |
+| `gtk_render_line()` | draws, but in the context's **foreground** colour — `#2e3436` on this theme. It is not what `gtk_paint_vline()`/`hline()` were: those drew the theme's etched groove. Using it for a separator puts black lines around the document, which is how the `MooPaned` border was noticed after it started working |
+| `gtk_style_context_add_class (…, GTK_STYLE_CLASS_SEPARATOR)` and friends | matches nothing since 3.20 on a widget that is not the thing named. A theme matches on the CSS **node**, so the class alone leaves the context exactly as it was |
 
 That last one is worth measuring rather than assuming. On this machine's theme:
 
@@ -2074,8 +2076,32 @@ class for that widget) + `set_state()` + `restore()`. Better still, let the them
 draw: `gtk_render_background()` with the state set beats fetching a colour and
 filling a rectangle.
 
+**To draw what a widget you do not have would draw**, build a style context on a
+widget path of its own rather than adding classes to the one you have:
+
+```c
+GtkStyleContext *context = gtk_style_context_new ();
+GtkWidgetPath *path = gtk_widget_path_new ();
+
+gtk_widget_path_append_type (path, GTK_TYPE_SEPARATOR);
+gtk_widget_path_iter_set_object_name (path, -1, "separator");   /* 3.20+ */
+gtk_style_context_set_path (context, path);
+gtk_widget_path_unref (path);
+
+gtk_render_background (context, cr, x, y, width, height);       /* the line */
+```
+
+Measured: that context's background is `rgba(0,0,0,0.1)`, which over the pane's
+surface is `#dedddc` — a separator, where `gtk_render_line()` on the widget's own
+context gave `#2e3436`. This is how `MooPaned` draws its border and the two lines
+beside the drag grip. Note that a separator on GTK+3 is a **background**, not a
+stroked line, so it is `gtk_render_background()` over a rectangle one pixel thick.
+
 `ui/stest.c`-style throwaway probes are cheap: a 20-line GTK+3 program that
-prints what these functions return settles such questions in one build.
+prints what these functions return settles such questions in one build. Four of
+them settled this section: the border of an entry against a container's, what
+`gtk_accelerator_parse()` makes of `"Shift"`, what a separator's background is,
+and what it comes out as over white.
 
 ## 7. Conventions
 

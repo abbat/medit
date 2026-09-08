@@ -24,10 +24,11 @@ from lib import input as ui
 # both.
 STRIP = 17
 
-# How far along the strip to look for tabs, and how finely. Three short names
-# take about 290 px; the step bounds how well a tab's edges are known, and
-# everything below stays well inside what it finds.
-REACH = 340
+# How finely to look along the strip for the edges of a tab. The step bounds
+# how well an edge is known, and everything below stays well inside what it
+# finds. How far to look is not fixed: the scan runs to the width of the
+# notebook and stops as soon as the third tab answers, so a machine whose font
+# makes the tabs wider costs a few more clicks rather than a failure.
 STEP = 12
 
 # What a tab looks like: mostly the light surface it is drawn on, with the
@@ -120,10 +121,10 @@ def tab_spans(t):
     title follows the document that has the focus, which after a run of clicks
     on the strip is not reliably the one whose tab was last clicked.
     """
-    x0 = t.extents(the_notebook(t))[0]
+    x0, y0, width, height = t.extents(the_notebook(t))
     spans = {}
 
-    for x in range(x0 + 2, x0 + REACH, STEP):
+    for x in range(x0 + 2, x0 + width, STEP):
         t.click_at(x, strip(t))
         name = showing(t)
 
@@ -132,6 +133,11 @@ def tab_spans(t):
 
         low, high = spans.get(name, (x, x))
         spans[name] = (min(low, x), max(high, x))
+
+        # The third tab has answered, so the second one's span is complete and
+        # there is nothing further along worth the clicks.
+        if len(spans) == 3:
+            break
 
     return spans
 

@@ -1857,6 +1857,48 @@ moo_paned_remove (GtkContainer   *container,
 }
 
 
+#if GTK_CHECK_VERSION(3,0,0)
+/*
+ * The line GTK+3 draws between two things, put down at the given rectangle.
+ *
+ * GTK+2's gtk_paint_vline() and gtk_paint_hline() drew the theme's etched
+ * groove -- light against dark, and never a solid line. gtk_render_line() is
+ * not that: it strokes in the style context's foreground colour, which on this
+ * theme is #2e3436, so the pane's border and the handle's shadow arrived as
+ * black lines drawn around the document. What GTK+3 makes a separator out of
+ * is the *background* of a node called "separator" -- rgba(0,0,0,0.1) here,
+ * which is #e6e6e6 over white -- and since 3.20 a widget that is not one
+ * cannot reach it by adding a style class, because the theme matches on the
+ * node and not on the class. A context built on a path of its own can.
+ *
+ * Built per call rather than kept: it is two allocations, it happens only
+ * while a border or a handle is on screen, and a cached one would have to be
+ * thrown away whenever the theme changed.
+ */
+static void
+draw_separator (cairo_t *cr,
+                int      x,
+                int      y,
+                int      width,
+                int      height)
+{
+    GtkStyleContext *context = gtk_style_context_new ();
+    GtkWidgetPath *path = gtk_widget_path_new ();
+
+    gtk_widget_path_append_type (path, GTK_TYPE_SEPARATOR);
+#if GTK_CHECK_VERSION(3,20,0)
+    gtk_widget_path_iter_set_object_name (path, -1, "separator");
+#endif
+    gtk_style_context_set_path (context, path);
+    gtk_widget_path_unref (path);
+
+    gtk_render_background (context, cr, x, y, MAX (width, 1), MAX (height, 1));
+
+    g_object_unref (context);
+}
+#endif
+
+
 static void
 draw_handle (MooPaned       *paned,
 #if GTK_CHECK_VERSION (3, 0, 0)
@@ -1972,24 +2014,11 @@ draw_handle (MooPaned       *paned,
             area.width = shadow_size;
 
 #if GTK_CHECK_VERSION(3,0,0)
-            context = gtk_widget_get_style_context (widget);
-            gtk_style_context_save (context);
-            gtk_style_context_set_state (context, GTK_STATE_FLAG_NORMAL);
-            gtk_render_line (context,
-                             cr,
-                             area.x, area.y,
-                             area.x, area.y + area.height);
-            gtk_style_context_restore (context);
+            draw_separator (cr, area.x, area.y, shadow_size, area.height);
 
             area.x = paned->priv->handle_size - shadow_size;
 
-            gtk_style_context_save (context);
-            gtk_style_context_set_state (context, GTK_STATE_FLAG_NORMAL);
-            gtk_render_line (context,
-                             cr,
-                             area.x, area.y,
-                             area.x, area.y + area.height);
-            gtk_style_context_restore (context);
+            draw_separator (cr, area.x, area.y, shadow_size, area.height);
 #else
             gtk_paint_vline (widget->style,
                              paned->priv->handle_window,
@@ -2020,24 +2049,11 @@ draw_handle (MooPaned       *paned,
             area.height = shadow_size;
 
 #if GTK_CHECK_VERSION(3,0,0)
-            context = gtk_widget_get_style_context (widget);
-            gtk_style_context_save (context);
-            gtk_style_context_set_state (context, GTK_STATE_FLAG_NORMAL);
-            gtk_render_line (context,
-                             cr,
-                             area.x, area.y,
-                             area.x + area.width, area.y);
-            gtk_style_context_restore (context);
+            draw_separator (cr, area.x, area.y, area.width, shadow_size);
 
             area.y = paned->priv->handle_size - shadow_size;
 
-            gtk_style_context_save (context);
-            gtk_style_context_set_state (context, GTK_STATE_FLAG_NORMAL);
-            gtk_render_line (context,
-                             cr,
-                             area.x, area.y,
-                             area.x + area.width, area.y);
-            gtk_style_context_restore (context);
+            draw_separator (cr, area.x, area.y, area.width, shadow_size);
 #else
             gtk_paint_hline (widget->style,
                              paned->priv->handle_window,
@@ -2098,14 +2114,7 @@ draw_border (MooPaned       *paned,
             rect.width = paned->priv->border_size;
 
 #if GTK_CHECK_VERSION(3,0,0)
-            context = gtk_widget_get_style_context (widget);
-            gtk_style_context_save (context);
-            gtk_style_context_set_state (context, GTK_STATE_FLAG_NORMAL);
-            gtk_render_line (context,
-                             cr,
-                             rect.x, rect.y,
-                             rect.x, rect.y + rect.height);
-            gtk_style_context_restore (context);
+            draw_separator (cr, rect.x, rect.y, rect.width, rect.height);
 #else
             gtk_paint_vline (widget->style,
                              paned->priv->bin_window,
@@ -2130,14 +2139,7 @@ draw_border (MooPaned       *paned,
             rect.height = paned->priv->border_size;
 
 #if GTK_CHECK_VERSION(3,0,0)
-            context = gtk_widget_get_style_context (widget);
-            gtk_style_context_save (context);
-            gtk_style_context_set_state (context, GTK_STATE_FLAG_NORMAL);
-            gtk_render_line (context,
-                             cr,
-                             rect.x, rect.y,
-                             rect.x + rect.width, rect.y);
-            gtk_style_context_restore (context);
+            draw_separator (cr, rect.x, rect.y, rect.width, rect.height);
 #else
             gtk_paint_hline (widget->style,
                              paned->priv->bin_window,

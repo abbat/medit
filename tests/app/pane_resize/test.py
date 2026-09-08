@@ -37,10 +37,12 @@ HANDLE = 5
 
 # How far apart the darkest and the lightest pixel across the splitter have to
 # be for something to have been drawn on it. A flat strip answers 0; the two
-# lines against the surface around them are worth about 200 on the theme the
-# tests run under, so anything in between says "a line is there" without
-# naming a colour.
-CONTRAST = 40
+# lines beside the grip are a separator, which is what GTK+3 draws between two
+# things -- a tenth of black over the surface, about 23 apart from it on the
+# theme the tests run under. Eight is clear of both ends, and the test asks for
+# a difference rather than for a colour so that it is the theme's line whatever
+# the theme draws.
+CONTRAST = 8
 
 
 def setup(s):
