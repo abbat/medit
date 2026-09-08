@@ -307,6 +307,15 @@ class Test(object):
         """Where the widget is on the screen, as (x, y, width, height)."""
         return ui.extents(node)
 
+    def pixel(self, x, y):
+        """The colour of one pixel of the screen, as "#rrggbb".
+
+        The one thing read off the screen rather than out of the accessibility
+        tree, and only where there is nothing in the tree to read: a colour, or
+        a line drawn by a container on a window of its own.
+        """
+        return ui.pixel(x, y)
+
     def value(self, node):
         """What a scrollbar or a slider says it is at, as (value, min, max).
 

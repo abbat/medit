@@ -1233,18 +1233,21 @@ moo_paned_size_request (GtkWidget      *widget,
 
     if (paned->priv->enable_border)
     {
+        /* GTK+2 read style->xthickness and style->ythickness here, which are
+           the theme's own idea of how thick a frame is and are never 0. Their
+           GTK+3 counterpart is the style context's border, and that is 0 on a
+           widget with no CSS border of its own -- measured on this widget, on
+           the themes to hand. The floor of one pixel is what keeps the line
+           that separates the button box from the pane the width GTK+2 drew it;
+           a theme that asks for more still gets more. */
         switch (paned->priv->pane_position)
         {
             case MOO_PANE_POS_LEFT:
             case MOO_PANE_POS_RIGHT:
 #if GTK_CHECK_VERSION(3,0,0)
-                /* FIXME: measured 0. A widget with no CSS border of its own
-                   gets none from gtk_style_context_get_border(), where GTK+2's
-                   style->xthickness was 1, so enable_border reserves nothing
-                   and draw_border() has nothing to draw. */
                 context = gtk_widget_get_style_context (widget);
                 gtk_style_context_get_border (context, GTK_STATE_FLAG_NORMAL, &border);
-                paned->priv->border_size = border.left;
+                paned->priv->border_size = MAX (border.left, 1);
 #else
                 paned->priv->border_size = widget->style->xthickness;
 #endif
@@ -1253,10 +1256,9 @@ moo_paned_size_request (GtkWidget      *widget,
             case MOO_PANE_POS_TOP:
             case MOO_PANE_POS_BOTTOM:
 #if GTK_CHECK_VERSION(3,0,0)
-                /* FIXME: measured 0, as for border.left above. */
                 context = gtk_widget_get_style_context (widget);
                 gtk_style_context_get_border (context, GTK_STATE_FLAG_NORMAL, &border);
-                paned->priv->border_size = border.top;
+                paned->priv->border_size = MAX (border.top, 1);
 #else
                 paned->priv->border_size = widget->style->ythickness;
 #endif
@@ -1728,29 +1730,11 @@ moo_paned_expose (GtkWidget      *widget,
                   GdkEventExpose *event)
 #endif
 {
-    GdkWindow *event_window;
     MooPaned *paned = MOO_PANED (widget);
 
-#if GTK_CHECK_VERSION(3,22,0)
-    //cairo_region_t *region;
-    //cairo_rectangle_int_t rectangle;
-    GdkDrawingContext *drawing_context;
-
-    drawing_context = gdk_cairo_get_drawing_context(cr);
-    if (!drawing_context)
-        return GTK_WIDGET_CLASS(moo_paned_parent_class)->draw (widget, cr);
-
-    event_window = gdk_drawing_context_get_window (drawing_context);
-
-    //region = gdk_drawing_context_get_clip (drawing_context);
-    //cairo_region_get_extents (region, &rectangle);
-
-    //event_area = (GdkRectangle*)&rectangle;
-#else
-    GdkRectangle *event_area;
-
-    event_window = event->window;
-    event_area = &event->area;
+#if !GTK_CHECK_VERSION(3,0,0)
+    GdkWindow *event_window = event->window;
+    GdkRectangle *event_area = &event->area;
 #endif
 
 
@@ -1806,25 +1790,37 @@ moo_paned_expose (GtkWidget      *widget,
                                         event);
 #endif
 
-    /* FIXME: on GTK+3 neither draw_handle() nor draw_border() below is ever
-       reached. gdk_cairo_get_drawing_context() answers the window the frame is
-       being drawn on, which is the toplevel, so it never equals a child window
-       of this widget -- measured: event_window is the same pointer for all four
-       MooPaneds of a window, while gtk_cairo_should_draw_window() answers TRUE
-       for both handle_window and bin_window. That is the call to use here. */
-    if (paned->priv->handle_visible && event_window == paned->priv->handle_window)
 #if GTK_CHECK_VERSION(3,0,0)
+    /* One ::draw for the whole widget, and gtk_cairo_should_draw_window() is
+       what says which of its windows this pass is for. The port asked
+       gdk_cairo_get_drawing_context() instead, and that answers the toplevel
+       the frame is drawn on -- the same pointer for every MooPaned of the
+       window -- so neither of these two ever ran. */
+    if (paned->priv->handle_visible && paned->priv->handle_window &&
+        gtk_cairo_should_draw_window (cr, paned->priv->handle_window))
+    {
+        cairo_save (cr);
+        gtk_cairo_transform_to_window (cr, widget, paned->priv->handle_window);
         draw_handle (paned, cr);
+        cairo_restore (cr);
+    }
+
+    if (paned->priv->button_box_visible && !paned->priv->pane_widget_visible &&
+        paned->priv->border_size && paned->priv->bin_window &&
+        gtk_cairo_should_draw_window (cr, paned->priv->bin_window))
+    {
+        cairo_save (cr);
+        gtk_cairo_transform_to_window (cr, widget, paned->priv->bin_window);
+        draw_border (paned, cr);
+        cairo_restore (cr);
+    }
 #else
+    if (paned->priv->handle_visible && event_window == paned->priv->handle_window)
         draw_handle (paned, event_area);
-#endif
 
     if (paned->priv->button_box_visible && !paned->priv->pane_widget_visible &&
         paned->priv->border_size && event_window == paned->priv->bin_window)
-#if GTK_CHECK_VERSION(3,0,0)
-            draw_border (paned, cr);
-#else
-            draw_border (paned, event_area);
+        draw_border (paned, event_area);
 #endif
 
     return TRUE;
@@ -1883,16 +1879,16 @@ draw_handle (MooPaned       *paned,
     GtkStateType state = GTK_STATE_NORMAL;
 #endif
 
+    /* The floor of one pixel is the same as in moo_paned_size_request(): the
+       border of a style context is 0 where GTK+2's xthickness was not. */
     switch (paned->priv->pane_position)
     {
         case MOO_PANE_POS_LEFT:
         case MOO_PANE_POS_RIGHT:
 #if GTK_CHECK_VERSION(3,0,0)
-            /* FIXME: 0, the same measurement as in moo_paned_size_request();
-               the two lines drawn below are dead while it is. */
             context = gtk_widget_get_style_context (widget);
             gtk_style_context_get_border (context, GTK_STATE_FLAG_NORMAL, &border);
-            shadow_size = border.left;
+            shadow_size = MAX (border.left, 1);
 #else
             shadow_size = widget->style->xthickness;
 #endif
@@ -1907,10 +1903,9 @@ draw_handle (MooPaned       *paned,
         case MOO_PANE_POS_TOP:
         case MOO_PANE_POS_BOTTOM:
 #if GTK_CHECK_VERSION(3,0,0)
-            /* FIXME: 0, as border.left above. */
             context = gtk_widget_get_style_context (widget);
             gtk_style_context_get_border (context, GTK_STATE_FLAG_NORMAL, &border);
-            shadow_size = border.top;
+            shadow_size = MAX (border.top, 1);
 #else
             shadow_size = widget->style->ythickness;
 #endif
@@ -1924,19 +1919,21 @@ draw_handle (MooPaned       *paned,
             break;
     }
 
+    /* One state, not a set of them: GTK+2 assigned here and the GTK+3
+       translation has to as well. What it did instead was to OR in
+       GTK_STATE_SELECTED and GTK_STATE_PRELIGHT, which are GtkStateType and
+       not GtkStateFlags -- GTK_STATE_SELECTED is 3, so a focused handle asked
+       the theme for ACTIVE|PRELIGHT. GTK_STATE_PRELIGHT was right only because
+       both spellings of prelight happen to be 2. */
     if (gtk_widget_is_focus (widget))
 #if GTK_CHECK_VERSION(3,0,0)
-        /* FIXME: GTK_STATE_SELECTED is a GtkStateType, and state is a
-           GtkStateFlags. The value is 3, so this asks for ACTIVE|PRELIGHT
-           rather than for GTK_STATE_FLAG_SELECTED (4). The PRELIGHT line
-           below is right only by accident: both spellings are 2. */
-        state |= GTK_STATE_SELECTED;
+        state = GTK_STATE_FLAG_SELECTED;
 #else
         state = GTK_STATE_SELECTED;
 #endif
     else if (paned->priv->handle_prelit)
 #if GTK_CHECK_VERSION(3,0,0)
-        state |= GTK_STATE_PRELIGHT;
+        state = GTK_STATE_FLAG_PRELIGHT;
 #else
         state = GTK_STATE_PRELIGHT;
 #endif
