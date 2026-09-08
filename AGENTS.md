@@ -5,16 +5,15 @@ alive. Work branch: `main`.
 
 The port was largely done by an AI and is buggy. It left 53 blocks marked
 `/* FIXME: This code was written by AI and requires review */`, a marker that said
-only who wrote the code, not what was wrong with it. All 53 have now been read
-against their GTK+2 branch: 33 were faithful translations and lost the marker, and
-the other 20 say what the review found instead of who to blame. **Grep for `FIXME:`
-in a file you are about to change and read the ones that are there** — each is a
-defect somebody has already located, with the measurement that located it. Nearly
-every one of them is a case of §6's two mistakes; the survivors are indexed at the
-end of §5.
+only who wrote the code, not what was wrong with it. All 53 have been read against
+their GTK+2 branch: 33 were faithful translations and lost the marker, 19 named a
+defect, and those defects are fixed — the story is at the end of §5. **Grep for
+`FIXME:` in a file you are about to change and read the ones that are there**: what
+is left says what was tried and measured, not who to blame.
 
-One is still a blanket: `mootextview.c:21` warns about the whole file and has not
-been gone through block by block.
+Three remain, all in `moonotebook.c` and all the same root cause, and one blanket:
+`mootextview.c:21` warns about the whole file and has not been gone through block
+by block.
 
 **The GTK+2 branch of every `#if GTK_CHECK_VERSION(3,0,0)` is the specification.**
 When GTK+3 misbehaves, read the `#else` branch first and ask what it achieved, then find
@@ -1065,6 +1064,47 @@ from AT-SPI, so a test says "the Credits button is there" rather than comparing 
 and says it identically on both toolkits. Input is `xdotool` at coordinates AT-SPI has
 just given, and there is not one fixed coordinate anywhere.
 
+**Except where there is nothing in the tree to read**, and the widgets the port broke are
+mostly of that kind: a container drawing on a `GdkWindow` of its own has no accessible for
+what it draws. `t.pixel(x, y)` reads one pixel and `t.pixel_row(x, y, width)` a whole line
+in one process — a hundred `t.pixel()` calls is a hundred ImageMagick invocations and is
+slower than the thing being watched. Ask such a test for a *property* rather than a
+colour, so it is not a test of the theme:
+
+| what is being asked | how it is put |
+|---|---|
+| is anything drawn here at all | the spread between the lightest and darkest pixel across the strip (`app/pane_resize`: 0 before the fix, 195 after) |
+| is this a picture of that | the mean brightness of the two compared (`editor/tab_drag`: a tab at rest is 240, in the air it was 122 and is now 239) |
+| is this a frame or a block | how much of a scanned line changed (`app/pane_move`: 3 pixels out of a span of 798) |
+
+**Some widgets are not in the tree at all.** `MooIconView` draws its own cells, so AT-SPI
+calls it `unknown` and it has no children — a test finds it as *the* on-screen node of that
+role and then asks which document a double-click at some coordinate opened, which says more
+than a name would: that those coordinates really were that file. `MooNotebook`'s tab strip
+is the same; what `MooNotebookAccessible` does expose is the pages, named after their tabs
+and in the order the notebook holds them, which is what reordering changes. Where a tab is
+is found by clicking along the strip and asking which page came forward — and read the page
+that is *showing*, not the window title, which follows the document that has the focus and
+after a run of clicks on the strip is not the one whose tab was last clicked.
+
+**Dragging.** `t.drag(node, dx, dy)` and `t.drag_to(x0, y0, x1, y1)` walk the journey in
+steps with the button down: a toolkit decides a drag has begun from the motion it sees, and
+one jump from press to release is a single event most drag handlers treat as noise. Pass
+`during=` to look at the screen while the button is still down — what a drag draws exists
+only then. Real X drag-and-drop is a different matter: dropping a file onto a folder in the
+file view *starts* (the drag icon and the drop highlight appear) but does not land
+reliably, so the menu it would raise is not covered by anything.
+
+**A submenu is not opened by clicking its parent.** Without a window manager the item takes
+the click and the submenu stays unmapped, its items in the tree with no position. `t.menu()`
+presses Right after such a step; an item that has a submenu is recognised by its role, which
+is `menu` where an ordinary item is `menu item`.
+
+**Typing into a dialog needs `t.focus()` first**, for the same reason: nothing hands the
+input focus to a window that has just appeared, and clicking an entry only moves the caret
+within a window that already has it. The symptom is an entry that keeps its old text with
+no error anywhere.
+
 Each test gets a temp root, a home directory, an X server (`Xvfb -displayfd`, so no two
 tests race for a display number — see the trap below) and a session bus of its own. HOME
 is sandboxed too, which only began to matter with the terminal: a shell reads the rc files
@@ -1882,26 +1922,42 @@ Reading these first will usually identify the next one:
   → *When a port adds a guard, check that everything depending on the guarded call moved
   inside it.*
 
-### What the marker sweep found and did not fix
+### What the marker sweep found, and what it cost to fix
 
-Reading all 53 `written by AI` blocks against their GTK+2 branch turned up 19 defects,
-each of which is now a `FIXME:` naming itself. None is fixed. Ordered by what a user
-would notice:
+Reading all 53 `written by AI` blocks against their GTK+2 branch turned up 19 defects.
+Every one is fixed, and each fix has a test written before it. Ordered by what a user
+would have noticed:
 
-| where | what |
-|---|---|
-| `moopaned.c` `moo_paned_draw()` | §6a exactly: `draw_handle()` and `draw_border()` are never called. **Measured** — `event_window` is one pointer shared by all four MooPaneds of a window, while `gtk_cairo_should_draw_window()` answers TRUE for both child windows |
-| `moopaned.c` ×4 | `gtk_style_context_get_border()` is **0** where `style->xthickness` was 1, so `border_size` and the handle's `shadow_size` are 0 and there is nothing to draw even once the above is fixed |
-| `moonotebook.c` drag snapshot | `gdk_pixbuf_new()` does not clear; the window is copied into a *second* pixbuf which is then unref'd, so a dragged tab paints uninitialised heap. Its failure branch stores nothing and leaks, and `snapshot_pixmap` is a `cairo_surface_t*` that `drag_end()` frees with `g_object_unref()` |
-| `mooiconview.c` | `set_scroll_adjustments` was dropped and GtkScrollable not implemented, so the file selector's icon view — its **default** view — never gets an adjustment and its scrollbar moves nothing |
-| `mooutils-misc.cpp` | `accel_label_set_string()` sets accel 0/0 and stores the text in object data it feeds back to itself: every menu item going through `_moo_menu_item_set_accel_label()` shows an empty shortcut column |
-| `moonotebook.c` tabs | `gtk_render_background()`+`gtk_render_frame()` with no style class where `gtk_paint_extension()` drew a tab, so each tab has a line between it and its own page |
-| `moobigpaned.c` ×2 | the drop indicator draws on `outer`'s `cr` instead of the shaped `drop_outline` window (§6a again), and its mask unions *filled* rectangles where GTK+2 drew outlines |
-| `moopane.c` | the five state-tinted copies of a button icon are all made with the widget's *current* state, so they are identical |
-| `moopaned.c` `draw_handle()` | `state \|= GTK_STATE_SELECTED` mixes a `GtkStateType` (3) into a `GtkStateFlags`, asking for ACTIVE\|PRELIGHT. The PRELIGHT line beside it is right only because both spellings are 2 |
-| `mooutils-treeview.cpp` | expander lines stroked at cairo's default width 2.0 on integer coordinates — grey and doubled where `gdk_draw_line()` was one pixel (§6c) |
-| `moofileentry.c` | entry borders from `gtk_style_context_get_border()` alone, 0 on the themes measured; the completion popup is positioned with them |
-| `moocommand-exe.cpp` | the `DISPLAY` set around `g_spawn_async()` is never read — the child is given an explicit `real_env` — while the process-wide environment is modified anyway |
+| where | what was wrong | what asserts it |
+|---|---|---|
+| `mooiconview.c` | GTK+2's `set-scroll-adjustments` was dropped and GtkScrollable never implemented, so the file selector's icon view — its **default** view — was put in a GtkViewport and its scroll bar had no range at all: **`value=0 max=0` with 41 files in the directory, of which the first thirty could not be reached by any means** | `app/file_selector_browse` |
+| `moopaned.c` `moo_paned_draw()` | §6a exactly, so `draw_handle()` and `draw_border()` had not run since the port. `event_window` is one pointer shared by all four MooPaneds of a window | `app/pane_resize`, on pixels |
+| `moopaned.c` ×4 | `gtk_style_context_get_border()` is **0** on this widget where `style->xthickness` was 1, so `border_size` and `shadow_size` were 0 and there was nothing to draw even once the dispatch was right. Floored at one pixel | the same |
+| `moonotebook.c` drag snapshot | `gdk_pixbuf_new()` does not clear; the window was copied into a *second* pixbuf which was then unref'd, so a dragged tab painted uninitialised heap. `gdk_cairo_set_source_window()` was also given `+offset` where it wants `-offset`, and the failure branch stored nothing | `editor/tab_drag`, on pixels |
+| `moobigpaned.c` ×2 | the drop indicator drew on `outer`'s `cr` instead of the shaped `drop_outline` window (§6a again), and its mask unioned *filled* rectangles where GTK+2 drew outlines | `app/pane_move`, on pixels, and `/mooutils/paned/drop-mask` |
+| `mooutils-misc.cpp` | `accel_label_set_string()` set accel 0/0 and stashed the text in object data it fed back to itself, so the second column of those menu items was empty | `/mooutils/accel/label` |
+| `moopane.c` | the five state-tinted copies of a button icon were all made with the widget's *current* state, so they were identical | — |
+| `moopaned.c` `draw_handle()` | `state \|= GTK_STATE_SELECTED` mixed a `GtkStateType` (3) into a `GtkStateFlags`, asking for ACTIVE\|PRELIGHT | — |
+| `mooutils-treeview.cpp` | expander lines stroked at cairo's default width 2.0 on integer coordinates — grey and doubled where `gdk_draw_line()` was one pixel (§6c) | — |
+| `moocommand-exe.cpp` | `DISPLAY` was set in *this* process around a `g_spawn_async()` given an explicit environment, so the child never read it | — |
+
+Two things that came out of the sweep are worth keeping separately.
+
+**`moofileentry.c` was marked and was not wrong.** The sweep reasoned by analogy with
+MooPaned, where `gtk_style_context_get_border()` measures 0. A realized `GtkEntry`
+answers 1 on every side, the same as GTK+2's `xthickness` — the difference is that an
+entry has a CSS border of its own and a bare container does not. Measure the widget you
+are about to change, not one that looks like it.
+
+**What is left in `moonotebook.c` is one problem wearing three markers.** The current tab
+has a line along its bottom closing it off from its page, where `gtk_paint_extension()`
+left that side open. `gtk_render_extension()` with `GTK_POS_BOTTOM`,
+`GTK_STYLE_CLASS_NOTEBOOK` and the states the right way round — GTK+2 drew the current
+tab NORMAL and the rest ACTIVE, GTK+3's themes want the opposite — produces a
+**byte-identical screenshot**. Since 3.20 a theme styles notebook parts through CSS
+nodes, and a widget that is not a `GtkNotebook` has none of them whatever it passes to
+the render calls. That wants a CSS name and node structure of its own, which is the
+whole widget's drawing rather than a cleanup.
 
 Known and deliberately left alone: `draw_entry()` in `mooiconview.c` still uses
 `gdk_cairo_create()` per row (deprecated since 3.22, bypasses the clip, works).
@@ -1934,6 +1990,25 @@ That window is the **toplevel frame's**, so the comparisons never match and the
 code silently does nothing. Same for `gdk_drawing_context_get_clip()`: its region
 is in toplevel coordinates, so intersecting it with widget-space rectangles
 clips away everything above the widget's origin.
+
+This has now been found three times — the file list, `MooPaned`'s splitter, and
+`MooBigPaned`'s drop indicator — and it is worth measuring rather than reading,
+because the failure is silent. Instrumenting `moo_paned_draw()` in a window with
+four panes in it printed:
+
+```
+PROBEPANED handle_visible=1 event_window=0x614000095640
+           handle_window=0x61400009a440 should_handle=1
+```
+
+one `event_window` for all four, never equal to any child, while
+`gtk_cairo_should_draw_window()` says TRUE for the child. A `g_print` in the
+dispatch and one UI test that opens the pane settles it in a minute.
+
+A window only reaches a widget's `::draw` if it carries that widget as its user
+data. `MooBigPaned` created the indicator as a child of `outer`'s window but set
+the user data to the big paned, so `gtk_cairo_should_draw_window()` on `outer`'s
+context answered FALSE for it whatever else was right.
 
 GTK+3 emits **one `::draw` for the whole widget**. The correct shape is:
 
@@ -1982,7 +2057,7 @@ These compile, run, and do nothing — no warning:
 | `gdk_window_set_background[_rgba]()` | no-op; GDK does not paint window backgrounds |
 | `gtk_style_context_add_region()` | no-op since 3.14 |
 | `gtk_style_context_get_background_color()` | returns **fully transparent** on a bare widget context |
-| `gtk_style_context_get_border()` | returns **0** on a bare widget context, where GTK+2's `style->xthickness`/`ythickness` were 1 — measured on `MooPaned`, and the reason four separate thickness translations in it draw nothing |
+| `gtk_style_context_get_border()` | **0** on a container with no CSS border of its own, where GTK+2's `style->xthickness`/`ythickness` were 1 — measured on `MooPaned`, and the reason four thickness translations in it drew nothing. Not a blanket rule: a realized `GtkEntry` answers 1, so measure the widget rather than assuming either way |
 
 That last one is worth measuring rather than assuming. On this machine's theme:
 
