@@ -187,6 +187,34 @@ def text_of(node):
         return ""
 
 
+def caret_of(node):
+    """Where the cursor is in a node's text, as a character offset.
+
+    The buffer's own offset for a text view, which is what makes a test about
+    cursor movement possible at all: nothing else in the tree moves when the
+    cursor does.
+    """
+    return node.queryText().caretOffset
+
+
+def selection_of(node):
+    """The selected range as (start, end), or None when nothing is selected.
+
+    at-spi allows a text to hold several selections and medit never makes more
+    than one, so this is the first. An empty range is no selection: a text view
+    with the cursor somewhere reports one that starts and ends in the same
+    place on some versions and reports none on others.
+    """
+    text = node.queryText()
+
+    if text.getNSelections() < 1:
+        return None
+
+    start, end = text.getSelection(0)
+
+    return (start, end) if start != end else None
+
+
 def attributes_of(node, offset):
     """The text attributes at one character of a node, as a dict.
 

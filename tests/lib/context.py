@@ -214,6 +214,30 @@ class Test(object):
     def text(self, node):
         return a11y.text_of(node)
 
+    def caret(self, node):
+        """The cursor's character offset in a text node."""
+        return a11y.caret_of(node)
+
+    def selection(self, node):
+        """The selected range of a text node as (start, end), or None."""
+        return a11y.selection_of(node)
+
+    def document(self):
+        """The text view of the document on screen.
+
+        The one text widget that has a position: the others in the tree belong
+        to panes that are not open. GTK+3 only, like every test that reads a
+        document -- on GTK+2 the pages of the editor's notebook are not in the
+        tree at all, which is what MooNotebookAccessible fixed and what gail
+        cannot do.
+        """
+        views = self.on_screen(self.find_all(self.frame, role="text", depth=25))
+
+        if len(views) != 1:
+            self.fail("expected one document on screen, found %d" % len(views))
+
+        return views[0]
+
     def attributes(self, node, offset):
         """The text attributes at one character: what the tags there say.
 
@@ -252,6 +276,23 @@ class Test(object):
                          % (missing, a11y.text_of(node)))
 
         self.log("ok: %s appeared" % described)
+
+    def wait_caret(self, node, offset, what=None, timeout=a11y.TIMEOUT):
+        """Wait until the cursor is at that offset, and say where it is if not.
+
+        The same shape as wait_text and for the same reason: a key that moved
+        the cursor somewhere else leaves a failure that means nothing without
+        the somewhere else.
+        """
+        described = what or "the cursor to be at %d" % offset
+
+        try:
+            self.wait(lambda: a11y.caret_of(node) == offset, described, timeout)
+        except a11y.NotFound as missing:
+            raise Failed("%s\nit should be at %d and is at %d"
+                         % (missing, offset, a11y.caret_of(node)))
+
+        self.log("ok: %s" % described)
 
     def links(self, node):
         return a11y.links_of(node)
