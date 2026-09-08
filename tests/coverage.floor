@@ -22,4 +22,10 @@
 # 2026-09-08  43.84%, raised to 43.5: the shortcuts dialog is driven now, and
 #             the accelerator map with it -- two UI tests, and a third that
 #             rebinds the terminal's keys before pressing them.
-43.5
+# 2026-09-08  48.96%, raised to 48.7: the sweep of the 53 AI markers, five UI
+#             tests and three unit tests behind it. The file selector is
+#             driven for the first time -- its icon view, its menu and its
+#             properties dialog -- and so are the panes and the document tab
+#             strip, which is what src/moofileview at 46.86% and src/mooutils
+#             at 55.40% are. gtk2 at 41.20%, gtk3 at 48.95%.
+48.7
