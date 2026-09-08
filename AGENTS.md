@@ -1019,6 +1019,24 @@ with it.
 `gdk/gdkkeysyms.h` has to be included for `GDK_KEY_s` on GTK+2 — the compat names live
 there, and a test that only ever built against GTK+3 does not find out.
 
+**Two dialogs in one `.ui` file must not share an id.** A GtkBuilder reads the whole
+file at once, so the second `id="entry"` is not a second scope — it is an error, and
+then *nothing* in the file is built. Both dialogs in `moofileselector.ui` were dead
+that way: Create File said
+
+```
+could not build /ui/moofileselector.ui: Duplicate object ID 'entry'
+Condition '*builder != nullptr' failed
+```
+
+and Save As, which no test can reach, said nothing at all. Underneath it the same
+duplicate had pointed the second dialog's `<action-widget>` at the first dialog's
+button, so once the file built, OK had no response and the dialog would not close.
+`cmake/CheckBuilderIds.cmake` refuses both shapes now — a duplicated id, and an
+`<action-widget>` naming an id the file does not declare — at build time and without a
+display, which is where this belongs: the check already existed and only compared the
+ids the C asks for against the ids the file declares, and every id here existed.
+
 ### The UI tests
 
 ```bash

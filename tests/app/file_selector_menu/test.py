@@ -1,15 +1,19 @@
-"""File Selector: look at what a file is, rename it there, and open it.
+"""File Selector: look at what a file is, rename it, and make another.
 
 # requires: MOO_GTK3
 
 One chain through the parts of the file view that a person actually uses on a
 file they did not mean to call that: select it, open the menu it has, ask for
-its properties, type a new name, and then open the file to see that the name
-took -- on disk and in the view, which had to notice the rename and redraw.
+its properties, type a new name, open the file to see that the name took -- on
+disk and in the view, which had to notice the rename and redraw -- and then
+make a new file from the same menu.
 
-The properties dialog is the one built by taking a notebook out of a
-placeholder window in moofileprops.ui and putting it in a dialog of its own,
-so this is also the test that the dialog comes up at all.
+Both dialogs on the way are built from a .ui file, and both had never been
+opened by a test. The properties one is taken out of a placeholder window in
+moofileprops.ui and put in a dialog of its own; the Create File one shares
+moofileselector.ui with Save As, which is what broke it -- a GtkBuilder reads
+the whole file at once, and the two dialogs had given their entries the same
+id.
 """
 
 from lib import input as ui
@@ -22,10 +26,11 @@ FIRST_ROW = 8
 
 BEFORE = "aaa.txt"
 AFTER = "aab.txt"
+MADE = "aac.txt"
 
 # What the menu is expected to offer on a file. Not all of it -- the point is
 # that the menu is built and populated, not to pin down its contents.
-ITEMS = ("Open", "Copy", "New Folder", "Properties")
+ITEMS = ("Open", "Copy", "New File...", "New Folder", "Properties")
 
 
 def setup(s):
@@ -47,6 +52,8 @@ def run(t):
             "the first row of the view is %s now, and opening it opens that "
             "file" % AFTER)
 
+    made_from_the_menu(t, view)
+
 
 def open_the_pane(t):
     t.menu("View", "Panes", "File Selector")
@@ -58,6 +65,34 @@ def open_the_pane(t):
                    what="the button that goes to the document's directory"))
 
     return t.wait(lambda: the_icon_view(t), "the icon view of the file selector")
+
+
+def made_from_the_menu(t, view):
+    """Make a new file where the view is looking, and end up editing it.
+
+    The dialog is offered a name and the test types over it, which is what a
+    person does; what it proves is that medit created the file and opened it,
+    since the window title is the document that is being edited.
+    """
+    menu = menu_on_the_first_file(t, view)
+    t.click(t.item(menu, "New File..."))
+
+    dialog = t.dialog("Create File")
+    entry = t.need(dialog, role="text", what="the name of the file to create")
+
+    t.focus()
+    t.click(entry)
+    t.key("ctrl+a")
+    t.type_text(MADE)
+
+    t.check(t.text(entry) == MADE, "the new file is to be called %s" % MADE)
+
+    t.click(t.button(dialog, "OK"))
+    t.no_toplevel("Create File")
+
+    t.wait(lambda: t.frame.name.endswith("/" + MADE),
+           "medit to be editing the file the menu made")
+    t.log("ok: %s was created and opened" % MADE)
 
 
 def menu_on_the_first_file(t, view):

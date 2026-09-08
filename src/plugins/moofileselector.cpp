@@ -378,17 +378,17 @@ create_new_file_dialog (GtkWidget         *parent,
 
     moo_window_set_parent (dialog, parent);
 
-    gtk_entry_set_text (GTK_ENTRY (moo_builder_get (*builder, "entry")), start_text);
-    moo_entry_clear_undo (MOO_ENTRY (moo_builder_get (*builder, "entry")));
+    gtk_entry_set_text (GTK_ENTRY (moo_builder_get (*builder, "new_file_entry")), start_text);
+    moo_entry_clear_undo (MOO_ENTRY (moo_builder_get (*builder, "new_file_entry")));
 
     label_text = g_strdup_printf (_("Create file in folder '%s':"), display_dirname);
     gtk_label_set_text (GTK_LABEL (moo_builder_get (*builder, "label")), label_text);
 
     gtk_widget_show_all (dialog);
-    gtk_widget_grab_focus (GTK_WIDGET (moo_builder_get (*builder, "entry")));
+    gtk_widget_grab_focus (GTK_WIDGET (moo_builder_get (*builder, "new_file_entry")));
 
-    moo_bind_bool_property (moo_builder_get (*builder, "ok_button"), "sensitive",
-                            moo_builder_get (*builder, "entry"), "empty", TRUE);
+    moo_bind_bool_property (moo_builder_get (*builder, "new_file_ok_button"), "sensitive",
+                            moo_builder_get (*builder, "new_file_entry"), "empty", TRUE);
 
     g_free (label_text);
     g_free (display_dirname);
@@ -417,7 +417,7 @@ new_file_dialog (GtkWidget   *parent,
         {
             dialog = create_new_file_dialog (parent, dirname, start_name, &builder);
             g_return_val_if_fail (dialog != nullptr, nullptr);
-            entry = GTK_ENTRY (moo_builder_get (builder, "entry"));
+            entry = GTK_ENTRY (moo_builder_get (builder, "new_file_entry"));
         }
 
         if (gtk_dialog_run (GTK_DIALOG (dialog)) != GTK_RESPONSE_OK)

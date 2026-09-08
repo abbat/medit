@@ -114,7 +114,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="MooEntry" id="entry">
+                  <object class="MooEntry" id="new_file_entry">
                     <property name="visible">True</property>
                     <property name="activates_default">True</property>
                   </object>
@@ -144,7 +144,7 @@
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="ok_button">
+              <object class="GtkButton" id="new_file_ok_button">
                 <property name="visible">True</property>
                 <property name="can_default">True</property>
                 <property name="has_default">True</property>
@@ -165,7 +165,7 @@
     </child>
     <action-widgets>
       <action-widget response="-6">button1</action-widget>
-      <action-widget response="-5">ok_button</action-widget>
+      <action-widget response="-5">new_file_ok_button</action-widget>
     </action-widgets>
   </object>
 </interface>
