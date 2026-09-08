@@ -305,9 +305,11 @@ Build directories of their own, `buildu2` and `buildu3` beside `build2` and `bui
 sanitized binary is three times the size and visibly slower, which is not what an
 ordinary build should become.
 
-A test is `tests/<subsystem>/<name>/test.py` — `app`, `editor`, `terminal`, `lsp` so far — one
-`run(t)` function, and it imports nothing: the whole vocabulary is on `t`
-(`tests/lib/context.py`). ctest labels each test with its subsystem and its toolkit. One
+A test is `tests/<subsystem>/<name>/test.py` — `app`, `editor`, `file`, `terminal`, `lsp`
+so far — one `run(t)` function, and nearly the whole vocabulary is on `t`
+(`tests/lib/context.py`); what is not is `from lib import input as ui` for the few things
+that are coordinates rather than widgets, and `from lib.notebook import ...` for the
+document strip. ctest labels each test with its subsystem and its toolkit. One
 file serves both toolkits wherever the two trees agree, which for dialogs they do, gail's
 and GTK+3's being the same tree there; the panes, the document and the terminal are GTK+3
 only, and those tests say so.
@@ -329,6 +331,22 @@ A test names what this build may lack in its header — `# requires: MOO_BUILD_T
 from AT-SPI, so a test says "the Credits button is there" rather than comparing pixels,
 and says it identically on both toolkits. Input is `xdotool` at coordinates AT-SPI has
 just given, and there is not one fixed coordinate anywhere.
+
+**What the tree can be asked, beyond names and text.** These are the readers the editor
+tests are built on, and a test that needs one of them should not go looking for pixels:
+
+| | |
+|---|---|
+| `t.document()` | the text view of the document on screen — the one text widget that has a position |
+| `t.caret(node)`, `t.wait_caret(node, n)` | where the cursor is, as a character offset |
+| `t.selection(node)`, `t.wait_selection(node, (a, b))` | the selected range, or `None` |
+| `t.range_extents(node, a, b)` | where a range of text is drawn, without clicking it — how the y of a line and the x of the margin beside it are found |
+| `t.attributes(node, n)` | what the tags say at one character |
+| `t.role(node)` | the role name, for finding a widget by what its neighbours are |
+| `t.click_at(x, y, modifiers=("shift",))` | a click whose button event carries the modifier, which is not the same as a key combination |
+| `t.popup_at_point(x, y)` | the context menu of a coordinate, for what has no accessible — `t.popup()` asks whatever has the focus |
+| `s.write_bytes()`, `t.sandbox.read_bytes()` | exact bytes in and out of a file, for a test about encodings |
+| `lib/notebook.py` | the document strip: `order()`, `showing()`, `strip()`, `spans()`, each taking a `frame` for a test with two windows |
 
 **Except where there is nothing in the tree to read**, and the widgets the port broke are
 mostly of that kind: a container drawing on a `GdkWindow` of its own has no accessible for
