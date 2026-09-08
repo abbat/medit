@@ -247,6 +247,10 @@ class Test(object):
         """
         return a11y.attributes_of(node, offset)
 
+    def role(self, node):
+        """The AT-SPI role name of a node, as the tree dump spells it."""
+        return a11y.role_name(node)
+
     def state(self, node, name):
         """Whether the node carries the named AT-SPI state."""
         return a11y.state(node, name)
