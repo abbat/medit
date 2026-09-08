@@ -355,6 +355,27 @@ def pixel(x, y):
     return found.group(0).lower()
 
 
+def pixel_row(x, y, width):
+    """The colours of one row of the screen, as a list of "#rrggbb".
+
+    One call for the whole row rather than pixel() over and over: reading a
+    line across a window is a hundred pixels, and a hundred processes for it
+    is slower than the thing being watched. The output of "txt:-" is one line
+    per pixel with the hex in it, in order.
+    """
+    out = _import("-window", "root", "-crop", "%dx1+%d+%d" % (width, x, y),
+                  "-depth", "8", "txt:-").stdout
+
+    found = re.findall(r"#[0-9A-Fa-f]{6}", out)
+
+    if len(found) != width:
+        raise AssertionError(
+            "asked for %d pixels at (%d,%d) and got %d"
+            % (width, x, y, len(found)))
+
+    return [colour.lower() for colour in found]
+
+
 def screenshot(path):
     """Best effort -- ImageMagick is useful here but not worth requiring."""
     try:

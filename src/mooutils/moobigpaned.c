@@ -1372,13 +1372,6 @@ moo_big_paned_draw (GtkWidget   *widget,
                     cairo_t     *cr,
                     MooBigPaned *paned)
 {
-    /* FIXME: wrong window. This runs on priv->outer's "draw", so cr belongs
-       to outer, and the two rectangles below land at outer's top-left corner
-       instead of on priv->drop_outline -- the shaped child window GTK+2 drew
-       them into, positioned at drop_rect. It wants
-       gtk_cairo_should_draw_window (cr, priv->drop_outline) and
-       gtk_cairo_transform_to_window() before drawing. */
-
     /* Call parent draw handler */
     GTK_WIDGET_CLASS(G_OBJECT_GET_CLASS (widget))->draw (widget, cr);
 
@@ -1389,24 +1382,37 @@ moo_big_paned_draw (GtkWidget   *widget,
 
         g_return_val_if_fail (paned->priv->drop_outline != NULL, FALSE);
 
-        /* Get the style context and foreground color */
+        /* On the outline window, which is where GTK+2 drew these two
+           rectangles -- it drew straight onto it and did not care which window
+           the expose was for. The port kept the coordinates and drew them on
+           the cairo context it was handed, which belongs to priv->outer, so
+           the outline appeared at outer's top-left corner if at all. */
+        if (!gtk_cairo_should_draw_window (cr, paned->priv->drop_outline))
+            return FALSE;
+
+        cairo_save (cr);
+        gtk_cairo_transform_to_window (cr, widget, paned->priv->drop_outline);
+
         context = gtk_widget_get_style_context (widget);
         gtk_style_context_get_color (context, GTK_STATE_FLAG_NORMAL, &color);
-
-        /* Set the color for drawing */
         gdk_cairo_set_source_rgba (cr, &color);
 
-        /* Draw the outer rectangle */
-        cairo_rectangle (cr, 0, 0,
+        /* Half-pixel offsets and a width of one: cairo strokes astride the
+           path, so a rectangle on integer coordinates comes out two pixels
+           wide and grey where GTK+2's line was one pixel and solid. */
+        cairo_set_line_width (cr, 1.0);
+
+        cairo_rectangle (cr, 0.5, 0.5,
                          paned->priv->drop_rect.width - 1,
                          paned->priv->drop_rect.height - 1);
         cairo_stroke (cr);
 
-        /* Draw the inner rectangle */
-        cairo_rectangle (cr, 1, 1,
+        cairo_rectangle (cr, 1.5, 1.5,
                          paned->priv->drop_rect.width - 3,
                          paned->priv->drop_rect.height - 3);
         cairo_stroke (cr);
+
+        cairo_restore (cr);
     }
 
     return FALSE;
@@ -1439,45 +1445,56 @@ moo_big_paned_expose (GtkWidget      *widget,
 #endif
 
 #if GTK_CHECK_VERSION(3,0,0)
+/* How thick the two outlines of the drop indicator are, in pixels. */
+#define BORDER 2
+
+/* Add the outline of a rectangle -- a rectangle with its middle taken out --
+   to a region. */
+static void
+frame_region (cairo_region_t *region,
+              int             x,
+              int             y,
+              int             width,
+              int             height,
+              int             thickness)
+{
+    cairo_rectangle_int_t outer = {x, y, width, height};
+    cairo_rectangle_int_t inner = {x + thickness, y + thickness,
+                                   width - 2 * thickness, height - 2 * thickness};
+    cairo_region_t *frame = cairo_region_create_rectangle (&outer);
+
+    if (inner.width > 0 && inner.height > 0)
+    {
+        cairo_region_t *hole = cairo_region_create_rectangle (&inner);
+        cairo_region_subtract (frame, hole);
+        cairo_region_destroy (hole);
+    }
+
+    cairo_region_union (region, frame);
+    cairo_region_destroy (frame);
+}
+
+
 static cairo_region_t *
 create_rect_mask (int           width,
                   int           height,
                   GdkRectangle *rect)
 {
-    /* FIXME: the two rect_ regions are unioned in filled, where GTK+2 drew
-       them with filled=FALSE -- an outline two pixels wide. So the shape of
-       the drop indicator is a solid block over the button area rather than a
-       frame around it. The outer border also comes out one pixel wide against
-       GTK+2's two. */
+    cairo_region_t *region = cairo_region_create ();
 
-    /* Create rectangles for the mask */
-    cairo_rectangle_int_t outer_rect = {0, 0, width, height};
-    cairo_rectangle_int_t inner_rect = {1, 1, width - 2, height - 2};
-    cairo_rectangle_int_t rect_outer = {rect->x, rect->y, rect->width, rect->height};
-    cairo_rectangle_int_t rect_inner = {rect->x + 1, rect->y + 1,
-                                       rect->width - 2, rect->height - 2};
-    cairo_region_t *region;
-    cairo_region_t *temp_region;
+    /* Two frames, and frames rather than blocks: GTK+2 drew all four
+       rectangles with filled=FALSE, so what the window let through was an
+       outline around the drop area and another around the button that would
+       carry the pane. The port unioned the two rectangles of the button
+       filled, which shows the drop position as a solid slab over the button
+       box, and gave the outer border one pixel where GTK+2 drew two.
 
-    /* Create region for the outer border */
-    region = cairo_region_create_rectangle (&outer_rect);
-
-    /* Subtract the inner area, leaving only a 1-pixel wide border */
-    temp_region = cairo_region_create_rectangle (&inner_rect);
-    cairo_region_subtract (region, temp_region);
-    cairo_region_destroy (temp_region);
-
-    /* Add the rectangle from the rect parameter */
-    temp_region = cairo_region_create_rectangle (&rect_outer);
-    cairo_region_union (region, temp_region);
-    cairo_region_destroy (temp_region);
-
-    /* Add the inner border of the rect rectangle */
-    if (rect->width > 2 && rect->height > 2) {
-        temp_region = cairo_region_create_rectangle (&rect_inner);
-        cairo_region_union (region, temp_region);
-        cairo_region_destroy (temp_region);
-    }
+       The button rectangle is a pixel wider and taller than it is given:
+       gdk_draw_rectangle() outlined through x + width, where a region of that
+       width stops one short. */
+    frame_region (region, 0, 0, width, height, BORDER);
+    frame_region (region, rect->x, rect->y,
+                  rect->width + 1, rect->height + 1, BORDER);
 
     return region;
 }
@@ -1550,7 +1567,11 @@ create_drop_outline (MooBigPaned *paned)
 
     paned->priv->drop_outline = gdk_window_new (gtk_widget_get_window (paned->priv->outer),
                                                 &attributes, attributes_mask);
-    gdk_window_set_user_data (paned->priv->drop_outline, paned);
+
+    /* To priv->outer and not to paned: this is a child of outer's window, and
+       on GTK+3 what puts a window into a widget's ::draw is whose user data it
+       carries. GTK+2 needed no such thing -- it drew on the window directly. */
+    gdk_window_set_user_data (paned->priv->drop_outline, paned->priv->outer);
 
     button_rect = paned->priv->drop_button_rect;
     button_rect.x -= paned->priv->drop_rect.x;

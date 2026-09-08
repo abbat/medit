@@ -331,6 +331,15 @@ class Test(object):
         """
         return ui.pixel(x, y)
 
+    def pixel_row(self, x, y, width):
+        """The colours of one row of the screen, left to right.
+
+        For looking at a shape rather than at a colour: what a line across a
+        window crosses says whether something is a frame or a block, and one
+        call reads the whole line.
+        """
+        return ui.pixel_row(x, y, width)
+
     def value(self, node):
         """What a scrollbar or a slider says it is at, as (value, min, max).
 
