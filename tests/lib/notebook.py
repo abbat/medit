@@ -24,25 +24,29 @@ STRIP = 17
 STEP = 12
 
 
-def the_notebook(t):
-    """The notebook the documents are in -- the one that is on screen."""
-    return [n for n in t.find_all(t.frame, role="page tab list", depth=25)
+def the_notebook(t, frame=None):
+    """The notebook the documents are in -- the one of that window that is drawn.
+
+    frame says which window, for a test that has more than one; the window the
+    test started with by default.
+    """
+    return [n for n in t.find_all(frame or t.frame, role="page tab list", depth=25)
             if ui.on_screen(n)][0]
 
 
-def strip(t):
+def strip(t, frame=None):
     """Where along the height of the window the tabs are drawn."""
-    return t.extents(the_notebook(t))[1] + STRIP
+    return t.extents(the_notebook(t, frame))[1] + STRIP
 
 
-def order(t):
+def order(t, frame=None):
     """The documents as the notebook holds them, named after their tabs."""
-    return [n.name for n in t.find_all(the_notebook(t), depth=1)]
+    return [n.name for n in t.find_all(the_notebook(t, frame), depth=1)]
 
 
-def showing(t):
+def showing(t, frame=None):
     """The one page of the notebook that is drawn: the current document."""
-    for page in t.find_all(the_notebook(t), depth=1):
+    for page in t.find_all(the_notebook(t, frame), depth=1):
         if ui.on_screen(page):
             return page.name
 
