@@ -64,7 +64,9 @@ Everything that kept medit out of the distributions is gone:
 * **The terminal pane is back.** It used to be a python plugin on top of the
   GTK+2 vte; it is a builtin C++ plugin on top of vte-2.91 now, with the same
   shell, color schemes and context menu, plus an entry in the Tools menu bound
-  to ``Ctrl+` ``. The GTK+2 build does not get it — vte's last GTK+2 release is
+  to ``Ctrl+` ``; that key, and the pane's own copy and paste, are in
+  `Edit → Configure Shortcuts` like every other command. The GTK+2 build does
+  not get it — vte's last GTK+2 release is
   0.28.2 from 2011 — and vte is optional either way (`-DENABLE_TERMINAL=OFF`).
 * **CMake** instead of autotools. The build is out of source, so a gtk-2 and a
   gtk-3 build directory can live side by side.

@@ -1,4 +1,4 @@
-"""Copy and paste, on the modifier a terminal has to use.
+"""Copy and paste, on whatever keys they have been given.
 
 # requires: MOO_BUILD_TERMINAL
 
@@ -7,10 +7,22 @@ control character -- so the pane moves copy and paste one modifier up, the way
 every terminal emulator does. The clipboard the two ends of that share is the
 system one, which is what makes the round trip through the document below a
 test of it rather than of something the pane keeps to itself.
+
+Both are rebound before medit starts, to keys medit ships with nothing on, and
+the test presses those: the pane looks the accelerator up rather than knowing
+it, and the two keys it used to have hard-coded in a switch are now ordinary
+actions that Configure Shortcuts can move. The shipped keys are pressed too,
+and have to do nothing at all -- a shortcut somebody moved that goes on working
+where it was is the failure this is about.
 """
 
 MARKER = "copyme42"
 COMMAND = "echo copyme$((21*2))\n"
+
+# What the pane's copy and paste are in this run, and what they are not.
+COPY = "ctrl+shift+y"
+PASTE = "ctrl+shift+u"
+SHIPPED_COPY = "ctrl+shift+c"
 
 
 def setup(s):
@@ -19,6 +31,10 @@ def setup(s):
     # Not the login shell of whoever runs the tests: that is a shell this test
     # has never seen, and one of them will not say "not found" at the end.
     s.pref("Plugins/Terminal/shell", "/bin/sh")
+
+    # The same file and the same keys Configure Shortcuts writes.
+    s.pref("Shortcuts/Editor/TerminalCopy", "<Ctrl><Shift>Y")
+    s.pref("Shortcuts/Editor/TerminalPaste", "<Ctrl><Shift>U")
 
 
 def run(t):
@@ -37,7 +53,14 @@ def run(t):
             "Copy is sensitive now that there is a selection")
     t.escape()
 
-    t.key("ctrl+shift+c")
+    # The key medit ships with, which this run has moved elsewhere.
+    t.key(SHIPPED_COPY)
+    nothing_was_copied(t)
+
+    t.menu("Tools", "Terminal")
+    select_word(t, terminal)
+
+    t.key(COPY)
 
     into_the_document(t)
     back_into_the_shell(t, terminal)
@@ -61,12 +84,34 @@ def select_word(t, terminal):
             "double-clicking the word selected exactly it")
 
 
+def nothing_was_copied(t):
+    """The clipboard is still empty, so there is nothing to paste into the document.
+
+    The one assertion here that a rebound shortcut needs: a key that was moved
+    has to stop working where it was, and "the pane copied anyway" would look
+    exactly like a pass in every other check of this test.
+    """
+    t.key("ctrl+grave")
+    t.key("ctrl+v")
+    t.settle(1)
+
+    view = document(t)
+
+    t.check(t.text(view) == "",
+            "the shipped key copied nothing, having been rebound: the document "
+            "holds %r" % t.text(view))
+
+
+def document(t):
+    return t.on_screen(t.find_all(t.frame, role="text", depth=25))[0]
+
+
 def into_the_document(t):
-    """Ctrl-Shift-C put it on the clipboard: the document can paste it."""
+    """The copy key put it on the clipboard: the document can paste it."""
     t.key("ctrl+grave")
     t.key("ctrl+v")
 
-    view = t.on_screen(t.find_all(t.frame, role="text", depth=25))[0]
+    view = document(t)
     t.wait(lambda: t.text(view) == MARKER,
            "the document to hold the word that was copied")
     t.log("ok: what the terminal copied arrived in the document, character for character")
@@ -83,9 +128,9 @@ def into_the_document(t):
 
 
 def back_into_the_shell(t, terminal):
-    """And Ctrl-Shift-V takes it the other way, into the shell's input."""
+    """And the paste key takes it the other way, into the shell's input."""
     t.menu("Tools", "Terminal")
-    t.key("ctrl+shift+v")
+    t.key(PASTE)
     t.key("Return")
 
     t.wait_text(terminal, "not found", squeeze=True,

@@ -645,47 +645,33 @@ terminal_popup_menu (G_GNUC_UNUSED GtkWidget *widget,
 /*
  * MooWindow hands a key to the focused widget before the accelerators, so while
  * the terminal has the focus every editor shortcut reaches the shell instead.
- * That is what a terminal is for, but it also means the pane's own accelerator
- * never fires and there is no way back to the document without the mouse, so
- * take that one key here and let it toggle the focus.
+ * That is what a terminal is for, but it also means the pane's own keys never
+ * fire -- there would be no way back to the document without the mouse -- so
+ * they are matched here, against whatever the shortcuts dialog has made them.
  */
 static gboolean
 terminal_accel_pressed (WindowStuff *stuff,
-                        GdkEventKey *event)
+                        GdkEventKey *event,
+                        const char  *action_id)
 {
-    GtkAction *action;
-    const char *accel_path;
-    const char *accel;
-    guint key;
-    GdkModifierType mods;
+    GtkAction *action = moo_window_get_action (MOO_WINDOW (stuff->window), action_id);
 
-    action = moo_window_get_action (MOO_WINDOW (stuff->window), "ShowTerminal");
-
-    if (!action)
-        return FALSE;
-
-    accel_path = gtk_action_get_accel_path (action);
-    accel = accel_path ? _moo_get_accel (accel_path) : NULL;
-
-    if (!accel || !accel[0] || !_moo_accel_parse (accel, &key, &mods))
-        return FALSE;
-
-    return moo_accel_check_event (GTK_WIDGET (stuff->terminal), event, key, mods);
+    return _moo_accel_check_action_event (GTK_WIDGET (stuff->terminal), event, action);
 }
 
 
 /*
- * Ctrl-C and Ctrl-V belong to the shell, so copy and paste move one modifier
- * up, the way every terminal emulator does it.
+ * The three keys the pane takes for itself before the shell sees them. Each is
+ * an action of its own, so each is in Configure Shortcuts and each is whatever
+ * the user has made it; the copy and paste ones are not connected to the
+ * window, so nothing happens on them while the document has the focus.
  */
 static gboolean
 terminal_key_press (G_GNUC_UNUSED GtkWidget *widget,
                     GdkEventKey *event,
                     WindowStuff *stuff)
 {
-    GdkModifierType mods;
-
-    if (terminal_accel_pressed (stuff, event))
+    if (terminal_accel_pressed (stuff, event, "ShowTerminal"))
     {
         MooEditView *view = moo_edit_window_get_active_view (stuff->window);
 
@@ -695,26 +681,19 @@ terminal_key_press (G_GNUC_UNUSED GtkWidget *widget,
         return TRUE;
     }
 
-    mods = (GdkModifierType) (event->state & gtk_accelerator_get_default_mod_mask ());
-
-    if (mods != (GDK_CONTROL_MASK | GDK_SHIFT_MASK))
-        return FALSE;
-
-    switch (event->keyval)
+    if (terminal_accel_pressed (stuff, event, "TerminalCopy"))
     {
-        case GDK_KEY_C:
-        case GDK_KEY_c:
-            copy_clipboard (stuff);
-            return TRUE;
-
-        case GDK_KEY_V:
-        case GDK_KEY_v:
-            paste_clipboard (stuff);
-            return TRUE;
-
-        default:
-            return FALSE;
+        copy_clipboard (stuff);
+        return TRUE;
     }
+
+    if (terminal_accel_pressed (stuff, event, "TerminalPaste"))
+    {
+        paste_clipboard (stuff);
+        return TRUE;
+    }
+
+    return FALSE;
 }
 
 
@@ -732,6 +711,31 @@ show_terminal_cb (MooEditWindow *window)
 
     moo_edit_window_show_pane (window, MOO_TERMINAL_PLUGIN_ID);
     gtk_widget_grab_focus (GTK_WIDGET (stuff->terminal));
+}
+
+
+/*
+ * The pane matches these two itself while it has the focus, which is the only
+ * time they mean anything; they are actions so that the binding is one the
+ * shortcuts dialog can edit and the pane can look up.
+ */
+static void
+copy_terminal_cb (MooEditWindow *window)
+{
+    WindowStuff *stuff = (WindowStuff*) moo_win_plugin_lookup (MOO_TERMINAL_PLUGIN_ID, window);
+
+    if (stuff && stuff->terminal)
+        copy_clipboard (stuff);
+}
+
+
+static void
+paste_terminal_cb (MooEditWindow *window)
+{
+    WindowStuff *stuff = (WindowStuff*) moo_win_plugin_lookup (MOO_TERMINAL_PLUGIN_ID, window);
+
+    if (stuff && stuff->terminal)
+        paste_clipboard (stuff);
 }
 
 
@@ -829,6 +833,30 @@ terminal_plugin_init (TerminalPlugin *plugin)
                                  "closure-callback", show_terminal_cb,
                                  nullptr);
 
+    /*
+     * In no menu and on no toolbar: they exist to be a binding the pane can
+     * look up and the shortcuts dialog can edit. connect-accel is off, so the
+     * window never fires them -- copying the terminal's selection with the
+     * document focused is not what the key means.
+     */
+    moo_window_class_new_action (klass, "TerminalCopy", NULL,
+                                 "display-name", _("Copy in Terminal"),
+                                 "label", _("Copy in Terminal"),
+                                 "tooltip", _("Copy the selection in the terminal pane"),
+                                 "default-accel", MOO_EDIT_ACCEL_TERMINAL_COPY,
+                                 "connect-accel", FALSE,
+                                 "closure-callback", copy_terminal_cb,
+                                 nullptr);
+
+    moo_window_class_new_action (klass, "TerminalPaste", NULL,
+                                 "display-name", _("Paste in Terminal"),
+                                 "label", _("Paste in Terminal"),
+                                 "tooltip", _("Paste the clipboard into the terminal pane"),
+                                 "default-accel", MOO_EDIT_ACCEL_TERMINAL_PASTE,
+                                 "connect-accel", FALSE,
+                                 "closure-callback", paste_terminal_cb,
+                                 nullptr);
+
     if (xml)
     {
         plugin->ui_merge_id = moo_ui_xml_new_merge_id (xml);
@@ -850,6 +878,8 @@ terminal_plugin_deinit (TerminalPlugin *plugin)
     MooUiXml *xml = moo_editor_get_ui_xml (editor);
 
     moo_window_class_remove_action (klass, "ShowTerminal");
+    moo_window_class_remove_action (klass, "TerminalCopy");
+    moo_window_class_remove_action (klass, "TerminalPaste");
 
     if (plugin->ui_merge_id)
         moo_ui_xml_remove_ui (xml, plugin->ui_merge_id);

@@ -1436,6 +1436,67 @@ three fixed here — with the test that failed first written down beside each:
   `fill_pane()` reads the preference now. A failed server still says so with the setting
   off — that is not a diagnostic, it is the reason there are none. In `diagnostics_pane`.
 
+### What the shortcuts know
+
+Every command in medit is a `GtkAction` with a name, and every action that is not
+marked `no-accel` is in **Edit → Configure Shortcuts**, whether or not it was given a
+default key. That dialog is the whole of the answer to "can I change that key": there is
+no per-plugin list anywhere, and a command that is not an action is not in it.
+
+**A binding is a preference**, written as `Shortcuts/<window id>/<action name>` — the
+editor window's id is `Editor`, so `Shortcuts/Editor/LspComplete` is Ctrl+Space and
+`Shortcuts/Editor/TerminalCopy` is the pane's copy. The `<MooAction>/` that starts an
+accel path is stripped on the way in (`accel_path_to_prefs_key()`), which is worth knowing
+before writing the key by hand: with the prefix left on, the value is loaded, registered
+and never looked at. A test rebinds a key by writing that preference in `setup()`, which
+is exactly what the dialog writes, and `tests/lsp/shortcuts` and `tests/terminal/copy_paste`
+both do.
+
+**A key the focused widget swallows has to be matched by hand**, and there are three of
+them: the terminal pane takes Ctrl+`, its copy and its paste before the shell sees
+anything, and the LSP client takes Ctrl+Space and Ctrl+Shift+Space before the text view
+does. `_moo_accel_check_action_event()` is the one place that does it, for both plugins:
+it reads the accelerator the action has **now**, so a rebinding is obeyed, and answers no
+when the accelerator is empty, so a shortcut somebody cleared stays cleared. The client
+used to fall back on the default it was compiled with, which meant a cleared Ctrl+Space
+went on completing.
+
+**That comparison cannot see a Ctrl+Shift+letter unless it looks twice**, which is the
+trap under all of this. Measured on a plain us layout: `gtk_accelerator_parse
+("<Ctrl><Shift>C")` gives the **lower-case** c with both modifiers, while pressing those
+keys produces an **upper-case** C with the shift already consumed by the keymap — so
+`moo_accel_check_event()`, which compares the translated event, never matches, and any
+Ctrl+Shift+letter anybody binds does nothing. That is why the terminal's copy and paste
+were two hard-coded cases in a switch for years. The matcher tries the raw event as well
+now, and `tests/terminal/copy_paste` presses a rebound Ctrl+Shift+Y to prove it.
+
+**`connect-accel FALSE` is how a key belongs to a pane and not to the window.** The
+terminal's copy and paste are actions so that the dialog can edit them and the pane can
+look them up, and are not connected to the window's accelerator group, because copying the
+terminal's selection while the document has the focus is not what the key means. They are
+in no menu either: the dialog lists actions, not menu items.
+
+**The dialog itself is driven in `tests/app/shortcuts`**, on both toolkits. Three things
+about doing that. The list is a tree, expanded, whose rows are the actions' display names —
+which is how that test can assert that every command of the client is configurable at all.
+The shortcut is set through a `MooAccelButton`, which opens a dialog with nothing to type
+into: it listens for the keys themselves and commits half a second after the last one, so
+the test presses the combination and waits for the dialog to go rather than pressing OK.
+And with no window manager the keys follow the pointer, so the test clicks the catching
+dialog's label first — otherwise the keystroke is delivered to the dialog underneath.
+
+Two things in that dialog were broken for as long as it has existed, and the test would
+have caught either. Its Search box was invisible — the box and its label say
+`visible=True` in the `.ui` file and the `GtkHBox` holding them says nothing, and a
+container that is not shown does not show its children — and it was wired to nothing, so
+the search column made typing into the *list* work while the box that says "Search:" did
+not exist. And the three radio buttons read `Shortcut|None`, `Shortcut|Default` and
+`Shortcut|Custom` in every language without a translation for them: the `.ui` marked them
+`context="yes"`, which GtkBuilder reads as the message context *being the word* "yes"
+rather than as "this string uses the | convention", so nothing ever stripped the prefix.
+Both are fixed; the po files keep their translations, the msgctxt in them having been
+moved to `Shortcut` along with the msgid.
+
 ### Coverage
 
 What the tests executed, measured by clang's own instrumentation — the same binary the UI

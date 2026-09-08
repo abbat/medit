@@ -43,6 +43,20 @@ void          moo_accel_translate_event     (GtkWidget       *widget,
                                              GdkEventKey     *event,
                                              guint           *keyval,
                                              GdkModifierType *mods);
+/*
+ * Whether the event is the accelerator that action carries *now*: what
+ * Configure Shortcuts wrote, not what the action was compiled with. An action
+ * whose shortcut somebody cleared has none, and none is what this answers --
+ * falling back on the default would make a cleared shortcut keep working.
+ *
+ * For a key a widget takes before the accelerators are tried at all, which is
+ * every key while a terminal or a text view has the focus. Everything else
+ * gets its accelerator from the window and needs nothing of this.
+ */
+gboolean     _moo_accel_check_action_event  (GtkWidget       *widget,
+                                             GdkEventKey     *event,
+                                             gpointer         action);
+
 gboolean      moo_accel_check_event         (GtkWidget       *widget,
                                              GdkEventKey     *event,
                                              guint            keyval,

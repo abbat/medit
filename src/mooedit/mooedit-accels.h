@@ -64,6 +64,16 @@
 
 #define MOO_EDIT_ACCEL_TERMINAL "<Ctrl>grave"
 
+/*
+ * Ctrl-C and Ctrl-V belong to the shell, so the terminal's own copy and paste
+ * move one modifier up, the way every terminal emulator does it. They are
+ * accelerators like any other -- Configure Shortcuts can change them -- and
+ * are matched inside the pane rather than connected to the window, since a key
+ * that reaches the shell must not also do something to the editor.
+ */
+#define MOO_EDIT_ACCEL_TERMINAL_COPY MOO_ACCEL_CTRL "<Shift>C"
+#define MOO_EDIT_ACCEL_TERMINAL_PASTE MOO_ACCEL_CTRL "<Shift>V"
+
 #define MOO_EDIT_ACCEL_GO_TO_DEFINITION "F12"
 #define MOO_EDIT_ACCEL_FIND_REFERENCES "<Shift>F12"
 /* F2 is what every editor with this feature uses, and nothing here had it. */

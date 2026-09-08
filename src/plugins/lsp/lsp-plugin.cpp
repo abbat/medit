@@ -156,9 +156,10 @@ _moo_lsp_debug (void)
  * moo_window_key_press_event() hands the key to the focused widget before it
  * tries the accelerators, so the text view swallows Ctrl+Space and the
  * LspComplete action never fires. The action's accelerator is therefore
- * matched here by hand, the way the terminal matches its own -- and by
- * reading it back from the accel map rather than from the default, so that a
- * user who rebound it still gets what they bound.
+ * matched here by hand, the way the terminal matches its own -- and against
+ * what the accelerator is now rather than what it was compiled as, so that a
+ * user who rebound it gets what they bound and one who cleared it gets
+ * nothing.
  */
 static gboolean
 accel_pressed (MooEditView *view,
@@ -166,39 +167,13 @@ accel_pressed (MooEditView *view,
                const char  *action_id)
 {
     MooEditWindow *window = moo_edit_view_get_window (view);
-    GtkAction *action;
-    const char *accel_path;
-    const char *accel;
-    guint key;
-    GdkModifierType mods;
 
     if (!window)
         return FALSE;
 
-    action = moo_window_get_action (MOO_WINDOW (window), action_id);
-
-    if (!action)
-        return FALSE;
-
-    accel_path = gtk_action_get_accel_path (action);
-
-    if (!accel_path)
-        return FALSE;
-
-    /*
-     * _moo_get_accel() answers out of the map of accelerators that were
-     * actually set, which is empty for one that has only ever had its
-     * default; _moo_accel_register() puts the default in a map of its own.
-     */
-    accel = _moo_get_accel (accel_path);
-
-    if (!accel || !accel[0])
-        accel = _moo_get_default_accel (accel_path);
-
-    if (!accel || !accel[0] || !_moo_accel_parse (accel, &key, &mods))
-        return FALSE;
-
-    return moo_accel_check_event (GTK_WIDGET (view), event, key, mods);
+    return _moo_accel_check_action_event (GTK_WIDGET (view), event,
+                                          moo_window_get_action (MOO_WINDOW (window),
+                                                                 action_id));
 }
 
 

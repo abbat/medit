@@ -491,6 +491,50 @@ moo_accel_translate_event (GtkWidget       *widget,
 }
 
 gboolean
+_moo_accel_check_action_event (GtkWidget   *widget,
+                               GdkEventKey *event,
+                               gpointer     action)
+{
+    const char *accel_path;
+    const char *accel;
+    guint key;
+    GdkModifierType mods;
+
+    g_return_val_if_fail (GTK_IS_WIDGET (widget), FALSE);
+    g_return_val_if_fail (event != NULL, FALSE);
+
+    if (!action || !GTK_IS_ACTION (action))
+        return FALSE;
+
+    accel_path = gtk_action_get_accel_path (GTK_ACTION (action));
+    accel = accel_path ? _moo_get_accel (accel_path) : NULL;
+
+    if (!accel || !accel[0] || !_moo_accel_parse (accel, &key, &mods))
+        return FALSE;
+
+    /*
+     * The event as the keymap explains it, which is how an accelerator without
+     * a shift in it is matched.
+     */
+    if (moo_accel_check_event (widget, event, key, mods))
+        return TRUE;
+
+    /*
+     * And the event as it arrived, which is the only way one *with* a shift can
+     * be. Measured, on a plain us layout: gtk_accelerator_parse() reads
+     * "<Ctrl><Shift>C" as the lower-case c with both modifiers, while pressing
+     * those keys produces an upper-case C with the shift already consumed by
+     * the keymap -- so the comparison above can never match a shifted letter,
+     * and every Ctrl+Shift+<letter> anybody binds here would do nothing at all.
+     * That is why the terminal's copy and paste used to be two hard-coded
+     * cases in a switch rather than accelerators.
+     */
+    return gdk_keyval_to_lower (event->keyval) == gdk_keyval_to_lower (key) &&
+           (GdkModifierType) (event->state & MOO_ACCEL_MODS_MASK) == mods;
+}
+
+
+gboolean
 moo_accel_check_event (GtkWidget       *widget,
                        GdkEventKey     *event,
                        guint            keyval,
