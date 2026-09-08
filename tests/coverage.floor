@@ -28,4 +28,7 @@
 #             properties dialog -- and so are the panes and the document tab
 #             strip, which is what src/moofileview at 46.86% and src/mooutils
 #             at 55.40% are. gtk2 at 41.20%, gtk3 at 48.95%.
-48.7
+# 2026-09-08  50.32%, raised to 50.0: every entry of the file selector's
+#             context menu is driven now, by four more UI tests and one longer
+#             one -- src/moofileview at 52.88%.
+50.0
