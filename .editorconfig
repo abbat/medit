@@ -1,7 +1,7 @@
 # Editor defaults. This is not a reformatting: it states the mechanical half of
 # what the tree already does, which is the half an editor gets wrong on its own
 # -- indent width, tabs, trailing whitespace, final newline, encoding. The style
-# itself is the GTK+/GNOME C style and is written down in AGENTS.md section 7,
+# itself is the GTK+/GNOME C style and is written down under "Conventions" in AGENTS.md,
 # together with why there is no .clang-format next to this file.
 
 root = true

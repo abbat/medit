@@ -2,7 +2,7 @@
 #
 # The local machine says very little about the distributions this fork targets:
 # it has gcc 12 and glib 2.74, while the matrix below spans gcc 11 to gcc 15 and
-# cmake 3.22 to cmake 4.2. Every class of breakage recorded in AGENTS.md --
+# cmake 3.22 to cmake 4.2. Every class of breakage recorded in doc/build.md --
 # symbols newer than the oldest glib, constructs one compiler accepts silently
 # and another rejects -- is invisible until one of these jobs runs.
 #

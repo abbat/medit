@@ -5,4 +5,4 @@
 # 2010 and had been wrong for years, so it is gone; Help -> Help opens the
 # project page instead.
 
-install(FILES built/medit.1 DESTINATION "${CMAKE_INSTALL_MANDIR}/man1")
+install(FILES man/medit.1 DESTINATION "${CMAKE_INSTALL_MANDIR}/man1")

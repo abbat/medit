@@ -1,6 +1,6 @@
 # The line coverage the tests must not fall below, in percent, as
 # tests/coverage.py measures it over both toolkits merged. The coverage job in
-# .github/workflows/ui.yml fails when the number is under it; see AGENTS.md §3.
+# .github/workflows/ui.yml fails when the number is under it; see doc/testing-panes.md.
 #
 # It sits about 0.3 pp under what the tests actually reach, because a UI run is
 # not deterministic to the hundredth: medit is started again when it could not

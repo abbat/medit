@@ -204,7 +204,7 @@ jobs:
   # on a plain runner.
   #
   # The gate is tests/coverage.floor -- a percentage in the tree, raised by hand
-  # with the change that earned it. See §3 of AGENTS.md for why that rather than
+  # with the change that earned it. See doc/testing-panes.md for why that rather than
   # a cache or a service: it is the only arrangement where the number the gate
   # compares against is visible in the same commit as the code, and where the
   # same command gives the same answer on a developer's machine.

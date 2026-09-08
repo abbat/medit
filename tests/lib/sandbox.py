@@ -203,7 +203,7 @@ def _start_x_once(root, log_path, screen, timeout):
 # for the length of that test.
 #
 # xfwm4 rather than something smaller: it is what the manual sandbox in
-# AGENTS.md has always started, so it is the one whose behaviour here is
+# doc/testing.md has always started, so it is the one whose behaviour here is
 # already known, and UI_TEST_WM overrides it on a machine that has another.
 # The flags are looked up by name because they are not portable between window
 # managers -- the compositor is off because there is nothing to composite on a

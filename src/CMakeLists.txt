@@ -141,8 +141,7 @@ add_dependencies(medit validate-xml check-builder-ids)
 target_include_directories(medit PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}"
     "${CMAKE_CURRENT_BINARY_DIR}"
-    "${CMAKE_BINARY_DIR}"
-    "${CMAKE_SOURCE_DIR}/doc/built")
+    "${CMAKE_BINARY_DIR}")
 
 target_compile_definitions(medit PRIVATE ${MOO_COMPILE_DEFINITIONS})
 target_compile_options(medit PRIVATE

@@ -87,7 +87,7 @@ jobs:
           # Two queries dropped, and this is the only mechanism that drops
           # anything: `// codeql[rule-id]` comments are recognised by the
           # engine but code scanning never reads the SARIF suppression they
-          # produce -- measured, and recorded in AGENTS.md -- and paths-ignore
+          # produce -- measured, and recorded in doc/build.md -- and paths-ignore
           # does not apply to a language that is built, which is why the
           # vendored directories are still analyzed here while the analyze
           # target skips them.
