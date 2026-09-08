@@ -90,6 +90,14 @@ class Setup(object):
         """The contents of such a file, or "" while it does not exist yet."""
         return self.read_path(self.path(*parts))
 
+    def exists(self, *parts):
+        """Whether such a file or directory is there at all."""
+        return os.path.exists(self.path(*parts))
+
+    def isdir(self, *parts):
+        """Whether it is there and is a directory."""
+        return os.path.isdir(self.path(*parts))
+
     def read_path(self, path):
         """The same, for a path a helper here has already built."""
         try:

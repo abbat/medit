@@ -22,6 +22,7 @@
 #include "mooedit/mooeditwindow.h"
 #include "mooedit/mooedittab.h"
 #include "moofileview/moobookmarkmgr.h"
+#include "moofileview/moofile.h"
 #include "moofileview/moofileview-tools.h"
 #include "plugins/mooplugin-builtin.h"
 #include "marshals.h"
@@ -341,6 +342,27 @@ goto_current_doc_dir (MooFileSelector *filesel)
 /* NewFile
  */
 
+/* Whether Open would do anything: it opens the regular files of the selection
+   and passes over the rest, so one file is enough and a folder on its own is
+   not. It used to be offered only for a selection of more than one, which hid
+   it in the case a person reaches for it in -- having just clicked a name. */
+static gboolean
+anything_to_open (GList *selected)
+{
+    GList *l;
+
+    for (l = selected; l != NULL; l = l->next)
+    {
+        MooFile *file = (MooFile*) l->data;
+
+        if (file && !MOO_FILE_IS_DIR (file))
+            return TRUE;
+    }
+
+    return FALSE;
+}
+
+
 static void
 moo_file_selector_populate_popup (MooFileView *fileview,
                                   GList       *selected,
@@ -355,7 +377,7 @@ moo_file_selector_populate_popup (MooFileView *fileview,
         gtk_action_set_sensitive (new_file, !selected || !selected->next);
 
     if (open)
-        gtk_action_set_visible (open, selected && selected->next);
+        gtk_action_set_visible (open, anything_to_open (selected));
 }
 
 

@@ -24,9 +24,16 @@ from lib import input as ui
 # file this test is about before and after the rename.
 FIRST_ROW = 8
 
+# How far into a row to click. From the left, because an entry is only as wide
+# as its own name and a point a quarter of the way across the view misses a
+# short one -- measured: a double click 66 px in did not open a folder called
+# "inner", and 20 px in did. Twenty is inside the icon of any entry there is.
+INTO_ROW = 20
+
 BEFORE = "aaa.txt"
 AFTER = "aab.txt"
 MADE = "aac.txt"
+FOLDER = "a-new-folder"
 
 # What the menu is expected to offer on a file. Not all of it -- the point is
 # that the menu is built and populated, not to pin down its contents.
@@ -43,7 +50,7 @@ def setup(s):
 def run(t):
     view = open_the_pane(t)
 
-    menu = menu_on_the_first_file(t, view)
+    menu = menu_on_the_first_row(t, view)
     dialog = properties_of(t, menu)
 
     rename_in(t, dialog)
@@ -53,6 +60,8 @@ def run(t):
             "file" % AFTER)
 
     made_from_the_menu(t, view)
+    made_a_folder(t, view)
+    thrown_away(t, view)
 
 
 def open_the_pane(t):
@@ -74,7 +83,7 @@ def made_from_the_menu(t, view):
     person does; what it proves is that medit created the file and opened it,
     since the window title is the document that is being edited.
     """
-    menu = menu_on_the_first_file(t, view)
+    menu = menu_on_the_first_row(t, view)
     t.click(t.item(menu, "New File..."))
 
     dialog = t.dialog("Create File")
@@ -95,11 +104,62 @@ def made_from_the_menu(t, view):
     t.log("ok: %s was created and opened" % MADE)
 
 
-def menu_on_the_first_file(t, view):
-    """Select the first file and open the menu the view offers for it."""
+def made_a_folder(t, view):
+    """New Folder offers a name, and what comes back is a directory on disk."""
+    menu = menu_on_the_first_row(t, view)
+    t.choose(menu, "New Folder")
+
+    dialog = t.dialog("Create Folder")
+    entry = t.need(dialog, role="text", what="the name of the folder to create")
+
+    t.focus()
+    t.click(entry)
+    t.key("ctrl+a")
+    t.type_text(FOLDER)
+
+    t.click(t.button(dialog, "OK"))
+    t.no_toplevel("Create Folder")
+
+    t.wait(lambda: t.sandbox.isdir("workdir", FOLDER),
+           "the folder %s to be made in workdir" % FOLDER)
+    t.log("ok: New Folder made %s" % FOLDER)
+
+
+def thrown_away(t, view):
+    """And Move to Trash takes the folder away again, once confirmed.
+
+    The folder just made is what the first row holds now -- a listing puts its
+    directories before its files -- so it is what the menu acts on, and the
+    question it asks names it.
+    """
+    menu = menu_on_the_first_row(t, view)
+    t.choose(menu, "Move to Trash...")
+
+    dialog = t.wait(lambda: the_question(t), "the question about the trash")
+    t.log("it asks: %r" % [n.name for n in t.find_all(dialog, role="label", depth=6)])
+
+    t.focus()
+    t.click(t.button(dialog, "Delete"))
+
+    t.wait(lambda: not t.sandbox.isdir("workdir", FOLDER),
+           "%s to be taken out of workdir" % FOLDER)
+    t.log("ok: Move to Trash took %s away" % FOLDER)
+
+
+def the_question(t):
+    """The confirmation, which is a message dialog and carries no title."""
+    for node in t.find_all(t.app, role="alert", depth=2):
+        if ui.on_screen(node):
+            return node
+
+    return None
+
+
+def menu_on_the_first_row(t, view):
+    """Select whatever the first row holds and open the menu for it."""
     x, y, width, height = t.extents(view)
 
-    t.click_at(x + width // 4, y + FIRST_ROW)
+    t.click_at(x + INTO_ROW, y + FIRST_ROW)
 
     menu = t.popup()
     labels = [item.name for item in t.find_all(menu, depth=2)]
@@ -154,7 +214,7 @@ def opened_from_the_first_row(t, view):
     x, y, width, height = t.extents(view)
 
     before = t.frame.name
-    t.click_at(x + width // 4, y + FIRST_ROW, times=2)
+    t.click_at(x + INTO_ROW, y + FIRST_ROW, times=2)
 
     t.wait(lambda: t.frame.name != before,
            "a document to open from the first row of the view")

@@ -490,11 +490,40 @@ class Test(object):
         return self.wait(self._popup_menu, "a context menu", timeout)
 
     def item(self, menu, label, timeout=a11y.TIMEOUT):
-        """One item of a menu that is already open."""
-        return self._or_dump(lambda: self._menu_item(menu, label),
-                             "the %r item" % label, timeout, menu)
+        """One item of a menu that is already open.
 
-    def _menu_item(self, parent, label):
+        An item of a long menu can be in the tree with no position at all --
+        the file selector's first entry is, every time -- and a click at the
+        coordinates of something that is nowhere goes nowhere. Walking the menu
+        with the arrow keys brings it out, which is what a person does with a
+        menu that does not fit, and then it is an ordinary click.
+        """
+        found = self._or_dump(lambda: self._menu_item(menu, label, anywhere=True),
+                              "the %r item" % label, timeout, menu)
+
+        if ui.on_screen(found):
+            return found
+
+        return self._walk_to(menu, found, label)
+
+    def _walk_to(self, menu, item, label):
+        """Press Down until the item has somewhere to be clicked.
+
+        Once round the menu at most: GTK wraps from the last entry to the first,
+        so every entry is passed over, and an item that never appears is a
+        failure worth the dump rather than a click into nothing.
+        """
+        for _ in range(len(a11y.find_all(menu, depth=2)) + 2):
+            ui.key("Down")
+
+            if ui.on_screen(item):
+                self.log("walked the menu down to %r" % label)
+                return item
+
+        return self._or_dump(lambda: None,
+                             "the %r item to come into view" % label, 0, menu)
+
+    def _menu_item(self, parent, label, anywhere=False):
         global _MENU_ROLE_CONSTS
 
         if _MENU_ROLE_CONSTS is None:
@@ -504,9 +533,14 @@ class Test(object):
         # already in the tree and have no position. Filtering them out here is
         # what turns "the menu is still opening" into another poll rather than
         # into a click at INT_MIN.
+        #
+        # anywhere= is for a menu already known to be open, where an item with
+        # no position is one the menu is not showing rather than one that is not
+        # ready -- t.item() walks the menu to it instead of waiting.
         items = a11y.find_all(
             parent,
-            pred=lambda n: a11y.role(n) in _MENU_ROLE_CONSTS and ui.on_screen(n),
+            pred=lambda n: a11y.role(n) in _MENU_ROLE_CONSTS
+            and (anywhere or ui.on_screen(n)),
             depth=3)
 
         exact = [n for n in items if a11y.name(n) == label]
@@ -519,6 +553,25 @@ class Test(object):
                          % (label, ", ".join(sorted(a11y.name(n) for n in prefixed))))
 
         return prefixed[0] if prefixed else None
+
+    def choose(self, menu, *path):
+        """Activate an entry of a menu that is already open, opening submenus.
+
+        t.menu() walks down from the menu bar; this walks a context menu, whose
+        first name is an entry of the menu already in hand. A step that has a
+        submenu is opened rather than activated, as there.
+        """
+        node = menu
+
+        for label in path[:-1]:
+            node = self.item(node, label)
+            self.click(node)
+            self._open_submenu(node)
+
+        node = self.item(node, path[-1])
+        self.click(node)
+
+        return node
 
     def escape(self):
         """Close whatever popup is open."""

@@ -122,6 +122,15 @@ def outer(args):
         env["LANG"] = "C.UTF-8"
         env["LANGUAGE"] = ""
 
+        # A bin directory of the sandbox's own, ahead of everything else, so a
+        # test can put a program where medit will find it. medit runs a few:
+        # "Open With / Default Application" in the file selector is xdg-open,
+        # and a user tool is whatever it names. s.script("bin/xdg-open", ...)
+        # is the whole of intercepting one, and it means a test does not depend
+        # on what the machine has installed or on what that would do.
+        env["PATH"] = os.pathsep.join(
+            [os.path.join(root, "bin"), os.environ.get("PATH", "")])
+
         # Warns when a deprecated GObject property or signal is used -- a class
         # of deprecation the compiler cannot see, because it is named by string.
         env["G_ENABLE_DIAGNOSTIC"] = "1"

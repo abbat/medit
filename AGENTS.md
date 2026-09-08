@@ -1127,6 +1127,38 @@ is found by clicking along the strip and asking which page came forward — and 
 that is *showing*, not the window title, which follows the document that has the focus and
 after a run of clicks on the strip is not the one whose tab was last clicked.
 
+**The file selector is six tests and one idea**: nothing in that pane names a
+file. `MooIconView` draws its own cells, so the way to read a listing is to select
+a row and ask the properties dialog whose file that is — a dialog per reading, and
+worth it. Everything else about the pane is read from the entry above the listing,
+which says the folder and also takes one when typed into, so a test points the pane
+where it wants without clicking through the listing at all.
+
+Three measurements that pane cost, so nobody pays twice:
+
+- **An entry is only as wide as its own name.** A click a quarter of the way across
+  the view lands beside a short one and does nothing: a double click 66 px in did
+  not open a folder called `inner`, and 20 px in did. Click from the left.
+- **The listing puts directories before files**, so the first row is a folder
+  wherever there is one, and a test that wants a particular file either arranges
+  the names or does without folders in that directory.
+- **The folder is watched.** A file written from outside is in the listing about a
+  second later, with nothing asked of the pane, so there is no backlog for Reload to
+  clear and no way to tell Reload's work from the monitor's. That test asserts what
+  is left: that Reload keeps the folder rather than losing it.
+
+**`s.script("bin/xdg-open", …)` intercepts a program medit runs.** The sandbox has a
+`bin` directory at the front of `PATH`, so what "Open With / Default Application"
+launches is a script the test wrote, and what it was asked to open is a string
+comparison instead of a dependency on what the machine has installed. The same trick
+is waiting for the user tools, which are 6% covered and are nothing but commands.
+
+**`t.choose(menu, *path)`** walks a context menu the way `t.menu()` walks the menu
+bar, opening submenus on the way. And `t.item()` will bring an entry into view with
+the arrow keys if it has no position: a long menu keeps entries in the tree that it
+is not showing, and clicking the coordinates of something that is nowhere goes
+nowhere.
+
 **Dragging.** `t.drag(node, dx, dy)` and `t.drag_to(x0, y0, x1, y1)` walk the journey in
 steps with the button down: a toolkit decides a drag has begun from the motion it sees, and
 one jump from press to release is a single event most drag handlers treat as noise. Pass

@@ -32,6 +32,12 @@ NAME = "a-file-with-a-fairly-long-name-%02d.txt"
 FIRST = NAME % 0
 LAST = NAME % (COUNT - 1)
 
+# How far into a row to click. From the left, because an entry is only as wide
+# as its own name and a point a quarter of the way across the view misses a
+# short one -- measured: a double click 66 px in did not open a folder called
+# "inner", and 20 px in did. Twenty is inside the icon of any entry there is.
+INTO_ROW = 20
+
 
 def setup(s):
     s.plugin("FileSelector")
@@ -171,7 +177,7 @@ def open_first_cell(t, view):
     x, y, width, height = t.extents(view)
 
     before = t.frame.name
-    ui.click_at(x + width // 4, y + 12, times=2)
+    ui.click_at(x + INTO_ROW, y + 12, times=2)
 
     t.wait(lambda: t.frame.name != before,
            "a document to open from the cell at the top left of the view")
