@@ -294,6 +294,22 @@ class Test(object):
 
         self.log("ok: %s" % described)
 
+    def wait_selection(self, node, bounds, what=None, timeout=a11y.TIMEOUT):
+        """Wait until the selected range is that pair, or None for no selection.
+
+        Same shape as wait_caret, and the same reason: what is selected instead
+        is the whole of the evidence.
+        """
+        described = what or "the selection to be %s" % (bounds,)
+
+        try:
+            self.wait(lambda: a11y.selection_of(node) == bounds, described, timeout)
+        except a11y.NotFound as missing:
+            raise Failed("%s\nit should be %s and is %s"
+                         % (missing, bounds, a11y.selection_of(node)))
+
+        self.log("ok: %s" % described)
+
     def links(self, node):
         return a11y.links_of(node)
 
