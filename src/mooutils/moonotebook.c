@@ -2551,12 +2551,18 @@ moo_notebook_draw_label (MooNotebook    *nb,
     height = nb->priv->tabs_height - y;
 
 #if GTK_CHECK_VERSION(3,0,0)
-    /* FIXME: gtk_paint_extension() drew a tab -- three sides and the fourth
-       open towards the page. gtk_render_background()+gtk_render_frame() on a
-       context carrying no style class draws a plain rectangle instead, so
-       every tab has a line between it and its own page. What GTK+3 wants is
-       GTK_STYLE_CLASS_NOTEBOOK plus gtk_render_extension(). The selected tab
-       also asks for GTK_STATE_FLAG_ACTIVE, which a theme paints as pressed. */
+    /* FIXME: the current tab has a line along its bottom, closing it off from
+       the page it belongs to, where gtk_paint_extension() left that side open.
+
+       Swapping this for gtk_render_extension (…, GTK_POS_BOTTOM) with
+       GTK_STYLE_CLASS_NOTEBOOK added and the states the right way round --
+       GTK+2 drew the current tab as NORMAL and the rest as ACTIVE, GTK+3's
+       themes want the opposite -- was tried and changes nothing: the
+       screenshots before and after are the same file. Since 3.20 a theme
+       styles notebook parts through CSS nodes, and a widget that is not a
+       GtkNotebook has none of them whatever it passes to the render calls, so
+       what this needs is a CSS name and node structure of its own rather than
+       a different call. Not attempted; it is the whole widget's drawing. */
     GtkStyleContext *context = gtk_widget_get_style_context(widget);
     gtk_style_context_save(context);
 

@@ -1099,11 +1099,6 @@ moo_expander_cell_render (GtkCellRenderer      *cell,
     }
 
 #if GTK_CHECK_VERSION(3,0,0)
-    /* FIXME: faithful to the GTK+2 drawing except for the pen. gdk_draw_line()
-       was one pixel wide on pixel boundaries; cairo defaults to 2.0 and these
-       coordinates are integers, so every line straddles two rows of pixels and
-       comes out grey and two wide. cairo_set_line_width (cr, 1.0) and half-pixel
-       coordinates are what that asks for. */
     cairo_save (cr);
 
     /* Set the color based on the widget state */
@@ -1123,19 +1118,28 @@ moo_expander_cell_render (GtkCellRenderer      *cell,
     gtk_style_context_get_color (context, state_flags, &color);
     gdk_cairo_set_source_rgba (cr, &color);
 
+    /* One pixel wide, and every coordinate half way between two of them:
+       gdk_draw_line() addressed pixels, cairo strokes astride a path with a
+       default width of 2, so integer coordinates here drew every line grey
+       and two pixels thick. */
+    cairo_set_line_width (cr, 1.0);
+
     /* Draw rectangle */
-    cairo_rectangle (cr, pix_rect.x, pix_rect.y, pix_rect.width, pix_rect.height);
+    cairo_rectangle (cr, pix_rect.x + 0.5, pix_rect.y + 0.5,
+                     pix_rect.width, pix_rect.height);
     cairo_stroke (cr);
 
     /* Draw horizontal line */
-    cairo_move_to (cr, pix_rect.x + 2, pix_rect.y + pix_rect.height / 2);
-    cairo_line_to (cr, pix_rect.x + pix_rect.width - 2, pix_rect.y + pix_rect.height / 2);
+    cairo_move_to (cr, pix_rect.x + 2, pix_rect.y + pix_rect.height / 2 + 0.5);
+    cairo_line_to (cr, pix_rect.x + pix_rect.width - 2,
+                   pix_rect.y + pix_rect.height / 2 + 0.5);
     cairo_stroke (cr);
 
     /* Draw vertical line if not expanded */
     if (!exp_cell->expanded) {
-        cairo_move_to (cr, pix_rect.x + pix_rect.width / 2, pix_rect.y + 2);
-        cairo_line_to (cr, pix_rect.x + pix_rect.width / 2, pix_rect.y + pix_rect.height - 2);
+        cairo_move_to (cr, pix_rect.x + pix_rect.width / 2 + 0.5, pix_rect.y + 2);
+        cairo_line_to (cr, pix_rect.x + pix_rect.width / 2 + 0.5,
+                       pix_rect.y + pix_rect.height - 2);
         cairo_stroke (cr);
     }
 

@@ -1596,6 +1596,25 @@ moo_icon_widget_dispose (GObject *object)
     G_OBJECT_CLASS (_moo_icon_widget_parent_class)->dispose (object);
 }
 
+#if GTK_CHECK_VERSION(3,0,0)
+/* The five states this icon is tinted for are GtkStateType values, which are
+   an enumeration where GtkStateFlags is a set of bits; nothing converts one to
+   the other, and the two do not even agree on the numbers. */
+static GtkStateFlags
+state_flags (int state)
+{
+    switch (state)
+    {
+        case GTK_STATE_ACTIVE:       return GTK_STATE_FLAG_ACTIVE;
+        case GTK_STATE_PRELIGHT:     return GTK_STATE_FLAG_PRELIGHT;
+        case GTK_STATE_SELECTED:     return GTK_STATE_FLAG_SELECTED;
+        case GTK_STATE_INSENSITIVE:  return GTK_STATE_FLAG_INSENSITIVE;
+        default:                     return GTK_STATE_FLAG_NORMAL;
+    }
+}
+#endif
+
+
 static GdkPixbuf *
 get_pixbuf (MooIconWidget *icon)
 {
@@ -1629,18 +1648,15 @@ get_pixbuf (MooIconWidget *icon)
             rowstride = gdk_pixbuf_get_rowstride (pixbuf);
 
 #if GTK_CHECK_VERSION(3,0,0)
-            /* FIXME: this ignores the loop variable. GTK+2 read
-               style->fg[state] and so gave each of the five states its own
-               tinted copy of the icon; here every iteration asks for the
-               colour of the widget's current state, so all five copies come
-               out the same and the button icons stop reacting to prelight,
-               active and insensitive. */
-            GtkStyleContext *context = gtk_widget_get_style_context(widget);
+            /* The colour of *this* state, which is what the loop is for. The
+               port asked for the widget's current state every time round and
+               so made five identical copies, and the buttons stopped reacting
+               to prelight, active and insensitive. */
+            GtkStyleContext *context = gtk_widget_get_style_context (widget);
             GdkRGBA rgba_color;
             GdkColor color_struct;
             color = &color_struct;
-            gtk_style_context_get_color(context, gtk_widget_get_state_flags(widget), &rgba_color);
-            /* Convert GdkRGBA to GdkColor for compatibility with the rest of the code */
+            gtk_style_context_get_color (context, state_flags (state), &rgba_color);
             color->red = rgba_color.red * 65535;
             color->green = rgba_color.green * 65535;
             color->blue = rgba_color.blue * 65535;

@@ -540,6 +540,54 @@ run_command (MooCommandExe     *cmd,
 }
 
 
+#if GTK_CHECK_VERSION(3, 0, 0)
+/*
+ * The environment a child should get to come up on a particular screen: the
+ * one it would otherwise have, with DISPLAY replaced.
+ *
+ * env is what _moo_env_add() built, which is NULL when the caller passed no
+ * additions -- and NULL to g_spawn_async() means "inherit", so that case has
+ * to be turned into a real environment before DISPLAY can be put in it.
+ */
+static char **
+env_with_display (char     **env,
+                  GdkScreen *screen)
+{
+    const char *display = gdk_display_get_name (gdk_screen_get_display (screen));
+    GPtrArray *out = g_ptr_array_new ();
+    char **p;
+
+    if (env == NULL)
+    {
+        char **names = g_listenv ();
+
+        for (p = names; p && *p; ++p)
+        {
+            const char *value = g_getenv (*p);
+
+            if (value && strcmp (*p, "DISPLAY") != 0)
+                g_ptr_array_add (out, g_strdup_printf ("%s=%s", *p, value));
+        }
+
+        g_strfreev (names);
+    }
+    else
+    {
+        for (p = env; *p != NULL; ++p)
+            if (strncmp (*p, "DISPLAY=", strlen ("DISPLAY=")) != 0)
+                g_ptr_array_add (out, g_strdup (*p));
+    }
+
+    if (display != NULL)
+        g_ptr_array_add (out, g_strdup_printf ("DISPLAY=%s", display));
+
+    g_ptr_array_add (out, NULL);
+
+    return (char**) g_ptr_array_free (out, FALSE);
+}
+#endif
+
+
 static gboolean
 run_async (const char     *cmd_line,
            const char     *working_dir,
@@ -569,28 +617,19 @@ run_async (const char     *cmd_line,
         if (screen)
         {
 #if GTK_CHECK_VERSION(3, 0, 0)
-            /* FIXME: the DISPLAY dance has no effect. g_spawn_async() is given
-               real_env, and a child spawned with an explicit environment does
-               not inherit the parent's, so what g_setenv() writes here is never
-               read -- while the process-wide environment is modified anyway,
-               which nothing else in this call needs. Putting DISPLAY into
-               real_env is what gdk_spawn_on_screen() did. */
-            const char *display_name = gdk_display_get_name(gdk_screen_get_display(screen));
-            const char *old_display = g_getenv("DISPLAY");
+            /* gdk_spawn_on_screen() is gone, and what it did was put the
+               screen's display into the child's environment. The port wrote it
+               into *this* process's environment instead and put it back
+               afterwards -- which the child sees only when it is inheriting
+               the environment, and never when _moo_env_add() has built one for
+               it, while every run changed this process for as long as the call
+               took. It goes where the child will read it. */
+            char **display_env = env_with_display (real_env, screen);
 
-            if (display_name) {
-                g_setenv("DISPLAY", display_name, TRUE);
-            }
-
-            result = g_spawn_async (working_dir, (char**) argv, real_env,
+            result = g_spawn_async (working_dir, (char**) argv, display_env,
                                     flags, NULL, NULL, NULL, &error);
 
-            /* Restore original DISPLAY if it existed */
-            if (old_display) {
-                g_setenv("DISPLAY", old_display, TRUE);
-            } else if (display_name) {
-                g_unsetenv("DISPLAY");
-            }
+            g_strfreev (display_env);
 #else
             result = gdk_spawn_on_screen (screen, working_dir, (char**) argv, real_env,
                                           flags, NULL, NULL, NULL, &error);
