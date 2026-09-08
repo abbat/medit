@@ -30,6 +30,7 @@
 #ifdef MOO_ENABLE_UNIT_TESTS
 
 #include "mooutils/mooaccel.h"
+#include "mooutils/moobigpaned.h"
 #include "mooutils/moofilewriter.h"
 #include "mooutils/mooutils-fs.h"
 #include "mooutils/mooutils-misc.h"
@@ -193,6 +194,93 @@ test_accel_parse (void)
 
 
 /* -------------------------------------------------------------------------
+ * The text in the accelerator column of a menu item
+ *
+ * GTK+2 let any string be written there. On GTK+3 the field is private and
+ * the public setter takes a key and modifiers, so the strings medit passes --
+ * a key name, or modifier names joined by "+" -- have to be turned into that
+ * pair. What they are drawn as afterwards is GTK's business and is measured
+ * in the comment beside the function.
+ */
+
+static void
+check_accel_label (const char      *label,
+                   guint            expected_key,
+                   GdkModifierType  expected_mods)
+{
+    guint key = 99;
+    GdkModifierType mods = GdkModifierType (99);
+
+    _moo_menu_item_parse_accel_label (label, &key, &mods);
+
+    g_assert_cmpuint (key, ==, expected_key);
+    g_assert_cmpuint ((guint) mods, ==, (guint) expected_mods);
+}
+
+
+static void
+test_accel_label_parse (void)
+{
+    /* A key name, which is what the Cancel item of the drop menu carries. */
+    check_accel_label ("Escape", GDK_KEY_Escape, GdkModifierType (0));
+
+    /* Modifier names, which is what the other three carry: they say which
+       modifier chooses that action, and there is no key. */
+    check_accel_label ("Shift", 0, GDK_SHIFT_MASK);
+    check_accel_label ("Control", 0, GDK_CONTROL_MASK);
+    check_accel_label ("Control+Shift", 0,
+                       GdkModifierType (GDK_CONTROL_MASK | GDK_SHIFT_MASK));
+
+    /* Spelt the way an accelerator is spelt everywhere else, since the first
+       thing tried is the ordinary parse. */
+    check_accel_label ("<Control>s", GDK_KEY_s, GDK_CONTROL_MASK);
+
+    /* Nothing, and nonsense, leave the column empty rather than guessing. */
+    check_accel_label ("", 0, GdkModifierType (0));
+    check_accel_label ("Nonsense", 0, GdkModifierType (0));
+}
+
+
+#if GTK_CHECK_VERSION(3,0,0)
+/* -------------------------------------------------------------------------
+ * The shape of the drop indicator
+ *
+ * While a pane is being carried to another edge of the window, MooBigPaned
+ * shows a shaped window over the place it would land: an outline around the
+ * drop area and another around the button that would carry it. The shape is
+ * the whole of it -- the window has nothing in it but two frames -- so
+ * whether it is a frame or a slab is decided here rather than by anything
+ * drawn.
+ */
+
+static void
+test_drop_mask (void)
+{
+    GdkRectangle button = {20, 30, 40, 10};
+    cairo_region_t *mask = _moo_big_paned_drop_mask (200, 100, &button);
+
+    /* Two pixels of border around the whole thing, and the inside of it
+       left alone -- what is under the indicator has to stay visible. */
+    g_assert_true (cairo_region_contains_point (mask, 0, 0));
+    g_assert_true (cairo_region_contains_point (mask, 1, 1));
+    g_assert_false (cairo_region_contains_point (mask, 2, 2));
+    g_assert_true (cairo_region_contains_point (mask, 199, 99));
+    g_assert_false (cairo_region_contains_point (mask, 100, 50));
+
+    /* And the same around the button, whose far edge is at x + width and
+       y + height: the GTK+2 call this replaced outlined through them. */
+    g_assert_true (cairo_region_contains_point (mask, 20, 30));
+    g_assert_true (cairo_region_contains_point (mask, 21, 31));
+    g_assert_false (cairo_region_contains_point (mask, 22, 32));
+    g_assert_true (cairo_region_contains_point (mask, 60, 40));
+    g_assert_false (cairo_region_contains_point (mask, 40, 35));
+
+    cairo_region_destroy (mask);
+}
+#endif
+
+
+/* -------------------------------------------------------------------------
  * MooFileWriter, which the removed moo_test_moo_file_writer() covered
  */
 
@@ -272,6 +360,10 @@ _moo_add_mooutils_unit_tests (void)
     g_test_add_func ("/mooutils/file-line", test_file_line);
     g_test_add_func ("/mooutils/splitlines", test_splitlines);
     g_test_add_func ("/mooutils/accel/parse", test_accel_parse);
+    g_test_add_func ("/mooutils/accel/label", test_accel_label_parse);
+#if GTK_CHECK_VERSION(3,0,0)
+    g_test_add_func ("/mooutils/paned/drop-mask", test_drop_mask);
+#endif
     g_test_add_func ("/mooutils/file-writer", test_file_writer);
 }
 

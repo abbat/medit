@@ -850,6 +850,65 @@ _moo_get_modifiers (GtkWidget *widget)
 /* GtkAccelLabel helpers
  */
 
+/**
+ * _moo_menu_item_parse_accel_label:
+ *
+ * The key and modifiers behind the text medit puts in a menu item's
+ * accelerator column.
+ *
+ * GTK+2 let any string be written straight into GtkAccelLabel's accel_string.
+ * On GTK+3 that field is private and the only public setter,
+ * gtk_accel_label_set_accel(), takes a key and modifiers -- so the strings
+ * have to be read back into the pair GTK draws them from. Every one medit
+ * passes is either a key name ("Escape") or modifier names joined by "+"
+ * ("Shift", "Control+Shift", which is what the drop menu tells the user to
+ * hold), and the second shape becomes the first by wrapping each name in
+ * angle brackets.
+ *
+ * Measured on GTK+ 3.24, which is what the column then reads:
+ *
+ *     "Escape"           key Escape        drawn "Escape"
+ *     "<Shift>"          mods 0x1          drawn "Shift"
+ *     "<Control><Shift>" mods 0x5          drawn "Shift+Ctrl"
+ *
+ * so the modifiers come out in the words GTK+3 uses for them everywhere else
+ * rather than in the ones this code spells them with.
+ */
+void
+_moo_menu_item_parse_accel_label (const char      *label,
+                                  guint           *key,
+                                  GdkModifierType *mods)
+{
+    char **parts;
+    GString *wrapped;
+    guint i;
+
+    g_return_if_fail (key != NULL && mods != NULL);
+
+    *key = 0;
+    *mods = GdkModifierType (0);
+
+    if (!label || !label[0])
+        return;
+
+    gtk_accelerator_parse (label, key, mods);
+
+    if (*key != 0 || *mods != 0)
+        return;
+
+    parts = g_strsplit (label, "+", -1);
+    wrapped = g_string_new (NULL);
+
+    for (i = 0; parts[i] != NULL; ++i)
+        g_string_append_printf (wrapped, "<%s>", g_strstrip (parts[i]));
+
+    gtk_accelerator_parse (wrapped->str, key, mods);
+
+    g_string_free (wrapped, TRUE);
+    g_strfreev (parts);
+}
+
+
 static void
 accel_label_set_string (GtkWidget  *accel_label,
                         const char *label)
@@ -857,18 +916,11 @@ accel_label_set_string (GtkWidget  *accel_label,
     g_return_if_fail (GTK_IS_ACCEL_LABEL (accel_label));
 
 #if GTK_CHECK_VERSION(3,0,0)
-    /* FIXME: this shows nothing. Passing 0/0 to gtk_accel_label_set_accel()
-       clears the accelerator, and the string is only put in object data that
-       accel_label_screen_changed() feeds back to this same function -- so on
-       GTK+3 every item that goes through _moo_menu_item_set_accel_label() (the
-       file selector's and the file view's context menus) has an empty
-       accelerator column where GTK+2 printed one. The label reaching here is
-       display text; gtk_accelerator_parse() turns it back into a keyval and
-       modifiers, which is what the public API wants. */
-    gtk_accel_label_set_accel(GTK_ACCEL_LABEL(accel_label), 0, static_cast<GdkModifierType>(0));
-    /* Store the label for later use in accel_label_screen_changed */
-    g_object_set_data_full(G_OBJECT(accel_label), "moo-accel-label-accel",
-                          g_strdup(label), g_free);
+    guint key = 0;
+    GdkModifierType mods = GdkModifierType (0);
+
+    _moo_menu_item_parse_accel_label (label, &key, &mods);
+    gtk_accel_label_set_accel (GTK_ACCEL_LABEL (accel_label), key, mods);
 #else
     /* GTK-2 code - direct access to accel_string field */
     g_free (GTK_ACCEL_LABEL(accel_label)->accel_string);

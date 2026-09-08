@@ -1475,10 +1475,10 @@ frame_region (cairo_region_t *region,
 }
 
 
-static cairo_region_t *
-create_rect_mask (int           width,
-                  int           height,
-                  GdkRectangle *rect)
+cairo_region_t *
+_moo_big_paned_drop_mask (int           width,
+                          int           height,
+                          GdkRectangle *rect)
 {
     cairo_region_t *region = cairo_region_create ();
 
@@ -1576,9 +1576,15 @@ create_drop_outline (MooBigPaned *paned)
     button_rect = paned->priv->drop_button_rect;
     button_rect.x -= paned->priv->drop_rect.x;
     button_rect.y -= paned->priv->drop_rect.y;
+#if GTK_CHECK_VERSION(3, 0, 0)
+    mask = _moo_big_paned_drop_mask (paned->priv->drop_rect.width,
+                                     paned->priv->drop_rect.height,
+                                     &button_rect);
+#else
     mask = create_rect_mask (paned->priv->drop_rect.width,
                              paned->priv->drop_rect.height,
                              &button_rect);
+#endif
 
 #if GTK_CHECK_VERSION(3, 0, 0)
     gdk_window_shape_combine_region (paned->priv->drop_outline, mask, 0, 0);
