@@ -17,6 +17,7 @@
 
 #ifdef MOO_ENABLE_UNIT_TESTS
 
+#include "mooedit/mooedit-tests.h"
 #include "mooutils/mooutils-tests.h"
 
 #ifdef MOO_BUILD_LSP
@@ -32,6 +33,7 @@ static void
 add_all_tests (void)
 {
     _moo_add_mooutils_unit_tests ();
+    _moo_add_mooedit_unit_tests ();
 
 #ifdef MOO_BUILD_LSP
     _moo_lsp_add_unit_tests ();

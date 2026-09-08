@@ -33,6 +33,7 @@ them.
 | change a package, upload to OBS, cut a release | `doc/packaging.md` |
 | run medit and decide whether it works; touch translations | `doc/running.md` |
 | write or fix a test, or read the UI harness | `doc/testing.md` |
+| add or change a language definition under `src/mooedit/langs` | `doc/testing.md`, "The highlighting goldens" |
 | write a test for the terminal, LSP or shortcuts; look at coverage | `doc/testing-panes.md` |
 | hunt a defect and want to know what this tree already got wrong | `doc/bugs.md` |
 

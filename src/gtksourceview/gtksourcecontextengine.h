@@ -77,6 +77,10 @@ void		 _gtk_source_context_data_unref		(GtkSourceContextData	*data);
 
 GtkSourceContextEngine *_gtk_source_context_engine_new  (GtkSourceContextData	*data);
 
+const gchar	*_gtk_source_context_engine_get_tag_style
+							(GtkSourceContextEngine	*ce,
+							 GtkTextTag		*tag);
+
 gboolean	 _gtk_source_context_data_define_context
 							(GtkSourceContextData	 *data,
 							 const gchar		 *id,

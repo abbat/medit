@@ -637,6 +637,42 @@ create_tag (GtkSourceContextEngine *ce,
 	return new_tag;
 }
 
+/**
+ * _gtk_source_context_engine_get_tag_style:
+ *
+ * @ce: #GtkSourceContextEngine.
+ * @tag: a tag.
+ *
+ * The style id @tag was created for, or %NULL when the engine did not create
+ * it. create_tag() above makes the tags anonymous, so the hash it fills is the
+ * only way back from a tag to the name a lang file gave it, and medit's
+ * highlighting tests dump a buffer with this. Reads that hash and changes
+ * nothing.
+ *
+ * Returns: the style id, owned by @ce.
+ */
+const gchar *
+_gtk_source_context_engine_get_tag_style (GtkSourceContextEngine *ce,
+					  GtkTextTag             *tag)
+{
+	GHashTableIter iter;
+	gpointer key, value;
+
+	g_return_val_if_fail (GTK_IS_SOURCE_CONTEXT_ENGINE (ce), NULL);
+	g_return_val_if_fail (GTK_IS_TEXT_TAG (tag), NULL);
+
+	if (ce->priv->tags == NULL)
+		return NULL;
+
+	g_hash_table_iter_init (&iter, ce->priv->tags);
+
+	while (g_hash_table_iter_next (&iter, &key, &value))
+		if (g_slist_find ((GSList*) value, tag) != NULL)
+			return (const gchar*) key;
+
+	return NULL;
+}
+
 /* Find tag which has to be overridden. */
 static GtkTextTag *
 get_parent_tag (Context    *context,

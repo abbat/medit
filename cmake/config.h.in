@@ -46,6 +46,12 @@
    ENABLE_UNIT_TESTS in the top CMakeLists.txt and mooutils/moo-unit-tests.h. */
 #cmakedefine MOO_ENABLE_UNIT_TESTS 1
 
+/* The source tree, which is where the unit tests read the files they compare
+   against -- the language definitions and the highlighting samples. A build
+   with the tests is a developer's build and is never installed, so a path into
+   the tree it was built from is the right one. Empty otherwise. */
+#define MOO_UNIT_TEST_SOURCE_ROOT "@MOO_UNIT_TEST_SOURCE_ROOT@"
+
 #define MOO_CONFIG_H_INCLUDED 1
 
 #include <moo-config.h>

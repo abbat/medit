@@ -78,13 +78,18 @@ is for, and a unit test that mocks a toolkit tests the mock.
 and `GtkTreeStore` are objects rather than widgets and work with no `gtk_init()` and no
 `DISPLAY`, which is what makes the text side of the LSP client testable this way.
 
-**A `GtkTextTag` is not one of them.** Its class installs properties of gdk's colour
-types, so creating one before `gtk_init()` is a fatal
-`g_param_spec_boxed: assertion 'G_TYPE_IS_BOXED (boxed_type)' failed` — with a display as
-much as without one, since it is the initialisation that is missing and not the screen.
-Anything about tags therefore splits in two: the part that is a decision (which tag a
-highlight kind gets) is a function returning a name and is tested here, and the part that
-is a buffer wearing tags is a UI test.
+**A `GtkTextTag` costs one line first.** Its class installs properties of gdk's colour
+types, and before gtk has initialised those types are not registered, so creating a tag is
+twelve `g_param_spec_boxed: assertion 'G_TYPE_IS_BOXED (boxed_type)' failed` criticals —
+which the test framework turns into a failure — with a display as much as without one,
+since it is the initialisation that is missing and not the screen. Naming the type
+registers it and that is the whole fix; `register_colour_type()` in
+`src/mooedit/mooedit-tests.cpp` is it, and the note there records that the getter is
+`G_GNUC_CONST`, so the call has to be used for something or the compiler drops it and the
+criticals come back. Measured on GTK+3 3.24; GTK+2 needs nothing.
+
+This is what makes the highlighting goldens below possible, and it lifts the old rule that
+anything about tags had to be a UI test. Drawing and events still are.
 
 **A build with the unit tests keeps its assertions live.** glib's test framework refuses
 to start when it is compiled with `G_DISABLE_ASSERT` — rightly, since `g_assert_cmpint()`
@@ -120,8 +125,8 @@ for the oldest distribution medit supports, and taken back out: turning them on 
 compiling that job with assertions live, which stops it being the build a distribution
 does, and the point of `build.yml` is that it is exactly that build.
 
-What is in them, besides the LSP client below: `_moo_parse_file_line()`, `moo_splitlines()`,
-`_moo_accel_parse()` and `MooFileWriter`. The last three are the suites this fork used to
+What is in them, besides the highlighting goldens below and the LSP client after them:
+`_moo_parse_file_line()`, `moo_splitlines()`, `_moo_accel_parse()` and `MooFileWriter`. The last three are the suites this fork used to
 have — `moo_test_mooaccel`, `moo_test_mooutils_misc` and `moo_test_moo_file_writer` went
 with the lua interpreter that ran them, while the functions they were about stayed exactly
 where they were. The first is new, and is why the file exists: see `doc/build.md` on `file.c:42`.
