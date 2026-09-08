@@ -98,6 +98,18 @@ class Setup(object):
         """Whether it is there and is a directory."""
         return os.path.isdir(self.path(*parts))
 
+    def read_bytes(self, *parts):
+        """The bytes of such a file, or b"" while it does not exist yet.
+
+        read() decodes, replacing whatever it could not, which is the wrong
+        question for a test about what was written.
+        """
+        try:
+            with open(self.path(*parts), "rb") as f:
+                return f.read()
+        except FileNotFoundError:
+            return b""
+
     def read_path(self, path):
         """The same, for a path a helper here has already built."""
         try:
@@ -111,6 +123,20 @@ class Setup(object):
         os.makedirs(os.path.dirname(path), exist_ok=True)
         with open(path, "w") as f:
             f.write(body)
+        return path
+
+    def write_bytes(self, name, data):
+        """A file with exactly those bytes in it, by path.
+
+        write() encodes as the locale says, which is UTF-8 in these tests. A
+        test about encodings needs the bytes it asked for and no others.
+        """
+        path = self.path(name)
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+
+        with open(path, "wb") as f:
+            f.write(data)
+
         return path
 
     def script(self, name, body):
