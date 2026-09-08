@@ -33,8 +33,8 @@ def setup(s):
     s.pref("Plugins/Terminal/shell", "/bin/sh")
 
     # The same file and the same keys Configure Shortcuts writes.
-    s.pref("Shortcuts/Editor/TerminalCopy", "<Ctrl><Shift>Y")
-    s.pref("Shortcuts/Editor/TerminalPaste", "<Ctrl><Shift>U")
+    s.pref("Shortcuts/Editor/Terminal/TerminalCopy", "<Ctrl><Shift>Y")
+    s.pref("Shortcuts/Editor/Terminal/TerminalPaste", "<Ctrl><Shift>U")
 
 
 def run(t):

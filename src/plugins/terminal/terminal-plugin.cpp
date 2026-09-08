@@ -824,7 +824,16 @@ terminal_plugin_init (TerminalPlugin *plugin)
     moo_prefs_new_key_string (MOO_TERMINAL_PREFS_SHELL, NULL);
     moo_prefs_new_key_string (MOO_TERMINAL_PREFS_FONT, NULL);
 
-    moo_window_class_new_action (klass, "ShowTerminal", NULL,
+    /*
+     * A section of its own in Configure Shortcuts, beside the editor's own
+     * hundred-odd commands: three keys are easier to find under the name of
+     * the thing they belong to. It also puts the group in the accelerator
+     * path, so these are Shortcuts/Editor/Terminal/... in the preferences.
+     */
+    if (!moo_window_class_find_group (klass, MOO_TERMINAL_PLUGIN_ID))
+        moo_window_class_new_group (klass, MOO_TERMINAL_PLUGIN_ID, _("Terminal"));
+
+    moo_window_class_new_action (klass, "ShowTerminal", MOO_TERMINAL_PLUGIN_ID,
                                  "display-name", _("Terminal"),
                                  "label", _("Terminal"),
                                  "tooltip", _("Show the terminal pane"),
@@ -839,7 +848,7 @@ terminal_plugin_init (TerminalPlugin *plugin)
      * window never fires them -- copying the terminal's selection with the
      * document focused is not what the key means.
      */
-    moo_window_class_new_action (klass, "TerminalCopy", NULL,
+    moo_window_class_new_action (klass, "TerminalCopy", MOO_TERMINAL_PLUGIN_ID,
                                  "display-name", _("Copy in Terminal"),
                                  "label", _("Copy in Terminal"),
                                  "tooltip", _("Copy the selection in the terminal pane"),
@@ -848,7 +857,7 @@ terminal_plugin_init (TerminalPlugin *plugin)
                                  "closure-callback", copy_terminal_cb,
                                  nullptr);
 
-    moo_window_class_new_action (klass, "TerminalPaste", NULL,
+    moo_window_class_new_action (klass, "TerminalPaste", MOO_TERMINAL_PLUGIN_ID,
                                  "display-name", _("Paste in Terminal"),
                                  "label", _("Paste in Terminal"),
                                  "tooltip", _("Paste the clipboard into the terminal pane"),

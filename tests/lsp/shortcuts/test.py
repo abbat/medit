@@ -20,9 +20,10 @@ request behind it is in the server's log either way.
 
 CONTENT = "alpha\n"
 
-# What Configure Shortcuts writes: the window's id and the action's name.
-MOVED = "Shortcuts/Editor/LspComplete"
-CLEARED = "Shortcuts/Editor/LspSignature"
+# What Configure Shortcuts writes: the window, the group the action is in,
+# and the action.
+MOVED = "Shortcuts/Editor/Lsp/LspComplete"
+CLEARED = "Shortcuts/Editor/Lsp/LspSignature"
 
 ITEMS = [{"label": "alphabet", "insertText": "alphabet"}]
 

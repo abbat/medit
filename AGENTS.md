@@ -1453,14 +1453,24 @@ marked `no-accel` is in **Edit → Configure Shortcuts**, whether or not it was 
 default key. That dialog is the whole of the answer to "can I change that key": there is
 no per-plugin list anywhere, and a command that is not an action is not in it.
 
-**A binding is a preference**, written as `Shortcuts/<window id>/<action name>` — the
-editor window's id is `Editor`, so `Shortcuts/Editor/LspComplete` is Ctrl+Space and
-`Shortcuts/Editor/TerminalCopy` is the pane's copy. The `<MooAction>/` that starts an
-accel path is stripped on the way in (`accel_path_to_prefs_key()`), which is worth knowing
-before writing the key by hand: with the prefix left on, the value is loaded, registered
-and never looked at. A test rebinds a key by writing that preference in `setup()`, which
-is exactly what the dialog writes, and `tests/lsp/shortcuts` and `tests/terminal/copy_paste`
-both do.
+**A binding is a preference**, written as `Shortcuts/<window id>/<group>/<action name>` —
+the editor window's id is `Editor` and each plugin puts its commands in a group of its
+own, so Ctrl+Space is `Shortcuts/Editor/Lsp/LspComplete` and the terminal's copy is
+`Shortcuts/Editor/Terminal/TerminalCopy`. An action in no group has no middle part. The
+`<MooAction>/` that starts an accel path is stripped on the way in
+(`accel_path_to_prefs_key()`), which is worth knowing before writing the key by hand: with
+the prefix left on, the value is loaded, registered and never looked at. A test rebinds a
+key by writing that preference in `setup()`, which is exactly what the dialog writes, and
+`tests/lsp/shortcuts` and `tests/terminal/copy_paste` both do.
+
+**A group is a heading in that dialog and a segment of the accel path**, and the two come
+together: `moo_window_class_new_group()` before the actions and the group's name as the
+third argument of `moo_window_class_new_action()`, after which the plugin's commands stop
+being a few rows among the editor's hundred. The user tools have done this since long
+before the plugins did. Moving an existing action into a group changes its accelerator
+path, so a binding somebody had customised under the old path is forgotten -- a one-time
+cost paid here for the terminal's ``Ctrl+` `` and nothing else, every other grouped action
+having been new.
 
 **A key the focused widget swallows has to be matched by hand**, and there are three of
 them: the terminal pane takes Ctrl+`, its copy and its paste before the shell sees

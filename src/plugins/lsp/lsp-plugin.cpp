@@ -1248,7 +1248,13 @@ lsp_plugin_init (LspPlugin *plugin)
     moo_prefs_new_key_bool (MOO_LSP_PREFS_DEBUG, FALSE);
     moo_prefs_new_key_int (MOO_LSP_PREFS_SYNC_DELAY, MOO_LSP_SYNC_DELAY_DEFAULT);
 
-    moo_window_class_new_action (klass, "ShowLspDiagnostics", NULL,
+    /* A section of its own in Configure Shortcuts; see the terminal for why,
+       and note that it is part of the accelerator path -- these are
+       Shortcuts/Editor/Lsp/... in the preferences. */
+    if (!moo_window_class_find_group (klass, MOO_LSP_PLUGIN_ID))
+        moo_window_class_new_group (klass, MOO_LSP_PLUGIN_ID, _("LSP"));
+
+    moo_window_class_new_action (klass, "ShowLspDiagnostics", MOO_LSP_PLUGIN_ID,
                                  "display-name", _("Diagnostics"),
                                  "label", _("Diagnostics"),
                                  "tooltip", _("Show the diagnostics pane"),
@@ -1256,7 +1262,7 @@ lsp_plugin_init (LspPlugin *plugin)
                                  "closure-callback", show_diagnostics_cb,
                                  nullptr);
 
-    moo_window_class_new_action (klass, "GoToDefinition", NULL,
+    moo_window_class_new_action (klass, "GoToDefinition", MOO_LSP_PLUGIN_ID,
                                  "display-name", _("Go to Definition"),
                                  "label", _("Go to _Definition"),
                                  "tooltip", _("Go to the definition of what is under the cursor"),
@@ -1264,7 +1270,7 @@ lsp_plugin_init (LspPlugin *plugin)
                                  "closure-callback", goto_definition_cb,
                                  nullptr);
 
-    moo_window_class_new_action (klass, "FindReferences", NULL,
+    moo_window_class_new_action (klass, "FindReferences", MOO_LSP_PLUGIN_ID,
                                  "display-name", _("Find References"),
                                  "label", _("Find _References"),
                                  "tooltip", _("List every use of what is under the cursor"),
@@ -1273,14 +1279,14 @@ lsp_plugin_init (LspPlugin *plugin)
                                  "closure-callback", find_references_cb,
                                  nullptr);
 
-    moo_window_class_new_action (klass, "LspFormat", NULL,
+    moo_window_class_new_action (klass, "LspFormat", MOO_LSP_PLUGIN_ID,
                                  "display-name", _("Format Document"),
                                  "label", _("_Format Document"),
                                  "tooltip", _("Let the language server lay the document out"),
                                  "closure-callback", format_cb,
                                  nullptr);
 
-    moo_window_class_new_action (klass, "RenameSymbol", NULL,
+    moo_window_class_new_action (klass, "RenameSymbol", MOO_LSP_PLUGIN_ID,
                                  "display-name", _("Rename"),
                                  "label", _("_Rename..."),
                                  "tooltip", _("Rename what is under the cursor everywhere"),
@@ -1288,14 +1294,14 @@ lsp_plugin_init (LspPlugin *plugin)
                                  "closure-callback", rename_cb,
                                  nullptr);
 
-    moo_window_class_new_action (klass, "GoToTypeDefinition", NULL,
+    moo_window_class_new_action (klass, "GoToTypeDefinition", MOO_LSP_PLUGIN_ID,
                                  "display-name", _("Go to Type Definition"),
                                  "label", _("Go to _Type Definition"),
                                  "tooltip", _("Go to the definition of the type of what is under the cursor"),
                                  "closure-callback", goto_type_definition_cb,
                                  nullptr);
 
-    moo_window_class_new_action (klass, "GoToImplementation", NULL,
+    moo_window_class_new_action (klass, "GoToImplementation", MOO_LSP_PLUGIN_ID,
                                  "display-name", _("Go to Implementation"),
                                  "label", _("Go to _Implementation"),
                                  "tooltip", _("Go to the implementation of what is under the cursor"),
@@ -1349,7 +1355,7 @@ lsp_plugin_init (LspPlugin *plugin)
         g_type_class_unref (edit_klass);
     }
 
-    moo_window_class_new_action (klass, "LspEditConfig", NULL,
+    moo_window_class_new_action (klass, "LspEditConfig", MOO_LSP_PLUGIN_ID,
                                  "display-name", _("LSP Servers"),
                                  "label", _("LSP _Servers..."),
                                  "tooltip", _("Edit the list of language servers"),
@@ -1357,7 +1363,7 @@ lsp_plugin_init (LspPlugin *plugin)
                                  "closure-callback", edit_config_cb,
                                  nullptr);
 
-    moo_window_class_new_action (klass, "LspRestartServers", NULL,
+    moo_window_class_new_action (klass, "LspRestartServers", MOO_LSP_PLUGIN_ID,
                                  "display-name", _("Restart Language Servers"),
                                  "label", _("Restart Language Servers"),
                                  "tooltip", _("Re-read the configuration and start every server again"),
@@ -1365,7 +1371,7 @@ lsp_plugin_init (LspPlugin *plugin)
                                  "closure-callback", restart_servers_cb,
                                  nullptr);
 
-    moo_window_class_new_action (klass, "LspComplete", NULL,
+    moo_window_class_new_action (klass, "LspComplete", MOO_LSP_PLUGIN_ID,
                                  "display-name", _("Complete Word"),
                                  "label", _("_Complete Word"),
                                  "tooltip", _("Ask the language server what could go here"),
@@ -1373,7 +1379,7 @@ lsp_plugin_init (LspPlugin *plugin)
                                  "closure-callback", complete_cb,
                                  nullptr);
 
-    moo_window_class_new_action (klass, "LspSignature", NULL,
+    moo_window_class_new_action (klass, "LspSignature", MOO_LSP_PLUGIN_ID,
                                  "display-name", _("Parameter Hints"),
                                  "label", _("_Parameter Hints"),
                                  "tooltip", _("Show what the call being typed takes"),
@@ -1381,7 +1387,7 @@ lsp_plugin_init (LspPlugin *plugin)
                                  "closure-callback", signature_cb,
                                  nullptr);
 
-    moo_window_class_new_action (klass, "ShowLspReferences", NULL,
+    moo_window_class_new_action (klass, "ShowLspReferences", MOO_LSP_PLUGIN_ID,
                                  "display-name", _("References"),
                                  "label", _("References"),
                                  "tooltip", _("Show the references pane"),
@@ -1389,7 +1395,7 @@ lsp_plugin_init (LspPlugin *plugin)
                                  "closure-callback", show_references_cb,
                                  nullptr);
 
-    moo_window_class_new_action (klass, "ShowLspSymbols", NULL,
+    moo_window_class_new_action (klass, "ShowLspSymbols", MOO_LSP_PLUGIN_ID,
                                  "display-name", _("Symbols"),
                                  "label", _("Symbols"),
                                  "tooltip", _("Show the symbol tree"),

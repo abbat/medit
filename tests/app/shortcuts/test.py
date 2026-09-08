@@ -18,7 +18,9 @@ keystroke are all things gail describes as readily as GTK+3 does.
 CONTENT = "alpha\n"
 
 # The client's commands, as the dialog names them (the display name of each
-# action). If one of these is missing it is not configurable at all.
+# action). If one of these is missing it is not configurable at all. "LSP" is
+# the heading they are under -- a group of the action collection, which is also
+# what puts "Lsp" in the middle of their accelerator paths.
 LISTED = ("Complete Word", "Parameter Hints", "Go to Definition",
           "Find References", "Rename", "Format Document")
 
@@ -42,6 +44,13 @@ def run(t):
 
     for name in LISTED:
         t.check(name in listed, "%r is in the list of shortcuts" % name)
+
+    # And in a section of their own rather than among the editor's hundred:
+    # the list is grouped by the action group, and each plugin makes one.
+    t.check("LSP" in listed, "the client's commands are under a heading of their own")
+
+    if t.gtk == 3:
+        t.check("Terminal" in listed, "and the terminal's are under theirs")
 
     # The Search box, which for twenty years was a widget with nothing behind
     # it: the list has a search column, so typing into the list searched and
