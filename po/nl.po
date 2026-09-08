@@ -2509,3 +2509,523 @@ msgstr ""
 
 #~ msgid "GAP source file"
 #~ msgstr "GAP-bronbestand"
+
+#: ../src/plugins/lsp/lsp-edits.cpp:332
+#: ../src/plugins/lsp/lsp-plugin.cpp:1284
+#: ../src/plugins/lsp/lsp-plugin.cpp:1329
+msgid "Rename"
+msgstr "Hernoemen"
+
+#: ../src/plugins/lsp/lsp-edits.cpp:336
+msgid "_Rename"
+msgstr "_Hernoemen"
+
+#: ../src/plugins/lsp/lsp-edits.cpp:343
+msgid "New name for '%s':"
+msgstr "Nieuwe naam voor ‘%s’:"
+
+#: ../src/plugins/lsp/lsp-edits.cpp:344
+msgid "New name:"
+msgstr "Nieuwe naam:"
+
+#: ../src/plugins/lsp/lsp-edits.cpp:432
+#: ../src/plugins/lsp/lsp-edits.cpp:442
+msgid "Rename failed"
+msgstr "Hernoemen mislukt"
+
+#: ../src/plugins/lsp/lsp-edits.cpp:443
+msgid "The server had nothing to change."
+msgstr "De server had niets te wijzigen."
+
+#: ../src/plugins/lsp/lsp-edits.cpp:546
+msgid "Formatting failed"
+msgstr "Opmaken mislukt"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:113
+msgid "LSP"
+msgstr "LSP"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:113
+msgid "Language server protocol client"
+msgstr "Client voor het language server protocol"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1153
+#: ../src/plugins/lsp/lsp-plugin.cpp:1252
+#: ../src/plugins/lsp/lsp-plugin.cpp:1253
+msgid "Diagnostics"
+msgstr "Diagnostiek"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1167
+#: ../src/plugins/lsp/lsp-plugin.cpp:1385
+#: ../src/plugins/lsp/lsp-plugin.cpp:1386
+msgid "References"
+msgstr "Verwijzingen"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1175
+#: ../src/plugins/lsp/lsp-plugin.cpp:1393
+#: ../src/plugins/lsp/lsp-plugin.cpp:1394
+msgid "Symbols"
+msgstr "Symbolen"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1254
+msgid "Show the diagnostics pane"
+msgstr "Het diagnostiekpaneel tonen"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1260
+#: ../src/plugins/lsp/lsp-plugin.cpp:1315
+msgid "Go to Definition"
+msgstr "Naar de definitie gaan"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1261
+#: ../src/plugins/lsp/lsp-plugin.cpp:1316
+msgid "Go to _Definition"
+msgstr "Naar de _definitie gaan"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1262
+#: ../src/plugins/lsp/lsp-plugin.cpp:1317
+msgid "Go to the definition of what is under the cursor"
+msgstr "Naar de definitie gaan van wat onder de cursor staat"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1268
+#: ../src/plugins/lsp/lsp-plugin.cpp:1322
+msgid "Find References"
+msgstr "Verwijzingen zoeken"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1269
+#: ../src/plugins/lsp/lsp-plugin.cpp:1323
+msgid "Find _References"
+msgstr "_Verwijzingen zoeken"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1270
+#: ../src/plugins/lsp/lsp-plugin.cpp:1324
+msgid "List every use of what is under the cursor"
+msgstr "Elk gebruik tonen van wat onder de cursor staat"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1277
+msgid "Format Document"
+msgstr "Document opmaken"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1278
+msgid "_Format Document"
+msgstr "Document _opmaken"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1279
+msgid "Let the language server lay the document out"
+msgstr "Het document door de taalserver laten opmaken"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1285
+#: ../src/plugins/lsp/lsp-plugin.cpp:1330
+msgid "_Rename..."
+msgstr "_Hernoemen…"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1286
+#: ../src/plugins/lsp/lsp-plugin.cpp:1331
+msgid "Rename what is under the cursor everywhere"
+msgstr "Overal hernoemen wat onder de cursor staat"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1292
+msgid "Go to Type Definition"
+msgstr "Naar de typedefinitie gaan"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1293
+msgid "Go to _Type Definition"
+msgstr "Naar de _typedefinitie gaan"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1294
+msgid "Go to the definition of the type of what is under the cursor"
+msgstr "Naar de definitie gaan van het type van wat onder de cursor staat"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1299
+msgid "Go to Implementation"
+msgstr "Naar de implementatie gaan"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1300
+msgid "Go to _Implementation"
+msgstr "Naar de _implementatie gaan"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1301
+msgid "Go to the implementation of what is under the cursor"
+msgstr "Naar de implementatie gaan van wat onder de cursor staat"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1353
+msgid "LSP Servers"
+msgstr "LSP-servers"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1354
+msgid "LSP _Servers..."
+msgstr "LSP-_servers…"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1355
+msgid "Edit the list of language servers"
+msgstr "De lijst met taalservers bewerken"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1361
+#: ../src/plugins/lsp/lsp-plugin.cpp:1362
+msgid "Restart Language Servers"
+msgstr "Taalservers herstarten"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1363
+msgid "Re-read the configuration and start every server again"
+msgstr "De configuratie opnieuw lezen en elke server opnieuw starten"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1369
+msgid "Complete Word"
+msgstr "Woord aanvullen"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1370
+msgid "_Complete Word"
+msgstr "Woord _aanvullen"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1371
+msgid "Ask the language server what could go here"
+msgstr "De taalserver vragen wat hier zou kunnen staan"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1377
+msgid "Parameter Hints"
+msgstr "Parametertips"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1378
+msgid "_Parameter Hints"
+msgstr "_Parametertips"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1379
+msgid "Show what the call being typed takes"
+msgstr "Tonen wat de aanroep die getypt wordt verwacht"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1387
+msgid "Show the references pane"
+msgstr "Het verwijzingenpaneel tonen"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1395
+msgid "Show the symbol tree"
+msgstr "De symbolenboom tonen"
+
+#: ../src/plugins/lsp/lsp-server.cpp:744
+msgid "%s failed to start: %s"
+msgstr "%s kon niet worden gestart: %s"
+
+#: ../src/plugins/lsp/lsp-server.cpp:745
+#: ../src/plugins/lsp/lsp-server.cpp:1073
+msgid "unknown error"
+msgstr "onbekende fout"
+
+#: ../src/plugins/lsp/lsp-server.cpp:751
+msgid "%s answered the initialize request with no capabilities"
+msgstr "%s beantwoordde het initialisatieverzoek zonder mogelijkheden"
+
+#: ../src/plugins/lsp/lsp-server.cpp:773
+msgid "%s did not answer the initialize request in %d seconds"
+msgstr "%s beantwoordde het initialisatieverzoek niet binnen %d seconden"
+
+#: ../src/plugins/lsp/lsp-server.cpp:1030
+msgid ""
+"%s exited immediately %d times in a row; check the command in the LSP "
+"configuration file"
+msgstr ""
+"%s stopte %d keer op rij onmiddellijk; controleer de opdracht in het "
+"LSP-configuratiebestand"
+
+#: ../src/plugins/lsp/lsp-server.cpp:1072
+msgid "could not run %s: %s"
+msgstr "kon %s niet uitvoeren: %s"
+
+#: ../src/plugins/lsp/lsp-prefs.cpp:43
+msgid "Could not create the LSP configuration file"
+msgstr "Kon het LSP-configuratiebestand niet aanmaken"
+
+#: ../src/plugins/lsp/lsp-prefs.cpp:86
+msgid "Language Servers"
+msgstr "Taalservers"
+
+#: ../src/plugins/lsp/lsp-references.cpp:335
+msgid "The server refused the question"
+msgstr "De server weigerde de vraag"
+
+#: ../src/plugins/lsp/lsp-references.cpp:347
+msgid "No references found"
+msgstr "Geen verwijzingen gevonden"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:22
+msgid "Underline problems and list them in the _Diagnostics pane"
+msgstr "Problemen onderstrepen en tonen in het _diagnostiekpaneel"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:34
+msgid "_Complete words"
+msgstr "Woorden _aanvullen"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:46
+msgid "Show the _parameters of a call"
+msgstr "De _parameters van een aanroep tonen"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:49
+msgid "While the call is being typed, and on Ctrl+Shift+Space."
+msgstr "Terwijl de aanroep getypt wordt, en met Ctrl+Shift+Spatie."
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:59
+msgid "_Mark the other uses of what the cursor is in"
+msgstr "De andere plaatsen _markeren waar staat wat onder de cursor staat"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:71
+msgid "Describe what is under the _pointer"
+msgstr "Beschrijven wat onder de _muisaanwijzer ligt"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:87
+msgid "Send changes to the server _after:"
+msgstr "Wijzigingen naar de server sturen _na:"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:110
+msgid "milliseconds of quiet"
+msgstr "milliseconden rust"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:125
+msgid "_Log the protocol to standard error"
+msgstr "Het protocol naar de standaardfoutuitvoer _loggen"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:128
+msgid ""
+"Every message to and from every server. The MEDIT_LSP_DEBUG environment "
+"variable does the same."
+msgstr ""
+"Elk bericht naar en van elke server. De omgevingsvariabele "
+"MEDIT_LSP_DEBUG doet hetzelfde."
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:142
+msgid "_Edit the Server List"
+msgstr "De serverlijst _bewerken"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:144
+msgid ""
+"Opens your copy of lsp.xml, creating it from the installed one if you "
+"have none."
+msgstr ""
+"Opent uw kopie van lsp.xml en maakt die aan vanuit de geïnstalleerde als "
+"u er geen hebt."
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:154
+msgid "_Restart Servers"
+msgstr "Servers _herstarten"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:156
+msgid "Re-reads the configuration file and starts over with every server."
+msgstr ""
+"Leest het configuratiebestand opnieuw en begint opnieuw met elke server."
+
+#: ../src/plugins/terminal/terminal-plugin.cpp:251
+msgid ""
+"The shell keeps exiting immediately, not restarting it. Check the shell "
+"in the Terminal preferences."
+msgstr ""
+"De shell stopt telkens onmiddellijk en wordt niet opnieuw gestart. "
+"Controleer de shell in de voorkeuren van de console."
+
+#: ../src/plugins/terminal/terminal-plugin.cpp:583
+msgid "“cd” to current file directory"
+msgstr "‘cd’ naar de map van het huidige bestand"
+
+#: ../src/plugins/terminal/terminal-plugin.cpp:590
+msgid "“pushd” to current file directory"
+msgstr "‘pushd’ naar de map van het huidige bestand"
+
+#: ../src/plugins/terminal/terminal-plugin.cpp:830
+msgid "Show the terminal pane"
+msgstr "Het consolepaneel tonen"
+
+#: ../src/plugins/terminal/terminal-plugin.cpp:843
+#: ../src/plugins/terminal/terminal-plugin.cpp:844
+msgid "Copy in Terminal"
+msgstr "Kopiëren in de console"
+
+#: ../src/plugins/terminal/terminal-plugin.cpp:845
+msgid "Copy the selection in the terminal pane"
+msgstr "De selectie in het consolepaneel kopiëren"
+
+#: ../src/plugins/terminal/terminal-plugin.cpp:852
+#: ../src/plugins/terminal/terminal-plugin.cpp:853
+msgid "Paste in Terminal"
+msgstr "Plakken in de console"
+
+#: ../src/plugins/terminal/terminal-plugin.cpp:854
+msgid "Paste the clipboard into the terminal pane"
+msgstr "Het klembord in het consolepaneel plakken"
+
+#: ../src/plugins/terminal/terminal-plugin.cpp:893
+msgid "Terminal pane"
+msgstr "Consolepaneel"
+
+#: ../src/plugins/terminal/ui/terminal-prefs.ui:20
+msgid "S_hell:"
+msgstr "S_hell:"
+
+#: ../src/plugins/terminal/ui/terminal-prefs.ui:34
+msgid ""
+"Leave empty to use the login shell. Takes effect the next time the shell "
+"is started."
+msgstr ""
+"Laat leeg om de aanmeldshell te gebruiken. Werkt vanaf de volgende keer "
+"dat de shell wordt gestart."
+
+#: ../src/plugins/terminal/ui/terminal-prefs.ui:45
+msgid "Color _scheme:"
+msgstr "Kleuren_schema:"
+
+#: ../src/plugins/terminal/ui/terminal-prefs.ui:68
+msgid "_Font:"
+msgstr "_Lettertype:"
+
+#: ../src/plugins/terminal/ui/terminal-prefs.ui:93
+msgid "_Default"
+msgstr "_Standaard"
+
+#: ../src/plugins/terminal/ui/terminal-prefs.ui:95
+msgid "Use the system monospace font"
+msgstr "Het monospace-lettertype van het systeem gebruiken"
+
+#: ../src/plugins/lsp/lsp-diagnostics.cpp:82
+msgctxt "diagnostic severity"
+msgid "warning"
+msgstr "waarschuwing"
+
+#: ../src/plugins/lsp/lsp-diagnostics.cpp:84
+msgctxt "diagnostic severity"
+msgid "information"
+msgstr "informatie"
+
+#: ../src/plugins/lsp/lsp-diagnostics.cpp:86
+msgctxt "diagnostic severity"
+msgid "hint"
+msgstr "tip"
+
+#: ../src/plugins/lsp/lsp-diagnostics.cpp:89
+msgctxt "diagnostic severity"
+msgid "error"
+msgstr "fout"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:33
+msgctxt "symbol kind"
+msgid "file"
+msgstr "bestand"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:34
+msgctxt "symbol kind"
+msgid "module"
+msgstr "module"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:35
+msgctxt "symbol kind"
+msgid "namespace"
+msgstr "naamruimte"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:36
+msgctxt "symbol kind"
+msgid "package"
+msgstr "pakket"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:37
+msgctxt "symbol kind"
+msgid "class"
+msgstr "klasse"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:38
+msgctxt "symbol kind"
+msgid "method"
+msgstr "methode"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:39
+msgctxt "symbol kind"
+msgid "property"
+msgstr "eigenschap"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:40
+msgctxt "symbol kind"
+msgid "field"
+msgstr "veld"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:41
+msgctxt "symbol kind"
+msgid "constructor"
+msgstr "constructor"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:42
+msgctxt "symbol kind"
+msgid "enum"
+msgstr "opsomming"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:43
+msgctxt "symbol kind"
+msgid "interface"
+msgstr "interface"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:44
+msgctxt "symbol kind"
+msgid "function"
+msgstr "functie"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:45
+msgctxt "symbol kind"
+msgid "variable"
+msgstr "variabele"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:46
+msgctxt "symbol kind"
+msgid "constant"
+msgstr "constante"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:47
+msgctxt "symbol kind"
+msgid "string"
+msgstr "tekenreeks"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:48
+msgctxt "symbol kind"
+msgid "number"
+msgstr "getal"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:49
+msgctxt "symbol kind"
+msgid "boolean"
+msgstr "booleaan"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:50
+msgctxt "symbol kind"
+msgid "array"
+msgstr "array"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:51
+msgctxt "symbol kind"
+msgid "object"
+msgstr "object"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:52
+msgctxt "symbol kind"
+msgid "key"
+msgstr "sleutel"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:53
+msgctxt "symbol kind"
+msgid "null"
+msgstr "null"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:54
+msgctxt "symbol kind"
+msgid "enum member"
+msgstr "opsommingswaarde"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:55
+msgctxt "symbol kind"
+msgid "struct"
+msgstr "structuur"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:56
+msgctxt "symbol kind"
+msgid "event"
+msgstr "gebeurtenis"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:57
+msgctxt "symbol kind"
+msgid "operator"
+msgstr "operator"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:58
+msgctxt "symbol kind"
+msgid "type parameter"
+msgstr "typeparameter"

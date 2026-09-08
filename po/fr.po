@@ -2744,3 +2744,522 @@ msgstr "Tous les documents"
 
 #~ msgid "Search:"
 #~ msgstr "Rechercher :"
+
+#: ../src/plugins/lsp/lsp-edits.cpp:332
+#: ../src/plugins/lsp/lsp-plugin.cpp:1284
+#: ../src/plugins/lsp/lsp-plugin.cpp:1329
+msgid "Rename"
+msgstr "Renommer"
+
+#: ../src/plugins/lsp/lsp-edits.cpp:336
+msgid "_Rename"
+msgstr "_Renommer"
+
+#: ../src/plugins/lsp/lsp-edits.cpp:343
+msgid "New name for '%s':"
+msgstr "Nouveau nom pour « %s » :"
+
+#: ../src/plugins/lsp/lsp-edits.cpp:344
+msgid "New name:"
+msgstr "Nouveau nom :"
+
+#: ../src/plugins/lsp/lsp-edits.cpp:432
+#: ../src/plugins/lsp/lsp-edits.cpp:442
+msgid "Rename failed"
+msgstr "Échec du renommage"
+
+#: ../src/plugins/lsp/lsp-edits.cpp:443
+msgid "The server had nothing to change."
+msgstr "Le serveur n'avait rien à changer."
+
+#: ../src/plugins/lsp/lsp-edits.cpp:546
+msgid "Formatting failed"
+msgstr "Échec du formatage"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:113
+msgid "LSP"
+msgstr "LSP"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:113
+msgid "Language server protocol client"
+msgstr "Client du protocole de serveur de langage"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1153
+#: ../src/plugins/lsp/lsp-plugin.cpp:1252
+#: ../src/plugins/lsp/lsp-plugin.cpp:1253
+msgid "Diagnostics"
+msgstr "Diagnostics"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1167
+#: ../src/plugins/lsp/lsp-plugin.cpp:1385
+#: ../src/plugins/lsp/lsp-plugin.cpp:1386
+msgid "References"
+msgstr "Références"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1175
+#: ../src/plugins/lsp/lsp-plugin.cpp:1393
+#: ../src/plugins/lsp/lsp-plugin.cpp:1394
+msgid "Symbols"
+msgstr "Symboles"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1254
+msgid "Show the diagnostics pane"
+msgstr "Afficher le panneau des diagnostics"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1260
+#: ../src/plugins/lsp/lsp-plugin.cpp:1315
+msgid "Go to Definition"
+msgstr "Aller à la définition"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1261
+#: ../src/plugins/lsp/lsp-plugin.cpp:1316
+msgid "Go to _Definition"
+msgstr "Aller à la _définition"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1262
+#: ../src/plugins/lsp/lsp-plugin.cpp:1317
+msgid "Go to the definition of what is under the cursor"
+msgstr "Aller à la définition de ce qui est sous le curseur"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1268
+#: ../src/plugins/lsp/lsp-plugin.cpp:1322
+msgid "Find References"
+msgstr "Chercher les références"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1269
+#: ../src/plugins/lsp/lsp-plugin.cpp:1323
+msgid "Find _References"
+msgstr "Chercher les _références"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1270
+#: ../src/plugins/lsp/lsp-plugin.cpp:1324
+msgid "List every use of what is under the cursor"
+msgstr "Lister toutes les utilisations de ce qui est sous le curseur"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1277
+msgid "Format Document"
+msgstr "Formater le document"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1278
+msgid "_Format Document"
+msgstr "_Formater le document"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1279
+msgid "Let the language server lay the document out"
+msgstr "Laisser le serveur de langage mettre le document en forme"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1285
+#: ../src/plugins/lsp/lsp-plugin.cpp:1330
+msgid "_Rename..."
+msgstr "_Renommer…"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1286
+#: ../src/plugins/lsp/lsp-plugin.cpp:1331
+msgid "Rename what is under the cursor everywhere"
+msgstr "Renommer partout ce qui est sous le curseur"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1292
+msgid "Go to Type Definition"
+msgstr "Aller à la définition du type"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1293
+msgid "Go to _Type Definition"
+msgstr "Aller à la définition du _type"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1294
+msgid "Go to the definition of the type of what is under the cursor"
+msgstr "Aller à la définition du type de ce qui est sous le curseur"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1299
+msgid "Go to Implementation"
+msgstr "Aller à l'implémentation"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1300
+msgid "Go to _Implementation"
+msgstr "Aller à l'_implémentation"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1301
+msgid "Go to the implementation of what is under the cursor"
+msgstr "Aller à l'implémentation de ce qui est sous le curseur"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1353
+msgid "LSP Servers"
+msgstr "Serveurs LSP"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1354
+msgid "LSP _Servers..."
+msgstr "_Serveurs LSP…"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1355
+msgid "Edit the list of language servers"
+msgstr "Modifier la liste des serveurs de langage"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1361
+#: ../src/plugins/lsp/lsp-plugin.cpp:1362
+msgid "Restart Language Servers"
+msgstr "Redémarrer les serveurs de langage"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1363
+msgid "Re-read the configuration and start every server again"
+msgstr "Relire la configuration et redémarrer chaque serveur"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1369
+msgid "Complete Word"
+msgstr "Compléter le mot"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1370
+msgid "_Complete Word"
+msgstr "_Compléter le mot"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1371
+msgid "Ask the language server what could go here"
+msgstr "Demander au serveur de langage ce qui pourrait aller ici"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1377
+msgid "Parameter Hints"
+msgstr "Aide sur les paramètres"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1378
+msgid "_Parameter Hints"
+msgstr "Aide sur les _paramètres"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1379
+msgid "Show what the call being typed takes"
+msgstr "Afficher ce que prend l'appel en cours de saisie"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1387
+msgid "Show the references pane"
+msgstr "Afficher le panneau des références"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1395
+msgid "Show the symbol tree"
+msgstr "Afficher l'arbre des symboles"
+
+#: ../src/plugins/lsp/lsp-server.cpp:744
+msgid "%s failed to start: %s"
+msgstr "%s n'a pas pu démarrer : %s"
+
+#: ../src/plugins/lsp/lsp-server.cpp:745
+#: ../src/plugins/lsp/lsp-server.cpp:1073
+msgid "unknown error"
+msgstr "erreur inconnue"
+
+#: ../src/plugins/lsp/lsp-server.cpp:751
+msgid "%s answered the initialize request with no capabilities"
+msgstr "%s a répondu à la requête d'initialisation sans aucune capacité"
+
+#: ../src/plugins/lsp/lsp-server.cpp:773
+msgid "%s did not answer the initialize request in %d seconds"
+msgstr "%s n'a pas répondu à la requête d'initialisation en %d secondes"
+
+#: ../src/plugins/lsp/lsp-server.cpp:1030
+msgid ""
+"%s exited immediately %d times in a row; check the command in the LSP "
+"configuration file"
+msgstr ""
+"%s s'est arrêté immédiatement %d fois de suite ; vérifiez la commande "
+"dans le fichier de configuration LSP"
+
+#: ../src/plugins/lsp/lsp-server.cpp:1072
+msgid "could not run %s: %s"
+msgstr "impossible d'exécuter %s : %s"
+
+#: ../src/plugins/lsp/lsp-prefs.cpp:43
+msgid "Could not create the LSP configuration file"
+msgstr "Impossible de créer le fichier de configuration LSP"
+
+#: ../src/plugins/lsp/lsp-prefs.cpp:86
+msgid "Language Servers"
+msgstr "Serveurs de langage"
+
+#: ../src/plugins/lsp/lsp-references.cpp:335
+msgid "The server refused the question"
+msgstr "Le serveur a refusé la question"
+
+#: ../src/plugins/lsp/lsp-references.cpp:347
+msgid "No references found"
+msgstr "Aucune référence trouvée"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:22
+msgid "Underline problems and list them in the _Diagnostics pane"
+msgstr "Souligner les problèmes et les lister dans le panneau _Diagnostics"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:34
+msgid "_Complete words"
+msgstr "_Compléter les mots"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:46
+msgid "Show the _parameters of a call"
+msgstr "Afficher les _paramètres d'un appel"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:49
+msgid "While the call is being typed, and on Ctrl+Shift+Space."
+msgstr "Pendant la saisie de l'appel, et avec Ctrl+Maj+Espace."
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:59
+msgid "_Mark the other uses of what the cursor is in"
+msgstr "_Marquer les autres utilisations de ce où se trouve le curseur"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:71
+msgid "Describe what is under the _pointer"
+msgstr "Décrire ce qui est sous le _pointeur"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:87
+msgid "Send changes to the server _after:"
+msgstr "Envoyer les modifications au serveur _après :"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:110
+msgid "milliseconds of quiet"
+msgstr "millisecondes de silence"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:125
+msgid "_Log the protocol to standard error"
+msgstr "_Journaliser le protocole sur la sortie d'erreur standard"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:128
+msgid ""
+"Every message to and from every server. The MEDIT_LSP_DEBUG environment "
+"variable does the same."
+msgstr ""
+"Chaque message vers et depuis chaque serveur. La variable d'environnement "
+"MEDIT_LSP_DEBUG fait la même chose."
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:142
+msgid "_Edit the Server List"
+msgstr "_Modifier la liste des serveurs"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:144
+msgid ""
+"Opens your copy of lsp.xml, creating it from the installed one if you "
+"have none."
+msgstr ""
+"Ouvre votre copie de lsp.xml, en la créant à partir de celle installée si "
+"vous n'en avez pas."
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:154
+msgid "_Restart Servers"
+msgstr "_Redémarrer les serveurs"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:156
+msgid "Re-reads the configuration file and starts over with every server."
+msgstr "Relit le fichier de configuration et recommence avec chaque serveur."
+
+#: ../src/plugins/terminal/terminal-plugin.cpp:251
+msgid ""
+"The shell keeps exiting immediately, not restarting it. Check the shell "
+"in the Terminal preferences."
+msgstr ""
+"Le shell s'arrête immédiatement à chaque fois ; il ne sera pas redémarré. "
+"Vérifiez le shell dans les préférences du terminal."
+
+#: ../src/plugins/terminal/terminal-plugin.cpp:583
+msgid "“cd” to current file directory"
+msgstr "« cd » vers le répertoire du fichier courant"
+
+#: ../src/plugins/terminal/terminal-plugin.cpp:590
+msgid "“pushd” to current file directory"
+msgstr "« pushd » vers le répertoire du fichier courant"
+
+#: ../src/plugins/terminal/terminal-plugin.cpp:830
+msgid "Show the terminal pane"
+msgstr "Afficher le panneau du terminal"
+
+#: ../src/plugins/terminal/terminal-plugin.cpp:843
+#: ../src/plugins/terminal/terminal-plugin.cpp:844
+msgid "Copy in Terminal"
+msgstr "Copier dans le terminal"
+
+#: ../src/plugins/terminal/terminal-plugin.cpp:845
+msgid "Copy the selection in the terminal pane"
+msgstr "Copier la sélection dans le panneau du terminal"
+
+#: ../src/plugins/terminal/terminal-plugin.cpp:852
+#: ../src/plugins/terminal/terminal-plugin.cpp:853
+msgid "Paste in Terminal"
+msgstr "Coller dans le terminal"
+
+#: ../src/plugins/terminal/terminal-plugin.cpp:854
+msgid "Paste the clipboard into the terminal pane"
+msgstr "Coller le presse-papiers dans le panneau du terminal"
+
+#: ../src/plugins/terminal/terminal-plugin.cpp:893
+msgid "Terminal pane"
+msgstr "Panneau du terminal"
+
+#: ../src/plugins/terminal/ui/terminal-prefs.ui:20
+msgid "S_hell:"
+msgstr "S_hell :"
+
+#: ../src/plugins/terminal/ui/terminal-prefs.ui:34
+msgid ""
+"Leave empty to use the login shell. Takes effect the next time the shell "
+"is started."
+msgstr ""
+"Laisser vide pour utiliser le shell de connexion. Prend effet au prochain "
+"démarrage du shell."
+
+#: ../src/plugins/terminal/ui/terminal-prefs.ui:45
+msgid "Color _scheme:"
+msgstr "_Jeu de couleurs :"
+
+#: ../src/plugins/terminal/ui/terminal-prefs.ui:68
+msgid "_Font:"
+msgstr "_Police :"
+
+#: ../src/plugins/terminal/ui/terminal-prefs.ui:93
+msgid "_Default"
+msgstr "Par _défaut"
+
+#: ../src/plugins/terminal/ui/terminal-prefs.ui:95
+msgid "Use the system monospace font"
+msgstr "Utiliser la police à chasse fixe du système"
+
+#: ../src/plugins/lsp/lsp-diagnostics.cpp:82
+msgctxt "diagnostic severity"
+msgid "warning"
+msgstr "avertissement"
+
+#: ../src/plugins/lsp/lsp-diagnostics.cpp:84
+msgctxt "diagnostic severity"
+msgid "information"
+msgstr "information"
+
+#: ../src/plugins/lsp/lsp-diagnostics.cpp:86
+msgctxt "diagnostic severity"
+msgid "hint"
+msgstr "indication"
+
+#: ../src/plugins/lsp/lsp-diagnostics.cpp:89
+msgctxt "diagnostic severity"
+msgid "error"
+msgstr "erreur"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:33
+msgctxt "symbol kind"
+msgid "file"
+msgstr "fichier"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:34
+msgctxt "symbol kind"
+msgid "module"
+msgstr "module"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:35
+msgctxt "symbol kind"
+msgid "namespace"
+msgstr "espace de noms"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:36
+msgctxt "symbol kind"
+msgid "package"
+msgstr "paquet"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:37
+msgctxt "symbol kind"
+msgid "class"
+msgstr "classe"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:38
+msgctxt "symbol kind"
+msgid "method"
+msgstr "méthode"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:39
+msgctxt "symbol kind"
+msgid "property"
+msgstr "propriété"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:40
+msgctxt "symbol kind"
+msgid "field"
+msgstr "champ"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:41
+msgctxt "symbol kind"
+msgid "constructor"
+msgstr "constructeur"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:42
+msgctxt "symbol kind"
+msgid "enum"
+msgstr "énumération"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:43
+msgctxt "symbol kind"
+msgid "interface"
+msgstr "interface"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:44
+msgctxt "symbol kind"
+msgid "function"
+msgstr "fonction"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:45
+msgctxt "symbol kind"
+msgid "variable"
+msgstr "variable"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:46
+msgctxt "symbol kind"
+msgid "constant"
+msgstr "constante"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:47
+msgctxt "symbol kind"
+msgid "string"
+msgstr "chaîne"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:48
+msgctxt "symbol kind"
+msgid "number"
+msgstr "nombre"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:49
+msgctxt "symbol kind"
+msgid "boolean"
+msgstr "booléen"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:50
+msgctxt "symbol kind"
+msgid "array"
+msgstr "tableau"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:51
+msgctxt "symbol kind"
+msgid "object"
+msgstr "objet"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:52
+msgctxt "symbol kind"
+msgid "key"
+msgstr "clé"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:53
+msgctxt "symbol kind"
+msgid "null"
+msgstr "nul"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:54
+msgctxt "symbol kind"
+msgid "enum member"
+msgstr "valeur d'énumération"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:55
+msgctxt "symbol kind"
+msgid "struct"
+msgstr "structure"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:56
+msgctxt "symbol kind"
+msgid "event"
+msgstr "événement"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:57
+msgctxt "symbol kind"
+msgid "operator"
+msgstr "opérateur"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:58
+msgctxt "symbol kind"
+msgid "type parameter"
+msgstr "paramètre de type"

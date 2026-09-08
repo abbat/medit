@@ -778,10 +778,20 @@ before inventing a wording; that is why the terminal's context menu came up in R
 with only nine new strings to write. For strings gtk itself carries, `D_(str, "gtk30")`
 borrows gtk's catalog the same way (`"Pick a Font"`); the python plugin used `"gtk20"`.
 
-Catalog state, for reference: `ru` is complete and is the one to check first; `es`, `fr`,
-`pl`, `ja`, `fi`, `de` are 90%+; `cs`, `nl` and `zh_CN` are half empty, and adding a
-stray translated string to their untouched sections is worse than leaving the gap. Also
-pre-existing: `ja.po` and `pl.po` fail `msgfmt --check` on plural forms.
+Catalog state, measured with the command above: `ru` is complete (626 strings) and is the
+one to check first; `fr` and `es` are one string short, `pl` is complete but carries nine
+fuzzy entries, `de` 20 short, `fi` 24, `ja` 29; `cs` (190 short) and `zh_CN` (215) are
+still half empty, and `nl` 119. Every string of the terminal and of the LSP client is
+translated in all ten, which is the one part of the tree where the newer catalogs are not
+behind.
+
+`ja.po` and `pl.po` still fail `msgfmt --check` on plural forms, which is pre-existing and
+about the header rather than any one string; `--check-format` is clean everywhere, the one
+Japanese entry that had lost a `%s` having been fixed. Two things to keep true when adding
+to a catalog: a translated string with a mnemonic keeps the underscore (on a letter of the
+translation, not of the English), and `msgctxt` entries have to be appended with their
+context or the lookup misses -- `C_("symbol kind", "class")` is not the same msgid as a
+bare "class", and a catalog that has one still shows the other in English.
 
 ### Isolate config
 

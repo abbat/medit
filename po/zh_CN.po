@@ -2601,3 +2601,512 @@ msgstr ""
 
 #~ msgid "Search:"
 #~ msgstr "查找:"
+
+#: ../src/plugins/lsp/lsp-edits.cpp:332
+#: ../src/plugins/lsp/lsp-plugin.cpp:1284
+#: ../src/plugins/lsp/lsp-plugin.cpp:1329
+msgid "Rename"
+msgstr "重命名"
+
+#: ../src/plugins/lsp/lsp-edits.cpp:336
+msgid "_Rename"
+msgstr "重命名(_R)"
+
+#: ../src/plugins/lsp/lsp-edits.cpp:343
+msgid "New name for '%s':"
+msgstr "“%s”的新名称："
+
+#: ../src/plugins/lsp/lsp-edits.cpp:344
+msgid "New name:"
+msgstr "新名称："
+
+#: ../src/plugins/lsp/lsp-edits.cpp:432
+#: ../src/plugins/lsp/lsp-edits.cpp:442
+msgid "Rename failed"
+msgstr "重命名失败"
+
+#: ../src/plugins/lsp/lsp-edits.cpp:443
+msgid "The server had nothing to change."
+msgstr "服务器没有需要修改的内容。"
+
+#: ../src/plugins/lsp/lsp-edits.cpp:546
+msgid "Formatting failed"
+msgstr "格式化失败"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:113
+msgid "LSP"
+msgstr "LSP"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:113
+msgid "Language server protocol client"
+msgstr "语言服务器协议客户端"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1153
+#: ../src/plugins/lsp/lsp-plugin.cpp:1252
+#: ../src/plugins/lsp/lsp-plugin.cpp:1253
+msgid "Diagnostics"
+msgstr "诊断"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1167
+#: ../src/plugins/lsp/lsp-plugin.cpp:1385
+#: ../src/plugins/lsp/lsp-plugin.cpp:1386
+msgid "References"
+msgstr "引用"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1175
+#: ../src/plugins/lsp/lsp-plugin.cpp:1393
+#: ../src/plugins/lsp/lsp-plugin.cpp:1394
+msgid "Symbols"
+msgstr "符号"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1254
+msgid "Show the diagnostics pane"
+msgstr "显示诊断面板"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1260
+#: ../src/plugins/lsp/lsp-plugin.cpp:1315
+msgid "Go to Definition"
+msgstr "转到定义"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1261
+#: ../src/plugins/lsp/lsp-plugin.cpp:1316
+msgid "Go to _Definition"
+msgstr "转到定义(_D)"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1262
+#: ../src/plugins/lsp/lsp-plugin.cpp:1317
+msgid "Go to the definition of what is under the cursor"
+msgstr "转到光标处内容的定义"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1268
+#: ../src/plugins/lsp/lsp-plugin.cpp:1322
+msgid "Find References"
+msgstr "查找引用"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1269
+#: ../src/plugins/lsp/lsp-plugin.cpp:1323
+msgid "Find _References"
+msgstr "查找引用(_R)"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1270
+#: ../src/plugins/lsp/lsp-plugin.cpp:1324
+msgid "List every use of what is under the cursor"
+msgstr "列出光标处内容的所有使用位置"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1277
+msgid "Format Document"
+msgstr "格式化文档"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1278
+msgid "_Format Document"
+msgstr "格式化文档(_F)"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1279
+msgid "Let the language server lay the document out"
+msgstr "让语言服务器排布文档格式"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1285
+#: ../src/plugins/lsp/lsp-plugin.cpp:1330
+msgid "_Rename..."
+msgstr "重命名(_R)..."
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1286
+#: ../src/plugins/lsp/lsp-plugin.cpp:1331
+msgid "Rename what is under the cursor everywhere"
+msgstr "在所有位置重命名光标处的内容"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1292
+msgid "Go to Type Definition"
+msgstr "转到类型定义"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1293
+msgid "Go to _Type Definition"
+msgstr "转到类型定义(_T)"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1294
+msgid "Go to the definition of the type of what is under the cursor"
+msgstr "转到光标处内容的类型定义"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1299
+msgid "Go to Implementation"
+msgstr "转到实现"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1300
+msgid "Go to _Implementation"
+msgstr "转到实现(_I)"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1301
+msgid "Go to the implementation of what is under the cursor"
+msgstr "转到光标处内容的实现"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1353
+msgid "LSP Servers"
+msgstr "LSP 服务器"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1354
+msgid "LSP _Servers..."
+msgstr "LSP 服务器(_S)..."
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1355
+msgid "Edit the list of language servers"
+msgstr "编辑语言服务器列表"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1361
+#: ../src/plugins/lsp/lsp-plugin.cpp:1362
+msgid "Restart Language Servers"
+msgstr "重启语言服务器"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1363
+msgid "Re-read the configuration and start every server again"
+msgstr "重新读取配置并重新启动每个服务器"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1369
+msgid "Complete Word"
+msgstr "补全单词"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1370
+msgid "_Complete Word"
+msgstr "补全单词(_C)"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1371
+msgid "Ask the language server what could go here"
+msgstr "询问语言服务器此处可以填什么"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1377
+msgid "Parameter Hints"
+msgstr "参数提示"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1378
+msgid "_Parameter Hints"
+msgstr "参数提示(_P)"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1379
+msgid "Show what the call being typed takes"
+msgstr "显示正在输入的调用需要哪些参数"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1387
+msgid "Show the references pane"
+msgstr "显示引用面板"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1395
+msgid "Show the symbol tree"
+msgstr "显示符号树"
+
+#: ../src/plugins/lsp/lsp-server.cpp:744
+msgid "%s failed to start: %s"
+msgstr "%s 启动失败：%s"
+
+#: ../src/plugins/lsp/lsp-server.cpp:745
+#: ../src/plugins/lsp/lsp-server.cpp:1073
+msgid "unknown error"
+msgstr "未知错误"
+
+#: ../src/plugins/lsp/lsp-server.cpp:751
+msgid "%s answered the initialize request with no capabilities"
+msgstr "%s 回应初始化请求时未声明任何能力"
+
+#: ../src/plugins/lsp/lsp-server.cpp:773
+msgid "%s did not answer the initialize request in %d seconds"
+msgstr "%s 在 %d 秒内未回应初始化请求"
+
+#: ../src/plugins/lsp/lsp-server.cpp:1030
+msgid ""
+"%s exited immediately %d times in a row; check the command in the LSP "
+"configuration file"
+msgstr "%s 连续 %d 次立即退出；请检查 LSP 配置文件中的命令"
+
+#: ../src/plugins/lsp/lsp-server.cpp:1072
+msgid "could not run %s: %s"
+msgstr "无法运行 %s：%s"
+
+#: ../src/plugins/lsp/lsp-prefs.cpp:43
+msgid "Could not create the LSP configuration file"
+msgstr "无法创建 LSP 配置文件"
+
+#: ../src/plugins/lsp/lsp-prefs.cpp:86
+msgid "Language Servers"
+msgstr "语言服务器"
+
+#: ../src/plugins/lsp/lsp-references.cpp:335
+msgid "The server refused the question"
+msgstr "服务器拒绝了该请求"
+
+#: ../src/plugins/lsp/lsp-references.cpp:347
+msgid "No references found"
+msgstr "未找到引用"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:22
+msgid "Underline problems and list them in the _Diagnostics pane"
+msgstr "为问题加下划线并列在诊断面板中(_D)"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:34
+msgid "_Complete words"
+msgstr "补全单词(_C)"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:46
+msgid "Show the _parameters of a call"
+msgstr "显示调用的参数(_P)"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:49
+msgid "While the call is being typed, and on Ctrl+Shift+Space."
+msgstr "在输入调用时，以及按 Ctrl+Shift+Space 时显示。"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:59
+msgid "_Mark the other uses of what the cursor is in"
+msgstr "标记光标所在内容的其他使用位置(_M)"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:71
+msgid "Describe what is under the _pointer"
+msgstr "描述鼠标指针下的内容(_P)"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:87
+msgid "Send changes to the server _after:"
+msgstr "向服务器发送更改前等待(_A)："
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:110
+msgid "milliseconds of quiet"
+msgstr "毫秒无输入"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:125
+msgid "_Log the protocol to standard error"
+msgstr "将协议记录到标准错误输出(_L)"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:128
+msgid ""
+"Every message to and from every server. The MEDIT_LSP_DEBUG environment "
+"variable does the same."
+msgstr "与每个服务器往来的每一条消息。环境变量 MEDIT_LSP_DEBUG 的作用相同。"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:142
+msgid "_Edit the Server List"
+msgstr "编辑服务器列表(_E)"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:144
+msgid ""
+"Opens your copy of lsp.xml, creating it from the installed one if you "
+"have none."
+msgstr "打开你自己的 lsp.xml；如果没有，则从随程序安装的那份创建。"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:154
+msgid "_Restart Servers"
+msgstr "重启服务器(_R)"
+
+#: ../src/plugins/lsp/ui/lsp-prefs.ui:156
+msgid "Re-reads the configuration file and starts over with every server."
+msgstr "重新读取配置文件，并对每个服务器重新开始。"
+
+#: ../src/plugins/terminal/terminal-plugin.cpp:251
+msgid ""
+"The shell keeps exiting immediately, not restarting it. Check the shell "
+"in the Terminal preferences."
+msgstr "shell 一直立即退出，将不再重启。请在终端首选项中检查 shell 设置。"
+
+#: ../src/plugins/terminal/terminal-plugin.cpp:583
+msgid "“cd” to current file directory"
+msgstr "“cd”到当前文件所在目录"
+
+#: ../src/plugins/terminal/terminal-plugin.cpp:590
+msgid "“pushd” to current file directory"
+msgstr "“pushd”到当前文件所在目录"
+
+#: ../src/plugins/terminal/terminal-plugin.cpp:830
+msgid "Show the terminal pane"
+msgstr "显示终端面板"
+
+#: ../src/plugins/terminal/terminal-plugin.cpp:843
+#: ../src/plugins/terminal/terminal-plugin.cpp:844
+msgid "Copy in Terminal"
+msgstr "在终端中复制"
+
+#: ../src/plugins/terminal/terminal-plugin.cpp:845
+msgid "Copy the selection in the terminal pane"
+msgstr "复制终端面板中的选中内容"
+
+#: ../src/plugins/terminal/terminal-plugin.cpp:852
+#: ../src/plugins/terminal/terminal-plugin.cpp:853
+msgid "Paste in Terminal"
+msgstr "在终端中粘贴"
+
+#: ../src/plugins/terminal/terminal-plugin.cpp:854
+msgid "Paste the clipboard into the terminal pane"
+msgstr "将剪贴板粘贴到终端面板"
+
+#: ../src/plugins/terminal/terminal-plugin.cpp:893
+msgid "Terminal pane"
+msgstr "终端面板"
+
+#: ../src/plugins/terminal/ui/terminal-prefs.ui:20
+msgid "S_hell:"
+msgstr "Shell(_H)："
+
+#: ../src/plugins/terminal/ui/terminal-prefs.ui:34
+msgid ""
+"Leave empty to use the login shell. Takes effect the next time the shell "
+"is started."
+msgstr "留空则使用登录 shell。下次启动 shell 时生效。"
+
+#: ../src/plugins/terminal/ui/terminal-prefs.ui:45
+msgid "Color _scheme:"
+msgstr "配色方案(_S)："
+
+#: ../src/plugins/terminal/ui/terminal-prefs.ui:68
+msgid "_Font:"
+msgstr "字体(_F)："
+
+#: ../src/plugins/terminal/ui/terminal-prefs.ui:93
+msgid "_Default"
+msgstr "默认(_D)"
+
+#: ../src/plugins/terminal/ui/terminal-prefs.ui:95
+msgid "Use the system monospace font"
+msgstr "使用系统等宽字体"
+
+#: ../src/plugins/lsp/lsp-diagnostics.cpp:82
+msgctxt "diagnostic severity"
+msgid "warning"
+msgstr "警告"
+
+#: ../src/plugins/lsp/lsp-diagnostics.cpp:84
+msgctxt "diagnostic severity"
+msgid "information"
+msgstr "信息"
+
+#: ../src/plugins/lsp/lsp-diagnostics.cpp:86
+msgctxt "diagnostic severity"
+msgid "hint"
+msgstr "提示"
+
+#: ../src/plugins/lsp/lsp-diagnostics.cpp:89
+msgctxt "diagnostic severity"
+msgid "error"
+msgstr "错误"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:33
+msgctxt "symbol kind"
+msgid "file"
+msgstr "文件"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:34
+msgctxt "symbol kind"
+msgid "module"
+msgstr "模块"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:35
+msgctxt "symbol kind"
+msgid "namespace"
+msgstr "命名空间"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:36
+msgctxt "symbol kind"
+msgid "package"
+msgstr "包"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:37
+msgctxt "symbol kind"
+msgid "class"
+msgstr "类"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:38
+msgctxt "symbol kind"
+msgid "method"
+msgstr "方法"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:39
+msgctxt "symbol kind"
+msgid "property"
+msgstr "属性"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:40
+msgctxt "symbol kind"
+msgid "field"
+msgstr "字段"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:41
+msgctxt "symbol kind"
+msgid "constructor"
+msgstr "构造函数"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:42
+msgctxt "symbol kind"
+msgid "enum"
+msgstr "枚举"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:43
+msgctxt "symbol kind"
+msgid "interface"
+msgstr "接口"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:44
+msgctxt "symbol kind"
+msgid "function"
+msgstr "函数"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:45
+msgctxt "symbol kind"
+msgid "variable"
+msgstr "变量"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:46
+msgctxt "symbol kind"
+msgid "constant"
+msgstr "常量"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:47
+msgctxt "symbol kind"
+msgid "string"
+msgstr "字符串"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:48
+msgctxt "symbol kind"
+msgid "number"
+msgstr "数字"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:49
+msgctxt "symbol kind"
+msgid "boolean"
+msgstr "布尔值"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:50
+msgctxt "symbol kind"
+msgid "array"
+msgstr "数组"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:51
+msgctxt "symbol kind"
+msgid "object"
+msgstr "对象"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:52
+msgctxt "symbol kind"
+msgid "key"
+msgstr "键"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:53
+msgctxt "symbol kind"
+msgid "null"
+msgstr "空值"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:54
+msgctxt "symbol kind"
+msgid "enum member"
+msgstr "枚举成员"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:55
+msgctxt "symbol kind"
+msgid "struct"
+msgstr "结构体"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:56
+msgctxt "symbol kind"
+msgid "event"
+msgstr "事件"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:57
+msgctxt "symbol kind"
+msgid "operator"
+msgstr "运算符"
+
+#: ../src/plugins/lsp/lsp-symbols.cpp:58
+msgctxt "symbol kind"
+msgid "type parameter"
+msgstr "类型参数"
