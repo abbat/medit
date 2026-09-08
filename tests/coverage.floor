@@ -19,4 +19,7 @@
 # 2026-09-08  42.97%, raised to 42.7: five more of the language server protocol
 #             answered, with five UI tests and twenty unit tests behind them --
 #             gtk2 at 39.71%, gtk3 at 42.80%, and src/plugins/lsp at 85.41%.
-42.7
+# 2026-09-08  43.84%, raised to 43.5: the shortcuts dialog is driven now, and
+#             the accelerator map with it -- two UI tests, and a third that
+#             rebinds the terminal's keys before pressing them.
+43.5
