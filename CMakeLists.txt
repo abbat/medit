@@ -61,6 +61,7 @@ option(ENABLE_UNIT_TESTS "Compile the unit tests into medit, behind --unit-test"
 
 if(ENABLE_UNIT_TESTS)
     set(MOO_ENABLE_UNIT_TESTS 1)
+    set(MOO_UNIT_TEST_SOURCE_ROOT "${CMAKE_SOURCE_DIR}")
 endif()
 
 # clang's source-based coverage, which the tests are measured with. Off by
@@ -265,31 +266,9 @@ if(ENABLE_UI_TESTS)
     add_subdirectory(tests)
 endif()
 
-# The unit tests are one ctest entry of their own, and not part of tests/: they
-# are inside the binary rather than under tests/, they need no X server, no
-# accessibility bus and no sandbox, and they finish in milliseconds. Registered
-# here so that a build with ENABLE_UNIT_TESTS but not ENABLE_UI_TESTS still has
-# something to run.
-#
-# The locale is pinned for the same reason the UI tests pin it: a name a test
-# compares is translated, and a suite that passes in English and fails in
-# Russian is worse than no suite. The sanitizer options are left alone on
-# purpose -- what the runtime does by default, including reporting leaks and
-# exiting non-zero over them, is exactly what this should be judged on.
+# The same binary the UI tests drive, so the same pool of profiles: what the
+# unit tests reach and what the clicks reach are one measurement.
 if(ENABLE_UNIT_TESTS)
     enable_testing()
-
-    add_test(NAME unit.all COMMAND medit --unit-test)
-
-    set_tests_properties(unit.all PROPERTIES
-        LABELS "unit;gtk${GTK_VERSION}"
-        ENVIRONMENT "LC_ALL=C.UTF-8;LANGUAGE="
-        TIMEOUT 120)
-
-    # The same binary the UI tests drive, so the same pool of profiles: what the
-    # unit tests reach and what the clicks reach are one measurement.
-    if(ENABLE_COVERAGE)
-        set_property(TEST unit.all APPEND PROPERTY ENVIRONMENT
-            "LLVM_PROFILE_FILE=${MOO_COVERAGE_DIR}/raw/unit.all-%p.profraw")
-    endif()
+    include(cmake/UnitTests.cmake)
 endif()

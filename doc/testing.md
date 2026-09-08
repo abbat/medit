@@ -17,8 +17,41 @@ cmake --build buildu3 -j"$(nproc)"
 buildu3/src/medit --unit-test                    # all of them, ~30 ms
 buildu3/src/medit --unit-test /lsp/position      # the four tests under it
 buildu3/src/medit --unit-test-list               # what there is
-cd buildu3 && ctest -L unit                      # the same, as one ctest entry
+
+cd buildu3
+ctest -L unit                                    # the same, one entry per test
+ctest -L lsp                                     # one subsystem
+ctest -R unit.mooedit.highlight.c                # one test
 ```
+
+**Each test is its own ctest entry, and the list comes out of the binary.** `medit` is
+run with `--unit-test-list` after every link, and `cmake/DiscoverUnitTests.cmake` turns
+what it prints into `add_test()` lines that ctest includes — the same trick
+`gtest_discover_tests` plays, and for the same reason: the tests are registered in C and
+cmake cannot know them at configure time. So `/mooutils/accel/parse` becomes
+`unit.mooutils.accel.parse`, labelled `unit`, `gtk2`/`gtk3` and its subsystem, with a
+timeout of its own. It used to be one entry called `unit.all`, where a failure named the
+group and left the log to be read.
+
+**One unit test runs at a time**, by a `RESOURCE_LOCK` the generated entries carry. They
+share a `ctest -j` pool with the UI tests, and forty short medit processes under the
+address sanitizer, each mapping its shadow, are load arriving during the twenty-second
+waits a UI test is made of. Serialised they cost five seconds between them — the load the
+single `unit.all` entry used to put on the machine, which is the point of the lock: the
+split was meant to change what a failure says, not what the machine is doing.
+
+Do not read that lock as a cure for a timing failure in a UI test. `app.file_selector_menu`
+is the slowest test in the suite, 29 s alone and over 50 s under `-j16`, and it fails at
+whichever twenty-second wait it happens to be slow at — measured on a 16-core machine, it
+failed in two of two runs of the UI tests **with the unit tests excluded entirely**, so it
+is nothing to do with them. Nothing detects that today: a test that fails one run in three
+is found by whoever happens to run the suite.
+
+Two more consequences. Listing costs one `medit` run per build, about ten milliseconds, and it
+happens even when nothing changed — deliberately, because keying it on a file meant a
+reconfigure could leave ctest holding a list from an older binary. And **ctest against a
+configured but never built tree finds no unit tests**: build first, and `ctest -N` says
+how many it found.
 
 A path names the tests **directly** under it and not the whole subtree beneath: measured,
 `/lsp/position` runs its four and `/lsp` runs nothing at all, printing `1..0` and looking
