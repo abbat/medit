@@ -711,12 +711,13 @@ with `-Wodr`, and accepts that a new compiler can fail the package over a warnin
 which on a builder compiling against a dozen distributions at once is a release that
 does not build for a warning nobody has seen.
 
-The `rpm` job parses that spec and runs its `%prep` against a tarball laid out the way
-OBS's is, which is exactly the step that failed. It does not build it: `%build`,
-`%install` and `%files` are the same lines as the spec it just built, and the openSUSE
-half of the `BuildRequires` cannot be resolved on Fedora at all. **The openSUSE
-branches are therefore unverified by anything here** — the first OBS build after a
-change to them is the check.
+**Nothing in CI builds that spec, on purpose**: OBS builds it, against the
+distributions it is actually for, and a second Fedora build here would only re-check
+`%build`, `%install` and `%files`, which are the same lines as the spec beside it. The
+one thing CI does watch is the version, which the `version` job compares across all
+seven files. Everything else about it — the source name, the `%setup` prefix, the
+openSUSE `BuildRequires` — **is checked by the first OBS build after a change**, and
+that is the check to look at.
 
 Then commit, merge to `main`, push, and tag:
 

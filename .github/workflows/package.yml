@@ -181,27 +181,6 @@ jobs:
               -o ~/rpmbuild/SOURCES/medit-"$v".tar.gz HEAD
           rpmbuild -bb rpm/medit.spec
 
-      # rpm/medit.obs.spec is the same package for OBS, which downloads nothing
-      # and copies whatever is in the project directory into SOURCES -- so its
-      # Source0 names a tarball of the maintainer's rather than GitHub's, and
-      # unpacks a directory of a different name. Getting that pair wrong is
-      # what it was written to fix, and nothing else here would notice:
-      #
-      #     rpmuncompress -x .../medit-1.3.5.tar.gz
-      #     error: File ...: No such file or directory
-      #
-      # So the spec is parsed and its %prep is run against a tarball laid out
-      # the way OBS's is. Not built: %build, %install and %files are the same
-      # lines as the spec above, which was just built, and the openSUSE half of
-      # its BuildRequires cannot be resolved on Fedora anyway.
-      - name: Unpack the OBS spec the way OBS would
-        run: |
-          set -eux
-          v=$(rpmspec -q --srpm --qf '%{version}\n' rpm/medit.obs.spec)
-          git archive --format=tar --prefix=medit/ HEAD \
-              | bzip2 > ~/rpmbuild/SOURCES/medit_"$v".tar.bz2
-          rpmbuild -bp --nodeps rpm/medit.obs.spec
-
       # The spec's own %check already runs desktop-file-validate; this is the
       # part that needs the package installed rather than built.
       - name: Install what was built and run it
