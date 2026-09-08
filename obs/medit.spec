@@ -2,21 +2,18 @@
 # ways. Keep the two in step: the version job in .github/workflows/package.yml
 # compares them, and the release procedure in AGENTS.md lists both.
 #
-# 1. The source. OBS downloads nothing: whatever files sit in the package
-#    directory are copied into SOURCES, so Source0 has to name one of them.
-#    rpm/medit.spec names the tarball GitHub generates for a tag, and asking
-#    for that on OBS is the error this file exists to avoid:
+# 1. The source. OBS downloads nothing of its own: whatever files sit in the
+#    package directory are copied into SOURCES, so a Source0 naming the tarball
+#    GitHub generates for a tag names a file that is not there, which is the
+#    error this file exists to avoid:
 #
 #        rpmuncompress -x /home/abuild/rpmbuild/SOURCES/medit-1.3.5.tar.gz
 #        error: File ...: No such file or directory
 #
-#    The name below, and the directory %setup unpacks into, follow the
-#    convention the other packages of this maintainer use on OBS:
-#    medit_<version>.tar.bz2, unpacking into medit/. If the tarball uploaded
-#    to the project is laid out the other way -- a medit-<version>/ prefix,
-#    as GitHub's is -- then this line is the one to change:
-#
-#        %setup -q -n %{name}-%{version}
+#    The tarball is made instead by the services in _service beside this file:
+#    obs_scm fetches the tag and the buildtime services turn it into
+#    medit-<version>.tar.bz2, unpacking a medit-<version>/ prefix -- which is
+#    what %%autosetup expects with no arguments.
 #
 # 2. The build dependencies, which are named differently on openSUSE and on
 #    the Fedora and RHEL family. Only the names that actually differ are
@@ -37,7 +34,7 @@ Group:          Productivity/Text/Editors
 
 License:        LGPL-2.1-only
 URL:            https://github.com/abbat/medit
-Source0:        https://build.opensuse.org/source/home:antonbatenev:%{name}/%{name}/%{name}_%{version}.tar.bz2
+Source0:        %{name}-%{version}.tar.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 
 BuildRequires:  cmake
@@ -74,7 +71,7 @@ find in files, ctags navigation and user defined tools. This is a fork of
 the editor Yevgen Muntyan stopped working on in 2017, ported to GTK+3.
 
 %prep
-%setup -q -n %{name}
+%autosetup
 
 %build
 # the icon cache is updated by a file trigger, not by us; --no-warn-unused-cli

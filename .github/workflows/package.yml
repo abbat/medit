@@ -30,12 +30,12 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # The version lives in seven files and nothing derives one from another, so the
+  # The version lives in eight files and nothing derives one from another, so the
   # only thing that keeps them together is somebody remembering. This is the
   # cheapest job in either workflow and it fails the moment one of them is
   # forgotten during a release.
   version:
-    name: version in seven places
+    name: version in eight places
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -47,22 +47,23 @@ jobs:
           news=$(sed -nE 's/^[[:space:]]*\* === Released ([0-9.]+) ===.*/\1/p' NEWS | head -1)
           deb=$(sed -nE '1s/^medit \(([^)-]+).*/\1/p' debian/changelog)
           rpm=$(sed -nE 's/^Version:[[:space:]]+//p' rpm/medit.spec | head -1)
-          obs=$(sed -nE 's/^Version:[[:space:]]+//p' rpm/medit.obs.spec | head -1)
+          obs=$(sed -nE 's/^Version:[[:space:]]+//p' obs/medit.spec | head -1)
+          dsc=$(sed -nE 's/^Version:[[:space:]]+//p' obs/medit.dsc | head -1)
           arch=$(sed -nE 's/^pkgver=//p' arch/PKGBUILD)
           readme=$(sed -nE 's/^\* current release of this fork: ([0-9.]+).*/\1/p' README.md | head -1)
 
           printf '%-20s %s\n' CMakeLists.txt "$cmake" NEWS "$news" \
                               debian/changelog "$deb" rpm/medit.spec "$rpm" \
-                              rpm/medit.obs.spec "$obs" \
+                              obs/medit.spec "$obs" obs/medit.dsc "$dsc" \
                               arch/PKGBUILD "$arch" README.md "$readme"
 
           bad=0
-          for v in "$news" "$deb" "$rpm" "$obs" "$arch" "$readme"; do
+          for v in "$news" "$deb" "$rpm" "$obs" "$dsc" "$arch" "$readme"; do
               [ "$v" = "$cmake" ] || bad=1
           done
           [ -n "$cmake" ] || bad=1
           if [ "$bad" != 0 ]; then
-              echo "::error::the version is not the same in all seven files"
+              echo "::error::the version is not the same in all eight files"
               exit 1
           fi
 

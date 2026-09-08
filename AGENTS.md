@@ -112,7 +112,7 @@ happens, and `-Wodr` has caught defects there that nothing else sees.
 
 `.github/workflows/package.yml` is the other half of the compiling: the deb on Debian 12
 and Ubuntu 26.04 (both toolkits each), the rpm on fedora:44 with LTO, the Arch package,
-and a check that the version is the same in all seven places it is written.
+and a check that the version is the same in all eight places it is written.
 
 `.github/workflows/ui.yml` compiles with clang, runs the static analyzer, and is the only
 job that runs the program rather than reading it. Its `harness` job goes first and takes
@@ -214,7 +214,7 @@ would, also on every push:
 
 | job | what it covers |
 |---|---|
-| `version` | the version in `CMakeLists.txt`, `NEWS`, `debian/changelog`, `rpm/medit.spec`, `rpm/medit.obs.spec`, `arch/PKGBUILD` and `README.md` — seven files, nothing deriving one from another |
+| `version` | the version in `CMakeLists.txt`, `NEWS`, `debian/changelog`, `rpm/medit.spec`, `obs/medit.spec`, `obs/medit.dsc`, `arch/PKGBUILD` and `README.md` — eight files, nothing deriving one from another |
 | `deb` | `dpkg-buildpackage` on ubuntu 22.04 and debian 13, two compiles each, then installs the result and runs it |
 | `rpm` | `rpmbuild` on fedora:44, then installs and runs |
 | `arch` | `makepkg` on archlinux, then installs and runs |
@@ -671,8 +671,8 @@ the whole `snapshot.debian.org` recipe its dead archive needed. A new one is wor
 container run before it goes in the matrix — Ubuntu 26.04 arrived with gcc 15 and cmake
 4.2, two and three major versions ahead of anything the tree had been built with.
 
-The version itself lives in seven places and they all have to move together. The
-`version` job in `package.yml` compares all seven and fails if one is left behind, so
+The version itself lives in eight places and they all have to move together. The
+`version` job in `package.yml` compares all eight and fails if one is left behind, so
 this is a list to work through rather than a thing to remember. `1.3.5` was cut like
 this:
 
@@ -686,38 +686,59 @@ this:
    the blank line before the signature and the RFC 2822 date (`date -R`).
 4. `rpm/medit.spec` — `Version:` and a `%changelog` entry, newest first, dated
    `Day Mon DD YYYY`.
-5. `rpm/medit.obs.spec` — the same two, with the same text.
-6. `arch/PKGBUILD` — `pkgver`.
-7. `README.md` — "current release of this fork", and the two tag examples in the
+5. `obs/medit.spec` — the same two, with the same text.
+6. `obs/medit.dsc` — `Version:`.
+7. `arch/PKGBUILD` — `pkgver`.
+8. `README.md` — "current release of this fork", and the two tag examples in the
    paragraph about `git checkout`.
 
-**Two rpm specs, because OBS downloads nothing.** `rpm/medit.spec` is the one CI builds
-and the one a person builds from a checkout: its `Source0` is the tarball GitHub
-generates for the tag, and `%autosetup` unpacks a `medit-<version>/` prefix. OBS copies
-whatever files sit in the package directory into `SOURCES` and fetches nothing, so a
-spec that names GitHub's tarball fails there before it compiles a line:
+### `obs/` is the OBS package
+
+`obs/` holds the three files that make up the package on
+`home:antonbatenev:medit` — `_service`, `medit.spec`, `medit.dsc` — so uploading a
+change there is copying the directory. Nothing else in the tree is for OBS, and
+nothing in CI builds any of it: OBS builds it, against the distributions it is
+actually for, and a Fedora run here would only re-check `%build`, `%install` and
+`%files`, which are the same lines as `rpm/medit.spec` beside it. The version is
+the one thing CI watches.
+
+**OBS downloads nothing of its own.** Whatever files sit in the package directory are
+copied into `SOURCES`, so a spec naming the tarball GitHub generates for a tag names a
+file that is not there:
 
 ```
 rpmuncompress -x /home/abuild/rpmbuild/SOURCES/medit-1.3.5.tar.gz
 error: File ...: No such file or directory
 ```
 
-`rpm/medit.obs.spec` names `medit_<version>.tar.bz2` and unpacks `medit/` instead,
-which is the convention the other packages of this maintainer use there. It also
-branches the handful of `BuildRequires` that openSUSE spells differently
-(`gdk-pixbuf-devel`, `gettext-tools`, `vte-devel`) and leaves `ENABLE_STRICT` off:
-the Fedora spec turns it on deliberately, being the one build here with LTO and so
-with `-Wodr`, and accepts that a new compiler can fail the package over a warning —
-which on a builder compiling against a dozen distributions at once is a release that
-does not build for a warning nobody has seen.
+`_service` is the answer: `obs_scm` fetches the tag, and `tar`, `recompress` and
+`set_version` run at build time to make `medit-<version>.tar.bz2`. The version comes
+from the tag — `versionformat` takes the parent tag and the rewrite drops the leading
+`v` — so a release is a tag and a trigger, and there is deliberately no `revision`
+parameter to become another file to edit.
 
-**Nothing in CI builds that spec, on purpose**: OBS builds it, against the
-distributions it is actually for, and a second Fedora build here would only re-check
-`%build`, `%install` and `%files`, which are the same lines as the spec beside it. The
-one thing CI does watch is the version, which the `version` job compares across all
-seven files. Everything else about it — the source name, the `%setup` prefix, the
-openSUSE `BuildRequires` — **is checked by the first OBS build after a change**, and
-that is the check to look at.
+`obs/medit.spec` differs from `rpm/medit.spec` in three ways: `Source0` is the plain
+name the service leaves behind, the handful of `BuildRequires` openSUSE spells
+differently are branched (`gdk-pixbuf-devel`, `gettext-tools`, `vte-devel`), and
+`ENABLE_STRICT` is off — the Fedora spec turns it on deliberately, being the one build
+here with LTO and so with `-Wodr`, and accepts that a new compiler can fail the package
+over a warning, which on a builder compiling against a dozen distributions at once is a
+release that does not build for a warning nobody has seen.
+
+**`obs/medit.dsc` is not a `.dsc` as `dpkg-source` writes one.** It has no `Files` or
+`Checksums`, and cannot: OBS extracts Debian sources with `dpkg-source -x`, which
+verifies them, and a tarball the service rebuilds every run hashes differently every
+run. `set_version` updates `Version:` in a `.dsc` and nothing else — its own code says
+so. What closes the gap is `debtransform`, which assembles the real source package at
+build time and computes the checksums then, and which finds the one tarball in the
+package by itself when there is no `Debtransform-Tar` line.
+
+Two things `debtransform` does are worth knowing before that first build: it always
+produces a **non-native** source package whatever the `Format:` line says, and it
+appends a Debian revision — the deb comes out `1.3.5-1` where the hand-uploaded one was
+`1.3.5`. Everything about all three files — the source name, the prefix, the openSUSE
+`BuildRequires`, the format `debtransform` settles on — **is checked by the first OBS
+build after a change**, and that is the check to look at.
 
 Then commit, merge to `main`, push, and tag:
 
