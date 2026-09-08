@@ -1,7 +1,7 @@
 # Maintainer: Anton Batenev <antonbatenev@yandex.ru>
 
 pkgname=medit
-pkgver=1.3.4
+pkgver=1.3.5
 pkgrel=1
 pkgdesc="Useful programming and around-programming text editor"
 arch=(x86_64)
@@ -14,7 +14,7 @@ optdepends=('ctags: list the functions of the open document'
             'gopls: the language server for Go'
             'python-lsp-server: the language server for Python')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('93b32bde68b6e484b85586f6fd12032d5c75c66c61ce2445c09bfb6513c6c07f')
+sha256sums=('0000000000000000000000000000000000000000000000000000000000000000')
 
 build() {
     # CMAKE_BUILD_TYPE=None keeps the flags makepkg exports; the install hook

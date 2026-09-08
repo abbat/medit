@@ -1,5 +1,5 @@
 Name:           medit
-Version:        1.3.4
+Version:        1.3.5
 Release:        1%{?dist}
 Summary:        Useful programming and around-programming text editor
 
@@ -66,6 +66,9 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 %{_mandir}/man1/%{name}.1*
 
 %changelog
+* Tue Sep 08 2026 Anton Batenev <antonbatenev@yandex.ru> - 1.3.5-1
+- The GTK+3 port's unreviewed blocks read through, and 19 defects fixed
+
 * Sun Sep 06 2026 Anton Batenev <antonbatenev@yandex.ru> - 1.3.4-1
 - Language server client, and the syntax definitions of gtksourceview 5.20.0
 

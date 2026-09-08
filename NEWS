@@ -1,3 +1,36 @@
+2026-09-08  Anton Batenev  <antonbatenev@yandex.ru>
+
+    * === Released 1.3.5 ===
+
+    Everything the GTK+3 port left behind marked as unreviewed has been read
+    against the GTK+2 code beside it: of the 53 blocks, 33 were faithful
+    translations and 19 named a defect, and all of those are fixed.
+    The file selector opens on its icon view and that view could not be
+    scrolled at all, so a directory with more files than fit showed some of
+    them and offered no way to reach the rest. The splitter between a pane
+    and the document was not drawn, nor the line beside the pane buttons. A
+    document tab being dragged across the strip showed uninitialised memory
+    instead of a picture of itself. The outline of where a dragged pane would
+    land was invisible. The menus of the file view had nothing in their
+    shortcut column, the pane buttons had stopped reacting to the pointer,
+    and the expander of a tree view was drawn grey and two pixels wide.
+    New File in the file selector had been dead since the port, and Save As
+    with it: the two dialogs share one file and had given their entries the
+    same name, which a GtkBuilder refuses -- and then builds none of the file.
+    Open in that menu is offered for a single file now, having appeared only
+    for a selection of more than one.
+    Go to Definition from the context menu asked the language server about
+    the wrong place whenever the line numbers were on: the click was read in
+    the coordinates of the wrong window, which on a short word lands in the
+    word before it.
+    The terminal's and the language server client's commands can be rebound
+    in Configure Shortcuts, which gives each plugin a heading of its own; the
+    dialog's search box and its None, Default and Custom buttons work again.
+    Both plugins are translated into all ten catalogs.
+    Behind all of that, medit is driven through its own accessibility bus by
+    fifty tests, has unit tests inside the binary behind --unit-test, and CI
+    measures what the two cover together and refuses a drop.
+
 2026-09-06  Anton Batenev  <antonbatenev@yandex.ru>
 
     * === Released 1.3.4 ===

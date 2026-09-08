@@ -1,3 +1,31 @@
+medit (1.3.5) unstable; urgency=low
+
+  * Read all 53 blocks the GTK+3 port left marked as unreviewed against the
+    GTK+2 code beside them, and fix the 19 defects they named.
+  * Fix the file selector's icon view, which is its default view and could not
+    be scrolled: a directory with more files than fit offered no way to reach
+    the rest of them.
+  * Fix the splitter between a pane and the document, and the line beside the
+    pane buttons, neither of which was drawn.
+  * Fix a document tab being dragged showing uninitialised memory instead of a
+    picture of itself, and the invisible outline of where a dragged pane would
+    land.
+  * Fix New File in the file selector, dead since the port along with Save As:
+    the two dialogs share a .ui file and had given their entries the same id,
+    which a GtkBuilder refuses, and then builds none of the file.
+  * Offer Open in the file selector's menu for a single file, where it had
+    appeared only for a selection of more than one.
+  * Fix Go to Definition from the context menu asking the language server about
+    the wrong place when the line numbers are on.
+  * Fix the empty shortcut column in the file view's menus, the pane button
+    icons not reacting to the pointer, and the expander of a tree view drawn
+    grey and two pixels wide.
+  * Let the terminal's and the language server client's commands be rebound in
+    Configure Shortcuts, under a heading per plugin, and translate both into
+    all ten catalogs.
+
+ -- Anton Batenev <antonbatenev@yandex.ru>  Tue, 08 Sep 2026 17:01:08 +0300
+
 medit (1.3.4) unstable; urgency=low
 
   * Add a language server client, built the way the ctags plugin is. It ships
