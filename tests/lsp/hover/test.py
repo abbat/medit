@@ -23,11 +23,26 @@ CONTENT = "alpha beta\ngamma delta\n"
 GAMMA = (11, 16)
 DELTA = (17, 22)
 
+# One character of it -- the first "m" -- as an offset into the document and as
+# the position in its line that the request has to name. A single character,
+# because a word starting at the beginning of its line hides a pointer position
+# that has drifted to the left, which is exactly what the context menu's did.
+# A quarter of the way in, because a text view resolves a point to the nearest
+# place a caret could go and the middle of a glyph is a boundary.
+GAMMA_M = 13
+GAMMA_M_IN_LINE = 2
+INSIDE = 0.25
+
 HOVER = {"contents": {"kind": "plaintext", "value": "gamma is the third letter"}}
 
 
 def setup(s):
     s.plugin("Lsp")
+
+    # With the line numbers on: a gutter is what turns a coordinate read in the
+    # wrong window into a position several characters to the left.
+    s.pref("Editor/show_line_numbers", True)
+
     s.open(s.write("workdir/hello.txt", CONTENT))
     s.lsp_server(filter="globs:*.txt", replies={"textDocument/hover": HOVER})
 
@@ -36,12 +51,13 @@ def run(t):
     t.wait_lsp("textDocument/didOpen")
 
     view = document(t)
-    t.hover(view, *GAMMA)
+    t.hover(view, GAMMA_M, GAMMA_M + 1, at=INSIDE)
 
     asked = t.wait_lsp("textDocument/hover")["params"]["position"]
 
-    t.check(asked["line"] == 1 and 0 <= asked["character"] <= 5,
-            "the server was asked about the word under the pointer: %s" % asked)
+    t.check(asked == {"line": 1, "character": GAMMA_M_IN_LINE},
+            "the server was asked about the character under the pointer, and "
+            "not one further left: %s" % asked)
 
     # Switched off, the pointer is not a question any more.
     switch_off(t)

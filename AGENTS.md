@@ -1019,6 +1019,28 @@ with it.
 `gdk/gdkkeysyms.h` has to be included for `GDK_KEY_s` on GTK+2 — the compat names live
 there, and a test that only ever built against GTK+3 does not find out.
 
+**`event->x` and `event->y` are in the coordinates of `event->window`**, and a
+GtkTextView has several windows: the text, and a border window for each side that
+is in use. Converting them with `gtk_text_view_window_to_buffer_coords (…,
+GTK_TEXT_WINDOW_WIDGET, …)` when the click landed on the text moves the position
+left by the width of whatever is down the left — the line numbers, most of all —
+and a right click on a short word then asks the language server about the word
+before it. Pass `event->window` along and convert from `GTK_TEXT_WINDOW_TEXT`; a
+click that landed anywhere else names no character at all.
+
+`::query-tooltip` is the other way round: its x and y *are* the widget's, so the
+hover path was right all along. Which coordinates a callback is handed is worth
+checking rather than copying from the one next to it.
+
+Two things about writing a test for this, both learnt the expensive way. A word
+is too wide a target — the first version asserted "inside `delta`" and passed
+while the click was landing two characters early, because `delta` is five
+characters long. And the *middle* of a single character is not that character: a
+text view resolves a point to the nearest place a caret could go, so a glyph
+eight pixels wide answers with itself for the first four and with its neighbour
+for the rest. `t.click_range()`, `t.popup_at()` and `t.hover()` take `at=0.25`
+for a test that means one particular character.
+
 **Two dialogs in one `.ui` file must not share an id.** A GtkBuilder reads the whole
 file at once, so the second `id="entry"` is not a second scope — it is an error, and
 then *nothing* in the file is built. Both dialogs in `moofileselector.ui` were dead

@@ -262,29 +262,38 @@ def drag_node(node, dx, dy, button=1, steps=12, settle=SETTLE):
     return drag(x, y, x + dx, y + dy, button=button, steps=steps, settle=settle)
 
 
-def click_range(node, start, end, button=1, settle=SETTLE, times=1):
+def click_range(node, start, end, button=1, settle=SETTLE, times=1, at=0.5):
     """Click a range of a node's text.
 
     This is how a hyperlink inside a label is clicked: it has no extents of its
     own, so the label's Text interface is asked where the characters it covers
     are drawn. Words on a terminal have no widget of their own either, and are
     reached the same way -- twice over, to select one.
+
+    at says how far across the range to click, and the middle is only the
+    default. A text view resolves a click to the nearest place a caret could go,
+    so the middle of a single character is the boundary between it and the next
+    one and lands on either -- measured, a glyph eight pixels wide answers with
+    itself for the first four and with its neighbour for the rest. A test that
+    means one particular character says at=0.25.
     """
     box = node.queryText().getRangeExtents(start, end, pyatspi.DESKTOP_COORDS)
-    x, y = box[0] + box[2] // 2, box[1] + box[3] // 2
+    x, y = box[0] + int(box[2] * at), box[1] + box[3] // 2
     click_at(x, y, button=button, settle=settle, times=times)
     return x, y
 
 
-def hover_range(node, start, end, settle=1.0):
+def hover_range(node, start, end, settle=1.0, at=0.5):
     """Rest the pointer where a range of a node's text is drawn.
 
     Parked elsewhere first and then moved, like a click, because what a
     tooltip waits for is the pointer arriving and then staying still: a warp
     straight onto the target produces no crossing event to start the timer.
+
+    at says how far across the range to rest it, as for click_range().
     """
     box = node.queryText().getRangeExtents(start, end, pyatspi.DESKTOP_COORDS)
-    x, y = box[0] + box[2] // 2, box[1] + box[3] // 2
+    x, y = box[0] + int(box[2] * at), box[1] + box[3] // 2
 
     park_pointer()
     time.sleep(POINTER)

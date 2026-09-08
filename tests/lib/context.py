@@ -281,9 +281,14 @@ class Test(object):
         self.log("click (%d,%d)%s" % (x, y, ", twice" if times == 2 else ""))
         return x, y
 
-    def click_range(self, node, start, end, times=1, button=1):
-        """Click where a range of the node's text is drawn."""
-        x, y = ui.click_range(node, start, end, button=button, times=times)
+    def click_range(self, node, start, end, times=1, button=1, at=0.5):
+        """Click where a range of the node's text is drawn.
+
+        at says how far across the range: the middle by default, and a quarter
+        of the way in for a test that means one particular character rather
+        than the boundary at its middle.
+        """
+        x, y = ui.click_range(node, start, end, button=button, times=times, at=at)
         self.log("click %s%s[%d:%d] at (%d,%d)%s"
                  % (a11y.role_name(node), "" if button == 1 else " (button %d)" % button,
                     start, end, x, y, ", twice" if times == 2 else ""))
@@ -384,9 +389,9 @@ class Test(object):
         return ui.focus_window(
             window=self.window_of(frame) if frame is not None else None)
 
-    def hover(self, node, start, end):
+    def hover(self, node, start, end, at=0.5):
         """Rest the pointer over a range of the node's text and let it settle."""
-        x, y = ui.hover_range(node, start, end)
+        x, y = ui.hover_range(node, start, end, at=at)
         self.log("hover %s[%d:%d] at (%d,%d)" % (a11y.role_name(node), start, end, x, y))
         return x, y
 
@@ -467,7 +472,7 @@ class Test(object):
 
         return None
 
-    def popup_at(self, node, start, end, timeout=a11y.TIMEOUT):
+    def popup_at(self, node, start, end, timeout=a11y.TIMEOUT, at=0.5):
         """Right-click where a range of the node's text is drawn, and take the menu.
 
         Not the same thing as t.popup(), which asks the focused widget for its
@@ -475,8 +480,12 @@ class Test(object):
         right click, so an entry that goes by the click rather than by the
         cursor can only be told apart from one that does not by opening the menu
         somewhere the cursor is not.
+
+        at is passed through to t.click_range(): a test that means one
+        particular character rather than the boundary at its middle says
+        at=0.25.
         """
-        self.click_range(node, start, end, button=3)
+        self.click_range(node, start, end, button=3, at=at)
 
         return self.wait(self._popup_menu, "a context menu", timeout)
 

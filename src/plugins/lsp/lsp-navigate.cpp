@@ -95,6 +95,7 @@ forget_click (void)
 
 void
 lsp_navigate_note_click (MooEditView *view,
+                         GdkWindow   *window,
                          int          x,
                          int          y)
 {
@@ -103,8 +104,27 @@ lsp_navigate_note_click (MooEditView *view,
 
     g_return_if_fail (MOO_IS_EDIT_VIEW (view));
 
+    /*
+     * A button event carries its coordinates in the window it landed in, and a
+     * GtkTextView has several: the text, and a border window for each side that
+     * is in use. Reading them as the widget's own moves the position left by
+     * the width of whatever is down the left -- the line numbers, most of all
+     * -- so a right click on a short word asked the server about the word
+     * before it. Measured on "gamma delta" with the line numbers on: clicked on
+     * character 8, asked about 6.
+     *
+     * A click that did not land on the text -- the gutter, the marks -- names
+     * no character, so it is not a click this remembers and the cursor stays
+     * the truth.
+     */
+    if (window != gtk_text_view_get_window (GTK_TEXT_VIEW (view), GTK_TEXT_WINDOW_TEXT))
+    {
+        forget_click ();
+        return;
+    }
+
     gtk_text_view_window_to_buffer_coords (GTK_TEXT_VIEW (view),
-                                           GTK_TEXT_WINDOW_WIDGET,
+                                           GTK_TEXT_WINDOW_TEXT,
                                            x, y, &buffer_x, &buffer_y);
     gtk_text_view_get_iter_at_location (GTK_TEXT_VIEW (view), &iter,
                                         buffer_x, buffer_y);

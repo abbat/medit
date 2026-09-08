@@ -55,8 +55,12 @@ void        lsp_goto_definition_at_click (MooEditView *view,
  * Records where a right click landed, and forgets it again on anything else
  * that moves the cursor -- another click, a key -- so that a menu opened from
  * the keyboard goes by the cursor rather than by an old click.
+ *
+ * window is the one the event carried its coordinates in: a GtkTextView has
+ * several, and which one it was decides what those coordinates mean.
  */
 void        lsp_navigate_note_click (MooEditView    *view,
+                                     GdkWindow      *window,
                                      int             x,
                                      int             y);
 void        lsp_navigate_forget_click (void);

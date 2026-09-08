@@ -19,12 +19,29 @@ document has no accessible to ask about that on GTK+2.
 
 CONTENT = "alpha beta\ngamma delta\n"
 
-# "delta" in the second line, as offsets into the text of the whole document.
-DELTA = (17, 22)
+# One character of the second line -- the "l" of "delta" -- as an offset into
+# the text of the whole document, and the same character counted from the start
+# of its own line, which is what the request has to name. A single character and
+# not a word: a word is wide enough to hide a click landing a few characters to
+# the left of where it was aimed, and that is the whole of what this asserts.
+#
+# Clicked a quarter of the way into it rather than in the middle, because a
+# text view resolves a click to the nearest place a caret could go and the
+# middle of a glyph is the boundary between it and the next.
+DELTA_L = 19
+DELTA_L_IN_LINE = 8
+INSIDE = 0.25
 
 
 def setup(s):
     s.plugin("Lsp")
+
+    # With the line numbers on, because a gutter is where this goes wrong: the
+    # click arrives in the coordinates of the window it landed in, and reading
+    # it as the widget's own moves it left by however wide the gutter is. Off,
+    # the two differ by the text view's left margin alone, which is less than a
+    # character and hides the fault.
+    s.pref("Editor/show_line_numbers", True)
     s.open(s.write("workdir/hello.txt", CONTENT))
     s.open(s.write("workdir/notes.md", "no server for this one\n"))
     s.lsp_server(filter="globs:*.txt",
@@ -40,7 +57,7 @@ def run(t):
     # The document with no server first: the entry is only offered where some
     # server handles the document, and hiding it is a thing update_doc_actions()
     # has to keep doing as the active document changes.
-    menu = t.popup_at(document(t), 0, 4)
+    menu = t.popup_at(document(t), 0, 1)
 
     t.check("Go to Definition" not in entries(t, menu),
             "no Go to Definition on a document no server handles: %s"
@@ -53,7 +70,7 @@ def run(t):
     t.focus()
     t.key("ctrl+Home")
 
-    menu = t.popup_at(view, *DELTA)
+    menu = t.popup_at(view, DELTA_L, DELTA_L + 1, at=INSIDE)
     t.click(t.item(menu, "Go to Definition"))
 
     asked = t.wait_lsp("textDocument/definition")["params"]["position"]
@@ -61,6 +78,12 @@ def run(t):
     t.check(asked["line"] == 1,
             "the server was asked about the line that was clicked, not the line "
             "the cursor was on: %s" % asked)
+
+    t.check(asked["character"] == DELTA_L_IN_LINE,
+            "and about the character that was clicked, not one further left: "
+            "asked about %d, clicked on %d"
+            % (asked["character"], DELTA_L_IN_LINE))
+
     t.log("ok: the entry goes by where the right click landed")
 
     t.wait(lambda: cursor(t) == "Line: 1 Col: 1",

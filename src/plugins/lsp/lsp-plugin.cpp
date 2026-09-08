@@ -244,7 +244,8 @@ view_button_press (MooEditView            *view,
      * button moves the cursor itself, and then the cursor is the truth.
      */
     if (event->button == 3)
-        lsp_navigate_note_click (view, (int) event->x, (int) event->y);
+        lsp_navigate_note_click (view, event->window,
+                                 (int) event->x, (int) event->y);
     else
         lsp_navigate_forget_click ();
 
