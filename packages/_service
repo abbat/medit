@@ -1,0 +1,34 @@
+<services>
+
+  <!-- The repository is fetched twice: whole for the source tarball, and
+       debian/ alone because debtransform builds the Debian source package out
+       of a debian.tar in the package directory. Everything runs on the server;
+       a buildtime service would want obs-service-* in the build root, which
+       only openSUSE has. revision, version=_none_ and the *.tar glob are each
+       load-bearing, and doc/packaging.md says why. -->
+
+  <service name="tar_scm">
+    <param name="url">https://github.com/abbat/medit.git</param>
+    <param name="scm">git</param>
+    <param name="revision">main</param>
+    <param name="filename">medit</param>
+    <param name="versionformat">@PARENT_TAG@</param>
+    <param name="versionrewrite-pattern">v(.*)</param>
+    <param name="versionrewrite-replacement">\1</param>
+  </service>
+
+  <service name="tar_scm">
+    <param name="url">https://github.com/abbat/medit.git</param>
+    <param name="scm">git</param>
+    <param name="revision">main</param>
+    <param name="subdir">debian</param>
+    <param name="filename">debian</param>
+    <param name="version">_none_</param>
+  </service>
+
+  <service name="recompress">
+    <param name="file">*.tar</param>
+    <param name="compression">bz2</param>
+  </service>
+
+</services>

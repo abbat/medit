@@ -25,14 +25,16 @@ ships packages for the distributions that lost it.
 
 ## download
 
-[**DEB packages**](http://software.opensuse.org/download.html?project=home:antonbatenev:medit&package=medit)
-for Debian 12, 13 and Ubuntu 22.04, 24.04, 26.04. The page has the
-repository setup instructions.
+[**Packages**](http://software.opensuse.org/download.html?project=home:antonbatenev:medit&package=medit)
+for Debian 12, 13, Ubuntu 22.04, 24.04, 26.04, Fedora and openSUSE — deb and
+rpm come from the same place, and the page walks you through adding the
+repository for whichever one you are on.
 
-`medit` is a metapackage that pulls in `medit-gtk3`, or leaves `medit-gtk2` in
-place if that is what is already installed — install one of those directly to
-pick the toolkit yourself. The two are mutually exclusive, and only
-`medit-gtk3` has the terminal pane.
+On deb, `medit` is a metapackage that pulls in `medit-gtk3`, or leaves
+`medit-gtk2` in place if that is what is already installed — install one of
+those directly to pick the toolkit yourself. The two are mutually exclusive, and
+only `medit-gtk3` has the terminal pane. The rpm is a single `medit` package,
+built against GTK+3.
 
 ## what this fork changes
 

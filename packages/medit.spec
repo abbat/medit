@@ -1,18 +1,25 @@
+# The spec medit is built from, on OBS and by the rpm job in
+# .github/workflows/package.yml. Source0 is the tarball _service leaves in the
+# package rather than a URL, and the BuildRequires openSUSE spells differently
+# are branched. doc/packaging.md has the rest, including why ENABLE_STRICT is on for a
+# builder whose compilers are pinned nowhere here, and which other six files
+# have to carry the same version.
+
 Name:           medit
 Version:        1.3.5
 Release:        1%{?dist}
 Summary:        Useful programming and around-programming text editor
+Group:          Productivity/Text/Editors
 
 License:        LGPL-2.1-only
 URL:            https://github.com/abbat/medit
-Source0:        %{url}/archive/refs/tags/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
+Source0:        %{name}-%{version}.tar.bz2
+BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 
 BuildRequires:  cmake
 BuildRequires:  desktop-file-utils
 BuildRequires:  gcc
 BuildRequires:  gcc-c++
-BuildRequires:  gdk-pixbuf2-devel
-BuildRequires:  gettext
 BuildRequires:  glib2-devel
 BuildRequires:  gtk3-devel
 BuildRequires:  intltool
@@ -22,8 +29,18 @@ BuildRequires:  json-glib-devel
 BuildRequires:  libICE-devel
 BuildRequires:  libSM-devel
 BuildRequires:  libxml2-devel
+
+%if 0%{?suse_version}
+BuildRequires:  gdk-pixbuf-devel
+BuildRequires:  gettext-tools
+# the terminal pane
+BuildRequires:  vte-devel
+%else
+BuildRequires:  gdk-pixbuf2-devel
+BuildRequires:  gettext
 # the terminal pane
 BuildRequires:  vte291-devel
+%endif
 
 Recommends:     ctags
 
@@ -36,13 +53,8 @@ the editor Yevgen Muntyan stopped working on in 2017, ported to GTK+3.
 %autosetup
 
 %build
-# the icon cache is updated by a file trigger, not by us; --no-warn-unused-cli
-# silences the notice about the RELEASE and Fortran flags %%cmake always passes.
-#
-# ENABLE_STRICT because this is the only build of medit that uses LTO, and -Wodr
-# has caught real defects in this tree that no other compiler sees; without it a
-# report would be a line in a log nobody reads. It does mean a new gcc can fail
-# the package build over a warning, which is the trade that was made knowingly.
+# --no-warn-unused-cli silences the notice about the flags %%cmake always
+# passes. %%cmake_build is current Fedora and openSUSE, but not Leap 15.2.
 %cmake --no-warn-unused-cli -DGTK_VERSION=3 -DENABLE_INSTALL_HOOKS=OFF \
     -DENABLE_TERMINAL=ON -DENABLE_LSP=ON -DENABLE_STRICT=ON
 %cmake_build
@@ -56,7 +68,11 @@ cat %{name}-gsv.lang >> %{name}.lang
 %check
 desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 
+%clean
+rm -rf %{buildroot}
+
 %files -f %{name}.lang
+%defattr(-,root,root,-)
 %license COPYING
 %doc AUTHORS NEWS README.md THANKS
 %{_bindir}/%{name}
