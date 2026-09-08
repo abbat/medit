@@ -92,6 +92,11 @@ struct _MooIconViewPrivate {
 
     int              xoffset;
     GtkAdjustment   *adjustment;
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkAdjustment   *vadjustment;
+    guint            hscroll_policy : 1;
+    guint            vscroll_policy : 1;
+#endif
     GtkTreeRowReference *scroll_to;
 
     guint            update_idle;
@@ -220,6 +225,10 @@ static void     _moo_icon_view_set_cell     (MooIconView        *view,
 
 static void     _moo_icon_view_set_adjustment   (MooIconView    *view,
                                                  GtkAdjustment  *adjustment);
+#if GTK_CHECK_VERSION(3,0,0)
+static void     set_vadjustment                 (MooIconView    *view,
+                                                 GtkAdjustment  *adjustment);
+#endif
 static void     moo_icon_view_set_scroll_adjustments
                                                 (GtkWidget      *widget,
                                                  GtkAdjustment  *hadj,
@@ -274,13 +283,30 @@ static void     dnd_info_free               (DndInfo        *info);
 
 
 /* MOO_TYPE_ICON_VIEW */
+#if GTK_CHECK_VERSION(3,0,0)
+/* GtkScrollable is how a GTK+3 scrolled window hands its adjustments to its
+   child, in place of GTK+2's set-scroll-adjustments signal. There is nothing
+   to implement beyond the four properties below -- the interface has no
+   methods -- but a child that does not carry it is put inside a GtkViewport,
+   which scrolls by moving a widget that has told it it is one pixel wide. */
+G_DEFINE_TYPE_WITH_CODE (MooIconView, _moo_icon_view, GTK_TYPE_WIDGET,
+                         G_ADD_PRIVATE (MooIconView)
+                         G_IMPLEMENT_INTERFACE (GTK_TYPE_SCROLLABLE, NULL))
+#else
 G_DEFINE_TYPE_WITH_CODE (MooIconView, _moo_icon_view, GTK_TYPE_WIDGET, G_ADD_PRIVATE(MooIconView))
+#endif
 
 enum {
     PROP_0,
     PROP_PIXBUF_CELL,
     PROP_TEXT_CELL,
-    PROP_MODEL
+    PROP_MODEL,
+#if GTK_CHECK_VERSION(3,0,0)
+    PROP_HADJUSTMENT,
+    PROP_VADJUSTMENT,
+    PROP_HSCROLL_POLICY,
+    PROP_VSCROLL_POLICY
+#endif
 };
 
 enum {
@@ -400,13 +426,14 @@ _moo_icon_view_class_init (MooIconViewClass *klass)
                           GTK_TYPE_ADJUSTMENT,
                           GTK_TYPE_ADJUSTMENT);
 #if GTK_CHECK_VERSION(3,0,0)
-    /* FIXME: skipping it leaves nothing in its place. The scrolled window
-     * this view is put into hands its adjustments to a child through
-     * GtkScrollable on GTK+3, which MooIconView does not implement, so
-     * moo_icon_view_set_scroll_adjustments() is never called, priv->adjustment
-     * stays NULL, and the horizontal scrollbar of the file selector's icon
-     * view -- its default view -- moves nothing. GtkScrollable is the port:
-     * hadjustment/vadjustment/hscroll-policy/vscroll-policy as properties. */
+    /* GTK+2 named a signal here and the scrolled window emitted it; GTK+3 sets
+     * the properties of GtkScrollable, which this class implements and
+     * overrides just below. The signal itself stays: it is still what
+     * _moo_icon_view_set_adjustment() is reached through. */
+    g_object_class_override_property (gobject_class, PROP_HADJUSTMENT, "hadjustment");
+    g_object_class_override_property (gobject_class, PROP_VADJUSTMENT, "vadjustment");
+    g_object_class_override_property (gobject_class, PROP_HSCROLL_POLICY, "hscroll-policy");
+    g_object_class_override_property (gobject_class, PROP_VSCROLL_POLICY, "vscroll-policy");
 #else
     widget_class->set_scroll_adjustments_signal = signals[SET_SCROLL_ADJUSTMENTS];
 #endif
@@ -575,6 +602,10 @@ moo_icon_view_dispose (GObject *object)
     g_object_unref (view->priv->adjustment);
     view->priv->adjustment = NULL;
 
+#if GTK_CHECK_VERSION(3,0,0)
+    set_vadjustment (view, NULL);
+#endif
+
     if (view->priv->update_idle)
     {
         g_source_remove (view->priv->update_idle);
@@ -662,6 +693,28 @@ static void         moo_icon_view_set_property  (GObject        *object,
                                      MOO_ICON_VIEW_CELL_TEXT,
                                      g_value_get_object (value));
             break;
+#if GTK_CHECK_VERSION(3,0,0)
+        case PROP_HADJUSTMENT:
+            _moo_icon_view_set_adjustment (view, (GtkAdjustment*) g_value_get_object (value));
+            break;
+
+        /* The view scrolls sideways only: entries fill a column downwards and
+           the columns run off to the right, so the layout is never taller than
+           the widget. The adjustment is kept so that the scrolled window gets
+           back what it put here, and nothing is connected to it. */
+        case PROP_VADJUSTMENT:
+            set_vadjustment (view, (GtkAdjustment*) g_value_get_object (value));
+            break;
+
+        case PROP_HSCROLL_POLICY:
+            view->priv->hscroll_policy = g_value_get_enum (value);
+            gtk_widget_queue_resize (GTK_WIDGET (view));
+            break;
+        case PROP_VSCROLL_POLICY:
+            view->priv->vscroll_policy = g_value_get_enum (value);
+            gtk_widget_queue_resize (GTK_WIDGET (view));
+            break;
+#endif
         default:
             G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -686,6 +739,20 @@ static void         moo_icon_view_get_property  (GObject        *object,
         case PROP_TEXT_CELL:
             g_value_set_object (value, view->priv->text.cell);
             break;
+#if GTK_CHECK_VERSION(3,0,0)
+        case PROP_HADJUSTMENT:
+            g_value_set_object (value, view->priv->adjustment);
+            break;
+        case PROP_VADJUSTMENT:
+            g_value_set_object (value, view->priv->vadjustment);
+            break;
+        case PROP_HSCROLL_POLICY:
+            g_value_set_enum (value, view->priv->hscroll_policy);
+            break;
+        case PROP_VSCROLL_POLICY:
+            g_value_set_enum (value, view->priv->vscroll_policy);
+            break;
+#endif
         default:
             G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -1990,6 +2057,25 @@ static void     moo_icon_view_update_adjustment (MooIconView    *view)
 
     gtk_adjustment_changed (view->priv->adjustment);
 }
+
+
+#if GTK_CHECK_VERSION(3,0,0)
+static void
+set_vadjustment (MooIconView   *view,
+                 GtkAdjustment *adjustment)
+{
+    if (view->priv->vadjustment == adjustment)
+        return;
+
+    if (view->priv->vadjustment)
+        g_object_unref (view->priv->vadjustment);
+
+    view->priv->vadjustment = adjustment;
+
+    if (adjustment)
+        g_object_ref_sink (adjustment);
+}
+#endif
 
 
 static void

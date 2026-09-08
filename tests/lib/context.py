@@ -285,6 +285,38 @@ class Test(object):
                  % (link["index"], link["uri"], x, y, link["source"]))
         return link["uri"]
 
+    def drag(self, node, dx, dy, button=1):
+        """Drag from the centre of a widget by an offset, and say where it went.
+
+        Everything in medit that is moved rather than clicked goes through
+        here: the splitter between a pane and the document, a notebook tab
+        being reordered, a pane button carried to another edge of the window.
+        """
+        x, y = ui.drag_node(node, dx, dy, button=button)
+        self.log("drag %s %r by (%+d,%+d), to (%d,%d)"
+                 % (a11y.role_name(node), a11y.name(node), dx, dy, x, y))
+        return x, y
+
+    def drag_to(self, x0, y0, x1, y1, button=1):
+        """Drag between two points the test worked out for itself."""
+        ui.drag(x0, y0, x1, y1, button=button)
+        self.log("drag (%d,%d) -> (%d,%d)" % (x0, y0, x1, y1))
+        return x1, y1
+
+    def extents(self, node):
+        """Where the widget is on the screen, as (x, y, width, height)."""
+        return ui.extents(node)
+
+    def value(self, node):
+        """What a scrollbar or a slider says it is at, as (value, min, max).
+
+        A scroll bar is the one widget whose whole state is a number, and the
+        number is the evidence that a view is scrollable at all: a range of
+        zero means nothing can be scrolled, whatever the view holds.
+        """
+        v = node.queryValue()
+        return v.currentValue, v.minimumValue, v.maximumValue
+
     def pin_pane(self):
         """Make the open pane sticky, so that it stays open when it loses focus.
 
@@ -334,20 +366,42 @@ class Test(object):
     def menu(self, *path, frame=None):
         """Walk a menu path, clicking each step.
 
-        The first name is a menu on the menu bar, the rest are items inside it.
-        The menu bar is the one of self.frame unless a test with two windows
-        says which window it means: frame=.
+        The first name is a menu on the menu bar, the rest are items inside it,
+        and a step that has a submenu is opened rather than activated. The menu
+        bar is the one of self.frame unless a test with two windows says which
+        window it means: frame=.
         """
         node = self.need(frame or self.frame, role="menu", name=path[0],
                          what="the %r menu" % path[0])
         self.click(node)
 
-        for label in path[1:]:
-            node = self.wait(lambda parent=node, want=label: self._menu_item(parent, want),
-                             "the %r item under %r" % (label, path[0]))
+        for depth, label in enumerate(path[1:]):
+            parent = node
+            node = self.wait(lambda p=parent, want=label: self._menu_item(p, want),
+                             "the %r item under %r"
+                             % (label, path[depth] if depth else path[0]))
             self.click(node)
+            self._open_submenu(node)
 
         return node
+
+    def _open_submenu(self, item):
+        """Pop up the submenu of a menu item that has one.
+
+        Clicking a submenu's parent item is not enough without a window
+        manager: the item takes the click, the submenu stays unmapped, and its
+        items are in the tree with no position -- so the next step of the path
+        finds nothing and waits out its timeout. What opens it is the same key
+        a person would use, and GTK's own menu navigation is what handles it.
+
+        An item that has a submenu is the submenu: AT-SPI gives it the role
+        "menu" and hangs the items off it directly, where an ordinary item is
+        a "menu item" with nothing under it. So the role is the whole test.
+        """
+        if a11y.role_name(item) != "menu":
+            return
+
+        ui.key("Right")
 
     def popup(self, timeout=a11y.TIMEOUT, frame=None):
         """Open the context menu of whatever has the focus, and return it.

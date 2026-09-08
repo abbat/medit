@@ -212,6 +212,49 @@ def click_at(x, y, button=1, settle=SETTLE, times=1):
     time.sleep(settle)
 
 
+def drag(x0, y0, x1, y1, button=1, steps=12, settle=SETTLE):
+    """Press at one point, travel to another, release there.
+
+    Not "mousedown, mousemove, mouseup": a toolkit decides that a drag has
+    begun from the motion it sees while the button is down, and one jump from
+    the press to the release is a single motion event that most drag handlers
+    treat as noise. GTK's own threshold is 8 pixels, and a splitter, a notebook
+    tab and a pane button each want to see the pointer cross it and keep
+    going -- so the journey is walked in steps, with the toolkit given time to
+    process each one.
+
+    The pointer is parked first for the reason every click is: the press has
+    to be preceded by a crossing event into the widget under it.
+    """
+    park_pointer()
+    time.sleep(POINTER)
+    _xdotool("mousemove", x0, y0)
+    time.sleep(POINTER)
+    _xdotool("mousedown", button)
+    time.sleep(POINTER)
+
+    for i in range(1, steps + 1):
+        _xdotool("mousemove",
+                 x0 + (x1 - x0) * i // steps,
+                 y0 + (y1 - y0) * i // steps)
+        time.sleep(0.03)
+
+    # Held still at the end before letting go: a drop is decided where the
+    # pointer is when the button comes up, and a release in the same instant
+    # as the last motion has been seen to land at the previous position.
+    time.sleep(POINTER)
+    _xdotool("mouseup", button)
+    time.sleep(settle)
+
+    return x1, y1
+
+
+def drag_node(node, dx, dy, button=1, steps=12, settle=SETTLE):
+    """Drag from the centre of a widget by an offset."""
+    x, y = centre(node)
+    return drag(x, y, x + dx, y + dy, button=button, steps=steps, settle=settle)
+
+
 def click_range(node, start, end, button=1, settle=SETTLE, times=1):
     """Click a range of a node's text.
 
