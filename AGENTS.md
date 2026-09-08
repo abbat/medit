@@ -112,7 +112,7 @@ happens, and `-Wodr` has caught defects there that nothing else sees.
 
 `.github/workflows/package.yml` is the other half of the compiling: the deb on Debian 12
 and Ubuntu 26.04 (both toolkits each), the rpm on fedora:44 with LTO, the Arch package,
-and a check that the version is the same in all six places it is written.
+and a check that the version is the same in all seven places it is written.
 
 `.github/workflows/ui.yml` compiles with clang, runs the static analyzer, and is the only
 job that runs the program rather than reading it. Its `harness` job goes first and takes
@@ -214,7 +214,7 @@ would, also on every push:
 
 | job | what it covers |
 |---|---|
-| `version` | the version in `CMakeLists.txt`, `NEWS`, `debian/changelog`, `rpm/medit.spec`, `arch/PKGBUILD` and `README.md` — six files, nothing deriving one from another |
+| `version` | the version in `CMakeLists.txt`, `NEWS`, `debian/changelog`, `rpm/medit.spec`, `rpm/medit.obs.spec`, `arch/PKGBUILD` and `README.md` — seven files, nothing deriving one from another |
 | `deb` | `dpkg-buildpackage` on ubuntu 22.04 and debian 13, two compiles each, then installs the result and runs it |
 | `rpm` | `rpmbuild` on fedora:44, then installs and runs |
 | `arch` | `makepkg` on archlinux, then installs and runs |
@@ -671,9 +671,10 @@ the whole `snapshot.debian.org` recipe its dead archive needed. A new one is wor
 container run before it goes in the matrix — Ubuntu 26.04 arrived with gcc 15 and cmake
 4.2, two and three major versions ahead of anything the tree had been built with.
 
-The version itself lives in six places and they all have to move together. The `version`
-job in `package.yml` compares all six and fails if one is left behind, so this is a list
-to work through rather than a thing to remember. `1.3.4` was cut like this:
+The version itself lives in seven places and they all have to move together. The
+`version` job in `package.yml` compares all seven and fails if one is left behind, so
+this is a list to work through rather than a thing to remember. `1.3.5` was cut like
+this:
 
 1. `CMakeLists.txt` — `MOO_MICRO_VERSION`. The comment above it says "keep in sync with
    debian/changelog", and that is the whole of the coupling: nothing derives one from
@@ -685,9 +686,37 @@ to work through rather than a thing to remember. `1.3.4` was cut like this:
    the blank line before the signature and the RFC 2822 date (`date -R`).
 4. `rpm/medit.spec` — `Version:` and a `%changelog` entry, newest first, dated
    `Day Mon DD YYYY`.
-5. `arch/PKGBUILD` — `pkgver`.
-6. `README.md` — "current release of this fork", and the two tag examples in the
+5. `rpm/medit.obs.spec` — the same two, with the same text.
+6. `arch/PKGBUILD` — `pkgver`.
+7. `README.md` — "current release of this fork", and the two tag examples in the
    paragraph about `git checkout`.
+
+**Two rpm specs, because OBS downloads nothing.** `rpm/medit.spec` is the one CI builds
+and the one a person builds from a checkout: its `Source0` is the tarball GitHub
+generates for the tag, and `%autosetup` unpacks a `medit-<version>/` prefix. OBS copies
+whatever files sit in the package directory into `SOURCES` and fetches nothing, so a
+spec that names GitHub's tarball fails there before it compiles a line:
+
+```
+rpmuncompress -x /home/abuild/rpmbuild/SOURCES/medit-1.3.5.tar.gz
+error: File ...: No such file or directory
+```
+
+`rpm/medit.obs.spec` names `medit_<version>.tar.bz2` and unpacks `medit/` instead,
+which is the convention the other packages of this maintainer use there. It also
+branches the handful of `BuildRequires` that openSUSE spells differently
+(`gdk-pixbuf-devel`, `gettext-tools`, `vte-devel`) and leaves `ENABLE_STRICT` off:
+the Fedora spec turns it on deliberately, being the one build here with LTO and so
+with `-Wodr`, and accepts that a new compiler can fail the package over a warning —
+which on a builder compiling against a dozen distributions at once is a release that
+does not build for a warning nobody has seen.
+
+The `rpm` job parses that spec and runs its `%prep` against a tarball laid out the way
+OBS's is, which is exactly the step that failed. It does not build it: `%build`,
+`%install` and `%files` are the same lines as the spec it just built, and the openSUSE
+half of the `BuildRequires` cannot be resolved on Fedora at all. **The openSUSE
+branches are therefore unverified by anything here** — the first OBS build after a
+change to them is the check.
 
 Then commit, merge to `main`, push, and tag:
 
