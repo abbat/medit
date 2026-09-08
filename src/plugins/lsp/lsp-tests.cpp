@@ -476,18 +476,26 @@ test_config_parse_bad (void)
 }
 
 
+/*
+ * The markers here are made up rather than the ".git" and "go.mod" a real
+ * lsp.xml names, and that is the whole point: the walk goes up from a directory
+ * under the temp directory, through it and to the root, so a marker with a real
+ * name anywhere above -- a stray /tmp/.git, which is a thing that happens --
+ * would be found and the last case here would report that directory instead.
+ * The names below cannot be up there.
+ */
 static void
 test_config_root (void)
 {
     char *dir = g_dir_make_tmp ("medit-unit-XXXXXX", NULL);
     char *sub = g_build_filename (dir, "a", "b", nullptr);
     char *marker;
-    char *markers[] = { (char*) ".git", (char*) "go.mod", NULL };
+    char *markers[] = { (char*) ".medit-unit-root", (char*) "medit-unit-root.mod", NULL };
     char *none[] = { NULL };
     char *root;
 
     g_assert_cmpint (g_mkdir_with_parents (sub, 0700), ==, 0);
-    marker = write_temp (dir, ".git", "gitdir: elsewhere\n");
+    marker = write_temp (dir, ".medit-unit-root", "whatever a marker holds\n");
 
     /* Two directories down, and the marker at the top: the top is the root. */
     root = lsp_config_find_root (sub, markers);

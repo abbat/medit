@@ -113,6 +113,15 @@ looks**: that whole class is clang's, and the ui job is where it lands. And `g_r
 not `g_assert` — the checks are compiled in every build, so only what an assertion guards
 is at risk of having rotted.
 
+**Nothing that walks up out of a temp directory may look for a real name.** The LSP
+client finds a project root by walking up until a directory holds one of the markers, and
+a test of that walk starts under the temp directory — so the walk goes through `/tmp` and
+on to `/`, and a stray `/tmp/.git` on the machine running it becomes the answer. It cost a
+run here: `unit.lsp.config.root` and `lsp.root_markers` both failed, both correctly, on a
+machine that had one. Both use a made-up marker name now, and the reason is written at
+each. The rule generalises to anything the code searches for by name above the directory a
+test made.
+
 **Pin nothing to an English string.** The kind names in the symbol tree are translated, so
 a test comparing against "function" passes in the C locale and fails on a Russian machine;
 compare against `lsp_symbol_kind_name()` instead. The ctest entry pins `LC_ALL=C.UTF-8`
@@ -206,6 +215,66 @@ button, so once the file built, OK had no response and the dialog would not clos
 `<action-widget>` naming an id the file does not declare — at build time and without a
 display, which is where this belongs: the check already existed and only compared the
 ids the C asks for against the ids the file declares, and every id here existed.
+
+## The highlighting goldens
+
+`src/mooedit/langs/check.sh` validates 179 `.lang` files against `language2.rng` on every
+push. That says they are well-formed XML of the right shape and **nothing at all** about
+what they highlight. The goldens run them.
+
+```bash
+buildu3/src/medit --unit-test /mooedit/highlight/c    # one language
+cd buildu3 && ctest -R unit.mooedit.highlight         # all of them, ~0.5 s
+```
+
+One sample per language under `tests/highlight`, named `<lang id>.<ext>` so the extension
+is the language's own and the test does not have to carry a table. Each is loaded into a
+`MooTextBuffer`, given the engine the language creates, highlighted to the end
+**synchronously** — there is no main loop here to run the idle handler the engine would
+otherwise wait for — and the tags that came out are written down beside it in
+`<lang id>.tags`:
+
+```
+10:17-10:21    c:hexadecimal                  "0x2a"
+3:26-3:28      c:string c:printf              "%s"
+```
+
+Position, the styles applied there outermost first, and the text, so that a diff of the
+file is a diff of what the editor would show. Untagged runs are left out. To add a
+language, put the sample there and write the file with
+
+```bash
+MOO_TEST_UPDATE_GOLDEN=1 buildu3/src/medit --unit-test /mooedit/highlight/<lang id>
+```
+
+then **read what it wrote before committing it**. The file is the expectation; a wrong one
+is worse than none.
+
+**The tags are anonymous, and that is why the engine gained a function.** The context
+engine creates each tag with `gtk_text_buffer_create_tag (buffer, NULL, NULL)` and keeps
+the style ids in a hash of its own, so there is no way from a tag back to the name a lang
+file gave it. `_gtk_source_context_engine_get_tag_style()` reads that hash and changes
+nothing — the one addition to `src/gtksourceview` this needed.
+
+**The engine is driven directly rather than through `moo_text_buffer_set_lang()`**, which
+keeps its engine private: the dump needs the engine itself to name the styles. The text is
+in the buffer before the engine is attached, so nothing has to be forwarded to it as the
+buffer changes, and detaching at the end is what removes the idle handler and the marks.
+
+**What this catches and what it does not.** It catches an engine change that stops
+applying a style and an edit to a `.lang` file that highlights something differently — the
+`html` sample reaches into the `css` and `js` definitions, so it also catches an
+`<include>` across languages breaking. It does not move the coverage number: `src/gtksourceview`
+is upstream code the report deliberately ignores (`MOO_COVERAGE_IGNORE` in
+`cmake/Coverage.cmake`), and what the test adds to the measured side is the small amount
+of `moolang` around it.
+
+**The engine matches with `GRegex`, so the goldens are as portable as pcre is.** They pass
+on both toolkits and on glib 2.74 and 2.88 as written; if a distribution ever disagrees
+about one of them, that is a real difference in what a user sees and worth knowing rather
+than papering over. The samples stay on mainstream constructs — comments, strings,
+keywords, numbers — for the same reason.
+
 
 ## The UI tests
 

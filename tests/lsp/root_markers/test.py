@@ -14,21 +14,27 @@ the two servers share a log, as they would share a configuration file.
 Both toolkits: nothing is read from the screen.
 """
 
-MARKER = "gitdir: elsewhere\n"
+# A made-up name rather than ".git", which is what an lsp.xml really names. The
+# third case below is a file with no marker above it, and "above it" runs all
+# the way to the root through the temp directory the sandbox lives in -- so a
+# stray /tmp/.git, which is a thing that happens, would become that file's
+# project and the test would fail on a machine that has one.
+MARKER_NAME = ".medit-project"
+MARKER = "whatever a marker holds\n"
 
 
 def setup(s):
     s.plugin("Lsp")
 
     # A project with a marker at its root, and a file one directory down.
-    s.write("proj/.git", MARKER)
+    s.write("proj/" + MARKER_NAME, MARKER)
     s.open(s.write("proj/sub/one.txt", "one\n"))
     s.open(s.write("proj/two.txt", "two\n"))
 
     # And a file with no marker anywhere above it.
     s.open(s.write("elsewhere/three.txt", "three\n"))
 
-    s.lsp_server(filter="globs:*.txt", root=".git")
+    s.lsp_server(filter="globs:*.txt", root=MARKER_NAME)
 
 
 def run(t):
