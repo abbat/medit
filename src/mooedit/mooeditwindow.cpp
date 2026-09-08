@@ -3178,12 +3178,17 @@ _moo_edit_window_remove_doc (MooEditWindow *window,
     MooEditView *new_view;
     MooEditViewArray *views;
     gboolean had_focus = FALSE;
+    gboolean was_active;
     MooNotebook *notebook = nullptr;
     MooEditTab *tab;
     guint i;
 
     g_return_if_fail (MOO_IS_EDIT_WINDOW (window));
     g_return_if_fail (MOO_IS_EDIT (doc));
+
+    /* Before anything is detached from it, and read here rather than at the
+       end because set_active_tab() below already changes the answer. */
+    was_active = (doc == ACTIVE_DOC (window));
 
     tab = moo_edit_get_tab (doc);
     g_return_if_fail (MOO_IS_EDIT_TAB (tab));
@@ -3236,10 +3241,19 @@ _moo_edit_window_remove_doc (MooEditWindow *window,
     if (moo_notebook_get_n_pages (notebook) == 0)
         gtk_widget_hide (GTK_WIDGET (notebook));
 
+    /*
+     * The history answers "where now", and only closing the document that was
+     * being looked at asks the question: without the test on was_active,
+     * closing a document in the background switched the window to whatever the
+     * history had -- so closing one tab took the user off the tab they were
+     * reading, and to a document that is neither the one that closed nor a
+     * neighbour of it.
+     */
     if (window->priv->enable_history)
     {
         window->priv->history_blocked = FALSE;
-        if (window->priv->history)
+
+        if (was_active && window->priv->history)
             moo_edit_window_set_active_doc (window, (MooEdit*) window->priv->history->data);
     }
 

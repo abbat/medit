@@ -556,6 +556,17 @@ class Test(object):
 
         return self.wait(self._popup_menu, "a context menu", timeout)
 
+    def popup_at_point(self, x, y, timeout=a11y.TIMEOUT):
+        """Right-click a point the test worked out for itself, and take the menu.
+
+        For what has no accessible to point at -- a notebook tab, drawn on the
+        notebook's own window. t.popup() asks whatever has the focus, from the
+        keyboard, and over a tab strip that is the document rather than the tab.
+        """
+        self.click_at(x, y, button=3)
+
+        return self.wait(self._popup_menu, "a context menu", timeout)
+
     def item(self, menu, label, timeout=a11y.TIMEOUT):
         """One item of a menu that is already open.
 
