@@ -2913,8 +2913,6 @@ msgstr "не удалось запустить %s: %s"
 #~ msgid "Python support"
 #~ msgstr "Поддержка языка Питон"
 
-#~ msgid "Show only fixed width fonts"
-#~ msgstr "Показывать только моноширинные шрифты"
 
 #~ msgid "Terminal plugin"
 #~ msgstr "Модуль терминала"
@@ -3102,8 +3100,6 @@ msgstr "не удалось запустить %s: %s"
 #~ msgid "Whole words only"
 #~ msgstr "Только целые слова"
 
-#~ msgid "Editor"
-#~ msgstr "Редактор"
 
 #~ msgid "None"
 #~ msgstr "Нет"
@@ -3241,3 +3237,13 @@ msgstr "Вставить в терминале"
 #: ../src/plugins/terminal/terminal-plugin.cpp:854
 msgid "Paste the clipboard into the terminal pane"
 msgstr "Вставить содержимое буфера обмена в панель терминала"
+
+#: ../src/mooutils/moofontsel.c:503
+msgid "Show only fixed width fonts"
+msgstr "Показывать только моноширинные шрифты"
+
+#. Translators: the heading this window's commands are listed under in
+#. Configure Shortcuts, beside one per plugin.
+#: ../src/mooedit/mooeditwindow.cpp:436
+msgid "Editor"
+msgstr "Редактор"

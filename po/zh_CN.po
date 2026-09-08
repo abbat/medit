@@ -2410,8 +2410,6 @@ msgstr ""
 #~ msgid "Python support"
 #~ msgstr "Python支持"
 
-#~ msgid "Show only fixed width fonts"
-#~ msgstr "只显示固定宽度的字体"
 
 #~ msgid "Terminal plugin"
 #~ msgstr "终端插件"
@@ -3110,3 +3108,13 @@ msgstr "运算符"
 msgctxt "symbol kind"
 msgid "type parameter"
 msgstr "类型参数"
+
+#: ../src/mooutils/moofontsel.c:503
+msgid "Show only fixed width fonts"
+msgstr "只显示固定宽度的字体"
+
+#. Translators: the heading this window's commands are listed under in
+#. Configure Shortcuts, beside one per plugin.
+#: ../src/mooedit/mooeditwindow.cpp:436
+msgid "Editor"
+msgstr "编辑器"

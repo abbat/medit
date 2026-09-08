@@ -785,9 +785,24 @@ still half empty, and `nl` 119. Every string of the terminal and of the LSP clie
 translated in all ten, which is the one part of the tree where the newer catalogs are not
 behind.
 
+**A string can be live, translated, and still English on screen.** Two ways, both found by
+auditing rather than by looking: a file that marks strings for translation and is not in
+`POTFILES.in` (its msgids go obsolete in every catalog, and the translations sit there
+behind `#~` while the program shows English — `moofontsel.c` and its "Show only fixed width
+fonts" spent years like that), and a literal that was never marked at all (the heading the
+editor's commands appear under in Configure Shortcuts was `"Editor"`, the window's display
+name, passed as a bare string). Both checks are worth repeating after adding a file:
+compare the set of files containing `_(`, `N_(`, `C_(` against `POTFILES.in`, and look for
+what the catalogs have obsolete that the source still contains.
+
+Note when translating a display name that the *id* beside it is not one: accelerator paths
+and the `Shortcuts/` preference keys are built from the id, so translating that would make
+a user's key bindings locale-dependent.
+
 `ja.po` and `pl.po` still fail `msgfmt --check` on plural forms, which is pre-existing and
 about the header rather than any one string; `--check-format` is clean everywhere, the one
-Japanese entry that had lost a `%s` having been fixed. Two things to keep true when adding
+Japanese entry that had lost a `%s` having been fixed. `fi.po` had a Spanish string in one
+obsolete entry, which is what reviving one blindly can cost. Two things to keep true when adding
 to a catalog: a translated string with a mnemonic keeps the underscore (on a letter of the
 translation, not of the English), and `msgctxt` entries have to be appended with their
 context or the lookup misses -- `C_("symbol kind", "class")` is not the same msgid as a

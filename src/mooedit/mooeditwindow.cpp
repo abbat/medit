@@ -433,7 +433,11 @@ moo_edit_window_class_init (MooEditWindowClass *klass)
     INSTALL_PROP (PROP_HAS_STOP_CLIENTS, "has-stop-clients");
     INSTALL_PROP (PROP_CAN_MOVE_TO_SPLIT_NOTEBOOK, "can-move-to-split-notebook");
 
-    moo_window_class_set_id (window_class, "Editor", "Editor");
+    /* Translators: the heading this window's commands are listed under in
+       Configure Shortcuts, beside one per plugin. The id beside it is not
+       translated: it is what the accelerator paths and the preference keys
+       under Shortcuts/ are made of. */
+    moo_window_class_set_id (window_class, "Editor", _("Editor"));
 
     moo_window_class_new_action (window_class, "NewDoc", nullptr,
                                  "display-name", GTK_STOCK_NEW,

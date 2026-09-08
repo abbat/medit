@@ -2934,3 +2934,13 @@ msgstr "operador"
 msgctxt "symbol kind"
 msgid "type parameter"
 msgstr "parámetro de tipo"
+
+#: ../src/mooutils/moofontsel.c:503
+msgid "Show only fixed width fonts"
+msgstr "Mostrar solo tipografías de ancho fijo"
+
+#. Translators: the heading this window's commands are listed under in
+#. Configure Shortcuts, beside one per plugin.
+#: ../src/mooedit/mooeditwindow.cpp:436
+msgid "Editor"
+msgstr "Editor"

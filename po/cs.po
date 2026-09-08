@@ -2428,8 +2428,6 @@ msgstr ""
 #~ msgid "Python support"
 #~ msgstr "Podpora Pythonu"
 
-#~ msgid "Show only fixed width fonts"
-#~ msgstr "Zobrazovat jen písma s pevnou šířkou"
 
 #~ msgid "Terminal plugin"
 #~ msgstr "Plugin pro terminál"
@@ -3000,3 +2998,13 @@ msgstr "operátor"
 msgctxt "symbol kind"
 msgid "type parameter"
 msgstr "typový parametr"
+
+#: ../src/mooutils/moofontsel.c:503
+msgid "Show only fixed width fonts"
+msgstr "Zobrazovat jen písma s pevnou šířkou"
+
+#. Translators: the heading this window's commands are listed under in
+#. Configure Shortcuts, beside one per plugin.
+#: ../src/mooedit/mooeditwindow.cpp:436
+msgid "Editor"
+msgstr "Editor"

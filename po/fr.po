@@ -2476,8 +2476,6 @@ msgstr "Tous les documents"
 #~ msgid "Python support"
 #~ msgstr "Support python"
 
-#~ msgid "Show only fixed width fonts"
-#~ msgstr "Ne montrer que les polices à chasse fixe"
 
 #~ msgid "Terminal plugin"
 #~ msgstr "Plugin Terminal"
@@ -3263,3 +3261,13 @@ msgstr "opérateur"
 msgctxt "symbol kind"
 msgid "type parameter"
 msgstr "paramètre de type"
+
+#: ../src/mooutils/moofontsel.c:503
+msgid "Show only fixed width fonts"
+msgstr "Ne montrer que les polices à chasse fixe"
+
+#. Translators: the heading this window's commands are listed under in
+#. Configure Shortcuts, beside one per plugin.
+#: ../src/mooedit/mooeditwindow.cpp:436
+msgid "Editor"
+msgstr "Éditeur"

@@ -44,6 +44,7 @@ src/mooutils/mooentry.cpp
 src/mooutils/moofiledialog.c
 src/mooutils/moofilewriter.cpp
 src/mooutils/moofiltermgr.c
+src/mooutils/moofontsel.c
 src/mooutils/moohelp.c
 src/mooutils/moopane.c
 src/mooutils/moostock.c

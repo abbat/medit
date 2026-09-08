@@ -47,6 +47,10 @@ def run(t):
 
     # And in a section of their own rather than among the editor's hundred:
     # the list is grouped by the action group, and each plugin makes one.
+    # The editor's own heading is the window's display name, which is
+    # translated -- the id beside it, which the accelerator paths are made of,
+    # is not. In this locale the two read the same.
+    t.check("Editor" in listed, "the editor's own commands are under a heading")
     t.check("LSP" in listed, "the client's commands are under a heading of their own")
 
     if t.gtk == 3:

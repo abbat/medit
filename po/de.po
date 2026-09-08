@@ -2451,8 +2451,6 @@ msgstr "alle Dokumente"
 #~ msgid "FILE"
 #~ msgstr "DATEI"
 
-#~ msgid "Show only fixed width fonts"
-#~ msgstr "Nur Schriftarten fester Breite anzeigen"
 
 #~ msgid "Terminal plugin"
 #~ msgstr "Konsolenzusatzmodul"
@@ -2979,3 +2977,13 @@ msgstr "Operator"
 msgctxt "symbol kind"
 msgid "type parameter"
 msgstr "Typparameter"
+
+#: ../src/mooutils/moofontsel.c:503
+msgid "Show only fixed width fonts"
+msgstr "Nur Schriftarten fester Breite anzeigen"
+
+#. Translators: the heading this window's commands are listed under in
+#. Configure Shortcuts, beside one per plugin.
+#: ../src/mooedit/mooeditwindow.cpp:436
+msgid "Editor"
+msgstr "Editor"
