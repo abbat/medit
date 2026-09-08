@@ -2111,8 +2111,12 @@ and what it comes out as over white.
   remove it too — a marker that survives a reading it passed costs the next reader the
   same reading. If you find something and are not fixing it now, replace the marker
   with what you found and how you found it.
-- Verify before claiming: build both, run both with the exit-code rule, screenshot when
-  the change is visual, and state what was *not* verified. On a push CI compiles every
+- Verify before claiming: build both **with `-DENABLE_STRICT=ON`**, run both with the
+  exit-code rule, screenshot when the change is visual, and state what was *not*
+  verified. Strict is not an extra: every job that compiles anything uses it, the
+  package builds included, so an ordinary local build is a weaker check than any gate
+  and `-Werror=unused-variable` on a line the change orphaned is enough to turn two
+  jobs red. On a push CI compiles every
   supported distribution but one, with both compilers, builds every package, and drives
   the program through the UI tests — so what is worth doing by hand is looking at what it
   did, and anything the tests do not cover yet.

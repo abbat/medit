@@ -2094,10 +2094,6 @@ draw_border (MooPaned       *paned,
     GdkRectangle rect;
     GtkWidget *widget = GTK_WIDGET (paned);
 
-#if GTK_CHECK_VERSION(3,0,0)
-    GtkStyleContext *context;
-#endif
-
     rect.x = paned->priv->button_box_size;
     rect.y = paned->priv->button_box_size;
 
