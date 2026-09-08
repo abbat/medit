@@ -16,20 +16,7 @@ read as pixels -- a tab is mostly its own light background, and anything that
 is not a picture of the tab is not.
 """
 
-from lib import input as ui
-
-# The strip runs from the top of the notebook to the top of the page. Sampled
-# at a fixed offset into it rather than at the middle of a tab: a tab that is
-# not the current one is drawn a couple of pixels lower, and this is inside
-# both.
-STRIP = 17
-
-# How finely to look along the strip for the edges of a tab. The step bounds
-# how well an edge is known, and everything below stays well inside what it
-# finds. How far to look is not fixed: the scan runs to the width of the
-# notebook and stops as soon as the third tab answers, so a machine whose font
-# makes the tabs wider costs a few more clicks rather than a failure.
-STEP = 12
+from lib.notebook import order, showing, spans, strip
 
 # What a tab looks like: mostly the light surface it is drawn on, with the
 # text a small dark part of it. The tab in the air is that same picture
@@ -49,13 +36,13 @@ def run(t):
     t.check(order(t) == ["alpha.txt", "bravo.txt", "charlie.txt"],
             "the three documents are open in the order they were given")
 
-    spans = tab_spans(t)
-    t.log("the tabs are at %s" % spans)
+    tabs = spans(t, 3)
+    t.log("the tabs are at %s" % tabs)
 
     for name in ("alpha.txt", "bravo.txt", "charlie.txt"):
-        t.check(name in spans, "%s has a tab on the strip" % name)
+        t.check(name in tabs, "%s has a tab on the strip" % name)
 
-    picture_of_itself(t, spans)
+    picture_of_itself(t, tabs)
 
     t.check(order(t) == ["bravo.txt", "alpha.txt", "charlie.txt"],
             "dropping the middle tab on the first one reordered them")
@@ -112,56 +99,3 @@ def grey(colour):
     red, green, blue = (int(colour[i:i + 2], 16) for i in (1, 3, 5))
 
     return (red * 299 + green * 587 + blue * 114) // 1000
-
-
-def tab_spans(t):
-    """Click along the strip and note which page each x brings forward.
-
-    Read from the page that is showing rather than from the window title: the
-    title follows the document that has the focus, which after a run of clicks
-    on the strip is not reliably the one whose tab was last clicked.
-    """
-    x0, y0, width, height = t.extents(the_notebook(t))
-    spans = {}
-
-    for x in range(x0 + 2, x0 + width, STEP):
-        t.click_at(x, strip(t))
-        name = showing(t)
-
-        if name is None:
-            continue
-
-        low, high = spans.get(name, (x, x))
-        spans[name] = (min(low, x), max(high, x))
-
-        # The third tab has answered, so the second one's span is complete and
-        # there is nothing further along worth the clicks.
-        if len(spans) == 3:
-            break
-
-    return spans
-
-
-def strip(t):
-    """Where along the height of the window the tabs are drawn."""
-    return t.extents(the_notebook(t))[1] + STRIP
-
-
-def the_notebook(t):
-    """The notebook the documents are in -- the one that is on screen."""
-    return [n for n in t.find_all(t.frame, role="page tab list", depth=25)
-            if ui.on_screen(n)][0]
-
-
-def order(t):
-    """The documents as the notebook holds them, named after their tabs."""
-    return [n.name for n in t.find_all(the_notebook(t), depth=1)]
-
-
-def showing(t):
-    """The one page of the notebook that is drawn: the current document."""
-    for page in t.find_all(the_notebook(t), depth=1):
-        if ui.on_screen(page):
-            return page.name
-
-    return None
