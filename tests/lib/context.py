@@ -270,6 +270,17 @@ class Test(object):
         x, y = ui.click(node, button)
         self.log("click %s at (%d,%d)" % (described, x, y))
 
+    def click_at(self, x, y, button=1, times=1):
+        """Click a point the test worked out for itself.
+
+        For what has no accessible to point at: a tab drawn on a notebook's
+        own window, a cell a view paints itself. A test that can name the
+        widget clicks the widget.
+        """
+        ui.click_at(x, y, button=button, times=times)
+        self.log("click (%d,%d)%s" % (x, y, ", twice" if times == 2 else ""))
+        return x, y
+
     def click_range(self, node, start, end, times=1, button=1):
         """Click where a range of the node's text is drawn."""
         x, y = ui.click_range(node, start, end, button=button, times=times)
@@ -297,9 +308,13 @@ class Test(object):
                  % (a11y.role_name(node), a11y.name(node), dx, dy, x, y))
         return x, y
 
-    def drag_to(self, x0, y0, x1, y1, button=1):
-        """Drag between two points the test worked out for itself."""
-        ui.drag(x0, y0, x1, y1, button=button)
+    def drag_to(self, x0, y0, x1, y1, button=1, during=None):
+        """Drag between two points the test worked out for itself.
+
+        during= is called with the button still down and the pointer at the
+        far end, for the things that exist only while a drag is happening.
+        """
+        ui.drag(x0, y0, x1, y1, button=button, during=during)
         self.log("drag (%d,%d) -> (%d,%d)" % (x0, y0, x1, y1))
         return x1, y1
 

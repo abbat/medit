@@ -212,7 +212,7 @@ def click_at(x, y, button=1, settle=SETTLE, times=1):
     time.sleep(settle)
 
 
-def drag(x0, y0, x1, y1, button=1, steps=12, settle=SETTLE):
+def drag(x0, y0, x1, y1, button=1, steps=12, settle=SETTLE, during=None):
     """Press at one point, travel to another, release there.
 
     Not "mousedown, mousemove, mouseup": a toolkit decides that a drag has
@@ -243,6 +243,13 @@ def drag(x0, y0, x1, y1, button=1, steps=12, settle=SETTLE):
     # pointer is when the button comes up, and a release in the same instant
     # as the last motion has been seen to land at the previous position.
     time.sleep(POINTER)
+
+    # Anything the caller wants to look at while the button is still down --
+    # what is drawn under the pointer during a drag exists only here, and is
+    # gone by the time the drop has been handled.
+    if during is not None:
+        during()
+
     _xdotool("mouseup", button)
     time.sleep(settle)
 

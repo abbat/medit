@@ -91,9 +91,12 @@ struct _MooNotebookPrivate {
     gboolean     in_drag;
     gboolean     want_snapshot;
 
-#if GTK_CHECK_VERSION(3,0,0)
-    cairo_surface_t *snapshot_pixmap;
-#else
+    /* GTK+2 only. It was the fallback for a pixbuf that could not be got out
+       of the tab window, and there is nothing on GTK+3 that can be drawn from
+       and no second place to keep it -- the port declared it as a
+       cairo_surface_t*, never assigned one, and freed it with
+       g_object_unref(). */
+#if !GTK_CHECK_VERSION(3,0,0)
     GdkPixmap   *snapshot_pixmap;
 #endif
 
@@ -2657,6 +2660,63 @@ moo_notebook_draw_labels (MooNotebook    *nb,
 }
 
 
+/*
+ * A copy of the tab that is about to be dragged, taken off the tab window
+ * where it has just been drawn.
+ *
+ * GTK+2 asked gdk_pixbuf_get_from_drawable() to fill a pixbuf it had already
+ * made, and the port kept that pixbuf, filled a different one, and threw the
+ * filled one away -- so what was dragged across the strip was the contents of
+ * an uninitialised heap block with its alpha overwritten.
+ *
+ * The GTK+3 way is to draw the window into an image surface and read the
+ * surface back. ARGB32 rather than RGB24 because the caller sets an alpha on
+ * every pixel afterwards, and a pixbuf out of an opaque surface has three
+ * channels for it to walk over in strides of four.
+ */
+static GdkPixbuf *
+snapshot_of_the_tab (MooNotebook *nb,
+                     int          width,
+                     int          height)
+{
+#if GTK_CHECK_VERSION(3,0,0)
+    int offset = nb->priv->drag_page->label->offset - nb->priv->labels_offset;
+    cairo_surface_t *surface;
+    GdkPixbuf *pixbuf;
+    cairo_t *cr;
+
+    surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, width, height);
+    cr = cairo_create (surface);
+
+    /* Negative: the call places the window's own origin at the point given,
+       so the part of it that is wanted is brought back to zero by moving the
+       whole window left by where that part starts. */
+    gdk_cairo_set_source_window (cr, nb->priv->tab_window, -offset, 0);
+    cairo_rectangle (cr, 0, 0, width, height);
+    cairo_fill (cr);
+    cairo_destroy (cr);
+
+    pixbuf = gdk_pixbuf_get_from_surface (surface, 0, 0, width, height);
+    cairo_surface_destroy (surface);
+
+    return pixbuf;
+#else
+    GdkPixbuf *pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, width, height);
+
+    if (gdk_pixbuf_get_from_drawable (pixbuf, nb->priv->tab_window,
+                                      gdk_drawable_get_colormap (nb->priv->tab_window),
+                                      nb->priv->drag_page->label->offset - nb->priv->labels_offset,
+                                      0, 0, 0,
+                                      width, height))
+        return pixbuf;
+
+    g_object_unref (pixbuf);
+
+    return NULL;
+#endif
+}
+
+
 static void
 moo_notebook_draw_dragged_label (MooNotebook    *nb,
 #if GTK_CHECK_VERSION (3, 0, 0)
@@ -2684,8 +2744,12 @@ moo_notebook_draw_dragged_label (MooNotebook    *nb,
         guchar *pixels;
         int rowstride, row, i;
 
+#if GTK_CHECK_VERSION(3,0,0)
+        g_return_if_fail (nb->priv->snapshot_pixbuf == NULL);
+#else
         g_return_if_fail (nb->priv->snapshot_pixmap == NULL &&
                 nb->priv->snapshot_pixbuf == NULL);
+#endif
 
         /* TODO: this event may not cover whole label area */
 #if GTK_CHECK_VERSION(3,0,0)
@@ -2706,74 +2770,14 @@ moo_notebook_draw_dragged_label (MooNotebook    *nb,
 
         nb->priv->want_snapshot = FALSE;
 
-        pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE,
-                                 8, width, height);
+        pixbuf = snapshot_of_the_tab (nb, width, height);
 
-#if GTK_CHECK_VERSION(3,0,0)
-        /* FIXME: pixbuf is never filled. gdk_pixbuf_new() does not clear the
-           memory it allocates, the window is copied into temp_pixbuf, and it
-           is temp_pixbuf that gets unref'd below while pixbuf becomes
-           snapshot_pixbuf -- so the tab dragged across the strip is whatever
-           was in that heap block, with its alpha set to LABEL_ALPHA. Either
-           make gdk_pixbuf_get_from_surface()'s result the snapshot, or copy
-           the window straight into pixbuf. */
-        cairo_surface_t *surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, width, height);
-        cairo_t *cr = cairo_create (surface);
-        gdk_cairo_set_source_window (cr, nb->priv->tab_window,
-                                    nb->priv->drag_page->label->offset - nb->priv->labels_offset, 0);
-        cairo_rectangle (cr, 0, 0, width, height);
-        cairo_fill (cr);
-        cairo_destroy (cr);
-
-        /* Convert cairo surface to pixbuf */
-        GdkPixbuf *temp_pixbuf = gdk_pixbuf_get_from_surface (surface, 0, 0, width, height);
-        cairo_surface_destroy (surface);
-
-        if (!temp_pixbuf)
-#else
-        if (!gdk_pixbuf_get_from_drawable (pixbuf, nb->priv->tab_window,
-                                           gdk_drawable_get_colormap (nb->priv->tab_window),
-                                           nb->priv->drag_page->label->offset - nb->priv->labels_offset,
-                                           0, 0, 0,
-                                           width, height))
-#endif
+        if (!pixbuf)
         {
             g_critical ("could not create pixbuf");
-            g_object_unref (pixbuf);
-
-#if GTK_CHECK_VERSION(3,0,0)
-            /* FIXME: this branch does nothing and leaks. GTK+2 put the copy
-               in snapshot_pixmap, which the caller below requires to be
-               non-NULL; here the surface is drawn, destroyed, and never
-               stored, and snapshot_pixmap stays NULL. Note also that
-               snapshot_pixmap is a cairo_surface_t* in the GTK+3 struct while
-               moo_notebook_drag_end() still frees it with g_object_unref(). */
-            cairo_surface_t *surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, width, height);
-            cairo_t *cr = cairo_create (surface);
-            gdk_cairo_set_source_window (cr, nb->priv->tab_window,
-                                        nb->priv->drag_page->label->offset - nb->priv->labels_offset, 0);
-            cairo_rectangle (cr, 0, 0, width, height);
-            cairo_fill (cr);
-            cairo_destroy (cr);
-#else
-            nb->priv->snapshot_pixmap =
-                    gdk_pixmap_new (nb->priv->tab_window,
-                                    width, height, -1);
-
-            gdk_draw_drawable (nb->priv->snapshot_pixmap,
-                               widget->style->bg_gc[GTK_STATE_NORMAL],
-                               nb->priv->tab_window,
-                               nb->priv->drag_page->label->offset - nb->priv->labels_offset,
-                               0, 0, 0,
-                               width, height);
-#endif
         }
         else
         {
-#if GTK_CHECK_VERSION(3,0,0)
-            g_object_unref (temp_pixbuf);
-#endif
-
             nb->priv->snapshot_pixbuf = pixbuf;
 
             pixels = gdk_pixbuf_get_pixels (pixbuf);
@@ -2796,7 +2800,15 @@ moo_notebook_draw_dragged_label (MooNotebook    *nb,
         if (!gdk_rectangle_intersect (&intersect_area, area, &intersect_area))
             return;
 
+#if GTK_CHECK_VERSION(3,0,0)
+        /* There is no second way to hold the snapshot on GTK+3, so a snapshot
+           that could not be taken is a tab drawn where it already is rather
+           than a warning per frame of the drag. */
+        if (!nb->priv->snapshot_pixbuf)
+            return;
+#else
         g_return_if_fail (nb->priv->snapshot_pixmap != NULL || nb->priv->snapshot_pixbuf != NULL);
+#endif
 
         if (nb->priv->snapshot_pixbuf)
 #if GTK_CHECK_VERSION(3,0,0)
@@ -2820,13 +2832,8 @@ moo_notebook_draw_dragged_label (MooNotebook    *nb,
                              intersect_area.height,
                              GDK_RGB_DITHER_NONE, 0, 0);
 #endif
+#if !GTK_CHECK_VERSION(3,0,0)
         else
-#if GTK_CHECK_VERSION(3,0,0)
-        {
-            /* FIXME: */
-            g_warning("Unimplemented FIXME");
-        }
-#else
             gdk_draw_drawable (nb->priv->tab_window,
                                widget->style->bg_gc[GTK_STATE_NORMAL],
                                nb->priv->snapshot_pixmap,
@@ -3208,10 +3215,13 @@ tab_drag_end (MooNotebook *nb,
 
     if (nb->priv->snapshot_pixbuf)
         g_object_unref (nb->priv->snapshot_pixbuf);
+    nb->priv->snapshot_pixbuf = NULL;
+
+#if !GTK_CHECK_VERSION(3,0,0)
     if (nb->priv->snapshot_pixmap)
         g_object_unref (nb->priv->snapshot_pixmap);
-    nb->priv->snapshot_pixbuf = NULL;
     nb->priv->snapshot_pixmap = NULL;
+#endif
     nb->priv->want_snapshot = FALSE;
 
     drag_scroll_stop (nb);
