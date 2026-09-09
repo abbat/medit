@@ -13,35 +13,4 @@
 # file ever leaves undefended. Lowering it is a legitimate commit too, when
 # covered code was deleted or a test was retired, with the reason written here
 # beside the number.
-#
-# 2026-09-07  41.57% measured on the first run: 32 UI tests and 17 unit tests,
-#             gtk2 at 38.56% and gtk3 at 41.37%.
-# 2026-09-08  42.97%, raised to 42.7: five more of the language server protocol
-#             answered, with five UI tests and twenty unit tests behind them --
-#             gtk2 at 39.71%, gtk3 at 42.80%, and src/plugins/lsp at 85.41%.
-# 2026-09-08  43.84%, raised to 43.5: the shortcuts dialog is driven now, and
-#             the accelerator map with it -- two UI tests, and a third that
-#             rebinds the terminal's keys before pressing them.
-# 2026-09-08  48.96%, raised to 48.7: the sweep of the 53 AI markers, five UI
-#             tests and three unit tests behind it. The file selector is
-#             driven for the first time -- its icon view, its menu and its
-#             properties dialog -- and so are the panes and the document tab
-#             strip, which is what src/moofileview at 46.86% and src/mooutils
-#             at 55.40% are. gtk2 at 41.20%, gtk3 at 48.95%.
-# 2026-09-08  50.32%, raised to 50.0: every entry of the file selector's
-#             context menu is driven now, by four more UI tests and one longer
-#             one -- src/moofileview at 52.88%.
-# 2026-09-09  60.42%, raised to 60.1: the menu bar is driven now. Thirty-one UI
-#             tests over the document view and the tab strip, and over the File,
-#             Window, Tools, View, Search and Document menus with the dialogs
-#             behind them -- src/mooedit at 63.49% and src/mooutils at 63.89%.
-#             gtk2 at 41.90%, gtk3 at 60.58%.
-# 2026-09-09  68.80%, raised to 68.5: the Edit menu, the preferences and the
-#             file selector. Twenty-seven more UI tests -- every page of the
-#             preferences dialog, the tools and filters and Open With entries
-#             they edit, the file selector's completion, typeahead, filter,
-#             delete and bookmarks, the panes detached and the plugins switched
-#             off, the output filter of a user tool, and two dialogs about
-#             losing data. src/mooutils at 71.35%, src/moofileview at 62.26%,
-#             src/plugins/usertools at 64.61%; gtk2 at 42.09%, gtk3 at 69.05%.
 68.5
