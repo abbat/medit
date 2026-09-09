@@ -38,6 +38,7 @@ ADD = 1
 
 WORKDIR = "workdir"
 
+
 def setup(s):
     s.plugin("FileSelector")
     s.write("workdir/aaa.txt", "a file, so the directory is not empty")

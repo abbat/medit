@@ -130,6 +130,3 @@ def page_buttons(t, dialog):
              if not b.name]
 
     return sorted(found, key=lambda node: t.extents(node)[0])
-
-
-

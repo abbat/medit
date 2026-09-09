@@ -30,7 +30,8 @@ TOOL = "Complain"
 FILTERS_XML = """<?xml version="1.0" encoding="UTF-8"?>
 <medit-filters version="1.0">
   <filter id="test" _name="Filter|Test">
-    <match what="stdout" pattern="^(?P&lt;file&gt;[^:]+):(?P&lt;line&gt;\\d+):" style="output-error"/>
+    <match what="stdout" style="output-error"
+           pattern="^(?P&lt;file&gt;[^:]+):(?P&lt;line&gt;\\d+):"/>
   </filter>
 </medit-filters>
 """

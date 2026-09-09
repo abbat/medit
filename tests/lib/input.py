@@ -119,6 +119,23 @@ def move_window(window, x, y, settle=SETTLE):
     time.sleep(settle)
 
 
+def move_window(x, y, window=None):
+    """Put a window somewhere else on the screen.
+
+    There is no window manager, so a window medit opens is wherever medit asked
+    for -- which for a detached document is over the window it came from, exactly.
+    A test that has to reach the one underneath moves the new one out of the way
+    first; nothing else can.
+
+    Which window is the caller's to say, as with focus_window(): the default is
+    the last one xdotool lists, which is the one that opened most recently.
+    """
+    if window is None:
+        window = windows()[-1]
+
+    _xdotool("windowmove", window, x, y)
+
+
 def focus_window(pattern=APP_CLASS, window=None):
     """Point the X input focus at the application's window.
 
