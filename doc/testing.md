@@ -305,9 +305,9 @@ Build directories of their own, `buildu2` and `buildu3` beside `build2` and `bui
 sanitized binary is three times the size and visibly slower, which is not what an
 ordinary build should become.
 
-A test is `tests/<subsystem>/<name>/test.py` — `app`, `editor`, `file`, `document`,
-`view`, `search`, `window`, `tools`, `terminal`, `lsp` so far, the middle ones being one
-menu each — one `run(t)` function, and nearly the whole vocabulary is on `t`
+A test is `tests/<subsystem>/<name>/test.py` — `app`, `editor`, `file`, `edit`,
+`document`, `view`, `search`, `window`, `tools`, `terminal`, `lsp` so far, the middle ones
+being one menu each — one `run(t)` function, and nearly the whole vocabulary is on `t`
 (`tests/lib/context.py`); what is not is `from lib import input as ui` for the few things
 that are coordinates rather than widgets, and `from lib.notebook import ...` for the
 document strip. ctest labels each test with its subsystem and its toolkit. One
@@ -421,6 +421,20 @@ is `menu` where an ordinary item is `menu item`.
 input focus to a window that has just appeared, and clicking an entry only moves the caret
 within a window that already has it. The symptom is an entry that keeps its old text with
 no error anywhere.
+
+**Three widgets take the keys or the pointer away, each in its own way.** A
+`MooHistoryCombo` — the entry of the Find dialog, of Find in Files — pops up a completion
+list as soon as what is typed matches its history, and that list takes a pointer grab: the
+next click is spent dismissing it and reaches nothing else, so a test that types a term it
+has searched for before clicks its button until the dialog goes rather than once
+(`tests/search/find_options`). An in-place cell edit — the File List pane's Rename, the
+bookmark editor's New — ends the moment the input focus moves, so the `t.focus()` that
+every other test does after a menu must be left out and the typing follow the menu item
+directly (`tests/tools/file_list`). And a menu dropped by a toolbar `MooMenuAction` — the
+file selector's bookmarks — is in no accessibility tree the harness can reach and its items
+report an impossible position whether it is up or not; it is driven by the arrows and
+Return, which reach it because a GTK menu grabs the keyboard, and the assertions are made
+about whatever it opens (`tests/app/bookmark_editor`).
 
 Each test gets a temp root, a home directory, an X server (`Xvfb -displayfd`, so no two
 tests race for a display number — see the trap below) and a session bus of its own. HOME
