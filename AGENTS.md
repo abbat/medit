@@ -61,6 +61,27 @@ conventions for code and commits.
 
 ---
 
+## What costs money
+
+The bill is cache reads: every tool call re-reads the whole context, so the cost of a
+session is its context size times its number of tool calls. What gets written is noise
+next to that — one long session here spent about $26 on everything it produced and five
+times that on re-reading what it already had.
+
+1. **One task per session.** Once the commit is pushed, `/clear`: the state is in git
+   and in `doc/`, not in the transcript. A session that has drifted to 400k tokens pays
+   ten times per call what a fresh one does, for the same work. `--autocompact 200k`
+   puts a ceiling on the drift when the work really is one long task.
+2. **Never let raw output into the transcript.** `ctest ... | grep -E "ok:|FAIL"`, never
+   a whole `-V` run; anything long goes to the scratchpad and is grepped there. A 30k
+   dump costs 30k on every later call, not once.
+3. **Wait for CI in one background loop**, then read one filtered summary. Polling
+   `gh run view` by hand is a full-price request that buys no information.
+4. **Mechanical sweeps** — a whole-suite run, log triage, a batch experiment — belong in
+   a fresh subagent or a cheaper model, and come back as counts rather than as logs.
+
+---
+
 ## Environment traps that cost tokens
 
 | trap | do this |
