@@ -1,7 +1,5 @@
 """Show Toolbar hides and shows the toolbar, and Toolbar Style changes its shape.
 
-# requires: MOO_GTK3
-
 Both live in MooWindow rather than in the editor: "ShowToolbar" is a toggle bound
 to the window's toolbar-visible condition, and "ToolbarStyle" is a
 moo_menu_action with four radio items built by create_toolbar_style_action().
@@ -12,6 +10,12 @@ The style is read as the height of the toolbar rather than as the tick on the
 radio item, because the tick would move in a build where the toolbar never
 changed. Labels below icons need two rows where icons alone need one, so the
 comparison is between two styles asked for by name and never against a number.
+
+One of the few UI tests that run on GTK+2 as well: it reads the menu bar and the
+toolbar and nothing else. Everything in a pane, and every document, is off the
+accessibility bus in GTK+2 -- gail reports no children for MooPaned or
+MooNotebook and its types cannot be subclassed -- which is what the other
+`# requires: MOO_GTK3` headers in tests/ come down to.
 """
 
 SHOW = "Show Toolbar"
