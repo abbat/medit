@@ -1,3 +1,18 @@
+medit (1.3.6) unstable; urgency=low
+
+  * Fix the scroll arrows of an overfull document tab strip, which were drawn
+    a pixel high in the corner of the notebook and would not scroll it.
+  * Fix closing a document in a background tab, which moved the window to a
+    third document instead of leaving the view alone.
+  * Fix the bookmarks in the Document menu, whose entries were offset by a row
+    whenever a bookmark had been added or removed since the menu was built.
+  * Fix Preferences / Tools, where picking a type for a new tool showed no
+    settings, and the two tabs of the page read an untranslated context.
+  * Test what a user does: 124 UI tests against the accessibility bus, and 70%
+    of the lines covered over both toolkits, gated in CI.
+
+ -- Anton Batenev <antonbatenev@yandex.ru>  Wed, 09 Sep 2026 18:57:56 +0300
+
 medit (1.3.5) unstable; urgency=low
 
   * Read all 53 blocks the GTK+3 port left marked as unreviewed against the

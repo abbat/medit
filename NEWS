@@ -1,3 +1,34 @@
+2026-09-09  Anton Batenev  <antonbatenev@yandex.ru>
+
+    * === Released 1.3.6 ===
+
+    Four defects that the tests written since the last release found, all of
+    them in code a user meets and none of them visible from reading it.
+    A tab strip whose tabs do not fit has two arrow buttons to scroll it, and
+    they were drawn nowhere: the allocation that discovers the overflow places
+    them before the tabs are laid out, so they kept the size an unallocated
+    widget has -- a pixel high in the corner of the notebook -- until something
+    else moved the notebook around, and neither of them would scroll the strip
+    in any case. They are reported on the accessibility bus now as well, so a
+    screen reader can reach them.
+    Closing a document in a background tab moved the window to a third
+    document, neither the one that closed nor a neighbour of it: the history
+    that answers "where now" was consulted whatever went, and is asked now only
+    when the document being looked at is the one that closed.
+    The bookmarks in the Document menu were laid out from the list as it stood
+    the last time the menu was built, so the entries were offset by a row
+    whenever a bookmark had been added or removed since.
+    Picking a type for a new tool in Preferences / Tools showed nothing at all:
+    the page of settings for that type was switched to and never shown. The two
+    tabs on that same page read "user-tools-prefs|Tools menu" in every
+    language, a translation context leaking into the label.
+    Behind those, the tests: 124 UI tests where 1.3.5 had 49, and the two
+    toolkits together now cover 70% of the lines, measured in CI and gated
+    there. The Print dialog's options, the whole of the file selector's icon
+    view, every page of the preferences, the Edit and Document menus and the
+    dialogs behind them are driven, and the highlighting of the language
+    definitions is compared against goldens rather than read.
+
 2026-09-08  Anton Batenev  <antonbatenev@yandex.ru>
 
     * === Released 1.3.5 ===

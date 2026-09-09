@@ -6,7 +6,7 @@
 # have to carry the same version.
 
 Name:           medit
-Version:        1.3.5
+Version:        1.3.6
 Release:        1%{?dist}
 Summary:        Useful programming and around-programming text editor
 Group:          Productivity/Text/Editors
@@ -82,6 +82,10 @@ rm -rf %{buildroot}
 %{_mandir}/man1/%{name}.1*
 
 %changelog
+* Wed Sep 09 2026 Anton Batenev <antonbatenev@yandex.ru> - 1.3.6-1
+- Four defects the new tests found, in the tab strip, the Document menu and
+  Preferences / Tools
+
 * Tue Sep 08 2026 Anton Batenev <antonbatenev@yandex.ru> - 1.3.5-1
 - The GTK+3 port's unreviewed blocks read through, and 19 defects fixed
 
