@@ -36,4 +36,12 @@
 #             Window, Tools, View, Search and Document menus with the dialogs
 #             behind them -- src/mooedit at 63.49% and src/mooutils at 63.89%.
 #             gtk2 at 41.90%, gtk3 at 60.58%.
-60.1
+# 2026-09-09  68.80%, raised to 68.5: the Edit menu, the preferences and the
+#             file selector. Twenty-seven more UI tests -- every page of the
+#             preferences dialog, the tools and filters and Open With entries
+#             they edit, the file selector's completion, typeahead, filter,
+#             delete and bookmarks, the panes detached and the plugins switched
+#             off, the output filter of a user tool, and two dialogs about
+#             losing data. src/mooutils at 71.35%, src/moofileview at 62.26%,
+#             src/plugins/usertools at 64.61%; gtk2 at 42.09%, gtk3 at 69.05%.
+68.5
