@@ -1,7 +1,5 @@
 """Switching a plugin off in the preferences, and on again.
 
-# requires: MOO_GTK3
-
 Every pane and half the menus of medit are plugins, and the Plugins page of the
 preferences is where they are switched on and off -- mooplugin.c's
 moo_plugin_set_enabled(), which unloads the plugin's windows, takes its actions
