@@ -14,6 +14,8 @@ installed medit to borrow definitions from. It claims "*.haiku", the page adds
 page could have made it a Haiku.
 """
 
+from lib import input as ui
+
 SPEC = """<?xml version="1.0" encoding="UTF-8"?>
 <language id="haiku" name="Haiku" version="2.0" _section="Others">
   <metadata>
@@ -36,8 +38,6 @@ SPEC = """<?xml version="1.0" encoding="UTF-8"?>
   </definitions>
 </language>
 """
-
-from lib import input as ui
 
 LANGUAGE = ("Document", "Language")
 

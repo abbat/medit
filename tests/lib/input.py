@@ -114,26 +114,14 @@ def move_window(window, x, y, settle=SETTLE):
     overlapping over most of both -- and an overlap is a click that lands in
     whichever of them X stacked on top. A test with two windows says where it
     wants them.
+
+    With no window manager the same is true and worse: a window medit opens is
+    exactly where medit asked for it, which for a detached document is over the
+    window it came from, to the pixel. windows()[-1] is the one that opened most
+    recently.
     """
     _xdotool("windowmove", window, x, y)
     time.sleep(settle)
-
-
-def move_window(x, y, window=None):
-    """Put a window somewhere else on the screen.
-
-    There is no window manager, so a window medit opens is wherever medit asked
-    for -- which for a detached document is over the window it came from, exactly.
-    A test that has to reach the one underneath moves the new one out of the way
-    first; nothing else can.
-
-    Which window is the caller's to say, as with focus_window(): the default is
-    the last one xdotool lists, which is the one that opened most recently.
-    """
-    if window is None:
-        window = windows()[-1]
-
-    _xdotool("windowmove", window, x, y)
 
 
 def focus_window(pattern=APP_CLASS, window=None):

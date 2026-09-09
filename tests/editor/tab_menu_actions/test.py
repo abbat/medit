@@ -74,7 +74,7 @@ def run(t):
     # The new window comes up exactly over the old one -- there is no window
     # manager to put it anywhere else -- and everything after this, the runner's
     # own File/Quit included, would be clicking the wrong window.
-    ui.move_window(300, 250)
+    ui.move_window(ui.windows()[-1], 300, 250)
 
     holds = [order(t, frame) for frame in t.frames()]
     t.check([SECOND] in holds,
