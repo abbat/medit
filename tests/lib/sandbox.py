@@ -246,8 +246,16 @@ def wm_is_running(display, timeout=0):
         time.sleep(0.2)
 
 
-def start_wm(display, log_path, timeout=20):
-    """Start a window manager on that display and wait until it has the screen."""
+def start_wm(display, log_path, timeout=60):
+    """Start a window manager on that display and wait until it has the screen.
+
+    A minute rather than the twenty seconds this used to allow. Claiming the
+    screen is process startup, not anything the test is about, and on a loaded
+    machine it is slow: with the suite grown past a hundred tests, ctest runs as
+    many of them at once as there are cores and xfwm4 missed the old deadline in
+    CI. Waiting longer costs nothing when it answers at once, which is the
+    ordinary case.
+    """
     log = open(log_path, "ab")
 
     try:

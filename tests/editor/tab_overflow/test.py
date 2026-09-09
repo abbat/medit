@@ -11,16 +11,21 @@ notebook and are in no accessibility tree, so this is the reachable half of the
 same code.
 
 Read by clicking one fixed point on the strip and asking which document came
-forward: after scrolling one way it is a later document, and after scrolling far
-enough the other way it is the very first tab, where labels_scroll() clamps.
-None of it depends on where a tab is drawn or on what colour it is.
+forward. The strip is scrolled to its left end first, where labels_scroll()
+clamps and the first tab has to be: from there, scrolling the other way has to
+bring a later document under the same point. Neither reading depends on where a
+tab is drawn or on what colour it is.
 
-The strip does not start at the left end, which is worth knowing before reading
-the numbers below: opening a document scrolls the strip to show its tab, so with
-fourteen open the left of the strip is somewhere in the middle of the list. So
-does clicking one, which is why three notches move the tab under the fixed point
-by one name rather than by three -- the reading is a direction and a clamp, not a
-distance.
+Starting from the left end is what makes it reliable, and finding that out cost a
+CI run. The strip does not start there: opening a document scrolls it to show
+that document's tab, and so does clicking one, so where the left of the strip is
+depends on how many tabs fit -- which depends on the font. On the machine this was
+written on there was room to scroll further right at the start; in CI the strip
+was already at its right end, where the wheel does nothing and rightly so.
+
+For the same reason the reading is a direction rather than a distance: three
+notches move the tab under the fixed point by one name, not by three, because
+clicking to read it scrolls the strip too.
 
 labels_scroll() does nothing at all while the tabs fit, so a build where the
 strip stopped overflowing would fail here rather than pass quietly: the same
@@ -53,8 +58,19 @@ def run(t):
 
     x = t.extents(the_notebook(t))[0] + 6
 
+    # To the left end first, so that what follows starts from a known place.
+    # Where the strip sits to begin with is not knowable: opening a document
+    # scrolls it to show that document's tab, and how many tabs fit before it
+    # depends on the width of the font -- on one machine the left of the strip
+    # was the eleventh tab and there was room to scroll further right, on
+    # another it was the twelfth and the strip was already at its right end,
+    # where the wheel correctly does nothing.
+    scroll(t, x, BACK, down=False)
+
     first = document_at(t, x)
-    t.log("the click at the left of the strip answers with %s" % first)
+    t.check(first == NAMES[0],
+            "scrolled as far left as it goes, the first tab is at the left end: %s"
+            % first)
 
     scroll(t, x, FORWARD, down=True)
 
@@ -66,13 +82,6 @@ def run(t):
     t.check(order(t).index(later) > order(t).index(first),
             "and it moved towards the end of the strip: %s comes after %s"
             % (later, first))
-
-    scroll(t, x, BACK, down=False)
-
-    back = document_at(t, x)
-    t.check(back == NAMES[0],
-            "scrolling the other way as far as it goes leaves the first tab at the "
-            "left end: %s, where the strip stops" % back)
 
 
 def document_at(t, x):
