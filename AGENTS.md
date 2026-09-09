@@ -79,6 +79,8 @@ times that on re-reading what it already had.
    `gh run view` by hand is a full-price request that buys no information.
 4. **Mechanical sweeps** — a whole-suite run, log triage, a batch experiment — belong in
    a fresh subagent or a cheaper model, and come back as counts rather than as logs.
+   `.claude/agents/` has two for that: `suite-run` runs ctest here and `ci-triage`
+   waits on a GitHub Actions run, both reporting names and numbers only.
 
 ---
 
