@@ -21,6 +21,13 @@ paper. The count in between says the tick got out of the dialog and onto the
 page.
 """
 
+import re
+import zlib
+
+# A page object of a PDF, written either "/Type /Page" or "/Type/Page" -- and not
+# "/Type /Pages", which is the tree the pages hang from.
+PAGE_OBJECT = re.compile(rb"/Type\s*/Page[^s]")
+
 NAME = "long-lines.txt"
 
 # Long enough that a line takes several across a page when it is wrapped and one
@@ -51,14 +58,21 @@ def setup(s):
 
 def run(t):
     ellipsized = print_it(t, tick=None, before=b"")
-    t.log("ellipsized, the document is %d pages" % pages(ellipsized))
-
     wrapped = print_it(t, tick=WRAP, before=ellipsized)
-    t.log("wrapped, it is %d pages" % pages(wrapped))
 
-    t.check(pages(wrapped) > pages(ellipsized),
-            "wrapping the lines took more paper than ellipsizing them: %d pages "
-            "against %d" % (pages(wrapped), pages(ellipsized)))
+    short, long = pages(ellipsized), pages(wrapped)
+
+    if short and long:
+        t.check(long > short,
+                "wrapping the lines took more paper than ellipsizing them: %d "
+                "pages against %d" % (long, short))
+    else:
+        # A PDF that will not say how many pages it has still says how much of
+        # it there is, and three times the printed lines is not a near thing.
+        t.log("the PDFs do not say how many pages they have")
+        t.check(len(wrapped) > len(ellipsized) * 5 // 4,
+                "wrapping the lines took more paper than ellipsizing them: "
+                "%d bytes of PDF against %d" % (len(wrapped), len(ellipsized)))
 
 
 def print_it(t, tick, before):
@@ -130,13 +144,38 @@ def pdf(t, before):
 
 
 def pages(written):
-    """How many pages the PDF has.
+    """How many pages the PDF has, or 0 when the file will not say.
 
-    Counted from the page objects rather than from /Count: cairo writes the
-    dictionaries uncompressed, so this needs no PDF library on the machine the
-    tests run on.
+    Counted from the page objects, so that this needs no PDF library on the
+    machine the tests run on. Where they are depends on the version of cairo:
+    one writes the dictionaries as they are, another puts them in a compressed
+    object stream, so the streams are inflated and looked through when the plain
+    text of the file has none -- and if a third does something else again, the
+    count is 0 and the caller measures the paper another way.
     """
-    return written.count(b"/Type /Page\n") + written.count(b"/Type /Page ")
+    found = len(PAGE_OBJECT.findall(written))
+
+    if found:
+        return found
+
+    for chunk in inflated(written):
+        found += len(PAGE_OBJECT.findall(chunk))
+
+    return found
+
+
+def inflated(written):
+    """Every stream of the PDF that inflates, which is most of them."""
+    for start in re.finditer(rb"stream\r?\n", written):
+        end = written.find(b"endstream", start.end())
+
+        if end < 0:
+            continue
+
+        try:
+            yield zlib.decompress(written[start.end():end])
+        except zlib.error:
+            continue
 
 
 def choose_printer(t, dialog):
