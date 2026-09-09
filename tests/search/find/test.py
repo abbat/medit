@@ -10,7 +10,9 @@ What is asserted is which occurrence is selected at each step, because that is
 the whole of what a search does: the first match, the next one, the one after
 that, round to the start when there are no more, and back the other way with
 Find Previous. The case-sensitive box is ticked at the end, where it has to turn
-three matches into one.
+three matches into one -- and then Find Next on that one match says the pattern
+was not found, which is medit's answer and not a shortcoming: the wrap searches
+up to the start of the current match and so excludes it.
 """
 
 CONTENT = "alpha beta\ngamma alpha\ndelta Alpha\n"
@@ -49,12 +51,39 @@ def run(t):
                      "with case sensitivity on, %r matches only the capital one: %s"
                      % (CAPITAL, THIRD))
 
+    # One match and no other. "Next" means another one, and the wrap search runs
+    # from the start of the buffer to the start of the current match -- which
+    # excludes it -- so medit says the pattern was not found and puts the cursor
+    # where the match ended instead of re-selecting it. That is the behaviour,
+    # not a shortcoming: the test pins it so a change of mind about it is a
+    # change somebody has to make deliberately.
     t.menu("Search", "Find Next")
-    t.settle(1)
-    t.log("after Find Next the selection is %s and the toplevels are %s"
-          % (t.selection(view),
-             [t.role(n) + " " + repr(n.name) for n in t.find_all(t.app, depth=1)]))
-    t.wait_selection(view, THIRD, "Find Next stays on the only match")
+
+    t.wait(lambda: t.selection(view) is None,
+           "the selection to be dropped when there is no next match; it is %s"
+           % (t.selection(view),))
+    t.log("ok: Find Next on the only match reports nothing further and drops the "
+          "selection")
+
+    t.check(t.caret(view) == THIRD[1],
+            "leaving the cursor where the match ended: %d" % t.caret(view))
+
+    t.check("not found" in said(t),
+            "and saying so where medit puts its messages: %r" % said(t))
+
+
+def said(t):
+    """What the status bar is showing.
+
+    moo_window_message() pushes onto a GtkStatusbar, whose text is not a label
+    of its own in the tree -- it is the name of the status bar node.
+    """
+    bar = t.find(t.frame, role="status bar", depth=25)
+
+    if bar is None:
+        return t.fail("no status bar in the window:\n%s" % t.dump(t.frame))
+
+    return "%s %s" % (bar.name or "", t.text(bar))
 
 
 def search_for(t, term, case_sensitive=False):
