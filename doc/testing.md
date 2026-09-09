@@ -426,6 +426,18 @@ tests race for a display number — see the trap below) and a session bus of its
 is sandboxed too, which only began to matter with the terminal: a shell reads the rc files
 of whoever runs the tests, so with the real one it came up with the developer's prompt,
 wrote to the developer's history, and behaved differently again in CI.
+
+**An installed medit is isolated away too.** `XDG_DATA_HOME` takes away what a user
+configured; `MOO_DATA_DIRS` takes away what a package installed — the language
+definitions, style schemes and user tools under `/usr/share/medit` that medit would
+otherwise find through `XDG_DATA_DIRS`. Without it the same test behaves differently on a
+machine with the package installed and in CI, where it is not: measured, the Language menu
+is full on this machine and holds only "None" in the container. `MOO_DATA_DIRS` rather
+than `XDG_DATA_DIRS` because the latter would also take away `/usr/share/mime`, and with
+it the file type a document reports. So a test that needs a language definition supplies
+its own: `s.write_data("language-specs/<id>.lang", …)`, which `tests/document/language`
+does.
+
 `UI_TEST_PARALLEL` says how many run at once. Browsers are intercepted, not opened: a
 fake `x-scheme-handler/http` desktop entry appends the URL to a file, so "the license
 opened in a browser" is a string comparison.

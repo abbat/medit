@@ -47,6 +47,17 @@ def make_root(tmp_root=TMP_ROOT):
         "HOME": os.path.join(root, "home"),
         "XDG_DATA_HOME": os.path.join(root, "data"),
         "XDG_CONFIG_HOME": os.path.join(root, "config"),
+        # medit's own data, and nothing of the machine's. XDG_DATA_HOME above
+        # takes away what a user configured; this takes away what an installed
+        # medit provides -- language definitions, style schemes, user tools --
+        # which is otherwise found through XDG_DATA_DIRS in /usr/share/medit and
+        # makes a test on a machine with the package installed behave differently
+        # from the same test in CI, where it is not. Measured: the Language menu
+        # is full here and holds only "None" in the container.
+        #
+        # MOO_DATA_DIRS rather than XDG_DATA_DIRS, which would also take away
+        # /usr/share/mime and with it the file type a document reports.
+        "MOO_DATA_DIRS": os.path.join(root, "share", "medit"),
         "XDG_CACHE_HOME": os.path.join(root, "cache"),
         "XDG_STATE_HOME": os.path.join(root, "state"),
         "XDG_RUNTIME_DIR": os.path.join(root, "run"),
