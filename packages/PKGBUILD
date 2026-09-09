@@ -14,7 +14,7 @@ optdepends=('ctags: list the functions of the open document'
             'gopls: the language server for Go'
             'python-lsp-server: the language server for Python')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('0000000000000000000000000000000000000000000000000000000000000000')
+sha256sums=('7f79d02e35e353985784ba36d6ee62849b647fee324f969f2ebff94f912b54b5')
 
 build() {
     # CMAKE_BUILD_TYPE=None keeps the flags makepkg exports; the install hook
