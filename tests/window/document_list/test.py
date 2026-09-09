@@ -40,8 +40,11 @@ def run(t):
     t.check(listed != order(t),
             "which is not the order the strip has them in: %s" % ", ".join(order(t)))
 
-    t.check(ticked(t) == [OPENED[-1]],
-            "and the current document is the one ticked: %s" % ticked(t))
+    # Read once: ticked() opens the menu to look, and opening a menu that is
+    # already open closes it.
+    state = ticked(t)
+    t.check(state == [OPENED[-1]],
+            "and the current document is the one ticked: %s" % state)
 
     # Choosing one is what the menu is for.
     t.escape()
@@ -52,8 +55,8 @@ def run(t):
            % showing(t))
     t.log("ok: choosing a document from the menu switches to it")
 
-    t.check(ticked(t) == [OPENED[0]],
-            "and the tick moved with it: %s" % ticked(t))
+    state = ticked(t)
+    t.check(state == [OPENED[0]], "and the tick moved with it: %s" % state)
 
 
 def the_menu(t):

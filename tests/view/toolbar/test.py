@@ -51,8 +51,11 @@ def run(t):
            "against %d" % (t.extents(toolbar(t))[3], short))
     t.log("ok: Toolbar Style changes the toolbar and not only the menu")
 
-    t.check(chosen(t) == [BELOW],
-            "and the style that was picked is the one ticked: %s" % chosen(t))
+    # Read once: chosen() opens the menu, and opening one that is already open
+    # closes it again.
+    picked = chosen(t)
+    t.check(picked == [BELOW],
+            "and the style that was picked is the one ticked: %s" % picked)
     t.escape()
 
 
