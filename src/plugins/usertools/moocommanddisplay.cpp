@@ -95,6 +95,15 @@ combo_changed (MooCommandDisplay *display)
         display->data[index].data = moo_command_data_new (factory->n_keys);
 
     gtk_notebook_set_current_page (display->notebook, index);
+
+    /* Shown as well as switched. The notebook is hidden while nothing is
+       selected, which is where a command with no type yet leaves it -- a command
+       that has just been created in the preferences -- and picking a type here is
+       the other way it stops being nothing. Without this the settings of the type
+       and the entry for the command itself never appear, and there is no way to
+       finish making the command. */
+    gtk_widget_show (GTK_WIDGET (display->notebook));
+
     widget = gtk_notebook_get_nth_page (display->notebook, index);
     _moo_command_factory_load_data (factory, widget, display->data[index].data);
 }

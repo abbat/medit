@@ -315,7 +315,7 @@
             <child type="tab">
               <object class="GtkLabel" id="label12">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes" context="yes" comments="Label of notebook tab on User Tools prefs page, remove the part before and including |">user-tools-prefs|Tools menu</property>
+                <property name="label" translatable="yes" context="user-tools-prefs" comments="Label of a notebook tab on the User Tools preferences page">Tools menu</property>
               </object>
               <packing>
                 <property name="tab_fill">False</property>
@@ -332,7 +332,7 @@
             <child type="tab">
               <object class="GtkLabel" id="label13">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes" context="yes" comments="Label of notebook tab on User Tools prefs page, remove the part before and including |">user-tools-prefs|Context menu</property>
+                <property name="label" translatable="yes" context="user-tools-prefs" comments="Label of a notebook tab on the User Tools preferences page">Context menu</property>
               </object>
               <packing>
                 <property name="position">1</property>

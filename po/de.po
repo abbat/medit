@@ -2275,14 +2275,16 @@ msgstr "_Speichern:"
 msgid "_Type:"
 msgstr "_Typ:"
 
-#. Label of notebook tab on User Tools prefs page, remove the part before and including |
+#. Label of a notebook tab on the User Tools preferences page
 #: ../src/plugins/usertools/glade/moousertools.glade.h:11
-msgid "user-tools-prefs|Tools menu"
+msgctxt "user-tools-prefs"
+msgid "Tools menu"
 msgstr "Werkzeugmenü"
 
-#. Label of notebook tab on User Tools prefs page, remove the part before and including |
+#. Label of a notebook tab on the User Tools preferences page
 #: ../src/plugins/usertools/glade/moousertools.glade.h:13
-msgid "user-tools-prefs|Context menu"
+msgctxt "user-tools-prefs"
+msgid "Context menu"
 msgstr "Contextmenü"
 
 #. Translators: this is an action for output of a shell command, remove the part before and including |
