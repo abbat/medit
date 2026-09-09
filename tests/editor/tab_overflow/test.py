@@ -5,10 +5,8 @@
 labels_scroll() in moonotebook.c, reached from moo_notebook_scroll_event(). The
 strip is medit's own, and so is this: GtkNotebook answers a wheel over its tabs
 by switching pages, and MooNotebook moves the strip instead, leaving the current
-page alone. It is also the only way to reach a tab that is off the end of the
-strip other than the two arrow buttons, which are internal children of the
-notebook and are in no accessibility tree, so this is the reachable half of the
-same code.
+page alone. It is also one of the two ways to reach a tab that is off the end of
+the strip; the other is the arrow buttons, which tests/editor/tab_arrows drives.
 
 Read by clicking one fixed point on the strip and asking which document came
 forward. The strip is scrolled to its left end first, where labels_scroll()

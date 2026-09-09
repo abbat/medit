@@ -40,14 +40,18 @@ def strip(t, frame=None):
 
 
 def order(t, frame=None):
-    """The documents as the notebook holds them, named after their tabs."""
-    return [n.name for n in t.find_all(the_notebook(t, frame), depth=1)]
+    """The documents as the notebook holds them, named after their tabs.
+
+    Only the named children: the notebook reports the two scroll arrows among
+    its children as well while the tabs do not fit, and they are not documents.
+    """
+    return [n.name for n in t.find_all(the_notebook(t, frame), depth=1) if n.name]
 
 
 def showing(t, frame=None):
     """The one page of the notebook that is drawn: the current document."""
     for page in t.find_all(the_notebook(t, frame), depth=1):
-        if ui.on_screen(page):
+        if page.name and ui.on_screen(page):
             return page.name
 
     return None
