@@ -22,12 +22,16 @@ from both halves.
 import json
 import os
 import shlex
+import shutil
 import sys
 
 from xml.sax.saxutils import escape
 
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+
+# The tree the tests live in, and with them medit's own data files.
+SOURCE = os.path.dirname(os.path.dirname(HERE))
 
 # Written by moo_prefs_save() under XDG_DATA_HOME at exit, and read at startup.
 PREFS_FILE = os.path.join("medit", "prefs.xml")
@@ -152,6 +156,22 @@ class Setup(object):
 
         with open(path, "w") as f:
             f.write(body)
+
+        return path
+
+    def copy_data(self, name, source):
+        """A file of medit's own, copied into medit's data directory.
+
+        For what a test needs medit to find and the sandbox deliberately does not
+        have. MOO_DATA_DIRS takes an installed medit's data away (sandbox.py says
+        why), and some of that data is not a matter of taste: every language
+        definition is validated against language-specs/language2.rng, and without
+        it a definition a test supplies is refused with "could not find the
+        RelaxNG schema file". source is a path in the source tree.
+        """
+        path = os.path.join(self.data_home, "medit", name)
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        shutil.copyfile(os.path.join(SOURCE, source), path)
 
         return path
 
