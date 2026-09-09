@@ -31,4 +31,9 @@
 # 2026-09-08  50.32%, raised to 50.0: every entry of the file selector's
 #             context menu is driven now, by four more UI tests and one longer
 #             one -- src/moofileview at 52.88%.
-50.0
+# 2026-09-09  60.42%, raised to 60.1: the menu bar is driven now. Thirty-one UI
+#             tests over the document view and the tab strip, and over the File,
+#             Window, Tools, View, Search and Document menus with the dialogs
+#             behind them -- src/mooedit at 63.49% and src/mooutils at 63.89%.
+#             gtk2 at 41.90%, gtk3 at 60.58%.
+60.1
