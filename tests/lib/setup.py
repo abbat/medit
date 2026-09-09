@@ -139,6 +139,22 @@ class Setup(object):
 
         return path
 
+    def write_data(self, name, body):
+        """A file in medit's own data directory, by path.
+
+        Where medit looks for what a user has configured: prefs.xml, lsp.xml and
+        the user tool descriptions all live there, rather than in the sandbox's
+        working directory. Written straight away rather than at commit(), since a
+        caller that builds the contents itself has nothing left to collect.
+        """
+        path = os.path.join(self.data_home, "medit", name)
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+
+        with open(path, "w") as f:
+            f.write(body)
+
+        return path
+
     def script(self, name, body):
         """An executable file in the sandbox, by path.
 
