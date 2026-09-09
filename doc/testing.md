@@ -305,8 +305,9 @@ Build directories of their own, `buildu2` and `buildu3` beside `build2` and `bui
 sanitized binary is three times the size and visibly slower, which is not what an
 ordinary build should become.
 
-A test is `tests/<subsystem>/<name>/test.py` — `app`, `editor`, `file`, `terminal`, `lsp`
-so far — one `run(t)` function, and nearly the whole vocabulary is on `t`
+A test is `tests/<subsystem>/<name>/test.py` — `app`, `editor`, `file`, `document`,
+`view`, `search`, `window`, `tools`, `terminal`, `lsp` so far, the middle ones being one
+menu each — one `run(t)` function, and nearly the whole vocabulary is on `t`
 (`tests/lib/context.py`); what is not is `from lib import input as ui` for the few things
 that are coordinates rather than widgets, and `from lib.notebook import ...` for the
 document strip. ctest labels each test with its subsystem and its toolkit. One
