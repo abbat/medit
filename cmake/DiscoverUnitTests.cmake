@@ -32,6 +32,14 @@ set(_moo_count 0)
 foreach(_moo_line IN LISTS _moo_lines)
     string(STRIP "${_moo_line}" _moo_path)
 
+    # Newer glib lists in TAP form, where every line is a comment and a test
+    # path arrives as "# /mooutils/file-line"; older glib prints the path on its
+    # own. Measured: glib 2.74 the second way, glib 2.88 the first, which is why
+    # this was green on a developer's machine and red in CI. The other comment
+    # lines -- the seed, "Start of ... tests" -- do not begin with a slash once
+    # the marker is off, so the test below still tells them apart.
+    string(REGEX REPLACE "^# *" "" _moo_path "${_moo_path}")
+
     if(NOT _moo_path MATCHES "^/")
         continue()
     endif()
