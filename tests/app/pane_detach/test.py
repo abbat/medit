@@ -72,7 +72,7 @@ def window_of(t, node):
 def path_entry(t):
     """The file selector's path entry, which is the only entry on screen."""
     entries = [node for node in t.find_all(t.app, role="text", depth=30)
-               if ui.on_screen(node) and not t.state(node, "multi line")]
+               if ui.on_screen(node) and not t.state(node, "multi_line")]
 
     return entries[0] if entries else None
 

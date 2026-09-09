@@ -14,6 +14,9 @@ one nothing had driven. Both answers are given: Cancel leaves what another
 process wrote, Overwrite replaces it with what is in the buffer.
 """
 
+import os
+import time
+
 NAME = "notes.txt"
 
 OPENED = "as it was opened\n"
@@ -42,6 +45,16 @@ def run(t):
 
     # And now the file changes underneath it.
     t.sandbox.write("workdir/" + NAME, FROM_OUTSIDE)
+
+    # medit looks every half second and compares modification times, which are
+    # whole seconds here: a file written within the same second as the last look
+    # has the same time and the change is missed -- measured, in CI, where the
+    # test then saved without being asked anything. So the time is pushed
+    # forward, and the test waits for a look to have happened.
+    path = t.sandbox.path("workdir", NAME)
+    later = time.time() + 2
+    os.utime(path, (later, later))
+    t.settle(2)
 
     # Cancelled: what the other process wrote is still there.
     ask(t)

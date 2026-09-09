@@ -73,7 +73,11 @@ def run(t):
     choose(t, input_combo, LINES)
     choose(t, output_combo, INSERT)
 
-    code = t.need(dialog, role="text", depth=30, pred=editable_and_big,
+    # The code view is the one text widget of the page that is not an entry.
+    # By what it is rather than by how big it is: the dialog is not the same size
+    # everywhere the tests run, and a height was the first thing this got wrong.
+    code = t.need(dialog, role="text", depth=30,
+                  pred=lambda node: t.state(node, "multi_line"),
                   what="the text view the command's code goes in")
     t.focus()
     t.click(code)
@@ -98,11 +102,6 @@ def run(t):
     t.focus()
     t.key("ctrl+s")
     t.wait(lambda: "[modified]" not in (t.frame.name or ""), "the document to be saved")
-
-
-def editable_and_big(node):
-    """The code view: the one editable text widget that is not a one-line entry."""
-    return node.queryComponent().getExtents(0).height > 60
 
 
 def page_buttons(t, dialog):
