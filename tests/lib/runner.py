@@ -193,7 +193,7 @@ def load_test(path):
 NO_DISPLAY = "cannot open display"
 
 
-def start_medit(binary, log_dir, files=(), attempts=3, settle=2.0):
+def start_medit(binary, log_dir, files=(), cwd=None, attempts=3, settle=2.0):
     """Start medit, and start it again if it could not open the display.
 
     Not a retry of anything else: only this one failure, and only when medit
@@ -205,6 +205,11 @@ def start_medit(binary, log_dir, files=(), attempts=3, settle=2.0):
 
     A medit that crashes at startup exits with a different message, is not
     retried, and its log is the same log this appends to.
+
+    cwd is the sandbox, so that anything medit writes to a name rather than to a
+    path lands there: GTK's "Print to File" printer writes output.pdf into the
+    current directory, and with the directory ctest left this process in that is
+    the build tree.
     """
     path = os.path.join(log_dir, "medit.log")
 
@@ -218,7 +223,7 @@ def start_medit(binary, log_dir, files=(), attempts=3, settle=2.0):
         written = os.path.getsize(path) if os.path.exists(path) else 0
 
         log = open(path, "ab")
-        proc = subprocess.Popen(argv, stdout=log, stderr=subprocess.STDOUT)
+        proc = subprocess.Popen(argv, stdout=log, stderr=subprocess.STDOUT, cwd=cwd)
         log.close()
 
         time.sleep(settle)
@@ -370,7 +375,7 @@ def inner(args):
                               os.path.join(log_dir, "wm.log"))
         print("    %s has the screen" % sandbox.WM)
 
-    proc = start_medit(args.binary, log_dir, prepared.files)
+    proc = start_medit(args.binary, log_dir, prepared.files, cwd=prepared.root)
 
     failure = None
     clean_exit = False

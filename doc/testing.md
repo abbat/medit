@@ -635,8 +635,17 @@ destroyed — and one on GTK+2, `gail_notebook_real_remove_gtk: assertion 'obj' 
 medit calls neither function; both are inside the toolkit's own accessible
 implementations, which only run because the bridge is loaded. The count also depends on
 the toolkit's version, not only on medit: debian 13's GTK+3 produces none of the three,
-and its GTK+2 still produces the one. So the runner counts criticals and prints the
+and its GTK+2 still produces the one. GTK's Print dialog produces ten of the same
+`gtk_notebook_get_tab_label` critical every time it is opened, which is why the two print
+tests report ten and twenty. So the runner counts criticals and prints the
 count, and does not gate on it.
+
+**medit runs in the sandbox, not in the build directory.** The runner starts it with the
+sandbox root as its working directory, so anything medit writes to a bare name lands
+there and the test can read it with `t.sandbox`. GTK's "Print to File" printer is the one
+that does this: it writes `output.pdf` into the current directory and offers no way to say
+otherwise, and before the runner said where that is, a print test wrote its PDF into
+`buildu3/tests`.
 
 **Quit through the UI, never with a signal.** A sanitizer only reports at exit, so a
 killed medit reports nothing; the runner clicks File/Quit and waits for the exit code,
