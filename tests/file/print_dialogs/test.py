@@ -1,7 +1,5 @@
 """The print dialogs open, and the Print one carries medit's own options.
 
-# requires: MOO_GTK3
-
 Page Setup and Print are GTK's dialogs and medit only has to put them up --
 _moo_edit_page_setup() and _moo_edit_print() -- which is exactly why nothing here
 asserts anything about their contents beyond one thing. A dialog that does not
