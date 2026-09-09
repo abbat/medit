@@ -193,6 +193,8 @@ static void          edit_changed                       (MooEditWindow      *win
                                                          MooEdit            *doc);
 static void          edit_filename_changed              (MooEditWindow      *window,
                                                          MooEdit            *doc);
+static void          edit_bookmarks_changed             (MooEditWindow      *window,
+                                                         MooEdit            *doc);
 static void          edit_encoding_changed              (MooEditWindow      *window,
                                                          GParamSpec         *pspec,
                                                          MooEdit            *doc);
@@ -238,6 +240,7 @@ static void          save_paned_config                  (MooEditWindow      *win
 static void          moo_edit_window_connect_menubar    (MooWindow          *window);
 static void          moo_edit_window_update_doc_list    (MooEditWindow      *window);
 static void          update_window_menu                 (MooEditWindow      *window);
+static void          update_bookmark_menu               (MooEditWindow      *window);
 static void          set_active_tab                     (MooEditWindow      *window,
                                                          MooEditTab         *tab);
 static void          window_menu_item_selected          (MooWindow          *window,
@@ -1974,6 +1977,55 @@ doc_item_selected (MooWindow   *window,
 }
 
 
+/*
+ * ::select above is too late on the opening where the list of bookmarks has
+ * changed: GTK+3 has sized and placed the submenu by then, so the items are
+ * drawn at other coordinates than the ones it measured -- 21 pixels lower, one
+ * item's worth, measured over the accessibility tree -- and a click meant for
+ * "Next Bookmark" lands on its neighbour.
+ *
+ * So the menu is brought up to date when the list changes instead, and is
+ * already the right size when it pops up. update_window_menu() does the same
+ * thing for the Window menu and says so at its own definition; this is the same
+ * bug in the same shape, found by driving the menu from a test.
+ *
+ * MooEdit::bookmarks-changed is what says the list has changed. It comes out of
+ * bookmarks_changed() in mooeditbookmark.cpp -- until now an empty stub, which is
+ * why ::select was doing the work -- and every path that adds, removes or moves a
+ * bookmark goes through it, the margin click and an edit that carries a mark to
+ * another line included.
+ */
+static void
+update_bookmark_menu (MooEditWindow *window)
+{
+    MooUiXml *xml;
+    GtkWidget *menubar;
+    GtkWidget *doc_item;
+    GtkWidget *menu;
+    GtkWidget *next_bk_item;
+
+    xml = moo_window_get_ui_xml (MOO_WINDOW (window));
+    menubar = MOO_WINDOW (window)->menubar;
+
+    if (xml == nullptr || menubar == nullptr)
+        return;
+
+    doc_item = moo_ui_xml_get_widget (xml, menubar, "Editor/Menubar/Document");
+    next_bk_item = moo_ui_xml_get_widget (xml, menubar,
+                                          "Editor/Menubar/Document/NextBookmark");
+
+    if (doc_item == nullptr || next_bk_item == nullptr)
+        return;
+
+    menu = gtk_menu_item_get_submenu (GTK_MENU_ITEM (doc_item));
+
+    if (menu == nullptr)
+        return;
+
+    populate_bookmark_menu (window, menu, next_bk_item);
+}
+
+
 static void
 moo_edit_window_connect_menubar (MooWindow *window)
 {
@@ -2586,11 +2638,20 @@ edit_changed (MooEditWindow *window,
         update_lang_menu (window);
         update_doc_view_actions (window);
         update_doc_encoding_item (window);
-    update_doc_line_end_item (window);
+        update_doc_line_end_item (window);
+        update_bookmark_menu (window);
     }
 
     if (doc)
         update_tab_labels (window, doc);
+}
+
+static void
+edit_bookmarks_changed (MooEditWindow *window,
+                        MooEdit       *doc)
+{
+    if (doc == ACTIVE_DOC (window))
+        update_bookmark_menu (window);
 }
 
 static void
@@ -3138,6 +3199,8 @@ _moo_edit_window_insert_tab (MooEditWindow *window,
 
     g_signal_connect_swapped (doc, "doc_status_changed",
                               G_CALLBACK (edit_changed), window);
+    g_signal_connect_swapped (doc, "bookmarks-changed",
+                              G_CALLBACK (edit_bookmarks_changed), window);
     g_signal_connect_swapped (doc, "notify::encoding",
                               G_CALLBACK (edit_encoding_changed), window);
     g_signal_connect_swapped (doc, "notify::line-end",
@@ -3211,6 +3274,7 @@ _moo_edit_window_remove_doc (MooEditWindow *window,
     g_signal_emit (window, signals[CLOSE_DOC], 0, doc);
 
     g_signal_handlers_disconnect_by_func (doc, (gpointer) edit_changed, window);
+    g_signal_handlers_disconnect_by_func (doc, (gpointer) edit_bookmarks_changed, window);
     g_signal_handlers_disconnect_by_func (doc, (gpointer) edit_filename_changed, window);
     g_signal_handlers_disconnect_by_func (doc, (gpointer) proxy_boolean_property, window);
     g_signal_handlers_disconnect_by_func (doc, (gpointer) edit_lang_changed, window);

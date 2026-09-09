@@ -57,8 +57,9 @@ moo_edit_bookmark_init (MooEditBookmark *bk)
 
 
 static void
-bookmarks_changed (G_GNUC_UNUSED MooEdit *edit)
+bookmarks_changed (MooEdit *edit)
 {
+    _moo_edit_bookmarks_changed (edit);
 }
 
 

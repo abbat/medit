@@ -103,6 +103,7 @@ enum {
     DOC_STATUS_CHANGED,
     FILENAME_CHANGED,
     WILL_CLOSE,
+    BOOKMARKS_CHANGED,
     BEFORE_SAVE,
     WILL_SAVE,
     AFTER_SAVE,
@@ -177,6 +178,17 @@ moo_edit_class_init (MooEditClass *klass)
                           G_SIGNAL_RUN_FIRST,
                           G_STRUCT_OFFSET (MooEditClass, filename_changed),
                           NULL, NULL,
+                          _moo_marshal_VOID__VOID,
+                          G_TYPE_NONE, 0);
+
+    /* No class offset and no default handler: what this says is "the list of
+       bookmarks in this document is not what it was", and the only listener is
+       a window keeping its Document menu up to date. */
+    signals[BOOKMARKS_CHANGED] =
+            g_signal_new ("bookmarks-changed",
+                          G_OBJECT_CLASS_TYPE (klass),
+                          G_SIGNAL_RUN_LAST,
+                          0, NULL, NULL,
                           _moo_marshal_VOID__VOID,
                           G_TYPE_NONE, 0);
 
@@ -661,6 +673,14 @@ _moo_edit_status_changed (MooEdit *edit)
 {
     g_return_if_fail (MOO_IS_EDIT (edit));
     g_signal_emit (edit, signals[DOC_STATUS_CHANGED], 0, NULL);
+}
+
+
+void
+_moo_edit_bookmarks_changed (MooEdit *edit)
+{
+    g_return_if_fail (MOO_IS_EDIT (edit));
+    g_signal_emit (edit, signals[BOOKMARKS_CHANGED], 0);
 }
 
 

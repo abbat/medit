@@ -78,3 +78,7 @@ struct MooEditPrivate
 };
 
 void    _moo_edit_remove_untitled   (MooEdit    *doc);
+
+/* Emits MooEdit::bookmarks-changed. Called from every path in
+   mooeditbookmark.cpp that adds, removes or moves a bookmark. */
+void    _moo_edit_bookmarks_changed (MooEdit    *doc);
