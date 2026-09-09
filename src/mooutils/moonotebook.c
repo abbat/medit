@@ -130,6 +130,7 @@ struct _MooNotebookPrivate {
     gboolean     arrows_gtk;
     gboolean     arrows_visible;
     int          arrows_size;
+    guint        arrows_resize_id;
     GtkWidget   *arrows;
     GtkWidget   *left_arrow;
     GtkWidget   *right_arrow;
@@ -302,6 +303,8 @@ static void     delete_page                 (MooNotebook    *nb,
                                              Page           *page);
 static GSList  *get_visible_pages           (MooNotebook    *nb);
 static void     moo_notebook_check_arrows   (MooNotebook    *nb);
+static void     arrows_queue_resize         (MooNotebook    *nb);
+static void     arrows_cancel_resize        (MooNotebook    *nb);
 
 static void     moo_notebook_set_homogeneous(MooNotebook    *nb,
                                              gboolean        homogeneous);
@@ -387,15 +390,33 @@ GType moo_notebook_accessible_get_type (void);
 G_DEFINE_TYPE (MooNotebookAccessible, moo_notebook_accessible, GTK_TYPE_NOTEBOOK_ACCESSIBLE)
 
 
+/*
+ * The pages, and the two arrows that scroll the strip when the tabs do not fit.
+ *
+ * The arrows are an internal child, so gtk_container_get_children() leaves them
+ * out and nothing outside this widget can see that they are there at all -- an
+ * overfull strip is then a thing only a mouse can scroll. They are reported
+ * while they are shown, which is exactly while the tabs do not fit. The tab
+ * labels are internal children too and stay out: every page already carries the
+ * text of its own tab, put there by name_after_the_tab().
+ */
 static GList *
 moo_notebook_accessible_children (AtkObject *object)
 {
     GtkWidget *widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (object));
+    MooNotebook *nb;
+    GList *children;
 
     if (widget == NULL)
         return NULL;
 
-    return gtk_container_get_children (GTK_CONTAINER (widget));
+    nb = MOO_NOTEBOOK (widget);
+    children = gtk_container_get_children (GTK_CONTAINER (widget));
+
+    if (nb->priv->arrows != NULL && gtk_widget_get_visible (nb->priv->arrows))
+        children = g_list_append (children, nb->priv->arrows);
+
+    return children;
 }
 
 
@@ -479,7 +500,10 @@ moo_notebook_accessible_ref_child (AtkObject *object,
 
         if (accessible != NULL)
         {
-            name_after_the_tab (widget, child, accessible);
+            /* The arrows are one of the children as well, and have no tab. */
+            if (child != MOO_NOTEBOOK (widget)->priv->arrows)
+                name_after_the_tab (widget, child, accessible);
+
             g_object_ref (accessible);
         }
     }
@@ -683,6 +707,7 @@ moo_notebook_init (MooNotebook *notebook)
     notebook->priv->arrows_gtk = FALSE;
     notebook->priv->arrows_visible = FALSE;
     notebook->priv->arrows_size = 0;
+    notebook->priv->arrows_resize_id = 0;
 
     notebook->priv->child_height = -1;
 
@@ -729,6 +754,53 @@ notebook_create_arrows (MooNotebook *nb)
 }
 
 
+static gboolean
+arrows_resize (MooNotebook *nb)
+{
+    nb->priv->arrows_resize_id = 0;
+
+    /* Shown here rather than where the tabs were found not to fit: a widget
+       shown in the middle of its parent's allocation is allocated the size it
+       has never had, one pixel, which its own children complain about. */
+    gtk_widget_show (nb->priv->arrows);
+    gtk_widget_queue_resize (GTK_WIDGET (nb));
+
+    return FALSE;
+}
+
+
+/* Nothing to come back to: the tabs fit again, or the notebook is going away. */
+static void
+arrows_cancel_resize (MooNotebook *nb)
+{
+    if (nb->priv->arrows_resize_id)
+    {
+        g_source_remove (nb->priv->arrows_resize_id);
+        nb->priv->arrows_resize_id = 0;
+    }
+}
+
+
+/*
+ * Ask for another allocation, from outside this one.
+ *
+ * gtk_widget_queue_resize() called while a widget is being allocated is undone
+ * by the allocation itself -- GTK+3 clears the flag it sets once the vfunc has
+ * returned -- so the arrows would keep the size an unallocated widget has, a
+ * pixel high in the corner of the notebook, until something else moved the
+ * notebook around. The width the labels have to fit in is short by the width of
+ * the arrows in that pass too, so what is wanted is the whole allocation again
+ * rather than a place for the arrows.
+ */
+static void
+arrows_queue_resize (MooNotebook *nb)
+{
+    if (!nb->priv->arrows_resize_id)
+        nb->priv->arrows_resize_id =
+                g_idle_add ((GSourceFunc) arrows_resize, nb);
+}
+
+
 static void
 #if GTK_CHECK_VERSION(3,0,0)
 moo_notebook_destroy (GtkWidget *object)
@@ -738,6 +810,8 @@ moo_notebook_destroy (GtkObject *object)
 {
     GSList *l;
     MooNotebook *nb = MOO_NOTEBOOK (object);
+
+    arrows_cancel_resize (nb);
 
     for (l = nb->priv->pages; l != NULL; l = l->next)
     {
@@ -1381,7 +1455,9 @@ moo_notebook_map (GtkWidget *widget)
         if (right && gtk_widget_get_visible (right))
             gtk_widget_map (right);
 
-        if (nb->priv->arrows_visible)
+        /* Visible as well as wanted: they are shown from an idle, a moment
+           after the tabs were found not to fit. */
+        if (nb->priv->arrows_visible && gtk_widget_get_visible (nb->priv->arrows))
             gtk_widget_map (nb->priv->arrows);
 
         VISIBLE_FOREACH_START (nb, page)
@@ -1415,7 +1491,7 @@ moo_notebook_unmap (GtkWidget *widget)
     }
     VISIBLE_FOREACH_END;
 
-    if (nb->priv->arrows_visible)
+    if (nb->priv->arrows_visible && gtk_widget_get_mapped (nb->priv->arrows))
         gtk_widget_unmap (nb->priv->arrows);
 
     if (right && gtk_widget_get_mapped (right))
@@ -2353,6 +2429,7 @@ labels_size_allocate (MooNotebook   *nb,
         {
             nb->priv->arrows_visible = FALSE;
             nb->priv->arrows_size = 0;
+            arrows_cancel_resize (nb);
             gtk_widget_hide (nb->priv->arrows);
         }
 
@@ -2460,6 +2537,7 @@ labels_size_allocate (MooNotebook   *nb,
         {
             nb->priv->arrows_visible = FALSE;
             nb->priv->arrows_size = 0;
+            arrows_cancel_resize (nb);
             gtk_widget_hide (nb->priv->arrows);
         }
 
@@ -2470,8 +2548,18 @@ labels_size_allocate (MooNotebook   *nb,
         if (nb->priv->labels_width > nb->priv->labels_visible_width)
         {
             nb->priv->arrows_visible = TRUE;
-            gtk_widget_show (nb->priv->arrows);
             move_onscreen_again = TRUE;
+
+            /* The allocation in which the arrows appear is this one, and the
+               part of it that gives them their place ran before the labels were
+               laid out. Without another one they keep the size and the place an
+               unallocated widget has -- a pixel high in the corner of the
+               notebook: shown, and impossible to click. And their sensitivity
+               is set from the offset, which nothing has done yet either: they
+               are created insensitive, so the strip would come up overfull with
+               neither arrow willing to scroll it. */
+            arrows_queue_resize (nb);
+            moo_notebook_check_arrows (nb);
         }
     }
 
