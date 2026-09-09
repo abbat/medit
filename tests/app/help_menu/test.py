@@ -1,7 +1,5 @@
 """The Help menu: the web site, and the bug report that asks first.
 
-# requires: MOO_GTK3
-
 The two entries of the Help menu that are not About both end in a URL handed to
 the desktop, which in a sandbox is a script that writes the URL down -- so what
 they did is a string comparison rather than a browser.
