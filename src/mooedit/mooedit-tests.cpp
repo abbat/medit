@@ -825,6 +825,52 @@ test_text_buffer_undo_group (void)
 }
 
 
+static void
+test_text_buffer_undo_freeze (void)
+{
+    MooTextBuffer *buffer = new_text_buffer ("abc");
+    MooUndoStack *stack = MOO_UNDO_STACK (_moo_text_buffer_get_undo_stack (buffer));
+    GtkTextIter iter;
+    char *text;
+
+    gtk_text_buffer_get_iter_at_offset (GTK_TEXT_BUFFER (buffer), &iter, 1);
+    gtk_text_buffer_insert (GTK_TEXT_BUFFER (buffer), &iter, "X", 1);
+    g_assert_true (moo_undo_stack_can_undo (stack));
+
+    moo_undo_stack_freeze (stack);
+    g_assert_true (moo_undo_stack_frozen (stack));
+    g_assert_false (moo_undo_stack_can_undo (stack));
+    g_assert_false (moo_undo_stack_can_redo (stack));
+
+    gtk_text_buffer_get_end_iter (GTK_TEXT_BUFFER (buffer), &iter);
+    gtk_text_buffer_insert (GTK_TEXT_BUFFER (buffer), &iter, "Y", 1);
+
+    moo_undo_stack_freeze (stack);
+    g_assert_true (moo_undo_stack_frozen (stack));
+    gtk_text_buffer_get_end_iter (GTK_TEXT_BUFFER (buffer), &iter);
+    gtk_text_buffer_insert (GTK_TEXT_BUFFER (buffer), &iter, "Z", 1);
+    moo_undo_stack_thaw (stack);
+    g_assert_true (moo_undo_stack_frozen (stack));
+
+    gtk_text_buffer_get_end_iter (GTK_TEXT_BUFFER (buffer), &iter);
+    gtk_text_buffer_insert (GTK_TEXT_BUFFER (buffer), &iter, "Q", 1);
+    g_assert_false (moo_undo_stack_can_undo (stack));
+
+    moo_undo_stack_thaw (stack);
+    g_assert_false (moo_undo_stack_frozen (stack));
+    gtk_text_buffer_get_end_iter (GTK_TEXT_BUFFER (buffer), &iter);
+    gtk_text_buffer_insert (GTK_TEXT_BUFFER (buffer), &iter, "R", 1);
+    g_assert_true (moo_undo_stack_can_undo (stack));
+
+    moo_undo_stack_undo (stack);
+    text = text_buffer_text (buffer);
+    g_assert_cmpstr (text, ==, "aXbcYZQ");
+    g_free (text);
+
+    g_object_unref (buffer);
+}
+
+
 void
 _moo_add_mooedit_unit_tests (void)
 {
@@ -857,6 +903,7 @@ _moo_add_mooedit_unit_tests (void)
                      test_text_buffer_exact_line_delete);
     g_test_add_func ("/mooedit/text-buffer/undo-redo", test_text_buffer_undo_redo);
     g_test_add_func ("/mooedit/text-buffer/undo-group", test_text_buffer_undo_group);
+    g_test_add_func ("/mooedit/text-buffer/undo-freeze", test_text_buffer_undo_freeze);
 
     if (entries == nullptr)
     {
