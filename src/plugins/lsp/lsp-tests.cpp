@@ -41,6 +41,7 @@
 
 #include "plugins/lsp/lsp-completion.h"
 #include "plugins/lsp/lsp-config.h"
+#include "plugins/lsp/lsp-client.h"
 #include "plugins/lsp/lsp-diagnostics.h"
 #include "plugins/lsp/lsp-doc.h"
 #include "plugins/lsp/lsp-highlight.h"
@@ -1472,6 +1473,47 @@ test_highlight_nothing (void)
 }
 
 
+static void
+test_client_framing (void)
+{
+    const char *first = "Content-Length: 7\r\nX-Test: yes\r\n\r\n{\"x\":1}";
+    const char *second = "content-length: 7\n\n{\"y\":2}";
+    const char *malformed = "X-Test: yes\r\n\r\n{}";
+    gsize body_offset;
+    gsize body_len;
+    gssize total;
+    char *stream;
+
+    total = _lsp_client_find_message ((const guint8*) first, strlen (first) - 2,
+                                      &body_offset, &body_len);
+    g_assert_cmpint (total, ==, 0);
+
+    total = _lsp_client_find_message ((const guint8*) first, strlen (first),
+                                      &body_offset, &body_len);
+    g_assert_cmpint (total, ==, (gssize) strlen (first));
+    g_assert_cmpuint (body_len, ==, 7);
+    g_assert_cmpmem (first + body_offset, body_len, "{\"x\":1}", 7);
+
+    stream = g_strconcat (first, second, nullptr);
+    total = _lsp_client_find_message ((const guint8*) stream, strlen (stream),
+                                      &body_offset, &body_len);
+    g_assert_cmpint (total, ==, (gssize) strlen (first));
+    total = _lsp_client_find_message ((const guint8*) stream + total,
+                                      strlen (stream) - total,
+                                      &body_offset, &body_len);
+    g_assert_cmpint (total, ==, (gssize) strlen (second));
+    g_assert_cmpuint (body_len, ==, 7);
+    g_assert_cmpmem (stream + strlen (first) + body_offset, body_len,
+                     "{\"y\":2}", 7);
+    g_free (stream);
+
+    total = _lsp_client_find_message ((const guint8*) malformed,
+                                      strlen (malformed),
+                                      &body_offset, &body_len);
+    g_assert_cmpint (total, ==, -1);
+}
+
+
 void
 _moo_lsp_add_unit_tests (void)
 {
@@ -1522,6 +1564,7 @@ _moo_lsp_add_unit_tests (void)
     g_test_add_func ("/lsp/highlight/tags", test_highlight_tags);
     g_test_add_func ("/lsp/highlight/nothing", test_highlight_nothing);
     g_test_add_func ("/lsp/highlight/malformed", test_highlight_malformed);
+    g_test_add_func ("/lsp/client/framing", test_client_framing);
 }
 
 #endif /* MOO_ENABLE_UNIT_TESTS */

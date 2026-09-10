@@ -801,11 +801,11 @@ dispatch_message (LspClient  *client,
  * Returns the length of one complete message including its header, zero when
  * the buffer does not hold one yet, and -1 when the stream is unusable.
  */
-static gssize
-find_message (const guint8 *data,
-              gsize         size,
-              gsize        *body_offset,
-              gsize        *body_len)
+gssize
+_lsp_client_find_message (const guint8 *data,
+                          gsize         size,
+                          gsize        *body_offset,
+                          gsize        *body_len)
 {
     static const char *terminators[] = { "\r\n\r\n", "\n\n" };
     const char *header_end = NULL;
@@ -884,8 +884,8 @@ process_in_buf (LspClient *client)
         if (client->in_buf->len == 0)
             break;
 
-        total = find_message (client->in_buf->data, client->in_buf->len,
-                              &body_offset, &body_len);
+        total = _lsp_client_find_message (client->in_buf->data, client->in_buf->len,
+                                          &body_offset, &body_len);
 
         if (total == 0)
         {

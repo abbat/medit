@@ -105,6 +105,12 @@ void        lsp_client_reply_error  (LspClient      *client,
 
 gboolean    lsp_client_is_running   (LspClient      *client);
 
+/* Pure framing helper, kept visible for the unit tests. */
+gssize      _lsp_client_find_message (const guint8 *data,
+                                      gsize         size,
+                                      gsize        *body_offset,
+                                      gsize        *body_len);
+
 /*
  * Switches to blocking writes and writes out whatever is queued. Everything
  * else here is asynchronous, which is no use on the way out: once the plugin
