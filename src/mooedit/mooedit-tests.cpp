@@ -42,6 +42,7 @@
 #ifdef MOO_ENABLE_UNIT_TESTS
 
 #include "mooedit/moolang-private.h"
+#include "mooedit/mooindenter.h"
 #include "mooedit/mootext-private.h"
 #include "mooedit/mootextbuffer.h"
 #include "mooedit/mootextsearch.h"
@@ -753,6 +754,30 @@ test_text_buffer_exact_line_delete (void)
 
 
 static void
+test_indenter_helpers (void)
+{
+    GtkTextBuffer *buffer = gtk_text_buffer_new (NULL);
+    GtkTextIter iter;
+    int offset;
+
+    gtk_text_buffer_set_text (buffer, "  \tvalue\n    next", -1);
+    gtk_text_buffer_get_iter_at_offset (buffer, &iter, 3);
+    g_assert_cmpint (moo_iter_get_blank_offset (&iter, 8), ==, 8);
+    gtk_text_buffer_get_iter_at_offset (buffer, &iter, 5);
+    g_assert_cmpint (moo_iter_get_blank_offset (&iter, 8), ==, -1);
+
+    gtk_text_buffer_set_text (buffer, "    one\n        two\n  three", -1);
+    gtk_text_buffer_get_iter_at_line (buffer, &iter, 2);
+    offset = moo_text_iter_get_prev_stop (&iter, 8, 8, FALSE);
+    g_assert_cmpint (offset, ==, 8);
+    offset = moo_text_iter_get_prev_stop (&iter, 8, 2, TRUE);
+    g_assert_cmpint (offset, ==, 2);
+
+    g_object_unref (buffer);
+}
+
+
+static void
 test_line_buffer_tree_boundaries (void)
 {
     LineBuffer *buffer = _moo_line_buffer_new ();
@@ -981,6 +1006,7 @@ _moo_add_mooedit_unit_tests (void)
                      test_text_buffer_exact_line_delete);
     g_test_add_func ("/mooedit/line-buffer/tree-boundaries",
                      test_line_buffer_tree_boundaries);
+    g_test_add_func ("/mooedit/indenter/helpers", test_indenter_helpers);
     g_test_add_func ("/mooedit/text-buffer/undo-redo", test_text_buffer_undo_redo);
     g_test_add_func ("/mooedit/text-buffer/undo-group", test_text_buffer_undo_group);
     g_test_add_func ("/mooedit/text-buffer/undo-freeze", test_text_buffer_undo_freeze);
