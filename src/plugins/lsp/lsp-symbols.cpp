@@ -118,7 +118,11 @@ append_symbol (GtkTreeStore        *store,
     char *markup;
     int line = 0, character = 0;
 
-    lsp_json_get_position (lsp_json_get_object (range, "start"), &line, &character);
+    if (!range ||
+        !lsp_json_get_position (lsp_json_get_object (range, "start"),
+                                &line, &character))
+        return;
+
     lsp_position_to_iter (buffer, line, character, encoding, &position);
 
     markup = make_markup (name, detail, kind);

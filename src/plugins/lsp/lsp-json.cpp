@@ -415,6 +415,28 @@ lsp_json_position (int line,
 }
 
 
+static gboolean
+get_position_number (JsonObject  *object,
+                     const char  *member,
+                     int         *value)
+{
+    JsonNode *node = lsp_json_get_node (object, member);
+    GType type;
+
+    if (!node || !JSON_NODE_HOLDS_VALUE (node))
+        return FALSE;
+
+    type = json_node_get_value_type (node);
+    if (type != G_TYPE_INT64 && type != G_TYPE_DOUBLE)
+        return FALSE;
+
+    if (value)
+        *value = (int) json_node_get_int (node);
+
+    return TRUE;
+}
+
+
 gboolean
 lsp_json_get_position (JsonObject *object,
                        int        *line,
@@ -423,13 +445,9 @@ lsp_json_get_position (JsonObject *object,
     if (!object)
         return FALSE;
 
-    if (!lsp_json_has (object, "line") || !lsp_json_has (object, "character"))
+    if (!get_position_number (object, "line", line) ||
+        !get_position_number (object, "character", character))
         return FALSE;
-
-    if (line)
-        *line = (int) lsp_json_get_int (object, "line", 0);
-    if (character)
-        *character = (int) lsp_json_get_int (object, "character", 0);
 
     return TRUE;
 }

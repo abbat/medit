@@ -162,6 +162,72 @@ test_position_out_of_range (void)
 }
 
 
+static void
+test_json_malformed (void)
+{
+    GError *error = NULL;
+    JsonNode *node;
+    JsonObject *object;
+    int line, character;
+
+    node = lsp_json_parse ("{\"string\":\"ok\",\"number\":3,"
+                           "\"boolean\":true,\"null\":null,"
+                           "\"object\":{},\"array\":[],"
+                           "\"nested\":{\"value\":7},"
+                           "\"provider-object\":{},"
+                           "\"provider-false\":false}", -1, &error);
+    g_assert_no_error (error);
+    g_assert_nonnull (node);
+    object = json_node_get_object (node);
+
+    g_assert_true (lsp_json_has (object, "string"));
+    g_assert_false (lsp_json_has (object, "null"));
+    g_assert_false (lsp_json_has (object, "missing"));
+    g_assert_cmpstr (lsp_json_get_string (object, "string"), ==, "ok");
+    g_assert_null (lsp_json_get_string (object, "number"));
+    g_assert_cmpint (lsp_json_get_int (object, "number", 9), ==, 3);
+    g_assert_cmpint (lsp_json_get_int (object, "string", 9), ==, 9);
+    g_assert_true (lsp_json_get_bool (object, "boolean", FALSE));
+    g_assert_false (lsp_json_get_bool (object, "string", FALSE));
+    g_assert_nonnull (lsp_json_get_object (object, "object"));
+    g_assert_nonnull (lsp_json_get_array (object, "array"));
+    g_assert_cmpint (lsp_json_lookup_int (object, "nested/value", 9), ==, 7);
+    g_assert_cmpint (lsp_json_lookup_int (object, "nested/missing", 9), ==, 9);
+    g_assert_true (lsp_json_get_provider (object, "provider-object"));
+    g_assert_false (lsp_json_get_provider (object, "provider-false"));
+    g_assert_false (lsp_json_get_provider (object, "null"));
+
+    json_node_unref (node);
+
+    node = lsp_json_parse ("{\"line\":1,\"character\":2}", -1, &error);
+    g_assert_no_error (error);
+    object = json_node_get_object (node);
+    g_assert_true (lsp_json_get_position (object, &line, &character));
+    g_assert_cmpint (line, ==, 1);
+    g_assert_cmpint (character, ==, 2);
+    json_node_unref (node);
+
+    /* A field with the wrong JSON type is not a position with a default zero. */
+    node = lsp_json_parse ("{\"line\":\"one\",\"character\":2}", -1, &error);
+    g_assert_no_error (error);
+    g_assert_false (lsp_json_get_position (json_node_get_object (node),
+                                            &line, &character));
+    json_node_unref (node);
+
+    node = lsp_json_parse ("{\"start\":{\"line\":0,\"character\":0}}",
+                           -1, &error);
+    g_assert_no_error (error);
+    g_assert_false (lsp_json_get_range (json_node_get_object (node),
+                                        &line, &character, NULL, NULL));
+    json_node_unref (node);
+
+    node = lsp_json_parse ("{", -1, &error);
+    g_assert_null (node);
+    g_assert_nonnull (error);
+    g_clear_error (&error);
+}
+
+
 /* -------------------------------------------------------------------------
  * documentSymbol, in both of the shapes a server may answer with
  */
@@ -365,6 +431,53 @@ test_symbols_empty (void)
     rows = symbols_of ("null", "alpha\n", LSP_POSITION_ENCODING_UTF16);
 
     g_assert_cmpuint (rows->len, ==, 0);
+    free_rows (rows);
+}
+
+
+static void
+test_malformed_replies (void)
+{
+    GError *error = NULL;
+    JsonNode *node;
+    GSList *diagnostics;
+    LspDiagnostic *diagnostic;
+    GArray *rows;
+
+    node = lsp_json_parse (
+        "[{\"message\":\"bad range\","
+        "  \"range\": {\"start\": {\"line\":\"zero\",\"character\":0},"
+        "              \"end\": {\"line\":0,\"character\":1}}},"
+        " {\"message\":\"valid\","
+        "  \"range\": {\"start\": {\"line\":0,\"character\":0},"
+        "              \"end\": {\"line\":0,\"character\":1}},"
+        "  \"severity\":\"warning\",\"code\":true},"
+        " {\"message\":7,"
+        "  \"range\": {\"start\": {\"line\":0,\"character\":0},"
+        "              \"end\": {\"line\":0,\"character\":1}}}]",
+        -1, &error);
+    g_assert_no_error (error);
+    diagnostics = lsp_diagnostics_parse (json_node_get_array (node));
+    g_assert_cmpuint (g_slist_length (diagnostics), ==, 1);
+    diagnostic = (LspDiagnostic*) diagnostics->data;
+    g_assert_cmpstr (diagnostic->message, ==, "valid");
+    g_assert_cmpint (diagnostic->severity, ==, LSP_SEVERITY_ERROR);
+    g_assert_null (diagnostic->code);
+    lsp_diagnostics_free (diagnostics);
+    json_node_unref (node);
+
+    /* Missing and malformed ranges do not create symbol rows. */
+    rows = symbols_of (
+        "[{\"name\":\"missing\"},"
+        " {\"name\":\"bad\",\"range\":"
+        "  {\"start\": {\"line\":\"zero\",\"character\":0},"
+        "   \"end\": {\"line\":0,\"character\":1}}},"
+        " {\"name\":\"good\",\"range\":"
+        "  {\"start\": {\"line\":0,\"character\":0},"
+        "   \"end\": {\"line\":0,\"character\":1}}}]",
+        "good\n", LSP_POSITION_ENCODING_UTF16);
+    g_assert_cmpuint (rows->len, ==, 1);
+    g_assert_cmpstr (g_array_index (rows, SymbolRow, 0).name, ==, "good");
     free_rows (rows);
 }
 
@@ -1140,6 +1253,7 @@ test_highlight_nothing (void)
 void
 _moo_lsp_add_unit_tests (void)
 {
+    g_test_add_func ("/lsp/json/malformed", test_json_malformed);
     g_test_add_func ("/lsp/completion/word-start", test_completion_word_start);
     g_test_add_func ("/lsp/diagnostics/detail", test_diagnostic_detail);
 
@@ -1156,6 +1270,7 @@ _moo_lsp_add_unit_tests (void)
     g_test_add_func ("/lsp/symbols/flat", test_symbols_flat);
     g_test_add_func ("/lsp/symbols/positions", test_symbols_positions);
     g_test_add_func ("/lsp/symbols/empty", test_symbols_empty);
+    g_test_add_func ("/lsp/replies/malformed", test_malformed_replies);
 
     g_test_add_func ("/lsp/locations/array", test_locations_array);
     g_test_add_func ("/lsp/locations/single", test_locations_single);
