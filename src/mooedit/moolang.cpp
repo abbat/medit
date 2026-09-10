@@ -164,8 +164,11 @@ _moo_lang_parse_string_list (const char *string)
     g_return_val_if_fail (pieces != NULL, NULL);
 
     for (p = pieces; *p; p++)
+    {
+        g_strstrip (*p);
         if (**p)
             list = g_slist_prepend (list, g_strdup (*p));
+    }
 
     g_strfreev (pieces);
     g_free (copy);

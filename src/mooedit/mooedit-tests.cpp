@@ -871,6 +871,35 @@ test_text_buffer_undo_freeze (void)
 }
 
 
+static void
+test_language_helpers (void)
+{
+    GSList *list;
+    GSList *item;
+    char *id;
+
+    id = _moo_lang_id_from_name ("  PYTHON  ");
+    g_assert_cmpstr (id, ==, "python");
+    g_free (id);
+
+    id = _moo_lang_id_from_name ("NoNe");
+    g_assert_cmpstr (id, ==, MOO_LANG_NONE);
+    g_free (id);
+
+    list = _moo_lang_parse_string_list (" c, cpp ; python \t");
+    g_assert_nonnull (list);
+    g_assert_cmpstr ((const char*) list->data, ==, "c");
+    item = list->next;
+    g_assert_nonnull (item);
+    g_assert_cmpstr ((const char*) item->data, ==, "cpp");
+    item = item->next;
+    g_assert_nonnull (item);
+    g_assert_cmpstr ((const char*) item->data, ==, "python");
+    g_assert_null (item->next);
+    g_slist_free_full (list, g_free);
+}
+
+
 void
 _moo_add_mooedit_unit_tests (void)
 {
@@ -904,6 +933,7 @@ _moo_add_mooedit_unit_tests (void)
     g_test_add_func ("/mooedit/text-buffer/undo-redo", test_text_buffer_undo_redo);
     g_test_add_func ("/mooedit/text-buffer/undo-group", test_text_buffer_undo_group);
     g_test_add_func ("/mooedit/text-buffer/undo-freeze", test_text_buffer_undo_freeze);
+    g_test_add_func ("/mooedit/language/helpers", test_language_helpers);
 
     if (entries == nullptr)
     {
