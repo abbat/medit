@@ -34,6 +34,7 @@
 #include "mooutils/moofilewriter.h"
 #include "mooutils/moomarkup.h"
 #include "mooutils/moouixml.h"
+#include "plugins/support/moooutputfilter.h"
 #include "mooutils/moohistorylist.h"
 #include "mooutils/mooutils-fs.h"
 #include "mooutils/mooutils-misc.h"
@@ -446,6 +447,52 @@ test_ui_xml_memory (void)
 
 
 static void
+test_output_filter_memory (void)
+{
+    MooOutputFilter *filter;
+    MooFileLineData *data;
+    MooFileLineData *copy;
+    char *dirs[] = { (char*) "src", (char*) "tests", NULL };
+    const char * const *active_dirs;
+
+    filter = MOO_OUTPUT_FILTER (g_object_new (MOO_TYPE_OUTPUT_FILTER, NULL));
+
+    g_assert_false (moo_output_filter_stdout_line (filter, "stdout"));
+    g_assert_false (moo_output_filter_stderr_line (filter, "stderr"));
+    g_assert_false (moo_output_filter_cmd_exit (filter, 0));
+
+    moo_output_filter_cmd_start (filter, "project");
+    active_dirs = moo_output_filter_get_active_dirs (filter);
+    g_assert_nonnull (active_dirs);
+    g_assert_cmpstr (active_dirs[0], ==, "project");
+    g_assert_null (active_dirs[1]);
+
+    moo_output_filter_add_active_dirs (filter, dirs);
+    active_dirs = moo_output_filter_get_active_dirs (filter);
+    g_assert_cmpstr (active_dirs[0], ==, "project");
+    g_assert_cmpstr (active_dirs[1], ==, "src");
+    g_assert_cmpstr (active_dirs[2], ==, "tests");
+    g_assert_null (active_dirs[3]);
+
+    moo_output_filter_set_active_file (filter, "main.c");
+    g_assert_cmpstr (moo_output_filter_get_active_file (filter), ==, "main.c");
+    moo_output_filter_set_active_file (filter, NULL);
+    g_assert_null (moo_output_filter_get_active_file (filter));
+
+    data = moo_file_line_data_new ("main.c", 12, 3);
+    copy = (MooFileLineData*) g_boxed_copy (MOO_TYPE_FILE_LINE_DATA, data);
+    g_assert_nonnull (copy);
+    g_assert_cmpstr (copy->file, ==, "main.c");
+    g_assert_cmpint (copy->line, ==, 12);
+    g_assert_cmpint (copy->character, ==, 3);
+    moo_file_line_data_free (copy);
+    moo_file_line_data_free (data);
+
+    g_object_unref (filter);
+}
+
+
+static void
 test_path_utilities (void)
 {
     GError *error = NULL;
@@ -674,6 +721,7 @@ _moo_add_mooutils_unit_tests (void)
     g_test_add_func ("/mooutils/markup/mutation-modified", test_markup_mutation_modified);
     g_test_add_func ("/mooutils/markup/round-trip-edges", test_markup_round_trip_edges);
     g_test_add_func ("/mooutils/ui-xml/memory", test_ui_xml_memory);
+    g_test_add_func ("/mooutils/output-filter/memory", test_output_filter_memory);
     g_test_add_func ("/mooutils/path/utilities", test_path_utilities);
     g_test_add_func ("/mooutils/path/boundaries", test_path_boundaries);
     g_test_add_func ("/mooutils/history-list/memory", test_history_list_memory);
