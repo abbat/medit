@@ -1096,6 +1096,27 @@ test_workspace_edit_malformed (void)
 }
 
 
+static void
+test_workspace_edit_reversed_range (void)
+{
+    static const char *reply =
+        "{\"changes\": {\"file:///tmp/a.txt\": ["
+        "  {\"range\": {\"start\": {\"line\": 2, \"character\": 0},"
+        "               \"end\": {\"line\": 1, \"character\": 0}},"
+        "   \"newText\": \"bad\"},"
+        "  {\"range\": {\"start\": {\"line\": 0, \"character\": 0},"
+        "               \"end\": {\"line\": 0, \"character\": 1}},"
+        "   \"newText\": \"ok\"}]}}";
+    GSList *edits = edits_of (reply);
+
+    /* LSP Range.start must not be after Range.end. */
+    g_assert_cmpuint (g_slist_length (edits), ==, 1);
+    check_edit (edits, 0, "/tmp/a.txt", 0, 0, "ok");
+
+    lsp_text_edits_free (edits);
+}
+
+
 /* -------------------------------------------------------------------------
  * The signature of a call, as the popup shows it
  */
@@ -1370,6 +1391,7 @@ _moo_lsp_add_unit_tests (void)
     g_test_add_func ("/lsp/rename/document-changes", test_workspace_edit_document_changes);
     g_test_add_func ("/lsp/rename/nothing", test_workspace_edit_nothing);
     g_test_add_func ("/lsp/rename/malformed", test_workspace_edit_malformed);
+    g_test_add_func ("/lsp/rename/reversed-range", test_workspace_edit_reversed_range);
 
     g_test_add_func ("/lsp/signature/active-parameter", test_signature_active_parameter);
     g_test_add_func ("/lsp/signature/offsets", test_signature_offsets);

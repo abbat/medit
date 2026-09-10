@@ -475,16 +475,37 @@ lsp_json_get_range (JsonObject *object,
                     int        *end_line,
                     int        *end_character)
 {
+    int range_start_line;
+    int range_start_character;
+    int range_end_line;
+    int range_end_character;
+
     if (!object)
         return FALSE;
 
     if (!lsp_json_get_position (lsp_json_get_object (object, "start"),
-                                start_line, start_character))
+                                &range_start_line, &range_start_character))
         return FALSE;
 
     if (!lsp_json_get_position (lsp_json_get_object (object, "end"),
-                                end_line, end_character))
+                                &range_end_line, &range_end_character))
         return FALSE;
+
+    if (range_start_line < 0 || range_start_character < 0 ||
+        range_end_line < 0 || range_end_character < 0 ||
+        range_start_line > range_end_line ||
+        (range_start_line == range_end_line &&
+         range_start_character > range_end_character))
+        return FALSE;
+
+    if (start_line)
+        *start_line = range_start_line;
+    if (start_character)
+        *start_character = range_start_character;
+    if (end_line)
+        *end_line = range_end_line;
+    if (end_character)
+        *end_character = range_end_character;
 
     return TRUE;
 }
