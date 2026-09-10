@@ -401,9 +401,45 @@ test_ui_xml_memory (void)
     g_assert_null (node);
     g_assert_null (moo_ui_xml_get_node (xml, "main/invalid"));
 
+    moo_ui_xml_insert_markup_before (xml, merge_id, "main/menu", "open",
+                                     "<item name=\"before\" action=\"Before\"/>"
+                                     "<item name=\"before-two\" action=\"BeforeTwo\"/>");
+    moo_ui_xml_insert_markup_after (xml, merge_id, "main/menu", "open",
+                                    "<item name=\"after\" action=\"After\"/>");
+    moo_ui_xml_insert_markup (xml, merge_id, "main/menu", 1,
+                              "<item name=\"middle\" action=\"Middle\"/>"
+                              "<item name=\"middle-two\" action=\"MiddleTwo\"/>");
+
+    node = moo_ui_xml_get_node (xml, "main/menu");
+    {
+        const char *expected[] = {
+            "before", "middle", "middle-two", "before-two", "open", "after", "slots", "Save"
+        };
+        GSList *children = node->children;
+
+        for (guint i = 0; i < G_N_ELEMENTS (expected); ++i)
+        {
+            g_assert_nonnull (children);
+            g_assert_cmpstr (((MooUiNode*) children->data)->name, ==, expected[i]);
+            children = children->next;
+        }
+        g_assert_null (children);
+    }
+
+    g_assert_nonnull (moo_ui_xml_get_node (xml, "main/menu/before"));
+    g_assert_nonnull (moo_ui_xml_get_node (xml, "main/menu/middle"));
+    g_assert_nonnull (moo_ui_xml_get_node (xml, "main/menu/middle-two"));
+    g_assert_nonnull (moo_ui_xml_get_node (xml, "main/menu/before-two"));
+    g_assert_nonnull (moo_ui_xml_get_node (xml, "main/menu/open"));
+    g_assert_nonnull (moo_ui_xml_get_node (xml, "main/menu/after"));
+
     moo_ui_xml_remove_ui (xml, merge_id);
     g_assert_null (moo_ui_xml_get_node (xml, "main/menu/Save"));
+    g_assert_null (moo_ui_xml_get_node (xml, "main/menu/before"));
+    g_assert_null (moo_ui_xml_get_node (xml, "main/menu/middle"));
+    g_assert_null (moo_ui_xml_get_node (xml, "main/menu/after"));
     g_assert_nonnull (moo_ui_xml_get_node (xml, "main/menu/open"));
+    g_assert_nonnull (moo_ui_xml_get_node (xml, "main/menu/slots"));
 
     g_object_unref (xml);
 }
