@@ -33,6 +33,7 @@
 #include "mooutils/moobigpaned.h"
 #include "mooutils/moofilewriter.h"
 #include "mooutils/moomarkup.h"
+#include "mooutils/mooprefs.h"
 #include "mooutils/moouixml.h"
 #include "plugins/support/moooutputfilter.h"
 #include "mooutils/moohistorylist.h"
@@ -516,6 +517,59 @@ test_ui_xml_rejects_invalid_nodes (void)
 
 
 static void
+test_prefs_memory (void)
+{
+    GSList *keys;
+    GFile *file;
+    char *key;
+
+    moo_prefs_new_key_bool ("unit/prefs/bool", TRUE);
+    moo_prefs_new_key_int ("unit/prefs/int", 7);
+    moo_prefs_new_key_string ("unit/prefs/string", "default");
+
+    g_assert_true (moo_prefs_key_registered ("unit/prefs/bool"));
+    g_assert_cmpuint (moo_prefs_get_key_type ("unit/prefs/int"), ==, G_TYPE_INT);
+    g_assert_true (moo_prefs_get_bool ("unit/prefs/bool"));
+    g_assert_cmpint (moo_prefs_get_int ("unit/prefs/int"), ==, 7);
+    g_assert_cmpstr (moo_prefs_get_string ("unit/prefs/string"), ==, "default");
+    g_test_expect_message ("Moo", G_LOG_LEVEL_WARNING, "*not registered*");
+    g_test_expect_message ("Moo", G_LOG_LEVEL_CRITICAL, "*val != NULL*");
+    g_assert_cmpstr (moo_prefs_get_string ("unit/prefs/missing"), ==, NULL);
+    g_test_assert_expected_messages ();
+
+    moo_prefs_set_bool ("unit/prefs/bool", FALSE);
+    moo_prefs_set_int ("unit/prefs/int", -12);
+    moo_prefs_set_string ("unit/prefs/string", "changed");
+    g_assert_false (moo_prefs_get_bool ("unit/prefs/bool"));
+    g_assert_cmpint (moo_prefs_get_int ("unit/prefs/int"), ==, -12);
+    g_assert_cmpstr (moo_prefs_get_string ("unit/prefs/string"), ==, "changed");
+
+    file = g_file_new_for_uri ("file:///tmp/unit-prefs.txt");
+    moo_prefs_new_key_string ("unit/prefs/file", NULL);
+    moo_prefs_set_file ("unit/prefs/file", file);
+    g_assert_cmpstr (moo_prefs_get_string ("unit/prefs/file"), ==,
+                     "file:///tmp/unit-prefs.txt");
+    g_object_unref (moo_prefs_get_file ("unit/prefs/file"));
+    g_object_unref (file);
+
+    key = moo_prefs_make_key ("unit", "prefs", "composed", nullptr);
+    g_assert_cmpstr (key, ==, "unit/prefs/composed");
+    g_free (key);
+
+    keys = moo_prefs_list_keys (MOO_PREFS_RC);
+    g_assert_nonnull (g_slist_find_custom (keys, "unit/prefs/bool", (GCompareFunc) strcmp));
+    g_assert_nonnull (g_slist_find_custom (keys, "unit/prefs/file", (GCompareFunc) strcmp));
+    g_slist_free_full (keys, g_free);
+
+    moo_prefs_delete_key ("unit/prefs/bool");
+    g_assert_false (moo_prefs_key_registered ("unit/prefs/bool"));
+    moo_prefs_delete_key ("unit/prefs/int");
+    moo_prefs_delete_key ("unit/prefs/string");
+    moo_prefs_delete_key ("unit/prefs/file");
+}
+
+
+static void
 test_path_utilities (void)
 {
     GError *error = NULL;
@@ -747,6 +801,7 @@ _moo_add_mooutils_unit_tests (void)
     g_test_add_func ("/mooutils/output-filter/memory", test_output_filter_memory);
     g_test_add_func ("/mooutils/ui-xml/rejects-invalid-nodes",
                      test_ui_xml_rejects_invalid_nodes);
+    g_test_add_func ("/mooutils/prefs/memory", test_prefs_memory);
     g_test_add_func ("/mooutils/path/utilities", test_path_utilities);
     g_test_add_func ("/mooutils/path/boundaries", test_path_boundaries);
     g_test_add_func ("/mooutils/history-list/memory", test_history_list_memory);
