@@ -282,6 +282,41 @@ test_markup_memory (void)
 
 
 static void
+test_markup_mutation_modified (void)
+{
+    MooMarkupDoc *doc = moo_markup_doc_new ("memory");
+    MooMarkupNode *root;
+    MooMarkupNode *child;
+    char *serialized;
+
+    root = moo_markup_create_root_element (doc, "root");
+    child = moo_markup_create_element (root, "child");
+    _moo_markup_set_modified (doc, FALSE);
+
+    moo_markup_set_content (child, "value");
+    g_assert_true (_moo_markup_get_modified (doc));
+    g_assert_cmpstr (moo_markup_get_content (child), ==, "value");
+
+    _moo_markup_set_modified (doc, FALSE);
+    moo_markup_set_prop (child, "name", "value");
+    g_assert_true (_moo_markup_get_modified (doc));
+
+    moo_markup_set_prop (root, "special", "a&b<\"");
+    serialized = moo_markup_node_get_string (MOO_MARKUP_NODE (doc));
+    g_assert_cmpstr (serialized, ==,
+                     "<root special=\"a&amp;b&lt;&quot;\"><child name=\"value\">value</child></root>");
+    g_free (serialized);
+
+    _moo_markup_set_modified (doc, FALSE);
+    moo_markup_delete_node (child);
+    g_assert_true (_moo_markup_get_modified (doc));
+    g_assert_null (moo_markup_get_element (root, "child"));
+
+    moo_markup_doc_unref (doc);
+}
+
+
+static void
 test_path_utilities (void)
 {
     GError *error = NULL;
@@ -433,6 +468,7 @@ _moo_add_mooutils_unit_tests (void)
     g_test_add_func ("/mooutils/accel/parse", test_accel_parse);
     g_test_add_func ("/mooutils/accel/label", test_accel_label_parse);
     g_test_add_func ("/mooutils/markup/memory", test_markup_memory);
+    g_test_add_func ("/mooutils/markup/mutation-modified", test_markup_mutation_modified);
     g_test_add_func ("/mooutils/path/utilities", test_path_utilities);
 #if GTK_CHECK_VERSION(3,0,0)
     g_test_add_func ("/mooutils/paned/drop-mask", test_drop_mask);

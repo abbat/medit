@@ -598,9 +598,14 @@ moo_markup_element_print (MooMarkupElement   *node,
 
     g_string_append_printf (str, "<%s", node->name);
     for (i = 0; i < node->n_attrs; ++i)
+    {
+        char *escaped = g_markup_escape_text (node->attr_vals[i], -1);
+
         g_string_append_printf (str, " %s=\"%s\"",
                                 node->attr_names[i],
-                                node->attr_vals[i]);
+                                escaped);
+        g_free (escaped);
+    }
 
     if (node->children)
     {
