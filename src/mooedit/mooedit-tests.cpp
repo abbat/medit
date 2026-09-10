@@ -753,6 +753,55 @@ test_text_buffer_exact_line_delete (void)
 
 
 static void
+test_line_buffer_tree_boundaries (void)
+{
+    LineBuffer *buffer = _moo_line_buffer_new ();
+    MooTextBuffer *owner = new_text_buffer ("");
+    MooLineMark *first = MOO_LINE_MARK (g_object_new (MOO_TYPE_LINE_MARK, nullptr));
+    MooLineMark *deleted = MOO_LINE_MARK (g_object_new (MOO_TYPE_LINE_MARK, nullptr));
+    MooLineMark *moved = MOO_LINE_MARK (g_object_new (MOO_TYPE_LINE_MARK, nullptr));
+    MooLineMark *last = MOO_LINE_MARK (g_object_new (MOO_TYPE_LINE_MARK, nullptr));
+    GSList *marks;
+    GSList *moved_marks = nullptr;
+    GSList *deleted_marks = nullptr;
+
+    _moo_line_mark_set_buffer (first, owner, buffer);
+    _moo_line_mark_set_buffer (deleted, owner, buffer);
+    _moo_line_mark_set_buffer (moved, owner, buffer);
+    _moo_line_mark_set_buffer (last, owner, buffer);
+
+    /* Cross the leaf capacity so range traversal has to visit an internal
+       B-tree node rather than a single array of lines. */
+    _moo_line_buffer_split_line (buffer, 0, 39);
+    _moo_line_buffer_add_mark (buffer, first, 0);
+    _moo_line_buffer_add_mark (buffer, deleted, 16);
+    _moo_line_buffer_add_mark (buffer, moved, 17);
+    _moo_line_buffer_add_mark (buffer, last, 39);
+
+    marks = _moo_line_buffer_get_marks_in_range (buffer, 10, 35);
+    g_assert_cmpuint (g_slist_length (marks), ==, 2);
+    g_assert_true (marks->data == deleted);
+    g_assert_true (marks->next->data == moved);
+    g_slist_free (marks);
+
+    _moo_line_buffer_delete (buffer, 16, 2, 0, &moved_marks, &deleted_marks);
+    g_assert_true (g_slist_find (moved_marks, moved) != nullptr);
+    g_assert_true (g_slist_find (deleted_marks, deleted) != nullptr);
+    g_assert_cmpint (moo_line_mark_get_line (moved), ==, 0);
+    g_assert_cmpint (moo_line_mark_get_line (last), ==, 37);
+    g_assert_cmpint (_moo_line_buffer_get_line_index (buffer,
+                                                      _moo_line_mark_get_line (first)),
+                     ==, 0);
+    g_slist_free (moved_marks);
+    g_slist_free (deleted_marks);
+
+    _moo_line_buffer_free (buffer);
+    g_object_unref (deleted);
+    g_object_unref (owner);
+}
+
+
+static void
 test_text_buffer_undo_redo (void)
 {
     MooTextBuffer *buffer = new_text_buffer ("abc");
@@ -930,6 +979,8 @@ _moo_add_mooedit_unit_tests (void)
                      test_text_buffer_empty_and_trailing_line);
     g_test_add_func ("/mooedit/text-buffer/exact-line-delete",
                      test_text_buffer_exact_line_delete);
+    g_test_add_func ("/mooedit/line-buffer/tree-boundaries",
+                     test_line_buffer_tree_boundaries);
     g_test_add_func ("/mooedit/text-buffer/undo-redo", test_text_buffer_undo_redo);
     g_test_add_func ("/mooedit/text-buffer/undo-group", test_text_buffer_undo_group);
     g_test_add_func ("/mooedit/text-buffer/undo-freeze", test_text_buffer_undo_freeze);
