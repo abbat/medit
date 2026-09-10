@@ -33,6 +33,7 @@
 #include "mooutils/moobigpaned.h"
 #include "mooutils/moofilewriter.h"
 #include "mooutils/moomarkup.h"
+#include "mooutils/moohistorylist.h"
 #include "mooutils/mooutils-fs.h"
 #include "mooutils/mooutils-misc.h"
 
@@ -386,6 +387,41 @@ test_path_boundaries (void)
 }
 
 
+static void
+test_history_list_memory (void)
+{
+    MooHistoryList *list = moo_history_list_new (NULL);
+    GtkTreeIter iter;
+    char *last;
+
+    g_assert_true (moo_history_list_is_empty (list));
+    moo_history_list_add (list, "one");
+    moo_history_list_add (list, "two");
+    moo_history_list_add (list, "one");
+    g_assert_false (moo_history_list_is_empty (list));
+    g_assert_cmpuint (moo_history_list_n_user_entries (list), ==, 2);
+
+    last = moo_history_list_get_last_item (list);
+    g_assert_cmpstr (last, ==, "one");
+    g_free (last);
+
+    g_assert_true (moo_history_list_find (list, "two", &iter));
+    g_assert_false (moo_history_list_find (list, "missing", &iter));
+
+    moo_history_list_set_max_entries (list, 2);
+    moo_history_list_add (list, "three");
+    g_assert_cmpuint (moo_history_list_n_user_entries (list), ==, 2);
+    last = moo_history_list_get_last_item (list);
+    g_assert_cmpstr (last, ==, "three");
+    g_free (last);
+
+    moo_history_list_add (list, "");
+    g_assert_cmpuint (moo_history_list_n_user_entries (list), ==, 2);
+
+    g_object_unref (list);
+}
+
+
 #if GTK_CHECK_VERSION(3,0,0)
 /* -------------------------------------------------------------------------
  * The shape of the drop indicator
@@ -510,6 +546,7 @@ _moo_add_mooutils_unit_tests (void)
     g_test_add_func ("/mooutils/markup/mutation-modified", test_markup_mutation_modified);
     g_test_add_func ("/mooutils/path/utilities", test_path_utilities);
     g_test_add_func ("/mooutils/path/boundaries", test_path_boundaries);
+    g_test_add_func ("/mooutils/history-list/memory", test_history_list_memory);
 #if GTK_CHECK_VERSION(3,0,0)
     g_test_add_func ("/mooutils/paned/drop-mask", test_drop_mask);
 #endif
