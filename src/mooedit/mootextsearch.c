@@ -459,8 +459,7 @@ moo_text_search_forward (const GtkTextIter      *start,
 
     if (!regex)
     {
-        g_warning ("%s", moo_error_message (error));
-        g_error_free (error);
+        g_clear_error (&error);
         return FALSE;
     }
 
@@ -514,8 +513,7 @@ moo_text_search_backward (const GtkTextIter      *start,
 
     if (!regex)
     {
-        g_warning ("%s", moo_error_message (error));
-        g_error_free (error);
+        g_clear_error (&error);
         return FALSE;
     }
 
@@ -784,8 +782,7 @@ moo_text_replace_all (GtkTextIter            *start,
 
         if (!regex)
         {
-            g_warning ("%s", moo_error_message (error));
-            g_error_free (error);
+            g_clear_error (&error);
             return 0;
         }
 
@@ -860,8 +857,7 @@ _moo_text_replace_all_interactive (GtkTextIter            *start,
 
         if (!regex)
         {
-            g_warning ("%s", moo_error_message (error));
-            g_error_free (error);
+            g_clear_error (&error);
             return 0;
         }
 

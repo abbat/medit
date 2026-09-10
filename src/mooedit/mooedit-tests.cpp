@@ -425,6 +425,7 @@ static const SearchCase search_cases[] = {
     {"regex-backward-limit", "cat dog cat", "c.t", MOO_TEXT_SEARCH_REGEX, TRUE, 7, 4, -1, -1},
     {"regex-line-start", "one\ntwo", "^", MOO_TEXT_SEARCH_REGEX, FALSE, 1, -1, 4, 4},
     {"regex-line-end", "one\ntwo", "$", MOO_TEXT_SEARCH_REGEX, FALSE, 0, -1, 3, 3},
+    {"regex-invalid", "cat", "[", MOO_TEXT_SEARCH_REGEX, FALSE, 0, -1, -1, -1},
     {"empty-buffer", "", "cat", MooTextSearchFlags (0), FALSE, 0, -1, -1, -1}
 };
 
@@ -496,6 +497,7 @@ static const ReplaceCase replace_cases[] = {
     {"zero-line-start", "one\ntwo", "^", ">", MOO_TEXT_SEARCH_REGEX, 0, -1, 2, ">one\n>two"},
     {"zero-line-end", "one\ntwo", "$", "!", MOO_TEXT_SEARCH_REGEX, 0, -1, 2, "one!\ntwo!"},
     {"zero-lookahead", "яя", "(?=я)", "!", MOO_TEXT_SEARCH_REGEX, 0, -1, 2, "!я!я"},
+    {"regex-invalid", "cat", "[", "dog", MOO_TEXT_SEARCH_REGEX, 0, -1, 0, "cat"},
     /* An empty match replaced with nothing is not an edit and is not counted. */
     {"zero-empty-replacement", "яя", "(?=я)", "", MOO_TEXT_SEARCH_REGEX, 0, -1, 0, "яя"},
     {"zero-at-eof", "one", "$", "", MOO_TEXT_SEARCH_REGEX, 0, -1, 0, "one"},
