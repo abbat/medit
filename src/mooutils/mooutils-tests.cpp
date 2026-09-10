@@ -32,6 +32,7 @@
 #include "mooutils/mooaccel.h"
 #include "mooutils/moobigpaned.h"
 #include "mooutils/moofilewriter.h"
+#include "mooutils/moomarkup.h"
 #include "mooutils/mooutils-fs.h"
 #include "mooutils/mooutils-misc.h"
 
@@ -241,6 +242,76 @@ test_accel_label_parse (void)
 }
 
 
+/* -------------------------------------------------------------------------
+ * MooMarkup trees built entirely in memory
+ */
+
+static void
+test_markup_memory (void)
+{
+    GError *error = NULL;
+    MooMarkupDoc *doc;
+    MooMarkupNode *root;
+    MooMarkupNode *child;
+
+    doc = moo_markup_parse_memory (
+        "<root answer=\"a&amp;b\"><child>one &amp; two</child>"
+        "<!-- ignored --><empty/></root>", -1, &error);
+    g_assert_no_error (error);
+    g_assert_nonnull (doc);
+
+    root = moo_markup_get_root_element (doc, "root");
+    g_assert_nonnull (root);
+    g_assert_cmpstr (moo_markup_get_prop (root, "answer"), ==, "a&b");
+
+    child = moo_markup_get_element (root, "child");
+    g_assert_nonnull (child);
+    g_assert_cmpstr (moo_markup_get_content (child), ==, "one & two");
+    g_assert_nonnull (moo_markup_get_element (root, "empty"));
+    g_assert_null (moo_markup_get_element (root, "missing"));
+
+    moo_markup_set_prop (root, "answer", "changed");
+    g_assert_cmpstr (moo_markup_get_prop (root, "answer"), ==, "changed");
+
+    moo_markup_set_content (child, "replacement");
+    g_assert_cmpstr (moo_markup_get_content (child), ==, "replacement");
+    g_assert_null (child->children->next);
+
+    moo_markup_doc_unref (doc);
+}
+
+
+static void
+test_path_utilities (void)
+{
+    GError *error = NULL;
+    char *uri;
+    char *path;
+    char *normalized;
+
+    g_assert_true (_moo_path_is_absolute ("/tmp/file"));
+    g_assert_false (_moo_path_is_absolute ("relative/file"));
+
+    normalized = _moo_normalize_file_path ("/tmp/a/../b/./c");
+    g_assert_cmpstr (normalized, ==, "/tmp/b/c");
+    g_free (normalized);
+
+    normalized = _moo_normalize_file_path ("/tmp/..");
+    g_assert_cmpstr (normalized, ==, "/");
+    g_free (normalized);
+
+    uri = _moo_filename_to_uri ("/tmp/a file/Ð¿ÑÐ¸Ð²ÐµÑ.txt", &error);
+    g_assert_no_error (error);
+    g_assert_nonnull (uri);
+    path = g_filename_from_uri (uri, NULL, &error);
+    g_assert_no_error (error);
+    g_assert_cmpstr (path, ==, "/tmp/a file/Ð¿ÑÐ¸Ð²ÐµÑ.txt");
+
+    g_free (path);
+    g_free (uri);
+}
+
+
 #if GTK_CHECK_VERSION(3,0,0)
 /* -------------------------------------------------------------------------
  * The shape of the drop indicator
@@ -361,6 +432,8 @@ _moo_add_mooutils_unit_tests (void)
     g_test_add_func ("/mooutils/splitlines", test_splitlines);
     g_test_add_func ("/mooutils/accel/parse", test_accel_parse);
     g_test_add_func ("/mooutils/accel/label", test_accel_label_parse);
+    g_test_add_func ("/mooutils/markup/memory", test_markup_memory);
+    g_test_add_func ("/mooutils/path/utilities", test_path_utilities);
 #if GTK_CHECK_VERSION(3,0,0)
     g_test_add_func ("/mooutils/paned/drop-mask", test_drop_mask);
 #endif
