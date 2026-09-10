@@ -290,6 +290,58 @@ test_json_position_bounds (void)
 }
 
 
+static void
+test_json_accessors (void)
+{
+    static const char *strings[] = { "one", "два", NULL };
+    JsonObject *object = json_object_new ();
+    JsonObject *nested = json_object_new ();
+    JsonArray *array;
+    JsonNode *node;
+    char *text;
+    gsize len;
+    int start_line, start_character, end_line, end_character;
+
+    lsp_json_set_string (object, "string", "value");
+    lsp_json_set_string (object, "null-string", NULL);
+    lsp_json_set_int (object, "integer", 42);
+    lsp_json_set_bool (object, "boolean", TRUE);
+    lsp_json_set_object (object, "nested", nested);
+    lsp_json_set_array (object, "array", lsp_json_string_array (strings));
+    lsp_json_set_null (object, "explicit-null");
+
+    g_assert_cmpstr (lsp_json_get_string (object, "string"), ==, "value");
+    g_assert_null (lsp_json_get_string (object, "null-string"));
+    g_assert_cmpint (lsp_json_get_int (object, "integer", 0), ==, 42);
+    g_assert_true (lsp_json_get_bool (object, "boolean", FALSE));
+    g_assert_cmpstr (lsp_json_lookup_string (object, "nested/missing"), ==, NULL);
+    g_assert_cmpint (lsp_json_lookup_int (object, "nested/missing", 7), ==, 7);
+    g_assert_false (lsp_json_lookup_bool (object, "nested/missing", FALSE));
+    g_assert_true (lsp_json_get_array (object, "array") != NULL);
+    array = lsp_json_get_array (object, "array");
+    g_assert_cmpuint (json_array_get_length (array), ==, 2);
+    g_assert_cmpstr (json_array_get_string_element (array, 1), ==, "два");
+
+    node = json_node_new (JSON_NODE_OBJECT);
+    json_node_set_object (node, lsp_json_range (2, 3, 4, 5));
+    g_assert_true (lsp_json_get_range (json_node_get_object (node),
+                                       &start_line, &start_character,
+                                       &end_line, &end_character));
+    g_assert_cmpint (start_line, ==, 2);
+    g_assert_cmpint (start_character, ==, 3);
+    g_assert_cmpint (end_line, ==, 4);
+    g_assert_cmpint (end_character, ==, 5);
+    json_node_free (node);
+
+    text = lsp_json_object_to_string (object, &len);
+    g_assert_nonnull (text);
+    g_assert_cmpuint (len, ==, strlen (text));
+    g_assert_nonnull (strstr (text, "\"string\":\"value\""));
+    g_free (text);
+    json_object_unref (object);
+}
+
+
 /* -------------------------------------------------------------------------
  * documentSymbol, in both of the shapes a server may answer with
  */
@@ -1519,6 +1571,7 @@ _moo_lsp_add_unit_tests (void)
 {
     g_test_add_func ("/lsp/json/malformed", test_json_malformed);
     g_test_add_func ("/lsp/json/position-bounds", test_json_position_bounds);
+    g_test_add_func ("/lsp/json/accessors", test_json_accessors);
     g_test_add_func ("/lsp/completion/word-start", test_completion_word_start);
     g_test_add_func ("/lsp/diagnostics/detail", test_diagnostic_detail);
 
