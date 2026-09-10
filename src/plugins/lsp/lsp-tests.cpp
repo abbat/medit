@@ -138,6 +138,33 @@ test_position_utf32 (void)
 
 
 static void
+test_position_to_server (void)
+{
+    GtkTextBuffer *buffer = buffer_with (EMOJI_LINE);
+    GtkTextIter iter;
+    int line, character;
+
+    /* The space after the emoji is character 7, UTF-8 byte 10, and UTF-16
+       unit 8. Test the direction used when sending edits and diagnostics. */
+    gtk_text_buffer_get_iter_at_line_offset (buffer, &iter, 0, 7);
+
+    lsp_iter_to_position (&iter, LSP_POSITION_ENCODING_UTF32, &line, &character);
+    g_assert_cmpint (line, ==, 0);
+    g_assert_cmpint (character, ==, 7);
+
+    lsp_iter_to_position (&iter, LSP_POSITION_ENCODING_UTF8, &line, &character);
+    g_assert_cmpint (line, ==, 0);
+    g_assert_cmpint (character, ==, 10);
+
+    lsp_iter_to_position (&iter, LSP_POSITION_ENCODING_UTF16, &line, &character);
+    g_assert_cmpint (line, ==, 0);
+    g_assert_cmpint (character, ==, 8);
+
+    g_object_unref (buffer);
+}
+
+
+static void
 test_position_out_of_range (void)
 {
     GtkTextBuffer *buffer = buffer_with (EMOJI_LINE);
@@ -1373,6 +1400,7 @@ _moo_lsp_add_unit_tests (void)
     g_test_add_func ("/lsp/position/utf16", test_position_utf16);
     g_test_add_func ("/lsp/position/utf8", test_position_utf8);
     g_test_add_func ("/lsp/position/utf32", test_position_utf32);
+    g_test_add_func ("/lsp/position/to-server", test_position_to_server);
     g_test_add_func ("/lsp/position/out-of-range", test_position_out_of_range);
 
     g_test_add_func ("/lsp/symbols/nested", test_symbols_nested);
