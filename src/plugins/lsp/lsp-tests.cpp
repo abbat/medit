@@ -49,6 +49,7 @@
 #include "plugins/lsp/lsp-edits.h"
 #include "plugins/lsp/lsp-signature.h"
 #include "plugins/lsp/lsp-symbols.h"
+#include "mooutils/moomarkup.h"
 
 #include <gtk/gtk.h>
 #include <string.h>
@@ -582,6 +583,67 @@ test_config_parse_bad (void)
     g_assert_null (lsp_config_parse_file (path));
     g_test_assert_expected_messages ();
 
+    g_remove (path);
+    g_rmdir (dir);
+    g_free (path);
+    g_free (dir);
+}
+
+
+static void
+test_markup_rejects_invalid_comment (void)
+{
+    GError *error = NULL;
+    MooMarkupDoc *doc;
+
+    /* XML comments may not contain two consecutive hyphens. GMarkup accepts
+       this input, but the configuration file is XML and must be portable to
+       a conforming parser. */
+    doc = moo_markup_parse_memory ("<root><!-- clangd --background-index --></root>",
+                                   -1, &error);
+
+    g_assert_null (doc);
+    g_assert_error (error, G_MARKUP_ERROR, G_MARKUP_ERROR_PARSE);
+    g_clear_error (&error);
+}
+
+
+static void
+test_config_skips_invalid_servers (void)
+{
+    static const char *xml =
+        "<medit-lsp>"
+        "  <server><filter>langs:c</filter><command>missing-id</command></server>"
+        "  <server id=\"missing-command\"><filter>langs:c</filter></server>"
+        "  <server id=\"bad-command\"><filter>langs:c</filter>"
+        "    <command>'unterminated</command></server>"
+        "  <server id=\"missing-filter\"><command>missing-filter</command></server>"
+        "  <server id=\"valid\"><filter>langs:c</filter>"
+        "    <command>clangd --query-driver='a b'</command>"
+        "    <env>   </env><root> ; , </root></server>"
+        "</medit-lsp>";
+    char *dir = g_dir_make_tmp ("medit-unit-XXXXXX", NULL);
+    char *path = write_temp (dir, "lsp.xml", xml);
+    GSList *list;
+    LspServerConfig *config;
+
+    g_test_expect_message ("Moo", G_LOG_LEVEL_WARNING, "*without an id*");
+    g_test_expect_message ("Moo", G_LOG_LEVEL_WARNING, "*no <command>*");
+    g_test_expect_message ("Moo", G_LOG_LEVEL_WARNING, "*unparsable*");
+    g_test_expect_message ("Moo", G_LOG_LEVEL_WARNING, "*no <filter>*");
+    list = lsp_config_parse_file (path);
+    g_test_assert_expected_messages ();
+
+    g_assert_cmpuint (g_slist_length (list), ==, 1);
+    config = (LspServerConfig*) list->data;
+    g_assert_cmpstr (config->id, ==, "valid");
+    g_assert_cmpstr (config->argv[0], ==, "clangd");
+    g_assert_cmpstr (config->argv[1], ==, "--query-driver=a b");
+    g_assert_null (config->argv[2]);
+    g_assert_null (config->env);
+    g_assert_null (config->root_markers);
+
+    lsp_config_list_free (list);
     g_remove (path);
     g_rmdir (dir);
     g_free (path);
@@ -1259,6 +1321,8 @@ _moo_lsp_add_unit_tests (void)
 
     g_test_add_func ("/lsp/config/parse", test_config_parse);
     g_test_add_func ("/lsp/config/malformed", test_config_parse_bad);
+    g_test_add_func ("/lsp/config/invalid-comment", test_markup_rejects_invalid_comment);
+    g_test_add_func ("/lsp/config/invalid-servers", test_config_skips_invalid_servers);
     g_test_add_func ("/lsp/config/root", test_config_root);
 
     g_test_add_func ("/lsp/position/utf16", test_position_utf16);

@@ -289,6 +289,7 @@ collect_env (MooMarkupNode *node)
 
     for (child = node->children; child != NULL; child = child->next)
     {
+        char *item;
         const char *content;
 
         if (!MOO_MARKUP_IS_ELEMENT (child) || strcmp (child->name, "env") != 0)
@@ -296,8 +297,14 @@ collect_env (MooMarkupNode *node)
 
         content = moo_markup_get_content (child);
 
-        if (content && content[0])
-            g_ptr_array_add (array, g_strstrip (g_strdup (content)));
+        if (!content)
+            continue;
+
+        item = g_strstrip (g_strdup (content));
+        if (item[0])
+            g_ptr_array_add (array, item);
+        else
+            g_free (item);
     }
 
     if (array->len == 0)

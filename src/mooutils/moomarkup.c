@@ -261,8 +261,18 @@ passthrough (G_GNUC_UNUSED GMarkupParseContext    *ctx,
              const gchar            *passthrough_text,
              gsize                   text_len,
              ParserState            *state,
-             G_GNUC_UNUSED GError                **error)
+             GError                **error)
 {
+    /* GMarkup accepts "--" inside comments, although XML forbids it. Keep
+       configuration files valid for parsers other than GMarkup as well. */
+    if (text_len >= 7 && g_str_has_prefix (passthrough_text, "<!--") &&
+        g_strstr_len (passthrough_text + 4, text_len - 7, "--") != NULL)
+    {
+        g_set_error (error, G_MARKUP_ERROR, G_MARKUP_ERROR_PARSE,
+                     "Invalid XML comment");
+        return;
+    }
+
     if (MOO_MARKUP_IS_COMMENT (state->current->last))
         moo_markup_text_node_add_text (MOO_MARKUP_COMMENT (state->current->last),
                                        passthrough_text, text_len);
