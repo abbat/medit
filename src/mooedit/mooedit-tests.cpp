@@ -42,10 +42,12 @@
 #ifdef MOO_ENABLE_UNIT_TESTS
 
 #include "mooedit/moolang-private.h"
+#include "mooedit/mootext-private.h"
 #include "mooedit/mootextbuffer.h"
 #include "mooedit/mootextsearch.h"
 #include "gtksourceview/gtksourcecontextengine.h"
 #include "gtksourceview/gtksourceengine.h"
+#include "mooutils/mooundo.h"
 
 #include <gtk/gtk.h>
 #include <string.h>
@@ -536,6 +538,183 @@ test_corpus_missing (void)
 }
 
 
+static MooTextBuffer *
+new_text_buffer (const char *text)
+{
+    register_colour_type ();
+
+    MooTextBuffer *buffer = MOO_TEXT_BUFFER (g_object_new (MOO_TYPE_TEXT_BUFFER, nullptr));
+
+    moo_text_buffer_begin_non_undoable_action (buffer);
+    gtk_text_buffer_set_text (GTK_TEXT_BUFFER (buffer), text, -1);
+    moo_text_buffer_end_non_undoable_action (buffer);
+
+    return buffer;
+}
+
+
+static char *
+text_buffer_text (MooTextBuffer *buffer)
+{
+    GtkTextIter start, end;
+
+    gtk_text_buffer_get_bounds (GTK_TEXT_BUFFER (buffer), &start, &end);
+    return gtk_text_buffer_get_text (GTK_TEXT_BUFFER (buffer), &start, &end, TRUE);
+}
+
+
+static void
+test_text_buffer_line_marks (void)
+{
+    MooTextBuffer *buffer = new_text_buffer ("a\nb\nc");
+    MooLineMark *mark = MOO_LINE_MARK (g_object_new (MOO_TYPE_LINE_MARK, nullptr));
+    GSList *marks;
+    GtkTextIter start;
+
+    moo_text_buffer_add_line_mark (buffer, mark, 1);
+    g_assert_cmpint (moo_line_mark_get_line (mark), ==, 1);
+    marks = moo_text_buffer_get_line_marks_at_line (buffer, 1);
+    g_assert_true (g_slist_find (marks, mark) != nullptr);
+    g_slist_free (marks);
+
+    /* A newline at the start of a line leaves a mark with the text that was
+       on that line, rather than leaving it on the newly empty line. */
+    gtk_text_buffer_get_start_iter (GTK_TEXT_BUFFER (buffer), &start);
+    gtk_text_buffer_insert (GTK_TEXT_BUFFER (buffer), &start, "\n", 1);
+    g_assert_cmpint (moo_line_mark_get_line (mark), ==, 2);
+    marks = moo_text_buffer_get_line_marks_at_line (buffer, 2);
+    g_assert_true (g_slist_find (marks, mark) != nullptr);
+    g_slist_free (marks);
+
+    moo_text_buffer_delete_line_mark (buffer, mark);
+    g_assert_true (moo_line_mark_get_deleted (mark));
+    g_object_unref (mark);
+    g_object_unref (buffer);
+}
+
+
+static void
+test_text_buffer_moved_line_mark (void)
+{
+    MooTextBuffer *buffer = new_text_buffer ("a\nb\nc");
+    MooLineMark *mark = MOO_LINE_MARK (g_object_new (MOO_TYPE_LINE_MARK, nullptr));
+    GtkTextIter start, end;
+    char *text;
+
+    moo_text_buffer_add_line_mark (buffer, mark, 2);
+
+    /* Deleting from the middle of one line through the next line moves marks
+       on the deleted lines to the line containing the surviving prefix. */
+    gtk_text_buffer_get_iter_at_offset (GTK_TEXT_BUFFER (buffer), &start, 1);
+    gtk_text_buffer_get_iter_at_offset (GTK_TEXT_BUFFER (buffer), &end, 4);
+    gtk_text_buffer_delete (GTK_TEXT_BUFFER (buffer), &start, &end);
+    g_assert_cmpint (moo_line_mark_get_line (mark), ==, 0);
+
+    text = text_buffer_text (buffer);
+    g_assert_cmpstr (text, ==, "ac");
+    g_free (text);
+
+    moo_text_buffer_delete_line_mark (buffer, mark);
+    g_object_unref (mark);
+    g_object_unref (buffer);
+}
+
+
+static void
+test_text_buffer_deleted_line_mark (void)
+{
+    MooTextBuffer *buffer = new_text_buffer ("a\nb\nc");
+    MooLineMark *mark = MOO_LINE_MARK (g_object_new (MOO_TYPE_LINE_MARK, nullptr));
+    GtkTextIter start, end;
+
+    moo_text_buffer_add_line_mark (buffer, mark, 1);
+
+    /* A mark on a line removed from the beginning of a range is deleted with
+       that line, rather than silently pointing at a different line. */
+    gtk_text_buffer_get_start_iter (GTK_TEXT_BUFFER (buffer), &start);
+    gtk_text_buffer_get_iter_at_offset (GTK_TEXT_BUFFER (buffer), &end, 4);
+    gtk_text_buffer_delete (GTK_TEXT_BUFFER (buffer), &start, &end);
+
+    g_assert_true (moo_line_mark_get_deleted (mark));
+    g_assert_null (moo_line_mark_get_buffer (mark));
+    g_object_unref (mark);
+    g_object_unref (buffer);
+}
+
+
+static void
+test_text_buffer_undo_redo (void)
+{
+    MooTextBuffer *buffer = new_text_buffer ("abc");
+    MooUndoStack *stack = MOO_UNDO_STACK (_moo_text_buffer_get_undo_stack (buffer));
+    GtkTextIter iter;
+    char *text;
+
+    gtk_text_buffer_get_iter_at_offset (GTK_TEXT_BUFFER (buffer), &iter, 1);
+    gtk_text_buffer_insert (GTK_TEXT_BUFFER (buffer), &iter, "X", 1);
+    g_assert_true (moo_text_buffer_can_undo (buffer));
+    g_assert_false (moo_text_buffer_can_redo (buffer));
+
+    moo_undo_stack_undo (stack);
+    text = text_buffer_text (buffer);
+    g_assert_cmpstr (text, ==, "abc");
+    g_free (text);
+    g_assert_false (moo_text_buffer_can_undo (buffer));
+    g_assert_true (moo_text_buffer_can_redo (buffer));
+
+    moo_undo_stack_redo (stack);
+    text = text_buffer_text (buffer);
+    g_assert_cmpstr (text, ==, "aXbc");
+    g_free (text);
+
+    /* A new edit after undo invalidates the redo branch. */
+    moo_undo_stack_undo (stack);
+    gtk_text_buffer_get_end_iter (GTK_TEXT_BUFFER (buffer), &iter);
+    gtk_text_buffer_insert (GTK_TEXT_BUFFER (buffer), &iter, "Y", 1);
+    g_assert_false (moo_text_buffer_can_redo (buffer));
+
+    g_object_unref (buffer);
+}
+
+
+static void
+test_text_buffer_undo_group (void)
+{
+    MooTextBuffer *buffer = new_text_buffer ("abc");
+    MooUndoStack *stack = MOO_UNDO_STACK (_moo_text_buffer_get_undo_stack (buffer));
+    GtkTextIter iter, end;
+    char *text;
+
+    gtk_text_buffer_begin_user_action (GTK_TEXT_BUFFER (buffer));
+    gtk_text_buffer_get_end_iter (GTK_TEXT_BUFFER (buffer), &iter);
+    gtk_text_buffer_insert (GTK_TEXT_BUFFER (buffer), &iter, "12", 2);
+    gtk_text_buffer_get_iter_at_offset (GTK_TEXT_BUFFER (buffer), &iter, 1);
+    end = iter;
+    gtk_text_iter_forward_char (&end);
+    gtk_text_buffer_delete (GTK_TEXT_BUFFER (buffer), &iter, &end);
+    gtk_text_buffer_end_user_action (GTK_TEXT_BUFFER (buffer));
+
+    moo_undo_stack_undo (stack);
+    text = text_buffer_text (buffer);
+    g_assert_cmpstr (text, ==, "abc");
+    g_free (text);
+    g_assert_true (moo_text_buffer_can_redo (buffer));
+
+    moo_undo_stack_redo (stack);
+    text = text_buffer_text (buffer);
+    g_assert_cmpstr (text, ==, "ac12");
+    g_free (text);
+
+    moo_text_buffer_begin_non_undoable_action (buffer);
+    gtk_text_buffer_set_text (GTK_TEXT_BUFFER (buffer), "reset", -1);
+    moo_text_buffer_end_non_undoable_action (buffer);
+    g_assert_false (moo_text_buffer_can_undo (buffer));
+    g_assert_false (moo_text_buffer_can_redo (buffer));
+
+    g_object_unref (buffer);
+}
+
+
 void
 _moo_add_mooedit_unit_tests (void)
 {
@@ -557,6 +736,12 @@ _moo_add_mooedit_unit_tests (void)
         g_test_add_data_func (path, &replace_cases[i], test_replace);
         g_free (path);
     }
+
+    g_test_add_func ("/mooedit/text-buffer/line-marks", test_text_buffer_line_marks);
+    g_test_add_func ("/mooedit/text-buffer/moved-line-mark", test_text_buffer_moved_line_mark);
+    g_test_add_func ("/mooedit/text-buffer/deleted-line-mark", test_text_buffer_deleted_line_mark);
+    g_test_add_func ("/mooedit/text-buffer/undo-redo", test_text_buffer_undo_redo);
+    g_test_add_func ("/mooedit/text-buffer/undo-group", test_text_buffer_undo_group);
 
     if (entries == nullptr)
     {
