@@ -945,6 +945,7 @@ moo_ui_xml_add_item (MooUiXml       *xml,
         case MOO_UI_NODE_SEPARATOR:
             g_warning ("can't add item to node of type %s",
                        NODE_TYPE_NAME[parent->type]);
+            return NULL;
     }
 
     item = item_new (name, action);

@@ -33,6 +33,7 @@
 #include "mooutils/moobigpaned.h"
 #include "mooutils/moofilewriter.h"
 #include "mooutils/moomarkup.h"
+#include "mooutils/moouixml.h"
 #include "mooutils/moohistorylist.h"
 #include "mooutils/mooutils-fs.h"
 #include "mooutils/mooutils-misc.h"
@@ -366,6 +367,49 @@ test_markup_round_trip_edges (void)
 
 
 static void
+test_ui_xml_memory (void)
+{
+    MooUiXml *xml;
+    MooUiNode *node;
+    guint merge_id;
+    char *path;
+
+    xml = moo_ui_xml_new ();
+    moo_ui_xml_add_ui_from_string (
+        xml,
+        "<ui><object name=\"main\"><widget name=\"menu\">"
+        "<item name=\"open\" action=\"Open\"/>"
+        "<placeholder name=\"slots\"/>"
+        "</widget></object></ui>",
+        -1);
+
+    node = moo_ui_xml_get_node (xml, "main/menu/open");
+    g_assert_nonnull (node);
+    path = moo_ui_node_get_path (node);
+    g_assert_cmpstr (path, ==, "main/menu/open");
+    g_free (path);
+    g_assert_nonnull (moo_ui_xml_find_placeholder (xml, "slots"));
+
+    merge_id = moo_ui_xml_new_merge_id (xml);
+    node = moo_ui_xml_add_item (xml, merge_id, "main/menu", NULL, "Save", -1);
+    g_assert_nonnull (node);
+    g_assert_nonnull (moo_ui_xml_get_node (xml, "main/menu/Save"));
+
+    g_test_expect_message ("Moo", G_LOG_LEVEL_WARNING, "*can't add item*");
+    node = moo_ui_xml_add_item (xml, merge_id, "main", "invalid", "Invalid", -1);
+    g_test_assert_expected_messages ();
+    g_assert_null (node);
+    g_assert_null (moo_ui_xml_get_node (xml, "main/invalid"));
+
+    moo_ui_xml_remove_ui (xml, merge_id);
+    g_assert_null (moo_ui_xml_get_node (xml, "main/menu/Save"));
+    g_assert_nonnull (moo_ui_xml_get_node (xml, "main/menu/open"));
+
+    g_object_unref (xml);
+}
+
+
+static void
 test_path_utilities (void)
 {
     GError *error = NULL;
@@ -593,6 +637,7 @@ _moo_add_mooutils_unit_tests (void)
     g_test_add_func ("/mooutils/markup/memory", test_markup_memory);
     g_test_add_func ("/mooutils/markup/mutation-modified", test_markup_mutation_modified);
     g_test_add_func ("/mooutils/markup/round-trip-edges", test_markup_round_trip_edges);
+    g_test_add_func ("/mooutils/ui-xml/memory", test_ui_xml_memory);
     g_test_add_func ("/mooutils/path/utilities", test_path_utilities);
     g_test_add_func ("/mooutils/path/boundaries", test_path_boundaries);
     g_test_add_func ("/mooutils/history-list/memory", test_history_list_memory);
