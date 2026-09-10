@@ -390,7 +390,8 @@ _moo_normalize_file_path (const char *filename)
 {
     g_return_val_if_fail (filename != NULL, NULL);
     /* empty filename is an error, but we don't want to crash here */
-    g_return_val_if_fail (filename[0] != 0, g_strdup (""));
+    if (filename[0] == 0)
+        return g_strdup ("");
     return normalize_path (filename);
 }
 

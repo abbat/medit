@@ -347,6 +347,45 @@ test_path_utilities (void)
 }
 
 
+static void
+test_path_boundaries (void)
+{
+    GError *error = NULL;
+    char *cwd = g_get_current_dir ();
+    char *uri;
+    char *path;
+    char *normalized;
+    char *expected;
+
+    normalized = _moo_normalize_file_path ("");
+    g_assert_cmpstr (normalized, ==, "");
+    g_free (normalized);
+
+    normalized = _moo_normalize_file_path (".");
+    g_assert_cmpstr (normalized, ==, cwd);
+    g_free (normalized);
+
+    normalized = _moo_normalize_file_path ("a///b/../../c/");
+    expected = g_build_filename (cwd, "c", nullptr);
+    g_assert_cmpstr (normalized, ==, expected);
+    g_free (expected);
+    g_free (normalized);
+
+    uri = _moo_filename_to_uri ("relative file.txt", &error);
+    g_assert_no_error (error);
+    g_assert_nonnull (uri);
+    path = g_filename_from_uri (uri, NULL, &error);
+    g_assert_no_error (error);
+    expected = g_build_filename (cwd, "relative file.txt", nullptr);
+    g_assert_cmpstr (path, ==, expected);
+    g_free (expected);
+
+    g_free (path);
+    g_free (uri);
+    g_free (cwd);
+}
+
+
 #if GTK_CHECK_VERSION(3,0,0)
 /* -------------------------------------------------------------------------
  * The shape of the drop indicator
@@ -470,6 +509,7 @@ _moo_add_mooutils_unit_tests (void)
     g_test_add_func ("/mooutils/markup/memory", test_markup_memory);
     g_test_add_func ("/mooutils/markup/mutation-modified", test_markup_mutation_modified);
     g_test_add_func ("/mooutils/path/utilities", test_path_utilities);
+    g_test_add_func ("/mooutils/path/boundaries", test_path_boundaries);
 #if GTK_CHECK_VERSION(3,0,0)
     g_test_add_func ("/mooutils/paned/drop-mask", test_drop_mask);
 #endif
