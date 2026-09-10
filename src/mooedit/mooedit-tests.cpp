@@ -42,6 +42,7 @@
 #ifdef MOO_ENABLE_UNIT_TESTS
 
 #include "mooedit/moolang-private.h"
+#include "mooedit/mooeditaction.h"
 #include "mooedit/mooindenter.h"
 #include "mooedit/mootext-private.h"
 #include "mooedit/mootextbuffer.h"
@@ -974,6 +975,38 @@ test_language_helpers (void)
 }
 
 
+static void
+test_edit_action_filters (void)
+{
+    MooEditAction *action;
+    char *filter = nullptr;
+
+    register_colour_type ();
+    action = MOO_EDIT_ACTION (g_object_new (MOO_TYPE_EDIT_ACTION, nullptr));
+
+    g_object_set (action,
+                  "filter-visible", "^visible$",
+                  "filter-sensitive", "sensitive",
+                  nullptr);
+    g_object_get (action, "filter-visible", &filter, nullptr);
+    g_assert_cmpstr (filter, ==, "^visible$");
+    g_free (filter);
+
+    g_object_get (action, "filter-sensitive", &filter, nullptr);
+    g_assert_cmpstr (filter, ==, "sensitive");
+    g_free (filter);
+
+    g_object_set (action, "filter-visible", nullptr, "filter-sensitive", "", nullptr);
+    g_object_get (action, "filter-visible", &filter, nullptr);
+    g_assert_null (filter);
+    g_object_get (action, "filter-sensitive", &filter, nullptr);
+    g_assert_cmpstr (filter, ==, "");
+    g_free (filter);
+
+    g_object_unref (action);
+}
+
+
 void
 _moo_add_mooedit_unit_tests (void)
 {
@@ -1011,6 +1044,7 @@ _moo_add_mooedit_unit_tests (void)
     g_test_add_func ("/mooedit/text-buffer/undo-group", test_text_buffer_undo_group);
     g_test_add_func ("/mooedit/text-buffer/undo-freeze", test_text_buffer_undo_freeze);
     g_test_add_func ("/mooedit/language/helpers", test_language_helpers);
+    g_test_add_func ("/mooedit/edit-action/filters", test_edit_action_filters);
 
     if (entries == nullptr)
     {

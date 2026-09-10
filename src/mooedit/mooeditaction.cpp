@@ -452,7 +452,8 @@ unuse_filter_regex (GRegex *regex)
     RegexRef *ref;
     const char *pattern;
 
-    g_return_if_fail (regex != NULL);
+    if (!regex)
+        return;
 
     init_filter_store ();
 
