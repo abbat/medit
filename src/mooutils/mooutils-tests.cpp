@@ -318,6 +318,54 @@ test_markup_mutation_modified (void)
 
 
 static void
+test_markup_round_trip_edges (void)
+{
+    GError *error = NULL;
+    MooMarkupDoc *doc;
+    MooMarkupNode *root;
+    MooMarkupNode *child;
+    char *serialized;
+    MooMarkupDoc *round_trip;
+    MooMarkupNode *round_child;
+    const char *round_content;
+
+    doc = moo_markup_parse_memory (
+        "<root><![CDATA[a < b & c]]><!-- note --><empty/>"
+        "<child>one<![CDATA[ & two]]></child></root>", -1, &error);
+    g_assert_no_error (error);
+    g_assert_nonnull (doc);
+
+    root = moo_markup_get_root_element (doc, "root");
+    child = moo_markup_get_element (root, "child");
+    g_assert_cmpstr (moo_markup_get_content (root), ==, "a < b & c");
+    g_assert_cmpstr (moo_markup_get_content (child), ==, "one & two");
+
+    serialized = moo_markup_node_get_string (MOO_MARKUP_NODE (doc));
+    g_assert_cmpstr (serialized, ==,
+                     "<root>a &lt; b &amp; c<!-- note --><empty/>"
+                     "<child>one &amp; two</child></root>");
+
+    round_trip = moo_markup_parse_memory (serialized, -1, &error);
+    g_assert_no_error (error);
+    g_assert_nonnull (round_trip);
+    round_child = moo_markup_get_element (MOO_MARKUP_NODE (round_trip),
+                                          "root/child");
+    round_content = moo_markup_get_content (round_child);
+    g_assert_cmpstr (round_content, ==, "one & two");
+
+    moo_markup_doc_unref (round_trip);
+    g_free (serialized);
+    moo_markup_doc_unref (doc);
+
+    doc = moo_markup_parse_memory ("<root><!-- invalid -- comment --></root>",
+                                   -1, &error);
+    g_assert_null (doc);
+    g_assert_error (error, G_MARKUP_ERROR, G_MARKUP_ERROR_PARSE);
+    g_clear_error (&error);
+}
+
+
+static void
 test_path_utilities (void)
 {
     GError *error = NULL;
@@ -544,6 +592,7 @@ _moo_add_mooutils_unit_tests (void)
     g_test_add_func ("/mooutils/accel/label", test_accel_label_parse);
     g_test_add_func ("/mooutils/markup/memory", test_markup_memory);
     g_test_add_func ("/mooutils/markup/mutation-modified", test_markup_mutation_modified);
+    g_test_add_func ("/mooutils/markup/round-trip-edges", test_markup_round_trip_edges);
     g_test_add_func ("/mooutils/path/utilities", test_path_utilities);
     g_test_add_func ("/mooutils/path/boundaries", test_path_boundaries);
     g_test_add_func ("/mooutils/history-list/memory", test_history_list_memory);
