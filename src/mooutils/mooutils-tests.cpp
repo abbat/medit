@@ -493,6 +493,29 @@ test_output_filter_memory (void)
 
 
 static void
+test_ui_xml_rejects_invalid_nodes (void)
+{
+    MooUiXml *xml;
+
+    xml = moo_ui_xml_new ();
+    g_test_expect_message ("Moo", G_LOG_LEVEL_WARNING, "*unknown element*");
+    moo_ui_xml_add_ui_from_string (xml, "<ui><unknown name=\"bad\"/></ui>", -1);
+    g_test_assert_expected_messages ();
+    g_assert_null (moo_ui_xml_get_node (xml, "bad"));
+
+    moo_ui_xml_add_ui_from_string (xml, "<ui><object name=\"main\"/></ui>", -1);
+    g_assert_nonnull (moo_ui_xml_get_node (xml, "main"));
+
+    g_test_expect_message ("Moo", G_LOG_LEVEL_WARNING, "*implement me*");
+    moo_ui_xml_add_ui_from_string (xml, "<ui><object name=\"main\"/></ui>", -1);
+    g_test_assert_expected_messages ();
+    g_assert_nonnull (moo_ui_xml_get_node (xml, "main"));
+
+    g_object_unref (xml);
+}
+
+
+static void
 test_path_utilities (void)
 {
     GError *error = NULL;
@@ -722,6 +745,8 @@ _moo_add_mooutils_unit_tests (void)
     g_test_add_func ("/mooutils/markup/round-trip-edges", test_markup_round_trip_edges);
     g_test_add_func ("/mooutils/ui-xml/memory", test_ui_xml_memory);
     g_test_add_func ("/mooutils/output-filter/memory", test_output_filter_memory);
+    g_test_add_func ("/mooutils/ui-xml/rejects-invalid-nodes",
+                     test_ui_xml_rejects_invalid_nodes);
     g_test_add_func ("/mooutils/path/utilities", test_path_utilities);
     g_test_add_func ("/mooutils/path/boundaries", test_path_boundaries);
     g_test_add_func ("/mooutils/history-list/memory", test_history_list_memory);
