@@ -15,6 +15,7 @@
 
 #include "plugins/lsp/lsp-json.h"
 
+#include <math.h>
 #include <string.h>
 
 
@@ -427,13 +428,34 @@ get_position_number (JsonObject  *object,
         return FALSE;
 
     type = json_node_get_value_type (node);
-    if (type != G_TYPE_INT64 && type != G_TYPE_DOUBLE)
-        return FALSE;
+    if (type == G_TYPE_INT64)
+    {
+        gint64 number = json_node_get_int (node);
 
-    if (value)
-        *value = (int) json_node_get_int (node);
+        if (number < 0 || number > G_MAXINT)
+            return FALSE;
 
-    return TRUE;
+        if (value)
+            *value = (int) number;
+
+        return TRUE;
+    }
+
+    if (type == G_TYPE_DOUBLE)
+    {
+        double number = json_node_get_double (node);
+
+        if (!isfinite (number) || number < 0 || number > G_MAXINT ||
+            number != floor (number))
+            return FALSE;
+
+        if (value)
+            *value = (int) number;
+
+        return TRUE;
+    }
+
+    return FALSE;
 }
 
 

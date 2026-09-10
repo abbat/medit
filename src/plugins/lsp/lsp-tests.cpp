@@ -256,6 +256,39 @@ test_json_malformed (void)
 }
 
 
+static void
+test_json_position_bounds (void)
+{
+    static const char *invalid[] = {
+        "{\"line\": 1.5, \"character\": 0}",
+        "{\"line\": -1, \"character\": 0}",
+        "{\"line\": 2147483648, \"character\": 0}",
+        NULL
+    };
+    GError *error = NULL;
+    JsonNode *node;
+    guint i;
+    int line, character;
+
+    for (i = 0; invalid[i]; ++i)
+    {
+        node = lsp_json_parse (invalid[i], -1, &error);
+        g_assert_no_error (error);
+        g_assert_false (lsp_json_get_position (json_node_get_object (node),
+                                                &line, &character));
+        json_node_unref (node);
+    }
+
+    node = lsp_json_parse ("{\"line\": 1.0, \"character\": 2.0}", -1, &error);
+    g_assert_no_error (error);
+    g_assert_true (lsp_json_get_position (json_node_get_object (node),
+                                          &line, &character));
+    g_assert_cmpint (line, ==, 1);
+    g_assert_cmpint (character, ==, 2);
+    json_node_unref (node);
+}
+
+
 /* -------------------------------------------------------------------------
  * documentSymbol, in both of the shapes a server may answer with
  */
@@ -950,6 +983,24 @@ test_locations_nothing (void)
 }
 
 
+static void
+test_locations_malformed (void)
+{
+    GSList *found = locations_of (
+        "[null, {},"
+        " {\"uri\":\"file:///tmp/bad.txt\",\"range\":"
+        "  {\"start\":{\"line\":2,\"character\":0},"
+        "   \"end\":{\"line\":1,\"character\":0}}},"
+        " {\"uri\":\"file:///tmp/good.txt\",\"range\":"
+        "  {\"start\":{\"line\":1,\"character\":2},"
+        "   \"end\":{\"line\":1,\"character\":3}}}]");
+
+    g_assert_cmpuint (g_slist_length (found), ==, 1);
+    check_location (found, 0, "/tmp/good.txt", 1, 2);
+    lsp_locations_free (found);
+}
+
+
 /* -------------------------------------------------------------------------
  * The edits a rename comes back as
  */
@@ -1294,6 +1345,22 @@ test_signature_nothing (void)
 }
 
 
+static void
+test_signature_malformed (void)
+{
+    char *markup = markup_of (
+        "{\"signatures\": [null, {\"label\": 7},"
+        " {\"label\": \"f(x)\","
+        "  \"parameters\": [null, {\"label\": [2]}]}],"
+        " \"activeSignature\": 2, \"activeParameter\": 1}");
+
+    /* Bad signatures and parameter ranges are ignored while the usable label
+       remains displayable. */
+    g_assert_cmpstr (markup, ==, "f(x)");
+    g_free (markup);
+}
+
+
 /* -------------------------------------------------------------------------
  * The other uses of what the cursor is in
  */
@@ -1362,6 +1429,27 @@ test_highlight_tags (void)
 
 
 static void
+test_highlight_malformed (void)
+{
+    GError *error = NULL;
+    JsonNode *node = lsp_json_parse (
+        "[null, {\"range\": {\"start\": {\"line\": 2, \"character\": 0},"
+        "  \"end\": {\"line\": 1, \"character\": 0}}},"
+        " {\"range\": {\"start\": {\"line\": 0, \"character\": 1},"
+        "  \"end\": {\"line\": 0, \"character\": 2}}}]", -1, &error);
+    GSList *found;
+
+    g_assert_no_error (error);
+    found = lsp_highlight_parse (node);
+    g_assert_cmpuint (g_slist_length (found), ==, 1);
+    g_assert_cmpint (((LspHighlight*) found->data)->start_line, ==, 0);
+    g_assert_cmpint (((LspHighlight*) found->data)->start_character, ==, 1);
+    lsp_highlight_free (found);
+    json_node_unref (node);
+}
+
+
+static void
 test_highlight_nothing (void)
 {
     GError *error = NULL;
@@ -1388,6 +1476,7 @@ void
 _moo_lsp_add_unit_tests (void)
 {
     g_test_add_func ("/lsp/json/malformed", test_json_malformed);
+    g_test_add_func ("/lsp/json/position-bounds", test_json_position_bounds);
     g_test_add_func ("/lsp/completion/word-start", test_completion_word_start);
     g_test_add_func ("/lsp/diagnostics/detail", test_diagnostic_detail);
 
@@ -1413,6 +1502,7 @@ _moo_lsp_add_unit_tests (void)
     g_test_add_func ("/lsp/locations/single", test_locations_single);
     g_test_add_func ("/lsp/locations/link", test_locations_link);
     g_test_add_func ("/lsp/locations/nothing", test_locations_nothing);
+    g_test_add_func ("/lsp/locations/malformed", test_locations_malformed);
 
     g_test_add_func ("/lsp/rename/order", test_workspace_edit_order);
     g_test_add_func ("/lsp/rename/files", test_workspace_edit_files);
@@ -1426,10 +1516,12 @@ _moo_lsp_add_unit_tests (void)
     g_test_add_func ("/lsp/signature/escaping", test_signature_escaping);
     g_test_add_func ("/lsp/signature/choices", test_signature_choices);
     g_test_add_func ("/lsp/signature/nothing", test_signature_nothing);
+    g_test_add_func ("/lsp/signature/malformed", test_signature_malformed);
 
     g_test_add_func ("/lsp/highlight/kinds", test_highlight_kinds);
     g_test_add_func ("/lsp/highlight/tags", test_highlight_tags);
     g_test_add_func ("/lsp/highlight/nothing", test_highlight_nothing);
+    g_test_add_func ("/lsp/highlight/malformed", test_highlight_malformed);
 }
 
 #endif /* MOO_ENABLE_UNIT_TESTS */

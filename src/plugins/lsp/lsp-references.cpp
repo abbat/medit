@@ -38,6 +38,7 @@ location_new (JsonObject          *object,
     const char *uri;
     char *path;
     int line = 0, character = 0;
+    int end_line = 0, end_character = 0;
 
     /*
      * A LocationLink names its target differently from a Location, and has
@@ -58,8 +59,8 @@ location_new (JsonObject          *object,
         range = lsp_json_get_object (object, "range");
     }
 
-    if (!range || !lsp_json_get_position (lsp_json_get_object (range, "start"),
-                                          &line, &character))
+    if (!range || !lsp_json_get_range (range, &line, &character,
+                                       &end_line, &end_character))
         return NULL;
 
     path = lsp_path_from_uri (uri);
