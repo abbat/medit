@@ -216,6 +216,21 @@ button, so once the file built, OK had no response and the dialog would not clos
 display, which is where this belongs: the check already existed and only compared the
 ids the C asks for against the ids the file declares, and every id here existed.
 
+### Search and replacement
+
+`mooedit-tests.cpp` also registers table-driven `/mooedit/search/*` and
+`/mooedit/replace/*` tests. They use a plain `GtkTextBuffer` without a display,
+and run on both toolkits. Search asserts character offsets (including Cyrillic
+and an emoji before the match), direction, word/case options and range limits.
+Replacement asserts both the complete resulting text and the replacement count:
+deletion, capture references, literal backslashes, Unicode, a bounded range that
+changes length, and zero-width matches at line boundaries and before Unicode.
+An empty match replaced with an empty string counts as no edit.
+
+Each case is a separate ctest entry, so a regression that stops advancing after
+a zero-width match hits that test's timeout rather than hanging the entire suite.
+Run them with `ctest -R 'unit.mooedit.(search|replace)' --output-on-failure`.
+
 ## The highlighting goldens
 
 `src/mooedit/langs/check.sh` validates 179 `.lang` files against `language2.rng` on every

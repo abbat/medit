@@ -43,6 +43,7 @@
 
 #include "mooedit/moolang-private.h"
 #include "mooedit/mootextbuffer.h"
+#include "mooedit/mootextsearch.h"
 #include "gtksourceview/gtksourcecontextengine.h"
 #include "gtksourceview/gtksourceengine.h"
 
@@ -385,6 +386,145 @@ test_highlight (gconstpointer data)
 }
 
 
+/* Search positions are character offsets, not UTF-8 byte offsets. Each case
+   gets its own ctest entry and timeout, including the zero-width replacements
+   which would otherwise hang the whole unit suite on a progress regression. */
+struct SearchCase
+{
+    const char *name;
+    const char *text;
+    const char *pattern;
+    MooTextSearchFlags flags;
+    gboolean backward;
+    int start;
+    int limit;
+    int match_start;
+    int match_end;
+};
+
+
+static const SearchCase search_cases[] = {
+    {"forward-first", "cat cat", "cat", MooTextSearchFlags (0), FALSE, 0, -1, 0, 3},
+    {"forward-offset", "cat cat", "cat", MooTextSearchFlags (0), FALSE, 1, -1, 4, 7},
+    {"backward-last", "cat cat", "cat", MooTextSearchFlags (0), TRUE, 7, -1, 4, 7},
+    {"backward-offset", "cat cat", "cat", MooTextSearchFlags (0), TRUE, 4, -1, 0, 3},
+    {"forward-limit", "cat dog cat", "cat", MooTextSearchFlags (0), FALSE, 4, 7, -1, -1},
+    {"backward-limit", "cat dog cat", "cat", MooTextSearchFlags (0), TRUE, 7, 4, -1, -1},
+    {"whole-word", "scatter cat", "cat", MOO_TEXT_SEARCH_WHOLE_WORDS, FALSE, 0, -1, 8, 11},
+    {"unicode", "я😀 кот кот", "кот", MooTextSearchFlags (0), FALSE, 0, -1, 3, 6},
+    {"unicode-backward", "я😀 кот кот", "кот", MooTextSearchFlags (0), TRUE,
+     10, -1, 7, 10},
+    {"caseless", "CAT cat", "cat", MOO_TEXT_SEARCH_CASELESS, FALSE, 0, -1, 0, 3},
+    {"regex-forward", "я😀 кот кот", "к.т", MOO_TEXT_SEARCH_REGEX, FALSE,
+     0, -1, 3, 6},
+    {"regex-backward", "я😀 кот кот", "к.т", MOO_TEXT_SEARCH_REGEX, TRUE,
+     10, -1, 7, 10},
+    {"regex-forward-limit", "cat dog cat", "c.t", MOO_TEXT_SEARCH_REGEX, FALSE, 4, 7, -1, -1},
+    {"regex-backward-limit", "cat dog cat", "c.t", MOO_TEXT_SEARCH_REGEX, TRUE, 7, 4, -1, -1},
+    {"regex-line-start", "one\ntwo", "^", MOO_TEXT_SEARCH_REGEX, FALSE, 1, -1, 4, 4},
+    {"regex-line-end", "one\ntwo", "$", MOO_TEXT_SEARCH_REGEX, FALSE, 0, -1, 3, 3},
+    {"empty-buffer", "", "cat", MooTextSearchFlags (0), FALSE, 0, -1, -1, -1}
+};
+
+
+static void
+test_search (gconstpointer data)
+{
+    const SearchCase *test = static_cast<const SearchCase*> (data);
+    GtkTextBuffer *buffer = gtk_text_buffer_new (nullptr);
+    GtkTextIter start, limit, match_start, match_end;
+    gboolean found;
+
+    gtk_text_buffer_set_text (buffer, test->text, -1);
+    gtk_text_buffer_get_iter_at_offset (buffer, &start, test->start);
+    if (test->limit >= 0)
+        gtk_text_buffer_get_iter_at_offset (buffer, &limit, test->limit);
+
+    if (test->backward)
+        found = moo_text_search_backward (&start, test->pattern, test->flags,
+                                          &match_start, &match_end,
+                                          test->limit < 0 ? nullptr : &limit);
+    else
+        found = moo_text_search_forward (&start, test->pattern, test->flags,
+                                         &match_start, &match_end,
+                                         test->limit < 0 ? nullptr : &limit);
+
+    g_assert_cmpint (found, ==, test->match_start >= 0);
+    if (found)
+    {
+        g_assert_cmpint (gtk_text_iter_get_offset (&match_start), ==, test->match_start);
+        g_assert_cmpint (gtk_text_iter_get_offset (&match_end), ==, test->match_end);
+    }
+    g_object_unref (buffer);
+}
+
+
+struct ReplaceCase
+{
+    const char *name;
+    const char *text;
+    const char *pattern;
+    const char *replacement;
+    MooTextSearchFlags flags;
+    int start;
+    int limit;
+    int count;
+    const char *expected;
+};
+
+
+static const ReplaceCase replace_cases[] = {
+    {"literal-all", "cat cat", "cat", "dog", MooTextSearchFlags (0), 0, -1, 2, "dog dog"},
+    {"literal-delete", "cat cat", "cat", "", MooTextSearchFlags (0), 0, -1, 2, " "},
+    {"literal-no-match", "cat", "dog", "x", MooTextSearchFlags (0), 0, -1, 0, "cat"},
+    {"literal-range", "cat cat cat", "cat", "kitten", MooTextSearchFlags (0),
+     4, 7, 1, "cat kitten cat"},
+    {"regex-range", "cat cat cat", "c.t", "kitten", MOO_TEXT_SEARCH_REGEX,
+     4, 7, 1, "cat kitten cat"},
+    {"regex-delete", "a12b34", "[0-9]+", "", MOO_TEXT_SEARCH_REGEX, 0, -1, 2, "ab"},
+    {"regex-groups", "cat:12 dog:34", "([a-z]+):([0-9]+)", "\\2=\\1",
+     MOO_TEXT_SEARCH_REGEX, 0, -1, 2, "12=cat 34=dog"},
+    {"regex-literal-replacement", "cat", "(cat)", "\\1",
+     MooTextSearchFlags (MOO_TEXT_SEARCH_REGEX | MOO_TEXT_SEARCH_REPL_LITERAL),
+     0, -1, 1, "\\1"},
+    {"unicode", "я😀 кот кот", "кот", "犬", MooTextSearchFlags (0),
+     0, -1, 2, "я😀 犬 犬"},
+    {"regex-unicode-groups", "я😀 кот", "(😀) (кот)", "\\2\\1",
+     MOO_TEXT_SEARCH_REGEX, 0, -1, 1, "якот😀"},
+    {"zero-line-start", "one\ntwo", "^", ">", MOO_TEXT_SEARCH_REGEX, 0, -1, 2, ">one\n>two"},
+    {"zero-line-end", "one\ntwo", "$", "!", MOO_TEXT_SEARCH_REGEX, 0, -1, 2, "one!\ntwo!"},
+    {"zero-lookahead", "яя", "(?=я)", "!", MOO_TEXT_SEARCH_REGEX, 0, -1, 2, "!я!я"},
+    /* An empty match replaced with nothing is not an edit and is not counted. */
+    {"zero-empty-replacement", "яя", "(?=я)", "", MOO_TEXT_SEARCH_REGEX, 0, -1, 0, "яя"},
+    {"zero-at-eof", "one", "$", "", MOO_TEXT_SEARCH_REGEX, 0, -1, 0, "one"},
+    {"empty-buffer", "", "cat", "dog", MooTextSearchFlags (0), 0, -1, 0, ""}
+};
+
+
+static void
+test_replace (gconstpointer data)
+{
+    const ReplaceCase *test = static_cast<const ReplaceCase*> (data);
+    GtkTextBuffer *buffer = gtk_text_buffer_new (nullptr);
+    GtkTextIter start, end;
+    char *text;
+    int count;
+
+    gtk_text_buffer_set_text (buffer, test->text, -1);
+    gtk_text_buffer_get_iter_at_offset (buffer, &start, test->start);
+    if (test->limit >= 0)
+        gtk_text_buffer_get_iter_at_offset (buffer, &end, test->limit);
+    count = moo_text_replace_all (&start, test->limit < 0 ? nullptr : &end,
+                                  test->pattern, test->replacement, test->flags);
+    g_assert_cmpint (count, ==, test->count);
+    gtk_text_buffer_get_bounds (buffer, &start, &end);
+    text = gtk_text_buffer_get_text (buffer, &start, &end, TRUE);
+    g_assert_cmpstr (text, ==, test->expected);
+    g_free (text);
+    g_object_unref (buffer);
+}
+
+
 static void
 test_corpus_missing (void)
 {
@@ -404,6 +544,19 @@ _moo_add_mooedit_unit_tests (void)
     GSList *ids = nullptr;
     GSList *l;
     const char *name;
+
+    for (guint i = 0; i < G_N_ELEMENTS (search_cases); ++i)
+    {
+        char *path = g_strconcat ("/mooedit/search/", search_cases[i].name, nullptr);
+        g_test_add_data_func (path, &search_cases[i], test_search);
+        g_free (path);
+    }
+    for (guint i = 0; i < G_N_ELEMENTS (replace_cases); ++i)
+    {
+        char *path = g_strconcat ("/mooedit/replace/", replace_cases[i].name, nullptr);
+        g_test_add_data_func (path, &replace_cases[i], test_replace);
+        g_free (path);
+    }
 
     if (entries == nullptr)
     {
