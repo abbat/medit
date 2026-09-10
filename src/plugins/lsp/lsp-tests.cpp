@@ -296,8 +296,8 @@ test_json_accessors (void)
     static const char *strings[] = { "one", "два", NULL };
     JsonObject *object = json_object_new ();
     JsonObject *nested = json_object_new ();
+    JsonObject *range;
     JsonArray *array;
-    JsonNode *node;
     char *text;
     gsize len;
     int start_line, start_character, end_line, end_character;
@@ -322,16 +322,15 @@ test_json_accessors (void)
     g_assert_cmpuint (json_array_get_length (array), ==, 2);
     g_assert_cmpstr (json_array_get_string_element (array, 1), ==, "два");
 
-    node = json_node_new (JSON_NODE_OBJECT);
-    json_node_set_object (node, lsp_json_range (2, 3, 4, 5));
-    g_assert_true (lsp_json_get_range (json_node_get_object (node),
+    range = lsp_json_range (2, 3, 4, 5);
+    g_assert_true (lsp_json_get_range (range,
                                        &start_line, &start_character,
                                        &end_line, &end_character));
     g_assert_cmpint (start_line, ==, 2);
     g_assert_cmpint (start_character, ==, 3);
     g_assert_cmpint (end_line, ==, 4);
     g_assert_cmpint (end_character, ==, 5);
-    json_node_free (node);
+    json_object_unref (range);
 
     text = lsp_json_object_to_string (object, &len);
     g_assert_nonnull (text);
