@@ -1072,6 +1072,30 @@ test_workspace_edit_nothing (void)
 }
 
 
+static void
+test_workspace_edit_malformed (void)
+{
+    static const char *reply =
+        "{\"changes\": {\"file:///tmp/a.txt\": ["
+        "  {\"range\": {\"start\": {\"line\": 0, \"character\": 0},"
+        "               \"end\": {\"line\": 0, \"character\": 1}}},"
+        "  {\"range\": {\"start\": {\"line\": 0, \"character\": 1},"
+        "               \"end\": {\"line\": 0, \"character\": 2}},"
+        "   \"newText\": 7},"
+        "  {\"range\": {\"start\": {\"line\": 0, \"character\": 2},"
+        "               \"end\": {\"line\": 0, \"character\": 3}},"
+        "   \"newText\": \"ok\"}]}}";
+    GSList *edits = edits_of (reply);
+
+    /* TextEdit.newText is required to be a string. A missing or malformed
+       replacement must not become an edit containing NULL text. */
+    g_assert_cmpuint (g_slist_length (edits), ==, 1);
+    check_edit (edits, 0, "/tmp/a.txt", 0, 2, "ok");
+
+    lsp_text_edits_free (edits);
+}
+
+
 /* -------------------------------------------------------------------------
  * The signature of a call, as the popup shows it
  */
@@ -1345,6 +1369,7 @@ _moo_lsp_add_unit_tests (void)
     g_test_add_func ("/lsp/rename/files", test_workspace_edit_files);
     g_test_add_func ("/lsp/rename/document-changes", test_workspace_edit_document_changes);
     g_test_add_func ("/lsp/rename/nothing", test_workspace_edit_nothing);
+    g_test_add_func ("/lsp/rename/malformed", test_workspace_edit_malformed);
 
     g_test_add_func ("/lsp/signature/active-parameter", test_signature_active_parameter);
     g_test_add_func ("/lsp/signature/offsets", test_signature_offsets);

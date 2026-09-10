@@ -36,10 +36,15 @@ text_edit_new (const char *path,
     LspTextEdit *edit;
     int start_line = 0, start_character = 0;
     int end_line = 0, end_character = 0;
+    const char *new_text;
 
     if (!lsp_json_get_range (lsp_json_get_object (object, "range"),
                              &start_line, &start_character,
                              &end_line, &end_character))
+        return NULL;
+
+    new_text = lsp_json_get_string (object, "newText");
+    if (!new_text)
         return NULL;
 
     edit = g_new0 (LspTextEdit, 1);
@@ -48,7 +53,7 @@ text_edit_new (const char *path,
     edit->start_character = start_character;
     edit->end_line = end_line;
     edit->end_character = end_character;
-    edit->new_text = g_strdup (lsp_json_get_string (object, "newText"));
+    edit->new_text = g_strdup (new_text);
 
     return edit;
 }
