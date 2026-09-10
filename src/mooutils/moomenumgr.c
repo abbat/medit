@@ -200,6 +200,7 @@ moo_menu_mgr_finalize (GObject *object)
                          (GNodeTraverseFunc) cleanup_node, NULL);
         g_node_destroy (node);
     }
+    g_slist_free (mgr->priv->top_nodes);
 
     g_hash_table_destroy (mgr->priv->named_nodes);
 
