@@ -262,6 +262,30 @@ test_json_malformed (void)
 
 
 static void
+test_json_parse_length (void)
+{
+    static const char data[] = "{\"ok\":1}trailing";
+    const gsize json_len = strlen ("{\"ok\":1}");
+    GError *error = NULL;
+    JsonNode *node;
+
+    node = lsp_json_parse (data, json_len, &error);
+    g_assert_no_error (error);
+    g_assert_nonnull (node);
+    json_node_unref (node);
+
+    node = lsp_json_parse (data, -1, &error);
+    g_assert_null (node);
+    g_assert_nonnull (error);
+    g_clear_error (&error);
+
+    node = lsp_json_parse ("", 0, &error);
+    g_assert_null (node);
+    g_clear_error (&error);
+}
+
+
+static void
 test_json_position_bounds (void)
 {
     static const char *invalid[] = {
@@ -476,6 +500,32 @@ test_completion_item_edges (void)
     g_assert_nonnull (node);
     g_assert_cmpuint (_lsp_completion_item_count (node), ==, 2);
     json_node_unref (node);
+}
+
+
+static void
+test_completion_item_limit (void)
+{
+    GString *json = g_string_new ("[");
+    GError *error = NULL;
+    JsonNode *node;
+    guint i;
+
+    for (i = 0; i < 201; ++i)
+    {
+        if (i)
+            g_string_append_c (json, ',');
+        g_string_append_printf (json, "{\"label\":\"item%u\"}", i);
+    }
+    g_string_append_c (json, ']');
+
+    node = lsp_json_parse (json->str, -1, &error);
+    g_assert_no_error (error);
+    g_assert_nonnull (node);
+    g_assert_cmpuint (_lsp_completion_item_count (node), ==, 200);
+
+    json_node_unref (node);
+    g_string_free (json, TRUE);
 }
 
 
@@ -1224,6 +1274,23 @@ test_locations_nothing (void)
 
 
 static void
+test_location_uri_edges (void)
+{
+    GSList *found = locations_of (
+        "[{\"uri\":\"file:///tmp/a%20b.txt\","
+        "  \"range\":{\"start\":{\"line\":0,\"character\":0},"
+        "             \"end\":{\"line\":0,\"character\":1}}},"
+        " {\"uri\":\"untitled:Scratch\","
+        "  \"range\":{\"start\":{\"line\":0,\"character\":0},"
+        "             \"end\":{\"line\":0,\"character\":1}}}]");
+
+    g_assert_cmpuint (g_slist_length (found), ==, 1);
+    check_location (found, 0, "/tmp/a b.txt", 0, 0);
+    lsp_locations_free (found);
+}
+
+
+static void
 test_locations_malformed (void)
 {
     GSList *found = locations_of (
@@ -1757,6 +1824,7 @@ void
 _moo_lsp_add_unit_tests (void)
 {
     g_test_add_func ("/lsp/json/malformed", test_json_malformed);
+    g_test_add_func ("/lsp/json/parse-length", test_json_parse_length);
     g_test_add_func ("/lsp/json/position-bounds", test_json_position_bounds);
     g_test_add_func ("/lsp/json/accessors", test_json_accessors);
     g_test_add_func ("/lsp/json/null-object", test_json_null_object);
@@ -1765,6 +1833,7 @@ _moo_lsp_add_unit_tests (void)
     g_test_add_func ("/lsp/json/serialization-edges", test_json_serialization_edges);
     g_test_add_func ("/lsp/hover/text-shapes", test_hover_text_shapes);
     g_test_add_func ("/lsp/completion/item-edges", test_completion_item_edges);
+    g_test_add_func ("/lsp/completion/item-limit", test_completion_item_limit);
     g_test_add_func ("/lsp/completion/word-start", test_completion_word_start);
     g_test_add_func ("/lsp/diagnostics/detail", test_diagnostic_detail);
     g_test_add_func ("/lsp/diagnostics/fields", test_diagnostic_fields);
@@ -1791,6 +1860,7 @@ _moo_lsp_add_unit_tests (void)
     g_test_add_func ("/lsp/locations/single", test_locations_single);
     g_test_add_func ("/lsp/locations/link", test_locations_link);
     g_test_add_func ("/lsp/locations/nothing", test_locations_nothing);
+    g_test_add_func ("/lsp/locations/uri-edges", test_location_uri_edges);
     g_test_add_func ("/lsp/locations/malformed", test_locations_malformed);
 
     g_test_add_func ("/lsp/rename/order", test_workspace_edit_order);
