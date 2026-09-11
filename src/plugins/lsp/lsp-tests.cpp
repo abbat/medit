@@ -1930,6 +1930,23 @@ test_client_framing_binary_body (void)
 
 
 static void
+test_client_framing_header_whitespace (void)
+{
+    static const char message[] =
+        "X-Test: ignored\r\nContent-Length:   0  \r\n\r\n";
+    gsize body_offset = 0;
+    gsize body_len = 99;
+
+    g_assert_cmpint (_lsp_client_find_message ((const guint8*) message,
+                                                strlen (message),
+                                                &body_offset, &body_len),
+                     ==, (gssize) strlen (message));
+    g_assert_cmpuint (body_offset, ==, strlen (message));
+    g_assert_cmpuint (body_len, ==, 0);
+}
+
+
+static void
 test_provider_name (void)
 {
     char *provider;
@@ -1987,6 +2004,8 @@ _moo_lsp_add_unit_tests (void)
     g_test_add_func ("/lsp/replies/malformed", test_malformed_replies);
     g_test_add_func ("/lsp/client/framing-edges", test_client_framing_edges);
     g_test_add_func ("/lsp/client/framing-binary-body", test_client_framing_binary_body);
+    g_test_add_func ("/lsp/client/framing-header-whitespace",
+                     test_client_framing_header_whitespace);
     g_test_add_func ("/lsp/client/provider-name", test_provider_name);
 
     g_test_add_func ("/lsp/locations/array", test_locations_array);
