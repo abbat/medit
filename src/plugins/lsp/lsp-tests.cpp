@@ -579,6 +579,28 @@ test_completion_item_ranges (void)
 }
 
 
+static void
+test_completion_item_empty_text (void)
+{
+    const char *json =
+        "[{\"label\":\"empty-edit\",\"insertText\":\"fallback\","
+        "  \"textEdit\":{\"newText\":\"\"}},"
+        " {\"label\":\"empty-insert\",\"insertText\":\"\"}]";
+    GError *error = NULL;
+    JsonNode *node = lsp_json_parse (json, -1, &error);
+    char *summary;
+
+    g_assert_no_error (error);
+    g_assert_nonnull (node);
+    summary = _lsp_completion_item_summary (node);
+    g_assert_cmpstr (summary, ==,
+                     "empty-edit||empty-edit||-1:-1--1:-1\n"
+                     "empty-insert||empty-insert||-1:-1--1:-1");
+    g_free (summary);
+    json_node_unref (node);
+}
+
+
 /* -------------------------------------------------------------------------
  * documentSymbol, in both of the shapes a server may answer with
  */
@@ -1981,6 +2003,7 @@ _moo_lsp_add_unit_tests (void)
     g_test_add_func ("/lsp/completion/item-limit", test_completion_item_limit);
     g_test_add_func ("/lsp/completion/item-fields", test_completion_item_fields);
     g_test_add_func ("/lsp/completion/item-ranges", test_completion_item_ranges);
+    g_test_add_func ("/lsp/completion/item-empty-text", test_completion_item_empty_text);
     g_test_add_func ("/lsp/completion/word-start", test_completion_word_start);
     g_test_add_func ("/lsp/diagnostics/detail", test_diagnostic_detail);
     g_test_add_func ("/lsp/diagnostics/fields", test_diagnostic_fields);
