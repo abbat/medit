@@ -858,7 +858,7 @@ _lsp_client_find_message (const guint8 *data,
                 return -1;
             }
 
-            if (value[0] == '-')
+            if (value[0] == '-' || value[0] == '+')
             {
                 g_strfreev (lines);
                 g_free (header);

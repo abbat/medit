@@ -1986,6 +1986,31 @@ test_client_framing_header_whitespace (void)
 
 
 static void
+test_client_framing_number_syntax (void)
+{
+    static const char *valid = "Content-Length: 0003\r\n\r\nabc";
+    static const char *plus = "Content-Length: +3\r\n\r\nabc";
+    static const char *split_sign = "Content-Length: + 3\r\n\r\nabc";
+    gsize body_offset = 0;
+    gsize body_len = 0;
+
+    g_assert_cmpint (_lsp_client_find_message ((const guint8*) valid,
+                                                strlen (valid),
+                                                &body_offset, &body_len),
+                     ==, (gssize) strlen (valid));
+    g_assert_cmpuint (body_len, ==, 3);
+    g_assert_cmpint (_lsp_client_find_message ((const guint8*) plus,
+                                                strlen (plus),
+                                                &body_offset, &body_len),
+                     ==, -1);
+    g_assert_cmpint (_lsp_client_find_message ((const guint8*) split_sign,
+                                                strlen (split_sign),
+                                                &body_offset, &body_len),
+                     ==, -1);
+}
+
+
+static void
 test_provider_name (void)
 {
     char *provider;
@@ -2048,6 +2073,8 @@ _moo_lsp_add_unit_tests (void)
     g_test_add_func ("/lsp/client/framing-binary-body", test_client_framing_binary_body);
     g_test_add_func ("/lsp/client/framing-header-whitespace",
                      test_client_framing_header_whitespace);
+    g_test_add_func ("/lsp/client/framing-number-syntax",
+                     test_client_framing_number_syntax);
     g_test_add_func ("/lsp/client/provider-name", test_provider_name);
 
     g_test_add_func ("/lsp/locations/array", test_locations_array);
