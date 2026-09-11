@@ -1914,6 +1914,22 @@ test_client_framing_edges (void)
 
 
 static void
+test_client_framing_binary_body (void)
+{
+    static const guint8 message[] = "Content-Length: 3\r\n\r\n\0aX";
+    gsize body_offset = 0;
+    gsize body_len = 0;
+    gssize total;
+
+    total = _lsp_client_find_message (message, sizeof (message) - 1,
+                                      &body_offset, &body_len);
+    g_assert_cmpint (total, ==, (gssize) (sizeof (message) - 1));
+    g_assert_cmpuint (body_len, ==, 3);
+    g_assert_cmpmem (message + body_offset, body_len, "\0aX", 3);
+}
+
+
+static void
 test_provider_name (void)
 {
     char *provider;
@@ -1970,6 +1986,7 @@ _moo_lsp_add_unit_tests (void)
     g_test_add_func ("/lsp/symbols/empty", test_symbols_empty);
     g_test_add_func ("/lsp/replies/malformed", test_malformed_replies);
     g_test_add_func ("/lsp/client/framing-edges", test_client_framing_edges);
+    g_test_add_func ("/lsp/client/framing-binary-body", test_client_framing_binary_body);
     g_test_add_func ("/lsp/client/provider-name", test_provider_name);
 
     g_test_add_func ("/lsp/locations/array", test_locations_array);
