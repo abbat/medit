@@ -801,6 +801,10 @@ test_path_boundaries (void)
     g_assert_cmpstr (normalized, ==, cwd);
     g_free (normalized);
 
+    normalized = _moo_normalize_file_path ("/tmp/a///");
+    g_assert_cmpstr (normalized, ==, "/tmp/a");
+    g_free (normalized);
+
     normalized = _moo_normalize_file_path ("a///b/../../c/");
     expected = g_build_filename (cwd, "c", nullptr);
     g_assert_cmpstr (normalized, ==, expected);
