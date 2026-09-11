@@ -314,6 +314,11 @@ test_markup_mutation_modified (void)
                      "<root special=\"a&amp;b&lt;&quot;\"><child name=\"value\">value</child></root>");
     g_free (serialized);
 
+    moo_markup_set_content (child, "");
+    g_assert_cmpstr (moo_markup_get_content (child), ==, "");
+    moo_markup_set_content (child, NULL);
+    g_assert_null (moo_markup_get_content (child));
+
     _moo_markup_set_modified (doc, FALSE);
     moo_markup_delete_node (child);
     g_assert_true (_moo_markup_get_modified (doc));
@@ -934,8 +939,9 @@ test_history_list_memory (void)
     g_free (last);
 
     moo_history_list_set_max_entries (list, 1);
-    moo_history_list_add (list, "four");
     g_assert_cmpuint (history_changed_count, ==, 5);
+    moo_history_list_add (list, "four");
+    g_assert_cmpuint (history_changed_count, ==, 6);
     g_assert_cmpuint (moo_history_list_n_user_entries (list), ==, 1);
     last = moo_history_list_get_last_item (list);
     g_assert_cmpstr (last, ==, "four");

@@ -554,6 +554,31 @@ test_completion_item_fields (void)
 }
 
 
+static void
+test_completion_item_ranges (void)
+{
+    const char *json =
+        "[{\"label\":\"replace\",\"textEdit\":{\"newText\":\"r\","
+        "  \"replace\":{\"start\":{\"line\":1,\"character\":2},"
+        "  \"end\":{\"line\":1,\"character\":5}}}},"
+        " {\"label\":\"insert\",\"insertText\":\"i\","
+        "  \"textEdit\":{\"range\":{\"start\":{\"line\":\"bad\","
+        "  \"character\":0},\"end\":{\"line\":0,\"character\":1}}}}]";
+    GError *error = NULL;
+    JsonNode *node = lsp_json_parse (json, -1, &error);
+    char *summary;
+
+    g_assert_no_error (error);
+    g_assert_nonnull (node);
+    summary = _lsp_completion_item_summary (node);
+    g_assert_cmpstr (summary, ==,
+                     "insert|i|insert||-1:-1--1:-1\n"
+                     "replace|r|replace||1:2-1:5");
+    g_free (summary);
+    json_node_unref (node);
+}
+
+
 /* -------------------------------------------------------------------------
  * documentSymbol, in both of the shapes a server may answer with
  */
@@ -1850,6 +1875,9 @@ test_client_framing_edges (void)
 {
     const char *empty = "Content-Length: 0\r\n\r\n";
     const char *incomplete = "Content-Length: 4\r\n\r\nxy";
+    const char *not_number = "Content-Length: nope\r\n\r\n";
+    const char *negative = "Content-Length: -1\r\n\r\n";
+    const char *too_large = "Content-Length: 100000001\r\n\r\n";
     gsize body_offset = 0;
     gsize body_len = 0;
 
@@ -1864,6 +1892,38 @@ test_client_framing_edges (void)
                                                 strlen (incomplete),
                                                 &body_offset, &body_len),
                      ==, 0);
+
+    g_assert_cmpint (_lsp_client_find_message ((const guint8*) not_number,
+                                                strlen (not_number),
+                                                &body_offset, &body_len),
+                     ==, -1);
+    g_assert_cmpint (_lsp_client_find_message ((const guint8*) negative,
+                                                strlen (negative),
+                                                &body_offset, &body_len),
+                     ==, -1);
+    g_assert_cmpint (_lsp_client_find_message ((const guint8*) too_large,
+                                                strlen (too_large),
+                                                &body_offset, &body_len),
+                     ==, -1);
+}
+
+
+static void
+test_provider_name (void)
+{
+    char *provider;
+
+    provider = _lsp_provider_name ("textDocument/definition");
+    g_assert_cmpstr (provider, ==, "definitionProvider");
+    g_free (provider);
+
+    provider = _lsp_provider_name ("customMethod");
+    g_assert_cmpstr (provider, ==, "customMethodProvider");
+    g_free (provider);
+
+    provider = _lsp_provider_name ("textDocument/formatting");
+    g_assert_cmpstr (provider, ==, "formattingProvider");
+    g_free (provider);
 }
 
 
@@ -1882,6 +1942,7 @@ _moo_lsp_add_unit_tests (void)
     g_test_add_func ("/lsp/completion/item-edges", test_completion_item_edges);
     g_test_add_func ("/lsp/completion/item-limit", test_completion_item_limit);
     g_test_add_func ("/lsp/completion/item-fields", test_completion_item_fields);
+    g_test_add_func ("/lsp/completion/item-ranges", test_completion_item_ranges);
     g_test_add_func ("/lsp/completion/word-start", test_completion_word_start);
     g_test_add_func ("/lsp/diagnostics/detail", test_diagnostic_detail);
     g_test_add_func ("/lsp/diagnostics/fields", test_diagnostic_fields);
@@ -1904,6 +1965,7 @@ _moo_lsp_add_unit_tests (void)
     g_test_add_func ("/lsp/symbols/empty", test_symbols_empty);
     g_test_add_func ("/lsp/replies/malformed", test_malformed_replies);
     g_test_add_func ("/lsp/client/framing-edges", test_client_framing_edges);
+    g_test_add_func ("/lsp/client/provider-name", test_provider_name);
 
     g_test_add_func ("/lsp/locations/array", test_locations_array);
     g_test_add_func ("/lsp/locations/single", test_locations_single);

@@ -68,6 +68,7 @@ void        lsp_navigate_forget_click (void);
 /* Whether the active document has a server that can answer that method. */
 gboolean    lsp_can_ask             (MooEditWindow  *window,
                                      const char     *method);
+char       *_lsp_provider_name      (const char     *method);
 
 /*
  * The place a question is about, and the document it is about it in. view is

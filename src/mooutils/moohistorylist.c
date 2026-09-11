@@ -499,6 +499,8 @@ void
 moo_history_list_set_max_entries (MooHistoryList *list,
                                   guint           num)
 {
+    gboolean changed = FALSE;
+
     g_return_if_fail (MOO_IS_HISTORY_LIST (list));
     g_return_if_fail (num > 0);
     list->priv->max_items = num;
@@ -507,7 +509,11 @@ moo_history_list_set_max_entries (MooHistoryList *list,
     {
         _list_delete_last (list);
         list->priv->num_user--;
+        changed = TRUE;
     }
+
+    if (changed)
+        g_signal_emit (list, signals[CHANGED], 0);
 }
 
 

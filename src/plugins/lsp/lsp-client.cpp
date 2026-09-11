@@ -848,7 +848,25 @@ _lsp_client_find_message (const guint8 *data,
 
         if (g_ascii_strcasecmp (lines[i], "Content-Length") == 0)
         {
-            content_length = (gsize) g_ascii_strtoull (g_strstrip (colon + 1), NULL, 10);
+            char *value = g_strstrip (colon + 1);
+            char *end = NULL;
+
+            if (value[0] == '-')
+            {
+                g_strfreev (lines);
+                g_free (header);
+                return -1;
+            }
+
+            content_length = (gsize) g_ascii_strtoull (value, &end, 10);
+
+            if (end == value || *end != '\0')
+            {
+                g_strfreev (lines);
+                g_free (header);
+                return -1;
+            }
+
             have_length = TRUE;
         }
     }
