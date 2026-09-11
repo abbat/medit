@@ -1543,6 +1543,7 @@ test_workspace_edit_nothing (void)
     g_assert_null (edits_of ("null"));
     g_assert_null (edits_of ("{}"));
     g_assert_null (edits_of ("{\"changes\": {}}"));
+    g_assert_null (edits_of ("{\"documentChanges\": []}"));
 }
 
 
