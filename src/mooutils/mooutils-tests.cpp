@@ -402,6 +402,24 @@ test_markup_sibling_order (void)
 
 
 static void
+test_markup_nested_creation (void)
+{
+    MooMarkupDoc *doc = moo_markup_doc_new ("memory");
+    MooMarkupNode *root = moo_markup_create_root_element (doc, "root");
+    char *serialized;
+
+    g_assert_nonnull (moo_markup_create_element (root, "menu/items/item"));
+    g_assert_nonnull (moo_markup_create_element (root, "menu/items/item"));
+
+    serialized = moo_markup_node_get_string (MOO_MARKUP_NODE (doc));
+    g_assert_cmpstr (serialized, ==,
+                     "<root><menu><items><item/><item/></items></menu></root>");
+    g_free (serialized);
+    moo_markup_doc_unref (doc);
+}
+
+
+static void
 test_markup_round_trip_edges (void)
 {
     GError *error = NULL;
@@ -1141,6 +1159,7 @@ _moo_add_mooutils_unit_tests (void)
     g_test_add_func ("/mooutils/markup/property-edges", test_markup_property_edges);
     g_test_add_func ("/mooutils/markup/type-edges", test_markup_type_edges);
     g_test_add_func ("/mooutils/markup/sibling-order", test_markup_sibling_order);
+    g_test_add_func ("/mooutils/markup/nested-creation", test_markup_nested_creation);
     g_test_add_func ("/mooutils/markup/round-trip-edges", test_markup_round_trip_edges);
     g_test_add_func ("/mooutils/ui-xml/memory", test_ui_xml_memory);
     g_test_add_func ("/mooutils/output-filter/memory", test_output_filter_memory);
