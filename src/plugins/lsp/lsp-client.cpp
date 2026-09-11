@@ -851,6 +851,13 @@ _lsp_client_find_message (const guint8 *data,
             char *value = g_strstrip (colon + 1);
             char *end = NULL;
 
+            if (have_length)
+            {
+                g_strfreev (lines);
+                g_free (header);
+                return -1;
+            }
+
             if (value[0] == '-')
             {
                 g_strfreev (lines);

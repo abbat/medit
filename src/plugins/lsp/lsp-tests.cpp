@@ -1878,6 +1878,7 @@ test_client_framing_edges (void)
     const char *not_number = "Content-Length: nope\r\n\r\n";
     const char *negative = "Content-Length: -1\r\n\r\n";
     const char *too_large = "Content-Length: 100000001\r\n\r\n";
+    const char *duplicate = "Content-Length: 1\r\nContent-Length: 1\r\n\r\nx";
     gsize body_offset = 0;
     gsize body_len = 0;
 
@@ -1903,6 +1904,10 @@ test_client_framing_edges (void)
                      ==, -1);
     g_assert_cmpint (_lsp_client_find_message ((const guint8*) too_large,
                                                 strlen (too_large),
+                                                &body_offset, &body_len),
+                     ==, -1);
+    g_assert_cmpint (_lsp_client_find_message ((const guint8*) duplicate,
+                                                strlen (duplicate),
                                                 &body_offset, &body_len),
                      ==, -1);
 }

@@ -940,6 +940,8 @@ test_history_list_memory (void)
 
     moo_history_list_set_max_entries (list, 1);
     g_assert_cmpuint (history_changed_count, ==, 5);
+    moo_history_list_set_max_entries (list, 1);
+    g_assert_cmpuint (history_changed_count, ==, 5);
     moo_history_list_add (list, "four");
     g_assert_cmpuint (history_changed_count, ==, 6);
     g_assert_cmpuint (moo_history_list_n_user_entries (list), ==, 1);
@@ -949,6 +951,21 @@ test_history_list_memory (void)
 
     moo_history_list_add (list, "");
     g_assert_cmpuint (moo_history_list_n_user_entries (list), ==, 1);
+
+    {
+        MooHistoryList *many = moo_history_list_new (NULL);
+
+        g_signal_connect (many, "changed", G_CALLBACK (history_changed), NULL);
+        history_changed_count = 0;
+        moo_history_list_add (many, "one");
+        moo_history_list_add (many, "two");
+        moo_history_list_add (many, "three");
+        history_changed_count = 0;
+        moo_history_list_set_max_entries (many, 1);
+        g_assert_cmpuint (history_changed_count, ==, 1);
+        g_assert_cmpuint (moo_history_list_n_user_entries (many), ==, 1);
+        g_object_unref (many);
+    }
 
     g_object_unref (list);
 }
