@@ -360,6 +360,27 @@ test_json_null_object (void)
 }
 
 
+static void
+test_json_lookup_paths (void)
+{
+    JsonObject *object = json_object_new ();
+    JsonObject *nested = json_object_new ();
+
+    lsp_json_set_object (object, "nested", nested);
+    lsp_json_set_int (nested, "value", 42);
+
+    g_assert_cmpint (lsp_json_lookup_int (object, "nested/value", 0), ==, 42);
+    g_assert_cmpint (lsp_json_lookup_int (object, "", 7), ==, 7);
+    g_assert_cmpint (lsp_json_lookup_int (object, "nested/", 8), ==, 8);
+    g_assert_cmpint (lsp_json_lookup_int (object, "/nested", 9), ==, 9);
+    g_assert_cmpint (lsp_json_lookup_int (object, "nested//value", 10), ==, 10);
+    g_assert_cmpint (lsp_json_lookup_int (object, "nested/value/member", 11), ==, 11);
+    g_assert_null (lsp_json_lookup_object (object, "nested/value"));
+
+    json_object_unref (object);
+}
+
+
 /* -------------------------------------------------------------------------
  * documentSymbol, in both of the shapes a server may answer with
  */
@@ -1641,6 +1662,7 @@ _moo_lsp_add_unit_tests (void)
     g_test_add_func ("/lsp/json/position-bounds", test_json_position_bounds);
     g_test_add_func ("/lsp/json/accessors", test_json_accessors);
     g_test_add_func ("/lsp/json/null-object", test_json_null_object);
+    g_test_add_func ("/lsp/json/lookup-paths", test_json_lookup_paths);
     g_test_add_func ("/lsp/completion/word-start", test_completion_word_start);
     g_test_add_func ("/lsp/diagnostics/detail", test_diagnostic_detail);
     g_test_add_func ("/lsp/diagnostics/fields", test_diagnostic_fields);
