@@ -641,6 +641,11 @@ test_output_filter_empty_state (void)
     g_assert_nonnull (active_dirs);
     g_assert_null (active_dirs[0]);
 
+    moo_output_filter_cmd_start (filter, "other");
+    active_dirs = moo_output_filter_get_active_dirs (filter);
+    g_assert_cmpstr (active_dirs[0], ==, "other");
+    g_assert_null (active_dirs[1]);
+
     g_object_unref (filter);
 }
 
@@ -877,6 +882,7 @@ test_history_list_memory (void)
     g_assert_cmpuint (history_changed_count, ==, 1);
     moo_history_list_add (list, "two");
     moo_history_list_add (list, "one");
+    g_assert_cmpuint (history_changed_count, ==, 3);
     g_assert_false (moo_history_list_is_empty (list));
     g_assert_cmpuint (moo_history_list_n_user_entries (list), ==, 2);
 
@@ -889,6 +895,7 @@ test_history_list_memory (void)
 
     moo_history_list_set_max_entries (list, 2);
     moo_history_list_add (list, "three");
+    g_assert_cmpuint (history_changed_count, ==, 4);
     g_assert_cmpuint (moo_history_list_n_user_entries (list), ==, 2);
     last = moo_history_list_get_last_item (list);
     g_assert_cmpstr (last, ==, "three");
