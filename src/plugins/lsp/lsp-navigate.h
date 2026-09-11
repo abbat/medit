@@ -107,6 +107,8 @@ gboolean    lsp_hover_query_tooltip (MooEditView    *view,
                                      gboolean        keyboard_mode,
                                      GtkTooltip     *tooltip);
 
+char       *lsp_hover_text          (JsonNode       *result);
+
 /* Drops the cached hover and forgets any request still in flight. */
 void        lsp_navigate_reset      (void);
 

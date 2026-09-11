@@ -503,8 +503,8 @@ lsp_goto_definition_at_click (MooEditView *view,
  * MarkupContent, MarkedString, or an array of MarkedString, all of which may
  * carry the text in one of two members.
  */
-static char *
-hover_text (JsonNode *result)
+char *
+lsp_hover_text (JsonNode *result)
 {
     JsonObject *object;
     JsonNode *contents;
@@ -580,7 +580,7 @@ hover_reply (JsonNode                 *result,
     hover.have_answer = TRUE;
 
     g_free (hover.text);
-    hover.text = error ? NULL : hover_text (result);
+    hover.text = error ? NULL : lsp_hover_text (result);
 
     /*
      * Ask the tooltip again, now that there is something to answer with. The

@@ -46,6 +46,7 @@
 #include "plugins/lsp/lsp-doc.h"
 #include "plugins/lsp/lsp-highlight.h"
 #include "plugins/lsp/lsp-json.h"
+#include "plugins/lsp/lsp-navigate.h"
 #include "plugins/lsp/lsp-references.h"
 #include "plugins/lsp/lsp-edits.h"
 #include "plugins/lsp/lsp-signature.h"
@@ -427,6 +428,34 @@ test_json_serialization_edges (void)
     g_assert_cmpstr (text, ==, "\"text\"");
     g_free (text);
     json_node_free (node);
+}
+
+
+static void
+test_hover_text_shapes (void)
+{
+    const char *replies[] = {
+        "{\"contents\":\"plain\"}",
+        "{\"contents\":{\"kind\":\"markdown\",\"value\":\"marked\"}}",
+        "{\"contents\":[\"one\",{\"language\":\"c\",\"value\":\"two\"},\"\",3]}",
+        "{\"contents\":null}",
+        "{}"
+    };
+    const char *expected[] = { "plain", "marked", "one\ntwo", NULL, NULL };
+
+    for (guint i = 0; i < G_N_ELEMENTS (replies); ++i)
+    {
+        GError *error = NULL;
+        JsonNode *node = lsp_json_parse (replies[i], -1, &error);
+        char *text;
+
+        g_assert_no_error (error);
+        g_assert_nonnull (node);
+        text = lsp_hover_text (node);
+        g_assert_cmpstr (text, ==, expected[i]);
+        g_free (text);
+        json_node_unref (node);
+    }
 }
 
 
@@ -1714,6 +1743,7 @@ _moo_lsp_add_unit_tests (void)
     g_test_add_func ("/lsp/json/lookup-paths", test_json_lookup_paths);
     g_test_add_func ("/lsp/json/string-array-edges", test_json_string_array_edges);
     g_test_add_func ("/lsp/json/serialization-edges", test_json_serialization_edges);
+    g_test_add_func ("/lsp/hover/text-shapes", test_hover_text_shapes);
     g_test_add_func ("/lsp/completion/word-start", test_completion_word_start);
     g_test_add_func ("/lsp/diagnostics/detail", test_diagnostic_detail);
     g_test_add_func ("/lsp/diagnostics/fields", test_diagnostic_fields);
