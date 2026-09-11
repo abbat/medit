@@ -226,6 +226,8 @@ test_json_malformed (void)
     g_assert_cmpint (lsp_json_lookup_int (object, "nested/missing", 9), ==, 9);
     g_assert_true (lsp_json_get_provider (object, "provider-object"));
     g_assert_false (lsp_json_get_provider (object, "provider-false"));
+    g_assert_false (lsp_json_get_provider (object, "string"));
+    g_assert_false (lsp_json_get_provider (object, "number"));
     g_assert_false (lsp_json_get_provider (object, "null"));
 
     json_node_unref (node);
