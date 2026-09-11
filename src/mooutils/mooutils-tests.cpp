@@ -499,6 +499,8 @@ test_output_filter_memory (void)
 
     moo_output_filter_set_active_file (filter, "main.c");
     g_assert_cmpstr (moo_output_filter_get_active_file (filter), ==, "main.c");
+    moo_output_filter_set_active_file (filter, "other.c");
+    g_assert_cmpstr (moo_output_filter_get_active_file (filter), ==, "other.c");
     moo_output_filter_set_active_file (filter, NULL);
     g_assert_null (moo_output_filter_get_active_file (filter));
 
@@ -901,8 +903,16 @@ test_history_list_memory (void)
     g_assert_cmpstr (last, ==, "three");
     g_free (last);
 
+    moo_history_list_set_max_entries (list, 1);
+    moo_history_list_add (list, "four");
+    g_assert_cmpuint (history_changed_count, ==, 5);
+    g_assert_cmpuint (moo_history_list_n_user_entries (list), ==, 1);
+    last = moo_history_list_get_last_item (list);
+    g_assert_cmpstr (last, ==, "four");
+    g_free (last);
+
     moo_history_list_add (list, "");
-    g_assert_cmpuint (moo_history_list_n_user_entries (list), ==, 2);
+    g_assert_cmpuint (moo_history_list_n_user_entries (list), ==, 1);
 
     g_object_unref (list);
 }

@@ -502,6 +502,12 @@ moo_history_list_set_max_entries (MooHistoryList *list,
     g_return_if_fail (MOO_IS_HISTORY_LIST (list));
     g_return_if_fail (num > 0);
     list->priv->max_items = num;
+
+    while (list->priv->num_user > list->priv->max_items)
+    {
+        _list_delete_last (list);
+        list->priv->num_user--;
+    }
 }
 
 

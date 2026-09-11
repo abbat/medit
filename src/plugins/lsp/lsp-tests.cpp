@@ -439,9 +439,11 @@ test_hover_text_shapes (void)
         "{\"contents\":{\"kind\":\"markdown\",\"value\":\"marked\"}}",
         "{\"contents\":[\"one\",{\"language\":\"c\",\"value\":\"two\"},\"\",3]}",
         "{\"contents\":null}",
+        "{\"contents\":{\"value\":\"\"}}",
+        "{\"contents\":[]}",
         "{}"
     };
-    const char *expected[] = { "plain", "marked", "one\ntwo", NULL, NULL };
+    const char *expected[] = { "plain", "marked", "one\ntwo", NULL, NULL, NULL, NULL };
 
     for (guint i = 0; i < G_N_ELEMENTS (replies); ++i)
     {

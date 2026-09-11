@@ -520,14 +520,17 @@ lsp_hover_text (JsonNode *result)
 
     if (JSON_NODE_HOLDS_VALUE (contents) &&
         json_node_get_value_type (contents) == G_TYPE_STRING)
-            return g_strdup (json_node_get_string (contents));
+    {
+        const char *value = json_node_get_string (contents);
+        return value && value[0] ? g_strdup (value) : NULL;
+    }
 
     if (JSON_NODE_HOLDS_OBJECT (contents))
     {
         JsonObject *content = json_node_get_object (contents);
         const char *value = lsp_json_get_string (content, "value");
 
-        return value ? g_strdup (value) : NULL;
+        return value && value[0] ? g_strdup (value) : NULL;
     }
 
     if (JSON_NODE_HOLDS_ARRAY (contents))
