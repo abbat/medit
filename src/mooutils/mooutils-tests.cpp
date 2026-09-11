@@ -195,6 +195,9 @@ test_accel_parse (void)
     GdkModifierType mods = GdkModifierType (0);
 
     g_assert_false (_moo_accel_parse ("<Nonsense>s", &key, &mods));
+    g_assert_false (_moo_accel_parse ("<Control>", &key, &mods));
+    g_assert_false (_moo_accel_parse ("Control+", &key, &mods));
+    g_assert_false (_moo_accel_parse ("Control++s", &key, &mods));
 }
 
 
