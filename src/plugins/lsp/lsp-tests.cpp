@@ -381,6 +381,25 @@ test_json_lookup_paths (void)
 }
 
 
+static void
+test_json_string_array_edges (void)
+{
+    static const char *strings[] = { "", "привет", NULL };
+    JsonArray *array;
+
+    array = lsp_json_string_array (NULL);
+    g_assert_nonnull (array);
+    g_assert_cmpuint (json_array_get_length (array), ==, 0);
+    json_array_unref (array);
+
+    array = lsp_json_string_array (strings);
+    g_assert_cmpuint (json_array_get_length (array), ==, 2);
+    g_assert_cmpstr (json_array_get_string_element (array, 0), ==, "");
+    g_assert_cmpstr (json_array_get_string_element (array, 1), ==, "привет");
+    json_array_unref (array);
+}
+
+
 /* -------------------------------------------------------------------------
  * documentSymbol, in both of the shapes a server may answer with
  */
@@ -1663,6 +1682,7 @@ _moo_lsp_add_unit_tests (void)
     g_test_add_func ("/lsp/json/accessors", test_json_accessors);
     g_test_add_func ("/lsp/json/null-object", test_json_null_object);
     g_test_add_func ("/lsp/json/lookup-paths", test_json_lookup_paths);
+    g_test_add_func ("/lsp/json/string-array-edges", test_json_string_array_edges);
     g_test_add_func ("/lsp/completion/word-start", test_completion_word_start);
     g_test_add_func ("/lsp/diagnostics/detail", test_diagnostic_detail);
     g_test_add_func ("/lsp/diagnostics/fields", test_diagnostic_fields);
