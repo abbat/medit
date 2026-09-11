@@ -493,6 +493,91 @@ test_output_filter_memory (void)
 }
 
 
+typedef struct {
+    guint stdout_lines;
+    guint stderr_lines;
+    guint starts;
+    guint exits;
+    int   last_status;
+} OutputFilterSignals;
+
+
+static gboolean
+output_filter_stdout_line (MooOutputFilter *filter,
+                           const char      *line,
+                           OutputFilterSignals *signals)
+{
+    g_assert_true (MOO_IS_OUTPUT_FILTER (filter));
+    g_assert_cmpstr (line, ==, "out");
+    ++signals->stdout_lines;
+    return TRUE;
+}
+
+
+static gboolean
+output_filter_stderr_line (MooOutputFilter *filter,
+                           const char      *line,
+                           OutputFilterSignals *signals)
+{
+    g_assert_true (MOO_IS_OUTPUT_FILTER (filter));
+    g_assert_cmpstr (line, ==, "err");
+    ++signals->stderr_lines;
+    return TRUE;
+}
+
+
+static void
+output_filter_cmd_start (MooOutputFilter *filter,
+                         OutputFilterSignals *signals)
+{
+    g_assert_true (MOO_IS_OUTPUT_FILTER (filter));
+    ++signals->starts;
+}
+
+
+static gboolean
+output_filter_cmd_exit (MooOutputFilter *filter,
+                        int              status,
+                        OutputFilterSignals *signals)
+{
+    g_assert_true (MOO_IS_OUTPUT_FILTER (filter));
+    signals->last_status = status;
+    ++signals->exits;
+    return TRUE;
+}
+
+
+static void
+test_output_filter_signals (void)
+{
+    MooOutputFilter *filter;
+    OutputFilterSignals signals = { 0, 0, 0, 0, 0 };
+
+    filter = MOO_OUTPUT_FILTER (g_object_new (MOO_TYPE_OUTPUT_FILTER, NULL));
+    g_signal_connect (filter, "stdout-line",
+                      G_CALLBACK (output_filter_stdout_line), &signals);
+    g_signal_connect (filter, "stderr-line",
+                      G_CALLBACK (output_filter_stderr_line), &signals);
+    g_signal_connect (filter, "cmd-start",
+                      G_CALLBACK (output_filter_cmd_start), &signals);
+    g_signal_connect (filter, "cmd-exit",
+                      G_CALLBACK (output_filter_cmd_exit), &signals);
+
+    g_assert_true (moo_output_filter_stdout_line (filter, "out"));
+    g_assert_true (moo_output_filter_stderr_line (filter, "err"));
+    moo_output_filter_cmd_start (filter, "project");
+    g_assert_true (moo_output_filter_cmd_exit (filter, 17));
+
+    g_assert_cmpuint (signals.stdout_lines, ==, 1);
+    g_assert_cmpuint (signals.stderr_lines, ==, 1);
+    g_assert_cmpuint (signals.starts, ==, 1);
+    g_assert_cmpuint (signals.exits, ==, 1);
+    g_assert_cmpint (signals.last_status, ==, 17);
+
+    g_object_unref (filter);
+}
+
+
 static void
 test_ui_xml_rejects_invalid_nodes (void)
 {
@@ -799,6 +884,7 @@ _moo_add_mooutils_unit_tests (void)
     g_test_add_func ("/mooutils/markup/round-trip-edges", test_markup_round_trip_edges);
     g_test_add_func ("/mooutils/ui-xml/memory", test_ui_xml_memory);
     g_test_add_func ("/mooutils/output-filter/memory", test_output_filter_memory);
+    g_test_add_func ("/mooutils/output-filter/signals", test_output_filter_signals);
     g_test_add_func ("/mooutils/ui-xml/rejects-invalid-nodes",
                      test_ui_xml_rejects_invalid_nodes);
     g_test_add_func ("/mooutils/prefs/memory", test_prefs_memory);
