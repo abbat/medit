@@ -599,6 +599,31 @@ test_output_filter_signals (void)
 
 
 static void
+test_output_filter_empty_state (void)
+{
+    MooOutputFilter *filter;
+    char *empty_dirs[] = { NULL };
+    const char * const *active_dirs;
+
+    filter = MOO_OUTPUT_FILTER (g_object_new (MOO_TYPE_OUTPUT_FILTER, NULL));
+    moo_output_filter_cmd_start (filter, "project");
+    moo_output_filter_add_active_dirs (filter, empty_dirs);
+    moo_output_filter_add_active_dirs (filter, NULL);
+    active_dirs = moo_output_filter_get_active_dirs (filter);
+    g_assert_nonnull (active_dirs);
+    g_assert_cmpstr (active_dirs[0], ==, "project");
+    g_assert_null (active_dirs[1]);
+
+    moo_output_filter_cmd_start (filter, NULL);
+    active_dirs = moo_output_filter_get_active_dirs (filter);
+    g_assert_nonnull (active_dirs);
+    g_assert_null (active_dirs[0]);
+
+    g_object_unref (filter);
+}
+
+
+static void
 test_ui_xml_rejects_invalid_nodes (void)
 {
     MooUiXml *xml;
@@ -936,6 +961,7 @@ _moo_add_mooutils_unit_tests (void)
     g_test_add_func ("/mooutils/ui-xml/memory", test_ui_xml_memory);
     g_test_add_func ("/mooutils/output-filter/memory", test_output_filter_memory);
     g_test_add_func ("/mooutils/output-filter/signals", test_output_filter_signals);
+    g_test_add_func ("/mooutils/output-filter/empty-state", test_output_filter_empty_state);
     g_test_add_func ("/mooutils/ui-xml/rejects-invalid-nodes",
                      test_ui_xml_rejects_invalid_nodes);
     g_test_add_func ("/mooutils/prefs/memory", test_prefs_memory);
