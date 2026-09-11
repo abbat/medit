@@ -322,14 +322,10 @@ moo_command_set_property (GObject *object,
 {
     MooCommand *cmd = MOO_COMMAND (object);
 
-    switch (property_id)
-    {
-        case CMD_PROP_OPTIONS:
-            moo_command_set_options (cmd, (MooCommandOptions) g_value_get_flags (value));
-            break;
-        default:
-            G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
-    }
+    if (property_id == CMD_PROP_OPTIONS)
+        moo_command_set_options (cmd, (MooCommandOptions) g_value_get_flags (value));
+    else
+        G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
 }
 
 
@@ -341,14 +337,10 @@ moo_command_get_property (GObject *object,
 {
     MooCommand *cmd = MOO_COMMAND (object);
 
-    switch (property_id)
-    {
-        case CMD_PROP_OPTIONS:
-            g_value_set_flags (value, cmd->options);
-            break;
-        default:
-            G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
-    }
+    if (property_id == CMD_PROP_OPTIONS)
+        g_value_set_flags (value, cmd->options);
+    else
+        G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
 }
 
 

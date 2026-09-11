@@ -173,15 +173,10 @@ moo_tree_view_set_property (GObject        *object,
 {
     MooTreeView *view = MOO_TREE_VIEW (object);
 
-    switch (prop_id)
-    {
-        case PROP_MODEL:
-            _moo_tree_view_set_model (view, g_value_get_object (value));
-            break;
-
-        default:
-            G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
+    if (prop_id == PROP_MODEL)
+        _moo_tree_view_set_model (view, g_value_get_object (value));
+    else
+        G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 }
 
 
@@ -193,15 +188,10 @@ moo_tree_view_get_property (GObject        *object,
 {
     MooTreeView *view = MOO_TREE_VIEW (object);
 
-    switch (prop_id)
-    {
-        case PROP_MODEL:
-            g_value_set_object (value, view->model);
-            break;
-
-        default:
-            G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
+    if (prop_id == PROP_MODEL)
+        g_value_set_object (value, view->model);
+    else
+        G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 }
 
 

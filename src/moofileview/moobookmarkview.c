@@ -148,16 +148,10 @@ moo_bookmark_view_set_property (GObject        *object,
 {
     MooBookmarkView *view = MOO_BOOKMARK_VIEW (object);
 
-    switch (prop_id)
-    {
-        case PROP_MGR:
-            _moo_bookmark_view_set_mgr (view, g_value_get_object (value));
-            break;
-
-        default:
-            G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-            break;
-    }
+    if (prop_id == PROP_MGR)
+        _moo_bookmark_view_set_mgr (view, g_value_get_object (value));
+    else
+        G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 }
 
 
@@ -169,16 +163,10 @@ moo_bookmark_view_get_property (GObject        *object,
 {
     MooBookmarkView *view = MOO_BOOKMARK_VIEW (object);
 
-    switch (prop_id)
-    {
-        case PROP_MGR:
-            g_value_set_object (value, view->mgr);
-            break;
-
-        default:
-            G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-            break;
-    }
+    if (prop_id == PROP_MGR)
+        g_value_set_object (value, view->mgr);
+    else
+        G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 }
 
 

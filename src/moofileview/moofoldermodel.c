@@ -139,16 +139,10 @@ moo_folder_model_set_property (GObject *object,
 {
     MooFolderModel *model = MOO_FOLDER_MODEL (object);
 
-    switch (property_id)
-    {
-        case PROP_FOLDER:
-            _moo_folder_model_set_folder (model,
-                                          g_value_get_object (value));
-            break;
-
-        default:
-            G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
-    }
+    if (property_id == PROP_FOLDER)
+        _moo_folder_model_set_folder (model, g_value_get_object (value));
+    else
+        G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
 }
 
 
@@ -160,16 +154,10 @@ moo_folder_model_get_property (GObject *object,
 {
     MooFolderModel *model = MOO_FOLDER_MODEL (object);
 
-    switch (property_id)
-    {
-        case PROP_FOLDER:
-            g_value_set_object (value,
-                                _moo_folder_model_get_folder (model));
-            break;
-
-        default:
-            G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
-    }
+    if (property_id == PROP_FOLDER)
+        g_value_set_object (value, _moo_folder_model_get_folder (model));
+    else
+        G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
 }
 
 
@@ -872,5 +860,4 @@ _moo_folder_filter_set_folder (MooFolderFilter    *filter,
     g_return_if_fail (MOO_IS_FOLDER_MODEL (model));
     _moo_folder_model_set_folder (MOO_FOLDER_MODEL (model), folder);
 }
-
 

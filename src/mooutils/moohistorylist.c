@@ -189,18 +189,14 @@ static void moo_history_list_set_property (GObject            *object,
 {
     MooHistoryList *list = MOO_HISTORY_LIST (object);
 
-    switch (prop_id)
+    if (prop_id == PROP_USER_ID)
     {
-        case PROP_USER_ID:
-            g_free (list->priv->user_id);
-            list->priv->user_id = g_strdup (g_value_get_string (value));
-            g_object_notify (object, "user-id");
-            break;
-
-        default:
-            G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-            break;
+        g_free (list->priv->user_id);
+        list->priv->user_id = g_strdup (g_value_get_string (value));
+        g_object_notify (object, "user-id");
     }
+    else
+        G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 }
 
 

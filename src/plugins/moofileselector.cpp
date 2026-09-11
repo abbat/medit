@@ -194,15 +194,10 @@ moo_file_selector_set_property (GObject        *object,
 {
     MooFileSelector *sel = MOO_FILE_SELECTOR (object);
 
-    switch (prop_id)
-    {
-        case PROP_WINDOW:
-            sel->window = (MooEditWindow*) g_value_get_object (value);
-            break;
-
-        default:
-            G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
+    if (prop_id == PROP_WINDOW)
+        sel->window = (MooEditWindow*) g_value_get_object (value);
+    else
+        G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 }
 
 
@@ -214,15 +209,10 @@ moo_file_selector_get_property (GObject        *object,
 {
     MooFileSelector *sel = MOO_FILE_SELECTOR (object);
 
-    switch (prop_id)
-    {
-        case PROP_WINDOW:
-            g_value_set_object (value, sel->window);
-            break;
-
-        default:
-            G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
+    if (prop_id == PROP_WINDOW)
+        g_value_set_object (value, sel->window);
+    else
+        G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 }
 
 

@@ -1231,19 +1231,16 @@ moo_tool_action_set_property (GObject      *object,
 {
     MooToolAction *action = MOO_TOOL_ACTION (object);
 
-    switch (property_id)
+    if (property_id == PROP_COMMAND)
     {
-        case PROP_COMMAND:
-            if (action->cmd)
-                g_object_unref (action->cmd);
-            action->cmd = (MooCommand*) g_value_get_object (value);
-            if (action->cmd)
-                g_object_ref (action->cmd);
-            break;
-
-        default:
-            G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+        if (action->cmd)
+            g_object_unref (action->cmd);
+        action->cmd = (MooCommand*) g_value_get_object (value);
+        if (action->cmd)
+            g_object_ref (action->cmd);
     }
+    else
+        G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
 }
 
 
@@ -1255,15 +1252,10 @@ moo_tool_action_get_property (GObject    *object,
 {
     MooToolAction *action = MOO_TOOL_ACTION (object);
 
-    switch (property_id)
-    {
-        case PROP_COMMAND:
-            g_value_set_object (value, action->cmd);
-            break;
-
-        default:
-            G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
-    }
+    if (property_id == PROP_COMMAND)
+        g_value_set_object (value, action->cmd);
+    else
+        G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
 }
 
 

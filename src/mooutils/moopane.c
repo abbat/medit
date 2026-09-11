@@ -807,16 +807,15 @@ create_label_widget (MooPanePosition position,
             break;
     }
 
-    switch (position)
+    if (position == MOO_PANE_POS_LEFT)
     {
-        case MOO_PANE_POS_LEFT:
-            gtk_box_pack_start (GTK_BOX (box), *label_widget, FALSE, FALSE, 0);
-            gtk_box_pack_start (GTK_BOX (box), *icon_widget, FALSE, FALSE, 0);
-            break;
-        default:
-            gtk_box_pack_start (GTK_BOX (box), *icon_widget, FALSE, FALSE, 0);
-            gtk_box_pack_start (GTK_BOX (box), *label_widget, FALSE, FALSE, 0);
-            break;
+        gtk_box_pack_start (GTK_BOX (box), *label_widget, FALSE, FALSE, 0);
+        gtk_box_pack_start (GTK_BOX (box), *icon_widget, FALSE, FALSE, 0);
+    }
+    else
+    {
+        gtk_box_pack_start (GTK_BOX (box), *icon_widget, FALSE, FALSE, 0);
+        gtk_box_pack_start (GTK_BOX (box), *label_widget, FALSE, FALSE, 0);
     }
 
     gtk_widget_show (box);

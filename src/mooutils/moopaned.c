@@ -3064,14 +3064,10 @@ moo_left_paned_focus (MooPaned         *paned,
             if (focus_to_child (paned, direction))
                 return TRUE;
 
-            switch (direction)
-            {
-                case GTK_DIR_LEFT:
-                    return (paned->priv->current_pane && focus_to_pane (paned, direction)) ||
-                            focus_to_button (paned, direction);
-                default:
-                    return FALSE;
-            }
+            if (direction == GTK_DIR_LEFT)
+                return (paned->priv->current_pane && focus_to_pane (paned, direction)) ||
+                        focus_to_button (paned, direction);
+            return FALSE;
 
         case FOCUS_PANE:
             if (focus_to_pane (paned, direction))
@@ -3091,14 +3087,10 @@ moo_left_paned_focus (MooPaned         *paned,
             if (focus_to_button (paned, direction))
                 return TRUE;
 
-            switch (direction)
-            {
-                case GTK_DIR_RIGHT:
-                    return focus_to_pane (paned, direction) ||
-                            focus_to_child (paned, direction);
-                default:
-                    return FALSE;
-            }
+            if (direction == GTK_DIR_RIGHT)
+                return focus_to_pane (paned, direction) ||
+                        focus_to_child (paned, direction);
+            return FALSE;
     }
 
     g_return_val_if_reached (FALSE);

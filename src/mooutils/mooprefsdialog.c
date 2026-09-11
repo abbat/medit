@@ -334,16 +334,13 @@ moo_prefs_dialog_set_property (GObject      *object,
     MooPrefsDialog *dialog = MOO_PREFS_DIALOG (object);
     g_return_if_fail (dialog != NULL);
 
-    switch (prop_id)
+    if (prop_id == PROP_HIDE_ON_DELETE)
     {
-        case PROP_HIDE_ON_DELETE:
-            dialog->hide_on_delete = g_value_get_boolean (value);
-            g_object_notify (object, "hide-on-delete");
-            break;
-
-        default:
-            G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+        dialog->hide_on_delete = g_value_get_boolean (value);
+        g_object_notify (object, "hide-on-delete");
     }
+    else
+        G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 }
 
 
@@ -356,15 +353,10 @@ moo_prefs_dialog_get_property (GObject    *object,
     MooPrefsDialog *dialog = MOO_PREFS_DIALOG (object);
     g_return_if_fail (dialog != NULL);
 
-    switch (prop_id)
-    {
-        case PROP_HIDE_ON_DELETE:
-            g_value_set_boolean (value, dialog->hide_on_delete);
-            break;
-
-        default:
-            G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
+    if (prop_id == PROP_HIDE_ON_DELETE)
+        g_value_set_boolean (value, dialog->hide_on_delete);
+    else
+        G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 }
 
 
@@ -559,5 +551,4 @@ moo_prefs_dialog_remove_page (MooPrefsDialog     *dialog,
     gtk_notebook_remove_page (dialog->notebook,
                               gtk_notebook_page_num (dialog->notebook, page));
 }
-
 

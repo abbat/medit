@@ -198,16 +198,10 @@ moo_find_set_property (GObject        *object,
 {
     MooFind *find = MOO_FIND (object);
 
-    switch (prop_id)
-    {
-        case PROP_REPLACE:
-            find->replace = g_value_get_boolean (value) ? TRUE : FALSE;
-            break;
-
-        default:
-            G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-            break;
-    }
+    if (prop_id == PROP_REPLACE)
+        find->replace = g_value_get_boolean (value) ? TRUE : FALSE;
+    else
+        G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 }
 
 
@@ -219,16 +213,10 @@ moo_find_get_property (GObject        *object,
 {
     MooFind *find = MOO_FIND (object);
 
-    switch (prop_id)
-    {
-        case PROP_REPLACE:
-            g_value_set_boolean (value, find->replace ? TRUE : FALSE);
-            break;
-
-        default:
-            G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-            break;
-    }
+    if (prop_id == PROP_REPLACE)
+        g_value_set_boolean (value, find->replace ? TRUE : FALSE);
+    else
+        G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 }
 
 

@@ -1666,12 +1666,7 @@ moo_file_entry_set_property (GObject        *object,
                              G_GNUC_UNUSED const GValue *value,
                              GParamSpec     *pspec)
 {
-    switch (prop_id)
-    {
-        default:
-            G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-            break;
-    }
+    G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 }
 
 
@@ -1683,16 +1678,10 @@ moo_file_entry_get_property (GObject        *object,
 {
     MooFileEntry *entry = MOO_FILE_ENTRY (object);
 
-    switch (prop_id)
-    {
-        case ENTRY_PROP_COMPLETION:
-            g_value_set_object (value, entry->completion);
-            break;
-
-        default:
-            G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-            break;
-    }
+    if (prop_id == ENTRY_PROP_COMPLETION)
+        g_value_set_object (value, entry->completion);
+    else
+        G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 }
 
 

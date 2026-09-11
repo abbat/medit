@@ -955,15 +955,10 @@ moo_app_exec_cmd (MooApp *app, char cmd, const char *data, G_GNUC_UNUSED guint l
 
   code = get_cmd_code (cmd);
 
-  switch (code)
-    {
-    case CMD_OPEN_FILES:
-      moo_app_cmd_open_files (app, data);
-      break;
-
-    default:
-      g_warning ("got unknown command %c %d", cmd, code);
-    }
+  if (code == CMD_OPEN_FILES)
+    moo_app_cmd_open_files (app, data);
+  else
+    g_warning ("got unknown command %c %d", cmd, code);
 }
 
 /*!

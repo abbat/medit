@@ -260,16 +260,10 @@ moo_history_mgr_set_property (GObject      *object,
 {
     MooHistoryMgr *mgr = MOO_HISTORY_MGR (object);
 
-    switch (prop_id)
-    {
-        case PROP_NAME:
-            MOO_ASSIGN_STRING (mgr->priv->name, g_value_get_string (value));
-            break;
-
-        default:
-            G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-            break;
-    }
+    if (prop_id == PROP_NAME)
+        MOO_ASSIGN_STRING (mgr->priv->name, g_value_get_string (value));
+    else
+        G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 }
 
 static void

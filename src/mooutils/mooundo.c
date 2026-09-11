@@ -190,16 +190,10 @@ moo_undo_stack_set_property (GObject        *object,
 {
     MooUndoStack *stack = MOO_UNDO_STACK (object);
 
-    switch (prop_id)
-    {
-        case PROP_DOCUMENT:
-            stack->document = g_value_get_pointer (value);
-            break;
-
-        default:
-            G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-            break;
-    }
+    if (prop_id == PROP_DOCUMENT)
+        stack->document = g_value_get_pointer (value);
+    else
+        G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 }
 
 
