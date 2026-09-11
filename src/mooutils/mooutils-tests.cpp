@@ -804,8 +804,22 @@ static void
 test_history_list_memory (void)
 {
     MooHistoryList *list = moo_history_list_new (NULL);
+    MooHistoryListItem *item;
+    MooHistoryListItem *copy;
     GtkTreeIter iter;
     char *last;
+
+    item = moo_history_list_item_new ("data", "display", TRUE);
+    copy = moo_history_list_item_copy (item);
+    g_assert_nonnull (copy);
+    g_assert_cmpstr (copy->data, ==, "data");
+    g_assert_cmpstr (copy->display, ==, "display");
+    g_assert_true (copy->builtin);
+    g_free (copy->data);
+    copy->data = g_strdup ("changed");
+    g_assert_cmpstr (item->data, ==, "data");
+    moo_history_list_item_free (copy);
+    moo_history_list_item_free (item);
 
     g_assert_true (moo_history_list_is_empty (list));
     moo_history_list_add (list, "one");
