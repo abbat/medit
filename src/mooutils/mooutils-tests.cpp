@@ -324,6 +324,25 @@ test_markup_mutation_modified (void)
 
 
 static void
+test_markup_property_edges (void)
+{
+    MooMarkupDoc *doc = moo_markup_doc_new ("memory");
+    MooMarkupNode *root = moo_markup_create_root_element (doc, "root");
+
+    g_assert_null (moo_markup_get_prop (root, "missing"));
+    moo_markup_set_prop (root, "first", "one");
+    moo_markup_set_prop (root, "second", "two");
+    moo_markup_set_prop (root, "first", NULL);
+    g_assert_null (moo_markup_get_prop (root, "first"));
+    g_assert_cmpstr (moo_markup_get_prop (root, "second"), ==, "two");
+    moo_markup_set_prop (root, "second", NULL);
+    g_assert_null (moo_markup_get_prop (root, "second"));
+
+    moo_markup_doc_unref (doc);
+}
+
+
+static void
 test_markup_round_trip_edges (void)
 {
     GError *error = NULL;
@@ -974,6 +993,7 @@ _moo_add_mooutils_unit_tests (void)
     g_test_add_func ("/mooutils/accel/label", test_accel_label_parse);
     g_test_add_func ("/mooutils/markup/memory", test_markup_memory);
     g_test_add_func ("/mooutils/markup/mutation-modified", test_markup_mutation_modified);
+    g_test_add_func ("/mooutils/markup/property-edges", test_markup_property_edges);
     g_test_add_func ("/mooutils/markup/round-trip-edges", test_markup_round_trip_edges);
     g_test_add_func ("/mooutils/ui-xml/memory", test_ui_xml_memory);
     g_test_add_func ("/mooutils/output-filter/memory", test_output_filter_memory);
