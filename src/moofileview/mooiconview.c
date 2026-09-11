@@ -2015,8 +2015,10 @@ moo_icon_view_set_scroll_adjustments    (GtkWidget      *widget,
 static void     value_changed           (MooIconView    *view,
                                          GtkAdjustment  *adj)
 {
-    if (gtk_adjustment_get_value (adj) != view->priv->xoffset)
-        moo_icon_view_scroll_to (view, (int) gtk_adjustment_get_value (adj));
+    int xoffset = (int) gtk_adjustment_get_value (adj);
+
+    if (xoffset != view->priv->xoffset)
+        moo_icon_view_scroll_to (view, xoffset);
 }
 
 

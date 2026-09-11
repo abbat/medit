@@ -485,7 +485,6 @@ _moo_edit_set_active_view (MooEdit     *doc,
         (doc->priv->active_view != NULL && doc->priv->active_view != view))
     {
         GtkTextIter iter;
-        GtkTextBuffer *buffer = moo_edit_get_buffer (doc);
         GtkTextMark *mark = _moo_edit_view_get_fake_cursor_mark (view);
         gtk_text_buffer_get_iter_at_mark (buffer, &iter, mark);
         gtk_text_buffer_place_cursor (buffer, &iter);

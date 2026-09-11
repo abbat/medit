@@ -1156,9 +1156,9 @@ file_list_add_group (FileList    *list,
         }
         else if (!file_list_iter_is_auto (list, &iter))
         {
-            GtkTreeIter parent_iter;
+            GtkTreeIter item_parent_iter;
 
-            if (gtk_tree_model_iter_parent (GTK_TREE_MODEL (list), &parent_iter, &iter))
+            if (gtk_tree_model_iter_parent (GTK_TREE_MODEL (list), &item_parent_iter, &iter))
             {
                 parent = gtk_tree_path_copy (path);
                 gtk_tree_path_up (parent);

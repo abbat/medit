@@ -3573,7 +3573,7 @@ create_tab_label (MooEditWindow *window,
     {
         GtkWidget *frame;
         GtkWidget *button;
-        GtkWidget *icon;
+        GtkWidget *close_icon;
 
         {
             static gboolean been_here;
@@ -3598,10 +3598,10 @@ create_tab_label (MooEditWindow *window,
 
         button = gtk_button_new ();
 
-        icon = _moo_create_small_icon (MOO_SMALL_ICON_CLOSE);
-        gtk_widget_set_size_request (icon, 9, 9);
+        close_icon = _moo_create_small_icon (MOO_SMALL_ICON_CLOSE);
+        gtk_widget_set_size_request (close_icon, 9, 9);
 
-        gtk_container_add (GTK_CONTAINER (button), icon);
+        gtk_container_add (GTK_CONTAINER (button), close_icon);
 
         gtk_button_set_relief (GTK_BUTTON (button), GTK_RELIEF_NONE);
         gtk_button_set_focus_on_click (GTK_BUTTON (button), FALSE);

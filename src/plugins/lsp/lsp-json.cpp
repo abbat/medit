@@ -444,9 +444,10 @@ get_position_number (JsonObject  *object,
     if (type == G_TYPE_DOUBLE)
     {
         double number = json_node_get_double (node);
+        double integral = floor (number);
 
         if (!isfinite (number) || number < 0 || number > G_MAXINT ||
-            number != floor (number))
+            !g_double_equal (&number, &integral))
             return FALSE;
 
         if (value)

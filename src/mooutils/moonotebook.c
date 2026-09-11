@@ -2692,21 +2692,21 @@ moo_notebook_draw_label (MooNotebook    *nb,
            rectangle inherits it; gtk_paint_focus() was given the tab's state
            too, so this much is faithful. It shares the style-class gap of the
            block above. */
-        GtkStyleContext *context = gtk_widget_get_style_context(widget);
-        gtk_style_context_save(context);
+        GtkStyleContext *focus_context = gtk_widget_get_style_context(widget);
+        gtk_style_context_save(focus_context);
 
         /* Set the state for rendering */
-        GtkStateFlags state_flags = state == GTK_STATE_NORMAL ? GTK_STATE_FLAG_NORMAL : GTK_STATE_FLAG_ACTIVE;
-        gtk_style_context_set_state(context, state_flags);
+        GtkStateFlags focus_state_flags = state == GTK_STATE_NORMAL ? GTK_STATE_FLAG_NORMAL : GTK_STATE_FLAG_ACTIVE;
+        gtk_style_context_set_state(focus_context, focus_state_flags);
 
         /* Render the focus rectangle */
-        gtk_render_focus(context, cr,
+        gtk_render_focus(focus_context, cr,
                         allocation.x - focus_width,
                         allocation.y - focus_width,
                         allocation.width + 2 * focus_width,
                         allocation.height + 2 * focus_width);
 
-        gtk_style_context_restore(context);
+        gtk_style_context_restore(focus_context);
 #else
         gtk_paint_focus (widget->style,
                          window,

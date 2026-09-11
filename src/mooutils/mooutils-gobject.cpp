@@ -560,7 +560,11 @@ _moo_value_equal (const GValue *a,
         return g_value_get_uint (a) == g_value_get_uint (b);
 
     if (type == G_TYPE_DOUBLE)
-        return g_value_get_double (a) == g_value_get_double (b);
+    {
+        double da = g_value_get_double (a);
+        double db = g_value_get_double (b);
+        return g_double_equal (&da, &db);
+    }
 
     if (type == G_TYPE_STRING)
     {
