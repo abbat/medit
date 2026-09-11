@@ -99,7 +99,7 @@ def filter_entry(t, view):
         if abs(x - vx) <= 80 and y > vy:
             return node
 
-    t.fail("the pane has no filter box under its listing")
+    return t.fail("the pane has no filter box under its listing")
 
 
 def open_the_pane(t):

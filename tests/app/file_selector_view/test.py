@@ -97,7 +97,7 @@ def where(t, view):
         if abs(x - vx) <= 4 and y < vy:
             return t.text(node)
 
-    t.fail("the pane has no entry for the folder it is looking at")
+    return t.fail("the pane has no entry for the folder it is looking at")
 
 
 def first_row(t, view):

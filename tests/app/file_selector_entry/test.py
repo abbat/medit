@@ -88,7 +88,7 @@ def path_entry(t, view):
         if abs(x - vx) <= 4 and y < vy:
             return node
 
-    t.fail("the pane has no entry for the directory it is looking at")
+    return t.fail("the pane has no entry for the directory it is looking at")
 
 
 def open_the_pane(t):
