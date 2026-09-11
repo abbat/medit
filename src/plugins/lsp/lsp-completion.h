@@ -61,6 +61,7 @@ void        lsp_completion_text_inserted (MooEditView   *view,
                                           const char    *text);
 
 guint       _lsp_completion_item_count   (JsonNode       *result);
+char       *_lsp_completion_item_summary (JsonNode       *result);
 
 G_END_DECLS
 

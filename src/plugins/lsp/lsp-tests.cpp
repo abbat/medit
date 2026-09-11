@@ -529,6 +529,31 @@ test_completion_item_limit (void)
 }
 
 
+static void
+test_completion_item_fields (void)
+{
+    const char *json =
+        "[{\"label\":\"second\",\"insertText\":\"fallback\","
+        "  \"filterText\":\"needle\",\"sortText\":\"2\"},"
+        " {\"label\":\"first\",\"insertText\":\"insert\","
+        "  \"sortText\":\"1\",\"textEdit\":{\"newText\":\"edit\","
+        "  \"range\":{\"start\":{\"line\":3,\"character\":4},"
+        "  \"end\":{\"line\":3,\"character\":8}}}}]";
+    GError *error = NULL;
+    JsonNode *node = lsp_json_parse (json, -1, &error);
+    char *summary;
+
+    g_assert_no_error (error);
+    g_assert_nonnull (node);
+    summary = _lsp_completion_item_summary (node);
+    g_assert_cmpstr (summary, ==,
+                     "first|edit|first|1|3:4-3:8\n"
+                     "second|fallback|needle|2|-1:-1--1:-1");
+    g_free (summary);
+    json_node_unref (node);
+}
+
+
 /* -------------------------------------------------------------------------
  * documentSymbol, in both of the shapes a server may answer with
  */
@@ -1820,6 +1845,28 @@ test_client_framing (void)
 }
 
 
+static void
+test_client_framing_edges (void)
+{
+    const char *empty = "Content-Length: 0\r\n\r\n";
+    const char *incomplete = "Content-Length: 4\r\n\r\nxy";
+    gsize body_offset = 0;
+    gsize body_len = 0;
+
+    g_assert_cmpint (_lsp_client_find_message ((const guint8*) empty,
+                                                strlen (empty),
+                                                &body_offset, &body_len),
+                     ==, (gssize) strlen (empty));
+    g_assert_cmpuint (body_offset, ==, strlen (empty));
+    g_assert_cmpuint (body_len, ==, 0);
+
+    g_assert_cmpint (_lsp_client_find_message ((const guint8*) incomplete,
+                                                strlen (incomplete),
+                                                &body_offset, &body_len),
+                     ==, 0);
+}
+
+
 void
 _moo_lsp_add_unit_tests (void)
 {
@@ -1834,6 +1881,7 @@ _moo_lsp_add_unit_tests (void)
     g_test_add_func ("/lsp/hover/text-shapes", test_hover_text_shapes);
     g_test_add_func ("/lsp/completion/item-edges", test_completion_item_edges);
     g_test_add_func ("/lsp/completion/item-limit", test_completion_item_limit);
+    g_test_add_func ("/lsp/completion/item-fields", test_completion_item_fields);
     g_test_add_func ("/lsp/completion/word-start", test_completion_word_start);
     g_test_add_func ("/lsp/diagnostics/detail", test_diagnostic_detail);
     g_test_add_func ("/lsp/diagnostics/fields", test_diagnostic_fields);
@@ -1855,6 +1903,7 @@ _moo_lsp_add_unit_tests (void)
     g_test_add_func ("/lsp/symbols/positions", test_symbols_positions);
     g_test_add_func ("/lsp/symbols/empty", test_symbols_empty);
     g_test_add_func ("/lsp/replies/malformed", test_malformed_replies);
+    g_test_add_func ("/lsp/client/framing-edges", test_client_framing_edges);
 
     g_test_add_func ("/lsp/locations/array", test_locations_array);
     g_test_add_func ("/lsp/locations/single", test_locations_single);

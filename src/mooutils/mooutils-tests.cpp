@@ -343,6 +343,36 @@ test_markup_property_edges (void)
 
 
 static void
+test_markup_type_edges (void)
+{
+    MooMarkupDoc *doc = moo_markup_doc_new ("memory");
+    MooMarkupNode *root = moo_markup_create_root_element (doc, "root");
+
+    moo_markup_set_prop (root, "int", "-42");
+    moo_markup_set_prop (root, "uint", "42");
+    moo_markup_set_prop (root, "true", "YeS");
+    moo_markup_set_prop (root, "false", "0");
+    moo_markup_set_prop (root, "invalid", "not-a-number");
+
+    g_assert_cmpint (moo_markup_int_prop (root, "int", 7), ==, -42);
+    g_assert_cmpuint (moo_markup_uint_prop (root, "uint", 7), ==, 42);
+    g_assert_true (moo_markup_bool_prop (root, "true", FALSE));
+    g_assert_false (moo_markup_bool_prop (root, "false", TRUE));
+    g_assert_cmpint (moo_markup_int_prop (root, "missing", 7), ==, 7);
+
+    g_test_expect_message ("Moo", G_LOG_LEVEL_WARNING, "*could not convert*");
+    g_assert_cmpint (moo_markup_uint_prop (root, "invalid", 7), ==, 7);
+    g_test_assert_expected_messages ();
+
+    g_test_expect_message ("Moo", G_LOG_LEVEL_WARNING, "*could not convert*");
+    g_assert_true (moo_markup_bool_prop (root, "invalid", TRUE));
+    g_test_assert_expected_messages ();
+
+    moo_markup_doc_unref (doc);
+}
+
+
+static void
 test_markup_round_trip_edges (void)
 {
     GError *error = NULL;
@@ -1041,6 +1071,7 @@ _moo_add_mooutils_unit_tests (void)
     g_test_add_func ("/mooutils/markup/memory", test_markup_memory);
     g_test_add_func ("/mooutils/markup/mutation-modified", test_markup_mutation_modified);
     g_test_add_func ("/mooutils/markup/property-edges", test_markup_property_edges);
+    g_test_add_func ("/mooutils/markup/type-edges", test_markup_type_edges);
     g_test_add_func ("/mooutils/markup/round-trip-edges", test_markup_round_trip_edges);
     g_test_add_func ("/mooutils/ui-xml/memory", test_ui_xml_memory);
     g_test_add_func ("/mooutils/output-filter/memory", test_output_filter_memory);

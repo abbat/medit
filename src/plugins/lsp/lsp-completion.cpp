@@ -215,6 +215,34 @@ _lsp_completion_item_count (JsonNode *result)
 }
 
 
+char *
+_lsp_completion_item_summary (JsonNode *result)
+{
+    GSList *items = parse_items (result);
+    GString *summary = g_string_new (NULL);
+
+    for (GSList *l = items; l; l = l->next)
+    {
+        LspCompletionItem *item = (LspCompletionItem*) l->data;
+
+        if (summary->len)
+            g_string_append_c (summary, '\n');
+        g_string_append_printf (summary, "%s|%s|%s|%s|%d:%d-%d:%d",
+                                item->label,
+                                item->text,
+                                item->filter,
+                                item->sort ? item->sort : "",
+                                item->have_range ? item->start_line : -1,
+                                item->have_range ? item->start_character : -1,
+                                item->have_range ? item->end_line : -1,
+                                item->have_range ? item->end_character : -1);
+    }
+
+    g_slist_free_full (items, (GDestroyNotify) item_free);
+    return g_string_free (summary, FALSE);
+}
+
+
 /**********************************************************************/
 /* The window
  */
