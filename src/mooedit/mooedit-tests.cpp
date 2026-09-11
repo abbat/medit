@@ -428,6 +428,8 @@ static const SearchCase search_cases[] = {
     {"regex-line-start", "one\ntwo", "^", MOO_TEXT_SEARCH_REGEX, FALSE, 1, -1, 4, 4},
     {"regex-line-end", "one\ntwo", "$", MOO_TEXT_SEARCH_REGEX, FALSE, 0, -1, 3, 3},
     {"regex-invalid", "cat", "[", MOO_TEXT_SEARCH_REGEX, FALSE, 0, -1, -1, -1},
+    {"regex-invalid-backward", "cat", "[", MOO_TEXT_SEARCH_REGEX, TRUE, 3, -1, -1, -1},
+    {"backward-at-buffer-start", "cat", "cat", MooTextSearchFlags (0), TRUE, 0, -1, -1, -1},
     {"empty-buffer", "", "cat", MooTextSearchFlags (0), FALSE, 0, -1, -1, -1}
 };
 
