@@ -4042,6 +4042,84 @@ focus_to_child (MooNotebook     *nb,
 }
 
 static gboolean
+focus_from_none (MooNotebook     *nb,
+                 GtkWidget       *widget,
+                 GtkDirectionType direction)
+{
+    if (gtk_widget_is_focus (widget))
+    {
+        nb->priv->focus = FOCUS_LABEL;
+        return moo_notebook_focus (widget, direction);
+    }
+
+    switch (direction)
+    {
+        case GTK_DIR_TAB_FORWARD:
+        case GTK_DIR_RIGHT:
+        case GTK_DIR_DOWN:
+            return focus_to_action_widget (nb, LEFT, direction) ||
+                    focus_to_labels (nb, direction, TRUE) ||
+                    focus_to_arrows (nb, direction) ||
+                    focus_to_action_widget (nb, RIGHT, direction) ||
+                    focus_to_child (nb, direction);
+
+        case GTK_DIR_TAB_BACKWARD:
+        case GTK_DIR_LEFT:
+            return focus_to_action_widget (nb, RIGHT, direction) ||
+                    focus_to_arrows (nb, direction) ||
+                    focus_to_labels (nb, direction, FALSE) ||
+                    focus_to_action_widget (nb, LEFT, direction) ||
+                    focus_to_child (nb, direction);
+
+        case GTK_DIR_UP:
+            return focus_to_child (nb, direction) ||
+                    focus_to_action_widget (nb, LEFT, direction) ||
+                    focus_to_labels (nb, direction, TRUE) ||
+                    focus_to_arrows (nb, direction) ||
+                    focus_to_action_widget (nb, RIGHT, direction);
+    }
+
+    return FALSE;
+}
+
+static gboolean
+focus_from_label (MooNotebook     *nb,
+                  GtkDirectionType direction)
+{
+    if (nb->priv->focus_page &&
+        gtk_widget_get_visible (nb->priv->focus_page->child) &&
+        gtk_widget_child_focus (nb->priv->focus_page->label->widget, direction))
+        return TRUE;
+
+    switch (direction)
+    {
+        case GTK_DIR_RIGHT:
+            return focus_to_next_label (nb, direction, TRUE) ||
+                    focus_to_arrows (nb, direction) ||
+                    focus_to_action_widget (nb, RIGHT, direction);
+
+        case GTK_DIR_LEFT:
+            return focus_to_next_label (nb, direction, FALSE) ||
+                    focus_to_action_widget (nb, LEFT, direction);
+
+        case GTK_DIR_TAB_FORWARD:
+            return focus_to_arrows (nb, direction) ||
+                    focus_to_action_widget (nb, RIGHT, direction);
+
+        case GTK_DIR_UP:
+            return FALSE;
+
+        case GTK_DIR_TAB_BACKWARD:
+            return focus_to_action_widget (nb, LEFT, direction);
+
+        case GTK_DIR_DOWN:
+            return focus_to_child (nb, direction);
+    }
+
+    return FALSE;
+}
+
+static gboolean
 moo_notebook_focus (GtkWidget       *widget,
                     GtkDirectionType direction)
 {
@@ -4051,39 +4129,7 @@ moo_notebook_focus (GtkWidget       *widget,
     switch (nb->priv->focus)
     {
         case FOCUS_NONE:
-            if (gtk_widget_is_focus (widget))
-            {
-                nb->priv->focus = FOCUS_LABEL;
-                return moo_notebook_focus (widget, direction);
-            }
-
-            switch (direction)
-            {
-                case GTK_DIR_TAB_FORWARD:
-                case GTK_DIR_RIGHT:
-                case GTK_DIR_DOWN:
-                    return focus_to_action_widget (nb, LEFT, direction) ||
-                            focus_to_labels (nb, direction, TRUE) ||
-                            focus_to_arrows (nb, direction) ||
-                            focus_to_action_widget (nb, RIGHT, direction) ||
-                            focus_to_child (nb, direction);
-
-                case GTK_DIR_TAB_BACKWARD:
-                case GTK_DIR_LEFT:
-                    return focus_to_action_widget (nb, RIGHT, direction) ||
-                            focus_to_arrows (nb, direction) ||
-                            focus_to_labels (nb, direction, FALSE) ||
-                            focus_to_action_widget (nb, LEFT, direction) ||
-                            focus_to_child (nb, direction);
-
-                case GTK_DIR_UP:
-                    return focus_to_child (nb, direction) ||
-                            focus_to_action_widget (nb, LEFT, direction) ||
-                            focus_to_labels (nb, direction, TRUE) ||
-                            focus_to_arrows (nb, direction) ||
-                            focus_to_action_widget (nb, RIGHT, direction);
-            }
-            break;
+            return focus_from_none (nb, widget, direction);
 
         case FOCUS_LEFT:
             if (gtk_widget_child_focus (nb->priv->action_widgets[LEFT], direction))
@@ -4158,36 +4204,7 @@ moo_notebook_focus (GtkWidget       *widget,
             break;
 
         case FOCUS_LABEL:
-            if (nb->priv->focus_page &&
-                gtk_widget_get_visible (nb->priv->focus_page->child) &&
-                gtk_widget_child_focus (nb->priv->focus_page->label->widget, direction))
-                    return TRUE;
-
-            switch (direction)
-            {
-                case GTK_DIR_RIGHT:
-                    return focus_to_next_label (nb, direction, TRUE) ||
-                            focus_to_arrows (nb, direction) ||
-                            focus_to_action_widget (nb, RIGHT, direction);
-
-                case GTK_DIR_LEFT:
-                    return focus_to_next_label (nb, direction, FALSE) ||
-                            focus_to_action_widget (nb, LEFT, direction);
-
-                case GTK_DIR_TAB_FORWARD:
-                    return focus_to_arrows (nb, direction) ||
-                            focus_to_action_widget (nb, RIGHT, direction);
-
-                case GTK_DIR_UP:
-                    return FALSE;
-
-                case GTK_DIR_TAB_BACKWARD:
-                    return focus_to_action_widget (nb, LEFT, direction);
-
-                case GTK_DIR_DOWN:
-                    return focus_to_child (nb, direction);
-            }
-            break;
+            return focus_from_label (nb, direction);
 
         case FOCUS_CHILD:
             page = nb->priv->current_page;

@@ -2011,6 +2011,52 @@ moo_icon_view_set_scroll_adjustments    (GtkWidget      *widget,
     _moo_icon_view_set_adjustment (MOO_ICON_VIEW (widget), hadj);
 }
 
+static gboolean
+moo_icon_view_button_press_single (MooIconView      *view,
+                                   GtkTreePath      *path,
+                                   GdkModifierType   mods,
+                                   GdkEventButton   *event)
+{
+    if (path && _moo_icon_view_path_is_selected (view, path))
+    {
+        view->priv->button_press_row =
+                gtk_tree_row_reference_new (view->priv->model, path);
+        gtk_tree_path_free (path);
+    }
+    else if (path)
+    {
+        if (mods & GDK_SHIFT_MASK)
+        {
+            GtkTreePath *cursor_path = ensure_cursor (view);
+            _moo_icon_view_unselect_all (view);
+            moo_icon_view_select_range (view, path, cursor_path);
+        }
+        else if (mods & GDK_CONTROL_MASK)
+        {
+            moo_icon_view_select_path (view, path);
+        }
+        else
+        {
+            _moo_icon_view_unselect_all (view);
+            _moo_icon_view_set_cursor (view, path, FALSE);
+        }
+
+        gtk_tree_path_free (path);
+    }
+    else if (!(mods & (GDK_SHIFT_MASK | GDK_CONTROL_MASK)))
+    {
+        _moo_icon_view_unselect_all (view);
+    }
+
+    /* this is later checked in maybe_drag */
+    view->priv->button_pressed = event->button;
+    view->priv->button_press_mods = mods;
+    view->priv->button_press_x = (int) event->x + view->priv->xoffset;
+    view->priv->button_press_y = (int) event->y;
+
+    return TRUE;
+}
+
 
 static void     value_changed           (MooIconView    *view,
                                          GtkAdjustment  *adj)
@@ -2143,44 +2189,7 @@ moo_icon_view_button_press (GtkWidget      *widget,
         switch (event->type)
         {
             case GDK_BUTTON_PRESS:
-                if (path && _moo_icon_view_path_is_selected (view, path))
-                {
-                    view->priv->button_press_row =
-                        gtk_tree_row_reference_new (view->priv->model, path);
-                    gtk_tree_path_free (path);
-                }
-                else if (path)
-                {
-                    if (mods & GDK_SHIFT_MASK)
-                    {
-                        GtkTreePath *cursor_path = ensure_cursor (view);
-                        _moo_icon_view_unselect_all (view);
-                        moo_icon_view_select_range (view, path, cursor_path);
-                    }
-                    else if (mods & GDK_CONTROL_MASK)
-                    {
-                        moo_icon_view_select_path (view, path);
-                    }
-                    else
-                    {
-                        _moo_icon_view_unselect_all (view);
-                        _moo_icon_view_set_cursor (view, path, FALSE);
-                    }
-
-                    gtk_tree_path_free (path);
-                }
-                else if (!(mods & (GDK_SHIFT_MASK | GDK_CONTROL_MASK)))
-                {
-                    _moo_icon_view_unselect_all (view);
-                }
-
-                /* this is later checked in maybe_drag */
-                view->priv->button_pressed = event->button;
-                view->priv->button_press_mods = mods;
-                view->priv->button_press_x = (int) event->x + view->priv->xoffset;
-                view->priv->button_press_y = (int) event->y;
-
-                return TRUE;
+                return moo_icon_view_button_press_single (view, path, mods, event);
 
             case GDK_2BUTTON_PRESS:
                 cleanup_after_button_press (view);

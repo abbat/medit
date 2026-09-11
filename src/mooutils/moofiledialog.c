@@ -531,6 +531,85 @@ get_uri_for_saving (MooFileDialog *dialog,
     return real;
 }
 
+static gboolean
+run_save_dialog (MooFileDialog *dialog,
+                 GtkWidget     *filechooser)
+{
+    while (TRUE)
+    {
+        char *msg;
+        char *filename;
+        char *uri;
+        int response;
+
+        response = gtk_dialog_run (GTK_DIALOG (filechooser));
+
+        if (response == GTK_RESPONSE_HELP)
+        {
+            moo_help_open (filechooser);
+            continue;
+        }
+
+        if (response != GTK_RESPONSE_OK)
+            return FALSE;
+
+        uri = get_uri_for_saving (dialog, filechooser);
+
+        if (!uri_is_valid (uri, &msg))
+        {
+            moo_error_dialog (msg, NULL, filechooser);
+            g_free (uri);
+            g_free (msg);
+            continue;
+        }
+
+        filename = g_filename_from_uri (uri, NULL, NULL);
+        if (filename)
+        {
+            if (g_file_test (filename, G_FILE_TEST_EXISTS) &&
+                !g_file_test (filename, G_FILE_TEST_IS_REGULAR))
+            {
+                moo_error_dialog (_("Selected file is not a regular file"),
+                                  NULL,
+                                  filechooser);
+                g_free (filename);
+                g_free (uri);
+                continue;
+            }
+
+            if (g_file_test (filename, G_FILE_TEST_EXISTS) &&
+                g_file_test (filename, G_FILE_TEST_IS_REGULAR))
+            {
+                char *basename = g_path_get_basename (filename);
+                char *dirname = g_path_get_dirname (filename);
+                char *display_name = g_filename_display_name (basename);
+                char *display_dirname = g_filename_display_name (dirname);
+                gboolean overwrite;
+
+                overwrite = moo_overwrite_file_dialog (display_name,
+                                                       display_dirname,
+                                                       filechooser);
+
+                g_free (basename);
+                g_free (dirname);
+                g_free (display_name);
+                g_free (display_dirname);
+
+                if (!overwrite)
+                {
+                    g_free (filename);
+                    g_free (uri);
+                    continue;
+                }
+            }
+        }
+
+        set_uri (dialog, uri);
+        g_free (filename);
+        return TRUE;
+    }
+}
+
 gboolean
 moo_file_dialog_run (MooFileDialog *dialog)
 {
@@ -564,76 +643,8 @@ moo_file_dialog_run (MooFileDialog *dialog)
             goto out;
 
         case MOO_FILE_DIALOG_SAVE:
-            while (TRUE)
-            {
-                char *msg;
-                char *filename;
-                char *uri;
-
-                response = gtk_dialog_run (GTK_DIALOG (filechooser));
-
-                if (response == GTK_RESPONSE_HELP)
-                {
-                    moo_help_open (filechooser);
-                    continue;
-                }
-
-                if (response != GTK_RESPONSE_OK)
-                    goto out;
-
-                uri = get_uri_for_saving (dialog, filechooser);
-
-                if (!uri_is_valid (uri, &msg))
-                {
-                    moo_error_dialog (msg, NULL, filechooser);
-                    g_free (uri);
-                    g_free (msg);
-                    continue;
-                }
-
-                if ((filename = g_filename_from_uri (uri, NULL, NULL)))
-                {
-                    if (g_file_test (filename, G_FILE_TEST_EXISTS) &&
-                        !g_file_test (filename, G_FILE_TEST_IS_REGULAR))
-                    {
-                        moo_error_dialog (_("Selected file is not a regular file"),
-                                          NULL,
-                                          filechooser);
-                        g_free (filename);
-                        g_free (uri);
-                        continue;
-                    }
-
-                    if (g_file_test (filename, G_FILE_TEST_EXISTS) &&
-                        g_file_test (filename, G_FILE_TEST_IS_REGULAR))
-                    {
-                        char *basename = g_path_get_basename (filename);
-                        char *dirname = g_path_get_dirname (filename);
-                        char *display_name = g_filename_display_name (basename);
-                        char *display_dirname = g_filename_display_name (dirname);
-                        gboolean overwrite;
-
-                        overwrite = moo_overwrite_file_dialog (display_name, display_dirname, filechooser);
-
-                        g_free (basename);
-                        g_free (dirname);
-                        g_free (display_name);
-                        g_free (display_dirname);
-
-                        if (!overwrite)
-                        {
-                            g_free (filename);
-                            g_free (uri);
-                            continue;
-                        }
-                    }
-                }
-
-                set_uri (dialog, uri);
-                g_free (filename);
-                result = TRUE;
-                goto out;
-            }
+            result = run_save_dialog (dialog, filechooser);
+            goto out;
 
         default:
             g_critical ("incorrect dialog type specified");
