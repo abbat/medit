@@ -463,6 +463,22 @@ test_hover_text_shapes (void)
 }
 
 
+static void
+test_completion_item_edges (void)
+{
+    const char *json = "[{\"label\":\"ok\"},{\"label\":\"\"},"
+                       "{\"label\":3},{\"detail\":\"missing label\"},"
+                       "{\"label\":\"edit\",\"textEdit\":{\"newText\":3}}]";
+    GError *error = NULL;
+    JsonNode *node = lsp_json_parse (json, -1, &error);
+
+    g_assert_no_error (error);
+    g_assert_nonnull (node);
+    g_assert_cmpuint (_lsp_completion_item_count (node), ==, 2);
+    json_node_unref (node);
+}
+
+
 /* -------------------------------------------------------------------------
  * documentSymbol, in both of the shapes a server may answer with
  */
@@ -1748,6 +1764,7 @@ _moo_lsp_add_unit_tests (void)
     g_test_add_func ("/lsp/json/string-array-edges", test_json_string_array_edges);
     g_test_add_func ("/lsp/json/serialization-edges", test_json_serialization_edges);
     g_test_add_func ("/lsp/hover/text-shapes", test_hover_text_shapes);
+    g_test_add_func ("/lsp/completion/item-edges", test_completion_item_edges);
     g_test_add_func ("/lsp/completion/word-start", test_completion_word_start);
     g_test_add_func ("/lsp/diagnostics/detail", test_diagnostic_detail);
     g_test_add_func ("/lsp/diagnostics/fields", test_diagnostic_fields);

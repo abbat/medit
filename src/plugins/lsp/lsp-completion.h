@@ -25,6 +25,7 @@
 #define MOO_LSP_COMPLETION_H
 
 #include "mooedit/mooeditview.h"
+#include "plugins/lsp/lsp-json.h"
 
 G_BEGIN_DECLS
 
@@ -58,6 +59,8 @@ gboolean    lsp_completion_key_press    (MooEditView    *view,
  */
 void        lsp_completion_text_inserted (MooEditView   *view,
                                           const char    *text);
+
+guint       _lsp_completion_item_count   (JsonNode       *result);
 
 G_END_DECLS
 

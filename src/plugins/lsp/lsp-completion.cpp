@@ -204,6 +204,17 @@ parse_items (JsonNode *result)
 }
 
 
+guint
+_lsp_completion_item_count (JsonNode *result)
+{
+    GSList *items = parse_items (result);
+    guint count = g_slist_length (items);
+
+    g_slist_free_full (items, (GDestroyNotify) item_free);
+    return count;
+}
+
+
 /**********************************************************************/
 /* The window
  */
