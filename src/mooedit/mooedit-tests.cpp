@@ -1013,8 +1013,8 @@ test_edit_action_filters (void)
 static void
 test_text_view_word_selection_after_closing_bracket (void)
 {
-    MooTextView view = { 0 };
-    MooTextViewPrivate priv = { 0 };
+    MooTextView view = {};
+    MooTextViewPrivate priv = {};
     MooTextBuffer *buffer;
     GtkTextIter start;
     GtkTextIter end;
