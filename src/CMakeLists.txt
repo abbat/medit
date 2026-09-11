@@ -45,9 +45,13 @@ endforeach()
 
 add_custom_command(
     OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/moo-pixbufs.h"
-    COMMAND ${GDK_PIXBUF_CSOURCE} --static --build-list ${pixbuf_args}
-            > "${CMAKE_CURRENT_BINARY_DIR}/moo-pixbufs.h"
+    COMMAND ${CMAKE_COMMAND}
+            "-DGDK_PIXBUF_CSOURCE=${GDK_PIXBUF_CSOURCE}"
+            "-DPIXBUF_ARGS=${pixbuf_args}"
+            "-DOUTPUT_FILE=${CMAKE_CURRENT_BINARY_DIR}/moo-pixbufs.h"
+            -P "${CMAKE_SOURCE_DIR}/cmake/GeneratePixbufHeader.cmake"
     DEPENDS ${pixbuf_deps}
+            "${CMAKE_SOURCE_DIR}/cmake/GeneratePixbufHeader.cmake"
     COMMENT "Generating moo-pixbufs.h"
     VERBATIM)
 
