@@ -337,6 +337,7 @@ test_json_accessors (void)
     g_assert_cmpint (start_character, ==, 3);
     g_assert_cmpint (end_line, ==, 4);
     g_assert_cmpint (end_character, ==, 5);
+    g_assert_true (lsp_json_get_range (range, NULL, NULL, NULL, NULL));
     json_object_unref (range);
 
     text = lsp_json_object_to_string (object, &len);

@@ -747,6 +747,8 @@ test_prefs_delete_reregister (void)
     moo_prefs_new_key_string ("unit/prefs/re-register", "second");
     g_assert_true (moo_prefs_key_registered ("unit/prefs/re-register"));
     g_assert_cmpstr (moo_prefs_get_string ("unit/prefs/re-register"), ==, "second");
+    g_assert_cmpstr (g_value_get_string (moo_prefs_get_default ("unit/prefs/re-register")),
+                     ==, "second");
 
     moo_prefs_delete_key ("unit/prefs/re-register");
 }
@@ -778,6 +780,15 @@ test_path_utilities (void)
     g_assert_no_error (error);
     g_assert_cmpstr (path, ==, "/tmp/a file/Ð¿ÑÐ¸Ð²ÐµÑ.txt");
 
+    g_free (path);
+    g_free (uri);
+
+    uri = _moo_filename_to_uri ("/tmp/a#b% c.txt", &error);
+    g_assert_no_error (error);
+    g_assert_nonnull (uri);
+    path = g_filename_from_uri (uri, NULL, &error);
+    g_assert_no_error (error);
+    g_assert_cmpstr (path, ==, "/tmp/a#b% c.txt");
     g_free (path);
     g_free (uri);
 }
@@ -826,6 +837,17 @@ test_path_boundaries (void)
 }
 
 
+static guint history_changed_count;
+
+
+static void
+history_changed (MooHistoryList *list)
+{
+    g_assert_true (MOO_IS_HISTORY_LIST (list));
+    ++history_changed_count;
+}
+
+
 static void
 test_history_list_memory (void)
 {
@@ -834,6 +856,9 @@ test_history_list_memory (void)
     MooHistoryListItem *copy;
     GtkTreeIter iter;
     char *last;
+
+    g_signal_connect (list, "changed", G_CALLBACK (history_changed), NULL);
+    history_changed_count = 0;
 
     item = moo_history_list_item_new ("data", "display", TRUE);
     copy = moo_history_list_item_copy (item);
@@ -849,6 +874,7 @@ test_history_list_memory (void)
 
     g_assert_true (moo_history_list_is_empty (list));
     moo_history_list_add (list, "one");
+    g_assert_cmpuint (history_changed_count, ==, 1);
     moo_history_list_add (list, "two");
     moo_history_list_add (list, "one");
     g_assert_false (moo_history_list_is_empty (list));
