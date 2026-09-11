@@ -475,16 +475,11 @@ static void terminate (tagFile *const file)
 	free (file->name.buffer);
 	free (file->fields.list);
 
-	if (file->program.author != NULL)
-		free (file->program.author);
-	if (file->program.name != NULL)
-		free (file->program.name);
-	if (file->program.url != NULL)
-		free (file->program.url);
-	if (file->program.version != NULL)
-		free (file->program.version);
-	if (file->search.name != NULL)
-		free (file->search.name);
+	free (file->program.author);
+	free (file->program.name);
+	free (file->program.url);
+	free (file->program.version);
+	free (file->search.name);
 
 	memset (file, 0, sizeof (tagFile));
 
@@ -650,8 +645,7 @@ static tagResult find (tagFile *const file, tagEntry *const entry,
 					   const char *const name, const int options)
 {
 	tagResult result;
-	if (file->search.name != NULL)
-		free (file->search.name);
+	free (file->search.name);
 	file->search.name = duplicate (name);
 	file->search.nameLength = strlen (name);
 	file->search.partial = (options & TAG_PARTIALMATCH) != 0;
