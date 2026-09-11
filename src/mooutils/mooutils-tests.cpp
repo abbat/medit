@@ -690,6 +690,22 @@ test_prefs_overwrite (void)
 
 
 static void
+test_prefs_delete_reregister (void)
+{
+    moo_prefs_new_key_string ("unit/prefs/re-register", "first");
+    moo_prefs_set_string ("unit/prefs/re-register", "changed");
+    moo_prefs_delete_key ("unit/prefs/re-register");
+    g_assert_false (moo_prefs_key_registered ("unit/prefs/re-register"));
+
+    moo_prefs_new_key_string ("unit/prefs/re-register", "second");
+    g_assert_true (moo_prefs_key_registered ("unit/prefs/re-register"));
+    g_assert_cmpstr (moo_prefs_get_string ("unit/prefs/re-register"), ==, "second");
+
+    moo_prefs_delete_key ("unit/prefs/re-register");
+}
+
+
+static void
 test_path_utilities (void)
 {
     GError *error = NULL;
@@ -924,6 +940,7 @@ _moo_add_mooutils_unit_tests (void)
                      test_ui_xml_rejects_invalid_nodes);
     g_test_add_func ("/mooutils/prefs/memory", test_prefs_memory);
     g_test_add_func ("/mooutils/prefs/overwrite", test_prefs_overwrite);
+    g_test_add_func ("/mooutils/prefs/delete-reregister", test_prefs_delete_reregister);
     g_test_add_func ("/mooutils/path/utilities", test_path_utilities);
     g_test_add_func ("/mooutils/path/boundaries", test_path_boundaries);
     g_test_add_func ("/mooutils/history-list/memory", test_history_list_memory);
