@@ -1002,6 +1002,20 @@ test_history_list_memory (void)
 }
 
 
+static void
+test_history_list_limit_noop (void)
+{
+    MooHistoryList *list = moo_history_list_new (NULL);
+
+    history_changed_count = 0;
+    g_signal_connect (list, "changed", G_CALLBACK (history_changed), NULL);
+    moo_history_list_set_max_entries (list, 1);
+    g_assert_cmpuint (history_changed_count, ==, 0);
+    g_assert_true (moo_history_list_is_empty (list));
+    g_object_unref (list);
+}
+
+
 #if GTK_CHECK_VERSION(3,0,0)
 /* -------------------------------------------------------------------------
  * The shape of the drop indicator
@@ -1140,6 +1154,7 @@ _moo_add_mooutils_unit_tests (void)
     g_test_add_func ("/mooutils/path/utilities", test_path_utilities);
     g_test_add_func ("/mooutils/path/boundaries", test_path_boundaries);
     g_test_add_func ("/mooutils/history-list/memory", test_history_list_memory);
+    g_test_add_func ("/mooutils/history-list/limit-noop", test_history_list_limit_noop);
 #if GTK_CHECK_VERSION(3,0,0)
     g_test_add_func ("/mooutils/paned/drop-mask", test_drop_mask);
 #endif
