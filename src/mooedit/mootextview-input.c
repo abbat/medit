@@ -1083,7 +1083,7 @@ _moo_text_view_extend_selection (MooTextView        *view,
         {
             GtkTextIter rstart = *start;
             if (moo_text_iter_at_bracket (&rstart) &&
-                !(order == 1 && gtk_text_iter_compare (&rstart, start) == -1))  /* this means (...)| */
+                gtk_text_iter_compare (&rstart, start) != -1)  /* this means (...)| */
             {
                 GtkTextIter rend = rstart;
                 if (moo_text_iter_find_matching_bracket (&rend,FIND_BRACKET_LIMIT) ==

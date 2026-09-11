@@ -47,6 +47,7 @@
 #include "mooedit/mootext-private.h"
 #include "mooedit/mootextbuffer.h"
 #include "mooedit/mootextsearch.h"
+#include "mooedit/mootextview-private.h"
 #include "gtksourceview/gtksourcecontextengine.h"
 #include "gtksourceview/gtksourceengine.h"
 #include "mooutils/mooundo.h"
@@ -1009,6 +1010,31 @@ test_edit_action_filters (void)
 }
 
 
+static void
+test_text_view_word_selection_after_closing_bracket (void)
+{
+    MooTextView view = { 0 };
+    MooTextViewPrivate priv = { 0 };
+    MooTextBuffer *buffer;
+    GtkTextIter start;
+    GtkTextIter end;
+
+    view.priv = &priv;
+    buffer = new_text_buffer ("(word)");
+    gtk_text_buffer_get_iter_at_offset (GTK_TEXT_BUFFER (buffer), &start, 6);
+    end = start;
+    view.priv->dnd.double_click_selects_brackets = TRUE;
+
+    g_assert_cmpint (_moo_text_view_extend_selection (&view,
+                                                       MOO_TEXT_SELECT_WORDS,
+                                                       &start, &end), ==, 0);
+    g_assert_cmpint (gtk_text_iter_get_offset (&start), ==, 6);
+    g_assert_cmpint (gtk_text_iter_get_offset (&end), ==, 6);
+
+    g_object_unref (buffer);
+}
+
+
 void
 _moo_add_mooedit_unit_tests (void)
 {
@@ -1047,6 +1073,8 @@ _moo_add_mooedit_unit_tests (void)
     g_test_add_func ("/mooedit/text-buffer/undo-freeze", test_text_buffer_undo_freeze);
     g_test_add_func ("/mooedit/language/helpers", test_language_helpers);
     g_test_add_func ("/mooedit/edit-action/filters", test_edit_action_filters);
+    g_test_add_func ("/mooedit/text-view/word-selection-after-closing-bracket",
+                     test_text_view_word_selection_after_closing_bracket);
 
     if (entries == nullptr)
     {
