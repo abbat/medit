@@ -51,6 +51,7 @@
 #include "plugins/lsp/lsp-signature.h"
 #include "plugins/lsp/lsp-symbols.h"
 #include "mooutils/moomarkup.h"
+#include "mooutils/mooi18n.h"
 
 #include <gtk/gtk.h>
 #include <string.h>
@@ -861,6 +862,56 @@ test_diagnostic_detail (void)
 }
 
 
+static void
+test_diagnostic_fields (void)
+{
+    GError *error = NULL;
+    JsonNode *node;
+    GSList *diagnostics;
+    LspDiagnostic *diagnostic;
+
+    node = lsp_json_parse (
+        "[{\"message\":\"string\",\"code\":\"E1\","
+        "  \"range\": {\"start\": {\"line\":0,\"character\":0},"
+        "              \"end\": {\"line\":0,\"character\":1}}},"
+        " {\"message\":\"integer\",\"code\":42,"
+        "  \"range\": {\"start\": {\"line\":1,\"character\":0},"
+        "              \"end\": {\"line\":1,\"character\":1}},"
+        "  \"severity\":2},"
+        " {\"message\":\"number\",\"code\":42.5,"
+        "  \"range\": {\"start\": {\"line\":2,\"character\":0},"
+        "              \"end\": {\"line\":2,\"character\":1}},"
+        "  \"severity\":4}]", -1, &error);
+    g_assert_no_error (error);
+    diagnostics = lsp_diagnostics_parse (json_node_get_array (node));
+
+    g_assert_cmpuint (g_slist_length (diagnostics), ==, 3);
+    diagnostic = (LspDiagnostic*) diagnostics->data;
+    g_assert_cmpstr (diagnostic->code, ==, "E1");
+    g_assert_cmpint (diagnostic->severity, ==, LSP_SEVERITY_ERROR);
+    diagnostic = (LspDiagnostic*) diagnostics->next->data;
+    g_assert_cmpstr (diagnostic->code, ==, "42");
+    g_assert_cmpint (diagnostic->severity, ==, LSP_SEVERITY_WARNING);
+    diagnostic = (LspDiagnostic*) diagnostics->next->next->data;
+    g_assert_cmpstr (diagnostic->code, ==, "42");
+    g_assert_cmpint (diagnostic->severity, ==, LSP_SEVERITY_HINT);
+
+    lsp_diagnostics_free (diagnostics);
+    json_node_unref (node);
+
+    g_assert_cmpstr (lsp_severity_name (LSP_SEVERITY_ERROR), ==,
+                     C_ ("diagnostic severity", "error"));
+    g_assert_cmpstr (lsp_severity_name (LSP_SEVERITY_WARNING), ==,
+                     C_ ("diagnostic severity", "warning"));
+    g_assert_cmpstr (lsp_severity_name (LSP_SEVERITY_INFORMATION), ==,
+                     C_ ("diagnostic severity", "information"));
+    g_assert_cmpstr (lsp_severity_name (LSP_SEVERITY_HINT), ==,
+                     C_ ("diagnostic severity", "hint"));
+    g_assert_cmpstr (lsp_severity_name (99), ==,
+                     C_ ("diagnostic severity", "error"));
+}
+
+
 /* -------------------------------------------------------------------------
  * Where the word being completed starts
  */
@@ -1573,6 +1624,7 @@ _moo_lsp_add_unit_tests (void)
     g_test_add_func ("/lsp/json/accessors", test_json_accessors);
     g_test_add_func ("/lsp/completion/word-start", test_completion_word_start);
     g_test_add_func ("/lsp/diagnostics/detail", test_diagnostic_detail);
+    g_test_add_func ("/lsp/diagnostics/fields", test_diagnostic_fields);
 
     g_test_add_func ("/lsp/config/parse", test_config_parse);
     g_test_add_func ("/lsp/config/malformed", test_config_parse_bad);
