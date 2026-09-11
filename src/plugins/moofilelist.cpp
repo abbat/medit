@@ -119,11 +119,11 @@ struct FileListWindowPlugin {
 #define TREE_MODEL_ROW_ATOM (tree_model_row_atom ())
 MOO_DEFINE_ATOM (GTK_TREE_MODEL_ROW, tree_model_row)
 
-MOO_DEFINE_QUARK_STATIC (moo-file-list-plugin-model-row, file_list_row_quark)
+#define FILE_LIST_ROW_QUARK (g_quark_from_static_string ("moo-file-list-plugin-model-row"))
 #define FILE_LIST_QUARK (file_list_quark ())
 MOO_DEFINE_QUARK_STATIC (moo-file-list-plugin, file_list_quark)
 
-const ObjectDataAccessor<MooEdit, GtkTreeRowReference*> file_list_row_data(file_list_row_quark());
+const ObjectDataAccessor<MooEdit, GtkTreeRowReference*> file_list_row_data(FILE_LIST_ROW_QUARK);
 
 
 static GType         item_get_type              (void) G_GNUC_CONST;
