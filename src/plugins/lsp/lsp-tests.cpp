@@ -310,11 +310,17 @@ test_json_accessors (void)
     lsp_json_set_object (object, "nested", nested);
     lsp_json_set_array (object, "array", lsp_json_string_array (strings));
     lsp_json_set_null (object, "explicit-null");
+    lsp_json_set_object (object, "null-object", NULL);
+    lsp_json_set_array (object, "null-array", NULL);
+    lsp_json_set_node (object, "null-node", NULL);
 
     g_assert_cmpstr (lsp_json_get_string (object, "string"), ==, "value");
     g_assert_null (lsp_json_get_string (object, "null-string"));
     g_assert_cmpint (lsp_json_get_int (object, "integer", 0), ==, 42);
     g_assert_true (lsp_json_get_bool (object, "boolean", FALSE));
+    g_assert_null (lsp_json_get_object (object, "null-object"));
+    g_assert_null (lsp_json_get_array (object, "null-array"));
+    g_assert_true (JSON_NODE_HOLDS_NULL (lsp_json_get_node (object, "null-node")));
     g_assert_cmpstr (lsp_json_lookup_string (object, "nested/missing"), ==, NULL);
     g_assert_cmpint (lsp_json_lookup_int (object, "nested/missing", 7), ==, 7);
     g_assert_false (lsp_json_lookup_bool (object, "nested/missing", FALSE));
