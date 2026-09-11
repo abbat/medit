@@ -489,6 +489,26 @@ test_output_filter_memory (void)
     moo_file_line_data_free (copy);
     moo_file_line_data_free (data);
 
+    data = moo_file_line_data_new (NULL, -1, -1);
+    g_assert_nonnull (data);
+    g_assert_null (data->file);
+    g_assert_cmpint (data->line, ==, -1);
+    g_assert_cmpint (data->character, ==, -1);
+    moo_file_line_data_free (data);
+
+    data = moo_file_line_data_new ("", 0, 0);
+    g_assert_nonnull (data);
+    g_assert_null (data->file);
+    copy = (MooFileLineData*) g_boxed_copy (MOO_TYPE_FILE_LINE_DATA, data);
+    g_assert_nonnull (copy);
+    g_assert_null (copy->file);
+    copy->line = 7;
+    copy->character = 8;
+    g_assert_cmpint (data->line, ==, 0);
+    g_assert_cmpint (data->character, ==, 0);
+    moo_file_line_data_free (copy);
+    moo_file_line_data_free (data);
+
     g_object_unref (filter);
 }
 
