@@ -407,6 +407,29 @@ test_json_string_array_edges (void)
 }
 
 
+static void
+test_json_serialization_edges (void)
+{
+    JsonNode *node;
+    char *text;
+    gsize len;
+
+    node = json_node_new (JSON_NODE_NULL);
+    text = lsp_json_to_string (node, &len);
+    g_assert_cmpstr (text, ==, "null");
+    g_assert_cmpuint (len, ==, 4);
+    g_free (text);
+    json_node_free (node);
+
+    node = json_node_new (JSON_NODE_VALUE);
+    json_node_set_string (node, "text");
+    text = lsp_json_to_string (node, NULL);
+    g_assert_cmpstr (text, ==, "\"text\"");
+    g_free (text);
+    json_node_free (node);
+}
+
+
 /* -------------------------------------------------------------------------
  * documentSymbol, in both of the shapes a server may answer with
  */
@@ -1690,6 +1713,7 @@ _moo_lsp_add_unit_tests (void)
     g_test_add_func ("/lsp/json/null-object", test_json_null_object);
     g_test_add_func ("/lsp/json/lookup-paths", test_json_lookup_paths);
     g_test_add_func ("/lsp/json/string-array-edges", test_json_string_array_edges);
+    g_test_add_func ("/lsp/json/serialization-edges", test_json_serialization_edges);
     g_test_add_func ("/lsp/completion/word-start", test_completion_word_start);
     g_test_add_func ("/lsp/diagnostics/detail", test_diagnostic_detail);
     g_test_add_func ("/lsp/diagnostics/fields", test_diagnostic_fields);
