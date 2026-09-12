@@ -304,8 +304,14 @@ _moo_fold_tree_free (MooFoldTree *tree)
 
     g_return_if_fail (tree != NULL);
 
-    for (child = tree->folds; child != NULL; child = child->next)
+    child = tree->folds;
+    while (child != NULL)
+    {
+        MooFold *next = child->next;
+
         moo_fold_free_recursively (child);
+        child = next;
+    }
 
     g_free (tree);
 }
