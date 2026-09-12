@@ -62,8 +62,8 @@ def save_copy(t, view):
             "Save Copy wrote the document contents")
     t.check(t.sandbox.exists("workdir", SAVE_COPY),
             "Save Copy left the original file in place")
-    t.check(INNER + "/" + SAVE_HERE not in (t.frame.name or ""),
-            "Save Copy did not change the document to the previous target")
+    t.check(SAVE_COPY in (t.frame.name or ""),
+            "Save Copy left the document on its original path")
 
 
 def cancel(t, view):
