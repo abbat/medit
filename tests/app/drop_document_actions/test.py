@@ -39,7 +39,7 @@ def run(t):
 
 def save_here(t, view):
     drop(t, view, SAVE_HERE)
-    menu = dropped_menu(t)
+    menu = t.wait(lambda: dropped_menu(t), "the Save Here drop menu")
     t.choose(menu, "Save Here")
 
     t.wait(lambda: t.sandbox.exists("workdir", INNER, SAVE_HERE),
@@ -54,7 +54,7 @@ def save_here(t, view):
 
 def save_copy(t, view):
     drop(t, view, SAVE_COPY)
-    menu = dropped_menu(t)
+    menu = t.wait(lambda: dropped_menu(t), "the Save Copy drop menu")
     t.choose(menu, "Save Copy")
 
     t.wait(lambda: t.sandbox.exists("workdir", INNER, SAVE_COPY),
@@ -69,8 +69,7 @@ def save_copy(t, view):
 
 def cancel(t, view):
     drop(t, view, CANCEL)
-    menu = dropped_menu(t)
-    t.check(menu is not None, "the drop menu is available to cancel")
+    t.wait(lambda: dropped_menu(t), "the drop menu to cancel")
     t.escape()
 
     t.check(not t.sandbox.exists("workdir", INNER, CANCEL),
