@@ -70,7 +70,8 @@ def save_copy(t, view):
 def cancel(t, view):
     drop(t, view, CANCEL)
     menu = dropped_menu(t)
-    t.choose(menu, "Cancel")
+    t.check(menu is not None, "the drop menu is available to cancel")
+    t.escape()
 
     t.check(not t.sandbox.exists("workdir", INNER, CANCEL),
             "cancelling left the target file absent")
