@@ -1,11 +1,13 @@
-"""Save a dropped document here, save a copy, and cancel the chooser.
+"""Save a dropped document here, save a copy, and cancel the drop.
 
 # requires: MOO_GTK3
 
 The drop test covers the no-modifier menu and chooses Move Here. The other
 actions call different document operations and were not reached: Save Here
-changes the document's file, Save Copy leaves it alone, and cancelling either
-chooser must leave both the document and the files untouched.
+changes the document's file, Save Copy leaves it alone, and cancelling the
+menu must leave both the document and the files untouched. With no modifier,
+both save actions use the dropped document's basename directly and do not ask
+for another name.
 """
 
 from lib import input as ui
@@ -39,7 +41,6 @@ def save_here(t, view):
     drop(t, view, SAVE_HERE)
     menu = dropped_menu(t)
     t.choose(menu, "Save Here")
-    finish_save_dialog(t, "Save As")
 
     t.wait(lambda: t.sandbox.exists("workdir", INNER, SAVE_HERE),
            "Save Here to write the target file")
@@ -55,7 +56,6 @@ def save_copy(t, view):
     drop(t, view, SAVE_COPY)
     menu = dropped_menu(t)
     t.choose(menu, "Save Copy")
-    finish_save_dialog(t, "Save Copy As")
 
     t.wait(lambda: t.sandbox.exists("workdir", INNER, SAVE_COPY),
            "Save Copy to write the target file")
@@ -70,11 +70,7 @@ def save_copy(t, view):
 def cancel(t, view):
     drop(t, view, CANCEL)
     menu = dropped_menu(t)
-    t.choose(menu, "Save Here")
-    dialog = t.need(t.app, role="dialog", name="Save As", depth=2,
-                    what="the Save As chooser for the cancelled drop")
-    t.escape()
-    t.no_toplevel("Save As", role="dialog")
+    t.choose(menu, "Cancel")
 
     t.check(not t.sandbox.exists("workdir", INNER, CANCEL),
             "cancelling left the target file absent")
@@ -82,7 +78,6 @@ def cancel(t, view):
             "cancelling left the original file in place")
     t.check(t.text(t.document()) == CONTENT,
             "cancelling left the document contents unchanged")
-    t.check(dialog is not None, "the cancelled action opened the Save As chooser")
 
 
 def open_the_pane(t):
@@ -111,13 +106,6 @@ def drop(t, view, name):
     left, _ = tabs[name]
     x, y, width, height = t.extents(view)
     t.drag_to(left + 12, strip(t), x + width // 2, y + height // 2)
-
-
-def finish_save_dialog(t, title):
-    t.need(t.app, role="dialog", name=title, depth=2,
-           what="the %s chooser" % title)
-    t.key("Return")
-    t.no_toplevel(title, role="dialog")
 
 
 def dropped_menu(t):
