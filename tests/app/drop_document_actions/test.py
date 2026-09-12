@@ -32,9 +32,9 @@ def run(t):
     view = open_the_pane(t)
     enter_inner(t, view)
 
+    cancel(t, view)
     save_here(t, view)
     save_copy(t, view)
-    cancel(t, view)
 
 
 def save_here(t, view):
