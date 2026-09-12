@@ -71,10 +71,10 @@ def cancel(t, view):
     drop(t, view, CANCEL)
     menu = dropped_menu(t)
     t.choose(menu, "Save Here")
-    dialog = t.need(t.app, role="file chooser", name="Save As", depth=2,
+    dialog = t.need(t.app, role="dialog", name="Save As", depth=2,
                     what="the Save As chooser for the cancelled drop")
     t.escape()
-    t.no_toplevel("Save As", role="file chooser")
+    t.no_toplevel("Save As", role="dialog")
 
     t.check(not t.sandbox.exists("workdir", INNER, CANCEL),
             "cancelling left the target file absent")
@@ -114,10 +114,10 @@ def drop(t, view, name):
 
 
 def finish_save_dialog(t, title):
-    t.need(t.app, role="file chooser", name=title, depth=2,
+    t.need(t.app, role="dialog", name=title, depth=2,
            what="the %s chooser" % title)
     t.key("Return")
-    t.no_toplevel(title, role="file chooser")
+    t.no_toplevel(title, role="dialog")
 
 
 def dropped_menu(t):
