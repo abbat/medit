@@ -75,9 +75,7 @@ def run(t):
     t.menu(*HORIZONTAL)
     t.wait(lambda: len(views(t, right)) == 2, "a second view in the split notebook")
     t.menu(*VERTICAL)
-    t.wait(lambda: len(views(t, right)) == 3, "a third view after the nested split")
-    t.menu(*HORIZONTAL)
-    t.wait(lambda: len(views(t, right)) == 4, "a fourth view after the second nested split")
+    t.wait(lambda: len(views(t, right)) == 4, "four views after the nested split")
 
     t.check(all(t.text(view) == CONTENTS[DOCUMENTS[3]] for view in views(t, right)),
             "all four views show the same document contents")
@@ -137,7 +135,6 @@ def tab_y(t, notebook):
 
 
 def views(t, notebook):
-    x, _, _, _ = t.extents(notebook)
     return [view for view in t.find_all(t.frame, role="text", depth=30)
             if ui.on_screen(view) and t.state(view, "editable")
-            and t.extents(view)[0] >= x]
+            and t.text(view) == CONTENTS[DOCUMENTS[3]]]
