@@ -94,9 +94,15 @@ def open_the_pane(t):
 
 
 def enter_inner(t, view):
-    x, y, _, _ = t.extents(view)
-    t.click_at(x + 20, y + 8, times=2)
-    t.wait(lambda: t.text(path_entry(t)).endswith("/" + INNER),
+    entry = path_entry(t, view)
+    target = "%s/inn" % t.sandbox.path("workdir")
+
+    t.click(entry)
+    t.key("ctrl+a")
+    t.type_text(target)
+    t.key("Tab")
+    t.key("Return")
+    t.wait(lambda: t.text(entry).rstrip("/").endswith("/" + INNER),
            "the file selector to enter the target directory")
 
 
@@ -122,8 +128,7 @@ def dropped_menu(t):
     return None
 
 
-def path_entry(t):
-    view = icon_view(t)
+def path_entry(t, view):
     vx, vy, _, _ = t.extents(view)
     for node in t.find_all(t.frame, role="text", depth=30):
         if ui.on_screen(node):
