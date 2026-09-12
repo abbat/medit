@@ -37,8 +37,13 @@
 #include "mooutils/moouixml.h"
 #include "plugins/support/moooutputfilter.h"
 #include "mooutils/moohistorylist.h"
+#include "mooutils/mooregion.h"
+#include "mooutils/mooutils-gobject.h"
 #include "mooutils/mooutils-fs.h"
 #include "mooutils/mooutils-misc.h"
+#if GTK_CHECK_VERSION(3,0,0)
+#include "plugins/terminal/terminal-colors.h"
+#endif
 
 #include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
@@ -1147,6 +1152,129 @@ test_file_writer (void)
 }
 
 
+static void
+test_line_reader_edges (void)
+{
+    static const char text[] = "one\r\ntwo\rthree\nfour\xe2\x80\xa9" "five";
+    static const gsize lengths[] = { 3, 3, 5, 4, 4 };
+    static const gsize terminators[] = { 2, 1, 1, 3, 0 };
+    MooLineReader reader;
+    const char *line;
+    gsize line_len, lt_len;
+    guint i;
+
+    moo_line_reader_init (&reader, text, sizeof text - 1);
+    for (i = 0; i < G_N_ELEMENTS (lengths); ++i)
+    {
+        line = moo_line_reader_get_line (&reader, &line_len, &lt_len);
+        g_assert_nonnull (line);
+        g_assert_cmpuint (line_len, ==, lengths[i]);
+        g_assert_cmpuint (lt_len, ==, terminators[i]);
+    }
+    g_assert_null (moo_line_reader_get_line (&reader, &line_len, &lt_len));
+
+    g_assert_true (moo_find_line_end ("abc\r\ndef", 7, &line_len, &lt_len));
+    g_assert_cmpuint (line_len, ==, 3);
+    g_assert_cmpuint (lt_len, ==, 2);
+    g_assert_false (moo_find_line_end ("abc", 3, &line_len, &lt_len));
+    g_assert_cmpuint (line_len, ==, 3);
+    g_assert_cmpuint (lt_len, ==, 0);
+}
+
+
+static void
+test_strv_reverse (void)
+{
+    char **strv = g_new (char *, 4);
+
+    strv[0] = g_strdup ("one");
+    strv[1] = g_strdup ("two");
+    strv[2] = g_strdup ("three");
+    strv[3] = NULL;
+    g_assert_true (_moo_strv_reverse (strv) == strv);
+    g_assert_cmpstr (strv[0], ==, "three");
+    g_assert_cmpstr (strv[1], ==, "two");
+    g_assert_cmpstr (strv[2], ==, "one");
+    g_strfreev (strv);
+}
+
+
+static void
+test_value_and_data_memory (void)
+{
+    GValue source = G_VALUE_INIT;
+    GValue converted = G_VALUE_INIT;
+    GValue stored = G_VALUE_INIT;
+    MooData *data;
+    static const char key[] = "answer";
+
+    g_value_init (&source, G_TYPE_INT);
+    g_value_set_int (&source, 42);
+    g_value_init (&converted, G_TYPE_STRING);
+    g_assert_true (_moo_value_convert (&source, &converted));
+    g_assert_cmpstr (g_value_get_string (&converted), ==, "42");
+    g_assert_true (_moo_value_equal (&source, &source));
+    g_assert_true (_moo_value_change_type (&source, G_TYPE_STRING));
+    g_assert_cmpstr (g_value_get_string (&source), ==, "42");
+    g_assert_true (_moo_value_convert_from_string ("TRUE", &converted));
+    g_assert_cmpstr (g_value_get_string (&converted), ==, "TRUE");
+    g_assert_true (_moo_convert_string_to_bool ("true", FALSE));
+    g_assert_cmpint (_moo_convert_string_to_int ("-7", 0), ==, -7);
+    g_assert_cmpuint (_moo_convert_string_to_uint ("9", 0), ==, 9);
+    g_assert_cmpstr (_moo_convert_bool_to_string (FALSE), ==, "FALSE");
+
+    data = _moo_data_new (g_str_hash, g_str_equal, NULL);
+    g_assert_nonnull (data);
+    _moo_data_insert_value (data, (gpointer) key, &source);
+    g_assert_true (_moo_data_get_value (data, (gpointer) key, &stored));
+    g_assert_cmpstr (g_value_get_string (&stored), ==, "42");
+    g_value_unset (&stored);
+    _moo_data_remove (data, (gpointer) key);
+    g_assert_false (_moo_data_get_value (data, (gpointer) key, NULL));
+    _moo_data_unref (data);
+    g_value_unset (&source);
+    g_value_unset (&converted);
+}
+
+
+static void
+test_region_polygon_memory (void)
+{
+    static const GdkPoint points[] = { { 0, 0 }, { 10, 0 }, { 10, 10 }, { 0, 10 } };
+    MooRegion *region = moo_region_polygon (points, G_N_ELEMENTS (points));
+
+    g_assert_nonnull (region);
+    g_assert_true (moo_region_point_in (region, 5, 5));
+    g_assert_false (moo_region_point_in (region, 15, 5));
+    moo_region_destroy (region);
+}
+
+
+#if GTK_CHECK_VERSION(3,0,0)
+static void
+test_terminal_color_schemes_memory (void)
+{
+    const MooTerminalColorScheme *schemes;
+    guint n_schemes, i, j;
+
+    schemes = _moo_terminal_color_schemes (&n_schemes);
+    g_assert_nonnull (schemes);
+    g_assert_cmpuint (n_schemes, >, 1);
+    g_assert_true (_moo_terminal_color_scheme_lookup (NULL) == schemes);
+    g_assert_true (_moo_terminal_color_scheme_lookup ("") == schemes);
+    g_assert_null (_moo_terminal_color_scheme_lookup ("does-not-exist"));
+
+    for (i = 0; i < n_schemes; ++i)
+    {
+        g_assert_true (_moo_terminal_color_scheme_lookup (schemes[i].name) == &schemes[i]);
+        if (schemes[i].colors[0])
+            for (j = 0; j < MOO_TERMINAL_SCHEME_N_COLORS; ++j)
+                g_assert_nonnull (schemes[i].colors[j]);
+    }
+}
+#endif
+
+
 void
 _moo_add_mooutils_unit_tests (void)
 {
@@ -1174,6 +1302,13 @@ _moo_add_mooutils_unit_tests (void)
     g_test_add_func ("/mooutils/path/boundaries", test_path_boundaries);
     g_test_add_func ("/mooutils/history-list/memory", test_history_list_memory);
     g_test_add_func ("/mooutils/history-list/limit-noop", test_history_list_limit_noop);
+    g_test_add_func ("/mooutils/line-reader/edges", test_line_reader_edges);
+    g_test_add_func ("/mooutils/strv/reverse", test_strv_reverse);
+    g_test_add_func ("/mooutils/value-and-data/memory", test_value_and_data_memory);
+    g_test_add_func ("/mooutils/region/polygon", test_region_polygon_memory);
+#if GTK_CHECK_VERSION(3,0,0)
+    g_test_add_func ("/mooutils/terminal/colors", test_terminal_color_schemes_memory);
+#endif
 #if GTK_CHECK_VERSION(3,0,0)
     g_test_add_func ("/mooutils/paned/drop-mask", test_drop_mask);
 #endif

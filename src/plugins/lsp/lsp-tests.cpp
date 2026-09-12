@@ -2030,6 +2030,27 @@ test_provider_name (void)
 }
 
 
+static void
+test_language_and_uri_helpers (void)
+{
+    char *path;
+
+    g_assert_cmpstr (lsp_language_id (NULL), ==, "plaintext");
+    g_assert_cmpstr (lsp_language_id (""), ==, "plaintext");
+    g_assert_cmpstr (lsp_language_id (MOO_LANG_NONE), ==, "plaintext");
+    g_assert_cmpstr (lsp_language_id ("chdr"), ==, "c");
+    g_assert_cmpstr (lsp_language_id ("python3"), ==, "python");
+    g_assert_cmpstr (lsp_language_id ("plain-custom"), ==, "plain-custom");
+
+    g_assert_null (lsp_path_from_uri (NULL));
+    g_assert_null (lsp_path_from_uri (""));
+    path = lsp_path_from_uri ("file:///tmp/a%20b.c");
+    g_assert_cmpstr (path, ==, "/tmp/a b.c");
+    g_free (path);
+    g_assert_null (lsp_path_from_uri ("https://example.com/a.c"));
+}
+
+
 void
 _moo_lsp_add_unit_tests (void)
 {
@@ -2077,6 +2098,7 @@ _moo_lsp_add_unit_tests (void)
     g_test_add_func ("/lsp/client/framing-number-syntax",
                      test_client_framing_number_syntax);
     g_test_add_func ("/lsp/client/provider-name", test_provider_name);
+    g_test_add_func ("/lsp/document/language-and-uri", test_language_and_uri_helpers);
 
     g_test_add_func ("/lsp/locations/array", test_locations_array);
     g_test_add_func ("/lsp/locations/single", test_locations_single);
