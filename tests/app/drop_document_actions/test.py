@@ -75,7 +75,7 @@ def cancel(t, view):
             "cancelling left the target file absent")
     t.check(t.sandbox.exists("workdir", SAVE_HERE),
             "cancelling left the original file in place")
-    t.check(t.text(t.document()) == CONTENT,
+    t.check(t.text(document(t)) == CONTENT,
             "cancelling left the document contents unchanged")
 
 
@@ -123,6 +123,14 @@ def path_entry(t, view):
             if abs(x - vx) <= 4 and y < vy:
                 return node
     return t.fail("the file selector has no path entry")
+
+
+def document(t):
+    views = [node for node in t.find_all(t.frame, role="text", depth=30)
+             if ui.on_screen(node) and t.text(node) == CONTENT]
+    if len(views) == 1:
+        return views[0]
+    return t.fail("the document view was not uniquely identifiable")
 
 
 def icon_view(t):
