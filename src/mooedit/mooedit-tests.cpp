@@ -777,6 +777,17 @@ test_indenter_helpers (void)
     offset = moo_text_iter_get_prev_stop (&iter, 8, 2, TRUE);
     g_assert_cmpint (offset, ==, 2);
 
+    gtk_text_buffer_set_text (buffer, "\t  value", -1);
+    gtk_text_buffer_get_end_iter (buffer, &iter);
+    g_assert_cmpint (moo_iter_get_blank_offset (&iter, 4), ==, -1);
+
+    gtk_text_buffer_get_iter_at_offset (buffer, &iter, 1);
+    g_assert_cmpint (moo_iter_get_blank_offset (&iter, 4), ==, 4);
+
+    gtk_text_buffer_set_text (buffer, "\t  ", -1);
+    gtk_text_buffer_get_end_iter (buffer, &iter);
+    g_assert_cmpint (moo_iter_get_blank_offset (&iter, 4), ==, 6);
+
     g_object_unref (buffer);
 }
 
@@ -949,6 +960,98 @@ test_text_buffer_undo_freeze (void)
 }
 
 
+static gboolean
+line_has_fold_tag (MooTextBuffer *buffer,
+                   int            line)
+{
+    GtkTextIter iter;
+    GSList *tags;
+    gboolean has_tag;
+
+    gtk_text_buffer_get_iter_at_line (GTK_TEXT_BUFFER (buffer), &iter, line);
+    tags = gtk_text_iter_get_tags (&iter);
+    has_tag = tags != nullptr;
+    g_slist_free (tags);
+
+    return has_tag;
+}
+
+
+static void
+test_fold_tree_visibility (void)
+{
+    MooTextBuffer *buffer = new_text_buffer ("0\n1\n2\n3\n4\n5\n6\n");
+    MooFoldTree *tree = _moo_fold_tree_new (buffer);
+    MooFold *outer = _moo_fold_tree_add (tree, 0, 6);
+    MooFold *inner = _moo_fold_tree_add (tree, 1, 3);
+    MooFold *sibling = _moo_fold_tree_add (tree, 4, 5);
+
+    gtk_text_buffer_create_tag (GTK_TEXT_BUFFER (buffer), MOO_FOLD_TAG,
+                                "invisible", TRUE, nullptr);
+
+    g_assert_false (line_has_fold_tag (buffer, 0));
+    g_assert_false (line_has_fold_tag (buffer, 2));
+
+    _moo_fold_tree_collapse (tree, inner);
+    g_assert_true (inner->collapsed);
+    g_assert_false (line_has_fold_tag (buffer, 1));
+    g_assert_true (line_has_fold_tag (buffer, 2));
+    g_assert_true (line_has_fold_tag (buffer, 3));
+    g_assert_false (line_has_fold_tag (buffer, 4));
+
+    _moo_fold_tree_collapse (tree, outer);
+    g_assert_true (line_has_fold_tag (buffer, 1));
+    g_assert_true (line_has_fold_tag (buffer, 5));
+
+    _moo_fold_tree_expand (tree, outer);
+    g_assert_false (line_has_fold_tag (buffer, 1));
+    g_assert_true (line_has_fold_tag (buffer, 2));
+    g_assert_true (line_has_fold_tag (buffer, 3));
+    g_assert_false (line_has_fold_tag (buffer, 5));
+
+    g_assert_true (_moo_fold_tree_collapse_all (tree));
+    g_assert_true (outer->collapsed);
+    g_assert_true (inner->collapsed);
+    g_assert_false (sibling->collapsed);
+    g_assert_true (_moo_fold_tree_expand_all (tree));
+    g_assert_false (outer->collapsed);
+    g_assert_false (inner->collapsed);
+    g_assert_false (sibling->collapsed);
+    g_assert_false (_moo_fold_tree_expand_all (tree));
+
+    _moo_fold_tree_free (tree);
+    g_object_unref (buffer);
+}
+
+
+static void
+test_fold_tree_remove_promotes_children (void)
+{
+    MooTextBuffer *buffer = new_text_buffer ("0\n1\n2\n3\n4\n5");
+    MooFoldTree *tree = _moo_fold_tree_new (buffer);
+    MooFold *parent = _moo_fold_tree_add (tree, 0, 5);
+    MooFold *child = _moo_fold_tree_add (tree, 1, 2);
+    MooFold *sibling = _moo_fold_tree_add (tree, 3, 4);
+
+    gtk_text_buffer_create_tag (GTK_TEXT_BUFFER (buffer), MOO_FOLD_TAG,
+                                "invisible", TRUE, nullptr);
+
+    g_assert_true (child->parent == parent);
+    g_assert_true (sibling->parent == parent);
+    _moo_fold_tree_remove (tree, parent);
+
+    g_assert_true (parent->deleted);
+    g_assert_null (child->parent);
+    g_assert_null (sibling->parent);
+    g_assert_true (tree->folds == child);
+    g_assert_true (child->next == sibling);
+    g_assert_true (sibling->prev == child);
+
+    _moo_fold_tree_free (tree);
+    g_object_unref (buffer);
+}
+
+
 static void
 test_language_helpers (void)
 {
@@ -1071,6 +1174,9 @@ _moo_add_mooedit_unit_tests (void)
     g_test_add_func ("/mooedit/text-buffer/undo-redo", test_text_buffer_undo_redo);
     g_test_add_func ("/mooedit/text-buffer/undo-group", test_text_buffer_undo_group);
     g_test_add_func ("/mooedit/text-buffer/undo-freeze", test_text_buffer_undo_freeze);
+    g_test_add_func ("/mooedit/fold-tree/visibility", test_fold_tree_visibility);
+    g_test_add_func ("/mooedit/fold-tree/remove-promotes-children",
+                     test_fold_tree_remove_promotes_children);
     g_test_add_func ("/mooedit/language/helpers", test_language_helpers);
     g_test_add_func ("/mooedit/edit-action/filters", test_edit_action_filters);
     g_test_add_func ("/mooedit/text-view/word-selection-after-closing-bracket",
