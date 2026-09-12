@@ -204,8 +204,13 @@ moo_fold_free_recursively (MooFold *fold)
     child = fold->children;
     fold->children = NULL;
 
-    for ( ; child != NULL; child = child->next)
+    while (child != NULL)
+    {
+        MooFold *next = child->next;
+
         moo_fold_free_recursively (child);
+        child = next;
+    }
 
     if (fold->start)
         g_object_unref (fold->start);
@@ -772,4 +777,3 @@ _moo_fold_tree_toggle (MooFoldTree *tree)
 
     return FALSE;
 }
-

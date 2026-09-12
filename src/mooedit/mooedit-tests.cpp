@@ -1040,10 +1040,10 @@ test_fold_tree_remove_promotes_children (void)
     g_assert_true (sibling->parent == parent);
     _moo_fold_tree_remove (tree, parent);
 
-    g_assert_true (parent->deleted);
     g_assert_null (child->parent);
     g_assert_null (sibling->parent);
     g_assert_true (tree->folds == child);
+    g_assert_cmpuint (tree->n_folds, ==, 2);
     g_assert_true (child->next == sibling);
     g_assert_true (sibling->prev == child);
 
