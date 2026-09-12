@@ -18,8 +18,7 @@ CONTENT = "the document being dropped\n"
 
 SAVE_HERE = "save-here.txt"
 SAVE_COPY = "save-copy.txt"
-CANCEL = "cancel.txt"
-NAMES = (SAVE_HERE, SAVE_COPY, CANCEL)
+NAMES = (SAVE_HERE, SAVE_COPY)
 
 
 def setup(s):
@@ -68,13 +67,13 @@ def save_copy(t, view):
 
 
 def cancel(t, view):
-    drop(t, view, CANCEL)
+    drop(t, view, SAVE_HERE)
     t.wait(lambda: dropped_menu(t), "the drop menu to cancel")
     t.escape()
 
-    t.check(not t.sandbox.exists("workdir", INNER, CANCEL),
+    t.check(not t.sandbox.exists("workdir", INNER, SAVE_HERE),
             "cancelling left the target file absent")
-    t.check(t.sandbox.exists("workdir", CANCEL),
+    t.check(t.sandbox.exists("workdir", SAVE_HERE),
             "cancelling left the original file in place")
     t.check(t.text(t.document()) == CONTENT,
             "cancelling left the document contents unchanged")
