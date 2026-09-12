@@ -48,6 +48,8 @@
 #include "mooedit/mootextbuffer.h"
 #include "mooedit/mootextsearch.h"
 #include "mooedit/mootextview-private.h"
+#include "mooedit/mooeditfiltersettings.h"
+#include "mooedit/mootextbtree.h"
 #include "gtksourceview/gtksourcecontextengine.h"
 #include "gtksourceview/gtksourceengine.h"
 #include "mooutils/mooundo.h"
@@ -1138,6 +1140,64 @@ test_text_view_word_selection_after_closing_bracket (void)
 }
 
 
+static void
+test_edit_filter_parsing (void)
+{
+    MooEditFilter *filter;
+    GError *error = nullptr;
+
+    filter = _moo_edit_filter_new_full ("langs: C; python3", MOO_EDIT_FILTER_ACTION,
+                                        &error);
+    g_assert_no_error (error);
+    g_assert_true (_moo_edit_filter_valid (filter));
+    _moo_edit_filter_free (filter);
+
+    filter = _moo_edit_filter_new_full ("globs: *.c; *.h", MOO_EDIT_FILTER_ACTION,
+                                        &error);
+    g_assert_no_error (error);
+    g_assert_true (_moo_edit_filter_valid (filter));
+    _moo_edit_filter_free (filter);
+
+    filter = _moo_edit_filter_new_full ("regex: ^medit$", MOO_EDIT_FILTER_ACTION,
+                                        &error);
+    g_assert_no_error (error);
+    g_assert_true (_moo_edit_filter_valid (filter));
+    _moo_edit_filter_free (filter);
+
+    filter = _moo_edit_filter_new_full ("regex: [", MOO_EDIT_FILTER_ACTION, &error);
+    g_assert_nonnull (error);
+    g_assert_false (_moo_edit_filter_valid (filter));
+    g_clear_error (&error);
+    _moo_edit_filter_free (filter);
+}
+
+
+static void
+test_text_btree_ranges (void)
+{
+    BTree *tree = _moo_text_btree_new ();
+    guint i;
+
+    g_assert_cmpuint (_moo_text_btree_size (tree), ==, 1);
+    _moo_text_btree_insert_range (tree, 0, 40);
+    g_assert_cmpuint (_moo_text_btree_size (tree), ==, 41);
+    for (i = 0; i < _moo_text_btree_size (tree); ++i)
+        g_assert_nonnull (_moo_text_btree_get_data (tree, i));
+
+    _moo_text_btree_update_n_marks (tree, _moo_text_btree_get_data (tree, 12), 2);
+    g_assert_cmpuint (_moo_text_btree_get_data (tree, 12)->n_marks, ==, 2);
+    g_assert_cmpuint (tree->root->n_marks, ==, 2);
+    _moo_text_btree_update_n_marks (tree, _moo_text_btree_get_data (tree, 12), -2);
+    g_assert_cmpuint (tree->root->n_marks, ==, 0);
+
+    _moo_text_btree_delete_range (tree, 5, 30, nullptr);
+    g_assert_cmpuint (_moo_text_btree_size (tree), ==, 11);
+    _moo_text_btree_delete_range (tree, 0, 10, nullptr);
+    g_assert_cmpuint (_moo_text_btree_size (tree), ==, 1);
+    _moo_text_btree_free (tree);
+}
+
+
 void
 _moo_add_mooedit_unit_tests (void)
 {
@@ -1179,6 +1239,8 @@ _moo_add_mooedit_unit_tests (void)
                      test_fold_tree_remove_promotes_children);
     g_test_add_func ("/mooedit/language/helpers", test_language_helpers);
     g_test_add_func ("/mooedit/edit-action/filters", test_edit_action_filters);
+    g_test_add_func ("/mooedit/edit-filter/parsing", test_edit_filter_parsing);
+    g_test_add_func ("/mooedit/text-btree/ranges", test_text_btree_ranges);
     g_test_add_func ("/mooedit/text-view/word-selection-after-closing-bracket",
                      test_text_view_word_selection_after_closing_bracket);
 
