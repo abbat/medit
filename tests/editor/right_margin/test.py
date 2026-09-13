@@ -32,6 +32,8 @@ def run(t):
     tick(t, dialog, "Draw right margin", True)
 
     spin = t.need(dialog, role="spin button", what="the right-margin column")
+    t.wait(lambda: t.state(spin, "sensitive"),
+           "the right-margin column to become editable")
     t.click(spin)
     t.key("ctrl+a")
     t.type_text(str(COLUMN))

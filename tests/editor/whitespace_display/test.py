@@ -40,6 +40,14 @@ def run(t):
     t.wait(lambda: pixels(t, space) != before,
            "the space marker to be painted")
 
+    # Show spaces also includes trailing spaces.  Turn it back off before the
+    # second baseline, otherwise enabling Show trailing spaces would have
+    # nothing new to paint.
+    dialog = t.preferences("View")
+    tick(t, dialog, "Show spaces", False)
+    t.click(t.button(dialog, "OK"))
+    t.no_toplevel("Preferences")
+
     # The two trailing spaces have their own setting.  They are kept separate
     # from the ordinary-space assertion because a regression could accidentally
     # make only the middle marker visible.

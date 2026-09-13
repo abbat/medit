@@ -25,8 +25,8 @@ def run(t):
 
     # Put the caret between the two words.  A middle click there must paste the
     # PRIMARY selection, rather than the CLIPBOARD or nothing at all.
-    x, y, width, height = t.range_extents(view, 6, 7)
-    t.click_at(x + width // 2, y + height // 2, button=2)
+    x, y, width, height = t.range_extents(view, 5, 6)
+    t.click_at(x + width * 3 // 4, y + height // 2, button=2)
     t.wait(lambda: t.text(view) == EXPECTED,
            "the primary selection to be pasted at the middle click; the document "
            "holds %r" % t.text(view))
