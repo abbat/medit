@@ -1489,7 +1489,7 @@ moo_app_send_files (MooOpenInfoArray *files, guint32 stamp, const char *pid)
   g_string_append_printf (msg, "%s<moo-app-open-files version=\"%s\" stamp=\"%u\">",
                           CMD_OPEN_FILES_S, MOO_APP_CMD_VERSION, stamp);
 
-  for (i = 0, c = files->size (); i < c; ++i)
+  for (i = 0, c = files ? files->size () : 0; i < c; ++i)
     {
       MooOpenInfo *info = files->elms[i];
       const char *encoding = moo_open_info_get_encoding (info);
@@ -1534,7 +1534,7 @@ moo_app_open_files (MooApp *app, MooOpenInfoArray *files, guint32 stamp)
 {
   g_return_if_fail (MOO_IS_APP (app));
 
-  if (!files->empty ())
+  if (files && !files->empty ())
     {
       guint i;
       MooOpenInfoArray *tmp = files->copy ();

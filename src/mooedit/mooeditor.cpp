@@ -1296,7 +1296,7 @@ _moo_editor_open_files (MooEditor         *editor,
 
     moo_return_error_if_fail_p (MOO_IS_EDITOR (editor));
     moo_return_error_if_fail_p (!parent || GTK_IS_WIDGET (parent));
-    moo_return_error_if_fail_p (!files->empty ());
+    moo_return_error_if_fail_p (files != NULL && !files->empty ());
 
     if (parent)
     {
@@ -2110,7 +2110,7 @@ moo_editor_open_files (MooEditor        *editor,
     gboolean ret;
 
     moo_return_error_if_fail (MOO_IS_EDITOR (editor));
-    moo_return_error_if_fail (!files->empty ());
+    moo_return_error_if_fail (files != NULL && !files->empty ());
 
     docs = _moo_editor_open_files (editor, files, parent, error);
     ret = docs && !docs->empty ();
