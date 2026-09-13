@@ -288,42 +288,6 @@ moo_save_info_new (const char *path,
     return info;
 }
 
-/**
- * moo_save_info_new_uri: (static-method-of MooSaveInfo)
- *
- * @uri: (type const-utf8)
- * @encoding: (type const-utf8) (allow-none) (default NULL)
- *
- * Returns: (transfer full)
- **/
-MooSaveInfo *
-moo_save_info_new_uri (const char *uri,
-                       const char *encoding)
-{
-    GFile *file = g_file_new_for_uri (uri);
-    MooSaveInfo *info = moo_save_info_new_file (file, encoding);
-    g_object_unref (file);
-    return info;
-}
-
-/**
- * moo_save_info_dup:
- *
- * Returns: (transfer full)
- **/
-MooSaveInfo *
-moo_save_info_dup (MooSaveInfo *info)
-{
-    MooSaveInfo *copy;
-
-    g_return_val_if_fail (info != NULL, NULL);
-
-    copy = moo_save_info_new_file (info->file, info->encoding);
-    g_return_val_if_fail (copy != NULL, NULL);
-
-    return copy;
-}
-
 void
 moo_save_info_free (MooSaveInfo *info)
 {
@@ -373,51 +337,6 @@ moo_reload_info_new (const char *encoding,
 
     return info;
 }
-
-/**
- * moo_reload_info_dup:
- *
- * Returns: (transfer full)
- **/
-MooReloadInfo *
-moo_reload_info_dup (MooReloadInfo *info)
-{
-    MooReloadInfo *copy;
-
-    g_return_val_if_fail (info != NULL, NULL);
-
-    copy = moo_reload_info_new (info->encoding, info->line);
-    g_return_val_if_fail (copy != NULL, NULL);
-
-    return copy;
-}
-
-/**
- * moo_reload_info_get_line:
- *
- * Returns: (type index)
- **/
-int
-moo_reload_info_get_line (MooReloadInfo *info)
-{
-    g_return_val_if_fail (MOO_IS_RELOAD_INFO (info), -1);
-    return info->line;
-}
-
-/**
- * moo_reload_info_set_line:
- *
- * @info:
- * @line: (type index)
- **/
-void
-moo_reload_info_set_line (MooReloadInfo *info,
-                          int            line)
-{
-    g_return_if_fail (MOO_IS_RELOAD_INFO (info));
-    info->line = line;
-}
-
 
 static void
 moo_reload_info_finalize (GObject *object)
