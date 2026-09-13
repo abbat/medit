@@ -24,9 +24,9 @@ def run(t):
     t.click(t.button(dialog, "OK"))
     t.no_toplevel("Preferences")
 
-    text_left, y, char_width, height = t.range_extents(view, 0, 1)
-    margin_x = text_left + char_width * COLUMN
-    before = t.pixel_row(margin_x - 2, y + height // 2, 5)
+    view_x, view_y, view_width, view_height = t.extents(view)
+    row_y = view_y + view_height // 2
+    before = t.pixel_row(view_x, row_y, view_width)
 
     dialog = t.preferences("View")
     tick(t, dialog, "Draw right margin", True)
@@ -41,7 +41,7 @@ def run(t):
     t.click(t.button(dialog, "OK"))
     t.no_toplevel("Preferences")
 
-    t.wait(lambda: t.pixel_row(margin_x - 2, y + height // 2, 5) != before,
+    t.wait(lambda: t.pixel_row(view_x, row_y, view_width) != before,
            "the right margin to be drawn at column %d" % COLUMN)
 
     t.key("ctrl+w")
