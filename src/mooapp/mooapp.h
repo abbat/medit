@@ -18,7 +18,7 @@
 #ifndef _mooapp_mooapp_h_
 #define _mooapp_mooapp_h_
 
-#include <mooedit/mooeditor.h>
+#include "mooedit/mooeditor.h"
 
 G_BEGIN_DECLS
 

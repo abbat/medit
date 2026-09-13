@@ -16,7 +16,7 @@
 #ifndef MOO_USER_TOOLS_H
 #define MOO_USER_TOOLS_H
 
-#include <mooutils/moouixml.h>
+#include "mooutils/moouixml.h"
 #include "moocommand.h"
 
 G_BEGIN_DECLS

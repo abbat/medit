@@ -20,7 +20,7 @@
  **/
 
 #include "mooeditfileinfo-impl.h"
-#include <mooutils/mooutils-misc.h>
+#include "mooutils/mooutils-misc.h"
 
 static void moo_open_info_class_init   (MooOpenInfoClass *klass);
 static void moo_save_info_class_init   (MooSaveInfoClass *klass);

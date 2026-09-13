@@ -16,7 +16,7 @@
 #ifndef MOO_EDIT_PREFS_H
 #define MOO_EDIT_PREFS_H
 
-#include <mooedit/mooeditor.h>
+#include "mooedit/mooeditor.h"
 
 G_BEGIN_DECLS
 

@@ -16,7 +16,7 @@
 #ifndef MOO_UTILS_MISC_H
 #define MOO_UTILS_MISC_H
 
-#include <mooutils/mooutils-messages.h>
+#include "mooutils/mooutils-messages.h"
 
 G_BEGIN_DECLS
 

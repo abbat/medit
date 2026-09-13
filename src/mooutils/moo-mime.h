@@ -16,7 +16,7 @@
 #ifndef MOO_MIME_H
 #define MOO_MIME_H
 
-#include <mooglib/moo-glib.h>
+#include "mooglib/moo-glib.h"
 
 G_BEGIN_DECLS
 

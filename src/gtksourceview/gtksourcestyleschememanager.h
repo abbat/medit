@@ -21,7 +21,7 @@
 #ifndef __GTK_SOURCE_STYLE_SCHEME_MANAGER_H__
 #define __GTK_SOURCE_STYLE_SCHEME_MANAGER_H__
 
-#include <gtksourceview/gtksourcestylescheme.h>
+#include "gtksourceview/gtksourcestylescheme.h"
 
 G_BEGIN_DECLS
 
@@ -79,4 +79,3 @@ GtkSourceStyleScheme	*gtk_source_style_scheme_manager_get_scheme		(GtkSourceStyl
 G_END_DECLS
 
 #endif /* __GTK_SOURCE_STYLE_SCHEME_MANAGER_H__ */
-

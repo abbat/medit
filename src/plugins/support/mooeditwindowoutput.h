@@ -1,7 +1,7 @@
 #ifndef MOO_EDIT_WINDOW_OUTPUT_H
 #define MOO_EDIT_WINDOW_OUTPUT_H
 
-#include <mooedit/mooeditwindow.h>
+#include "mooedit/mooeditwindow.h"
 
 G_BEGIN_DECLS
 

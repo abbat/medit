@@ -25,7 +25,7 @@
 #include "gtksourcelanguage-private.h"
 #include "gtksourcebuffer.h"
 #include "gtksourcestyle-private.h"
-#include <mooglib/moo-glib.h>
+#include "mooglib/moo-glib.h"
 #include <string.h>
 
 #undef DEBUG

@@ -16,7 +16,7 @@
 #ifndef MOO_PLUGIN_H
 #define MOO_PLUGIN_H
 
-#include <mooedit/mooeditor.h>
+#include "mooedit/mooeditor.h"
 
 G_BEGIN_DECLS
 

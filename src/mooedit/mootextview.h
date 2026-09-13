@@ -15,11 +15,11 @@
 
 #pragma once
 
-#include <mooedit/mooindenter.h>
-#include <mooedit/moolang.h>
-#include <mooedit/mootextsearch.h>
-#include <mooedit/mootextstylescheme.h>
-#include <mooedit/mooedit-enums.h>
+#include "mooedit/mooindenter.h"
+#include "mooedit/moolang.h"
+#include "mooedit/mootextsearch.h"
+#include "mooedit/mootextstylescheme.h"
+#include "mooedit/mooedit-enums.h"
 
 G_BEGIN_DECLS
 

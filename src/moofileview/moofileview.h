@@ -16,8 +16,8 @@
 #ifndef MOO_FILE_VIEW_H
 #define MOO_FILE_VIEW_H
 
-#include <mooutils/moouixml.h>
-#include <mooutils/mooutils-file.h>
+#include "mooutils/moouixml.h"
+#include "mooutils/mooutils-file.h"
 
 G_BEGIN_DECLS
 

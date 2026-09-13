@@ -1,7 +1,7 @@
 #ifndef MOO_EDIT_SCRIPT_H
 #define MOO_EDIT_SCRIPT_H
 
-#include <mooedit/mooedit.h>
+#include "mooedit/mooedit.h"
 
 G_BEGIN_DECLS
 

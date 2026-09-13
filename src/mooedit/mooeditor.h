@@ -18,11 +18,11 @@
 
 #include "sysheaders.h"
 
-#include <mooedit/mooedit.h>
-#include <mooedit/mooeditview.h>
-#include <mooedit/mooeditwindow.h>
-#include <mooedit/mooeditfileinfo.h>
-#include <mooutils/moouixml.h>
+#include "mooedit/mooedit.h"
+#include "mooedit/mooeditview.h"
+#include "mooedit/mooeditwindow.h"
+#include "mooedit/mooeditfileinfo.h"
+#include "mooutils/moouixml.h"
 
 G_BEGIN_DECLS
 

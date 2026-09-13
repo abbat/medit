@@ -20,8 +20,8 @@
 #include "mooutils/mooutils-mem.h"
 #include "mooutils/mooutils-misc.h"
 #include "marshals.h"
-#include <mooglib/moo-glib.h>
-#include <mooglib/moo-stat.h>
+#include "mooglib/moo-glib.h"
+#include "mooglib/moo-stat.h"
 #ifdef HAVE_UNISTD_H
 #endif
 

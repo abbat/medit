@@ -15,11 +15,11 @@
 
 #pragma once
 
-#include <mooedit/mooeditconfig.h>
-#include <mooedit/mooedit-enums.h>
-#include <mooedit/mooedittypes.h>
-#include <mooedit/mooeditfileinfo.h>
-#include <mooutils/mooprefs.h>
+#include "mooedit/mooeditconfig.h"
+#include "mooedit/mooedit-enums.h"
+#include "mooedit/mooedittypes.h"
+#include "mooedit/mooeditfileinfo.h"
+#include "mooutils/mooprefs.h"
 
 G_BEGIN_DECLS
 
@@ -125,7 +125,7 @@ G_END_DECLS
 
 #ifdef __cplusplus
 
-#include <moocpp/gstr.h>
+#include "moocpp/gstr.h"
 
 MOO_DEFINE_GOBJ_TRAITS(MooEdit, MOO_TYPE_EDIT);
 

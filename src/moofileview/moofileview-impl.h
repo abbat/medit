@@ -15,7 +15,7 @@
 
 #pragma once
 
-#include <moofileview/moofileview.h>
+#include "moofileview/moofileview.h"
 
 G_BEGIN_DECLS
 

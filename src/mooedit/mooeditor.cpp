@@ -43,7 +43,7 @@
 #include "mooutils/mooi18n.h"
 #include "mooutils/mooencodings.h"
 #include "mooutils/moolist.h"
-#include <mooglib/moo-glib.h>
+#include "mooglib/moo-glib.h"
 
 #define RECENT_ACTION_ID "OpenRecent"
 #define RECENT_DIALOG_ACTION_ID "OpenRecentDialog"

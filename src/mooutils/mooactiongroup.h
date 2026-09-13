@@ -16,7 +16,7 @@
 #ifndef MOO_ACTION_GROUP_H
 #define MOO_ACTION_GROUP_H
 
-#include <mooutils/mooactioncollection.h>
+#include "mooutils/mooactioncollection.h"
 
 G_BEGIN_DECLS
 

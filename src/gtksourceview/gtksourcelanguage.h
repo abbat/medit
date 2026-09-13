@@ -21,7 +21,7 @@
 #ifndef __GTK_SOURCE_LANGUAGE_H__
 #define __GTK_SOURCE_LANGUAGE_H__
 
-#include <mooglib/moo-glib.h>
+#include "mooglib/moo-glib.h"
 #include <glib-object.h>
 #include <gtk/gtk.h>
 
@@ -63,4 +63,3 @@ const gchar	 *gtk_source_language_get_metadata	(GtkSourceLanguage *language,
 G_END_DECLS
 
 #endif /* __GTK_SOURCE_LANGUAGE_H__ */
-

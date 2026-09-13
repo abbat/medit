@@ -16,8 +16,8 @@
 #ifndef MOO_UTILS_MESSAGES_H
 #define MOO_UTILS_MESSAGES_H
 
-#include <mooutils/mooutils-macros.h>
-#include <mooglib/moo-glib.h>
+#include "mooutils/mooutils-macros.h"
+#include "mooglib/moo-glib.h"
 
 G_BEGIN_DECLS
 

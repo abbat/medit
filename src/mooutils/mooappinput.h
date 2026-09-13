@@ -16,7 +16,7 @@
 #ifndef MOO_APP_INPUT_H
 #define MOO_APP_INPUT_H
 
-#include <mooglib/moo-glib.h>
+#include "mooglib/moo-glib.h"
 
 G_BEGIN_DECLS
 

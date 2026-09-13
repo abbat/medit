@@ -16,7 +16,7 @@
 #ifndef MOO_ACCEL_PREFS_H
 #define MOO_ACCEL_PREFS_H
 
-#include <mooutils/mooactioncollection.h>
+#include "mooutils/mooactioncollection.h"
 
 G_BEGIN_DECLS
 

@@ -27,7 +27,7 @@
 #include "mooutils/mooi18n.h"
 #ifdef HAVE_UNISTD_H
 #endif
-#include <mooglib/moo-glib.h>
+#include "mooglib/moo-glib.h"
 
 #define COLUMN_BOOKMARK MOO_BOOKMARK_MGR_COLUMN_BOOKMARK
 

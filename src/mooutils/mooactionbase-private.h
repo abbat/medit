@@ -16,7 +16,7 @@
 #ifndef MOO_ACTION_BASE_PRIVATE_H
 #define MOO_ACTION_BASE_PRIVATE_H
 
-#include <mooutils/mooactionbase.h>
+#include "mooutils/mooactionbase.h"
 
 G_BEGIN_DECLS
 

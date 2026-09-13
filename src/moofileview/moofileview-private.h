@@ -13,7 +13,7 @@
  *   License along with medit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <moofileview/moofileview-impl.h>
+#include "moofileview/moofileview-impl.h"
 
 #ifndef MOO_FILE_VIEW_PRIVATE_H
 #define MOO_FILE_VIEW_PRIVATE_H

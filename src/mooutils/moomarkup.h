@@ -16,7 +16,7 @@
 #ifndef MOO_MARKUP_H
 #define MOO_MARKUP_H
 
-#include <mooutils/moofilewriter.h>
+#include "mooutils/moofilewriter.h"
 
 G_BEGIN_DECLS
 

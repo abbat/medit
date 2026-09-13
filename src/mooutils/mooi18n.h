@@ -15,7 +15,7 @@
 
 #pragma once
 
-#include <mooglib/moo-glib.h>
+#include "mooglib/moo-glib.h"
 
 G_BEGIN_DECLS
 

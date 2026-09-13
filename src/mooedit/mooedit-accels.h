@@ -16,7 +16,7 @@
 #ifndef MOO_EDIT_ACCELS_H
 #define MOO_EDIT_ACCELS_H
 
-#include <mooutils/mooaccel.h>
+#include "mooutils/mooaccel.h"
 
 #define MOO_EDIT_ACCEL_NEW          MOO_ACCEL_NEW
 #define MOO_EDIT_ACCEL_OPEN         MOO_ACCEL_OPEN

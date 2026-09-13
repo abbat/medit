@@ -16,8 +16,8 @@
 #ifndef MOO_EDIT_BOOKMARK_H
 #define MOO_EDIT_BOOKMARK_H
 
-#include <mooedit/mooedit.h>
-#include <mooedit/moolinemark.h>
+#include "mooedit/mooedit.h"
+#include "mooedit/moolinemark.h"
 
 G_BEGIN_DECLS
 

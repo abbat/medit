@@ -1,7 +1,7 @@
 #ifndef MOO_EDIT_ENUMS_H
 #define MOO_EDIT_ENUMS_H
 
-#include <mooedit/mooedit-enum-types.h>
+#include "mooedit/mooedit-enum-types.h"
 
 G_BEGIN_DECLS
 

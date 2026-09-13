@@ -16,7 +16,7 @@
 #ifndef __MOO_LINE_VIEW__
 #define __MOO_LINE_VIEW__
 
-#include <mooedit/mootextview.h>
+#include "mooedit/mootextview.h"
 
 G_BEGIN_DECLS
 

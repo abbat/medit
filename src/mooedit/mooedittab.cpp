@@ -6,7 +6,7 @@
 #include "mooeditview-impl.h"
 #include "mooeditwindow-impl.h"
 #include "mooedit-impl.h"
-#include <mooutils/moocompat.h>
+#include "mooutils/moocompat.h"
 
 struct MooEditTab
 {

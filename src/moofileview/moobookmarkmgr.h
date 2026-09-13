@@ -16,7 +16,7 @@
 #ifndef MOO_BOOKMARK_MGR_H
 #define MOO_BOOKMARK_MGR_H
 
-#include <mooutils/moouixml.h>
+#include "mooutils/moouixml.h"
 
 G_BEGIN_DECLS
 

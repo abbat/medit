@@ -16,8 +16,8 @@
 #ifndef MOO_FILE_ENTRY_H
 #define MOO_FILE_ENTRY_H
 
-#include <mooutils/mooentry.h>
-#include <moofileview/moofile.h>
+#include "mooutils/mooentry.h"
+#include "moofileview/moofile.h"
 
 G_BEGIN_DECLS
 

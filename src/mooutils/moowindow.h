@@ -16,9 +16,9 @@
 #ifndef MOOUI_MOOWINDOW_H
 #define MOOUI_MOOWINDOW_H
 
-#include <mooutils/mooutils-gobject.h>
-#include <mooutils/moouixml.h>
-#include <mooutils/mooactioncollection.h>
+#include "mooutils/mooutils-gobject.h"
+#include "mooutils/moouixml.h"
+#include "mooutils/mooactioncollection.h"
 
 G_BEGIN_DECLS
 

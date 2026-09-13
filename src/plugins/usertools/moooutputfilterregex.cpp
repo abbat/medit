@@ -22,7 +22,7 @@
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/moomarkup.h"
 #include "mooutils/mooi18n.h"
-#include <mooglib/moo-glib.h>
+#include "mooglib/moo-glib.h"
 
 #define FILTERS_VERSION     "1.0"
 

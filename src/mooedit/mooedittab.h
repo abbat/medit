@@ -1,7 +1,7 @@
 #ifndef MOO_EDIT_TAB_H
 #define MOO_EDIT_TAB_H
 
-#include <mooedit/mooedittypes.h>
+#include "mooedit/mooedittypes.h"
 
 G_BEGIN_DECLS
 

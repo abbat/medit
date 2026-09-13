@@ -20,7 +20,7 @@
 #include "mooutils/mooutils-debug.h"
 #include "mooutils/moostock.h"
 #include "moo-pixbufs.h"
-#include <mooglib/moo-glib.h>
+#include "mooglib/moo-glib.h"
 
 void
 moo_file_icon_for_file (MooFileIcon *icon,

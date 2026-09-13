@@ -16,8 +16,8 @@
 #ifndef MOO_TEXT_SEARCH_H
 #define MOO_TEXT_SEARCH_H
 
-#include <mooedit/mootextiter.h>
-#include <mooedit/mooedit-enums.h>
+#include "mooedit/mootextiter.h"
+#include "mooedit/mooedit-enums.h"
 
 G_BEGIN_DECLS
 

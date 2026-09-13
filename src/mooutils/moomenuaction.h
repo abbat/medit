@@ -16,8 +16,8 @@
 #ifndef MOO_MENU_ACTION_H
 #define MOO_MENU_ACTION_H
 
-#include <mooutils/mooaction.h>
-#include <mooutils/moomenumgr.h>
+#include "mooutils/mooaction.h"
+#include "mooutils/moomenumgr.h"
 
 G_BEGIN_DECLS
 

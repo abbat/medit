@@ -16,8 +16,8 @@
 #ifndef MOO_PREFS_H
 #define MOO_PREFS_H
 
-#include <mooutils/moomarkup.h>
-#include <mooutils/mooutils-file.h>
+#include "mooutils/moomarkup.h"
+#include "mooutils/mooutils-file.h"
 
 G_BEGIN_DECLS
 

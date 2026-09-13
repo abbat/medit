@@ -36,8 +36,8 @@
 #include "mooutils/moobuilder.h"
 #include "mooutils/moohelp.h"
 #include "mooutils/mooatom.h"
-#include <mooglib/moo-glib.h>
-#include <mooglib/moo-stat.h>
+#include "mooglib/moo-glib.h"
+#include "mooglib/moo-stat.h"
 
 #define PREFS_LAST_DIR MOO_PLUGIN_PREFS_ROOT "/" MOO_FILE_SELECTOR_PLUGIN_ID "/last_dir"
 #define PREFS_HIDDEN_FILES MOO_PLUGIN_PREFS_ROOT "/" MOO_FILE_SELECTOR_PLUGIN_ID "/show_hidden_files"

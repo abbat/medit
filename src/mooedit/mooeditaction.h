@@ -16,8 +16,8 @@
 #ifndef MOO_EDIT_ACTION_H
 #define MOO_EDIT_ACTION_H
 
-#include <mooutils/mooaction.h>
-#include <mooedit/mooedit.h>
+#include "mooutils/mooaction.h"
+#include "mooedit/mooedit.h"
 
 G_BEGIN_DECLS
 

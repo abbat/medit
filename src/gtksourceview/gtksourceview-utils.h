@@ -21,7 +21,7 @@
 #ifndef __GTK_SOURCE_VIEW_UTILS_H__
 #define __GTK_SOURCE_VIEW_UTILS_H__
 
-#include <mooglib/moo-glib.h>
+#include "mooglib/moo-glib.h"
 
 G_BEGIN_DECLS
 

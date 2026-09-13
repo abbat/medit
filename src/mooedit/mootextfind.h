@@ -16,9 +16,9 @@
 #ifndef MOO_TEXT_FIND_H
 #define MOO_TEXT_FIND_H
 
-#include <mooedit/mooedit-enums.h>
-#include <mooutils/moohistorylist.h>
-#include <mooglib/moo-glib.h>
+#include "mooedit/mooedit-enums.h"
+#include "mooutils/moohistorylist.h"
+#include "mooglib/moo-glib.h"
 
 G_BEGIN_DECLS
 

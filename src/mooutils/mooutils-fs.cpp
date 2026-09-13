@@ -23,8 +23,8 @@
 #include "mooutils/mootype-macros.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooi18n.h"
-#include <mooglib/moo-stat.h>
-#include <mooglib/moo-glib.h>
+#include "mooglib/moo-stat.h"
+#include "mooglib/moo-glib.h"
 
 
 #ifndef S_IRWXU
@@ -473,7 +473,7 @@ _moo_mkdir (const char *path, mgw_errno_t *err)
  */
 
 #define MOO_GLOB_REGEX
-#include <mooglib/moo-glib.h>
+#include "mooglib/moo-glib.h"
 
 typedef struct _MooGlob {
 #ifdef MOO_GLOB_REGEX

@@ -16,7 +16,7 @@
 #ifndef MOO_TYPE_MACROS_H
 #define MOO_TYPE_MACROS_H
 
-#include <mooutils/mooonce.h>
+#include "mooutils/mooonce.h"
 
 
 #define MOO_DEFINE_BOXED_TYPE__(TypeName,type_name,copy_func,free_func)                     \

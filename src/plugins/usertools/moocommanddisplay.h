@@ -16,7 +16,7 @@
 #ifndef MOO_COMMAND_DISPLAY_H
 #define MOO_COMMAND_DISPLAY_H
 
-#include <mooutils/mooutils-treeview.h>
+#include "mooutils/mooutils-treeview.h"
 #include "moocommand.h"
 
 G_BEGIN_DECLS

@@ -1,10 +1,10 @@
 #ifndef MOO_EDIT_TYPES_H
 #define MOO_EDIT_TYPES_H
 
-#include <mooutils/mooarray.h>
-#include <mooutils/moolist.h>
-#include <mooutils/mootype-macros.h>
-#include <mooedit/mooedit-enums.h>
+#include "mooutils/mooarray.h"
+#include "mooutils/moolist.h"
+#include "mooutils/mootype-macros.h"
+#include "mooedit/mooedit-enums.h"
 
 G_BEGIN_DECLS
 

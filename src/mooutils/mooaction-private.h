@@ -16,8 +16,8 @@
 #ifndef MOO_ACTION_PRIVATE_H
 #define MOO_ACTION_PRIVATE_H
 
-#include <mooutils/mooaction.h>
-#include <mooutils/mooclosure.h>
+#include "mooutils/mooaction.h"
+#include "mooutils/mooclosure.h"
 
 G_BEGIN_DECLS
 

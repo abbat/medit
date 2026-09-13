@@ -16,7 +16,7 @@
 #ifndef MOO_UTILS_GOBJECT_PRIVATE_H
 #define MOO_UTILS_GOBJECT_PRIVATE_H
 
-#include <mooutils/mooutils-gobject.h>
+#include "mooutils/mooutils-gobject.h"
 
 G_BEGIN_DECLS
 

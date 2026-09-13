@@ -21,7 +21,7 @@
 #ifndef __GTK_SOURCE_LANGUAGE_PRIVATE_H__
 #define __GTK_SOURCE_LANGUAGE_PRIVATE_H__
 
-#include <mooglib/moo-glib.h>
+#include "mooglib/moo-glib.h"
 #include "gtksourcecontextengine.h"
 #include "gtksourcelanguagemanager.h"
 
@@ -91,4 +91,3 @@ void			  _gtk_source_style_info_free			(GtkSourceStyleInfo       *info);
 G_END_DECLS
 
 #endif  /* __GTK_SOURCE_LANGUAGE_PRIVATE_H__ */
-

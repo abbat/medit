@@ -16,7 +16,7 @@
 #ifndef MOO_HISTORY_LIST_H
 #define MOO_HISTORY_LIST_H
 
-#include <mooutils/moomenumgr.h>
+#include "mooutils/moomenumgr.h"
 
 G_BEGIN_DECLS
 

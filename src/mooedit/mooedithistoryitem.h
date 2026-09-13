@@ -1,7 +1,7 @@
 #ifndef MOO_EDIT_HISTORY_ITEM_H
 #define MOO_EDIT_HISTORY_ITEM_H
 
-#include <mooutils/moohistorymgr.h>
+#include "mooutils/moohistorymgr.h"
 
 G_BEGIN_DECLS
 

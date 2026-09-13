@@ -16,7 +16,7 @@
 #ifndef MOO_EDIT_FILTER_SETTINGS_H
 #define MOO_EDIT_FILTER_SETTINGS_H
 
-#include <mooedit/mooedit.h>
+#include "mooedit/mooedit.h"
 
 G_BEGIN_DECLS
 

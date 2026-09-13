@@ -36,7 +36,7 @@
 #include <unistd.h>
 #endif
 #include <libxml/xmlreader.h>
-#include <mooglib/moo-glib.h>
+#include "mooglib/moo-glib.h"
 #include "gtksourceview-i18n.h"
 #include "gtksourcebuffer.h"
 #include "gtksourcelanguage.h"

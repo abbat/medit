@@ -23,7 +23,7 @@
 #define MOO_FILE_SYSTEM_H
 
 #include "moofileview/moofolder.h"
-#include <mooutils/moofilewatch.h>
+#include "mooutils/moofilewatch.h"
 
 
 G_BEGIN_DECLS

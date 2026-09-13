@@ -23,7 +23,7 @@
 #define __GTK_SOURCE_ENGINE_H__
 
 #include <gtk/gtk.h>
-#include <gtksourceview/gtksourcestylescheme.h>
+#include "gtksourceview/gtksourcestylescheme.h"
 
 G_BEGIN_DECLS
 

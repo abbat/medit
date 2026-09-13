@@ -16,7 +16,7 @@
 #ifndef MOO_BOOKMARK_VIEW_H
 #define MOO_BOOKMARK_VIEW_H
 
-#include <moofileview/moobookmarkmgr.h>
+#include "moofileview/moobookmarkmgr.h"
 
 G_BEGIN_DECLS
 

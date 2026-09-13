@@ -16,7 +16,7 @@
 #ifndef MOO_FILE_VIEW_ACCELS_H
 #define MOO_FILE_VIEW_ACCELS_H
 
-#include <mooutils/mooaccel.h>
+#include "mooutils/mooaccel.h"
 
 #define MOO_FILE_VIEW_ACCEL_CUT   MOO_ACCEL_CUT
 #define MOO_FILE_VIEW_ACCEL_COPY  MOO_ACCEL_COPY

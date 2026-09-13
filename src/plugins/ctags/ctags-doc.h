@@ -17,7 +17,7 @@
 #ifndef CTAGS_DOC_H
 #define CTAGS_DOC_H
 
-#include <mooedit/mooplugin.h>
+#include "mooedit/mooplugin.h"
 
 #define MOO_TYPE_CTAGS_ENTRY (_moo_ctags_entry_get_type ())
 

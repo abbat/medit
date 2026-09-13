@@ -16,7 +16,7 @@
 #ifndef MOO_FOLDER_MODEL_H
 #define MOO_FOLDER_MODEL_H
 
-#include <moofileview/moofile.h>
+#include "moofileview/moofile.h"
 
 G_BEGIN_DECLS
 

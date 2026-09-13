@@ -15,8 +15,8 @@
 
 #pragma once
 
-#include <mooedit/mooedittypes.h>
-#include <mooutils/mooutils-cpp.h>
+#include "mooedit/mooedittypes.h"
+#include "mooutils/mooutils-cpp.h"
 
 G_BEGIN_DECLS
 

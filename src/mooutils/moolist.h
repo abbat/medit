@@ -1,7 +1,7 @@
 #ifndef MOO_LIST_H
 #define MOO_LIST_H
 
-#include <mooglib/moo-glib.h>
+#include "mooglib/moo-glib.h"
 
 #define _MOO_DEFINE_LIST(GListType, glisttype,                          \
                          ListType, list_type, ElmType)                  \

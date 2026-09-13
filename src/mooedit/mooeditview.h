@@ -15,8 +15,8 @@
 
 #pragma once
 
-#include <mooedit/mootextview.h>
-#include <mooedit/mooedit.h>
+#include "mooedit/mootextview.h"
+#include "mooedit/mooedit.h"
 
 G_BEGIN_DECLS
 

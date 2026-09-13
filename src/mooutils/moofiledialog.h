@@ -16,7 +16,7 @@
 #ifndef MOO_FILE_DIALOG_H
 #define MOO_FILE_DIALOG_H
 
-#include <mooutils/mooutils-file.h>
+#include "mooutils/mooutils-file.h"
 
 G_BEGIN_DECLS
 

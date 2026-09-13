@@ -23,7 +23,7 @@
 #include "mooutils/moobuilder.h"
 #include "mooutils/mooencodings.h"
 #include "mooutils/mooutils.h"
-#include <mooglib/moo-glib.h>
+#include "mooglib/moo-glib.h"
 
 MooOpenInfoArray *
 _moo_edit_open_dialog (GtkWidget *widget,

@@ -16,8 +16,8 @@
 #ifndef MOO_TEXT_BUFFER_H
 #define MOO_TEXT_BUFFER_H
 
-#include <mooedit/moolang.h>
-#include <mooedit/moolinemark.h>
+#include "mooedit/moolang.h"
+#include "mooedit/moolinemark.h"
 
 G_BEGIN_DECLS
 

@@ -32,7 +32,7 @@
 #ifdef HAVE_UNISTD_H
 #endif
 
-#include <mooglib/moo-glib.h>
+#include "mooglib/moo-glib.h"
 
 #define ENCODING_LOCALE "LOCALE"
 

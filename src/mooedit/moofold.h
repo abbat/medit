@@ -16,7 +16,7 @@
 #ifndef MOO_FOLD_H
 #define MOO_FOLD_H
 
-#include <mooedit/moolinemark.h>
+#include "mooedit/moolinemark.h"
 
 G_BEGIN_DECLS
 

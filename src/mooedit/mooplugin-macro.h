@@ -16,7 +16,7 @@
 #ifndef MOO_PLUGIN_MACRO_H
 #define MOO_PLUGIN_MACRO_H
 
-#include <mooedit/mooplugin.h>
+#include "mooedit/mooplugin.h"
 
 
 #define MOO_PLUGIN_INIT_FUNC_DECL   \

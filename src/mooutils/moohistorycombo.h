@@ -16,8 +16,8 @@
 #ifndef MOO_HISTORY_COMBO_H
 #define MOO_HISTORY_COMBO_H
 
-#include <mooutils/moocombo.h>
-#include <mooutils/moohistorylist.h>
+#include "mooutils/moocombo.h"
+#include "mooutils/moohistorylist.h"
 
 G_BEGIN_DECLS
 

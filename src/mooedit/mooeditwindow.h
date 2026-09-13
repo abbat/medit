@@ -15,12 +15,12 @@
 
 #pragma once
 
-#include <mooedit/mooedittypes.h>
-#include <mooedit/mooedit.h>
-#include <mooedit/mooedit-enums.h>
-#include <mooutils/moowindow.h>
-#include <mooutils/moobigpaned.h>
-#include <mooutils/mooatom.h>
+#include "mooedit/mooedittypes.h"
+#include "mooedit/mooedit.h"
+#include "mooedit/mooedit-enums.h"
+#include "mooutils/moowindow.h"
+#include "mooutils/moobigpaned.h"
+#include "mooutils/mooatom.h"
 
 G_BEGIN_DECLS
 

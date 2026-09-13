@@ -16,7 +16,7 @@
 #ifndef MOO_UTILS_MACROS_H
 #define MOO_UTILS_MACROS_H
 
-#include <moo-config.h>
+#include "moo-config.h"
 
 #if defined(MOO_CL_GCC)
 #  define MOO_STRFUNC ((const char*) (__PRETTY_FUNCTION__))

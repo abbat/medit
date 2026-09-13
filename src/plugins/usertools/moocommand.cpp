@@ -24,7 +24,7 @@
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mootype-macros.h"
 #include "mooutils/mooutils-cpp.h"
-#include <mooglib/moo-glib.h>
+#include "mooglib/moo-glib.h"
 
 enum {
     CTX_PROP_0,

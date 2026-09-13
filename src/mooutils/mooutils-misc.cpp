@@ -26,7 +26,7 @@
 #include "mooutils/mootype-macros.h"
 #include "mooutils/mooarray.h"
 #include "mooutils/moobuilder.h"
-#include <mooglib/moo-glib.h>
+#include "mooglib/moo-glib.h"
 #ifdef HAVE_UNISTD_H
 #endif
 
