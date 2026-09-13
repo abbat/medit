@@ -5,7 +5,7 @@
 
 import os
 
-from app.file_selector_common import first_row_menu, go, open_pane, path_entry
+from app.file_selector_common import first_row_menu, go, open_pane
 
 
 def setup(s):

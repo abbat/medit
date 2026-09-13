@@ -3,7 +3,7 @@
 # requires: MOO_GTK3
 """
 
-from app.file_selector_common import open_pane, path_entry, select_row
+from app.file_selector_common import open_pane, select_row
 from lib.notebook import order
 
 
