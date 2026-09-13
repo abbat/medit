@@ -17,7 +17,6 @@
 
 #include "mooutils/mooutils-cpp.h"
 
-#include <glib.h>
 
 template<typename Data, typename Obj>
 inline Data* object_get_data_cast(Obj* obj, const char* key)

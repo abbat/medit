@@ -16,7 +16,6 @@
 #ifndef MOO_ACTION_BASE_H
 #define MOO_ACTION_BASE_H
 
-#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 

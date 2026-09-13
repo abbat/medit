@@ -16,7 +16,6 @@
 #ifndef MOO_ENCODINGS_H
 #define MOO_ENCODINGS_H
 
-#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 

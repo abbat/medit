@@ -21,7 +21,6 @@
 #include "mooutils/mooactionbase-private.h"
 #include "mooutils/mooutils-gobject.h"
 #include "mooutils/mooactiongroup.h"
-#include <string.h>
 
 
 static void _moo_action_set_closure (MooAction  *action,

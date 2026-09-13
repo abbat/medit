@@ -20,7 +20,6 @@
 #include "mooedit/mooeditor.h"
 #include "mooedit/mootextview.h"
 #include "mooutils/moohistorymgr.h"
-#include <gio/gio.h>
 
 G_BEGIN_DECLS
 

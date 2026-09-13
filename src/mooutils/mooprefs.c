@@ -20,8 +20,6 @@
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooutils-gobject.h"
 #include "mooutils/mootype-macros.h"
-#include <string.h>
-#include <gobject/gvaluecollector.h>
 #include <mooglib/moo-glib.h>
 
 #define MOO_PREFS_ELEMENT "moo-prefs"

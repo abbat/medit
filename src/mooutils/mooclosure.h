@@ -16,7 +16,6 @@
 #ifndef MOO_CLOSURE_H
 #define MOO_CLOSURE_H
 
-#include <glib-object.h>
 
 G_BEGIN_DECLS
 

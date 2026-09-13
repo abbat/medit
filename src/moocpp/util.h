@@ -15,7 +15,6 @@
 
 #pragma once
 
-#include <algorithm>
 
 template<typename Container, typename Element>
 bool contains(const Container& container, const Element& element)

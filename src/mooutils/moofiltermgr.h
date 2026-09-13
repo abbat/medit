@@ -16,7 +16,6 @@
 #ifndef MOO_FILTER_MGR_H
 #define MOO_FILTER_MGR_H
 
-#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 

@@ -26,7 +26,6 @@
 #include "mooutils/mooi18n.h"
 #include "mooutils/moocompat.h"
 #include "marshals.h"
-#include <string.h>
 
 struct _MooPrefsPagePrivate {
     GdkPixbuf   *icon;

@@ -16,7 +16,6 @@
 #ifndef MOOUTILS_STOCK_H
 #define MOOUTILS_STOCK_H
 
-#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 

@@ -16,7 +16,6 @@
 #ifndef MOO_UTILS_GOBJECT_H
 #define MOO_UTILS_GOBJECT_H
 
-#include <gtk/gtk.h>
 #include <mooutils/mooclosure.h>
 
 G_BEGIN_DECLS

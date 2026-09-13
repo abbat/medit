@@ -16,7 +16,6 @@
 #ifndef MOO_LANG_H
 #define MOO_LANG_H
 
-#include <glib-object.h>
 
 G_BEGIN_DECLS
 

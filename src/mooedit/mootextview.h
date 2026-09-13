@@ -15,7 +15,6 @@
 
 #pragma once
 
-#include <gtk/gtk.h>
 #include <mooedit/mooindenter.h>
 #include <mooedit/moolang.h>
 #include <mooedit/mootextsearch.h>

@@ -22,7 +22,6 @@
 #ifndef MOO_LSP_CONFIG_H
 #define MOO_LSP_CONFIG_H
 
-#include <glib.h>
 
 G_BEGIN_DECLS
 

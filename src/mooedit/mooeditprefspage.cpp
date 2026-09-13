@@ -27,7 +27,6 @@
 #include "mooutils/mooencodings.h"
 #include "mooutils/mooi18n.h"
 #include "mooutils/moohelp.h"
-#include <string.h>
 
 
 typedef struct PrefsPage PrefsPage;

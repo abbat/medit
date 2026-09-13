@@ -4,7 +4,6 @@
 #ifndef MOO_UTILS_ENUMS_H
 #define MOO_UTILS_ENUMS_H
 
-#include <glib-object.h>
 
 G_BEGIN_DECLS
 /* MooSaveChangesResponse */
@@ -31,4 +30,3 @@ G_END_DECLS
 #endif /* MOO_UTILS_ENUMS_H */
 
 /* Generated data ends here */
-

@@ -54,8 +54,6 @@
 #include "gtksourceview/gtksourceengine.h"
 #include "mooutils/mooundo.h"
 
-#include <gtk/gtk.h>
-#include <string.h>
 
 
 /* How much of a span's text a dumped line carries. Enough to recognise it,

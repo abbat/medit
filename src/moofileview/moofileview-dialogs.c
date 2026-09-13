@@ -22,9 +22,6 @@
 #include "mooutils/mooi18n.h"
 #include "mooutils/moocompat.h"
 #include "mooutils/moobuilder.h"
-#include <time.h>
-#include <string.h>
-#include <gtk/gtk.h>
 
 #if GTK_CHECK_VERSION(3,0,0)
 static void moo_file_props_dialog_destroy   (GtkWidget          *object);

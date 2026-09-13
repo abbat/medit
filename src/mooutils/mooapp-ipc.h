@@ -16,7 +16,6 @@
 #ifndef MOO_APP_IPC_H
 #define MOO_APP_IPC_H
 
-#include <glib-object.h>
 
 G_BEGIN_DECLS
 

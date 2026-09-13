@@ -20,10 +20,6 @@
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooutils-treeview.h"
 #include "mooutils/moocompat.h"
-#include <gdk/gdkkeysyms.h>
-#include <gtk/gtk.h>
-#include <string.h>
-#include <math.h>
 
 
 typedef struct Column    Column;

@@ -13,9 +13,6 @@
  *   License along with medit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
 #include "moofileview/moofileview-tools.h"
 #include "moofileview/moofileview-private.h"
@@ -29,7 +26,6 @@
 #include "mooutils/mooi18n.h"
 #include "mooutils/moo-mime.h"
 #include "mooutils/mooutils-gobject.h"
-#include <string.h>
 
 
 typedef struct {

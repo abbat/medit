@@ -17,17 +17,11 @@
  * class:MooPane: (parent GtkObject) (moo.private 1)
  **/
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
 #include "marshals.h"
 #include "moopaned.h"
 #include "moo-pixbufs.h"
 
-#include <string.h>
-#include <gdk/gdkkeysyms.h>
-#include <gtk/gtk.h>
 
 #define SPACING_IN_BUTTON 4
 #define OPEN_PANE_TIMEOUT 200

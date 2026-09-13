@@ -26,9 +26,6 @@
 #include "mooutils/moohelp.h"
 #include "mooutils/moocompat.h"
 #include "mooutils/moobuilder.h"
-#include <gtk/gtk.h>
-#include <gdk/gdkkeysyms.h>
-#include <string.h>
 
 
 typedef struct {

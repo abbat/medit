@@ -16,7 +16,6 @@
 #include "mooutils/moomenu.h"
 #include "marshals.h"
 #include "mooutils/mooutils-misc.h"
-#include <gdk/gdkkeysyms.h>
 
 static gboolean moo_menu_key_press_event    (GtkWidget      *widget,
                                              GdkEventKey    *event);

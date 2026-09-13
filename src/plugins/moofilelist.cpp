@@ -13,7 +13,6 @@
  *   License along with medit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "config.h"
 #include "plugins/mooplugin-builtin.h"
 #include "mooedit/mooplugin-macro.h"
 #include "mooutils/mooi18n.h"
@@ -22,9 +21,6 @@
 #include "mooutils/mooutils-treeview.h"
 #include "mooutils/mooutils-fs.h"
 #include "mooutils/mooatom.h"
-#include <gtk/gtk.h>
-#include <stdlib.h>
-#include <string.h>
 
 #define DEBUG_ASSERT(expr) g_assert (expr)
 

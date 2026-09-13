@@ -19,8 +19,6 @@
 #include "mooutils/mooi18n.h"
 #include "mooutils/moobuilder.h"
 #include "mooutils/mooaccel.h"
-#include <gtk/gtk.h>
-#include <gdk/gdkkeysyms.h>
 
 
 enum {

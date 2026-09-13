@@ -26,8 +26,6 @@
 #include "mooutils/mooutils-debug.h"
 #include "mooutils/mootype-macros.h"
 #include "mooglib/moo-time.h"
-#include <sys/types.h>
-#include <string.h>
 
 MOO_DEBUG_INIT (printing, FALSE)
 

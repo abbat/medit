@@ -15,7 +15,6 @@
 
 #include "mooeditops.h"
 #include "marshals.h"
-#include <gtk/gtk.h>
 
 static void
 moo_edit_ops_class_init (G_GNUC_UNUSED MooEditOpsIface *iface, G_GNUC_UNUSED gpointer data)

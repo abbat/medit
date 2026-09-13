@@ -13,16 +13,10 @@
  *   License along with medit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 #include "mooedit/moolang-private.h"
 #include "mooutils/mooi18n.h"
 #include <mooglib/moo-glib.h>
-#include <sys/stat.h>
-#include <fcntl.h>
 #ifdef HAVE_UNISTD_H
-#include <unistd.h>
 #endif
 
 

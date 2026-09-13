@@ -17,8 +17,6 @@
 
 #include "moocpp/gstr.h"
 #include "mooutils/mooutils-cpp.h"
-#include <memory>
-#include <functional>
 
 namespace g
 {

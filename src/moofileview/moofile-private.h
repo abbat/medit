@@ -17,7 +17,6 @@
 #define MOO_FILE_PRIVATE_H
 
 #include "moofileview/moofile.h"
-#include <sys/types.h>
 
 G_BEGIN_DECLS
 

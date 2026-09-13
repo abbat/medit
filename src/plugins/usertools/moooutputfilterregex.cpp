@@ -23,7 +23,6 @@
 #include "mooutils/moomarkup.h"
 #include "mooutils/mooi18n.h"
 #include <mooglib/moo-glib.h>
-#include <string.h>
 
 #define FILTERS_VERSION     "1.0"
 

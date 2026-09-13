@@ -33,9 +33,6 @@
  * boxed:MooPluginParams: (moo.private 1)
  **/
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
 
 #include "mooedit/mooplugin.h"
 #include "mooedit/mooplugin-loader.h"
@@ -47,9 +44,6 @@
 #include "mooutils/mooutils-debug.h"
 #include "mooutils/moohelp.h"
 #include "mooutils/mootype-macros.h"
-#include <string.h>
-#include <gmodule.h>
-#include <gobject/gvaluecollector.h>
 
 
 #define PLUGIN_PREFS_ENABLED "enabled"

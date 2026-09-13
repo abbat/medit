@@ -16,7 +16,6 @@
 #ifndef MOO_REGION_H
 #define MOO_REGION_H
 
-#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 

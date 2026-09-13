@@ -25,18 +25,11 @@
  * boxed:MooPaneParams: (moo.private 1)
  **/
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
 #include "marshals.h"
 #include "moopaned.h"
 
-#include <string.h>
-#include <gdk/gdkkeysyms.h>
-#include <gtk/gtk.h>
 #if GTK_CHECK_VERSION(3,0,0)
-#include <gtk/gtk-a11y.h>
 #endif
 
 # include "mooutils-misc.h"

@@ -19,9 +19,6 @@
 #include "mooutils/mooprefs.h"
 #include "mooutils/mootype-macros.h"
 #include "mooutils/mooaction.h"
-#include <gtk/gtk.h>
-#include <string.h>
-#include <stdlib.h>
 
 #define MAX_RECENT_ENCODINGS 5
 #define ROW_AUTO              0

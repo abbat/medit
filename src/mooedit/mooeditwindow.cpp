@@ -17,9 +17,6 @@
  * class:MooEditWindow: (parent MooWindow) (moo.doc-object-name window): document window object
  **/
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
 #include "mooedit/mooedit-impl.h"
 #include "mooedit/mooeditdialogs.h"
@@ -50,12 +47,7 @@
 #include "mooutils/moocompat.h"
 #include "mooutils/mooutils-enums.h"
 #include "moocpp/gobjptr.h"
-#include <string.h>
-#include <gtk/gtk.h>
-#include <math.h>
 
-#include <string>
-#include <unordered_set>
 
 #define ENABLE_PRINTING
 #include "mooedit/mootextprint.h"

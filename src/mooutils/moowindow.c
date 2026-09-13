@@ -34,8 +34,6 @@
 #include "mooutils/mootype-macros.h"
 #include "mooutils/mooutils-enums.h"
 #include "mooutils/moocompat.h"
-#include <gtk/gtk.h>
-#include <gobject/gvaluecollector.h>
 
 
 #define PREFS_REMEMBER_SIZE  "window/remember_size"

@@ -13,9 +13,6 @@
  *   License along with medit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
 #include "mooedit/mooplugin-macro.h"
 #include "mooedit/mooedit-script.h"
@@ -32,10 +29,6 @@
 #include "mooutils/mooutils-fs.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/moobuilder.h"
-#include <gtk/gtk.h>
-#include <string.h>
-#include <sys/wait.h>
-#include <signal.h>
 
 #define FIND_PLUGIN_ID "Find"
 

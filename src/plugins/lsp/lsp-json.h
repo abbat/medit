@@ -24,7 +24,6 @@
 #ifndef MOO_LSP_JSON_H
 #define MOO_LSP_JSON_H
 
-#include <json-glib/json-glib.h>
 
 G_BEGIN_DECLS
 

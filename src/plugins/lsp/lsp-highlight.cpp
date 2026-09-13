@@ -19,7 +19,6 @@
 
 #include "mooutils/mooprefs.h"
 
-#include <string.h>
 
 /* Long enough that walking through a file with the arrow keys is one request
    per stop rather than one per line, short enough not to feel late. */

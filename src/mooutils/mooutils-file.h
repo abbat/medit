@@ -1,7 +1,6 @@
 #ifndef MOO_UTILS_FILE_H
 #define MOO_UTILS_FILE_H
 
-#include <gio/gio.h>
 #include <mooutils/mooarray.h>
 
 G_BEGIN_DECLS

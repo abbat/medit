@@ -13,9 +13,6 @@
  *   License along with medit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
 #include "moofileview/moobookmarkmgr.h"
 #include "moofileview/moofileentry.h"
@@ -28,11 +25,8 @@
 #include "mooutils/mooutils-treeview.h"
 #include "mooutils/moobuilder.h"
 #include "mooutils/mooi18n.h"
-#include <string.h>
 #ifdef HAVE_UNISTD_H
-#include <unistd.h>
 #endif
-#include <gtk/gtk.h>
 #include <mooglib/moo-glib.h>
 
 #define COLUMN_BOOKMARK MOO_BOOKMARK_MGR_COLUMN_BOOKMARK

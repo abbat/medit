@@ -13,7 +13,6 @@
  *   License along with medit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <config.h>
 
 #include "mooutils/moobuilder.h"
 

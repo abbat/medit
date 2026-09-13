@@ -44,8 +44,6 @@
 #include "mooutils/mooencodings.h"
 #include "mooutils/moolist.h"
 #include <mooglib/moo-glib.h>
-#include <string.h>
-#include <stdlib.h>
 
 #define RECENT_ACTION_ID "OpenRecent"
 #define RECENT_DIALOG_ACTION_ID "OpenRecentDialog"

@@ -19,8 +19,6 @@
 #include "mooutils/mooaccel.h"
 #include "mooutils/mooutils-gobject.h"
 #include "marshals.h"
-#include <gtk/gtk.h>
-#include <string.h>
 
 
 static void proxy_set_use_underline       (GtkWidget *proxy,

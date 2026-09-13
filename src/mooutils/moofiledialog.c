@@ -17,7 +17,6 @@
  * class:MooFileDialog: (parent GObject) (constructable) (moo.private 1)
  **/
 
-#include "config.h"
 #include "mooutils/moodialogs.h"
 #include "mooutils/mooprefs.h"
 #include "mooutils/mooutils-misc.h"
@@ -27,8 +26,6 @@
 #include "mooutils/mooutils-enums.h"
 #include "mooutils/mooi18n.h"
 #include "marshals.h"
-#include <gtk/gtk.h>
-#include <string.h>
 
 
 struct _MooFileDialogPrivate {

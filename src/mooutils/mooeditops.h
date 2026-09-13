@@ -16,7 +16,6 @@
 #ifndef MOO_EDIT_OPS_H
 #define MOO_EDIT_OPS_H
 
-#include <glib-object.h>
 
 G_BEGIN_DECLS
 

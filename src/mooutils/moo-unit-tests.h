@@ -40,13 +40,9 @@
 #ifndef MOO_UNIT_TESTS_H
 #define MOO_UNIT_TESTS_H
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
 #ifdef MOO_ENABLE_UNIT_TESTS
 
-#include <glib.h>
 
 G_BEGIN_DECLS
 

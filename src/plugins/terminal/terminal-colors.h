@@ -18,8 +18,6 @@
 #ifndef MOO_TERMINAL_COLORS_H
 #define MOO_TERMINAL_COLORS_H
 
-#include <gtk/gtk.h>
-#include <vte/vte.h>
 
 G_BEGIN_DECLS
 

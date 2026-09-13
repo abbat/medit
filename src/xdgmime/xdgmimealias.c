@@ -25,9 +25,6 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
 #include "xdgmimealias.h"
 #include "xdgmimeint.h"
@@ -180,5 +177,4 @@ _xdg_mime_alias_list_dump (XdgAliasList *list)
 	}
     }
 }
-
 

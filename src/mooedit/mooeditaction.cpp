@@ -23,7 +23,6 @@
 #include "mooedit/mooedit-impl.h"
 #include "mooutils/mooutils.h"
 #include <mooglib/moo-glib.h>
-#include <string.h>
 
 
 typedef enum {

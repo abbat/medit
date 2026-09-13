@@ -18,9 +18,6 @@
 #include "mooutils-debug.h"
 #include "mooutils-misc.h"
 #include "moolist.h"
-#include <string.h>
-#include <sys/time.h>
-#include <time.h>
 
 #define VERSION_STRING "0001"
 #define VERSION_LEN 4

@@ -18,7 +18,6 @@
 #ifndef MOO_FILE_WATCH_H
 #define MOO_FILE_WATCH_H
 
-#include <glib-object.h>
 
 G_BEGIN_DECLS
 

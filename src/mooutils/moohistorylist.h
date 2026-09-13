@@ -16,7 +16,6 @@
 #ifndef MOO_HISTORY_LIST_H
 #define MOO_HISTORY_LIST_H
 
-#include <gtk/gtk.h>
 #include <mooutils/moomenumgr.h>
 
 G_BEGIN_DECLS

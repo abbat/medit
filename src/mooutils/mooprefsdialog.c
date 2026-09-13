@@ -17,7 +17,6 @@
  * class:MooPrefsDialog: (parent GtkDialog) (constructable) (moo.private 1)
  **/
 
-#include "config.h"
 #include "marshals.h"
 #include "mooutils/mooprefsdialog.h"
 #include "mooutils/moodialogs.h"
@@ -551,4 +550,3 @@ moo_prefs_dialog_remove_page (MooPrefsDialog     *dialog,
     gtk_notebook_remove_page (dialog->notebook,
                               gtk_notebook_page_num (dialog->notebook, page));
 }
-

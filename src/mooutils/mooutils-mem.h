@@ -17,8 +17,6 @@
 #define MOO_UTILS_MEM_H
 
 #include <mooglib/moo-glib.h>
-#include <gtk/gtk.h>
-#include <string.h>
 
 // GFunc compatible g_free
 static inline void moo_free(gpointer mem, G_GNUC_UNUSED gpointer user_data)

@@ -16,7 +16,6 @@
 #ifndef CTAGS_VIEW_H
 #define CTAGS_VIEW_H
 
-#include <gtk/gtk.h>
 
 #define MOO_TYPE_CTAGS_VIEW              (_moo_ctags_view_get_type ())
 #define MOO_CTAGS_VIEW(object)           (G_TYPE_CHECK_INSTANCE_CAST ((object), MOO_TYPE_CTAGS_VIEW, MooCtagsView))

@@ -16,7 +16,6 @@
 #include "mooedit/mooindenter.h"
 #include "mooedit/mooedit.h"
 #include "marshals.h"
-#include <string.h>
 
 
 /* XXX this doesn't take unicode control chars into account */

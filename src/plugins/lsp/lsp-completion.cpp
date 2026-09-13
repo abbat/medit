@@ -22,8 +22,6 @@
 #include "mooedit/mootextview.h"
 #include "mooutils/mooprefs.h"
 
-#include <gdk/gdkkeysyms.h>
-#include <string.h>
 
 #define LSP_COMPLETION_MAX_ITEMS 200
 #define LSP_COMPLETION_ROWS 10

@@ -15,7 +15,6 @@
 
 #pragma once
 
-#include <gtk/gtk.h>
 
 #ifdef __cplusplus
 

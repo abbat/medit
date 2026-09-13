@@ -13,7 +13,6 @@
  *   License along with medit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <config.h>
 
 #include "moofilesystem.h"
 #include "moofolder-private.h"
@@ -21,9 +20,6 @@
 #include "mooutils/mooutils-mem.h"
 #include "mooutils/mooutils.h"
 #include "marshals.h"
-#include <gio/gio.h>
-#include <stdio.h>
-#include <sys/wait.h>
 
 #if 0 && MOO_DEBUG
 #define DEBUG_MESSAGE g_message

@@ -19,8 +19,6 @@
 #include "mooutils/stock-file-24.h"
 #include "moo-pixbufs.h"
 #include "mooutils/mooi18n.h"
-#include <gtk/gtk.h>
-#include <string.h>
 
 #define REAL_SMALL 6
 

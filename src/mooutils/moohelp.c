@@ -14,9 +14,6 @@
  *   License along with medit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
 #include "moohelp.h"
 #include "mooaccel.h"
@@ -24,7 +21,6 @@
 #include "mooi18n.h"
 #include "moodialogs.h"
 
-#include <gdk/gdkkeysyms.h>
 
 
 void

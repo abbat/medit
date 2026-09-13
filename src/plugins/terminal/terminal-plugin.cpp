@@ -21,9 +21,6 @@
  * whole file is compiled out when cmake does not find vte-2.91.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
 #include "plugins/terminal/terminal-plugin.h"
 #include "plugins/terminal/terminal-colors.h"
@@ -41,9 +38,6 @@
 #include "mooutils/moostock.h"
 #include "mooutils/mooutils-misc.h"
 
-#include <gtk/gtk.h>
-#include <vte/vte.h>
-#include <string.h>
 
 /* What the python plugin asked for. vte allocates rows lazily. */
 #define TERMINAL_SCROLLBACK_LINES 1000000

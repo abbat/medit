@@ -17,15 +17,9 @@
  * class:MooBigPaned: (parent GtkFrame) (constructable) (moo.private 1)
  **/
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
 #include "moobigpaned.h"
 #include "marshals.h"
-#include <errno.h>
-#include <string.h>
-#include <stdlib.h>
 
 #include "mooutils-mem.h"
 #include "mooutils-misc.h"

@@ -16,7 +16,6 @@
 #ifndef MOOUTILS_DIALOGS_H
 #define MOOUTILS_DIALOGS_H
 
-#include <gtk/gtk.h>
 #include "mooutils/moofiledialog.h"
 
 G_BEGIN_DECLS

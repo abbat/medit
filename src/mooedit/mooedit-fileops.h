@@ -17,7 +17,6 @@
 #define MOO_EDIT_FILE_OPS_H
 
 #include "mooedit/mooedit.h"
-#include <gio/gio.h>
 
 G_BEGIN_DECLS
 

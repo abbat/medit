@@ -13,9 +13,6 @@
  *   License along with medit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 #include "moocommand-exe.h"
 #include "mooedit/mooeditor.h"
 #include "mooedit/mooedit-script.h"
@@ -29,11 +26,8 @@
 #include "mooutils/moospawn.h"
 #include "mooutils/mootype-macros.h"
 #include "mooutils/moobuilder.h"
-#include <gtk/gtk.h>
-#include <string.h>
 
 #ifdef HAVE_UNISTD_H
-#include <unistd.h>
 #endif
 #define RUN_CMD_FLAGS ((GSpawnFlags)0)
 #define SCRIPT_EXTENSION ".sh"

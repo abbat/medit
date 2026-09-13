@@ -3,13 +3,6 @@
 #include "moo-time.h"
 #include "moo-stat.h"
 
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <time.h>
-#include <stdio.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <unistd.h>
 
 const mgw_errno_t MGW_E_NOERROR = { MGW_ENOERROR };
 const mgw_errno_t MGW_E_EXIST   = { MGW_EEXIST };

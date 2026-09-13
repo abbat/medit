@@ -15,7 +15,6 @@
 
 #pragma once
 
-#include <gtk/gtk.h>
 #include "../support/moooutputfilter.h"
 #include "moousertools-enums.h"
 

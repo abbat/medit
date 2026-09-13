@@ -22,7 +22,6 @@
 #include "mooedit/moolinemark.h"
 #include "mooutils/mooi18n.h"
 
-#include <string.h>
 
 /* Where the marks put on a document are remembered, to take them off again. */
 #define LSP_MARKS_QUARK "moo-lsp-diagnostic-marks"

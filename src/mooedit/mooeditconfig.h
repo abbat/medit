@@ -16,7 +16,6 @@
 #ifndef MOO_EDIT_CONFIG_H
 #define MOO_EDIT_CONFIG_H
 
-#include <glib-object.h>
 #include <mooedit/mooedit-enums.h>
 
 G_BEGIN_DECLS

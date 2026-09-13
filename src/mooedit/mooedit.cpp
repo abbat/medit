@@ -54,8 +54,6 @@
 #include "mooutils/mootype-macros.h"
 #include "mooutils/mooatom.h"
 #include "mooutils/moocompat.h"
-#include <string.h>
-#include <stdlib.h>
 
 #define KEY_ENCODING "encoding"
 #define KEY_LINE "line"

@@ -13,9 +13,6 @@
  *   License along with medit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
 #include "moofileselector.h"
 #include "mooedit/mooplugin-macro.h"
@@ -41,10 +38,6 @@
 #include "mooutils/mooatom.h"
 #include <mooglib/moo-glib.h>
 #include <mooglib/moo-stat.h>
-#include <gmodule.h>
-#include <gtk/gtk.h>
-#include <gdk/gdkkeysyms.h>
-#include <string.h>
 
 #define PREFS_LAST_DIR MOO_PLUGIN_PREFS_ROOT "/" MOO_FILE_SELECTOR_PLUGIN_ID "/last_dir"
 #define PREFS_HIDDEN_FILES MOO_PLUGIN_PREFS_ROOT "/" MOO_FILE_SELECTOR_PLUGIN_ID "/show_hidden_files"

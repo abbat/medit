@@ -33,14 +33,6 @@
  * GTK+ at ftp://ftp.gtk.org/pub/gtk/.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-#include <stdlib.h>
-#include <glib/gprintf.h>
-#include <string.h>
-#include <gtk/gtk.h>
-#include <gdk/gdkkeysyms.h>
 #include "mooutils/moofontsel.h"
 #include "mooutils/mooi18n.h"
 #include "mooutils/moocompat.h"

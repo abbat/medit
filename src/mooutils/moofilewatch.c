@@ -13,16 +13,11 @@
  *   License along with medit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
 #define WANT_STAT_MONITOR
 
-#include <time.h>
 #include <mooglib/moo-glib.h>
 #include <mooglib/moo-stat.h>
-#include <sys/types.h>
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooutils-mem.h"
 #include "mooutils/moofilewatch.h"

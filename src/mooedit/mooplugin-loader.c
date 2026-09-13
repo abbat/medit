@@ -13,17 +13,11 @@
  *   License along with medit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 #include "mooedit/mooplugin-loader.h"
 #include "mooedit/mooplugin.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooutils-debug.h"
 #include "mooutils/mooi18n.h"
-#include <string.h>
-#include <stdlib.h>
-#include <gmodule.h>
 
 #define GROUP_MODULE    "module"
 #define GROUP_PLUGIN    "plugin"

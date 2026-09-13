@@ -20,8 +20,6 @@
 #include "mooutils/moomenuaction.h"
 #include "mooutils/mooaction-private.h"
 #include "marshals.h"
-#include <gtk/gtk.h>
-#include <string.h>
 
 
 static void moo_menu_action_class_init      (MooMenuActionClass *klass);

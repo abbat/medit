@@ -1,7 +1,5 @@
-#include "config.h"
 #include "mooutils-file.h"
 #include "mooutils.h"
-#include <fnmatch.h>
 
 MOO_DEFINE_OBJECT_ARRAY_FULL (MooFileArray, moo_file_array, GFile)
 

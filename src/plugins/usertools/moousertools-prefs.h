@@ -16,7 +16,6 @@
 #ifndef MOO_USER_TOOLS_PREFS_H
 #define MOO_USER_TOOLS_PREFS_H
 
-#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 

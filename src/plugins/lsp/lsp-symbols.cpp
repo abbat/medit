@@ -18,7 +18,6 @@
 
 #include "mooutils/mooi18n.h"
 
-#include <string.h>
 
 /*
  * SymbolKind, as numbered by the protocol. C_() concatenates its two literals

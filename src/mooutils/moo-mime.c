@@ -17,7 +17,6 @@
 #include "xdgmime/xdgmime.h"
 #include "mooutils/mooutils-fs.h"
 #include <mooglib/moo-stat.h>
-#include <string.h>
 
 G_LOCK_DEFINE (moo_mime);
 

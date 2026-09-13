@@ -16,7 +16,6 @@
 #ifndef MOO_COMBO_H
 #define MOO_COMBO_H
 
-#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 

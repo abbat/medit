@@ -16,7 +16,6 @@
 #ifndef MOO_UTILS_SCRIPT_H
 #define MOO_UTILS_SCRIPT_H
 
-#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 

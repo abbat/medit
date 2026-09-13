@@ -13,9 +13,6 @@
  *   License along with medit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
 #include "plugins/terminal/terminal-plugin.h"
 #include "plugins/terminal/terminal-colors.h"
@@ -26,7 +23,6 @@
 #include "mooutils/mooprefspage.h"
 #include "mooutils/moostock.h"
 
-#include <string.h>
 
 
 static void

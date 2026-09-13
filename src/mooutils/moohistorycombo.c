@@ -21,9 +21,6 @@
 #include "mooutils/moohistorycombo.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/moocompat.h"
-#include <gtk/gtk.h>
-#include <gdk/gdkkeysyms.h>
-#include <string.h>
 
 
 struct _MooHistoryComboPrivate {

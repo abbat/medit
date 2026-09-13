@@ -23,7 +23,6 @@
 #include "mooutils/mooprefs.h"
 #include "mooutils/mooutils-file.h"
 
-#include <string.h>
 
 /*
  * The reply to a hover request arrives long after the tooltip was asked for,

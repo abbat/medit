@@ -17,9 +17,6 @@
  *  TODO!!! fix this mess
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
 #include "moofileview/moofilesystem.h"
 #include "moofileview/moofile-private.h"
@@ -33,14 +30,8 @@
 #include <mooglib/moo-glib.h>
 #include <mooglib/moo-stat.h>
 
-#include <string.h>
-#include <sys/types.h>
-#include <errno.h>
 #ifdef HAVE_UNISTD_H
-#include <unistd.h>
 #endif
-#include <time.h>
-#include <gtk/gtk.h>
 
 MOO_DEBUG_INIT(file, FALSE)
 

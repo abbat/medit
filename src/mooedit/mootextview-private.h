@@ -19,7 +19,6 @@
 #include "mooedit/mootextview.h"
 #include "mooedit/mootextsearch.h"
 #include "mooutils/moohistorylist.h"
-#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 

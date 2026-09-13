@@ -23,7 +23,6 @@
 
 #include "plugins/lsp/lsp-server.h"
 
-#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 

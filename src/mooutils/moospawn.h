@@ -16,7 +16,6 @@
 #ifndef MOO_SPAWN_H
 #define MOO_SPAWN_H
 
-#include <glib-object.h>
 
 G_BEGIN_DECLS
 

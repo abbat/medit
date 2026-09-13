@@ -20,8 +20,6 @@
 
 #include "mooutils/mooprefs.h"
 
-#include <gdk/gdkkeysyms.h>
-#include <string.h>
 
 /* Only one call is being typed at a time, which is why nothing here is an
    object -- the same reason the completion popup is not one. */

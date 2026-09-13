@@ -21,7 +21,6 @@
 #include "mooutils/mooutils-file.h"
 #include "mooutils/mooprefs.h"
 
-#include <string.h>
 
 /*
  * A server with nothing open is kept this long before being shut down.

@@ -16,7 +16,6 @@
 #ifndef MOO_TREE_VIEW_H
 #define MOO_TREE_VIEW_H
 
-#include <gtk/gtk.h>
 #include "moofileview/mooiconview.h"
 
 G_BEGIN_DECLS

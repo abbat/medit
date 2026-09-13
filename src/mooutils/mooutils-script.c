@@ -13,12 +13,10 @@
  *   License along with medit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "config.h"
 #include "mooutils-script.h"
 #include "mooutils-fs.h"
 #include "mooutils-debug.h"
 #include "mooutils.h"
-#include <stdlib.h>
 
 static char *moo_temp_dir;
 

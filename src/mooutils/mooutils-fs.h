@@ -17,7 +17,6 @@
 #define MOO_UTILS_FS_H
 
 #include <mooglib/moo-glib.h>
-#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 

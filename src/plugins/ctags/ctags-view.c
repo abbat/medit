@@ -20,7 +20,6 @@
 #include "marshals.h"
 #include <mooutils/mooutils-gobject.h>
 #include <mooutils/mooutils-treeview.h>
-#include <gtk/gtk.h>
 
 struct _MooCtagsViewPrivate {
     guint nothing;

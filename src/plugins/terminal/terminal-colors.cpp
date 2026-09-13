@@ -15,14 +15,10 @@
  *   License along with medit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
 #include "plugins/terminal/terminal-colors.h"
 #include "mooutils/mooi18n.h"
 
-#include <string.h>
 
 /* Shamelessly stolen from Konsole, the best terminal emulator out there,
    by way of the python plugin this one replaces. */

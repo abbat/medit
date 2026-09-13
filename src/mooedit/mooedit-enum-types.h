@@ -4,7 +4,6 @@
 #ifndef MOO_EDIT_ENUM_TYPES_H
 #define MOO_EDIT_ENUM_TYPES_H
 
-#include <glib-object.h>
 
 G_BEGIN_DECLS
 /* MooEditConfigSource */
@@ -48,4 +47,3 @@ G_END_DECLS
 #endif /* MOO_EDIT_ENUM_TYPES_H */
 
 /* Generated data ends here */
-

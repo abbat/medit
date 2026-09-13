@@ -22,8 +22,6 @@
 #include "mooutils/moomenuaction.h"
 #include "mooutils/mooi18n.h"
 #include "mooutils/mootype-macros.h"
-#include <string.h>
-#include <gobject/gvaluecollector.h>
 
 
 typedef GtkAction *(*MooEditActionFunc)     (MooEdit            *edit,

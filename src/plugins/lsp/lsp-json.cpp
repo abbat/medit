@@ -15,8 +15,6 @@
 
 #include "plugins/lsp/lsp-json.h"
 
-#include <math.h>
-#include <string.h>
 
 
 JsonNode *

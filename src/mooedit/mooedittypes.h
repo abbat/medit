@@ -1,7 +1,6 @@
 #ifndef MOO_EDIT_TYPES_H
 #define MOO_EDIT_TYPES_H
 
-#include <gtk/gtk.h>
 #include <mooutils/mooarray.h>
 #include <mooutils/moolist.h>
 #include <mooutils/mootype-macros.h>

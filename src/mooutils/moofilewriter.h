@@ -16,7 +16,6 @@
 #ifndef MOO_FILE_WRITER_H
 #define MOO_FILE_WRITER_H
 
-#include <gio/gio.h>
 
 G_BEGIN_DECLS
 

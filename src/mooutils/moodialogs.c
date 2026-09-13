@@ -13,7 +13,6 @@
  *   License along with medit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <gtk/gtk.h>
 #include "mooutils/moodialogs.h"
 #include "mooutils/mooprefs.h"
 #include "mooutils/mooutils-misc.h"

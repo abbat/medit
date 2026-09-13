@@ -17,7 +17,6 @@
 #include "moofile-private.h"
 #include "moofolder-private.h"
 #include "moofoldermodel-private.h"
-#include <gtk/gtk.h>
 
 
 struct _MooFolderModelPrivate {
@@ -860,4 +859,3 @@ _moo_folder_filter_set_folder (MooFolderFilter    *filter,
     g_return_if_fail (MOO_IS_FOLDER_MODEL (model));
     _moo_folder_model_set_folder (MOO_FOLDER_MODEL (model), folder);
 }
-

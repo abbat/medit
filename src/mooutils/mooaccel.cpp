@@ -16,10 +16,6 @@
 #include "mooutils/mooaccel.h"
 #include "mooutils/mooprefs.h"
 #include "mooutils/moocompat.h"
-#include <gdk/gdkkeysyms.h>
-#include <gtk/gtk.h>
-#include <string.h>
-#include <locale.h>
 
 #define MOO_ACCEL_PREFS_KEY "Shortcuts"
 #define COMMAND_MASK GDK_CONTROL_MASK

@@ -20,7 +20,6 @@
 #include "mooutils/mooutils-debug.h"
 #include "mooutils/mooutils-mem.h"
 #include "mooutils/mooprefs.h"
-#include <gobject/gvaluecollector.h>
 
 
 #define VALUE(c_,i_)  (&(c_)->priv->values[i_])

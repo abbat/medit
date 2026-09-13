@@ -16,7 +16,6 @@
 #ifndef MOO_APP_ACCELS_H
 #define MOO_APP_ACCELS_H
 
-#include <gtk/gtk.h>
 
 #define MOO_APP_ACCEL_HELP "F1"
 #define MOO_APP_ACCEL_QUIT "<Ctrl>Q"

@@ -13,13 +13,8 @@
  *   License along with medit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "config.h"
 #include "mooutils/mooappinput-priv.h"
 
-#include <fcntl.h>
-#include <errno.h>
-#include <stdio.h>
-#include <string.h>
 #include "mooappinput.h"
 #include "mooapp-ipc.h"
 #include "mooutils-misc.h"

@@ -42,10 +42,7 @@
 #include "mooutils/mootype-macros.h"
 #include "mooutils/moocompat.h"
 #include "mooutils/mooutils-gobject.h"
-#include <gtk/gtk.h>
 #include <mooglib/moo-glib.h>
-#include <gdk/gdkkeysyms.h>
-#include <string.h>
 
 #define LIGHT_BLUE "#EEF6FF"
 #define BOOL_CMP(b1,b2) ((b1 && b2) || (!b1 && !b2))

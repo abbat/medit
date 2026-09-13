@@ -22,7 +22,6 @@
 #include "mooutils/mooi18n.h"
 #include "mooutils/mooutils-file.h"
 
-#include <string.h>
 
 
 /**********************************************************************/

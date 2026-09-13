@@ -27,8 +27,6 @@
 #include "mooutils/mooi18n.h"
 #include "mooutils/mooaction-private.h"
 #include "mooutils/mootype-macros.h"
-#include <string.h>
-#include <stdlib.h>
 
 
 #define N_TOOLS 2

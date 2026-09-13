@@ -14,7 +14,6 @@
  */
 
 #include "moofileview/moofile-private.h"
-#include <string.h>
 #include <mooglib/moo-glib.h>
 
 #ifndef MOO_FILE_VIEW_AUX_H

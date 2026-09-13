@@ -16,7 +16,6 @@
 #ifndef MOO_TEXT_PRINT_H
 #define MOO_TEXT_PRINT_H
 
-#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 

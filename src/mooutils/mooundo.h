@@ -16,7 +16,6 @@
 #ifndef MOO_UNDO_H
 #define MOO_UNDO_H
 
-#include <glib-object.h>
 
 G_BEGIN_DECLS
 

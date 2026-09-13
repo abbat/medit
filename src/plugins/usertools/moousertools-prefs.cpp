@@ -23,7 +23,6 @@
 #include "mooutils/mooutils.h"
 #include "mooutils/moohelp.h"
 #include "mooutils/moobuilder.h"
-#include <string.h>
 
 enum {
     COLUMN_INFO,

@@ -19,15 +19,9 @@
 #include "mooutils/mooi18n.h"
 #include "mooutils/mooprefs.h"
 
-#include <stdarg.h>
-#include <string.h>
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
 #ifdef HAVE_UNISTD_H
-#include <unistd.h>
 #endif
 
 /* A server that dies sooner than this never really started. */

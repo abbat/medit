@@ -24,7 +24,6 @@
 #include "marshals.h"
 #include "mooutils/mooundo.h"
 #include "mooutils/mooutils-gobject.h"
-#include <string.h>
 
 
 struct MooTextBufferPrivate {

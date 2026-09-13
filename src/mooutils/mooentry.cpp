@@ -24,9 +24,6 @@
 #include "mooutils/mooutils-gobject.h"
 #include "mooutils/mooeditops.h"
 #include "mooutils/mooi18n.h"
-#include <gtk/gtk.h>
-#include <gdk/gdkkeysyms.h>
-#include <string.h>
 
 
 struct _MooEntryPrivate {

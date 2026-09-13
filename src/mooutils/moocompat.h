@@ -2,7 +2,6 @@
 #define MOO_GTK_H
 
 #include <mooglib/moo-glib.h>
-#include <gtk/gtk.h>
 
 #if !GTK_CHECK_VERSION(3,0,0)
 

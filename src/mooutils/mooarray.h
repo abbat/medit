@@ -2,7 +2,6 @@
 #define MOO_ARRAY_H
 
 #include <mooutils/mooutils-mem.h>
-#include <glib-object.h>
 
 #define MOO_DECLARE_PTR_ARRAY_FULL(ArrayType, array_type, ElmType)      \
                                                                         \

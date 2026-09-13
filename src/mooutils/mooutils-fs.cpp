@@ -26,20 +26,14 @@
 #include <mooglib/moo-stat.h>
 #include <mooglib/moo-glib.h>
 
-#include <stdio.h>
-#include <string.h>
-#include <errno.h>
-#include <sys/types.h>
 
 #ifndef S_IRWXU
 #define S_IRWXU 0
 #endif
 
 #ifdef HAVE_SYS_WAIT_H
-#include <sys/wait.h>
 #endif
 #ifdef HAVE_UNISTD_H
-#include <unistd.h>
 #endif
 
 #define BROKEN_NAME "<" "????" ">"

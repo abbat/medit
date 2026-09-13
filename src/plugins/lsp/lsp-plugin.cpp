@@ -22,9 +22,6 @@
  * for both.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
 #include "plugins/lsp/lsp-plugin.h"
 #include "plugins/lsp/lsp-manager.h"

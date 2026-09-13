@@ -16,7 +16,6 @@
 #include "moocommanddisplay.h"
 #include "moocommand-private.h"
 #include "mooutils/mooutils-misc.h"
-#include <string.h>
 
 
 typedef struct {

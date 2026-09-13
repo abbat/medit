@@ -14,19 +14,14 @@
  *   License along with medit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "config.h"
 #define MOO_DO_NOT_MANGLE_GLIB_FUNCTIONS
 #include "ctags-doc.h"
 #include "ctags-view.h"
 #include "readtags.h"
 #include <mooutils/mooutils-misc.h>
 #include <mooutils/mootype-macros.h>
-#include <gtk/gtk.h>
-#include <string.h>
 #ifdef HAVE_UNISTD_H
-#include <unistd.h>
 #endif
-#include <stdlib.h>
 
 MOO_DEFINE_BOXED_TYPE_R (MooCtagsEntry, _moo_ctags_entry)
 

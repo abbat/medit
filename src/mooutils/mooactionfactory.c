@@ -17,8 +17,6 @@
 #include "mooutils/mooutils-gobject.h"
 #include "mooutils/mooaction.h"
 #include "mooutils/mooactionbase.h"
-#include <gobject/gvaluecollector.h>
-#include <string.h>
 
 
 static MooActionFactory *moo_action_factory_new_valist  (GType       action_type,

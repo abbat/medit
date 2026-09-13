@@ -21,8 +21,6 @@
 #include "mooutils/moostock.h"
 #include "moo-pixbufs.h"
 #include <mooglib/moo-glib.h>
-#include <gtk/gtk.h>
-#include <string.h>
 
 void
 moo_file_icon_for_file (MooFileIcon *icon,

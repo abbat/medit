@@ -22,7 +22,6 @@
 #include "mooutils/moodialogs.h"
 #include "mooutils/mooi18n.h"
 
-#include <string.h>
 
 
 /**********************************************************************/

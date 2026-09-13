@@ -14,9 +14,6 @@
  *   License along with medit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
 #include "mooedit/mooedit-private.h"
 #include "mooedit/mooeditor-impl.h"
@@ -32,13 +29,8 @@
 #include "mooutils/mooutils.h"
 #include "mooutils/mooutils-fs.h"
 #include "mooutils/moocompat.h"
-#include <string.h>
-#include <sys/types.h>
-#include <fcntl.h>
 #ifdef HAVE_UNISTD_H
-#include <unistd.h>
 #endif
-#include <stdio.h>
 
 #include <mooglib/moo-glib.h>
 

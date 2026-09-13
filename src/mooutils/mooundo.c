@@ -15,7 +15,6 @@
 
 #include "mooutils/mooundo.h"
 #include "marshals.h"
-#include <string.h>
 
 
 /*

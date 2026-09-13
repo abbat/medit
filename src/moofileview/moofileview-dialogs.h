@@ -17,7 +17,6 @@
 #define MOO_FILE_VIEW_DIALOGS_H
 
 #include "moofileview/moofile.h"
-#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 

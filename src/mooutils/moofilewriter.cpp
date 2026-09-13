@@ -13,19 +13,14 @@
  *   License along with medit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <config.h>
 #include "mooutils/moofilewriter-private.h"
 #include "mooutils/mootype-macros.h"
 #include "mooutils/mooutils-fs.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooi18n.h"
 #include "mooutils/moocompat.h"
-#include <stdio.h>
-#include <string.h>
 #include <mooglib/moo-glib.h>
-#include <gio/gio.h>
 #ifdef HAVE_UNISTD_H
-#include <unistd.h>
 #endif
 
 /************************************************************************/

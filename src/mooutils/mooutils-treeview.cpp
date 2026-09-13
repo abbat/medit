@@ -19,8 +19,6 @@
 #include "mooutils/moocompat.h"
 #include "mooutils/mootype-macros.h"
 #include "marshals.h"
-#include <string.h>
-#include <gobject/gvaluecollector.h>
 
 
 typedef enum {

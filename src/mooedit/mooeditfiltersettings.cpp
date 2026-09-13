@@ -23,7 +23,6 @@
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooutils-debug.h"
 #include <mooglib/moo-glib.h>
-#include <string.h>
 
 MOO_DEBUG_INIT(filters, FALSE)
 

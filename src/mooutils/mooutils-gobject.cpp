@@ -16,10 +16,6 @@
 #include "mooutils/mooutils-gobject-private.h"
 #include "mooutils/mooclosure.h"
 #include "mooutils/mootype-macros.h"
-#include <gobject/gvaluecollector.h>
-#include <string.h>
-#include <stdlib.h>
-#include <errno.h>
 
 
 /*****************************************************************************/

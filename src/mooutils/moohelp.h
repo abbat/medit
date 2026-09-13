@@ -17,7 +17,6 @@
 #ifndef MOO_HELP_H
 #define MOO_HELP_H
 
-#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 

@@ -24,9 +24,6 @@
 #include "mooutils/mooutils-misc.h"
 #include "plugins/usertools/moocommand.h"
 
-#include <sys/wait.h>
-#include <unistd.h>
-#include <signal.h>
 
 
 struct _MooCmdViewPrivate {

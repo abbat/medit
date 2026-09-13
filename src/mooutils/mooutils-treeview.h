@@ -16,7 +16,6 @@
 #ifndef MOO_UTILS_TREE_VIEW_H
 #define MOO_UTILS_TREE_VIEW_H
 
-#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 

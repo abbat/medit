@@ -152,6 +152,9 @@ target_compile_options(medit PRIVATE
     $<$<COMPILE_LANGUAGE:C>:${MOO_C_FLAGS}>
     $<$<COMPILE_LANGUAGE:CXX>:${MOO_CXX_FLAGS}>)
 
+target_precompile_headers(medit PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/sysheaders.h")
+
 target_link_libraries(medit PRIVATE
     PkgConfig::GTKPKG
     PkgConfig::GLIB

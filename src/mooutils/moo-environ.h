@@ -16,7 +16,6 @@
 #ifndef MOO_ENVIRON_H
 #define MOO_ENVIRON_H
 
-#include <config.h>
 
 extern char **environ;
 

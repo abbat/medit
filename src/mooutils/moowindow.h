@@ -19,7 +19,6 @@
 #include <mooutils/mooutils-gobject.h>
 #include <mooutils/moouixml.h>
 #include <mooutils/mooactioncollection.h>
-#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 

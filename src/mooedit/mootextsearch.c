@@ -17,7 +17,6 @@
 #include "gtksourceview/gtksourceview-api.h"
 #include "mooutils/mooutils-misc.h"
 #include <mooglib/moo-glib.h>
-#include <string.h>
 
 
 /* XXX lame */

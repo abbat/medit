@@ -15,8 +15,6 @@
 
 #include "plugins/lsp/lsp-client.h"
 
-#include <gio/gio.h>
-#include <string.h>
 
 #define LSP_READ_CHUNK 8192
 

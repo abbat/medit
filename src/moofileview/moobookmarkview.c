@@ -15,8 +15,6 @@
 
 #include "moofileview/moobookmarkview.h"
 #include "marshals.h"
-#include <gtk/gtk.h>
-#include <string.h>
 
 #define COLUMN_BOOKMARK MOO_BOOKMARK_MGR_COLUMN_BOOKMARK
 

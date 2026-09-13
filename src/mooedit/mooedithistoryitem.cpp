@@ -1,5 +1,4 @@
 #include "mooedithistoryitem.h"
-#include <stdlib.h>
 
 #define KEY_ENCODING "encoding"
 #define KEY_LINE "line"

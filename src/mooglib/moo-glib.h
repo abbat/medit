@@ -1,9 +1,5 @@
 #pragma once
 
-#include <glib.h>
-#include <glib/gstdio.h>
-#include <config.h>
-#include <errno.h>
 
 G_BEGIN_DECLS
 

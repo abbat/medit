@@ -16,7 +16,6 @@
 #ifndef MOO_TYPE_MACROS_H
 #define MOO_TYPE_MACROS_H
 
-#include <glib-object.h>
 #include <mooutils/mooonce.h>
 
 

@@ -13,9 +13,6 @@
  *   License along with medit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 #include "mooedit/moolangmgr-private.h"
 #include "mooedit/moolang-private.h"
 #include "mooedit/mooeditprefs.h"
@@ -24,7 +21,6 @@
 #include "mooutils/mooprefs.h"
 #include "marshals.h"
 #include "mooutils/moo-mime.h"
-#include <string.h>
 
 #define LANGUAGE_DIR            "language-specs"
 #define ELEMENT_LANG_CONFIG     MOO_EDIT_PREFS_PREFIX "/langs"

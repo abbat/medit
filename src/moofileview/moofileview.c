@@ -45,8 +45,6 @@
 #include "mooutils/moocompat.h"
 #include "marshals.h"
 #include "mooutils/mooi18n.h"
-#include <gdk/gdkkeysyms.h>
-#include <gtk/gtk.h>
 
 
 #define TYPEAHEAD_CASE_SENSITIVE_DEFAULT    FALSE

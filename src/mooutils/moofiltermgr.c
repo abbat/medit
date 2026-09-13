@@ -17,8 +17,6 @@
 #include "mooutils/mooprefs.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooi18n.h"
-#include <string.h>
-#include <gtk/gtk.h>
 
 #define NUM_USER_FILTERS  5
 #define ALL_FILES_GLOB    "*"

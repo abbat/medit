@@ -16,7 +16,6 @@
 #include "moofileview/mootreeview.h"
 #include "marshals.h"
 #include "mooutils/mooutils-gobject.h"
-#include <gtk/gtk.h>
 
 
 typedef MooTreeViewChild Child;

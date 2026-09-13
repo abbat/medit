@@ -54,8 +54,6 @@
 #include "mooutils/moomarkup.h"
 #include "mooutils/mooi18n.h"
 
-#include <gtk/gtk.h>
-#include <string.h>
 
 /* "alpha ", an emoji, " beta" -- the emoji is one character and two UTF-16
    code units, which is the whole point of it. */

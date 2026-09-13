@@ -16,7 +16,6 @@
 #ifndef MOO_LINE_MARK_H
 #define MOO_LINE_MARK_H
 
-#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 

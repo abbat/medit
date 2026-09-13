@@ -16,7 +16,6 @@
 #ifndef MOO_ATOM_H
 #define MOO_ATOM_H
 
-#include <gdk/gdk.h>
 
 G_BEGIN_DECLS
 

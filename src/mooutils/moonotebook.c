@@ -17,9 +17,6 @@
  * class:MooNotebook: (parent GtkNotebook) (constructable) (moo.private 1)
  **/
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
 #include "marshals.h"
 #include "mooutils/moonotebook.h"
@@ -27,12 +24,8 @@
 #include "mooutils/mooutils-mem.h"
 #include "mooutils/moopane.h"
 #include "mooutils/moocompat.h"
-#include <gdk/gdkkeysyms.h>
-#include <gtk/gtk.h>
 #if GTK_CHECK_VERSION(3,0,0)
-#include <gtk/gtk-a11y.h>
 #endif
-#include <string.h>
 
 #if defined(MOO_BROKEN_GTK_THEME)
 #define DETAIL_NOTEBOOK NULL

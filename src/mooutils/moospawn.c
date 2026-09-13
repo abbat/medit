@@ -16,12 +16,7 @@
 #include "mooutils/moospawn.h"
 #include "marshals.h"
 #include "mooutils/mooutils-misc.h"
-#include <string.h>
 
-#include <sys/wait.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <signal.h>
 
 typedef struct {
     MooCmd *cmd;

@@ -13,9 +13,6 @@
  *   License along with medit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
 
 #include "moocommand-private.h"
 #include "moocommand-exe.h"
@@ -27,10 +24,7 @@
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mootype-macros.h"
 #include "mooutils/mooutils-cpp.h"
-#include <gtk/gtk.h>
 #include <mooglib/moo-glib.h>
-#include <string.h>
-#include <stdio.h>
 
 enum {
     CTX_PROP_0,

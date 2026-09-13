@@ -13,7 +13,6 @@
  *   License along with medit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "config.h"
 
 #define MOO_DO_NOT_MANGLE_GLIB_FUNCTIONS
 #include <mooglib/moo-glib.h>
@@ -23,14 +22,7 @@
 # include <sys/socket.h>
 # include <sys/un.h>
 
-#include <unistd.h>
-#include <stdlib.h>
-#include <sys/types.h>
 
-#include <fcntl.h>
-#include <errno.h>
-#include <stdio.h>
-#include <string.h>
 #include "mooapp-ipc.h"
 #include "mooutils-misc.h"
 #include "mooutils-debug.h"

@@ -24,9 +24,6 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -1011,5 +1008,4 @@ _xdg_mime_cache_glob_dump (void)
 	    dump_glob_node (cache, offset + 20 * j, 0);
   }
 }
-
 

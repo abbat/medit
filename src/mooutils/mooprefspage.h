@@ -16,7 +16,6 @@
 #ifndef MOO_PREFS_PAGE_H
 #define MOO_PREFS_PAGE_H
 
-#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 

@@ -26,8 +26,6 @@
 #include "mooutils/moohelp.h"
 #include "mooutils/moocompat.h"
 #include "mooutils/moobuilder.h"
-#include <gtk/gtk.h>
-#include <glib/gprintf.h>
 
 
 #define REGEX_FREE(re) G_STMT_START {   \

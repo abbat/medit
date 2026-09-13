@@ -20,7 +20,6 @@
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooaccel.h"
 #include "mooutils/moocompat.h"
-#include <gdk/gdkkeysyms.h>
 
 
 static gboolean

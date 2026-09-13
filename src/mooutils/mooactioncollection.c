@@ -21,7 +21,6 @@
 #include "mooutils/mooactionbase.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/moowindow.h"
-#include <string.h>
 
 
 struct _MooActionCollectionPrivate {

@@ -13,9 +13,6 @@
  *   License along with medit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
 #include "moofileview/moofilesystem.h"
 #include "moofileview/moofolder-private.h"
@@ -25,13 +22,8 @@
 #include "marshals.h"
 #include <mooglib/moo-glib.h>
 #include <mooglib/moo-stat.h>
-#include <string.h>
-#include <sys/types.h>
 #ifdef HAVE_UNISTD_H
-#include <unistd.h>
 #endif
-#include <time.h>
-#include <gtk/gtk.h>
 
 #define NORMAL_PRIORITY         G_PRIORITY_DEFAULT_IDLE
 #define NORMAL_TIMEOUT          0.04

@@ -21,7 +21,6 @@
 #include "mooutils/mooutils-file.h"
 #include "mooutils/mooprefs.h"
 
-#include <string.h>
 
 struct LspDoc {
     MooEdit       *doc;

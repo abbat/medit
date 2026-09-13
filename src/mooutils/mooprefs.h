@@ -16,7 +16,6 @@
 #ifndef MOO_PREFS_H
 #define MOO_PREFS_H
 
-#include <glib-object.h>
 #include <mooutils/moomarkup.h>
 #include <mooutils/mooutils-file.h>
 

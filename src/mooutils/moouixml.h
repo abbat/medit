@@ -16,7 +16,6 @@
 #ifndef MOO_UI_XML_H
 #define MOO_UI_XML_H
 
-#include <libxml/parser.h>
 #include <mooutils/moomarkup.h>
 #include <mooutils/mooactioncollection.h>
 

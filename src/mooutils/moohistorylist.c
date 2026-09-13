@@ -21,8 +21,6 @@
 #include "mooutils/moohistorylist.h"
 #include "mooutils/mooprefs.h"
 #include "mooutils/mootype-macros.h"
-#include <gtk/gtk.h>
-#include <string.h>
 
 #define MAX_NUM_HISTORY_ITEMS 10
 

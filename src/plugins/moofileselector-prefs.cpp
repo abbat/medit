@@ -21,8 +21,6 @@
 #include "mooutils/moostock.h"
 #include "mooutils/moohelp.h"
 #include "mooutils/moobuilder.h"
-#include <gtk/gtk.h>
-#include <string.h>
 
 
 enum {

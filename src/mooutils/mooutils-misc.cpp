@@ -13,7 +13,6 @@
  *   License along with medit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "config.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooutils-fs.h"
 #include "mooutils/moofilewriter.h"
@@ -27,19 +26,11 @@
 #include "mooutils/mootype-macros.h"
 #include "mooutils/mooarray.h"
 #include "mooutils/moobuilder.h"
-#include <gtk/gtk.h>
 #include <mooglib/moo-glib.h>
 #ifdef HAVE_UNISTD_H
-#include <unistd.h>
 #endif
-#include <string.h>
-#include <stdio.h>
-#include <sys/types.h>
-#include <stdlib.h>
-#include <stdarg.h>
 
 #ifdef GDK_WINDOWING_X11
-#include <gdk/gdkx.h>
 #endif
 
 MOO_DEFINE_OBJECT_ARRAY_FULL (MooObjectArray, moo_object_array, GObject)
@@ -143,8 +134,6 @@ moo_open_file (const char *path)
 
 #ifdef GDK_WINDOWING_X11
 
-#include <X11/Xatom.h>
-#include <gdk/gdkx.h>
 
 
 /* TODO TODO is it 64-bits safe? */

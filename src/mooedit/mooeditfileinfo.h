@@ -15,7 +15,6 @@
 
 #pragma once
 
-#include <gio/gio.h>
 #include <mooedit/mooedittypes.h>
 #include <mooutils/mooutils-cpp.h>
 

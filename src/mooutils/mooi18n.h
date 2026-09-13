@@ -15,7 +15,6 @@
 
 #pragma once
 
-#include <config.h>
 #include <mooglib/moo-glib.h>
 
 G_BEGIN_DECLS
@@ -32,8 +31,6 @@ G_END_DECLS
 
 #ifdef ENABLE_NLS
 
-#include <libintl.h>
-#include <string.h>
 
 #define _(String) moo_gettext (String)
 #define N_(String) (String)

@@ -23,7 +23,6 @@
 #include "mooedit/moolangmgr.h"
 #include "mooutils/mooencodings.h"
 #include "mooutils/mooi18n.h"
-#include <string.h>
 
 #define DEFAULT_FONT "Monospace"
 

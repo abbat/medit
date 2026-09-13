@@ -19,9 +19,6 @@
 #error "This is a c++ header"
 #endif
 
-#include <glib.h>
-#include <string.h>
-#include <vector>
 
 class gstr;
 using gstrvec = std::vector<gstr>;

@@ -16,7 +16,6 @@
 #ifndef MOO_FILE_ICON_H
 #define MOO_FILE_ICON_H
 
-#include <gtk/gtk.h>
 #include <mooutils/mooutils-file.h>
 
 G_BEGIN_DECLS

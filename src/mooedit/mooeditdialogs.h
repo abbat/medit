@@ -18,7 +18,6 @@
 
 #include "mooutils/moodialogs.h"
 #include "mooedit/mooedittypes.h"
-#include <gio/gio.h>
 
 G_BEGIN_DECLS
 
