@@ -1,6 +1,6 @@
 """Ctags lists symbols and jumps to the selected function.
 
-# requires: MOO_BUILD_CTAGS
+# requires: MOO_BUILD_CTAGS, MOO_GTK3
 
 The document is opened from disk so the ctags plugin can parse its filename.
 The UI test checks the complete path from the document plugin through the
@@ -33,6 +33,12 @@ def setup(s):
 def run(t):
     t.menu("View", "Panes", "Functions")
     tree = t.wait(lambda: ctags_tree(t), "the Functions pane")
+
+    for group in ("Functions", "Macros", "Widget"):
+        row = t.need(tree, role="table cell", name=group,
+                     what="the %s ctags group" % group)
+        t.click(row)
+        t.key("Right")
 
     t.wait(lambda: expected_symbols(rows(t, tree)),
            "ctags symbols to appear; the tree holds %s" % rows(t, tree))
