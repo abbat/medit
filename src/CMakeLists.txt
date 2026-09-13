@@ -154,11 +154,15 @@ target_compile_options(medit PRIVATE
 
 # clang-tidy cannot consume the PCH generated for the clang build: its
 # invocation changes the language options and clang rejects the mismatch.
-# GCC builds keep the common PCH; the clang CI build analyzes without it.
+# Keep the common header forced into every clang translation unit instead, so
+# the clang build and its analyzer have the same declarations without a PCH.
 if(NOT CMAKE_C_COMPILER_ID MATCHES "Clang" AND
    NOT CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     target_precompile_headers(medit PRIVATE
         "${CMAKE_CURRENT_SOURCE_DIR}/sysheaders.h")
+else()
+    target_compile_options(medit PRIVATE
+        "-include${CMAKE_CURRENT_SOURCE_DIR}/sysheaders.h")
 endif()
 
 target_link_libraries(medit PRIVATE
