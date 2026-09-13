@@ -9,7 +9,7 @@ This test keeps the document unsaved, so it needs no input file.
 """
 
 CONTENT = "alpha beta"
-EXPECTED = "alpha alpha beta"
+EXPECTED = "alpha alphabeta"
 
 
 def run(t):

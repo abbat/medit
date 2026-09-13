@@ -31,7 +31,8 @@ def run(t):
     dialog = t.preferences("View")
     tick(t, dialog, "Draw right margin", True)
 
-    spin = t.need(dialog, role="spin button", what="the right-margin column")
+    spin = t.wait(lambda: visible_spin(t, dialog),
+                  "the visible right-margin column")
     t.wait(lambda: t.state(spin, "sensitive"),
            "the right-margin column to become editable")
     t.click(spin)
@@ -56,3 +57,9 @@ def tick(t, dialog, name, on):
         t.click(box)
         t.wait(lambda: t.state(box, "checked") == on,
                "the %r box to be %s" % (name, "ticked" if on else "clear"))
+
+
+def visible_spin(t, dialog):
+    """Ignore spin buttons on the preference pages that are not displayed."""
+    spins = t.on_screen(t.find_all(dialog, role="spin button"))
+    return spins[0] if len(spins) == 1 else None
