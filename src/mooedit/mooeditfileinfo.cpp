@@ -126,18 +126,6 @@ moo_open_info_dup (MooOpenInfo *info)
 
 
 /**
- * moo_open_info_get_filename: (moo.private 1)
- *
- * Returns: (type filename)
- **/
-char *
-moo_open_info_get_filename (MooOpenInfo *info)
-{
-    g_return_val_if_fail (MOO_IS_OPEN_INFO (info), NULL);
-    return g_file_get_path (info->file);
-}
-
-/**
  * moo_open_info_get_uri: (moo.private 1)
  *
  * Returns: (type utf8)
@@ -147,18 +135,6 @@ moo_open_info_get_uri (MooOpenInfo *info)
 {
     g_return_val_if_fail (MOO_IS_OPEN_INFO (info), NULL);
     return g_file_get_uri (info->file);
-}
-
-/**
- * moo_open_info_get_file: (moo.private 1)
- *
- * Returns: (transfer full)
- **/
-GFile *
-moo_open_info_get_file (MooOpenInfo *info)
-{
-    g_return_val_if_fail (MOO_IS_OPEN_INFO (info), NULL);
-    return g_file_dup (info->file);
 }
 
 /**

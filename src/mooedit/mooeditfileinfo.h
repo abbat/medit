@@ -64,9 +64,6 @@ MooOpenInfo         *moo_open_info_new_uri      (const char         *uri,
                                                  MooOpenFlags        flags);
 MooOpenInfo         *moo_open_info_dup          (MooOpenInfo        *info);
 
-char                *moo_open_info_get_filename (MooOpenInfo        *info);
-char                *moo_open_info_get_uri      (MooOpenInfo        *info);
-GFile               *moo_open_info_get_file     (MooOpenInfo        *info);
 char                *moo_open_info_get_uri      (MooOpenInfo        *info);
 const char          *moo_open_info_get_encoding (MooOpenInfo        *info);
 void                 moo_open_info_set_encoding (MooOpenInfo        *info,
