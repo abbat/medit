@@ -125,8 +125,6 @@ public:
     bool fetch_pos(int match_num, int& start_pos, int& end_pos) const;
     gstr fetch_named(const char* name) const;
     bool fetch_named_pos(const char* name, int& start_pos, int& end_pos) const;
-    std::vector<gstr> fetch_all() const;
-
 private:
     std::reference_wrapper<const Regex> m_regex;
     GMatchInfo* m_p;

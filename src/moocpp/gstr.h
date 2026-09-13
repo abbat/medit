@@ -60,8 +60,6 @@ public:
 
     static gstrvec take(char** strv);
 
-    gstrvec split(const char* separator, int max_pieces) const;
-
 private:
     char* m_p;
 };
@@ -79,12 +77,3 @@ struct hash<gstr>
 };
 
 } // namespace std
-
-class ConstCharSource
-{
-public:
-    static const char* get(const char* s) { return s; }
-
-
-    static const char* get(const gstr& s) { return s.get(); }
-};

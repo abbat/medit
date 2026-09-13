@@ -127,8 +127,3 @@ gstrvec gstr::take(char** strv)
     g_free(strv);
     return result;
 }
-
-gstrvec gstr::split(const char* separator, int max_pieces) const
-{
-    return take(g_strsplit(get(), separator, max_pieces));
-}

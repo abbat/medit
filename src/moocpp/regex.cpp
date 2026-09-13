@@ -218,9 +218,4 @@ bool MatchInfo::fetch_named_pos(const char* name, int& start_pos, int& end_pos) 
     return g_match_info_fetch_named_pos(m_p, name, &start_pos, &end_pos);
 }
 
-gstrvec MatchInfo::fetch_all() const
-{
-    return gstr::take(g_match_info_fetch_all(m_p));
-}
-
 } // namespace g
