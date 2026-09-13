@@ -5,5 +5,4 @@ target_sources(medit PRIVATE
     moocpp.h
     regex.cpp
     regex.h
-    util.h
 )

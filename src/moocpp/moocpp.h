@@ -17,4 +17,3 @@
 
 #include "moocpp/gobjptr.h"
 #include "moocpp/gstr.h"
-#include "moocpp/util.h"
