@@ -124,6 +124,10 @@ list(FILTER MOO_PROJECT_SRC_FILES EXCLUDE REGEX "/gtksourceview/")
 list(FILTER MOO_PROJECT_SRC_FILES EXCLUDE REGEX "/xdgmime/")
 list(FILTER MOO_PROJECT_SRC_FILES EXCLUDE REGEX "/plugins/ctags/")
 set_source_files_properties(${MOO_PROJECT_SRC_FILES} PROPERTIES LANGUAGE CXX)
+set(MOO_PROJECT_C_FILES ${MOO_PROJECT_SRC_FILES})
+list(FILTER MOO_PROJECT_C_FILES INCLUDE REGEX "\\.c$")
+set_source_files_properties(${MOO_PROJECT_C_FILES}
+                            PROPERTIES COMPILE_OPTIONS "-x;c++")
 
 add_custom_command(
     OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/builder-ids.stamp"
@@ -155,6 +159,10 @@ set_source_files_properties(
     "${CMAKE_CURRENT_BINARY_DIR}/marshals.c"
     "${CMAKE_CURRENT_BINARY_DIR}/resources.c"
     PROPERTIES LANGUAGE CXX)
+set_source_files_properties(
+    "${CMAKE_CURRENT_BINARY_DIR}/marshals.c"
+    "${CMAKE_CURRENT_BINARY_DIR}/resources.c"
+    PROPERTIES COMPILE_OPTIONS "-x;c++")
 
 add_dependencies(medit validate-xml check-builder-ids)
 
