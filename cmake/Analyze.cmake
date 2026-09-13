@@ -35,7 +35,7 @@ set(MOO_ANALYZE_EXCLUDE
     "src/vendor/gtksourceview/"
     "src/vendor/xdgmime/"
     "src/vendor/eggsmclient/"
-    "src/plugins/ctags/readtags\\.c")
+    "src/vendor/ctags/readtags\\.c")
 
 list(JOIN MOO_ANALYZE_EXCLUDE "|" _moo_analyze_exclude)
 # run-clang-tidy takes a python regex matched against each path in the

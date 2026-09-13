@@ -6,6 +6,6 @@ target_sources(medit PRIVATE
     ctags-view.c
     ctags-view.h
     readtags-mangle.h
-    readtags.c
-    readtags.h
+    ../../vendor/ctags/readtags.c
+    ../../vendor/ctags/readtags.h
 )

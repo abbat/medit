@@ -17,7 +17,7 @@
 #define MOO_DO_NOT_MANGLE_GLIB_FUNCTIONS
 #include "ctags-doc.h"
 #include "ctags-view.h"
-#include "readtags.h"
+#include "vendor/ctags/readtags.h"
 #include "mooutils/mooutils-misc.h"
 #ifdef HAVE_UNISTD_H
 #endif
