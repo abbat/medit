@@ -61,6 +61,7 @@ def set_shell(t, dialog, path):
     entries = t.on_screen(t.find_all(dialog, role="text"))
     t.check(len(entries) == 1, "the page has one entry, for the shell")
 
+    t.focus(frame=dialog)
     t.click(entries[0])
     t.key("ctrl+a")
     t.type_text(path)
