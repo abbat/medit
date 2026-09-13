@@ -194,20 +194,6 @@ mgw_fgets(char *s, int size, MGW_FILE *stream)
 }
 
 
-MgwFd
-mgw_open (const char *filename, int flags, int mode)
-{
-    MgwFd fd;
-    fd.value = g_open (filename, flags, mode);
-    return fd;
-}
-
-int
-mgw_close (MgwFd fd)
-{
-    return close (fd.value);
-}
-
 int
 mgw_unlink (const char *path, mgw_errno_t *err)
 {

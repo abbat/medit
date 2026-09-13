@@ -29,6 +29,7 @@
 #include "mooutils/mooutils-fs.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/moobuilder.h"
+#include "mooutils/mooutils-mem.h"
 
 #define FIND_PLUGIN_ID "Find"
 
@@ -563,8 +564,8 @@ do_grep (MooEditWindow *window,
     execute_grep (pattern, glob, dirs, skip,
                   case_sensitive, stuff);
 
-    g_slist_foreach (dirs, (GFunc) moo_free, NULL);
-    g_slist_free (dirs);
+    g_slist_free_full (dirs, (GDestroyNotify) g_free);
+
 }
 
 
@@ -602,8 +603,8 @@ do_find (MooEditWindow *window,
         execute_find (pattern, (const char*) dirs->data, skip, stuff);
     }
 
-    g_slist_foreach (dirs, (GFunc) moo_free, NULL);
-    g_slist_free (dirs);
+    g_slist_free_full (dirs, (GDestroyNotify) g_free);
+
 }
 
 

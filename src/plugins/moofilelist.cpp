@@ -2205,7 +2205,7 @@ do_update (WindowPlugin *plugin)
     file_list_update (plugin->list, list);
 
     g_slist_free (list);
-    moo_edit_array_free (docs);
+    delete docs;
     return FALSE;
 }
 

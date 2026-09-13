@@ -24,6 +24,7 @@
 #include "mooutils/moofontsel.h"
 #include "mooutils/mooutils-treeview.h"
 #include "mooutils/mooutils-misc.h"
+#include "mooutils/mooutils-mem.h"
 #include "mooutils/mooencodings.h"
 #include "mooutils/mooi18n.h"
 #include "mooutils/moohelp.h"
@@ -494,8 +495,8 @@ list_to_string (GSList  *list,
 
     if (free_list)
     {
-        g_slist_foreach (list, (GFunc) moo_free, NULL);
-        g_slist_free (list);
+        g_slist_free_full (list, (GDestroyNotify) g_free);
+
     }
 
     return g_string_free (string, FALSE);
@@ -885,8 +886,8 @@ populate_filter_settings_store (GtkListStore *store)
         l = l->next->next;
     }
 
-    g_slist_foreach (strings, (GFunc) moo_free, NULL);
-    g_slist_free (strings);
+    g_slist_free_full (strings, (GDestroyNotify) g_free);
+
 }
 
 
@@ -1042,8 +1043,8 @@ apply_filter_settings (GtkBuilder *gxml)
     _moo_edit_filter_settings_set_strings (strings);
     filter_store_set_modified (G_OBJECT (model), FALSE);
 
-    g_slist_foreach (strings, (GFunc) moo_free, NULL);
-    g_slist_free (strings);
+    g_slist_free_full (strings, (GDestroyNotify) g_free);
+
 }
 
 

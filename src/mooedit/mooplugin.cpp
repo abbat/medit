@@ -40,6 +40,7 @@
 #include "mooutils/mooi18n.h"
 #include "mooutils/moostock.h"
 #include "mooutils/mooutils-misc.h"
+#include "mooutils/mooutils-mem.h"
 #include "mooutils/mooutils-debug.h"
 #include "mooutils/moohelp.h"
 
@@ -290,7 +291,7 @@ moo_plugin_register (const char            *id,
     windows = moo_editor_get_windows (plugin_store->editor);
     for (i = 0; i < windows->n_elms; ++i)
         plugin_attach_win (plugin, windows->elms[i]);
-    moo_edit_window_array_free (windows);
+    delete windows;
 
     return TRUE;
 }
@@ -381,7 +382,7 @@ plugin_attach_win (MooPlugin      *plugin,
     docs = moo_edit_window_get_docs (window);
     for (i = 0; i < docs->n_elms; ++i)
         plugin_attach_doc (plugin, window, docs->elms[i]);
-    moo_edit_array_free (docs);
+    delete docs;
 }
 
 
@@ -404,7 +405,7 @@ plugin_detach_win (MooPlugin      *plugin,
     docs = moo_edit_window_get_docs (window);
     for (i = 0; i < docs->n_elms; ++i)
         plugin_detach_doc (plugin, window, docs->elms[i]);
-    moo_edit_array_free (docs);
+    delete docs;
 
     win_plugin = window_get_plugin (window, plugin);
 
@@ -777,7 +778,7 @@ plugin_enable (MooPlugin  *plugin)
     windows = moo_editor_get_windows (plugin_store->editor);
     for (i = 0; i < windows->n_elms; ++i)
         plugin_attach_win (plugin, windows->elms[i]);
-    moo_edit_window_array_free (windows);
+    delete windows;
 
     return TRUE;
 }
@@ -799,7 +800,7 @@ plugin_disable (MooPlugin  *plugin)
     windows = moo_editor_get_windows (plugin_store->editor);
     for (i = 0; i < windows->n_elms; ++i)
         plugin_detach_win (plugin, windows->elms[i]);
-    moo_edit_window_array_free (windows);
+    delete windows;
 
     plugin_deinit (plugin);
     plugin->params->enabled = FALSE;
@@ -1299,8 +1300,8 @@ sync_pages (MooPrefsDialog *dialog)
     g_object_set_data_full (G_OBJECT (dialog), "moo-plugin-prefs-pages",
                             plugin_pages, (GDestroyNotify) g_slist_free);
 
-    g_slist_foreach (plugin_ids, (GFunc) moo_free, NULL);
-    g_slist_free (plugin_ids);
+    g_slist_free_full (plugin_ids, (GDestroyNotify) g_free);
+
     g_slist_free (plugins);
 }
 

@@ -962,10 +962,8 @@ moo_folder_do_reload (MooFolderImpl *impl)
     for (l = deleted; l != NULL; l = l->next)
         file_deleted (impl, (const char *) l->data);
 
-    g_slist_foreach (new_files, (GFunc) moo_free, NULL);
-    g_slist_foreach (deleted, (GFunc) moo_free, NULL);
-    g_slist_free (new_files);
-    g_slist_free (deleted);
+    g_slist_free_full (new_files, (GDestroyNotify) g_free);
+    g_slist_free_full (deleted, (GDestroyNotify) g_free);
     g_hash_table_destroy (files);
     g_dir_close (dir);
     return FALSE;

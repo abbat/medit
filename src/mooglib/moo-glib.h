@@ -53,9 +53,6 @@ gsize mgw_fwrite(const void *ptr, gsize size, gsize nmemb, MGW_FILE *stream);
 int mgw_ferror (MGW_FILE *file);
 char *mgw_fgets(char *s, int size, MGW_FILE *stream);
 
-MgwFd mgw_open (const char *filename, int flags, int mode);
-int mgw_close (MgwFd fd);
-
 int mgw_unlink (const char *path, mgw_errno_t *err);
 int mgw_remove (const char *path, mgw_errno_t *err);
 int mgw_rename (const char *oldpath, const char *newpath, mgw_errno_t *err);

@@ -25,6 +25,7 @@
 #include "mooutils/mooi18n.h"
 #include "mooutils/moo-mime.h"
 #include "mooutils/mooutils-gobject.h"
+#include "mooutils/mooutils-mem.h"
 
 
 typedef struct {
@@ -56,10 +57,10 @@ moo_file_view_tool_action_finalize (GObject *object)
 {
     ToolAction *action = (ToolAction*) object;
 
-    g_slist_foreach (action->extensions, (GFunc) moo_free, NULL);
-    g_slist_free (action->extensions);
-    g_slist_foreach (action->mimetypes, (GFunc) moo_free, NULL);
-    g_slist_free (action->mimetypes);
+    g_slist_free_full (action->extensions, (GDestroyNotify) g_free);
+
+    g_slist_free_full (action->mimetypes, (GDestroyNotify) g_free);
+
     g_free (action->command);
 
     G_OBJECT_CLASS (_moo_file_view_tool_action_parent_class)->finalize (object);

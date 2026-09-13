@@ -330,10 +330,10 @@ add_marks (MooEdit *doc,
      */
     views = moo_edit_get_views (doc);
 
-    for (i = 0; i < moo_edit_view_array_get_size (views); ++i)
+    for (i = 0; i < views->size (); ++i)
         g_object_set (views->elms[i], "show-line-marks", TRUE, (const char*) NULL);
 
-    moo_edit_view_array_free (views);
+    delete views;
 
     g_hash_table_iter_init (&iter, worst);
 

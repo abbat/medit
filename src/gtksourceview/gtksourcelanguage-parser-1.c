@@ -27,7 +27,6 @@
 #include "gtksourcebuffer.h"
 #include "gtksourcelanguage.h"
 #include "gtksourcelanguage-private.h"
-#include "mooutils/moouixml.h"
 
 static gchar *
 fix_pattern (const gchar *pattern,
@@ -483,8 +482,7 @@ parseKeywordList (xmlNodePtr            cur,
 	g_free (beginning_regex),
 	g_free (end_regex);
 
-	g_slist_foreach (list, (GFunc) moo_xmlFree, NULL);
-	g_slist_free (list);
+	g_slist_free_full (list, (GDestroyNotify) xmlFree);
 
 	ctx_data_add_simple_pattern (ctx_data, language, id, (gchar*) style, regex);
 

@@ -17,6 +17,7 @@
 #include "mooedit/moolang-private.h"
 #include "mooedit/mooeditprefs.h"
 #include "mooutils/mooutils-misc.h"
+#include "mooutils/mooutils-mem.h"
 #include "mooutils/mooutils-fs.h"
 #include "marshals.h"
 #include "mooutils/moo-mime.h"
@@ -194,8 +195,8 @@ string_list_copy (GSList *list)
 static void
 string_list_free (GSList *list)
 {
-    g_slist_foreach (list, (GFunc) moo_free, NULL);
-    g_slist_free (list);
+    g_slist_free_full (list, (GDestroyNotify) g_free);
+
 }
 
 

@@ -21,8 +21,6 @@
 #ifndef __GTK_SOURCE_VIEW_UTILS_H__
 #define __GTK_SOURCE_VIEW_UTILS_H__
 
-#include "mooglib/moo-glib.h"
-
 G_BEGIN_DECLS
 
 gchar 	**_gtk_source_view_get_default_dirs (const gchar  *basename);

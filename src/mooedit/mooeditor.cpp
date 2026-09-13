@@ -336,8 +336,8 @@ static void
 moo_editor_init (MooEditor *editor)
 {
     editor->priv = (MooEditorPrivate*) moo_editor_get_instance_private (editor);
-    editor->priv->windows = moo_edit_window_array_new ();
-    editor->priv->windowless = moo_edit_array_new ();
+    editor->priv->windows = new MooEditWindowArray ();
+    editor->priv->windowless = new MooEditArray ();
 }
 
 static GObject *
@@ -496,8 +496,8 @@ moo_editor_finalize (GObject *object)
     if (editor->priv->windowless->n_elms)
         g_critical ("finalizing editor while some documents are open");
 
-    moo_edit_window_array_free (editor->priv->windows);
-    moo_edit_array_free (editor->priv->windowless);
+    delete editor->priv->windows;
+    delete editor->priv->windowless;
 
     G_OBJECT_CLASS (moo_editor_parent_class)->finalize (object);
 }
@@ -619,7 +619,7 @@ get_top_window (MooEditor *editor)
     GSList *window_list;
     guint i;
 
-    if (moo_edit_window_array_is_empty (editor->priv->windows))
+    if (editor->priv->windows->empty ())
         return NULL;
 
     for (window_list = NULL, i = 0; i < editor->priv->windows->n_elms; ++i)
@@ -818,7 +818,7 @@ create_window (MooEditor *editor)
                       "editor", editor,
                       "ui-xml", moo_editor_get_ui_xml (editor),
                       (const char*) NULL));
-    moo_edit_window_array_append (editor->priv->windows, window);
+    editor->priv->windows->append (window);
     _moo_window_attach_plugins (window);
     gtk_widget_show (GTK_WIDGET (window));
     return window;
@@ -831,7 +831,7 @@ moo_editor_add_doc (MooEditor      *editor,
                     MooEdit        *doc)
 {
     if (!window)
-        moo_edit_array_append (editor->priv->windowless, doc);
+        editor->priv->windowless->append (doc);
 }
 
 
@@ -1296,7 +1296,7 @@ _moo_editor_open_files (MooEditor         *editor,
 
     moo_return_error_if_fail_p (MOO_IS_EDITOR (editor));
     moo_return_error_if_fail_p (!parent || GTK_IS_WIDGET (parent));
-    moo_return_error_if_fail_p (!moo_open_info_array_is_empty (files));
+    moo_return_error_if_fail_p (!files->empty ());
 
     if (parent)
     {
@@ -1305,7 +1305,7 @@ _moo_editor_open_files (MooEditor         *editor,
             window = MOO_EDIT_WINDOW (top);
     }
 
-    docs = moo_edit_array_new ();
+    docs = new MooEditArray ();
 
     for (i = 0; i < files->n_elms; ++i)
     {
@@ -1322,7 +1322,7 @@ _moo_editor_open_files (MooEditor         *editor,
         {
             parent = GTK_WIDGET (moo_edit_get_view (doc));
             bring_to_front = doc;
-            moo_edit_array_append (docs, doc);
+            docs->append (doc);
         }
         else
         {
@@ -1339,7 +1339,7 @@ _moo_editor_open_files (MooEditor         *editor,
 
     if (!result)
     {
-        moo_edit_array_free (docs);
+        delete docs;
         docs = NULL;
     }
 
@@ -1467,13 +1467,13 @@ moo_editor_before_close_window (MooEditor     *editor,
     if (busy)
     {
         moo_editor_set_active_doc (editor, busy);
-        moo_edit_array_free (docs);
+        delete docs;
         return MOO_CLOSE_RESPONSE_CANCEL;
     }
 
     modified = find_modified (docs);
 
-    if (moo_edit_array_is_empty (modified))
+    if (modified->empty ())
     {
         do_close = TRUE;
     }
@@ -1505,7 +1505,7 @@ moo_editor_before_close_window (MooEditor     *editor,
         MooEditArray *to_save;
         gboolean saved = TRUE;
 
-        to_save = moo_edit_array_new ();
+        to_save = new MooEditArray ();
         response = _moo_edit_save_multiple_changes_dialog (modified, to_save);
 
         switch (response)
@@ -1529,11 +1529,11 @@ moo_editor_before_close_window (MooEditor     *editor,
                 break;
         }
 
-        moo_edit_array_free (to_save);
+        delete to_save;
     }
 
-    moo_edit_array_free (modified);
-    moo_edit_array_free (docs);
+    delete modified;
+    delete docs;
     return do_close ? MOO_CLOSE_RESPONSE_CONTINUE : MOO_CLOSE_RESPONSE_CANCEL;
 }
 
@@ -1550,17 +1550,17 @@ moo_editor_close_window (MooEditor      *editor,
     g_return_val_if_fail (MOO_IS_EDITOR (editor), FALSE);
     g_return_val_if_fail (MOO_IS_EDIT_WINDOW (window), FALSE);
 
-    if (moo_edit_window_array_find (editor->priv->windows, window) < 0)
+    if (editor->priv->windows->find (window) < 0)
         return TRUE;
 
     g_object_ref (window);
 
     g_signal_emit_by_name (window, "before-close", &response);
 
-    if (response != MOO_CLOSE_RESPONSE_CANCEL && moo_edit_window_array_find (editor->priv->windows, window) >= 0)
+    if (response != MOO_CLOSE_RESPONSE_CANCEL && editor->priv->windows->find (window) >= 0)
         g_signal_emit (editor, signals[BEFORE_CLOSE_WINDOW], 0, window, &response);
 
-    if (response != MOO_CLOSE_RESPONSE_CANCEL && moo_edit_window_array_find (editor->priv->windows, window) >= 0)
+    if (response != MOO_CLOSE_RESPONSE_CANCEL && editor->priv->windows->find (window) >= 0)
         do_close_window (editor, window);
 
     g_object_unref (window);
@@ -1584,14 +1584,14 @@ do_close_window (MooEditor      *editor,
     for (i = 0; i < docs->n_elms; ++i)
         do_close_doc (editor, docs->elms[i]);
 
-    moo_edit_window_array_remove (editor->priv->windows, window);
+    editor->priv->windows->remove (window);
 
     _moo_window_detach_plugins (window);
     gtk_widget_destroy (GTK_WIDGET (window));
 
     g_signal_emit (editor, signals[AFTER_CLOSE_WINDOW], 0);
 
-    moo_edit_array_free (docs);
+    delete docs;
 }
 
 
@@ -1610,8 +1610,8 @@ do_close_doc (MooEditor *editor,
 
     if (!window)
     {
-        g_assert (moo_edit_array_find (editor->priv->windowless, doc) >= 0);
-        moo_edit_array_remove (editor->priv->windowless, doc);
+        g_assert (editor->priv->windowless->find (doc) >= 0);
+        editor->priv->windowless->remove (doc);
     }
 
     update_history_item_for_doc (editor, doc, TRUE);
@@ -1636,10 +1636,10 @@ moo_editor_close_doc (MooEditor *editor,
     gboolean result;
     MooEditArray *docs;
 
-    docs = moo_edit_array_new ();
-    moo_edit_array_append (docs, doc);
+    docs = new MooEditArray ();
+    docs->append (doc);
     result = moo_editor_close_docs (editor, docs);
-    moo_edit_array_free (docs);
+    delete docs;
     return result;
 }
 
@@ -1656,7 +1656,7 @@ moo_editor_close_docs (MooEditor    *editor,
 
     g_return_val_if_fail (MOO_IS_EDITOR (editor), FALSE);
 
-    if (moo_edit_array_is_empty (docs))
+    if (docs->empty ())
         return TRUE;
 
     for (i = 0; i < docs->n_elms; ++i)
@@ -1707,7 +1707,7 @@ close_docs_real (MooEditor    *editor,
 
     modified = find_modified (docs);
 
-    if (moo_edit_array_is_empty (modified))
+    if (modified->empty ())
     {
         do_close = TRUE;
     }
@@ -1741,7 +1741,7 @@ close_docs_real (MooEditor    *editor,
         MooEditArray *to_save;
         gboolean saved = TRUE;
 
-        to_save = moo_edit_array_new ();
+        to_save = new MooEditArray ();
         response = _moo_edit_save_multiple_changes_dialog (modified, to_save);
 
         switch (response)
@@ -1765,7 +1765,7 @@ close_docs_real (MooEditor    *editor,
                 break;
         }
 
-        moo_edit_array_free (to_save);
+        delete to_save;
     }
 
     if (do_close)
@@ -1775,7 +1775,7 @@ close_docs_real (MooEditor    *editor,
             do_close_doc (editor, docs->elms[i]);
     }
 
-    moo_edit_array_free (modified);
+    delete modified;
     return do_close;
 }
 
@@ -1784,10 +1784,10 @@ static MooEditArray *
 find_modified (MooEditArray *docs)
 {
     guint i;
-    MooEditArray *modified = moo_edit_array_new ();
+    MooEditArray *modified = new MooEditArray ();
     for (i = 0; i < docs->n_elms; ++i)
         if (moo_edit_is_modified (docs->elms[i]) && !moo_edit_get_clean (docs->elms[i]))
-            moo_edit_array_append (modified, docs->elms[i]);
+            modified->append (docs->elms[i]);
     return modified;
 }
 
@@ -1806,12 +1806,12 @@ _moo_editor_close_all (MooEditor *editor)
     {
         if (!moo_editor_close_window (editor, windows->elms[i]))
         {
-            moo_edit_window_array_free (windows);
+            delete windows;
             return FALSE;
         }
     }
 
-    moo_edit_window_array_free (windows);
+    delete windows;
     return TRUE;
 }
 
@@ -1971,7 +1971,7 @@ save_window_session (MooEditWindow *window,
             moo_markup_set_bool_prop (doc_node, "active", TRUE);
     }
 
-    moo_edit_array_free (docs);
+    delete docs;
     return node;
 }
 
@@ -2048,7 +2048,7 @@ _moo_editor_save_session (MooEditor     *editor,
             moo_markup_set_bool_prop (window_node, "active", TRUE);
     }
 
-    moo_edit_window_array_free (windows);
+    delete windows;
 }
 
 
@@ -2061,7 +2061,7 @@ MooEditWindowArray *
 moo_editor_get_windows (MooEditor *editor)
 {
     g_return_val_if_fail (MOO_IS_EDITOR (editor), NULL);
-    return moo_edit_window_array_copy (editor->priv->windows);
+    return editor->priv->windows->copy ();
 }
 
 /**
@@ -2077,16 +2077,16 @@ moo_editor_get_docs (MooEditor *editor)
 
     g_return_val_if_fail (MOO_IS_EDITOR (editor), NULL);
 
-    docs = moo_edit_array_new ();
+    docs = new MooEditArray ();
 
     for (i = 0; i < editor->priv->windows->n_elms; ++i)
     {
         MooEditArray *docs_here = moo_edit_window_get_docs (editor->priv->windows->elms[i]);
-        moo_edit_array_append_array (docs, docs_here);
-        moo_edit_array_free (docs_here);
+        docs->append_array (docs_here);
+        delete docs_here;
     }
 
-    moo_edit_array_append_array (docs, editor->priv->windowless);
+    docs->append_array (editor->priv->windowless);
 
     return docs;
 }
@@ -2110,16 +2110,16 @@ moo_editor_open_files (MooEditor        *editor,
     gboolean ret;
 
     moo_return_error_if_fail (MOO_IS_EDITOR (editor));
-    moo_return_error_if_fail (!moo_open_info_array_is_empty (files));
+    moo_return_error_if_fail (!files->empty ());
 
     docs = _moo_editor_open_files (editor, files, parent, error);
-    ret = !moo_edit_array_is_empty (docs);
+    ret = !docs->empty ();
 
-    moo_assert (moo_edit_array_is_empty (docs) ||
-                moo_edit_array_get_size (docs) ==
-                    moo_open_info_array_get_size (files));
+    moo_assert (docs->empty () ||
+                docs->size () ==
+                    files->size ());
 
-    moo_edit_array_free (docs);
+    delete docs;
     return ret;
 }
 
@@ -2174,12 +2174,12 @@ moo_editor_open_file (MooEditor   *editor,
 
     moo_return_error_if_fail_p (info != NULL);
 
-    files = moo_open_info_array_new ();
-    moo_open_info_array_append (files, info);
+    files = new MooOpenInfoArray ();
+    files->append (info);
 
     docs = _moo_editor_open_files (editor, files, parent, error);
 
-    moo_open_info_array_free (files);
+    delete files;
 
     if (docs)
     {
@@ -2187,7 +2187,7 @@ moo_editor_open_file (MooEditor   *editor,
         ret = docs->elms[0];
     }
 
-    moo_edit_array_free (docs);
+    delete docs;
     return ret;
 }
 
@@ -2558,7 +2558,7 @@ moo_editor_reload (MooEditor     *editor,
 
     views = moo_edit_get_views (doc);
 
-    for (i = 0; i < moo_edit_view_array_get_size (views); ++i)
+    for (i = 0; i < views->size (); ++i)
     {
         int cursor_line, cursor_offset;
         GtkTextIter iter;
@@ -2589,7 +2589,7 @@ moo_editor_reload (MooEditor     *editor,
         goto out;
     }
 
-    for (i = 0; i < moo_edit_view_array_get_size (views); ++i)
+    for (i = 0; i < views->size (); ++i)
     {
         int cursor_line, cursor_offset;
         MooEditView *view = views->elms[i];
@@ -2604,7 +2604,7 @@ moo_editor_reload (MooEditor     *editor,
     ret = TRUE;
 
 out:
-    moo_edit_view_array_free (views);
+    delete views;
     return ret;
 }
 
@@ -2894,7 +2894,7 @@ moo_editor_get_doc_for_file (MooEditor *editor,
     {
         MooEditArray *docs = moo_edit_window_get_docs (editor->priv->windows->elms[i]);
         doc = doc_array_find_norm_name (docs, norm_name);
-        moo_edit_array_free (docs);
+        delete docs;
     }
 
     g_free (norm_name);

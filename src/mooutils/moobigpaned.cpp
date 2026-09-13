@@ -1628,8 +1628,8 @@ config_free (MooBigPanedConfig *config)
 
         for (pos = 0; pos < 4; pos++)
         {
-            g_slist_foreach (config->paned[pos].order, (GFunc) moo_free, NULL);
-            g_slist_free (config->paned[pos].order);
+            g_slist_free_full (config->paned[pos].order, (GDestroyNotify) g_free);
+
             g_free (config->paned[pos].active);
         }
 

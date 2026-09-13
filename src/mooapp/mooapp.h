@@ -125,7 +125,9 @@ MooEditor *moo_app_get_editor (MooApp *app);
  * \param pid the process ID to send the files to
  * \return TRUE on success, FALSE on failure
  */
+#ifdef __cplusplus
 gboolean moo_app_send_files (MooOpenInfoArray *files, guint32 stamp, const char *pid);
+#endif
 
 /*!
  * \brief Opens files in the application
@@ -133,7 +135,9 @@ gboolean moo_app_send_files (MooOpenInfoArray *files, guint32 stamp, const char 
  * \param files an array of files to open
  * \param stamp a timestamp
  */
+#ifdef __cplusplus
 void moo_app_open_files (MooApp *app, MooOpenInfoArray *files, guint32 stamp);
+#endif
 
 /*!
  * \brief Gets system information including application version, OS details, and library versions

@@ -15,6 +15,7 @@
 
 #include "mooedit/mooeditprefs.h"
 #include "mooutils/mooutils-debug.h"
+#include "mooutils/mooutils-mem.h"
 
 
 #define VALUE(c_,i_)  (&(c_)->priv->values[i_])

@@ -26,7 +26,6 @@ target_sources(medit PRIVATE
     mooappinput-priv.h
     mooappinput-unix.cpp
     mooappinput.h
-    mooarray.h
     mooatom.h
     moobuilder.cpp
     moobuilder.h

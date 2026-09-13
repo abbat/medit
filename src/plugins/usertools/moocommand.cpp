@@ -416,7 +416,7 @@ save_all (void)
         }
     }
 
-    moo_edit_array_free (docs);
+    delete docs;
     return result;
 }
 

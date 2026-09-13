@@ -73,9 +73,9 @@ _moo_edit_open_dialog (GtkWidget *widget,
         files = moo_file_dialog_get_files (dialog);
         g_return_val_if_fail (files != NULL && files->n_elms != 0, NULL);
 
-        info_array = moo_open_info_array_new ();
+        info_array = new MooOpenInfoArray ();
         for (i = 0; i < files->n_elms; ++i)
-            moo_open_info_array_take (info_array, moo_open_info_new_file (files->elms[i], encoding, -1, MooOpenFlags (0)));
+            info_array->take (moo_open_info_new_file (files->elms[i], encoding, -1, MooOpenFlags (0)));
 
         g_clear_object (&start);
         start = g_file_get_parent (files->elms[0]);
@@ -84,7 +84,7 @@ _moo_edit_open_dialog (GtkWidget *widget,
 
     g_clear_object (&start);
     g_object_unref (dialog);
-    moo_file_array_free (files);
+    delete files;
     return info_array;
 }
 
@@ -306,7 +306,7 @@ files_treeview_get_to_save (GtkTreeView  *treeview,
         g_return_if_fail (MOO_IS_EDIT (doc));
 
         if (save)
-            moo_edit_array_append (to_save, doc);
+            to_save->append (doc);
 
         g_object_unref (doc);
     }

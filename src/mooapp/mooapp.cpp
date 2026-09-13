@@ -690,10 +690,10 @@ editor_will_close_window (MooApp *app)
 
   windows = moo_editor_get_windows (app->priv->editor);
 
-  if (moo_edit_window_array_get_size (windows) == 1)
+  if (windows->size () == 1)
     moo_app_save_session (app);
 
-  moo_edit_window_array_free (windows);
+  delete windows;
 }
 
 /*!
@@ -711,14 +711,14 @@ editor_after_close_window (MooApp *app)
 
   windows = moo_editor_get_windows (app->priv->editor);
 
-  if (moo_edit_window_array_get_size (windows) == 0)
+  if (windows->size () == 0)
     {
       app->priv->in_after_close_window = TRUE;
       moo_app_quit (app);
       app->priv->in_after_close_window = FALSE;
     }
 
-  moo_edit_window_array_free (windows);
+  delete windows;
 }
 
 /*!
@@ -862,7 +862,7 @@ moo_app_parse_files (const char *data, guint32 *stamp)
     }
 
   *stamp = moo_markup_uint_prop (root, "stamp", 0);
-  files = moo_open_info_array_new ();
+  files = new MooOpenInfoArray ();
 
   for (node = root->children; node != NULL; node = node->next)
     {
@@ -899,7 +899,7 @@ moo_app_parse_files (const char *data, guint32 *stamp)
       if (moo_markup_bool_prop (node, "reload", FALSE))
         moo_open_info_add_flags (info, MOO_OPEN_FLAG_RELOAD);
 
-      moo_open_info_array_take (files, info);
+      files->take (info);
     }
 
   moo_markup_doc_unref (xml);
@@ -918,7 +918,7 @@ moo_app_cmd_open_files (MooApp *app, const char *data)
   guint32 stamp;
   files = moo_app_parse_files (data, &stamp);
   moo_app_open_files (app, files, stamp);
-  moo_open_info_array_free (files);
+  delete files;
 }
 
 /*!
@@ -1438,7 +1438,7 @@ moo_app_send_files (MooOpenInfoArray *files, guint32 stamp, const char *pid)
   g_string_append_printf (msg, "%s<moo-app-open-files version=\"%s\" stamp=\"%u\">",
                           CMD_OPEN_FILES_S, MOO_APP_CMD_VERSION, stamp);
 
-  for (i = 0, c = moo_open_info_array_get_size (files); i < c; ++i)
+  for (i = 0, c = files->size (); i < c; ++i)
     {
       MooOpenInfo *info = files->elms[i];
       const char *encoding = moo_open_info_get_encoding (info);
@@ -1483,14 +1483,14 @@ moo_app_open_files (MooApp *app, MooOpenInfoArray *files, guint32 stamp)
 {
   g_return_if_fail (MOO_IS_APP (app));
 
-  if (!moo_open_info_array_is_empty (files))
+  if (!files->empty ())
     {
       guint i;
-      MooOpenInfoArray *tmp = moo_open_info_array_copy (files);
+      MooOpenInfoArray *tmp = files->copy ();
       for (i = 0; i < tmp->n_elms; ++i)
         moo_open_info_add_flags (tmp->elms[i], MOO_OPEN_FLAG_CREATE_NEW);
       moo_editor_open_files (app->priv->editor, tmp, NULL, NULL);
-      moo_open_info_array_free (tmp);
+      delete tmp;
     }
 
   moo_editor_present (app->priv->editor, stamp);

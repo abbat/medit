@@ -20,6 +20,7 @@
 #include "mooedit/moolangmgr.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooi18n.h"
+#include "mooutils/mooutils-mem.h"
 
 #define FILTERS_VERSION     "1.0"
 
@@ -146,11 +147,11 @@ moo_output_filter_regex_dispose (GObject *object)
     moo_file_line_data_free (filter->priv->line);
     filter->priv->line = NULL;
 
-    g_slist_foreach (filter->priv->file_stack, (GFunc) moo_free, NULL);
-    g_slist_free (filter->priv->file_stack);
+    g_slist_free_full (filter->priv->file_stack, (GDestroyNotify) g_free);
+
     filter->priv->file_stack = NULL;
-    g_slist_foreach (filter->priv->dir_stack, (GFunc) moo_free, NULL);
-    g_slist_free (filter->priv->dir_stack);
+    g_slist_free_full (filter->priv->dir_stack, (GDestroyNotify) g_free);
+
     filter->priv->dir_stack = NULL;
 
     G_OBJECT_CLASS (_moo_output_filter_regex_parent_class)->dispose (object);

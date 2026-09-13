@@ -1,8 +1,6 @@
 #include "mooutils-file.h"
 #include "mooutils.h"
 
-MOO_DEFINE_OBJECT_ARRAY_FULL (MooFileArray, moo_file_array, GFile)
-
 char *
 moo_file_get_display_name (GFile *file)
 {

@@ -24,6 +24,7 @@
 #include "mooutils/moohelp.h"
 #include "mooutils/moofiltermgr.h"
 #include "mooutils/mooutils-enums.h"
+#include "mooutils/mooutils-mem.h"
 #include "mooutils/mooi18n.h"
 #include "marshals.h"
 
@@ -201,8 +202,8 @@ moo_file_dialog_get_property (GObject        *object,
 static void
 string_slist_free (GSList *list)
 {
-    g_slist_foreach (list, (GFunc) moo_free, NULL);
-    g_slist_free (list);
+    g_slist_free_full (list, (GDestroyNotify) g_free);
+
 }
 
 
@@ -457,11 +458,11 @@ uri_list_to_files (GSList *list)
     if (!list)
         return NULL;
 
-    flocs = moo_file_array_new ();
+    flocs = new MooFileArray ();
 
     while (list)
     {
-        moo_file_array_take (flocs, g_file_new_for_uri ((const char *) list->data));
+        flocs->take (g_file_new_for_uri ((const char *) list->data));
         list = list->next;
     }
 

@@ -294,10 +294,10 @@ hook_views_of_doc (MooEdit *doc)
 
     views = moo_edit_get_views (doc);
 
-    for (i = 0; i < moo_edit_view_array_get_size (views); ++i)
+    for (i = 0; i < views->size (); ++i)
         hook_view (views->elms[i]);
 
-    moo_edit_view_array_free (views);
+    delete views;
 }
 
 

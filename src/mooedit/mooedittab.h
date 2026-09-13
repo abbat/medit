@@ -6,7 +6,9 @@
 G_BEGIN_DECLS
 
 MooEdit             *moo_edit_tab_get_doc                   (MooEditTab     *tab);
+#ifdef __cplusplus
 MooEditViewArray    *moo_edit_tab_get_views                 (MooEditTab     *tab);
+#endif
 MooEditView         *moo_edit_tab_get_active_view           (MooEditTab     *tab);
 MooEditWindow       *moo_edit_tab_get_window                (MooEditTab     *tab);
 

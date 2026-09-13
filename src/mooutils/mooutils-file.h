@@ -1,11 +1,13 @@
 #ifndef MOO_UTILS_FILE_H
 #define MOO_UTILS_FILE_H
 
-#include "mooutils/mooarray.h"
+#include "moocpp/array.h"
+
+#ifdef __cplusplus
+using MooFileArray = MooObjectArray<GFile>;
+#endif
 
 G_BEGIN_DECLS
-
-MOO_DECLARE_OBJECT_ARRAY_FULL (MooFileArray, moo_file_array, GFile)
 
 static inline void
 moo_file_free (GFile *file)

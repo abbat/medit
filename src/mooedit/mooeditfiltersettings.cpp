@@ -18,6 +18,7 @@
 #include "mooedit/mooeditaction.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooutils-debug.h"
+#include "mooutils/mooutils-mem.h"
 
 MOO_DEBUG_INIT(filters, FALSE)
 
@@ -296,8 +297,8 @@ _moo_edit_filter_free (MooEditFilter *filter)
         {
             case MOO_EDIT_FILTER_GLOBS:
             case MOO_EDIT_FILTER_LANGS:
-                g_slist_foreach (filter->u.langs, (GFunc) moo_free, NULL);
-                g_slist_free (filter->u.langs);
+                g_slist_free_full (filter->u.langs, (GDestroyNotify) g_free);
+
                 break;
             case MOO_EDIT_FILTER_REGEX:
                 if (filter->u.regex)

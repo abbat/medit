@@ -100,10 +100,12 @@ MooEdit             *moo_editor_open_file           (MooEditor              *edi
                                                      MooOpenInfo            *info,
                                                      GtkWidget              *parent,
                                                      GError                **error);
+#ifdef __cplusplus
 gboolean             moo_editor_open_files          (MooEditor              *editor,
                                                      MooOpenInfoArray       *files,
                                                      GtkWidget              *parent,
                                                      GError                **error);
+#endif
 
 MooEdit             *moo_editor_open_uri            (MooEditor              *editor,
                                                      const char             *uri,
@@ -153,15 +155,19 @@ void                 moo_editor_set_active_window   (MooEditor              *edi
 void                 moo_editor_present             (MooEditor              *editor,
                                                      guint32                 stamp);
 
+#ifdef __cplusplus
 MooEditWindowArray  *moo_editor_get_windows         (MooEditor              *editor);
 MooEditArray        *moo_editor_get_docs            (MooEditor              *editor);
+#endif
 
 gboolean             moo_editor_close_window        (MooEditor              *editor,
                                                      MooEditWindow          *window);
 gboolean             moo_editor_close_doc           (MooEditor              *editor,
                                                      MooEdit                *doc);
+#ifdef __cplusplus
 gboolean             moo_editor_close_docs          (MooEditor              *editor,
                                                      MooEditArray           *docs);
+#endif
 gboolean            _moo_editor_close_all           (MooEditor              *editor);
 
 MooUiXml            *moo_editor_get_doc_ui_xml      (MooEditor              *editor);

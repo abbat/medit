@@ -36,7 +36,6 @@
 #include <unistd.h>
 #endif
 #include <libxml/xmlreader.h>
-#include "mooglib/moo-glib.h"
 #include "gtksourceview-i18n.h"
 #include "gtksourcebuffer.h"
 #include "gtksourcelanguage.h"
@@ -1523,7 +1522,7 @@ file_parse (gchar                     *filename,
 	ParserState *parser_state;
 	xmlTextReader *reader = NULL;
 	int ret;
-	MgwFd fd = { -1 };
+	int fd = -1;
 	GError *tmp_error = NULL;
 	GtkSourceLanguageManager *lm;
 	const gchar *rng_lang_schema;
@@ -1535,10 +1534,10 @@ file_parse (gchar                     *filename,
 	/*
 	 * Use fd instead of filename so that it's utf8 safe on w32.
 	 */
-	fd = mgw_open (filename, O_RDONLY, 0);
+	fd = open (filename, O_RDONLY, 0);
 
-	if (fd.value != -1)
-		reader = xmlReaderForFd (fd.value, filename, NULL, 0);
+	if (fd != -1)
+		reader = xmlReaderForFd (fd, filename, NULL, 0);
 
 	if (reader == NULL)
 	{
@@ -1614,13 +1613,13 @@ file_parse (gchar                     *filename,
 	if (tmp_error != NULL)
 		goto error;
 
-	mgw_close (fd);
+	close (fd);
 
 	return TRUE;
 
 error:
-	if (fd.value != -1)
-		mgw_close (fd);
+	if (fd != -1)
+		close (fd);
 	g_propagate_error (error, tmp_error);
 	return FALSE;
 }

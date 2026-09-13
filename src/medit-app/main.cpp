@@ -667,7 +667,7 @@ parse_files (void)
   if (medit_opts.files.empty () || !(n_files = (int) medit_opts.files.size ()))
     return NULL;
 
-  files = moo_open_info_array_new ();
+  files = new MooOpenInfoArray ();
 
   for (i = 0; i < n_files; ++i)
     {
@@ -691,7 +691,7 @@ parse_files (void)
       if (!moo_open_info_get_encoding (info) && medit_opts.encoding && medit_opts.encoding[0])
         moo_open_info_set_encoding (info, medit_opts.encoding);
 
-      moo_open_info_array_take (files, info);
+      files->take (info);
     }
 
   g_free (current_dir);
@@ -792,7 +792,7 @@ medit_app_main (int argc, char *argv[])
   if (files)
     moo_app_open_files (app, files, stamp);
 
-  moo_open_info_array_free (files);
+  delete files;
   g_option_context_free (ctx);
 
   retval = moo_app_run (app);

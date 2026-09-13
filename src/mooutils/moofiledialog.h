@@ -69,7 +69,9 @@ void            moo_file_dialog_set_filter_mgr_id       (MooFileDialog  *dialog,
 
 gboolean        moo_file_dialog_run                     (MooFileDialog  *dialog);
 GFile          *moo_file_dialog_get_file                (MooFileDialog  *dialog);
+#ifdef __cplusplus
 MooFileArray   *moo_file_dialog_get_files               (MooFileDialog  *dialog);
+#endif
 char           *moo_file_dialog_get_uri                 (MooFileDialog  *dialog);
 char          **moo_file_dialog_get_uris                (MooFileDialog  *dialog);
 

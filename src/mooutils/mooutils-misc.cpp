@@ -23,7 +23,6 @@
 #include "mooutils/mooutils-enums.h"
 #include "mooutils/moocompat.h"
 #include "mooutils/mootype-macros.h"
-#include "mooutils/mooarray.h"
 #include "mooutils/moobuilder.h"
 #ifdef HAVE_UNISTD_H
 #endif
@@ -31,7 +30,6 @@
 #ifdef GDK_WINDOWING_X11
 #endif
 
-MOO_DEFINE_OBJECT_ARRAY_FULL (MooObjectArray, moo_object_array, GObject)
 MOO_DEFINE_QUARK (moo-error, moo_error_quark)
 
 G_LOCK_DEFINE_STATIC (moo_user_data_dir);

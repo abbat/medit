@@ -26,8 +26,6 @@ static void moo_open_info_class_init   (MooOpenInfoClass *klass);
 static void moo_save_info_class_init   (MooSaveInfoClass *klass);
 static void moo_reload_info_class_init (MooReloadInfoClass *klass);
 
-MOO_DEFINE_OBJECT_ARRAY (MooOpenInfo, moo_open_info)
-
 G_DEFINE_TYPE (MooOpenInfo, moo_open_info, G_TYPE_OBJECT)
 G_DEFINE_TYPE (MooSaveInfo, moo_save_info, G_TYPE_OBJECT)
 G_DEFINE_TYPE (MooReloadInfo, moo_reload_info, G_TYPE_OBJECT)

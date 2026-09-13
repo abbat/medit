@@ -105,10 +105,12 @@ void                 moo_edit_window_set_active_view        (MooEditWindow  *win
 
 MooEditor           *moo_edit_window_get_editor             (MooEditWindow  *window);
 
+#ifdef __cplusplus
 MooEditArray        *moo_edit_window_get_docs               (MooEditWindow  *window);
 MooEditViewArray    *moo_edit_window_get_views              (MooEditWindow  *window);
 
 MooEditTabArray     *moo_edit_window_get_tabs               (MooEditWindow  *window);
+#endif
 int                  moo_edit_window_get_n_tabs             (MooEditWindow  *window);
 MooEditTab          *moo_edit_window_get_nth_tab            (MooEditWindow  *window,
                                                              guint           n);

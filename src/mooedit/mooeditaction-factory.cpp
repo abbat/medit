@@ -20,6 +20,7 @@
 #include "mooutils/mooactionbase.h"
 #include "mooutils/moomenuaction.h"
 #include "mooutils/mooi18n.h"
+#include "mooutils/mooutils-mem.h"
 
 
 typedef GtkAction *(*MooEditActionFunc)     (MooEdit            *edit,
@@ -417,13 +418,13 @@ error:
 
     if (doc_conditions)
     {
-        g_ptr_array_foreach (doc_conditions, (GFunc) moo_free, NULL);
+        g_ptr_array_set_free_func (doc_conditions, (GDestroyNotify) g_free);
         g_ptr_array_free (doc_conditions, TRUE);
     }
 
     if (view_conditions)
     {
-        g_ptr_array_foreach (view_conditions, (GFunc) moo_free, NULL);
+        g_ptr_array_set_free_func (view_conditions, (GDestroyNotify) g_free);
         g_ptr_array_free (view_conditions, TRUE);
     }
 

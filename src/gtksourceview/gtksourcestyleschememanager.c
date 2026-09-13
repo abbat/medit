@@ -22,7 +22,6 @@
 #include "gtksourceview-marshal.h"
 #include "gtksourceview-i18n.h"
 #include "gtksourceview-utils.h"
-#include "mooutils/mooutils-mem.h"
 #include <string.h>
 
 #define SCHEME_FILE_SUFFIX	".xml"
@@ -372,8 +371,8 @@ reload_if_needed (GtkSourceStyleSchemeManager *mgr)
 
 	ids = check_parents (ids, schemes_hash);
 
-	g_slist_foreach (files, (GFunc) moo_free, NULL);
-	g_slist_free (files);
+	g_slist_free_full (files, (GDestroyNotify) g_free);
+
 
 	free_schemes (mgr);
 

@@ -33,6 +33,7 @@
 #include "mooutils/moomenu.h"
 #include "mooutils/moobuilder.h"
 #include "mooutils/moohelp.h"
+#include "mooutils/mooutils-mem.h"
 #include "mooglib/moo-stat.h"
 
 #define PREFS_LAST_DIR MOO_PLUGIN_PREFS_ROOT "/" MOO_FILE_SELECTOR_PLUGIN_ID "/last_dir"
@@ -524,8 +525,8 @@ file_selector_create_file (MooFileSelector *filesel)
 out:
     g_free (path);
     g_free (dir);
-    g_list_foreach (selected, (GFunc) moo_free, nullptr);
-    g_list_free (selected);
+    g_list_free_full (selected, (GDestroyNotify) g_free);
+
 }
 
 

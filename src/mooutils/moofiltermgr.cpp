@@ -16,6 +16,7 @@
 #include "mooutils/moofiltermgr.h"
 #include "mooutils/mooprefs.h"
 #include "mooutils/mooutils-misc.h"
+#include "mooutils/mooutils-mem.h"
 #include "mooutils/mooi18n.h"
 
 #define NUM_USER_FILTERS  5
@@ -1147,8 +1148,8 @@ mgr_do_save (MooFilterMgr *mgr)
 
     mgr->priv->changed = FALSE;
 
-    g_slist_foreach (user_ids, (GFunc) moo_free, NULL);
-    g_slist_free (user_ids);
+    g_slist_free_full (user_ids, (GDestroyNotify) g_free);
+
     return FALSE;
 }
 

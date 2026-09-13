@@ -25,7 +25,6 @@
 #include "gtksourcelanguage-private.h"
 #include "gtksourcebuffer.h"
 #include "gtksourcestyle-private.h"
-#include "mooglib/moo-glib.h"
 #include <string.h>
 
 #undef DEBUG
@@ -2706,14 +2705,14 @@ sub_pattern_to_int (const gchar *name)
 {
 	guint64 number;
 	gchar *end_name;
-	mgw_errno_t err;
 
 	if (*name == 0)
 		return -1;
 
-	number = mgw_ascii_strtoull (name, &end_name, 10, &err);
+	errno = 0;
+	number = g_ascii_strtoull (name, &end_name, 10);
 
-	if (mgw_errno_is_set (err) || number > G_MAXINT || *end_name != 0)
+	if (errno != 0 || number > G_MAXINT || *end_name != 0)
 		return -1;
 
 	return number;

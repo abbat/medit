@@ -12,8 +12,6 @@
 #include "mooutils/mooutils.h"
 #include "mooutils/moocompat.h"
 
-MOO_DEFINE_OBJECT_ARRAY (MooEditView, moo_edit_view)
-
 static void     moo_edit_view_dispose               (GObject            *object);
 
 static gboolean moo_edit_view_focus_in              (GtkWidget          *widget,

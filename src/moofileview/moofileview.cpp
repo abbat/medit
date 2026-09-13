@@ -24,6 +24,7 @@
 #include "moofileview/moobookmarkview.h"
 #include "moofileview/moofileview-tools.h"
 #include "mooutils/mooutils-gobject.h"
+#include "mooutils/mooutils-mem.h"
 #include "mooutils/moobuilder.h"
 #include "mooutils/mooutils-fs.h"
 #include "mooutils/mooutils-misc.h"
@@ -2107,10 +2108,8 @@ history_init (MooFileView *fileview)
 static void
 history_clear (MooFileView *fileview)
 {
-    g_slist_foreach (fileview->priv->history->back, (GFunc) moo_free, NULL);
-    g_slist_foreach (fileview->priv->history->fwd, (GFunc) moo_free, NULL);
-    g_slist_free (fileview->priv->history->back);
-    g_slist_free (fileview->priv->history->fwd);
+    g_slist_free_full (fileview->priv->history->back, (GDestroyNotify) g_free);
+    g_slist_free_full (fileview->priv->history->fwd, (GDestroyNotify) g_free);
     fileview->priv->history->back = NULL;
     fileview->priv->history->fwd = NULL;
     g_free (fileview->priv->history->current);
@@ -2219,8 +2218,8 @@ history_add (MooFileView    *fileview,
     if (hist->fwd)
     {
         could_go_forward = TRUE;
-        g_slist_foreach (hist->fwd, (GFunc) moo_free, NULL);
-        g_slist_free (hist->fwd);
+        g_slist_free_full (hist->fwd, (GDestroyNotify) g_free);
+
         hist->fwd = NULL;
     }
 
@@ -2817,8 +2816,8 @@ file_view_paste_clipboard (MooFileView *fileview)
             copy_files (fileview, filenames, destdir);
         }
 
-        g_list_foreach (filenames, (GFunc) moo_free, NULL);
-        g_list_free (filenames);
+        g_list_free_full (filenames, (GDestroyNotify) g_free);
+
 
         goto out;
     }
@@ -2847,8 +2846,8 @@ file_view_paste_clipboard (MooFileView *fileview)
             copy_files (fileview, filenames, destdir);
 
         g_strfreev (uris);
-        g_list_foreach (filenames, (GFunc) moo_free, NULL);
-        g_list_free (filenames);
+        g_list_free_full (filenames, (GDestroyNotify) g_free);
+
 
         goto out;
     }
@@ -5732,8 +5731,8 @@ link_files (MooFileView *fileview,
 static void
 free_string_list (GList *list)
 {
-    g_list_foreach (list, (GFunc) moo_free, NULL);
-    g_list_free (list);
+    g_list_free_full (list, (GDestroyNotify) g_free);
+
 }
 
 

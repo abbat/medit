@@ -25,7 +25,6 @@
 #define MOO_DO_NOT_MANGLE_GLIB_FUNCTIONS
 
 #include "eggdesktopfile.h"
-#include "mooutils/mooutils-mem.h"
 
 #include <string.h>
 #include <unistd.h>
@@ -586,10 +585,10 @@ static EggDesktopFile *egg_desktop_file;
 
 /**
  * egg_get_desktop_file:
- * 
+ *
  * Gets the application's #EggDesktopFile, as set by
  * egg_set_desktop_file().
- * 
+ *
  * Return value: the #EggDesktopFile, or %NULL if it hasn't been set.
  **/
 EggDesktopFile *

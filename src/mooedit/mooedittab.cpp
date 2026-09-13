@@ -29,8 +29,6 @@ struct MooEditTabClass
     GtkVBoxClass base_class;
 };
 
-MOO_DEFINE_OBJECT_ARRAY (MooEditTab, moo_edit_tab)
-
 G_DEFINE_TYPE (MooEditTab, moo_edit_tab, GTK_TYPE_VBOX)
 
 /**************************************************************************************************
@@ -143,7 +141,7 @@ moo_edit_tab_get_views (MooEditTab *tab)
 
     g_return_val_if_fail (MOO_IS_EDIT_TAB (tab), NULL);
 
-    views = moo_edit_view_array_new ();
+    views = new MooEditViewArray ();
 
     for (i = 0; i < 2; ++i)
     {
@@ -151,7 +149,7 @@ moo_edit_tab_get_views (MooEditTab *tab)
         while (children)
         {
             MooEditView *view = MOO_EDIT_VIEW (gtk_bin_get_child (GTK_BIN (children->data)));
-            moo_edit_view_array_append (views, view);
+            views->append (view);
             children = g_list_delete_link (children, children);
         }
     }

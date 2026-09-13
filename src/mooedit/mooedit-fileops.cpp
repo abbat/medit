@@ -25,6 +25,7 @@
 #include "mooutils/mooencodings.h"
 #include "mooutils/mooi18n.h"
 #include "mooutils/mooutils.h"
+#include "mooutils/mooutils-mem.h"
 #include "mooutils/mooutils-fs.h"
 #include "mooutils/moocompat.h"
 #ifdef HAVE_UNISTD_H
@@ -1125,8 +1126,8 @@ _moo_edit_set_file (MooEdit    *edit,
 
     moo_file_free (tmp);
 
-    g_slist_foreach (free_list, (GFunc) moo_free, NULL);
-    g_slist_free (free_list);
+    g_slist_free_full (free_list, (GDestroyNotify) g_free);
+
 }
 
 
@@ -1428,8 +1429,8 @@ moo_convert_file_data_to_utf8 (const char  *data,
             g_free (enc);
         }
 
-        g_slist_foreach (encodings, (GFunc) moo_free, NULL);
-        g_slist_free (encodings);
+        g_slist_free_full (encodings, (GDestroyNotify) g_free);
+
     }
     else
     {

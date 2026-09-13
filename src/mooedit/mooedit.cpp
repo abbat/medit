@@ -56,8 +56,6 @@
 #define KEY_ENCODING "encoding"
 #define KEY_LINE "line"
 
-MOO_DEFINE_OBJECT_ARRAY (MooEdit, moo_edit)
-
 MooEditList *_moo_edit_instances = NULL;
 static guint moo_edit_apply_config_all_idle;
 
@@ -316,7 +314,7 @@ moo_edit_init (MooEdit *edit)
     edit->priv = (MooEditPrivate*) moo_edit_get_instance_private (edit);
     new(edit->priv) MooEditPrivate;
 
-    edit->priv->views = moo_edit_view_array_new ();
+    edit->priv->views = new MooEditViewArray ();
     edit->priv->buffer = GTK_TEXT_BUFFER (g_object_new (MOO_TYPE_TEXT_BUFFER, NULL));
 
     edit->config = moo_edit_config_new ();
@@ -379,7 +377,7 @@ moo_edit_finalize (GObject *object)
 {
     MooEdit *edit = MOO_EDIT (object);
 
-    moo_edit_view_array_free (edit->priv->views);
+    delete edit->priv->views;
     g_object_unref (edit->priv->buffer);
     moo_file_free (edit->priv->file);
     g_free (edit->priv->filename);
@@ -403,7 +401,7 @@ _moo_edit_closed (MooEdit *doc)
     _moo_edit_remove_untitled (doc);
     _moo_edit_instances = moo_edit_list_remove (_moo_edit_instances, doc);
 
-    while (!moo_edit_view_array_is_empty (doc->priv->views))
+    while (!doc->priv->views->empty ())
         gtk_widget_destroy (GTK_WIDGET (doc->priv->views->elms[0]));
 
     if (doc->config)
@@ -465,7 +463,7 @@ _moo_edit_set_active_view (MooEdit     *doc,
     g_return_if_fail (MOO_IS_EDIT (doc));
     g_return_if_fail (MOO_IS_EDIT_VIEW (view));
 
-    g_return_if_fail (moo_edit_view_array_find (doc->priv->views, view) >= 0);
+    g_return_if_fail (doc->priv->views->find (view) >= 0);
 
     buffer = moo_edit_get_buffer (doc);
 
@@ -497,10 +495,10 @@ _moo_edit_add_view (MooEdit     *doc,
     g_return_if_fail (MOO_IS_EDIT (doc));
     g_return_if_fail (MOO_IS_EDIT_VIEW (view));
 
-    g_assert (moo_edit_view_array_find (doc->priv->views, view) < 0);
+    g_assert (doc->priv->views->find (view) < 0);
 
     g_object_ref_sink (view);
-    moo_edit_view_array_append (doc->priv->views, view);
+    doc->priv->views->append (view);
     g_object_unref (view);
 
     _moo_edit_view_apply_prefs (view);
@@ -514,7 +512,7 @@ _moo_edit_remove_view (MooEdit     *doc,
     g_return_if_fail (MOO_IS_EDIT (doc));
     g_return_if_fail (MOO_IS_EDIT_VIEW (view));
 
-    g_return_if_fail (moo_edit_view_array_find (doc->priv->views, view) >= 0);
+    g_return_if_fail (doc->priv->views->find (view) >= 0);
 
     if (view == doc->priv->active_view)
     {
@@ -524,7 +522,7 @@ _moo_edit_remove_view (MooEdit     *doc,
 
     g_object_ref (view);
 
-    moo_edit_view_array_remove (doc->priv->views, view);
+    doc->priv->views->remove (view);
     _moo_edit_view_unset_doc (view);
 
     g_object_unref (view);
@@ -950,7 +948,7 @@ moo_edit_get_view (MooEdit *doc)
     g_return_val_if_fail (MOO_IS_EDIT (doc), NULL);
 
     if (!doc->priv->active_view)
-        if (!moo_edit_view_array_is_empty (doc->priv->views))
+        if (!doc->priv->views->empty ())
             doc->priv->active_view = doc->priv->views->elms[doc->priv->views->n_elms - 1];
 
     return doc->priv->active_view;
@@ -965,7 +963,7 @@ MooEditViewArray *
 moo_edit_get_views (MooEdit *doc)
 {
     g_return_val_if_fail (MOO_IS_EDIT (doc), NULL);
-    return moo_edit_view_array_copy (doc->priv->views);
+    return doc->priv->views->copy ();
 }
 
 /**
@@ -977,7 +975,7 @@ int
 moo_edit_get_n_views (MooEdit *doc)
 {
     g_return_val_if_fail (MOO_IS_EDIT (doc), 0);
-    return (int) moo_edit_view_array_get_size (doc->priv->views);
+    return (int) doc->priv->views->size ();
 }
 
 /**
@@ -1585,7 +1583,7 @@ _moo_edit_set_state (MooEdit        *doc,
 
     doc->priv->state = state;
 
-    for (i = 0; i < moo_edit_view_array_get_size (doc->priv->views); ++i)
+    for (i = 0; i < doc->priv->views->size (); ++i)
         gtk_text_view_set_editable (GTK_TEXT_VIEW (doc->priv->views->elms[i]), !state);
 
     tab = moo_edit_get_tab (doc);

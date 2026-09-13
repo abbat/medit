@@ -25,6 +25,7 @@
 #include "mooutils/mooutils-treeview.h"
 #include "mooutils/moobuilder.h"
 #include "mooutils/mooi18n.h"
+#include "mooutils/mooutils-mem.h"
 #ifdef HAVE_UNISTD_H
 #endif
 
@@ -1427,8 +1428,8 @@ fill_icon_store (GtkListStore   *store,
     gtk_list_store_append (store, &iter);
     gtk_list_store_set (store, &iter, ICON_COLUMN_LABEL, "None", -1);
 
-    g_slist_foreach (stock_ids, (GFunc) moo_free, NULL);
-    g_slist_free (stock_ids);
+    g_slist_free_full (stock_ids, (GDestroyNotify) g_free);
+
 }
 
 
