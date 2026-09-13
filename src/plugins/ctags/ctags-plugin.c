@@ -41,6 +41,7 @@ typedef struct
   MooWinPlugin parent;       /*!< \brief Parent window plugin structure */
   MooCtagsView *view;        /*!< \brief Ctags view widget */
   guint update_idle;         /*!< \brief ID for idle update callback */
+  guint expand_idle;         /*!< \brief ID for idle tree expansion */
   GtkTreeModel *model;       /*!< \brief Model connected to the view */
   gulong model_row_inserted; /*!< \brief Model row-inserted handler */
 } CtagsWindowPlugin;
@@ -77,13 +78,24 @@ MOO_WIN_PLUGIN_DEFINE (Ctags, ctags)
  */
 MOO_PLUGIN_DEFINE (Ctags, ctags, NULL, NULL, NULL, NULL, NULL, ctags_window_plugin_get_type (), MOO_TYPE_CTAGS_DOC_PLUGIN)
 
+static gboolean
+expand_tree (CtagsWindowPlugin *plugin)
+{
+  plugin->expand_idle = 0;
+  gtk_tree_view_expand_all (GTK_TREE_VIEW (plugin->view));
+  return FALSE;
+}
+
 static void
 model_row_inserted (G_GNUC_UNUSED GtkTreeModel *model,
                     G_GNUC_UNUSED GtkTreePath  *path,
                     G_GNUC_UNUSED GtkTreeIter  *iter,
                     CtagsWindowPlugin         *plugin)
 {
-  gtk_tree_view_expand_all (GTK_TREE_VIEW (plugin->view));
+  if (!plugin->expand_idle)
+    plugin->expand_idle =
+      g_idle_add_full (G_PRIORITY_LOW, (GSourceFunc) expand_tree,
+                       plugin, NULL);
 }
 
 /*!
@@ -221,8 +233,11 @@ ctags_window_plugin_destroy (CtagsWindowPlugin *plugin)
 
   if (plugin->model)
     g_signal_handler_disconnect (plugin->model, plugin->model_row_inserted);
+  if (plugin->expand_idle)
+    g_source_remove (plugin->expand_idle);
   plugin->model = NULL;
   plugin->model_row_inserted = 0;
+  plugin->expand_idle = 0;
 
   moo_edit_window_remove_pane (window, CTAGS_PLUGIN_ID);
 
