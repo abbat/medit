@@ -17,7 +17,7 @@
 #define MOO_LANG_MGR_PRIVATE_H
 
 #include "mooedit/moolangmgr.h"
-#include "gtksourceview/gtksourceview-api.h"
+#include "vendor/gtksourceview/gtksourceview-api.h"
 
 G_BEGIN_DECLS
 

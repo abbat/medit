@@ -32,7 +32,7 @@ find_program(RUN_CLANG_TIDY NAMES run-clang-tidy run-clang-tidy.py)
 # from the ctags project. Analyzing them reports real enough findings that are
 # still not ours to fix, and they would show up on every run.
 set(MOO_ANALYZE_EXCLUDE
-    "src/gtksourceview/"
+    "src/vendor/gtksourceview/"
     "src/xdgmime/"
     "src/vendor/eggsmclient/"
     "src/plugins/ctags/readtags\\.c")

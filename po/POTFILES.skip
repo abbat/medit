@@ -3,7 +3,7 @@ junk/
 plat/
 tools/
 src/mooedit/langs/
-src/gtksourceview/
+src/vendor/gtksourceview/
 src/vendor/eggsmclient/
 
 doc/txt2tags/txt2tags.py

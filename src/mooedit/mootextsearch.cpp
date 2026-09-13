@@ -14,7 +14,7 @@
  */
 
 #include "mooedit/mootextsearch-private.h"
-#include "gtksourceview/gtksourceview-api.h"
+#include "vendor/gtksourceview/gtksourceview-api.h"
 #include "mooutils/mooutils-misc.h"
 
 

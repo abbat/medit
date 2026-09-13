@@ -21,7 +21,7 @@
 #ifndef __GTK_SOURCE_LANGUAGE_MANAGER_H__
 #define __GTK_SOURCE_LANGUAGE_MANAGER_H__
 
-#include "gtksourceview/gtksourcelanguage.h"
+#include "vendor/gtksourceview/gtksourcelanguage.h"
 
 G_BEGIN_DECLS
 

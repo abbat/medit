@@ -1,10 +1,10 @@
-src/gtksourceview/gtksourcecontextengine.c
-src/gtksourceview/gtksourcelanguage.c
-src/gtksourceview/gtksourcelanguagemanager.c
-src/gtksourceview/gtksourcelanguage-parser-2.c
-src/gtksourceview/gtksourcestyle.c
-src/gtksourceview/gtksourcestylescheme.c
-src/gtksourceview/gtksourcestyleschememanager.c
+src/vendor/gtksourceview/gtksourcecontextengine.c
+src/vendor/gtksourceview/gtksourcelanguage.c
+src/vendor/gtksourceview/gtksourcelanguagemanager.c
+src/vendor/gtksourceview/gtksourcelanguage-parser-2.c
+src/vendor/gtksourceview/gtksourcestyle.c
+src/vendor/gtksourceview/gtksourcestylescheme.c
+src/vendor/gtksourceview/gtksourcestyleschememanager.c
 src/mooedit/langs/abnf.lang
 src/mooedit/langs/actionscript.lang
 src/mooedit/langs/ada.lang

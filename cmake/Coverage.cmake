@@ -60,7 +60,7 @@ file(MAKE_DIRECTORY "${MOO_COVERAGE_DIR}/raw")
 set(MOO_COVERAGE_IGNORE
     "/usr/"
     "${CMAKE_BINARY_DIR}/"
-    "src/gtksourceview/"
+    "src/vendor/gtksourceview/"
     "src/xdgmime/"
     "src/vendor/eggsmclient/"
     "src/plugins/ctags/readtags\\.c")

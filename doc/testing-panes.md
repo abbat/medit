@@ -335,7 +335,7 @@ GTK+2 is not the lesser half: it is what runs the `#else` branch of every
 `GTK_CHECK_VERSION` split, and a line only it executed is a covered line. The script lives
 under `tests/` because that is where the harness lives and where `flake8` already reads.
 
-Vendored code is not measured — `src/gtksourceview`, `src/xdgmime`, `src/vendor/eggsmclient` and
+Vendored code is not measured — `src/vendor/gtksourceview`, `src/xdgmime`, `src/vendor/eggsmclient` and
 `readtags.c`, the same four the `analyze` target skips — and neither is anything the build
 generates or any system header glib inlines into every file.
 

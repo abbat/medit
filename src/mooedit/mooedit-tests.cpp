@@ -46,8 +46,8 @@
 #include "mooedit/mootext-private.h"
 #include "mooedit/mootextview-private.h"
 #include "mooedit/mooeditfiltersettings.h"
-#include "gtksourceview/gtksourcecontextengine.h"
-#include "gtksourceview/gtksourceengine.h"
+#include "vendor/gtksourceview/gtksourcecontextengine.h"
+#include "vendor/gtksourceview/gtksourceengine.h"
 #include "mooutils/mooundo.h"
 
 

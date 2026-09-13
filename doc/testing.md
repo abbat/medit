@@ -269,7 +269,7 @@ is worse than none.
 engine creates each tag with `gtk_text_buffer_create_tag (buffer, NULL, NULL)` and keeps
 the style ids in a hash of its own, so there is no way from a tag back to the name a lang
 file gave it. `_gtk_source_context_engine_get_tag_style()` reads that hash and changes
-nothing — the one addition to `src/gtksourceview` this needed.
+nothing — the one addition to `src/vendor/gtksourceview` this needed.
 
 **The engine is driven directly rather than through `moo_text_buffer_set_lang()`**, which
 keeps its engine private: the dump needs the engine itself to name the styles. The text is
@@ -279,7 +279,7 @@ buffer changes, and detaching at the end is what removes the idle handler and th
 **What this catches and what it does not.** It catches an engine change that stops
 applying a style and an edit to a `.lang` file that highlights something differently — the
 `html` sample reaches into the `css` and `js` definitions, so it also catches an
-`<include>` across languages breaking. It does not move the coverage number: `src/gtksourceview`
+`<include>` across languages breaking. It does not move the coverage number: `src/vendor/gtksourceview`
 is upstream code the report deliberately ignores (`MOO_COVERAGE_IGNORE` in
 `cmake/Coverage.cmake`), and what the test adds to the measured side is the small amount
 of `moolang` around it.
