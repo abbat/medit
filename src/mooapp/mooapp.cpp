@@ -126,6 +126,10 @@ static guint signals[LAST_SIGNAL];
 /*!< \brief Stores the most recently received signal */
 static volatile int signal_received;
 
+#if GTK_CHECK_VERSION(3, 0, 0)
+static void moo_app_activate (GApplication *application);
+#endif
+
 /*!
  * \brief Gets the system name and version information
  * \return (transfer full): a newly allocated string containing system name, release, version and machine type
@@ -595,6 +599,9 @@ static void
 moo_app_class_init (MooAppClass *klass, G_GNUC_UNUSED gpointer data)
 {
   GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
+#if GTK_CHECK_VERSION(3, 0, 0)
+  GApplicationClass *application_class = G_APPLICATION_CLASS (klass);
+#endif
 
   moo_app_parent_class = (GObjectClass *) g_type_class_peek_parent (klass);
 
@@ -602,6 +609,9 @@ moo_app_class_init (MooAppClass *klass, G_GNUC_UNUSED gpointer data)
   gobject_class->finalize = moo_app_finalize;
   gobject_class->set_property = moo_app_set_property;
   gobject_class->get_property = moo_app_get_property;
+#if GTK_CHECK_VERSION(3, 0, 0)
+  application_class->activate = moo_app_activate;
+#endif
 
   g_object_class_install_property (gobject_class,
                                    PROP_RUN_INPUT,
@@ -1047,6 +1057,20 @@ emit_started (MooApp *app)
 
   return FALSE;
 }
+
+#if GTK_CHECK_VERSION(3, 0, 0)
+/* Keep the existing window-based lifecycle when GtkApplication activates us. */
+static void
+moo_app_activate (GApplication *application)
+{
+  MooApp *app = MOO_APP (application);
+  MooEditWindow *window;
+
+  window = moo_editor_get_active_window (app->priv->editor);
+  if (window)
+    gtk_window_present (GTK_WINDOW (window));
+}
+#endif
 
 /*!
  * \brief Callback for session manager quit request.
