@@ -1,33 +1,33 @@
 target_sources(medit PRIVATE
-    moobookmarkmgr.c
+    moobookmarkmgr.cpp
     moobookmarkmgr.h
-    moobookmarkview.c
+    moobookmarkview.cpp
     moobookmarkview.h
     moofile-private.h
-    moofile.c
+    moofile.cpp
     moofile.h
-    moofileentry.c
+    moofileentry.cpp
     moofileentry.h
-    moofilesystem.c
+    moofilesystem.cpp
     moofilesystem.h
     moofileview-accels.h
     moofileview-aux.h
-    moofileview-dialogs.c
+    moofileview-dialogs.cpp
     moofileview-dialogs.h
     moofileview-impl.h
     moofileview-private.h
     moofileview-tools.cpp
     moofileview-tools.h
-    moofileview.c
+    moofileview.cpp
     moofileview.h
     moofolder-private.h
-    moofolder.c
+    moofolder.cpp
     moofolder.h
     moofoldermodel-private.h
-    moofoldermodel.c
+    moofoldermodel.cpp
     moofoldermodel.h
-    mooiconview.c
+    mooiconview.cpp
     mooiconview.h
-    mootreeview.c
+    mootreeview.cpp
     mootreeview.h
 )

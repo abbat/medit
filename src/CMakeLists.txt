@@ -12,12 +12,12 @@ add_custom_command(
     VERBATIM)
 
 add_custom_command(
-    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/marshals.c"
-    COMMAND ${CMAKE_COMMAND} -E echo "#include \"marshals.h\"" > "${CMAKE_CURRENT_BINARY_DIR}/marshals.c"
+    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/marshals.cpp"
+    COMMAND ${CMAKE_COMMAND} -E echo "#include \"marshals.h\"" > "${CMAKE_CURRENT_BINARY_DIR}/marshals.cpp"
     COMMAND ${GLIB_GENMARSHAL} --prefix=_moo_marshal --body
-            "${CMAKE_CURRENT_SOURCE_DIR}/marshals.list" >> "${CMAKE_CURRENT_BINARY_DIR}/marshals.c"
+            "${CMAKE_CURRENT_SOURCE_DIR}/marshals.list" >> "${CMAKE_CURRENT_BINARY_DIR}/marshals.cpp"
     DEPENDS marshals.list "${CMAKE_CURRENT_BINARY_DIR}/marshals.h"
-    COMMENT "Generating marshals.c"
+    COMMENT "Generating marshals.cpp"
     VERBATIM)
 
 set(MOO_PIXMAPS
@@ -59,14 +59,14 @@ add_custom_command(
 file(GLOB_RECURSE MOO_UI_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/*.ui")
 
 add_custom_command(
-    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/resources.c"
+    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/resources.cpp"
     COMMAND ${GLIB_COMPILE_RESOURCES} "${CMAKE_CURRENT_SOURCE_DIR}/resources.xml"
             --sourcedir "${CMAKE_CURRENT_SOURCE_DIR}"
-            --target "${CMAKE_CURRENT_BINARY_DIR}/resources.c" --generate-source
+            --target "${CMAKE_CURRENT_BINARY_DIR}/resources.cpp" --generate-source
     DEPENDS resources.xml ${MOO_UI_FILES} "${CMAKE_SOURCE_DIR}/THANKS"
             mooedit/medit.xml mooedit/mooedit.xml moofileview/moofileview.xml
             plugins/lsp/lsp.xml
-    COMMENT "Generating resources.c"
+    COMMENT "Generating resources.cpp"
     VERBATIM)
 
 # ---------------------------------------------------------------------------
@@ -114,21 +114,6 @@ add_custom_target(validate-xml
 file(GLOB_RECURSE MOO_SRC_FILES CONFIGURE_DEPENDS
      "${CMAKE_CURRENT_SOURCE_DIR}/*.c" "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 
-# Keep vendored C sources on the C compiler, but compile the project's own C
-# sources with the C++ compiler as part of the all-C++ build experiment.  The
-# generated C sources are added to this property below, after the target is
-# declared.
-set(MOO_PROJECT_SRC_FILES ${MOO_SRC_FILES})
-list(FILTER MOO_PROJECT_SRC_FILES EXCLUDE REGEX "/eggsmclient/")
-list(FILTER MOO_PROJECT_SRC_FILES EXCLUDE REGEX "/gtksourceview/")
-list(FILTER MOO_PROJECT_SRC_FILES EXCLUDE REGEX "/xdgmime/")
-list(FILTER MOO_PROJECT_SRC_FILES EXCLUDE REGEX "/plugins/ctags/")
-set_source_files_properties(${MOO_PROJECT_SRC_FILES} PROPERTIES LANGUAGE CXX)
-set(MOO_PROJECT_C_FILES ${MOO_PROJECT_SRC_FILES})
-list(FILTER MOO_PROJECT_C_FILES INCLUDE REGEX "\\.c$")
-set_source_files_properties(${MOO_PROJECT_C_FILES}
-                            PROPERTIES COMPILE_OPTIONS "-x;c++")
-
 add_custom_command(
     OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/builder-ids.stamp"
     COMMAND ${CMAKE_COMMAND}
@@ -148,21 +133,12 @@ add_custom_target(check-builder-ids
 # ---------------------------------------------------------------------------
 
 add_executable(medit
-    main.c
+    main.cpp
     medit-app/main.cpp
-    "${CMAKE_CURRENT_BINARY_DIR}/marshals.c"
+    "${CMAKE_CURRENT_BINARY_DIR}/marshals.cpp"
     "${CMAKE_CURRENT_BINARY_DIR}/marshals.h"
     "${CMAKE_CURRENT_BINARY_DIR}/moo-pixbufs.h"
-    "${CMAKE_CURRENT_BINARY_DIR}/resources.c")
-
-set_source_files_properties(
-    "${CMAKE_CURRENT_BINARY_DIR}/marshals.c"
-    "${CMAKE_CURRENT_BINARY_DIR}/resources.c"
-    PROPERTIES LANGUAGE CXX)
-set_source_files_properties(
-    "${CMAKE_CURRENT_BINARY_DIR}/marshals.c"
-    "${CMAKE_CURRENT_BINARY_DIR}/resources.c"
-    PROPERTIES COMPILE_OPTIONS "-x;c++")
+    "${CMAKE_CURRENT_BINARY_DIR}/resources.cpp")
 
 add_dependencies(medit validate-xml check-builder-ids)
 

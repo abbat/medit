@@ -1,112 +1,112 @@
 target_sources(medit PRIVATE
     moo-environ.h
-    moo-mime.c
+    moo-mime.cpp
     moo-mime.h
     mooaccel.cpp
     mooaccel.h
-    mooaccelbutton.c
+    mooaccelbutton.cpp
     mooaccelbutton.h
     mooaccelprefs.cpp
     mooaccelprefs.h
     mooaction-private.h
-    mooaction.c
+    mooaction.cpp
     mooaction.h
     mooactionbase-private.h
-    mooactionbase.c
+    mooactionbase.cpp
     mooactionbase.h
-    mooactioncollection.c
+    mooactioncollection.cpp
     mooactioncollection.h
-    mooactionfactory.c
+    mooactionfactory.cpp
     mooactionfactory.h
-    mooactiongroup.c
+    mooactiongroup.cpp
     mooactiongroup.h
-    mooapp-ipc.c
+    mooapp-ipc.cpp
     mooapp-ipc.h
-    mooappinput-common.c
+    mooappinput-common.cpp
     mooappinput-priv.h
-    mooappinput-unix.c
+    mooappinput-unix.cpp
     mooappinput.h
     mooarray.h
     mooatom.h
-    moobuilder.c
+    moobuilder.cpp
     moobuilder.h
-    moobigpaned.c
+    moobigpaned.cpp
     moobigpaned.h
-    mooclosure.c
+    mooclosure.cpp
     mooclosure.h
-    moocombo.c
+    moocombo.cpp
     moocombo.h
     moocompat.h
-    moodialogs.c
+    moodialogs.cpp
     moodialogs.h
-    mooeditops.c
+    mooeditops.cpp
     mooeditops.h
     mooencodings-data.h
     mooencodings.cpp
     mooencodings.h
     mooentry.cpp
     mooentry.h
-    moofiledialog.c
+    moofiledialog.cpp
     moofiledialog.h
-    moofileicon.c
+    moofileicon.cpp
     moofileicon.h
-    moofilewatch.c
+    moofilewatch.cpp
     moofilewatch.h
     moofilewriter-private.h
     moofilewriter.cpp
     moofilewriter.h
-    moofiltermgr.c
+    moofiltermgr.cpp
     moofiltermgr.h
-    moofontsel.c
+    moofontsel.cpp
     moofontsel.h
-    moohelp.c
+    moohelp.cpp
     moohelp.h
-    moohistorycombo.c
+    moohistorycombo.cpp
     moohistorycombo.h
-    moohistorylist.c
+    moohistorylist.cpp
     moohistorylist.h
-    moohistorymgr.c
+    moohistorymgr.cpp
     moohistorymgr.h
     mooi18n.cpp
     mooi18n.h
     moolist.h
-    moomarkup.c
+    moomarkup.cpp
     moomarkup.h
-    moomenu.c
+    moomenu.cpp
     moomenu.h
-    moomenuaction.c
+    moomenuaction.cpp
     moomenuaction.h
-    moomenumgr.c
+    moomenumgr.cpp
     moomenumgr.h
-    moonotebook.c
+    moonotebook.cpp
     moonotebook.h
     mooonce.h
-    moopane.c
+    moopane.cpp
     moopane.h
-    moopaned.c
+    moopaned.cpp
     moopaned.h
-    mooprefs.c
+    mooprefs.cpp
     mooprefs.h
-    mooprefsdialog.c
+    mooprefsdialog.cpp
     mooprefsdialog.h
-    mooprefspage.c
+    mooprefspage.cpp
     mooprefspage.h
-    mooregion.c
+    mooregion.cpp
     mooregion.h
-    moospawn.c
+    moospawn.cpp
     moospawn.h
-    moostock.c
+    moostock.cpp
     moostock.h
     mootype-macros.h
-    moouixml.c
+    moouixml.cpp
     moouixml.h
-    mooundo.c
+    mooundo.cpp
     mooundo.h
     mooutils-cpp.h
     mooutils-debug.h
-    mooutils-enums.c
+    mooutils-enums.cpp
     mooutils-enums.h
-    mooutils-file.c
+    mooutils-file.cpp
     mooutils-file.h
     mooutils-fs.cpp
     mooutils-fs.h
@@ -123,12 +123,12 @@ target_sources(medit PRIVATE
     moo-unit-tests.h
     mooutils-tests.cpp
     mooutils-tests.h
-    mooutils-script.c
+    mooutils-script.cpp
     mooutils-script.h
     mooutils-treeview.cpp
     mooutils-treeview.h
     mooutils.h
-    moowindow.c
+    moowindow.cpp
     moowindow.h
     stock-file-24.h
     stock-file-selector-24.h

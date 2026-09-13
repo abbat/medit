@@ -1,11 +1,11 @@
 target_sources(medit PRIVATE
-    about.c
+    about.cpp
     about.h
-    credits.c
+    credits.cpp
     credits.h
     mooapp-accels.h
     mooapp-info.h
     mooapp-private.h
-    mooapp.c
+    mooapp.cpp
     mooapp.h
 )

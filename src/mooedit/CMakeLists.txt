@@ -1,6 +1,6 @@
 target_sources(medit PRIVATE
     mooedit-accels.h
-    mooedit-enum-types.c
+    mooedit-enum-types.cpp
     mooedit-enum-types.h
     mooedit-enums.h
     mooedit-enums.h
@@ -63,34 +63,34 @@ target_sources(medit PRIVATE
     moolangmgr-private.h
     moolangmgr.cpp
     moolangmgr.h
-    moolinebuffer.c
+    moolinebuffer.cpp
     moolinebuffer.h
-    moolinemark.c
+    moolinemark.cpp
     moolinemark.h
-    mooplugin-loader.c
+    mooplugin-loader.cpp
     mooplugin-loader.h
     mooplugin-macro.h
-    mooplugin.c
+    mooplugin.cpp
     mooplugin.h
     mootext-private.h
-    mootextbtree.c
+    mootextbtree.cpp
     mootextbtree.h
-    mootextbuffer.c
+    mootextbuffer.cpp
     mootextbuffer.h
-    mootextfind.c
+    mootextfind.cpp
     mootextfind.h
     mootextiter.h
     mootextprint-private.h
-    mootextprint.c
+    mootextprint.cpp
     mootextprint.h
     mootextsearch-private.h
-    mootextsearch.c
+    mootextsearch.cpp
     mootextsearch.h
-    mootextstylescheme.c
+    mootextstylescheme.cpp
     mootextstylescheme.h
-    mootextview-input.c
+    mootextview-input.cpp
     mootextview-private.h
-    mootextview.c
+    mootextview.cpp
     mootextview.h
 )
 
