@@ -34,12 +34,6 @@ def run(t):
     t.menu("View", "Panes", "Functions")
     tree = t.wait(lambda: ctags_tree(t), "the Functions pane")
 
-    for group in ("Functions", "Macros", "Widget"):
-        row = t.need(tree, role="table cell", name=group,
-                     what="the %s ctags group" % group)
-        t.click(row)
-        t.key("Right")
-
     t.wait(lambda: expected_symbols(rows(t, tree)),
            "ctags symbols to appear; the tree holds %s" % rows(t, tree))
     t.log("ok: ctags listed the functions, macro and structure")

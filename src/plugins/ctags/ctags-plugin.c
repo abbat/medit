@@ -38,9 +38,11 @@ typedef struct
  */
 typedef struct
 {
-  MooWinPlugin parent; /*!< \brief Parent window plugin structure */
-  MooCtagsView *view;  /*!< \brief Ctags view widget */
-  guint update_idle;   /*!< \brief ID for idle update callback */
+  MooWinPlugin parent;       /*!< \brief Parent window plugin structure */
+  MooCtagsView *view;        /*!< \brief Ctags view widget */
+  guint update_idle;         /*!< \brief ID for idle update callback */
+  GtkTreeModel *model;       /*!< \brief Model connected to the view */
+  gulong model_row_inserted; /*!< \brief Model row-inserted handler */
 } CtagsWindowPlugin;
 
 /*!
@@ -75,6 +77,15 @@ MOO_WIN_PLUGIN_DEFINE (Ctags, ctags)
  */
 MOO_PLUGIN_DEFINE (Ctags, ctags, NULL, NULL, NULL, NULL, NULL, ctags_window_plugin_get_type (), MOO_TYPE_CTAGS_DOC_PLUGIN)
 
+static void
+model_row_inserted (G_GNUC_UNUSED GtkTreeModel *model,
+                    G_GNUC_UNUSED GtkTreePath  *path,
+                    G_GNUC_UNUSED GtkTreeIter  *iter,
+                    CtagsWindowPlugin         *plugin)
+{
+  gtk_tree_view_expand_all (GTK_TREE_VIEW (plugin->view));
+}
+
 /*!
  * \brief Update the ctags view with current document's tags
  * \param plugin The window plugin instance
@@ -103,6 +114,18 @@ window_plugin_update (CtagsWindowPlugin *plugin)
   g_return_val_if_fail (MOO_IS_CTAGS_DOC_PLUGIN (dp), FALSE);
 
   model = _moo_ctags_doc_plugin_get_store (dp);
+
+  if (plugin->model != model)
+    {
+      if (plugin->model)
+        g_signal_handler_disconnect (plugin->model, plugin->model_row_inserted);
+
+      plugin->model = model;
+      plugin->model_row_inserted =
+        g_signal_connect (model, "row-inserted",
+                          G_CALLBACK (model_row_inserted), plugin);
+    }
+
   gtk_tree_view_set_model (GTK_TREE_VIEW (plugin->view), model);
   gtk_tree_view_expand_all (GTK_TREE_VIEW (plugin->view));
 
@@ -195,6 +218,11 @@ static void
 ctags_window_plugin_destroy (CtagsWindowPlugin *plugin)
 {
   MooEditWindow *window = MOO_WIN_PLUGIN (plugin)->window;
+
+  if (plugin->model)
+    g_signal_handler_disconnect (plugin->model, plugin->model_row_inserted);
+  plugin->model = NULL;
+  plugin->model_row_inserted = 0;
 
   moo_edit_window_remove_pane (window, CTAGS_PLUGIN_ID);
 
