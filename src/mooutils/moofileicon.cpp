@@ -659,6 +659,33 @@ create_mime_icon_exact (GtkIconTheme *icon_theme,
 }
 
 static GdkPixbuf *
+create_mime_icon_system (GtkIconTheme *icon_theme,
+                         const char   *mime_type,
+                         int           pixel_size)
+{
+    GIcon *icon;
+    GdkPixbuf *pixbuf = NULL;
+    char *content_type;
+
+    content_type = g_content_type_from_mime_type (mime_type);
+    icon = g_content_type_get_icon (content_type);
+    if (G_IS_THEMED_ICON (icon))
+    {
+        const char * const *names;
+        guint i;
+
+        names = g_themed_icon_get_names (G_THEMED_ICON (icon));
+        for (i = 0; names[i] && !pixbuf; ++i)
+            pixbuf = get_named_icon (icon_theme, names[i], pixel_size);
+    }
+    if (icon)
+        g_object_unref (icon);
+    g_free (content_type);
+
+    return pixbuf;
+}
+
+static GdkPixbuf *
 create_mime_icon (GtkWidget    *widget,
                   const char   *mime_type,
                   GtkIconSize   size)
@@ -699,30 +726,10 @@ create_mime_icon (GtkWidget    *widget,
     pixbuf = create_mime_icon_exact (icon_theme, mime_type, pixel_size);
 
     if (!pixbuf)
-    {
-        const char **parent_types = moo_mime_type_list_parents (mime_type);
+        pixbuf = create_mime_icon_system (icon_theme, mime_type, pixel_size);
 
-        if (parent_types && parent_types[0])
-        {
-            const char **p;
-
-            for (p = parent_types; *p && !pixbuf; ++p)
-            {
-                pixbuf = create_mime_icon (widget, *p, size);
-                if (pixbuf)
-                    moo_dmsg ("used mime type '%s' icon for '%s'", *p, mime_type);
-            }
-
-            g_free ((gpointer) parent_types);
-            return pixbuf;
-        }
-        else
-        {
-            pixbuf = create_mime_icon_type (icon_theme, mime_type, size);
-        }
-
-        g_free ((gpointer) parent_types);
-    }
+    if (!pixbuf)
+        pixbuf = create_mime_icon_type (icon_theme, mime_type, pixel_size);
 
     if (!pixbuf)
         pixbuf = create_special_icon (widget, MOO_ICON_FILE, size);

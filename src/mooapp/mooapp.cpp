@@ -321,7 +321,6 @@ static void
 moo_app_cleanup (void)
 {
   _moo_app_input_shutdown ();
-  moo_mime_shutdown ();
   moo_cleanup ();
 }
 

@@ -194,7 +194,6 @@ add_subdirectory(mooglib)
 add_subdirectory(moofileview)
 add_subdirectory(mooutils)
 add_subdirectory(plugins)
-add_subdirectory(vendor/xdgmime)
 
 install(TARGETS medit RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 

@@ -31,6 +31,7 @@
 
 #include "mooutils/mooaccel.h"
 #include "mooutils/moobigpaned.h"
+#include "mooutils/moo-mime.h"
 #include "mooutils/mooprefs.h"
 #include "mooutils/moouixml.h"
 #include "plugins/support/moooutputfilter.h"
@@ -96,6 +97,25 @@ test_file_line (void)
     /* Not a line number, so not a line. */
     check_file_line ("/tmp/foo.c:abc", NULL, 0);
     check_file_line ("/tmp/foo.c(abc)", NULL, 0);
+}
+
+
+static void
+test_mime_system_behaviour (void)
+{
+    const char *mime;
+
+    mime = moo_get_mime_type_for_filename ("source.c");
+    g_assert_cmpstr (mime, ==, "text/x-csrc");
+
+    mime = moo_get_mime_type_for_filename ("file.without-a-known-extension");
+    g_assert_cmpstr (mime, ==, MOO_MIME_TYPE_UNKNOWN);
+
+    g_assert_true (moo_mime_type_is_subclass ("text/x-csrc", "text/plain"));
+    g_assert_true (moo_mime_type_is_subclass ("text/x-csrc", "text/*"));
+    g_assert_true (moo_mime_type_is_subclass ("text/x-csrc",
+                                              "application/octet-stream"));
+    g_assert_false (moo_mime_type_is_subclass ("text/plain", "image/*"));
 }
 
 
@@ -1274,6 +1294,7 @@ void
 _moo_add_mooutils_unit_tests (void)
 {
     g_test_add_func ("/mooutils/file-line", test_file_line);
+    g_test_add_func ("/mooutils/mime/system-behaviour", test_mime_system_behaviour);
     g_test_add_func ("/mooutils/splitlines", test_splitlines);
     g_test_add_func ("/mooutils/accel/parse", test_accel_parse);
     g_test_add_func ("/mooutils/accel/label", test_accel_label_parse);

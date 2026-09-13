@@ -33,8 +33,6 @@ const char  *moo_get_mime_type_for_file         (const char     *filename,
 const char  *moo_get_mime_type_for_filename     (const char     *filename);
 gboolean     moo_mime_type_is_subclass          (const char     *mime_type,
                                                  const char     *base);
-const char **moo_mime_type_list_parents         (const char     *mime_type);
-void         moo_mime_shutdown                  (void);
 
 
 G_END_DECLS

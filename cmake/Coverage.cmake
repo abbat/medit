@@ -61,7 +61,6 @@ set(MOO_COVERAGE_IGNORE
     "/usr/"
     "${CMAKE_BINARY_DIR}/"
     "src/vendor/gtksourceview/"
-    "src/vendor/xdgmime/"
     "src/vendor/eggsmclient/"
     "src/vendor/ctags/readtags\\.c")
 
