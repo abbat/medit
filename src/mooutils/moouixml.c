@@ -28,7 +28,6 @@
 #include "mooutils/mooaction-private.h"
 #include "mooutils/moouixml.h"
 #include "marshals.h"
-#include "mooutils/moomenutoolbutton.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooi18n.h"
 #include "mooutils/moomenu.h"
@@ -2149,31 +2148,20 @@ create_tool_separator (MooUiXml       *xml,
 }
 
 
-#define IS_MENU_TOOL_BUTTON(wid) (GTK_IS_MENU_TOOL_BUTTON (wid) || \
-                                  MOO_IS_MENU_TOOL_BUTTON (wid))
-
 static void
 menu_tool_button_set_menu (GtkWidget *button,
                            GtkWidget *menu)
 {
-    if (MOO_IS_MENU_TOOL_BUTTON (button))
-        moo_menu_tool_button_set_menu (MOO_MENU_TOOL_BUTTON (button), menu);
-    else if (GTK_IS_MENU_TOOL_BUTTON (button))
-        gtk_menu_tool_button_set_menu (GTK_MENU_TOOL_BUTTON (button), menu);
-    else
-        g_return_if_reached ();
+    g_return_if_fail (GTK_IS_MENU_TOOL_BUTTON (button));
+    gtk_menu_tool_button_set_menu (GTK_MENU_TOOL_BUTTON (button), menu);
 }
 
 
 static GtkWidget*
 menu_tool_button_get_menu (GtkWidget *button)
 {
-    if (MOO_IS_MENU_TOOL_BUTTON (button))
-        return moo_menu_tool_button_get_menu (MOO_MENU_TOOL_BUTTON (button));
-    else if (GTK_IS_MENU_TOOL_BUTTON (button))
-        return gtk_menu_tool_button_get_menu (GTK_MENU_TOOL_BUTTON (button));
-    else
-        g_return_val_if_reached (NULL);
+    g_return_val_if_fail (GTK_IS_MENU_TOOL_BUTTON (button), NULL);
+    return gtk_menu_tool_button_get_menu (GTK_MENU_TOOL_BUTTON (button));
 }
 
 
@@ -2222,7 +2210,7 @@ create_tool_item (MooUiXml       *xml,
 
         if (node->children)
         {
-            if (!IS_MENU_TOOL_BUTTON (tool_item))
+            if (!GTK_IS_MENU_TOOL_BUTTON (tool_item))
             {
                 g_critical ("oops");
             }
@@ -2238,33 +2226,7 @@ create_tool_item (MooUiXml       *xml,
 
     }
     else
-    {
-        GtkWidget *menu;
-
-        tool_item = moo_menu_tool_button_new ();
-        gtk_widget_show (tool_item);
-
-        if (item->icon_stock_id)
-            gtk_tool_button_set_stock_id (GTK_TOOL_BUTTON (tool_item),
-                                          item->icon_stock_id);
-        if (item->stock_id)
-            gtk_tool_button_set_stock_id (GTK_TOOL_BUTTON (tool_item),
-                                          item->stock_id);
-        if (item->label)
-            gtk_tool_button_set_label (GTK_TOOL_BUTTON (tool_item),
-                                       item->label);
-
-        gtk_toolbar_insert (toolbar, GTK_TOOL_ITEM (tool_item), index);
-
-        if (item->tooltip)
-            _moo_widget_set_tooltip (tool_item, item->tooltip);
-
-        menu = gtk_menu_new ();
-        /* XXX empty menu */
-        gtk_widget_show (menu);
-        menu_tool_button_set_menu (tool_item, menu);
-        fill_menu_shell (xml, toplevel, node, GTK_MENU_SHELL (menu));
-    }
+        return TRUE;
 
     g_return_val_if_fail (tool_item != NULL, FALSE);
 
@@ -2501,7 +2463,7 @@ toplevel_add_node (MooUiXml *xml,
 
             check_separators (parent, toplevel);
         }
-        else if (IS_MENU_TOOL_BUTTON (parent_widget))
+        else if (GTK_IS_MENU_TOOL_BUTTON (parent_widget))
         {
             GtkWidget *menu;
 

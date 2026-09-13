@@ -78,8 +78,6 @@ target_sources(medit PRIVATE
     moomenuaction.h
     moomenumgr.c
     moomenumgr.h
-    moomenutoolbutton.c
-    moomenutoolbutton.h
     moonotebook.c
     moonotebook.h
     mooonce.h
