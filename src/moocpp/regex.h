@@ -83,27 +83,11 @@ public:
 
     static Regex compile(const char* pattern, CompileFlags compile_options = COMPILE_FLAGS_NONE, MatchFlags match_options = MATCH_FLAGS_NONE, GError** error = nullptr);
 
-    const char* get_pattern() const;
-    int get_max_backref() const;
-    int get_capture_count() const;
-    bool get_has_cr_or_lf() const;
-    int get_max_lookbehind() const;
-    int get_string_number(const char *name) const;
-
-    static gstr escape_string(const char* string, int length = -1);
-    static gstr escape_nul(const char* string, int length = -1);
-
-    CompileFlags get_compile_flags() const;
-    MatchFlags get_match_flags() const;
-
     static bool match(const char *pattern, const char *string, CompileFlags compile_options = COMPILE_FLAGS_NONE, MatchFlags match_options = MATCH_FLAGS_NONE);
 
     MatchInfo match(const char* string, MatchFlags match_options = MATCH_FLAGS_NONE) const;
     MatchInfo match(const gstr& string, MatchFlags match_options = MATCH_FLAGS_NONE) const;
     MatchInfo match(const char* string, ssize_t string_len, int start_position, MatchFlags match_options, GError** error) const;
-    MatchInfo match_all(const char* string, MatchFlags match_options = MATCH_FLAGS_NONE) const;
-    MatchInfo match_all(const char* string, ssize_t string_len, int start_position, MatchFlags match_options, GError** error) const;
-
     static std::vector<gstr> split(const char* pattern, const char* string, CompileFlags compile_options = COMPILE_FLAGS_NONE, MatchFlags match_options = MATCH_FLAGS_NONE);
     std::vector<gstr> split(const char* string, MatchFlags match_options = MATCH_FLAGS_NONE) const;
     std::vector<gstr> split(const char* string, ssize_t string_len, int start_position, MatchFlags match_options, int max_tokens, GError** error) const;
@@ -112,8 +96,6 @@ public:
     gstr replace(const char* string, ssize_t string_len, int start_position, const char* replacement, MatchFlags match_options, GError** error) const;
     gstr replace_literal(const char* string, const char* replacement, MatchFlags match_options = MATCH_FLAGS_NONE) const;
     gstr replace_literal(const char* string, ssize_t string_len, int start_position, const char* replacement, MatchFlags match_options, GError** error) const;
-    gstr replace_eval(const char* string, ssize_t string_len, int start_position, MatchFlags match_options, const std::function<bool(const MatchInfo&, gstr&)>& eval, GError** error) const;
-    static bool check_replacement(const char* replacement, bool& has_references, GError** error);
 
 private:
     GRegex* m_p;
