@@ -538,13 +538,15 @@ completion_parse_text (MooFileEntryCompletion *cmpl,
     }
 
     {
+        gsize new_display_basename_len =
+            display_basename ? strlen (display_basename) : 0;
         char *new_display_basename = g_strdup (display_basename);
         if (display_basename == cmpl->priv->display_basename)
             display_basename = NULL;
         g_free (cmpl->priv->display_basename);
         cmpl->priv->display_basename = new_display_basename;
+        cmpl->priv->display_basename_len = new_display_basename_len;
     }
-    cmpl->priv->display_basename_len = strlen (cmpl->priv->display_basename);
 
     text_len = strlen (text);
 
