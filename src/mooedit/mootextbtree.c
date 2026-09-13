@@ -203,7 +203,7 @@ node_insert__ (BTNode   *node,
                      node->u.children + index,
                      node->n_children - index);
 
-    node->u.children[index] = data;
+    node->u.children[index] = (BTNode *) data;
     node->n_children++;
 }
 

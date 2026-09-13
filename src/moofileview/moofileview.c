@@ -390,7 +390,7 @@ static gboolean moo_file_view_drop_text     (MooFileView    *fileview,
                                              int             x,
                                              int             y,
                                              guint           time,
-                                             gboolean       *delete);
+                                             gboolean       *delete_selection);
 
 
 static void     file_list_selection_changed (MooFileView    *file_view,
@@ -5330,7 +5330,7 @@ moo_file_view_drop_data_received (MooFileView    *fileview,
                                   guint           time)
 {
     gboolean success = FALSE;
-    gboolean delete = FALSE;
+    gboolean delete_selection = FALSE;
 
     if (gtk_selection_data_get_target (data) == moo_atom_uri_list ())
     {
@@ -5355,18 +5355,18 @@ moo_file_view_drop_data_received (MooFileView    *fileview,
     {
         char *text = (char*) gtk_selection_data_get_text (data);
 
-        delete = gdk_drag_context_get_suggested_action(context) & GDK_ACTION_MOVE;
+        delete_selection = gdk_drag_context_get_suggested_action(context) & GDK_ACTION_MOVE;
 
         if (text)
             success = moo_file_view_drop_text (fileview, text, path, widget,
-                                               context, x, y, time, &delete);
+                                               context, x, y, time, &delete_selection);
         else
             g_critical ("oops");
 
         g_free (text);
     }
 
-    _moo_file_view_drag_finish (fileview, context, success, delete, time);
+    _moo_file_view_drag_finish (fileview, context, success, delete_selection, time);
     return TRUE;
 }
 
@@ -5974,7 +5974,7 @@ moo_file_view_drop_text (G_GNUC_UNUSED MooFileView *fileview,
                          G_GNUC_UNUSED int x,
                          G_GNUC_UNUSED int y,
                          G_GNUC_UNUSED guint time,
-                         G_GNUC_UNUSED gboolean *delete)
+                         G_GNUC_UNUSED gboolean *delete_selection)
 {
     char *name = NULL;
     gboolean result = FALSE;

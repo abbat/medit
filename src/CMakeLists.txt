@@ -114,6 +114,17 @@ add_custom_target(validate-xml
 file(GLOB_RECURSE MOO_SRC_FILES CONFIGURE_DEPENDS
      "${CMAKE_CURRENT_SOURCE_DIR}/*.c" "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 
+# Keep vendored C sources on the C compiler, but compile the project's own C
+# sources with the C++ compiler as part of the all-C++ build experiment.  The
+# generated C sources are added to this property below, after the target is
+# declared.
+set(MOO_PROJECT_SRC_FILES ${MOO_SRC_FILES})
+list(FILTER MOO_PROJECT_SRC_FILES EXCLUDE REGEX "/eggsmclient/")
+list(FILTER MOO_PROJECT_SRC_FILES EXCLUDE REGEX "/gtksourceview/")
+list(FILTER MOO_PROJECT_SRC_FILES EXCLUDE REGEX "/xdgmime/")
+list(FILTER MOO_PROJECT_SRC_FILES EXCLUDE REGEX "/plugins/ctags/")
+set_source_files_properties(${MOO_PROJECT_SRC_FILES} PROPERTIES LANGUAGE CXX)
+
 add_custom_command(
     OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/builder-ids.stamp"
     COMMAND ${CMAKE_COMMAND}
@@ -139,6 +150,11 @@ add_executable(medit
     "${CMAKE_CURRENT_BINARY_DIR}/marshals.h"
     "${CMAKE_CURRENT_BINARY_DIR}/moo-pixbufs.h"
     "${CMAKE_CURRENT_BINARY_DIR}/resources.c")
+
+set_source_files_properties(
+    "${CMAKE_CURRENT_BINARY_DIR}/marshals.c"
+    "${CMAKE_CURRENT_BINARY_DIR}/resources.c"
+    PROPERTIES LANGUAGE CXX)
 
 add_dependencies(medit validate-xml check-builder-ids)
 

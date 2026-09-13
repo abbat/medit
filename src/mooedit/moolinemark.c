@@ -213,7 +213,8 @@ moo_line_mark_set_property (GObject        *object,
     switch (prop_id)
     {
         case PROP_BACKGROUND_GDK:
-            moo_line_mark_set_background_gdk (mark, g_value_get_boxed (value));
+            moo_line_mark_set_background_gdk (mark,
+                                              (const GdkColor *) g_value_get_boxed (value));
             break;
 
         case PROP_BACKGROUND:
@@ -236,7 +237,7 @@ moo_line_mark_set_property (GObject        *object,
             break;
 
         case PROP_PIXBUF:
-            moo_line_mark_set_pixbuf (mark, g_value_get_object (value));
+            moo_line_mark_set_pixbuf (mark, (GdkPixbuf *) g_value_get_object (value));
             break;
 
         case PROP_STOCK_ID:
@@ -557,8 +558,8 @@ update_pixbuf (MooLineMark *mark)
     g_return_if_fail (GTK_IS_WIDGET (mark->priv->widget));
     g_return_if_fail (gtk_widget_get_realized (mark->priv->widget));
 
-    cache = g_object_get_data (G_OBJECT (mark->priv->widget),
-                               "moo-line-mark-icons");
+    cache = (GHashTable *) g_object_get_data (G_OBJECT (mark->priv->widget),
+                                              "moo-line-mark-icons");
 
     if (!cache)
     {
@@ -569,7 +570,7 @@ update_pixbuf (MooLineMark *mark)
                                 (GDestroyNotify) g_hash_table_destroy);
     }
 
-    pixbuf = g_hash_table_lookup (cache, mark->priv->stock_id);
+    pixbuf = (GdkPixbuf *) g_hash_table_lookup (cache, mark->priv->stock_id);
 
     if (!pixbuf)
     {

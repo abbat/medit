@@ -79,7 +79,7 @@ moo_plugin_loader_lookup (const char *id)
     g_return_val_if_fail (id != NULL, NULL);
 
     if (registered_loaders)
-        return g_hash_table_lookup (registered_loaders, id);
+        return (MooPluginLoader *) g_hash_table_lookup (registered_loaders, id);
     else
         return NULL;
 }
@@ -95,7 +95,7 @@ moo_plugin_loader_add (const MooPluginLoader *loader,
     g_return_if_fail (type != NULL);
     g_return_if_fail (registered_loaders != NULL);
 
-    copy = g_memdup (loader, sizeof (MooPluginLoader));
+    copy = (MooPluginLoader *) g_memdup (loader, sizeof (MooPluginLoader));
     g_hash_table_insert (registered_loaders, g_strdup (type), copy);
 }
 
@@ -117,7 +117,7 @@ moo_plugin_loader_register (const MooPluginLoader *loader,
 
     for (l = waiting_list; l != NULL; l = l->next)
     {
-        ModuleInfo *info = l->data;
+        ModuleInfo *info = (ModuleInfo *) l->data;
 
         if (!strcmp (info->loader, type))
             open_now = g_slist_prepend (open_now, info);
@@ -138,8 +138,8 @@ moo_plugin_loader_register (const MooPluginLoader *loader,
 
     while (open_now)
     {
-        moo_plugin_loader_load (loader, open_now->data);
-        module_info_free (open_now->data);
+        moo_plugin_loader_load (loader, (ModuleInfo *) open_now->data);
+        module_info_free ((ModuleInfo *) open_now->data);
         open_now = g_slist_delete_link (open_now, open_now);
     }
 }
@@ -189,7 +189,7 @@ static gboolean
 check_version (const char *version,
                const char *ini_file_path)
 {
-    char *dot;
+    const char *dot;
     char *end = NULL;
     long major, minor;
 
@@ -241,10 +241,10 @@ parse_ini_file (const char *dir,
     MooPluginParams *params = NULL;
     ModuleInfo *module_info = NULL;
 
-    ini_file_path = g_build_filename (dir, ini_file, NULL);
+    ini_file_path = g_build_filename (dir, ini_file, nullptr);
     key_file = g_key_file_new ();
 
-    if (!g_key_file_load_from_file (key_file, ini_file_path, 0, &error))
+    if (!g_key_file_load_from_file (key_file, ini_file_path, G_KEY_FILE_NONE, &error))
     {
         g_warning ("error parsing plugin ini file '%s': %s", ini_file_path, error->message);
         goto out;
@@ -280,7 +280,7 @@ parse_ini_file (const char *dir,
     if (!g_path_is_absolute (file))
     {
         char *tmp = file;
-        file = g_build_filename (dir, file, NULL);
+        file = g_build_filename (dir, file, nullptr);
         g_free (tmp);
     }
 
@@ -298,7 +298,7 @@ parse_ini_file (const char *dir,
 
     module_info = g_new0 (ModuleInfo, 1);
     module_info->loader = loader;
-    module_info->file = g_build_path (dir, file, NULL);
+    module_info->file = g_build_path (dir, file, nullptr);
     module_info->plugin_id = id;
     module_info->plugin_info = info;
     module_info->plugin_params = params;
@@ -373,7 +373,7 @@ _moo_plugin_finish_load (void)
 {
     while (waiting_list)
     {
-        ModuleInfo *info = waiting_list->data;
+        ModuleInfo *info = (ModuleInfo *) waiting_list->data;
         _moo_message ("unknown module type '%s' in file %s",
                       info->loader, info->ini_file);
         module_info_free (info);
@@ -410,7 +410,7 @@ load_c_module (const char *module_file,
         return;
 
     if (g_module_symbol (module, MOO_MODULE_INIT_FUNC_NAME, &init_func_ptr) &&
-        (init_func = init_func_ptr) && init_func ())
+        (init_func = (MooModuleInitFunc) init_func_ptr) && init_func ())
     {
         g_module_make_resident (module);
     }
@@ -438,7 +438,7 @@ load_c_plugin (const char      *plugin_file,
         return;
 
     if (!g_module_symbol (module, MOO_PLUGIN_INIT_FUNC_NAME, &init_func_ptr) ||
-        !(init_func = init_func_ptr) ||
+        !(init_func = (MooPluginModuleInitFunc) init_func_ptr) ||
         !init_func (&type))
     {
         g_module_close (module);

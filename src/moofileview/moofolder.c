@@ -934,7 +934,7 @@ moo_folder_do_reload (MooFolderImpl *impl)
     GDir *dir;
     GError *error = NULL;
     const char *name;
-    GSList *new = NULL, *deleted = NULL, *l;
+    GSList *new_files = NULL, *deleted = NULL, *l;
 
     g_return_val_if_fail (!impl->deleted, FALSE);
     impl->reload_idle = 0;
@@ -954,17 +954,17 @@ moo_folder_do_reload (MooFolderImpl *impl)
     while ((name = g_dir_read_name (dir)))
         g_hash_table_insert (files, g_strdup (name), NULL);
 
-    diff_hash_tables (files, impl->files, &new, &deleted);
+    diff_hash_tables (files, impl->files, &new_files, &deleted);
 
-    for (l = new; l != NULL; l = l->next)
+    for (l = new_files; l != NULL; l = l->next)
         file_created (impl, l->data);
 
     for (l = deleted; l != NULL; l = l->next)
         file_deleted (impl, l->data);
 
-    g_slist_foreach (new, (GFunc) moo_free, NULL);
+    g_slist_foreach (new_files, (GFunc) moo_free, NULL);
     g_slist_foreach (deleted, (GFunc) moo_free, NULL);
-    g_slist_free (new);
+    g_slist_free (new_files);
     g_slist_free (deleted);
     g_hash_table_destroy (files);
     g_dir_close (dir);

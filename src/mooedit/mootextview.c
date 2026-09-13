@@ -1945,7 +1945,7 @@ clear_clipboard (G_GNUC_UNUSED GtkClipboard *clipboard,
 
 static void
 moo_text_view_cut_or_copy (GtkTextView *text_view,
-                           gboolean     delete,
+                           gboolean     delete_selection,
                            GdkAtom      clipboard_type)
 {
     GtkTextBuffer *buffer;
@@ -1978,7 +1978,7 @@ moo_text_view_cut_or_copy (GtkTextView *text_view,
     gtk_clipboard_set_can_store (clipboard, targets + 1,
                                  G_N_ELEMENTS (targets) - 1);
 
-    if (delete)
+    if (delete_selection)
     {
         gtk_text_buffer_begin_user_action (buffer);
         gtk_text_buffer_delete (buffer, &start, &end);

@@ -148,7 +148,8 @@ _moo_text_search_regex_forward (const GtkTextIter      *search_start,
         text = gtk_text_buffer_get_slice (buffer, &start, &end, TRUE);
         text_start = g_utf8_offset_to_pointer (text, start_offset);
 
-        if (g_regex_match_full (regex->re, text, -1, text_start - text, 0, &match_info, NULL))
+        if (g_regex_match_full (regex->re, text, -1, text_start - text,
+                                (GRegexMatchFlags) 0, &match_info, NULL))
         {
             int start_pos, end_pos;
 
@@ -268,7 +269,7 @@ _moo_text_search_regex_backward (const GtkTextIter      *search_start,
     slice_start = *search_start;
     slice_end = slice_start;
     gtk_text_iter_backward_lines (&slice_start, regex->n_lines);
-    flags = 0;
+    flags = (GRegexMatchFlags) 0;
 
     if (!gtk_text_iter_ends_line (&slice_end))
         flags |= G_REGEX_MATCH_NOTEOL;
@@ -316,7 +317,7 @@ _moo_text_search_regex_backward (const GtkTextIter      *search_start,
         g_free (text);
 
         slice_end = slice_start;
-        flags = 0;
+        flags = (GRegexMatchFlags) 0;
 
         if (gtk_text_iter_is_start (&slice_end))
             break;
@@ -342,7 +343,7 @@ get_regex (const char            *pattern,
 
     if (!saved_pattern || strcmp (saved_pattern, pattern) || saved_flags != flags)
     {
-        GRegexCompileFlags re_flags = 0;
+        GRegexCompileFlags re_flags = (GRegexCompileFlags) 0;
 
         if (saved_regex)
             _moo_regex_unref (saved_regex);
@@ -356,7 +357,7 @@ get_regex (const char            *pattern,
 
         saved_regex = _moo_regex_compile (saved_pattern,
                                           re_flags | G_REGEX_OPTIMIZE,
-                                          0, error);
+                                          (GRegexMatchFlags) 0, error);
 
         if (!saved_regex)
         {
@@ -418,11 +419,11 @@ moo_text_search_forward (const GtkTextIter      *start,
 
     if (!(flags & MOO_TEXT_SEARCH_REGEX))
     {
-        GtkSourceSearchFlags gs_flags = 0;
+        GtkSourceSearchFlags gs_flags = (GtkSourceSearchFlags) 0;
         GtkTextIter real_end, real_start;
 
         if (flags & MOO_TEXT_SEARCH_CASELESS)
-            gs_flags |= GTK_SOURCE_SEARCH_CASE_INSENSITIVE;
+            gs_flags = (GtkSourceSearchFlags) (gs_flags | GTK_SOURCE_SEARCH_CASE_INSENSITIVE);
 
         /* http://bugzilla.gnome.org/show_bug.cgi?id=321299 */
         if (!end || gtk_text_iter_is_end (end))
@@ -484,11 +485,11 @@ moo_text_search_backward (const GtkTextIter      *start,
 
     if (!(flags & MOO_TEXT_SEARCH_REGEX))
     {
-        GtkSourceSearchFlags gs_flags = 0;
+        GtkSourceSearchFlags gs_flags = (GtkSourceSearchFlags) 0;
         GtkTextIter real_start;
 
         if (flags & MOO_TEXT_SEARCH_CASELESS)
-            gs_flags |= GTK_SOURCE_SEARCH_CASE_INSENSITIVE;
+            gs_flags = (GtkSourceSearchFlags) (gs_flags | GTK_SOURCE_SEARCH_CASE_INSENSITIVE);
 
         if (!(flags & MOO_TEXT_SEARCH_WHOLE_WORDS))
             return gtk_source_iter_backward_search (start, str, gs_flags,
