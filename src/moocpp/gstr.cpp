@@ -92,11 +92,6 @@ gstr& gstr::operator=(gstr&& other)
     return *this;
 }
 
-void gstr::clear()
-{
-    *this = nullptr;
-}
-
 bool gstr::empty() const
 {
     return !m_p || !*m_p;
@@ -120,16 +115,6 @@ bool gstr::operator==(std::nullptr_t) const
 bool gstr::operator<(const gstr& other) const
 {
     return strcmp(get(), other.get()) < 0;
-}
-
-gstrvec gstr::copy(char** strv)
-{
-    size_t len = strv ? g_strv_length(strv) : 0;
-    gstrvec result;
-    result.reserve(len);
-    for (size_t i = 0; i < len; ++i)
-        result.push_back(gstr(strv[i]));
-    return result;
 }
 
 gstrvec gstr::take(char** strv)

@@ -47,7 +47,6 @@ public:
     gstr& operator=(const gstr& other);
     gstr& operator=(gstr&& other);
 
-    void clear();
     bool empty() const;
 
     bool operator==(const gstr& other) const;
@@ -62,7 +61,6 @@ public:
 
     bool operator<(const gstr& other) const;
 
-    static gstrvec copy(char** strv);
     static gstrvec take(char** strv);
 
     gstrvec split(const char* separator, int max_pieces) const;
