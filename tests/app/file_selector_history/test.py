@@ -32,6 +32,7 @@ def run(t):
     go(t, view, c)
     choose_empty_space(t, view, "Forward")
     t.check(where(t, view) == c, "Forward is a no-op after a new branch")
+    t.escape()
 
 
 def choose_empty_space(t, view, item):

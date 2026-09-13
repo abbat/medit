@@ -29,3 +29,4 @@ def run(t):
     t.check("Properties" in [n.name for n in t.find_all(first_row_menu(t, view), depth=2)
                              if n.name],
             "the updated listing can act on the new folder")
+    t.escape()
