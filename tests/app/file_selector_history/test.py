@@ -3,7 +3,7 @@
 # requires: MOO_GTK3
 """
 
-from app.file_selector_common import go, open_pane, path_entry, where
+from app.file_selector_common import go, open_pane, where
 
 
 def setup(s):

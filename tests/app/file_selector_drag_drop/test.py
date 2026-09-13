@@ -49,6 +49,7 @@ def go(t, view, path):
 def drop_menu(t):
     for top in t.find_all(t.app, depth=1):
         for menu in t.find_all(top, role="menu", depth=1):
-            if menu and any(n.name == "Move Here" for n in t.on_screen(t.find_all(menu, depth=1))):
+            if menu and any(n.name == "Move Here"
+                            for n in t.on_screen(t.find_all(menu, depth=1))):
                 return menu
     return None
