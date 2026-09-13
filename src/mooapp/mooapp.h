@@ -54,7 +54,11 @@ typedef struct _MooAppClass MooAppClass;
  */
 struct _MooApp
 {
+#if GTK_CHECK_VERSION(3, 0, 0)
+  GtkApplication parent;
+#else
   GObject parent;      /*!< \brief The parent GObject */
+#endif
   MooAppPrivate *priv; /*!< \brief Pointer to private data */
 };
 
@@ -63,7 +67,11 @@ struct _MooApp
  */
 struct _MooAppClass
 {
+#if GTK_CHECK_VERSION(3, 0, 0)
+  GtkApplicationClass parent_class;
+#else
   GObjectClass parent_class; /*!< \brief The parent class structure */
+#endif
 
   void (*started) (MooApp *app);      /*!< \brief Signal emitted when the application has started */
   void (*quit) (MooApp *app);         /*!< \brief Signal emitted when the application is about to quit */

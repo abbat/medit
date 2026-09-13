@@ -34,7 +34,7 @@ find_program(RUN_CLANG_TIDY NAMES run-clang-tidy run-clang-tidy.py)
 set(MOO_ANALYZE_EXCLUDE
     "src/gtksourceview/"
     "src/xdgmime/"
-    "src/eggsmclient/"
+    "src/vendor/eggsmclient/"
     "src/plugins/ctags/readtags\\.c")
 
 list(JOIN MOO_ANALYZE_EXCLUDE "|" _moo_analyze_exclude)

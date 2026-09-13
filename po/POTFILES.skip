@@ -4,7 +4,7 @@ plat/
 tools/
 src/mooedit/langs/
 src/gtksourceview/
-src/eggsmclient/
+src/vendor/eggsmclient/
 
 doc/txt2tags/txt2tags.py
 src/mooutils/moofontsel.c

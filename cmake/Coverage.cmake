@@ -62,7 +62,7 @@ set(MOO_COVERAGE_IGNORE
     "${CMAKE_BINARY_DIR}/"
     "src/gtksourceview/"
     "src/xdgmime/"
-    "src/eggsmclient/"
+    "src/vendor/eggsmclient/"
     "src/plugins/ctags/readtags\\.c")
 
 list(JOIN MOO_COVERAGE_IGNORE "|" _moo_coverage_ignore)

@@ -768,6 +768,11 @@ medit_app_main (int argc, char *argv[])
   install_log_handlers ();
 
   app = MOO_APP (g_object_new (medit_app_get_type (),
+#if GTK_CHECK_VERSION(3, 0, 0)
+                               "application-id", "org.medit.Medit",
+                               "flags", G_APPLICATION_NON_UNIQUE,
+                               "register-session", TRUE,
+#endif
                                "run-input", run_input,
                                "use-session", medit_opts.use_session,
                                "instance-name", medit_opts.instance_name,

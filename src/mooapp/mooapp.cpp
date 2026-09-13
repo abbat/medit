@@ -16,7 +16,9 @@
 
 
 #include "about.h"
-#include "eggsmclient/eggsmclient.h"
+#if !GTK_CHECK_VERSION(3, 0, 0)
+#include "vendor/eggsmclient/eggsmclient.h"
+#endif
 #include "marshals.h"
 #include "mooapp-accels.h"
 #include "mooapp-info.h"
@@ -92,7 +94,11 @@ static struct
 struct _MooAppPrivate
 {
   MooEditor *editor;                  /*!< \brief Pointer to the editor instance */
+#if !GTK_CHECK_VERSION(3, 0, 0)
   EggSMClient *sm_client;             /*!< \brief Session management client */
+#else
+  guint session_inhibit_cookie;       /*!< \brief GTK session-end inhibitor */
+#endif
   MooMarkupDoc *session;              /*!< \brief Session document */
   MooUiXml *ui_xml;                   /*!< \brief UI XML data */
   const char *default_ui;             /*!< \brief Default UI XML data */
@@ -119,11 +125,6 @@ static guint signals[LAST_SIGNAL];
 
 /*!< \brief Stores the most recently received signal */
 static volatile int signal_received;
-
-#if GTK_CHECK_VERSION(3, 0, 0)
-/*!< \brief Global application pointer for GTK3 (replaces quit_handler_id) */
-static MooApp *on_gtk_main_quit_app_arg;
-#endif
 
 /*!
  * \brief Gets the system name and version information
@@ -437,7 +438,9 @@ moo_app_write_session (MooApp *app)
 static void
 moo_app_do_quit (MooApp *app)
 {
+#if !GTK_CHECK_VERSION(3, 0, 0)
   guint i;
+#endif
 
   if (!app->priv->running)
     return;
@@ -446,8 +449,17 @@ moo_app_do_quit (MooApp *app)
 
   g_signal_emit (app, signals[QUIT], 0);
 
+#if !GTK_CHECK_VERSION(3, 0, 0)
   g_object_unref (app->priv->sm_client);
   app->priv->sm_client = NULL;
+#else
+  if (app->priv->session_inhibit_cookie)
+    {
+      gtk_application_uninhibit (GTK_APPLICATION (app),
+                                 app->priv->session_inhibit_cookie);
+      app->priv->session_inhibit_cookie = 0;
+    }
+#endif
 
   _moo_editor_close_all (app->priv->editor);
 
@@ -464,12 +476,16 @@ moo_app_do_quit (MooApp *app)
     gtk_quit_remove (app->priv->quit_handler_id);
 #endif
 
+#if GTK_CHECK_VERSION(3, 0, 0)
+  g_application_quit (G_APPLICATION (app));
+#else
   i = 0;
   while (gtk_main_level () && i < 1000)
     {
       gtk_main_quit ();
       i++;
     }
+#endif
 
   moo_app_cleanup ();
 }
@@ -487,10 +503,6 @@ moo_app_finalize (GObject *object)
   moo_app_do_quit (app);
 
   moo_app_data.instance = NULL;
-
-#if GTK_CHECK_VERSION(3, 0, 0)
-  on_gtk_main_quit_app_arg = NULL;
-#endif
 
   g_free (app->priv->rc_files[0]);
   g_free (app->priv->rc_files[1]);
@@ -990,35 +1002,19 @@ start_input (MooApp *app)
                           TRUE, input_callback, app);
 }
 
-/*!
- * \brief Callback function called when GTK main loop is about to quit. Attempts to quit the application gracefully.
- * \param app the MooApp instance (GTK2 only)
- * \return FALSE (GTK2 only)
- */
-static
-#if GTK_CHECK_VERSION(3, 0, 0)
-    void
-    on_gtk_main_quit ()
-#else
-    gboolean
-    on_gtk_main_quit (MooApp *app)
-#endif
+/* Callback function called when the GTK2 main loop is about to quit. */
+#if !GTK_CHECK_VERSION(3, 0, 0)
+static gboolean
+on_gtk_main_quit (MooApp *app)
 {
-#if GTK_CHECK_VERSION(3, 0, 0)
-  MooApp *app = on_gtk_main_quit_app_arg;
-  if (app == NULL)
-    return;
-#else
   app->priv->quit_handler_id = 0;
-#endif
 
   if (!moo_app_quit (app))
     moo_app_do_quit (app);
 
-#if !GTK_CHECK_VERSION(3, 0, 0)
   return FALSE;
-#endif
 }
+#endif
 
 /*!
  * \brief Timeout function to check for received signals and handle them.
@@ -1057,6 +1053,7 @@ emit_started (MooApp *app)
  * \brief Callback for session manager quit request.
  * \param app the MooApp instance
  */
+#if !GTK_CHECK_VERSION(3, 0, 0)
 static void
 sm_quit_requested (MooApp *app)
 {
@@ -1080,6 +1077,26 @@ sm_quit (MooApp *app)
   if (!moo_app_quit (app))
     moo_app_do_quit (app);
 }
+#endif
+
+#if GTK_CHECK_VERSION(3, 0, 0)
+static void
+gtk_application_query_end (GtkApplication *application,
+                           MooApp         *app)
+{
+  app->priv->session_inhibit_cookie =
+      gtk_application_inhibit (application, NULL,
+                               GTK_APPLICATION_INHIBIT_LOGOUT,
+                               _("Checking for unsaved documents"));
+
+  if (moo_app_quit (app) && app->priv->session_inhibit_cookie)
+    {
+      gtk_application_uninhibit (application,
+                                 app->priv->session_inhibit_cookie);
+      app->priv->session_inhibit_cookie = 0;
+    }
+}
+#endif
 
 /*!
  * \brief Loads application preferences from system and user configuration files.
@@ -1219,7 +1236,11 @@ moo_app_get_type (void)
         NULL /* value_table */
       };
 
+#if GTK_CHECK_VERSION(3, 0, 0)
+      type = g_type_register_static (GTK_TYPE_APPLICATION, "MooApp", &type_info, (GTypeFlags) 0);
+#else
       type = g_type_register_static (G_TYPE_OBJECT, "MooApp", &type_info, (GTypeFlags) 0);
+#endif
     }
 
   return type;
@@ -1281,16 +1302,13 @@ moo_app_run (MooApp *app)
 
   app->priv->running = TRUE;
 
-#if GTK_CHECK_VERSION(3, 0, 0)
-  on_gtk_main_quit_app_arg = app;
-  // FIXME: deprecated
-  g_atexit (on_gtk_main_quit);
-#else
+#if !GTK_CHECK_VERSION(3, 0, 0)
   app->priv->quit_handler_id = gtk_quit_add (1, (GtkFunction) on_gtk_main_quit, app);
 #endif
 
   g_timeout_add (100, (GSourceFunc) check_signal, NULL);
 
+#if !GTK_CHECK_VERSION(3, 0, 0)
   app->priv->sm_client = egg_sm_client_get ();
   /* make it install log handler */
   g_option_group_free (egg_sm_client_get_option_group ());
@@ -1301,10 +1319,18 @@ moo_app_run (MooApp *app)
 
   if (EGG_SM_CLIENT_GET_CLASS (app->priv->sm_client)->startup)
     EGG_SM_CLIENT_GET_CLASS (app->priv->sm_client)->startup (app->priv->sm_client, NULL);
+#endif
 
   g_idle_add_full (G_PRIORITY_DEFAULT_IDLE + 1, (GSourceFunc) emit_started, app, NULL);
 
+#if GTK_CHECK_VERSION(3, 0, 0)
+  g_signal_connect (app, "query-end",
+                    G_CALLBACK (gtk_application_query_end), app);
+  char *argv[] = { (char *) MOO_APP_SHORT_NAME, NULL };
+  g_application_run (G_APPLICATION (app), 1, argv);
+#else
   gtk_main ();
+#endif
 
   return app->priv->exit_status;
 }
