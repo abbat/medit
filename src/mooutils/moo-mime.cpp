@@ -14,7 +14,7 @@
  */
 
 #include "mooutils/moo-mime.h"
-#include "xdgmime/xdgmime.h"
+#include "vendor/xdgmime/xdgmime.h"
 #include "mooutils/mooutils-fs.h"
 #include "mooglib/moo-stat.h"
 

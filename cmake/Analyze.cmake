@@ -33,7 +33,7 @@ find_program(RUN_CLANG_TIDY NAMES run-clang-tidy run-clang-tidy.py)
 # still not ours to fix, and they would show up on every run.
 set(MOO_ANALYZE_EXCLUDE
     "src/vendor/gtksourceview/"
-    "src/xdgmime/"
+    "src/vendor/xdgmime/"
     "src/vendor/eggsmclient/"
     "src/plugins/ctags/readtags\\.c")
 
