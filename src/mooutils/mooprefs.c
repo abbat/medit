@@ -188,7 +188,7 @@ moo_prefs_create_key (const char   *key,
     char *error = NULL;
 
     g_return_if_fail (key != NULL);
-    g_return_if_fail (prefs_kind < 2);
+    g_return_if_fail ((int) prefs_kind < 2);
     g_return_if_fail (_moo_value_type_supported (value_type));
 
     default_value.g_type = 0;
@@ -298,7 +298,7 @@ prepend_key (const char *key,
     struct {
         GSList *list;
         MooPrefsKind prefs_kind;
-    } *data = pdata;
+    } *data = (decltype(data)) pdata;
 
     if (data->prefs_kind == item->prefs_kind)
         data->list = g_slist_prepend (data->list, g_strdup (key));
@@ -418,7 +418,7 @@ prefs_new_key_from_string (const char   *key,
         if (prefs_kind == MOO_PREFS_SYS)
             g_value_copy (&real_val, &default_val);
         moo_prefs_new_key (key, value_type, &default_val,
-                           prefs_kind == MOO_PREFS_SYS ? MOO_PREFS_RC : prefs_kind);
+                           (MooPrefsKind) (prefs_kind == MOO_PREFS_SYS ? MOO_PREFS_RC : prefs_kind));
         item = prefs_get_item (key);
         g_value_unset (&default_val);
     }
@@ -460,7 +460,7 @@ prefs_get_item (const char *key)
 {
     PrefsStore *prefs = prefs_instance ();
     g_return_val_if_fail (key != NULL, NULL);
-    return g_hash_table_lookup (prefs->data, key);
+    return (PrefsItem *) g_hash_table_lookup (prefs->data, key);
 }
 
 
@@ -821,7 +821,7 @@ sync_xml (MooPrefsKind prefs_kind)
                                           MOO_PREFS_ELEMENT "/" PREFS_ROOT);
 
         for (i = 0; i < data.keys->len; ++i)
-            write_item (data.keys->pdata[i], root);
+            write_item ((const char *) data.keys->pdata[i], root);
     }
 
     g_ptr_array_free (data.keys, TRUE);

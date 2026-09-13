@@ -619,7 +619,7 @@ moo_big_paned_insert_pane (MooBigPaned        *paned,
 
     g_return_val_if_fail (MOO_IS_BIG_PANED (paned), NULL);
     g_return_val_if_fail (GTK_IS_WIDGET (pane_widget), NULL);
-    g_return_val_if_fail (position < 4, NULL);
+    g_return_val_if_fail (position <= MOO_PANE_POS_BOTTOM, NULL);
 
     if (id && moo_big_paned_lookup_pane (paned, id) != NULL)
     {
@@ -677,7 +677,7 @@ moo_big_paned_reorder_pane (MooBigPaned    *paned,
 
     g_return_if_fail (MOO_IS_BIG_PANED (paned));
     g_return_if_fail (GTK_IS_WIDGET (pane_widget));
-    g_return_if_fail (new_position < 4);
+    g_return_if_fail (new_position <= MOO_PANE_POS_BOTTOM);
 
     pane = moo_big_paned_find_pane (paned, pane_widget, &child);
     g_return_if_fail (pane != NULL);
@@ -1292,7 +1292,7 @@ get_drop_area (MooBigPaned    *paned,
     height = allocation.height;
 
     g_object_get (active_child, "pane-position", &active_position, NULL);
-    g_return_if_fail (active_position < 4);
+    g_return_if_fail (active_position <= MOO_PANE_POS_BOTTOM);
 
     if (active_position == position)
     {

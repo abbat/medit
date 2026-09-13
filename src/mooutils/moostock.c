@@ -24,15 +24,15 @@
 
 
 static GtkStockItem stock_items[] = {
-    {(char*) MOO_STOCK_SAVE_NONE, (char*) N_("Save _None"), 0, 0, (char*) GETTEXT_PACKAGE},
-    {(char*) MOO_STOCK_SAVE_SELECTED, (char*) N_("Save _Selected"), 0, 0, (char*) GETTEXT_PACKAGE},
-    {(char*) MOO_STOCK_FILE_COPY, (char*) "_Copy", 0, 0, (char*) "gtk20"},
-    {(char*) MOO_STOCK_FILE_MOVE, (char*) N_("Move"), 0, 0, (char*) GETTEXT_PACKAGE},
-    {(char*) MOO_STOCK_FILE_LINK, (char*) N_("Link"), 0, 0, (char*) GETTEXT_PACKAGE},
-    {(char*) MOO_STOCK_FILE_SAVE_AS, (char*) "Save _As", 0, 0, (char*) "gtk20"},
-    {(char*) MOO_STOCK_FILE_SAVE_COPY, (char*) N_("Save Copy"), 0, 0, (char*) GETTEXT_PACKAGE},
-    {(char*) MOO_STOCK_NEW_FOLDER, (char*) N_("_New Folder"), 0, 0, (char*) GETTEXT_PACKAGE},
-    {(char*) MOO_STOCK_NEW_WINDOW, (char*) N_("New _Window"), 0, 0, (char*) GETTEXT_PACKAGE}
+    {(char*) MOO_STOCK_SAVE_NONE, (char*) N_("Save _None"), (GdkModifierType) 0, 0, (char*) GETTEXT_PACKAGE},
+    {(char*) MOO_STOCK_SAVE_SELECTED, (char*) N_("Save _Selected"), (GdkModifierType) 0, 0, (char*) GETTEXT_PACKAGE},
+    {(char*) MOO_STOCK_FILE_COPY, (char*) "_Copy", (GdkModifierType) 0, 0, (char*) "gtk20"},
+    {(char*) MOO_STOCK_FILE_MOVE, (char*) N_("Move"), (GdkModifierType) 0, 0, (char*) GETTEXT_PACKAGE},
+    {(char*) MOO_STOCK_FILE_LINK, (char*) N_("Link"), (GdkModifierType) 0, 0, (char*) GETTEXT_PACKAGE},
+    {(char*) MOO_STOCK_FILE_SAVE_AS, (char*) "Save _As", (GdkModifierType) 0, 0, (char*) "gtk20"},
+    {(char*) MOO_STOCK_FILE_SAVE_COPY, (char*) N_("Save Copy"), (GdkModifierType) 0, 0, (char*) GETTEXT_PACKAGE},
+    {(char*) MOO_STOCK_NEW_FOLDER, (char*) N_("_New Folder"), (GdkModifierType) 0, 0, (char*) GETTEXT_PACKAGE},
+    {(char*) MOO_STOCK_NEW_WINDOW, (char*) N_("New _Window"), (GdkModifierType) 0, 0, (char*) GETTEXT_PACKAGE}
 };
 
 
@@ -191,7 +191,7 @@ _moo_stock_init (void)
     add_default_image (24, MEDIT_ICON, "medit", NULL);
     add_default_image (48, MEDIT_ICON, "medit", NULL);
 
-    gtk_stock_add_static (stock_items, G_N_ELEMENTS (stock_items));
+    gtk_stock_add_static (stock_items, 9);
 
     register_stock_icon_alias (factory, GTK_STOCK_DIRECTORY, MOO_STOCK_NEW_FOLDER, "folder_new");
     add_icon_name (factory, MOO_STOCK_NEW_FOLDER, "folder-new");

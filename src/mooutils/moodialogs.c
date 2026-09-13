@@ -235,7 +235,7 @@ moo_message_dialog (GtkWidget  *parent,
 
     moo_position_window_real (dialog, parent, FALSE, FALSE, 0, 0);
 
-    response = gtk_dialog_run (GTK_DIALOG (dialog));
+    response = (GtkResponseType) gtk_dialog_run (GTK_DIALOG (dialog));
 
     gtk_widget_destroy (dialog);
     return response;

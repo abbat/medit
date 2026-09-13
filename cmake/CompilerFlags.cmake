@@ -94,6 +94,12 @@ if(ENABLE_STRICT)
     # After -Werror above, so that deprecations warn but do not fail the build.
     moo_try_flag(-Wno-error=deprecated-declarations)
 
+    # GCC does not recognize a typed NULL pointer as a variadic sentinel when
+    # these C sources are compiled as C++. The calls are valid, but GCC warns
+    # about them as missing sentinels; keep the diagnostic without making it a
+    # build error.
+    moo_try_cxx_flag(-Wno-error=format)
+
     foreach(flag
             -fno-nonansi-builtins
             -fno-gnu-keywords

@@ -82,7 +82,7 @@ _moo_bookmark_view_class_init (MooBookmarkViewClass *klass)
     signals[BOOKMARK_ACTIVATED] =
             g_signal_new ("bookmark-activated",
                           G_OBJECT_CLASS_TYPE (klass),
-                          G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+                          (GSignalFlags) (G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION),
                           G_STRUCT_OFFSET (MooBookmarkViewClass, bookmark_activated),
                           NULL, NULL,
                           _moo_marshal_VOID__BOXED,
@@ -147,7 +147,7 @@ moo_bookmark_view_set_property (GObject        *object,
     MooBookmarkView *view = MOO_BOOKMARK_VIEW (object);
 
     if (prop_id == PROP_MGR)
-        _moo_bookmark_view_set_mgr (view, g_value_get_object (value));
+        _moo_bookmark_view_set_mgr (view, (MooBookmarkMgr *) g_value_get_object (value));
     else
         G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 }

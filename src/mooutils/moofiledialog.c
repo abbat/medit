@@ -461,7 +461,7 @@ uri_list_to_files (GSList *list)
 
     while (list)
     {
-        moo_file_array_take (flocs, g_file_new_for_uri (list->data));
+        moo_file_array_take (flocs, g_file_new_for_uri ((const char *) list->data));
         list = list->next;
     }
 

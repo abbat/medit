@@ -33,6 +33,11 @@
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
 #if GTK_CHECK_VERSION(3,0,0)
+#include <gtk/deprecated/gtkstock.h>
+#else
+#include <gtk/gtkstock.h>
+#endif
+#if GTK_CHECK_VERSION(3,0,0)
 #include <gtk/gtk-a11y.h>
 #endif
 #include <gdk/gdkkeysyms.h>
@@ -81,6 +86,7 @@
 #include <unordered_set>
 #include <utility>
 #include <vector>
+
 #endif
 
 #endif // _medit_sysheaders_h_

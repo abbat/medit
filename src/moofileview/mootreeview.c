@@ -173,7 +173,7 @@ moo_tree_view_set_property (GObject        *object,
     MooTreeView *view = MOO_TREE_VIEW (object);
 
     if (prop_id == PROP_MODEL)
-        _moo_tree_view_set_model (view, g_value_get_object (value));
+        _moo_tree_view_set_model (view, (GtkTreeModel *) g_value_get_object (value));
     else
         G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 }
@@ -200,9 +200,9 @@ _moo_tree_view_get_model (gpointer view)
     if (MOO_IS_TREE_VIEW (view))
         return MOO_TREE_VIEW(view)->model;
     else if (GTK_IS_TREE_VIEW (view))
-        return gtk_tree_view_get_model (view);
+        return gtk_tree_view_get_model (GTK_TREE_VIEW (view));
     else if (MOO_IS_ICON_VIEW (view))
-        return _moo_icon_view_get_model (view);
+        return _moo_icon_view_get_model (MOO_ICON_VIEW (view));
     else
         g_return_val_if_reached (NULL);
 }
@@ -291,7 +291,7 @@ find_child (MooTreeView    *view,
 
     for (l = view->children; l != NULL; l = l->next)
     {
-        Child *child = l->data;
+        Child *child = (Child *) l->data;
         if (child->widget == real_view)
             return child;
     }
@@ -582,12 +582,12 @@ _moo_tree_view_get_path_at_pos (gpointer        view,
     }
     else if (GTK_IS_TREE_VIEW (view))
     {
-        return gtk_tree_view_get_path_at_pos (view, x, y, path,
+        return gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (view), x, y, path,
                                               NULL, NULL, NULL);
     }
     else if (MOO_IS_ICON_VIEW (view))
     {
-        return _moo_icon_view_get_path_at_pos (view, x, y, path,
+        return _moo_icon_view_get_path_at_pos (MOO_ICON_VIEW (view), x, y, path,
                                                NULL, NULL, NULL);
     }
     else
@@ -678,10 +678,10 @@ _moo_tree_view_set_drag_dest_row (gpointer        view,
                                   GtkTreePath    *path)
 {
     if (GTK_IS_TREE_VIEW (view))
-        gtk_tree_view_set_drag_dest_row (view, path,
+        gtk_tree_view_set_drag_dest_row (GTK_TREE_VIEW (view), path,
                                          GTK_TREE_VIEW_DROP_INTO_OR_AFTER);
     else if (MOO_IS_ICON_VIEW (view))
-        _moo_icon_view_set_drag_dest_row (view, path);
+        _moo_icon_view_set_drag_dest_row (MOO_ICON_VIEW (view), path);
     else
         g_return_if_reached ();
 }
@@ -695,9 +695,9 @@ _moo_tree_view_widget_to_abs_coords (gpointer        view,
                                      int            *absy)
 {
     if (GTK_IS_TREE_VIEW (view))
-        gtk_tree_view_convert_widget_to_bin_window_coords (view, wx, wy, absx, absy);
+        gtk_tree_view_convert_widget_to_bin_window_coords (GTK_TREE_VIEW (view), wx, wy, absx, absy);
     else if (MOO_IS_ICON_VIEW (view))
-        _moo_icon_view_widget_to_abs_coords (view, wx, wy, absx, absy);
+        _moo_icon_view_widget_to_abs_coords (MOO_ICON_VIEW (view), wx, wy, absx, absy);
     else
         g_return_if_reached ();
 }

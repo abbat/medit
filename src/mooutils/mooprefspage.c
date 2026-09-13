@@ -230,10 +230,10 @@ GtkWidget *
 moo_prefs_page_new (const char *label,
                     const char *icon_stock_id)
 {
-    return g_object_new (MOO_TYPE_PREFS_PAGE,
-                         "label", label,
-                         "icon-stock-id", icon_stock_id,
-                         (const char*) NULL);
+    return (GtkWidget *) g_object_new (MOO_TYPE_PREFS_PAGE,
+                                       "label", label,
+                                       "icon-stock-id", icon_stock_id,
+                                       (const char*) NULL);
 }
 
 
@@ -312,7 +312,8 @@ static void
 setting_init (GtkWidget *widget, G_GNUC_UNUSED gpointer data)
 {
     const GValue *value;
-    const char *prefs_key = g_object_get_data (G_OBJECT (widget), "moo-prefs-key");
+    const char *prefs_key = (const char *) g_object_get_data (G_OBJECT (widget),
+                                                              "moo-prefs-key");
 
     g_return_if_fail (prefs_key != NULL);
 
@@ -326,8 +327,10 @@ setting_init (GtkWidget *widget, G_GNUC_UNUSED gpointer data)
 static void
 setting_apply (GtkWidget *widget, G_GNUC_UNUSED gpointer data)
 {
-    const char *prefs_key = g_object_get_data (G_OBJECT (widget), "moo-prefs-key");
-    GtkWidget *set_or_not = g_object_get_data (G_OBJECT (widget), "moo-prefs-set-or-not");
+    const char *prefs_key = (const char *) g_object_get_data (G_OBJECT (widget),
+                                                              "moo-prefs-key");
+    GtkWidget *set_or_not = (GtkWidget *) g_object_get_data (G_OBJECT (widget),
+                                                             "moo-prefs-set-or-not");
     GValue value;
     GType type;
 

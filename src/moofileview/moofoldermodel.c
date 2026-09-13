@@ -138,7 +138,7 @@ moo_folder_model_set_property (GObject *object,
     MooFolderModel *model = MOO_FOLDER_MODEL (object);
 
     if (property_id == PROP_FOLDER)
-        _moo_folder_model_set_folder (model, g_value_get_object (value));
+        _moo_folder_model_set_folder (model, (MooFolder *) g_value_get_object (value));
     else
         G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
 }
@@ -476,7 +476,7 @@ G_STMT_START {                              \
 static GtkTreeModelFlags
 moo_folder_model_get_flags (G_GNUC_UNUSED GtkTreeModel *tree_model)
 {
-    return GTK_TREE_MODEL_ITERS_PERSIST | GTK_TREE_MODEL_LIST_ONLY;
+    return (GtkTreeModelFlags) (GTK_TREE_MODEL_ITERS_PERSIST | GTK_TREE_MODEL_LIST_ONLY);
 }
 
 
@@ -550,7 +550,7 @@ moo_folder_model_get_path (GtkTreeModel *tree_model,
     g_return_val_if_fail (ITER_MODEL (iter) == model, NULL);
     g_return_val_if_fail (ITER_FILE (iter) != NULL, NULL);
 
-    index = file_list_position (model->priv->files, ITER_FILE (iter));
+    index = file_list_position (model->priv->files, (MooFile *) ITER_FILE (iter));
     g_return_val_if_fail (index >= 0, NULL);
 
     return gtk_tree_path_new_from_indices (index, -1);
@@ -588,7 +588,7 @@ moo_folder_model_iter_next (GtkTreeModel *tree_model,
     g_return_val_if_fail (ITER_MODEL (iter) == model, FALSE);
     g_return_val_if_fail (ITER_FILE (iter) != NULL, FALSE);
 
-    next = file_list_next (model->priv->files, ITER_FILE (iter));
+    next = file_list_next (model->priv->files, (MooFile *) ITER_FILE (iter));
 
     if (next)
     {

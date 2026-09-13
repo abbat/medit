@@ -225,7 +225,7 @@ _moo_file_entry_completion_class_init (MooFileEntryCompletionClass *klass)
     signals[FINISHED] =
             _moo_signal_new_cb ("finished",
                                 G_OBJECT_CLASS_TYPE (klass),
-                                G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+                                (GSignalFlags) (G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION),
                                 G_CALLBACK (completion_finished),
                                 NULL, NULL,
                                 _moo_marshal_VOID__VOID,
@@ -310,7 +310,7 @@ moo_file_entry_completion_set_property (GObject        *object,
     switch (prop_id)
     {
         case PROP_ENTRY:
-            _moo_file_entry_completion_set_entry (cmpl, g_value_get_object (value));
+            _moo_file_entry_completion_set_entry (cmpl, (GtkEntry *) g_value_get_object (value));
             break;
 
         case PROP_ENABLE_COMPLETION:
@@ -335,7 +335,7 @@ moo_file_entry_completion_set_property (GObject        *object,
             break;
 
         case PROP_FILE_SYSTEM:
-            completion_set_file_system (cmpl, g_value_get_object (value));
+            completion_set_file_system (cmpl, (MooFileSystem *) g_value_get_object (value));
             break;
 
         case PROP_CASE_SENSITIVE:
@@ -791,9 +791,9 @@ completion_popup (MooFileEntryCompletion *cmpl)
 
     gtk_grab_add (cmpl->priv->popup);
     gdk_pointer_grab (gtk_widget_get_window (cmpl->priv->popup), TRUE,
-                      GDK_BUTTON_PRESS_MASK |
+                      (GdkEventMask) (GDK_BUTTON_PRESS_MASK |
                               GDK_BUTTON_RELEASE_MASK |
-                              GDK_POINTER_MOTION_MASK,
+                              GDK_POINTER_MOTION_MASK),
                       NULL, NULL, GDK_CURRENT_TIME);
 
     g_signal_connect (cmpl->priv->entry, "focus-out-event",
@@ -1513,7 +1513,8 @@ completion_entry_key_press (GtkEntry               *entry,
     g_return_val_if_fail (entry == cmpl->priv->entry, FALSE);
 
     if (cmpl->priv->enabled &&
-        moo_accel_check_event (GTK_WIDGET (entry), event, GDK_KEY_Tab, 0))
+        moo_accel_check_event (GTK_WIDGET (entry), event, GDK_KEY_Tab,
+                               (GdkModifierType) 0))
     {
         completion_tab_key (cmpl);
         return TRUE;

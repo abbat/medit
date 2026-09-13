@@ -100,7 +100,7 @@ void            _moo_param_array_free       (GParameter *array,
 
 guint _moo_signal_new_cb (const gchar        *signal_name,
                           GType               itype,
-                          GSignalFlags        signal_flags,
+                          int                 signal_flags,
                           GCallback           handler,
                           GSignalAccumulator  accumulator,
                           gpointer            accu_data,

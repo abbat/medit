@@ -268,26 +268,26 @@ install_common_actions (void)
                                "tooltip", GTK_STOCK_PREFERENCES,
                                "stock-id", GTK_STOCK_PREFERENCES,
                                "closure-callback", moo_app_prefs_dialog,
-                               NULL);
+                               nullptr);
 
   moo_window_class_new_action (klass, "About", NULL,
                                "label", GTK_STOCK_ABOUT,
                                "no-accel", TRUE,
                                "stock-id", GTK_STOCK_ABOUT,
                                "closure-callback", show_about /* was moo_app_about_dialog from mooappabout.h */,
-                               NULL);
+                               nullptr);
 
   moo_window_class_new_action (klass, "Help", NULL,
                                "label", GTK_STOCK_HELP,
                                "default-accel", MOO_APP_ACCEL_HELP,
                                "stock-id", GTK_STOCK_HELP,
                                "closure-callback", moo_app_help,
-                               NULL);
+                               nullptr);
 
   moo_window_class_new_action (klass, "ReportBug", NULL,
                                "label", _ ("Report a Bug..."),
                                "closure-callback", moo_app_report_bug,
-                               NULL);
+                               nullptr);
 
   moo_window_class_new_action (klass, "Quit", NULL,
                                "display-name", GTK_STOCK_QUIT,
@@ -297,7 +297,7 @@ install_common_actions (void)
                                "default-accel", MOO_APP_ACCEL_QUIT,
                                "closure-callback", moo_app_quit,
                                "closure-proxy-func", moo_app_instance,
-                               NULL);
+                               nullptr);
 
   g_type_class_unref (klass);
 }

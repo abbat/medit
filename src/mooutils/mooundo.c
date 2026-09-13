@@ -137,7 +137,7 @@ moo_undo_stack_class_init (MooUndoStackClass *klass)
     signals[UNDO] =
             g_signal_new ("undo",
                           G_OBJECT_CLASS_TYPE (klass),
-                          G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+                          (GSignalFlags) (G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION),
                           G_STRUCT_OFFSET (MooUndoStackClass, undo),
                           NULL, NULL,
                           _moo_marshal_VOID__VOID,
@@ -146,7 +146,7 @@ moo_undo_stack_class_init (MooUndoStackClass *klass)
     signals[REDO] =
             g_signal_new ("redo",
                           G_OBJECT_CLASS_TYPE (klass),
-                          G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+                          (GSignalFlags) (G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION),
                           G_STRUCT_OFFSET (MooUndoStackClass, redo),
                           NULL, NULL,
                           _moo_marshal_VOID__VOID,
@@ -163,7 +163,7 @@ moo_undo_stack_init (G_GNUC_UNUSED MooUndoStack *stack)
 MooUndoStack*
 moo_undo_stack_new (gpointer document)
 {
-    return g_object_new (MOO_TYPE_UNDO_STACK,
+    return (MooUndoStack *) g_object_new (MOO_TYPE_UNDO_STACK,
                          "document", document,
                          (const char*) NULL);
 }
@@ -279,7 +279,7 @@ action_group_undo (ActionGroup    *group,
 
     for (l = group->actions->head; l != NULL; l = l->next)
     {
-        Wrapper *wrapper = l->data;
+        Wrapper *wrapper = (Wrapper *) l->data;
         WRAPPER_VTABLE(wrapper)->undo (wrapper->action, stack->document);
     }
 }
@@ -293,7 +293,7 @@ action_group_redo (ActionGroup    *group,
 
     for (l = group->actions->tail; l != NULL; l = l->prev)
     {
-        Wrapper *wrapper = l->data;
+        Wrapper *wrapper = (Wrapper *) l->data;
         WRAPPER_VTABLE(wrapper)->redo (wrapper->action, stack->document);
     }
 }
@@ -311,7 +311,7 @@ moo_undo_stack_undo_real (MooUndoStack *stack)
     stack->frozen++;
 
     link = stack->undo_stack;
-    group = link->data;
+    group = (ActionGroup *) link->data;
     stack->undo_stack = g_slist_delete_link (stack->undo_stack, link);
     notify_redo = stack->redo_stack == NULL;
     stack->redo_stack = g_slist_prepend (stack->redo_stack, group);
@@ -344,7 +344,7 @@ moo_undo_stack_redo_real (MooUndoStack *stack)
     stack->frozen++;
 
     link = stack->redo_stack;
-    group = link->data;
+    group = (ActionGroup *) link->data;
     stack->redo_stack = g_slist_delete_link (stack->redo_stack, link);
     notify_undo = stack->undo_stack == NULL;
     stack->undo_stack = g_slist_prepend (stack->undo_stack, group);
@@ -453,7 +453,7 @@ action_group_merge (ActionGroup    *group,
 {
     Wrapper *old;
 
-    old = group->actions->head ? group->actions->head->data : NULL;
+    old = group->actions->head ? (Wrapper *) group->actions->head->data : NULL;
 
     if (!old || old->type != type)
         return FALSE;
@@ -513,12 +513,12 @@ moo_undo_stack_add_action (MooUndoStack   *stack,
     }
     else if (stack->do_continue)
     {
-        group = stack->undo_stack->data;
+        group = (ActionGroup *) stack->undo_stack->data;
         action_group_add (group, type, action, TRUE, stack->document);
     }
     else
     {
-        group = stack->undo_stack->data;
+        group = (ActionGroup *) stack->undo_stack->data;
 
         if (!action_group_merge (group, type, action, stack->document))
         {

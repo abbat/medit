@@ -88,9 +88,9 @@ struct MooPrintOperationPrivate {
 #define SET_FLAG(flags, f, val)                     \
 G_STMT_START {                                      \
     if (val)                                        \
-        (flags) |= (f);                             \
+        (flags) = (MooPrintFlags) ((flags) | (f));  \
     else                                            \
-        (flags) &= (~(f));                          \
+        (flags) = (MooPrintFlags) ((flags) & ~(f)); \
 } G_STMT_END
 
 #define GET_OPTION(op, opt) (((op)->priv->settings->flags & (opt)) != 0)
@@ -222,7 +222,7 @@ moo_print_header_footer_free (MooPrintHeaderFooter *hf)
     for (i = 0; i < 3; ++i)
     {
         g_free (hf->format[i]);
-        hf_format_free (hf->parsed_format[i]);
+        hf_format_free ((HFFormat *) hf->parsed_format[i]);
     }
 
     g_free (hf);
@@ -244,7 +244,7 @@ static MooPrintSettings *
 moo_print_settings_new_default (void)
 {
     MooPrintSettings *settings = g_new0 (MooPrintSettings, 1);
-    settings->flags = MOO_PRINT_HEADER | MOO_PRINT_FOOTER;
+    settings->flags = (MooPrintFlags) (MOO_PRINT_HEADER | MOO_PRINT_FOOTER);
     settings->wrap_mode = PANGO_WRAP_WORD_CHAR;
     settings->header = moo_print_header_footer_new ();
     settings->footer = moo_print_header_footer_new ();
@@ -260,7 +260,7 @@ _moo_print_settings_copy (MooPrintSettings *settings)
 
     g_return_val_if_fail (settings != NULL, NULL);
 
-    copy = g_memdup (settings, sizeof (MooPrintSettings));
+    copy = (MooPrintSettings *) g_memdup (settings, sizeof (MooPrintSettings));
 
     copy->font = g_strdup (settings->font);
     copy->ln_font = g_strdup (settings->ln_font);
@@ -342,15 +342,15 @@ moo_print_operation_set_property (GObject            *object,
     switch (prop_id)
     {
         case PROP_DOC:
-            moo_print_operation_set_doc (op, g_value_get_object (value));
+            moo_print_operation_set_doc (op, (GtkTextView *) g_value_get_object (value));
             break;
 
         case PROP_BUFFER:
-            moo_print_operation_set_buffer (op, g_value_get_object (value));
+            moo_print_operation_set_buffer (op, (GtkTextBuffer *) g_value_get_object (value));
             break;
 
         case PROP_SETTINGS:
-            moo_print_operation_set_settings (op, g_value_get_boxed (value));
+            moo_print_operation_set_settings (op, (MooPrintSettings *) g_value_get_boxed (value));
             break;
 
         default:
@@ -850,7 +850,7 @@ set_tabs (MooPrintOperation *op,
     {
         guint n_spaces;
 
-        g_object_get (op->priv->doc, "tab-width", &n_spaces, NULL);
+        g_object_get (op->priv->doc, "tab-width", &n_spaces, nullptr);
 
         if (n_spaces != 8)
             string = g_strnfill (n_spaces, ' ');
@@ -963,7 +963,7 @@ moo_print_operation_begin_print (GtkPrintOperation *operation,
 
     mgw_time (&t, &err);
 
-    if (mgw_errno_is_set (err) || !mgw_localtime_r (&t, op->priv->tm, &err))
+    if (mgw_errno_is_set (err) || !mgw_localtime_r (&t, (struct tm *) op->priv->tm, &err))
     {
         g_critical ("time: %s", mgw_strerror (err));
         g_free (op->priv->tm);
@@ -1005,7 +1005,7 @@ get_iter_attrs (MooPrintOperation *op,
         GtkTextTag *tag;
         gboolean bg_set, fg_set, style_set, ul_set, weight_set, st_set;
 
-        tag = tags->data;
+        tag = (GtkTextTag *) tags->data;
         tags = g_slist_delete_link (tags, tags);
 
         if (ignore_tag (op, tag))
@@ -1018,13 +1018,13 @@ get_iter_attrs (MooPrintOperation *op,
                       "underline-set", &ul_set,
                       "weight-set", &weight_set,
                       "strikethrough-set", &st_set,
-                      NULL);
+                      nullptr);
 
         if (bg_set)
         {
             GdkColor *color = NULL;
             if (bg) pango_attribute_destroy (bg);
-            g_object_get (tag, "background-gdk", &color, NULL);
+            g_object_get (tag, "background-gdk", &color, nullptr);
             bg = pango_attr_background_new (color->red, color->green, color->blue);
             gdk_color_free (color);
         }
@@ -1033,7 +1033,7 @@ get_iter_attrs (MooPrintOperation *op,
         {
             GdkColor *color = NULL;
             if (fg) pango_attribute_destroy (fg);
-            g_object_get (tag, "foreground-gdk", &color, NULL);
+            g_object_get (tag, "foreground-gdk", &color, nullptr);
             fg = pango_attr_foreground_new (color->red, color->green, color->blue);
             gdk_color_free (color);
         }
@@ -1042,7 +1042,7 @@ get_iter_attrs (MooPrintOperation *op,
         {
             PangoStyle style_value;
             if (style) pango_attribute_destroy (style);
-            g_object_get (tag, "style", &style_value, NULL);
+            g_object_get (tag, "style", &style_value, nullptr);
             style = pango_attr_style_new (style_value);
         }
 
@@ -1050,7 +1050,7 @@ get_iter_attrs (MooPrintOperation *op,
         {
             PangoUnderline underline;
             if (ul) pango_attribute_destroy (ul);
-            g_object_get (tag, "underline", &underline, NULL);
+            g_object_get (tag, "underline", &underline, nullptr);
             ul = pango_attr_underline_new (underline);
         }
 
@@ -1058,7 +1058,7 @@ get_iter_attrs (MooPrintOperation *op,
         {
             PangoWeight weight_value;
             if (weight) pango_attribute_destroy (weight);
-            g_object_get (tag, "weight", &weight_value, NULL);
+            g_object_get (tag, "weight", &weight_value, nullptr);
             weight = pango_attr_weight_new (weight_value);
         }
 
@@ -1066,7 +1066,7 @@ get_iter_attrs (MooPrintOperation *op,
         {
             gboolean strikethrough;
             if (st) pango_attribute_destroy (st);
-            g_object_get (tag, "strikethrough", &strikethrough, NULL);
+            g_object_get (tag, "strikethrough", &strikethrough, nullptr);
             st = pango_attr_strikethrough_new (strikethrough);
         }
     }
@@ -1152,7 +1152,7 @@ fill_layout (MooPrintOperation *op,
 
             while (attrs)
             {
-                PangoAttribute *a = attrs->data;
+                PangoAttribute *a = (PangoAttribute *) attrs->data;
 
                 a->start_index = si;
                 a->end_index = ei;
@@ -1194,10 +1194,10 @@ print_header_footer (MooPrintOperation    *op,
         y = page->y + page->height + hf->separator_before +
             hf->separator_after + hf->separator_height;
 
-    g_object_get (op, "n-pages", &total_pages, NULL);
+    g_object_get (op, "n-pages", &total_pages, nullptr);
 
     if (hf->parsed_format[0] &&
-        (text = hf_format_eval (hf->parsed_format[0], op->priv->tm, page_no, total_pages,
+        (text = hf_format_eval ((HFFormat *) hf->parsed_format[0], (struct tm *) op->priv->tm, page_no, total_pages,
                                 op->priv->filename, op->priv->basename)))
     {
         pango_layout_set_text (hf->layout, text, -1);
@@ -1207,7 +1207,7 @@ print_header_footer (MooPrintOperation    *op,
     }
 
     if (hf->parsed_format[1] &&
-        (text = hf_format_eval (hf->parsed_format[1], op->priv->tm, page_no, total_pages,
+        (text = hf_format_eval ((HFFormat *) hf->parsed_format[1], (struct tm *) op->priv->tm, page_no, total_pages,
                                 op->priv->filename, op->priv->basename)))
     {
         double w;
@@ -1219,7 +1219,7 @@ print_header_footer (MooPrintOperation    *op,
     }
 
     if (hf->parsed_format[2] &&
-        (text = hf_format_eval (hf->parsed_format[2], op->priv->tm, page_no, total_pages,
+        (text = hf_format_eval ((HFFormat *) hf->parsed_format[2], (struct tm *) op->priv->tm, page_no, total_pages,
                                 op->priv->filename, op->priv->basename)))
     {
         double w;
@@ -1462,7 +1462,7 @@ update_progress (GtkPrintOperation *operation,
     else if (status == GTK_PRINT_STATUS_GENERATING_DATA && page >= 0)
     {
         int n_pages;
-        g_object_get (op, "n-pages", &n_pages, NULL);
+        g_object_get (op, "n-pages", &n_pages, nullptr);
         text = g_strdup_printf ("Printing page %d of %d", page + 1, n_pages);
     }
     else
@@ -2174,7 +2174,7 @@ hf_format_eval (HFFormat         *format,
 
     for (l = format->chunks; l != NULL; l = l->next)
     {
-        HFFormatChunk *chunk = l->data;
+        HFFormatChunk *chunk = (HFFormatChunk *) l->data;
 
         switch (chunk->type)
         {

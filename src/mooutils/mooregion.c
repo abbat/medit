@@ -26,7 +26,7 @@ moo_region_polygon (const GdkPoint *points, gint n_points)
   g_assert (n_points > 2);
   g_assert (points != NULL);
 
-  region = g_malloc (sizeof (MooRegion));
+  region = (MooRegion *) g_malloc (sizeof (MooRegion));
   if (region == NULL)
     {
       g_warning ("moo_region_polygon: out of memory");

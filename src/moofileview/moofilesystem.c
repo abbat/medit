@@ -129,7 +129,7 @@ add_folder_cache (MooFileSystem *fs,
 
     if (cache->queue->length > FOLDERS_CACHE_SIZE)
     {
-        MooFolderImpl *old = g_queue_pop_tail (cache->queue);
+        MooFolderImpl *old = (MooFolderImpl *) g_queue_pop_tail (cache->queue);
         g_hash_table_remove (cache->paths, old->path);
         DEBUG_MESSAGE ("%s: removing folder %s from cache", G_STRFUNC, old->path);
         _moo_folder_impl_free (old);
@@ -404,7 +404,7 @@ get_folder (MooFileSystem  *fs,
     if (!norm_path)
         return NULL;
 
-    folder = g_hash_table_lookup (fs->priv->folders, norm_path);
+    folder = (MooFolder *) g_hash_table_lookup (fs->priv->folders, norm_path);
 
     if (folder)
     {
@@ -413,7 +413,7 @@ get_folder (MooFileSystem  *fs,
         goto out;
     }
 
-    impl = g_hash_table_lookup (fs->priv->cache.paths, norm_path);
+    impl = (MooFolderImpl *) g_hash_table_lookup (fs->priv->cache.paths, norm_path);
 
     if (impl)
     {

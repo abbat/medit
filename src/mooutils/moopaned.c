@@ -486,7 +486,7 @@ moo_paned_class_init (MooPanedClass *klass)
     paned_signals[PANED_SET_PANE_SIZE] =
             g_signal_new ("set-pane-size",
                           G_OBJECT_CLASS_TYPE (klass),
-                          G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
+                          (GSignalFlags) (G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION),
                           G_STRUCT_OFFSET (MooPanedClass, set_pane_size),
                           NULL, NULL,
                           _moo_marshal_VOID__INT,
@@ -496,7 +496,7 @@ moo_paned_class_init (MooPanedClass *klass)
     paned_signals[PANED_HANDLE_DRAG_START] =
             g_signal_new ("handle-drag-start",
                           G_OBJECT_CLASS_TYPE (klass),
-                          G_SIGNAL_RUN_FIRST,
+                          (GSignalFlags) G_SIGNAL_RUN_FIRST,
                           G_STRUCT_OFFSET (MooPanedClass, handle_drag_start),
                           NULL, NULL,
                           _moo_marshal_VOID__OBJECT,
@@ -506,7 +506,7 @@ moo_paned_class_init (MooPanedClass *klass)
     paned_signals[PANED_HANDLE_DRAG_MOTION] =
             g_signal_new ("handle-drag-motion",
                           G_OBJECT_CLASS_TYPE (klass),
-                          G_SIGNAL_RUN_FIRST,
+                          (GSignalFlags) G_SIGNAL_RUN_FIRST,
                           G_STRUCT_OFFSET (MooPanedClass, handle_drag_motion),
                           NULL, NULL,
                           _moo_marshal_VOID__OBJECT,
@@ -516,7 +516,7 @@ moo_paned_class_init (MooPanedClass *klass)
     paned_signals[PANED_HANDLE_DRAG_END] =
             g_signal_new ("handle-drag-end",
                           G_OBJECT_CLASS_TYPE (klass),
-                          G_SIGNAL_RUN_FIRST,
+                          (GSignalFlags) G_SIGNAL_RUN_FIRST,
                           G_STRUCT_OFFSET (MooPanedClass, handle_drag_end),
                           NULL, NULL,
                           _moo_marshal_VOID__OBJECT_BOOLEAN,
@@ -527,7 +527,7 @@ moo_paned_class_init (MooPanedClass *klass)
     paned_signals[PANED_PANE_PARAMS_CHANGED] =
             g_signal_new ("pane-params-changed",
                           G_OBJECT_CLASS_TYPE (klass),
-                          G_SIGNAL_RUN_LAST,
+                          (GSignalFlags) G_SIGNAL_RUN_LAST,
                           G_STRUCT_OFFSET (MooPanedClass, pane_params_changed),
                           NULL, NULL,
                           _moo_marshal_VOID__UINT,
@@ -550,7 +550,7 @@ moo_paned_init (MooPaned *paned)
      * http://bugzilla.gnome.org/show_bug.cgi?id=550345 */
     paned->priv->forall_bottom_to_top = TRUE;
 
-    paned->priv->pane_position = -1;
+    paned->priv->pane_position = (MooPanePosition) -1;
     paned->priv->handle_window = NULL;
     paned->priv->pane_window = NULL;
     paned->priv->bin_window = NULL;
@@ -629,11 +629,11 @@ moo_paned_set_property (GObject        *object,
     switch (prop_id)
     {
         case PANED_PROP_ACTIVE_PANE:
-            moo_paned_open_pane (paned, g_value_get_object (value));
+            moo_paned_open_pane (paned, (MooPane *) g_value_get_object (value));
             break;
 
         case PANED_PROP_PANE_POSITION:
-            paned->priv->pane_position = g_value_get_enum (value);
+            paned->priv->pane_position = (MooPanePosition) g_value_get_enum (value);
             break;
 
         case PANED_PROP_CLOSE_PANE_ON_CHILD_FOCUS:
@@ -656,7 +656,7 @@ moo_paned_set_property (GObject        *object,
         case PANED_PROP_ENABLE_HANDLE_DRAG:
             paned->priv->enable_handle_drag = g_value_get_boolean (value);
             if (!paned->priv->enable_handle_drag)
-                moo_paned_set_handle_cursor_type (paned, 0, FALSE);
+                moo_paned_set_handle_cursor_type (paned, (GdkCursorType) 0, FALSE);
             else
                 moo_paned_set_handle_cursor_type (paned, paned->priv->handle_cursor_type, TRUE);
             g_object_notify (object, "enable-handle-drag");
@@ -668,9 +668,9 @@ moo_paned_set_property (GObject        *object,
 
         case PANED_PROP_HANDLE_CURSOR_TYPE:
             if (paned->priv->enable_handle_drag)
-                moo_paned_set_handle_cursor_type (paned, g_value_get_enum (value), TRUE);
+                moo_paned_set_handle_cursor_type (paned, (GdkCursorType) g_value_get_enum (value), TRUE);
             else
-                paned->priv->handle_cursor_type = g_value_get_enum (value);
+                paned->priv->handle_cursor_type = (GdkCursorType) g_value_get_enum (value);
             break;
 
         default:
@@ -739,9 +739,9 @@ moo_paned_destroy (GtkObject      *object)
 
     for (l = paned->priv->panes; l != NULL; l = l->next)
 #if GTK_CHECK_VERSION(3,0,0)
-        gtk_widget_destroy (l->data);
+        gtk_widget_destroy ((GtkWidget *) l->data);
 #else
-        gtk_object_destroy (l->data);
+        gtk_object_destroy ((GtkObject *) l->data);
 #endif
 
 #if GTK_CHECK_VERSION(3,0,0)
@@ -761,7 +761,7 @@ moo_paned_destroy (GtkObject      *object)
 MooPanePosition
 _moo_paned_get_position (MooPaned *paned)
 {
-    g_return_val_if_fail (MOO_IS_PANED (paned), 0);
+    g_return_val_if_fail (MOO_IS_PANED (paned), (MooPanePosition) 0);
     return paned->priv->pane_position;
 }
 
@@ -1691,7 +1691,7 @@ forall_internals (MooPaned    *paned,
     callback (paned->button_box, callback_data);
 
     for (l = paned->priv->panes; l != NULL; l = l->next)
-        callback (_moo_pane_get_frame (l->data), callback_data);
+        callback (_moo_pane_get_frame ((MooPane *) l->data), callback_data);
 }
 
 static void
@@ -2181,7 +2181,7 @@ moo_paned_get_pane (MooPaned  *paned,
     g_return_val_if_fail (MOO_IS_PANED (paned), NULL);
     g_return_val_if_fail (GTK_IS_WIDGET (widget), NULL);
 
-    pane = g_object_get_data (G_OBJECT (widget), "moo-pane");
+    pane = (MooPane *) g_object_get_data (G_OBJECT (widget), "moo-pane");
 
     if (pane && _moo_pane_get_parent (pane) == paned)
         return pane;
@@ -2199,7 +2199,7 @@ moo_paned_get_pane_num (MooPaned  *paned,
     g_return_val_if_fail (MOO_IS_PANED (paned), -1);
     g_return_val_if_fail (GTK_IS_WIDGET (widget), -1);
 
-    pane = g_object_get_data (G_OBJECT (widget), "moo-pane");
+    pane = (MooPane *) g_object_get_data (G_OBJECT (widget), "moo-pane");
 
     if (pane)
         return pane_index (paned, pane);
@@ -2336,11 +2336,11 @@ moo_paned_button_press (GtkWidget      *widget,
 
         /* This is copied from gtkpaned.c */
         gdk_pointer_grab (paned->priv->handle_window, FALSE,
-                          GDK_POINTER_MOTION_HINT_MASK
+                          (GdkEventMask) (GDK_POINTER_MOTION_HINT_MASK
                                   | GDK_BUTTON1_MOTION_MASK
                                   | GDK_BUTTON_RELEASE_MASK
                                   | GDK_ENTER_NOTIFY_MASK
-                                  | GDK_LEAVE_NOTIFY_MASK,
+                                  | GDK_LEAVE_NOTIFY_MASK),
                           NULL, NULL,
                           event->time);
 
@@ -2439,9 +2439,9 @@ _moo_paned_get_button_position (MooPaned     *paned,
     buttons = gtk_container_get_children (GTK_CONTAINER (paned->button_box));
 
     if (index >= 0)
-        button = g_list_nth_data (buttons, index);
+        button = (GtkWidget *) g_list_nth_data (buttons, index);
     if (!button && buttons)
-        last_button = g_list_last (buttons)->data;
+        last_button = (GtkWidget *) g_list_last (buttons)->data;
 
     if (button)
     {
@@ -2542,7 +2542,7 @@ _moo_paned_get_button (MooPaned  *paned,
     while (buttons != NULL)
     {
         gboolean in_button = FALSE;
-        GtkWidget *button = buttons->data;
+        GtkWidget *button = (GtkWidget *) buttons->data;
 
         gtk_widget_get_allocation (button, &allocation);
         switch (paned->priv->pane_position)
@@ -2787,7 +2787,7 @@ moo_paned_remove_pane (MooPaned  *paned,
     g_return_val_if_fail (MOO_IS_PANED (paned), FALSE);
     g_return_val_if_fail (GTK_IS_WIDGET (pane_widget), FALSE);
 
-    pane = g_object_get_data (G_OBJECT (pane_widget), "moo-pane");
+    pane = (MooPane *) g_object_get_data (G_OBJECT (pane_widget), "moo-pane");
     g_return_val_if_fail (pane != NULL, FALSE);
     g_return_val_if_fail (g_slist_find (paned->priv->panes, pane) != NULL, FALSE);
 
@@ -2922,7 +2922,7 @@ moo_paned_set_focus_child (GtkContainer *container,
         {
             for (l = paned->priv->panes; l != NULL; l = l->next)
             {
-                MooPane *pane = l->data;
+                MooPane *pane = (MooPane *) l->data;
 
                 if (widget == _moo_pane_get_frame (pane))
                 {
@@ -2956,14 +2956,14 @@ moo_paned_set_focus_child (GtkContainer *container,
             if (new_focus != FOCUS_CHILD)
             {
                 if (paned->priv->focus_child)
-                    g_object_remove_weak_pointer (paned->priv->focus_child,
-                                                  &paned->priv->focus_child);
+                    g_object_remove_weak_pointer (G_OBJECT (paned->priv->focus_child),
+                                                  (gpointer *) &paned->priv->focus_child);
 
                 paned->priv->focus_child = find_focus_child (paned);
 
                 if (paned->priv->focus_child)
-                    g_object_add_weak_pointer (paned->priv->focus_child,
-                                               &paned->priv->focus_child);
+                    g_object_add_weak_pointer (G_OBJECT (paned->priv->focus_child),
+                                               (gpointer *) &paned->priv->focus_child);
             }
             break;
 
@@ -3385,7 +3385,7 @@ moo_paned_hide_pane_real (MooPaned *paned)
     {
         if (paned->priv->focus_child)
         {
-            gtk_widget_grab_focus (paned->priv->focus_child);
+            gtk_widget_grab_focus ((GtkWidget *) paned->priv->focus_child);
         }
         else if (!gtk_bin_get_child (GTK_BIN(paned)) ||
                   !gtk_widget_child_focus (gtk_bin_get_child (GTK_BIN(paned)), GTK_DIR_TAB_FORWARD))
@@ -3411,7 +3411,7 @@ pane_button_toggled (GtkToggleButton *button,
 {
     MooPane *pane;
 
-    pane = g_object_get_data (G_OBJECT (button), "moo-pane");
+    pane = (MooPane *) g_object_get_data (G_OBJECT (button), "moo-pane");
     g_return_if_fail (MOO_IS_PANE (pane));
 
     if (!gtk_toggle_button_get_active (button))
@@ -3457,7 +3457,7 @@ static MooPane *
 get_nth_pane (MooPaned *paned,
               guint     index_)
 {
-    return g_slist_nth_data (paned->priv->panes, index_);
+    return (MooPane *) g_slist_nth_data (paned->priv->panes, index_);
 }
 
 
@@ -3542,7 +3542,7 @@ handle_motion (GtkWidget      *widget,
     if (!paned->priv->handle_button_pressed)
         return FALSE;
 
-    pane = g_object_get_data (G_OBJECT (widget), "moo-pane");
+    pane = (MooPane *) g_object_get_data (G_OBJECT (widget), "moo-pane");
     child = moo_pane_get_child (pane);
     g_return_val_if_fail (child != NULL, FALSE);
 
@@ -3596,7 +3596,7 @@ handle_button_release (GtkWidget      *widget,
 #endif
         paned->priv->handle_button_pressed = FALSE;
 
-        pane = g_object_get_data (G_OBJECT (widget), "moo-pane");
+        pane = (MooPane *) g_object_get_data (G_OBJECT (widget), "moo-pane");
         child = moo_pane_get_child (pane);
         g_return_val_if_fail (child != NULL, FALSE);
 
@@ -3844,7 +3844,7 @@ moo_pane_params_new (GdkRectangle *window_position,
 MooPaneParams*
 moo_pane_params_copy (MooPaneParams *params)
 {
-    return g_memdup (params, sizeof *params);
+    return (MooPaneParams *) g_memdup (params, sizeof *params);
 }
 
 

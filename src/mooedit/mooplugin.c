@@ -127,7 +127,7 @@ moo_plugin_get_type (void)
             NULL    /* value_table */
         };
 
-        type = g_type_register_static (G_TYPE_OBJECT, "MooPlugin", &info, 0);
+        type = g_type_register_static (G_TYPE_OBJECT, "MooPlugin", &info, (GTypeFlags) 0);
     }
 
     return type;
@@ -154,7 +154,7 @@ moo_win_plugin_get_type (void)
             NULL    /* value_table */
         };
 
-        type = g_type_register_static (G_TYPE_OBJECT, "MooWinPlugin", &info, 0);
+        type = g_type_register_static (G_TYPE_OBJECT, "MooWinPlugin", &info, (GTypeFlags) 0);
     }
 
     return type;
@@ -181,7 +181,7 @@ moo_doc_plugin_get_type (void)
             NULL    /* value_table */
         };
 
-        type = g_type_register_static (G_TYPE_OBJECT, "MooDocPlugin", &info, 0);
+        type = g_type_register_static (G_TYPE_OBJECT, "MooDocPlugin", &info, (GTypeFlags) 0);
     }
 
     return type;
@@ -241,7 +241,7 @@ moo_plugin_register (const char            *id,
 
     g_return_val_if_fail (g_type_is_a (type, MOO_TYPE_PLUGIN), FALSE);
 
-    klass = g_type_class_ref (type);
+    klass = (MooPluginClass *) g_type_class_ref (type);
     g_return_val_if_fail (klass != NULL, FALSE);
 
     if (moo_plugin_registered (type))
@@ -517,7 +517,7 @@ window_get_plugin (MooEditWindow  *window,
 {
     g_return_val_if_fail (MOO_IS_EDIT_WINDOW (window), NULL);
     g_return_val_if_fail (MOO_IS_PLUGIN (plugin), NULL);
-    return g_object_get_qdata (G_OBJECT (window), plugin->id_quark);
+    return (MooWinPlugin *) g_object_get_qdata (G_OBJECT (window), plugin->id_quark);
 }
 
 
@@ -527,7 +527,7 @@ doc_get_plugin (MooEdit        *doc,
 {
     g_return_val_if_fail (MOO_IS_EDIT (doc), NULL);
     g_return_val_if_fail (MOO_IS_PLUGIN (plugin), NULL);
-    return g_object_get_qdata (G_OBJECT (doc), plugin->id_quark);
+    return (MooDocPlugin *) g_object_get_qdata (G_OBJECT (doc), plugin->id_quark);
 }
 
 
@@ -608,7 +608,7 @@ moo_plugin_get (GType type)
 {
     g_return_val_if_fail (g_type_is_a (type, MOO_TYPE_PLUGIN), NULL);
     plugin_store_init ();
-    return g_type_get_qdata (type, MOO_PLUGIN_QUARK);
+    return (MooPlugin *) g_type_get_qdata (type, MOO_PLUGIN_QUARK);
 }
 
 
@@ -628,7 +628,7 @@ moo_win_plugin_lookup (const char     *plugin_id,
     g_return_val_if_fail (plugin_id != NULL, NULL);
     g_return_val_if_fail (MOO_IS_EDIT_WINDOW (window), NULL);
 
-    plugin = moo_plugin_lookup (plugin_id);
+    plugin = (MooPlugin *) moo_plugin_lookup (plugin_id);
     return plugin ? window_get_plugin (window, plugin) : NULL;
 }
 
@@ -642,7 +642,7 @@ moo_doc_plugin_lookup (const char     *plugin_id,
     g_return_val_if_fail (plugin_id != NULL, NULL);
     g_return_val_if_fail (MOO_IS_EDIT (doc), NULL);
 
-    plugin = moo_plugin_lookup (plugin_id);
+    plugin = (MooPlugin *) moo_plugin_lookup (plugin_id);
     return plugin ? doc_get_plugin (doc, plugin) : NULL;
 }
 
@@ -717,7 +717,7 @@ make_prefs_key (MooPlugin      *plugin,
     return moo_prefs_make_key (MOO_PLUGIN_PREFS_ROOT,
                                moo_plugin_id (plugin),
                                PLUGIN_PREFS_ENABLED,
-                               NULL);
+                               nullptr);
 }
 
 
@@ -1000,7 +1000,7 @@ _moo_window_attach_plugins (MooEditWindow *window)
     plugin_store_init ();
 
     for (l = plugin_store->list; l != NULL; l = l->next)
-        plugin_attach_win (l->data, window);
+        plugin_attach_win ((MooPlugin *) l->data, window);
 }
 
 
@@ -1014,7 +1014,7 @@ _moo_window_detach_plugins (MooEditWindow *window)
     plugin_store_init ();
 
     for (l = plugin_store->list; l != NULL; l = l->next)
-        plugin_detach_win (l->data, window);
+        plugin_detach_win ((MooPlugin *) l->data, window);
 }
 
 
@@ -1030,7 +1030,7 @@ _moo_doc_attach_plugins (MooEditWindow *window,
     plugin_store_init ();
 
     for (l = plugin_store->list; l != NULL; l = l->next)
-        plugin_attach_doc (l->data, window, doc);
+        plugin_attach_doc ((MooPlugin *) l->data, window, doc);
 }
 
 
@@ -1046,7 +1046,7 @@ _moo_doc_detach_plugins (MooEditWindow *window,
     plugin_store_init ();
 
     for (l = plugin_store->list; l != NULL; l = l->next)
-        plugin_detach_doc (l->data, window, doc);
+        plugin_detach_doc ((MooPlugin *) l->data, window, doc);
 }
 
 
@@ -1208,7 +1208,7 @@ selection_changed (GtkTreeSelection *selection,
     {
         char *id = NULL;
         gtk_tree_model_get (model, &iter, COLUMN_PLUGIN_ID, &id, -1);
-        plugin = moo_plugin_lookup (id);
+        plugin = (MooPlugin *) moo_plugin_lookup (id);
         g_free (id);
     }
 
@@ -1233,7 +1233,7 @@ static int
 cmp_page_and_id (GObject    *page,
                  const char *id)
 {
-    const char *page_id = g_object_get_data (page, "moo-plugin-id");
+    const char *page_id = (const char *) g_object_get_data (page, "moo-plugin-id");
     return page_id ? strcmp (id, page_id) : 1;
 }
 
@@ -1247,22 +1247,22 @@ sync_pages (MooPrefsDialog *dialog)
 
     for (l = plugins; l != NULL; l = l->next)
     {
-        MooPlugin *plugin = l->data;
+        MooPlugin *plugin = (MooPlugin *) l->data;
         plugin_ids = g_slist_append (plugin_ids, g_strdup (moo_plugin_id (plugin)));
     }
 
-    old_plugin_pages = g_object_get_data (G_OBJECT (dialog), "moo-plugin-prefs-pages");
+    old_plugin_pages = (GSList *) g_object_get_data (G_OBJECT (dialog), "moo-plugin-prefs-pages");
     plugin_pages = NULL;
 
     for (l = plugins; l != NULL; l = l->next)
     {
-        MooPlugin *plugin = l->data;
+        MooPlugin *plugin = (MooPlugin *) l->data;
 
         if (moo_plugin_enabled (plugin) &&
             MOO_PLUGIN_GET_CLASS(plugin)->create_prefs_page)
         {
             GSList *link = g_slist_find_custom (old_plugin_pages,
-                                                moo_plugin_id (l->data),
+                                                moo_plugin_id ((MooPlugin *) l->data),
                                                 (GCompareFunc) cmp_page_and_id);
 
             if (link)
@@ -1294,7 +1294,7 @@ sync_pages (MooPrefsDialog *dialog)
 
     for (l = old_plugin_pages; l != NULL; l = l->next)
         if (!g_slist_find (plugin_pages, l->data))
-            moo_prefs_dialog_remove_page (dialog, l->data);
+            moo_prefs_dialog_remove_page (dialog, (GtkWidget *) l->data);
 
     g_object_set_data_full (G_OBJECT (dialog), "moo-plugin-prefs-pages",
                             plugin_pages, (GDestroyNotify) g_slist_free);
@@ -1322,7 +1322,7 @@ prefs_page_init (MooPrefsPage *page,
     for (l = plugins; l != NULL; l = l->next)
     {
         GtkTreeIter iter;
-        MooPlugin *plugin = l->data;
+        MooPlugin *plugin = (MooPlugin *) l->data;
 
         if (moo_plugin_visible (plugin))
         {
@@ -1338,7 +1338,7 @@ prefs_page_init (MooPrefsPage *page,
     selection_changed (gtk_tree_view_get_selection (GTK_TREE_VIEW (moo_builder_get (gxml, "treeview"))), gxml);
 
     g_slist_free (plugins);
-    sync_pages (g_object_get_data (G_OBJECT (page), "moo-plugin-prefs-dialog"));
+    sync_pages ((MooPrefsDialog *) g_object_get_data (G_OBJECT (page), "moo-plugin-prefs-dialog"));
 }
 
 
@@ -1350,7 +1350,7 @@ prefs_page_apply (MooPrefsPage *page,
     GtkTreeIter iter;
     MooPrefsDialog *dialog;
 
-    dialog = g_object_get_data (G_OBJECT (page), "moo-plugin-prefs-dialog");
+    dialog = (MooPrefsDialog *) g_object_get_data (G_OBJECT (page), "moo-plugin-prefs-dialog");
 
     model = gtk_tree_view_get_model (GTK_TREE_VIEW (moo_builder_get (gxml, "treeview")));
 
@@ -1367,7 +1367,7 @@ prefs_page_apply (MooPrefsPage *page,
                             -1);
 
         g_return_if_fail (id != NULL);
-        plugin = moo_plugin_lookup (id);
+        plugin = (MooPlugin *) moo_plugin_lookup (id);
         g_return_if_fail (plugin != NULL);
 
         moo_plugin_set_enabled (plugin, enabled);
@@ -1434,18 +1434,18 @@ moo_plugin_attach_prefs (GtkWidget *dialog)
     g_object_unref (store);
 
     cell = gtk_cell_renderer_toggle_new ();
-    g_object_set (cell, "activatable", TRUE, NULL);
+    g_object_set (cell, "activatable", TRUE, nullptr);
     g_signal_connect (cell, "toggled", G_CALLBACK (enable_toggled), store);
     /* Column label on Plugins prefs page */
     gtk_tree_view_insert_column_with_attributes (treeview, 0,
                                                  C_("plugin-prefs-column", "Enabled"), cell,
-                                                 "active", COLUMN_ENABLED, NULL);
+                                                 "active", COLUMN_ENABLED, nullptr);
 
     cell = gtk_cell_renderer_text_new ();
     /* Column label on Plugins prefs page */
     gtk_tree_view_insert_column_with_attributes (treeview, 1,
                                                  C_("plugin-prefs-column", "Plugin"), cell,
-                                                 "text", COLUMN_PLUGIN_NAME, NULL);
+                                                 "text", COLUMN_PLUGIN_NAME, nullptr);
 
     moo_prefs_dialog_append_page (MOO_PREFS_DIALOG (dialog), GTK_WIDGET (page));
     prefs_page_init (MOO_PREFS_PAGE (page), gxml);
@@ -1467,7 +1467,7 @@ plugin_type_cleanup (GType type)
 
     if (meths_table)
     {
-        g_hash_table_destroy (meths_table);
+        g_hash_table_destroy ((GHashTable *) meths_table);
         g_type_set_qdata (type, MOO_PLUGIN_METHS_QUARK, NULL);
     }
 }
@@ -1484,13 +1484,13 @@ moo_plugin_lookup_method (gpointer    plugin,
     g_return_val_if_fail (MOO_IS_PLUGIN (plugin), NULL);
     g_return_val_if_fail (name != NULL, NULL);
 
-    meths = g_type_get_qdata (G_OBJECT_TYPE (plugin), MOO_PLUGIN_METHS_QUARK);
+    meths = (GHashTable *) g_type_get_qdata (G_OBJECT_TYPE (plugin), MOO_PLUGIN_METHS_QUARK);
 
     if (!meths)
         return NULL;
 
     norm_name = g_strdelimit (g_strdup (name), "_", '-');
-    m = g_hash_table_lookup (meths, norm_name);
+    m = (MooPluginMeth *) g_hash_table_lookup (meths, norm_name);
     g_free (norm_name);
     return m;
 }
@@ -1512,7 +1512,7 @@ moo_plugin_list_methods (gpointer plugin)
 
     g_return_val_if_fail (MOO_IS_PLUGIN (plugin), NULL);
 
-    meths = g_type_get_qdata (G_OBJECT_TYPE (plugin), MOO_PLUGIN_METHS_QUARK);
+    meths = (GHashTable *) g_type_get_qdata (G_OBJECT_TYPE (plugin), MOO_PLUGIN_METHS_QUARK);
 
     if (!meths)
         return NULL;
@@ -1558,7 +1558,7 @@ moo_plugin_call_method_valist (gpointer        plugin,
     if (!meth)
     {
         g_warning ("plugin '%s' does not have method '%s'",
-                   moo_plugin_id (plugin), name);
+                   moo_plugin_id ((MooPlugin *) plugin), name);
         return;
     }
 
@@ -1649,7 +1649,7 @@ moo_plugin_call_methodv (const GValue *plugin_and_args,
     g_return_if_fail (plugin_and_args != NULL);
     g_return_if_fail (name != NULL);
 
-    plugin = g_value_get_object (plugin_and_args);
+    plugin = (MooPlugin *) g_value_get_object (plugin_and_args);
     g_return_if_fail (plugin != NULL);
 
     meth = moo_plugin_lookup_method (plugin, name);
@@ -1657,7 +1657,7 @@ moo_plugin_call_methodv (const GValue *plugin_and_args,
     if (!meth)
     {
         g_warning ("plugin '%s' does not have method '%s'",
-                   moo_plugin_id (plugin), name);
+                   moo_plugin_id ((MooPlugin *) plugin), name);
         return;
     }
 
@@ -1762,7 +1762,7 @@ moo_plugin_method_newv (const char     *name,
     g_return_if_fail (!n_params || param_types);
 
     norm_name = g_strdelimit (g_strdup (name), "_", '-');
-    meths = g_type_get_qdata (ptype, MOO_PLUGIN_METHS_QUARK);
+    meths = (GHashTable *) g_type_get_qdata (ptype, MOO_PLUGIN_METHS_QUARK);
 
     if (meths)
     {
@@ -1785,7 +1785,7 @@ moo_plugin_method_newv (const char     *name,
     m->ptype = ptype;
     m->return_type = return_type;
     m->n_params = n_params;
-    m->param_types = n_params ? g_memdup (param_types, n_params * sizeof (GType)) : NULL;
+    m->param_types = n_params ? (GType *) g_memdup (param_types, n_params * sizeof (GType)) : NULL;
     m->closure = g_closure_ref (closure);
     g_closure_sink (closure);
     g_closure_set_marshal (closure, c_marshaller);

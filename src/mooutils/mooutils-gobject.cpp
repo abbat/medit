@@ -847,7 +847,7 @@ _moo_param_array_free (GParameter *array,
 guint
 _moo_signal_new_cb (const gchar        *signal_name,
                     GType               itype,
-                    GSignalFlags        signal_flags,
+                    int                 signal_flags,
                     GCallback           handler,
                     GSignalAccumulator  accumulator,
                     gpointer            accu_data,
@@ -867,7 +867,7 @@ _moo_signal_new_cb (const gchar        *signal_name,
     if (handler)
         closure = g_cclosure_new (handler, NULL, NULL);
 
-    signal_id = g_signal_new_valist (signal_name, itype, signal_flags, closure,
+    signal_id = g_signal_new_valist (signal_name, itype, (GSignalFlags) signal_flags, closure,
                                      accumulator, accu_data, c_marshaller,
                                      return_type, n_params, args);
 

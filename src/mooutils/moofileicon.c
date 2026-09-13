@@ -180,7 +180,7 @@ moo_icon_cache_get_special (MooIconCache   *cache,
                             MooIconEmblem   flags)
 {
     g_return_val_if_fail (type && type < MOO_ICON_INVALID, NULL);
-    g_return_val_if_fail (flags < MOO_ICON_EMBLEM_LEN, NULL);
+    g_return_val_if_fail ((int) flags < MOO_ICON_EMBLEM_LEN, NULL);
     return cache->special_icons[type] ? cache->special_icons[type][flags] : NULL;
 }
 
@@ -218,7 +218,7 @@ moo_icon_cache_set_special (MooIconCache   *cache,
     GdkPixbuf *tmp;
 
     g_return_if_fail (type && type < MOO_ICON_INVALID);
-    g_return_if_fail (flags < MOO_ICON_EMBLEM_LEN);
+    g_return_if_fail ((int) flags < MOO_ICON_EMBLEM_LEN);
 
     if (!cache->special_icons[type])
         cache->special_icons[type] = pixbuf_array_new ();
@@ -745,7 +745,7 @@ moo_file_icon_get_pixbuf (MooFileIcon *icon,
     g_return_val_if_fail (!widget || GTK_IS_WIDGET (widget), NULL);
     g_return_val_if_fail (icon->type < MOO_ICON_INVALID, NULL);
     g_return_val_if_fail (icon->type != MOO_ICON_MIME || icon->mime_type != NULL, NULL);
-    g_return_val_if_fail (icon->emblem < MOO_ICON_EMBLEM_LEN, NULL);
+    g_return_val_if_fail ((int) icon->emblem < MOO_ICON_EMBLEM_LEN, NULL);
 
     if (icon->type != MOO_ICON_MIME)
         mime_type = NULL;

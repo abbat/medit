@@ -745,7 +745,7 @@ connect_buffer (MooTextView *view)
     g_signal_connect_swapped (buffer, "notify::has-text",
                               G_CALLBACK (proxy_prop_notify), view);
 
-    undo_stack = _moo_text_buffer_get_undo_stack (MOO_TEXT_BUFFER (buffer));
+    undo_stack = (MooUndoStack *) _moo_text_buffer_get_undo_stack (MOO_TEXT_BUFFER (buffer));
     g_signal_connect_swapped (undo_stack, "notify::can-undo",
                               G_CALLBACK (proxy_notify_can_undo_redo), view);
     g_signal_connect_swapped (undo_stack, "notify::can-redo",
@@ -753,7 +753,7 @@ connect_buffer (MooTextView *view)
 
     g_signal_connect_data (buffer, "insert-text",
                            G_CALLBACK (insert_text_cb), view,
-                           NULL, G_CONNECT_AFTER | G_CONNECT_SWAPPED);
+                           NULL, (GConnectFlags) (G_CONNECT_AFTER | G_CONNECT_SWAPPED));
 
     g_signal_connect_swapped (buffer, "line-mark-added",
                               G_CALLBACK (line_mark_added), view);
@@ -782,7 +782,7 @@ disconnect_buffer (MooTextView *view)
                                           0, 0, NULL, NULL,
                                           view);
 
-    undo_stack = _moo_text_buffer_get_undo_stack (MOO_TEXT_BUFFER (view->priv->buffer));
+    undo_stack = (MooUndoStack *) _moo_text_buffer_get_undo_stack (MOO_TEXT_BUFFER (view->priv->buffer));
 
     g_signal_handlers_disconnect_matched (undo_stack,
                                           G_SIGNAL_MATCH_DATA,
@@ -856,7 +856,7 @@ moo_text_view_dispose (GObject *object)
     }
 
     while (view->priv->line_marks)
-        remove_line_mark (view, view->priv->line_marks->data);
+        remove_line_mark (view, (MooLineMark *) view->priv->line_marks->data);
 
     if (view->priv->style_scheme)
     {
@@ -916,7 +916,7 @@ static void
 msg_to_statusbar (const char *message,
                   gpointer    data)
 {
-    moo_text_view_message (data, message);
+    moo_text_view_message ((MooTextView *) data, message);
 }
 
 
@@ -990,7 +990,7 @@ moo_text_view_set_font_from_string (MooTextView *view,
 static MooUndoStack *
 get_undo_stack (MooTextView *view)
 {
-    return _moo_text_buffer_get_undo_stack (get_moo_buffer (view));
+    return (MooUndoStack *) _moo_text_buffer_get_undo_stack (get_moo_buffer (view));
 }
 
 
@@ -1085,7 +1085,7 @@ moo_text_view_set_property (GObject        *object,
     switch (prop_id)
     {
         case PROP_BUFFER:
-            buffer = g_value_get_object (value);
+            buffer = (GtkTextBuffer *) g_value_get_object (value);
 
             if (!buffer)
             {
@@ -1111,7 +1111,7 @@ moo_text_view_set_property (GObject        *object,
             break;
 
         case PROP_INDENTER:
-            moo_text_view_set_indenter (view, g_value_get_object (value));
+            moo_text_view_set_indenter (view, (MooIndenter *) g_value_get_object (value));
             break;
 
         case PROP_TAB_WIDTH:
@@ -1153,7 +1153,7 @@ moo_text_view_set_property (GObject        *object,
             break;
 
         case PROP_DRAW_WHITESPACE:
-            set_draw_whitespace (view, g_value_get_flags (value));
+            set_draw_whitespace (view, (MooDrawWsFlags) g_value_get_flags (value));
             break;
 
         case PROP_MANAGE_CLIPBOARD:
@@ -1189,7 +1189,7 @@ moo_text_view_set_property (GObject        *object,
             break;
 
         case PROP_QUICK_SEARCH_FLAGS:
-            view->priv->qs.flags = g_value_get_flags (value);
+            view->priv->qs.flags = (MooTextSearchFlags) g_value_get_flags (value);
             g_object_notify (object, "quick-search-flags");
             break;
 
@@ -1846,7 +1846,7 @@ clipboard_get_selection (G_GNUC_UNUSED GtkClipboard *clipboard,
                          G_GNUC_UNUSED guint info,
                          gpointer data)
 {
-    MooTextView *view = data;
+    MooTextView *view = (MooTextView *) data;
     GtkTextIter start, end;
 
     if (gtk_text_buffer_get_selection_bounds (get_buffer (view), &start, &end))
@@ -1924,7 +1924,7 @@ get_clipboard (G_GNUC_UNUSED GtkClipboard *clipboard,
                G_GNUC_UNUSED guint info,
                gpointer data)
 {
-    MooTextViewClipboard *contents = data;
+    MooTextViewClipboard *contents = (MooTextViewClipboard *) data;
     gtk_selection_data_set_text (selection_data, contents->text, -1);
 }
 
@@ -1933,7 +1933,7 @@ static void
 clear_clipboard (G_GNUC_UNUSED GtkClipboard *clipboard,
                  gpointer data)
 {
-    MooTextViewClipboard *contents = data;
+    MooTextViewClipboard *contents = (MooTextViewClipboard *) data;
 
     if (contents->view && contents->view->priv->clipboard == contents)
         contents->view->priv->clipboard = NULL;
@@ -1945,7 +1945,7 @@ clear_clipboard (G_GNUC_UNUSED GtkClipboard *clipboard,
 
 static void
 moo_text_view_cut_or_copy (GtkTextView *text_view,
-                           gboolean     delete,
+                           gboolean     delete_selection,
                            GdkAtom      clipboard_type)
 {
     GtkTextBuffer *buffer;
@@ -1978,7 +1978,7 @@ moo_text_view_cut_or_copy (GtkTextView *text_view,
     gtk_clipboard_set_can_store (clipboard, targets + 1,
                                  G_N_ELEMENTS (targets) - 1);
 
-    if (delete)
+    if (delete_selection)
     {
         gtk_text_buffer_begin_user_action (buffer);
         gtk_text_buffer_delete (buffer, &start, &end);
@@ -2119,7 +2119,7 @@ moo_text_view_realize (GtkWidget *widget)
     for (i = 0; i < 4; ++i)
     {
         if (view->priv->children[i] && gtk_widget_get_visible (view->priv->children[i]))
-            lower_border_window (GTK_TEXT_VIEW (view), i);
+            lower_border_window (GTK_TEXT_VIEW (view), (MooTextViewPos) i);
     }
 
     _moo_text_view_update_text_cursor (view, -1, -1);
@@ -2974,7 +2974,7 @@ static void
 update_fold_width (MooTextView *view)
 {
     gtk_widget_style_get (GTK_WIDGET (view), "expander-size",
-                          &view->priv->lm.fold_width, NULL);
+                          &view->priv->lm.fold_width, (char *) NULL);
     view->priv->lm.fold_width += 2*EXPANDER_PAD;
 }
 
@@ -3082,7 +3082,7 @@ draw_marks (MooTextView    *view,
         GdkPixbuf *pixbuf;
         const char *markup;
 
-        mark = marks->data;
+        mark = (MooLineMark *) marks->data;
         marks = marks->next;
 
         if (!_moo_line_mark_get_pretty (mark))
@@ -3167,8 +3167,8 @@ draw_fold_mark (MooTextView    *view,
 
         if (!fold->collapsed)
             gtk_style_context_set_state (context,
-                                         gtk_style_context_get_state (context) |
-                                             GTK_STATE_FLAG_CHECKED);
+                                         (GtkStateFlags) (gtk_style_context_get_state (context) |
+                                                          GTK_STATE_FLAG_CHECKED));
 
         gtk_render_expander (context, cr,
                              cx - size / 2, cy - size / 2,
@@ -3385,7 +3385,7 @@ draw_marks_background (MooTextView    *view,
             {
                 while (marks)
                 {
-                    mark = marks->data;
+                    mark = (MooLineMark *) marks->data;
 
                     if (_moo_line_mark_get_pretty (mark))
                         color = moo_line_mark_get_background (mark);
@@ -3918,7 +3918,7 @@ moo_text_view_size_request (GtkWidget      *widget,
                                                    window_types[i],
                                                    border_size);
             if (!old_size)
-                lower_border_window (GTK_TEXT_VIEW (view), i);
+                lower_border_window (GTK_TEXT_VIEW (view), (MooTextViewPos) i);
         }
     }
 
@@ -4089,7 +4089,7 @@ moo_text_view_set_quick_search_flags (MooTextView        *view,
 static void
 quick_search_option_toggled (MooTextView *view)
 {
-    MooTextSearchFlags flags = 0;
+    MooTextSearchFlags flags = (MooTextSearchFlags) 0;
 
     if (!gtk_toggle_button_get_active (view->priv->qs.case_sensitive))
         flags |= MOO_TEXT_SEARCH_CASELESS;
@@ -4107,9 +4107,9 @@ static void
 quick_search_set_widgets_from_flags (MooTextView *view)
 {
     g_signal_handlers_block_by_func (view->priv->qs.case_sensitive,
-                                     quick_search_option_toggled, view);
+                                     (gpointer) quick_search_option_toggled, view);
     g_signal_handlers_block_by_func (view->priv->qs.regex,
-                                     quick_search_option_toggled, view);
+                                     (gpointer) quick_search_option_toggled, view);
 
     gtk_toggle_button_set_active (view->priv->qs.case_sensitive,
                                   !(view->priv->qs.flags & MOO_TEXT_SEARCH_CASELESS));
@@ -4117,9 +4117,9 @@ quick_search_set_widgets_from_flags (MooTextView *view)
                                   view->priv->qs.flags & MOO_TEXT_SEARCH_REGEX);
 
     g_signal_handlers_unblock_by_func (view->priv->qs.case_sensitive,
-                                       quick_search_option_toggled, view);
+                                       (gpointer) quick_search_option_toggled, view);
     g_signal_handlers_unblock_by_func (view->priv->qs.regex,
-                                       quick_search_option_toggled, view);
+                                       (gpointer) quick_search_option_toggled, view);
 }
 
 
@@ -4168,7 +4168,8 @@ quick_search_find_from (MooTextView *view,
     if (view->priv->qs.flags & MOO_TEXT_SEARCH_REGEX)
     {
         GError *error = NULL;
-        GRegex *re = g_regex_new (text, 0, 0, &error);
+        GRegex *re = g_regex_new (text, (GRegexCompileFlags) 0,
+                                   (GRegexMatchFlags) 0, &error);
 
         if (!re)
         {

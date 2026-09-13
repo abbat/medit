@@ -306,10 +306,10 @@ moo_pane_set_property (GObject      *object,
     switch (prop_id)
     {
         case PROP_LABEL:
-            moo_pane_set_label (pane, g_value_get_boxed (value));
+            moo_pane_set_label (pane, (MooPaneLabel *) g_value_get_boxed (value));
             break;
         case PROP_PARAMS:
-            moo_pane_set_params (pane, g_value_get_boxed (value));
+            moo_pane_set_params (pane, (MooPaneParams *) g_value_get_boxed (value));
             break;
         case PROP_DETACHABLE:
             moo_pane_set_detachable (pane, g_value_get_boolean (value));
@@ -731,34 +731,34 @@ create_frame_widget (MooPane        *pane,
         case MOO_PANE_POS_LEFT:
             gtk_table_attach (GTK_TABLE (table), separator,
                               0, 1, 0, 1,
-                              0, GTK_FILL, 0, 0);
+                              (GtkAttachOptions) 0, (GtkAttachOptions) GTK_FILL, 0, 0);
             gtk_table_attach (GTK_TABLE (table), vbox,
                               1, 2, 0, 1,
-                              GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
+                              (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
             break;
         case MOO_PANE_POS_TOP:
             gtk_table_attach (GTK_TABLE (table), separator,
                               0, 1, 0, 1,
-                              0, GTK_FILL, 0, 0);
+                              (GtkAttachOptions) 0, (GtkAttachOptions) GTK_FILL, 0, 0);
             gtk_table_attach (GTK_TABLE (table), vbox,
                               0, 1, 1, 2,
-                              GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
+                              (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
             break;
         case MOO_PANE_POS_RIGHT:
             gtk_table_attach (GTK_TABLE (table), separator,
                               1, 2, 0, 1,
-                              0, GTK_FILL, 0, 0);
+                              (GtkAttachOptions) 0, (GtkAttachOptions) GTK_FILL, 0, 0);
             gtk_table_attach (GTK_TABLE (table), vbox,
                               0, 1, 0, 1,
-                              GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
+                              (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
             break;
         case MOO_PANE_POS_BOTTOM:
             gtk_table_attach (GTK_TABLE (table), separator,
                               0, 1, 1, 2,
-                              0, GTK_FILL, 0, 0);
+                              (GtkAttachOptions) 0, (GtkAttachOptions) GTK_FILL, 0, 0);
             gtk_table_attach (GTK_TABLE (table), vbox,
                               0, 1, 0, 1,
-                              GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
+                              (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
             break;
     }
 
@@ -772,7 +772,7 @@ create_label_widget (MooPanePosition position,
 {
     GtkWidget *box = NULL;
 
-    g_return_val_if_fail (position < 4, NULL);
+    g_return_val_if_fail ((int) position < 4, NULL);
 
     *label_widget = gtk_label_new (NULL);
 
@@ -889,7 +889,7 @@ button_drag_motion (GtkWidget      *button,
                                             (GSourceFunc) drag_open_pane,
                                             pane);
 
-    gdk_drag_status (context, 0, time);
+    gdk_drag_status (context, (GdkDragAction) 0, time);
 
     return TRUE;
 
@@ -901,7 +901,7 @@ out:
         g_source_remove (pane->open_timeout);
     pane->open_timeout = 0;
 
-    gdk_drag_status (context, 0, time);
+    gdk_drag_status (context, (GdkDragAction) 0, time);
 
     return TRUE;
 }
@@ -909,7 +909,8 @@ out:
 static void
 setup_button_dnd (MooPane *pane)
 {
-    gtk_drag_dest_set (pane->button, 0, NULL, 0, GDK_ACTION_COPY | GDK_ACTION_MOVE);
+    gtk_drag_dest_set (pane->button, (GtkDestDefaults) 0, NULL, 0,
+                       (GdkDragAction) (GDK_ACTION_COPY | GDK_ACTION_MOVE));
     g_signal_connect (pane->button, "drag-motion",
                       G_CALLBACK (button_drag_motion), pane);
     g_signal_connect (pane->button, "drag-leave",
@@ -1009,7 +1010,7 @@ _moo_pane_new (GtkWidget    *child,
 
     g_return_val_if_fail (GTK_IS_WIDGET (child), NULL);
 
-    pane = g_object_new (MOO_TYPE_PANE, (const char*) NULL);
+    pane = (MooPane *) g_object_new (MOO_TYPE_PANE, (const char*) NULL);
     pane->child = g_object_ref (child);
     gtk_widget_show (pane->child);
     g_object_set_data (G_OBJECT (pane->child), "moo-pane", pane);
@@ -1061,8 +1062,8 @@ _moo_pane_set_parent (MooPane   *pane,
     }
     else
     {
-        pane->parent = parent;
-        create_widgets (pane, _moo_paned_get_position (parent), pane_window);
+        pane->parent = (MooPaned *) parent;
+        create_widgets (pane, _moo_paned_get_position ((MooPaned *) parent), pane_window);
 
         g_signal_connect_swapped (parent, "notify::enable-detaching",
                                   G_CALLBACK (paned_enable_detaching_notify),
@@ -1109,7 +1110,7 @@ GtkWidget *
 _moo_pane_get_focus_child (MooPane *pane)
 {
     g_return_val_if_fail (MOO_IS_PANE (pane), NULL);
-    return pane->focus_child;
+    return (GtkWidget *) pane->focus_child;
 }
 
 GtkWidget *
@@ -1250,12 +1251,14 @@ _moo_pane_update_focus_child (MooPane *pane)
     g_return_if_fail (MOO_IS_PANE (pane));
 
     if (pane->focus_child)
-        g_object_remove_weak_pointer (pane->focus_child, &pane->focus_child);
+        g_object_remove_weak_pointer (G_OBJECT (pane->focus_child),
+                                      (gpointer *) &pane->focus_child);
 
     pane->focus_child = find_focus (pane->child);
 
     if (pane->focus_child)
-        g_object_add_weak_pointer (pane->focus_child, &pane->focus_child);
+        g_object_add_weak_pointer (G_OBJECT (pane->focus_child),
+                                   (gpointer *) &pane->focus_child);
 }
 
 
@@ -1405,7 +1408,7 @@ _moo_pane_detach (MooPane *pane)
     }
 
     if (pane->focus_child)
-        gtk_widget_grab_focus (pane->focus_child);
+        gtk_widget_grab_focus ((GtkWidget *) pane->focus_child);
     else
         gtk_widget_child_focus (pane->child, GTK_DIR_TAB_FORWARD);
 
@@ -1439,10 +1442,12 @@ _moo_pane_attach (MooPane *pane)
     pane->params->detached = FALSE;
 
     if (pane->focus_child)
-        g_object_remove_weak_pointer (pane->focus_child, &pane->focus_child);
+        g_object_remove_weak_pointer (G_OBJECT (pane->focus_child),
+                                      (gpointer *) &pane->focus_child);
     pane->focus_child = find_focus (pane->child);
     if (pane->focus_child)
-        g_object_add_weak_pointer (pane->focus_child, &pane->focus_child);
+        g_object_add_weak_pointer (G_OBJECT (pane->focus_child),
+                                   (gpointer *) &pane->focus_child);
 
     reparent (pane->child, pane->window_child_holder, pane->child_holder);
 
@@ -1884,7 +1889,8 @@ _moo_create_small_icon (MooSmallIcon icon)
 
     g_return_val_if_fail (data != NULL, NULL);
 
-    icon_widget = g_object_new (_moo_icon_widget_get_type (), (const char*) NULL);
+    icon_widget = (MooIconWidget *) g_object_new (_moo_icon_widget_get_type (),
+                                                  (const char*) NULL);
     icon_widget->data = data;
     gtk_widget_set_size_request (GTK_WIDGET (icon_widget), 7, 7 /* magic */);
 
@@ -1915,7 +1921,8 @@ _moo_create_arrow_icon (GtkArrowType arrow_type)
             g_return_val_if_reached (NULL);
     }
 
-    icon_widget = g_object_new (_moo_icon_widget_get_type (), (const char*) NULL);
+    icon_widget = (MooIconWidget *) g_object_new (_moo_icon_widget_get_type (),
+                                                  (const char*) NULL);
     icon_widget->type = icon_type;
 
     return GTK_WIDGET (icon_widget);

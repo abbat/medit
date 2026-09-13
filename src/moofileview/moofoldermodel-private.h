@@ -169,7 +169,7 @@ static MooFile  *file_list_nth          (FileList   *flist,
 {
     MooFile *file;
     g_assert (0 <= index_ && index_ < flist->size);
-    file = g_list_nth_data (flist->list, index_);
+    file = (MooFile *) g_list_nth_data (flist->list, index_);
     g_assert (file != NULL);
     return file;
 }
@@ -196,7 +196,7 @@ static int       file_list_position     (FileList   *flist,
     GList *link;
     int position;
     g_assert (file != NULL);
-    link = g_hash_table_lookup (flist->file_to_link, file);
+    link = (GList *) g_hash_table_lookup (flist->file_to_link, file);
     g_assert (link != NULL);
     position = g_list_position (flist->list, link);
     g_assert (position >= 0);
@@ -207,7 +207,7 @@ static int       file_list_position     (FileList   *flist,
 static MooFile  *file_list_find_name    (FileList   *flist,
                                          const char *name)
 {
-    return g_hash_table_lookup (flist->name_to_file, name);
+    return (MooFile *) g_hash_table_lookup (flist->name_to_file, name);
 }
 
 
@@ -215,7 +215,7 @@ static MooFile  *file_list_find_display_name
                                         (FileList   *flist,
                                          const char *display_name)
 {
-    return g_hash_table_lookup (flist->display_name_to_file,
+    return (MooFile *) g_hash_table_lookup (flist->display_name_to_file,
                                 display_name);
 }
 
@@ -223,7 +223,7 @@ static MooFile  *file_list_find_display_name
 static MooFile  *file_list_first        (FileList   *flist)
 {
     if (flist->list)
-        return flist->list->data;
+        return (MooFile *) flist->list->data;
     else
         return NULL;
 }
@@ -232,10 +232,10 @@ static MooFile  *file_list_first        (FileList   *flist)
 static MooFile  *file_list_next         (FileList   *flist,
                                          MooFile    *file)
 {
-    GList *link = g_hash_table_lookup (flist->file_to_link, file);
+    GList *link = (GList *) g_hash_table_lookup (flist->file_to_link, file);
     g_assert (link != NULL);
     if (link->next)
-        return link->next->data;
+        return (MooFile *) link->next->data;
     else
         return NULL;
 }
@@ -247,7 +247,7 @@ static GSList   *file_list_get_slist    (FileList   *flist)
     GSList *slist = NULL;
 
     for (l = flist->list; l != NULL; l = l->next)
-        slist = g_slist_prepend (slist, _moo_file_ref (l->data));
+        slist = g_slist_prepend (slist, _moo_file_ref ((MooFile *) l->data));
 
     return g_slist_reverse (slist);
 }
@@ -308,7 +308,7 @@ static GList    *_list_find             (FileList       *flist,
                                          MooFile        *file,
                                          int            *index_)
 {
-    GList *link = g_hash_table_lookup (flist->file_to_link, file);
+    GList *link = (GList *) g_hash_table_lookup (flist->file_to_link, file);
     g_return_val_if_fail (link != NULL, NULL);
     *index_ = g_list_position (flist->list, link);
     g_return_val_if_fail (*index_ >= 0, NULL);
@@ -399,7 +399,7 @@ static void     _find_insert_position   (GList          *list,
             pos = 0;
         }
 
-        cmp = cmp_func (file, left->data);
+        cmp = cmp_func (file, (MooFile *) left->data);
         g_assert (cmp != 0);
 
         if (cmp < 0)
@@ -419,7 +419,7 @@ static void     _find_insert_position   (GList          *list,
             else if (list_len == 2)
             {
                 g_assert (left->next != NULL);
-                cmp = cmp_func (file, left->next->data);
+                cmp = cmp_func (file, (MooFile *) left->next->data);
                 g_assert (cmp != 0);
 
                 if (cmp < 0)
@@ -440,7 +440,7 @@ static void     _find_insert_position   (GList          *list,
                 right = g_list_nth (left, list_len / 2);
                 g_assert (right != NULL);
 
-                cmp = cmp_func (file, right->data);
+                cmp = cmp_func (file, (MooFile *) right->data);
                 g_assert (cmp != 0);
 
                 if (cmp > 0)
@@ -456,7 +456,7 @@ static void     _find_insert_position   (GList          *list,
                 right = g_list_nth (left, list_len / 2);
                 g_assert (right != NULL);
 
-                cmp = cmp_func (file, right->data);
+                cmp = cmp_func (file, (MooFile *) right->data);
                 g_assert (cmp != 0);
 
                 if (cmp < 0)
@@ -521,9 +521,10 @@ static int       _compare_links         (int            *a,
     struct {
         MooFileCmp cmp_func;
         GList **links;
-    } *data = user_data;
+    } *data = (decltype(data)) user_data;
 
-    return data->cmp_func (data->links[*a]->data, data->links[*b]->data);
+    return data->cmp_func ((MooFile *) data->links[*a]->data,
+                           (MooFile *) data->links[*b]->data);
 }
 
 

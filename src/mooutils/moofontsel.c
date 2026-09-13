@@ -291,26 +291,26 @@ moo_font_selection_init (MooFontSelection *fontsel)
   gtk_widget_set_size_request (fontsel->size_entry, 20, -1);
   gtk_widget_show (fontsel->size_entry);
   gtk_table_attach (GTK_TABLE (table), fontsel->size_entry, 2, 3, 1, 2,
-                    GTK_FILL, 0, 0, 0);
+                    (GtkAttachOptions) GTK_FILL, (GtkAttachOptions) 0, 0, 0);
   g_signal_connect (fontsel->size_entry, "activate",
                     G_CALLBACK (moo_font_selection_size_activate),
                     fontsel);
   g_signal_connect_data (fontsel->size_entry, "focus_out_event",
                          G_CALLBACK (moo_font_selection_size_focus_out),
                          fontsel, NULL,
-                         G_CONNECT_AFTER | G_CONNECT_SWAPPED);
+                         (GConnectFlags) (G_CONNECT_AFTER | G_CONNECT_SWAPPED));
 
   font_label = gtk_label_new_with_mnemonic (D_("_Family:", "gtk20"));
   gtk_misc_set_alignment (GTK_MISC (font_label), 0.0, 0.5);
   gtk_widget_show (font_label);
   gtk_table_attach (GTK_TABLE (table), font_label, 0, 1, 0, 1,
-                    GTK_FILL, 0, 0, 0);
+                    (GtkAttachOptions) GTK_FILL, (GtkAttachOptions) 0, 0, 0);
 
   style_label = gtk_label_new_with_mnemonic (D_("_Style:", "gtk20"));
   gtk_misc_set_alignment (GTK_MISC (style_label), 0.0, 0.5);
   gtk_widget_show (style_label);
   gtk_table_attach (GTK_TABLE (table), style_label, 1, 2, 0, 1,
-                    GTK_FILL, 0, 0, 0);
+                    (GtkAttachOptions) GTK_FILL, (GtkAttachOptions) 0, 0, 0);
 
   label = gtk_label_new_with_mnemonic (D_("Si_ze:", "gtk20"));
   gtk_label_set_mnemonic_widget (GTK_LABEL (label),
@@ -318,7 +318,7 @@ moo_font_selection_init (MooFontSelection *fontsel)
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
   gtk_widget_show (label);
   gtk_table_attach (GTK_TABLE (table), label, 2, 3, 0, 1,
-                    GTK_FILL, 0, 0, 0);
+                    (GtkAttachOptions) GTK_FILL, (GtkAttachOptions) 0, 0, 0);
 
 
   /* Create the lists  */
@@ -356,8 +356,8 @@ moo_font_selection_init (MooFontSelection *fontsel)
   gtk_widget_show (scrolled_win);
 
   gtk_table_attach (GTK_TABLE (table), scrolled_win, 0, 1, 1, 3,
-                    GTK_EXPAND | GTK_FILL,
-                    GTK_EXPAND | GTK_FILL, 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   focus_chain = g_list_append (focus_chain, scrolled_win);
 
   model = gtk_list_store_new (2,
@@ -391,8 +391,8 @@ moo_font_selection_init (MooFontSelection *fontsel)
   gtk_widget_show (fontsel->face_list);
   gtk_widget_show (scrolled_win);
   gtk_table_attach (GTK_TABLE (table), scrolled_win, 1, 2, 1, 3,
-                    GTK_EXPAND | GTK_FILL,
-                    GTK_EXPAND | GTK_FILL, 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   focus_chain = g_list_append (focus_chain, scrolled_win);
 
   focus_chain = g_list_append (focus_chain, fontsel->size_entry);
@@ -423,7 +423,8 @@ moo_font_selection_init (MooFontSelection *fontsel)
   gtk_widget_show (fontsel->size_list);
   gtk_widget_show (scrolled_win);
   gtk_table_attach (GTK_TABLE (table), scrolled_win, 2, 3, 2, 3,
-                    GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
+                    (GtkAttachOptions) GTK_FILL,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   focus_chain = g_list_append (focus_chain, scrolled_win);
 
   gtk_container_set_focus_chain (GTK_CONTAINER (table), focus_chain);
@@ -436,7 +437,7 @@ moo_font_selection_init (MooFontSelection *fontsel)
   g_signal_connect_data (fontsel->family_list, "map",
                          G_CALLBACK (moo_font_selection_scroll_on_map),
                          fontsel, NULL,
-                         G_CONNECT_AFTER | G_CONNECT_SWAPPED);
+                         (GConnectFlags) (G_CONNECT_AFTER | G_CONNECT_SWAPPED));
 
   g_signal_connect (gtk_tree_view_get_selection (GTK_TREE_VIEW (fontsel->face_list)), "changed",
                     G_CALLBACK (moo_font_selection_select_style), fontsel);
@@ -529,7 +530,7 @@ moo_font_selection_new (void)
 {
   MooFontSelection *fontsel;
 
-  fontsel = g_object_new (MOO_TYPE_FONT_SELECTION, NULL);
+  fontsel = (MooFontSelection *) g_object_new (MOO_TYPE_FONT_SELECTION, NULL);
 
   return GTK_WIDGET (fontsel);
 }
@@ -1365,7 +1366,7 @@ moo_font_selection_dialog_new (const gchar *title)
 {
   MooFontSelectionDialog *fontseldiag;
 
-  fontseldiag = g_object_new (MOO_TYPE_FONT_SELECTION_DIALOG, NULL);
+  fontseldiag = (MooFontSelectionDialog *) g_object_new (MOO_TYPE_FONT_SELECTION_DIALOG, NULL);
 
   if (title)
     gtk_window_set_title (GTK_WINDOW (fontseldiag), title);
@@ -1785,7 +1786,7 @@ moo_font_button_realize (GtkWidget *widget)
 GtkWidget *
 moo_font_button_new (void)
 {
-  return g_object_new (MOO_TYPE_FONT_BUTTON, NULL);
+  return GTK_WIDGET (g_object_new (MOO_TYPE_FONT_BUTTON, NULL));
 }
 
 /**
@@ -1801,7 +1802,7 @@ moo_font_button_new (void)
 GtkWidget *
 moo_font_button_new_with_font (const gchar *fontname)
 {
-  return g_object_new (MOO_TYPE_FONT_BUTTON, "font_name", fontname, NULL);
+  return GTK_WIDGET (g_object_new (MOO_TYPE_FONT_BUTTON, "font_name", fontname, NULL));
 }
 
 /**

@@ -88,8 +88,8 @@ init_find_history (void)
         last_search = moo_history_list_get_last_item (search_history);
 
         moo_prefs_create_key (moo_edit_setting (MOO_EDIT_PREFS_SEARCH_FLAGS), MOO_PREFS_STATE,
-                                                G_TYPE_INT, MOO_FIND_CASELESS);
-        last_search_flags = moo_prefs_get_int (moo_edit_setting (MOO_EDIT_PREFS_SEARCH_FLAGS));
+                                                G_TYPE_INT, (gint) MOO_FIND_CASELESS);
+        last_search_flags = (MooFindFlags) moo_prefs_get_int (moo_edit_setting (MOO_EDIT_PREFS_SEARCH_FLAGS));
     }
 }
 
@@ -165,14 +165,14 @@ moo_find_constructor (GType           type,
     }
 
     gtk_widget_set_sensitive (GTK_WIDGET (GTK_CHECK_BUTTON (moo_builder_get (find->xml, "backwards"))), !use_replace);
-    g_object_set (GTK_FRAME (moo_builder_get (find->xml, "replace_frame")), "visible", use_replace, NULL);
-    g_object_set (GTK_CHECK_BUTTON (moo_builder_get (find->xml, "dont_prompt")), "visible", use_replace, NULL);
+    g_object_set (GTK_FRAME (moo_builder_get (find->xml, "replace_frame")), "visible", use_replace, nullptr);
+    g_object_set (GTK_CHECK_BUTTON (moo_builder_get (find->xml, "dont_prompt")), "visible", use_replace, nullptr);
 
     gtk_window_set_title (GTK_WINDOW (find), title);
     gtk_dialog_add_buttons (GTK_DIALOG (find),
                             GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                             stock_id, GTK_RESPONSE_OK,
-                            NULL);
+                            nullptr);
     gtk_dialog_set_alternative_button_order (GTK_DIALOG (find),
                                              GTK_RESPONSE_OK,
                                              GTK_RESPONSE_CANCEL,
@@ -460,13 +460,14 @@ moo_find_run (MooFind        *find,
         if (flags & MOO_FIND_REGEX)
         {
             MooRegex *regex;
-            GRegexCompileFlags re_flags = 0;
+            GRegexCompileFlags re_flags = (GRegexCompileFlags) 0;
             GError *error = NULL;
 
             if (flags & MOO_FIND_CASELESS)
                 re_flags |= G_REGEX_CASELESS;
 
-            regex = _moo_regex_compile (search_for, re_flags | G_REGEX_OPTIMIZE, 0, &error);
+            regex = _moo_regex_compile (search_for, re_flags | G_REGEX_OPTIMIZE,
+                                        (GRegexMatchFlags) 0, &error);
 
             if (!regex)
             {
@@ -515,9 +516,9 @@ moo_find_run (MooFind        *find,
 static MooFindFlags
 moo_find_get_flags (MooFind *find)
 {
-    MooFindFlags flags = 0;
+    MooFindFlags flags = (MooFindFlags) 0;
 
-    g_return_val_if_fail (MOO_IS_FIND (find), 0);
+    g_return_val_if_fail (MOO_IS_FIND (find), (MooFindFlags) 0);
 
     if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GTK_CHECK_BUTTON (moo_builder_get (find->xml, "regex")))))
         flags |= MOO_FIND_REGEX;
@@ -616,7 +617,7 @@ do_find (const GtkTextIter *start,
     }
     else
     {
-        MooTextSearchFlags search_flags = 0;
+        MooTextSearchFlags search_flags = (MooTextSearchFlags) 0;
 
         if (flags & MOO_FIND_CASELESS)
             search_flags |= MOO_TEXT_SEARCH_CASELESS;
@@ -1036,7 +1037,7 @@ do_replace_silent (GtkTextIter       *start,
                    MooRegex          *regex,
                    const char        *replacement)
 {
-    MooTextSearchFlags search_flags = 0;
+    MooTextSearchFlags search_flags = (MooTextSearchFlags) 0;
 
     if (flags & MOO_FIND_CASELESS)
         search_flags |= MOO_TEXT_SEARCH_CASELESS;
@@ -1118,7 +1119,7 @@ replace_func (G_GNUC_UNUSED const char *text,
         GtkTextView *view;
         GtkWidget *dialog;
         MooTextReplaceResponse response;
-    } *data = user_data;
+    } *data = (decltype (data)) user_data;
 
     buffer = gtk_text_view_get_buffer (data->view);
     gtk_text_buffer_select_range (buffer, to_replace_end, to_replace_start);
@@ -1134,7 +1135,7 @@ replace_func (G_GNUC_UNUSED const char *text,
         case MOO_TEXT_REPLACE_SKIP:
         case MOO_TEXT_REPLACE_DO_REPLACE:
         case MOO_TEXT_REPLACE_ALL:
-            data->response = response;
+            data->response = (MooTextReplaceResponse) response;
             break;
 
         default:
@@ -1156,7 +1157,7 @@ do_replace_interactive (GtkTextView       *view,
                         const char        *replacement,
                         int               *replaced)
 {
-    MooTextSearchFlags search_flags = 0;
+    MooTextSearchFlags search_flags = (MooTextSearchFlags) 0;
 
     struct {
         GtkTextView *view;

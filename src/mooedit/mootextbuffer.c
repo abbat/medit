@@ -361,11 +361,11 @@ moo_text_buffer_init (MooTextBuffer *buffer)
     g_signal_connect_data (buffer->priv->undo_stack, "undo",
                            G_CALLBACK (after_undo_redo),
                            buffer, NULL,
-                           G_CONNECT_AFTER | G_CONNECT_SWAPPED);
+                           (GConnectFlags) (G_CONNECT_AFTER | G_CONNECT_SWAPPED));
     g_signal_connect_data (buffer->priv->undo_stack, "redo",
                            G_CALLBACK (after_undo_redo),
                            buffer, NULL,
-                           G_CONNECT_AFTER | G_CONNECT_SWAPPED);
+                           (GConnectFlags) (G_CONNECT_AFTER | G_CONNECT_SWAPPED));
 
     g_signal_connect_swapped (buffer->priv->undo_stack, "notify::can-undo",
                               G_CALLBACK (proxy_notify_can_undo_redo), buffer);
@@ -592,7 +592,7 @@ moo_text_buffer_insert_text (GtkTextBuffer      *text_buffer,
         GSList *l, *marks;
         marks = moo_text_buffer_get_line_marks_at_line (buffer, first_line);
         for (l = marks; l != NULL; l = l->next)
-            moo_text_buffer_move_line_mark (buffer, l->data, last_line);
+            moo_text_buffer_move_line_mark (buffer, (MooLineMark *) l->data, last_line);
         g_slist_free (marks);
     }
 
@@ -625,17 +625,17 @@ marks_moved_or_deleted (MooTextBuffer *buffer,
     g_slist_foreach (deleted, (GFunc) moo_object_ref, NULL);
 
     for (l = deleted; l != NULL; l = l->next)
-        _moo_line_mark_set_buffer (l->data, NULL, NULL);
+        _moo_line_mark_set_buffer ((MooLineMark *) l->data, NULL, NULL);
 
     for (l = deleted; l != NULL; l = l->next)
     {
-        line_mark_deleted (buffer, l->data);
-        g_object_unref (l->data);
+        line_mark_deleted (buffer, (MooLineMark *) l->data);
+        g_object_unref ((MooLineMark *) l->data);
     }
 
     for (l = moved; l != NULL; l = l->next)
-        if (!moo_line_mark_get_deleted (l->data))
-            line_mark_moved (buffer, l->data);
+        if (!moo_line_mark_get_deleted ((MooLineMark *) l->data))
+            line_mark_moved (buffer, (MooLineMark *) l->data);
 
     g_slist_foreach (deleted, (GFunc) moo_object_unref, NULL);
     g_slist_foreach (moved, (GFunc) moo_object_unref, NULL);
@@ -863,15 +863,15 @@ moo_text_buffer_set_property (GObject        *object,
             break;
 
         case PROP_BRACKET_MATCH_STYLE:
-            moo_text_buffer_set_bracket_match_style (buffer, g_value_get_object (value));
+            moo_text_buffer_set_bracket_match_style (buffer, (MooTextStyle *) g_value_get_object (value));
             break;
 
         case PROP_BRACKET_MISMATCH_STYLE:
-            moo_text_buffer_set_bracket_mismatch_style (buffer, g_value_get_object (value));
+            moo_text_buffer_set_bracket_mismatch_style (buffer, (MooTextStyle *) g_value_get_object (value));
             break;
 
         case PROP_LANG:
-            moo_text_buffer_set_lang (buffer, g_value_get_object (value));
+            moo_text_buffer_set_lang (buffer, (MooLang *) g_value_get_object (value));
             break;
 
         default:
@@ -1585,7 +1585,7 @@ action_new (ActionType     type,
     }
 
     g_assert (size != 0);
-    action = g_malloc0 (size);
+    action = (EditAction *) g_malloc0 (size);
     action->interactive = (!buffer->priv->non_interactive && buffer->priv->user_action_count) ? TRUE : FALSE;
 
     if (!gtk_text_buffer_get_modified (text_buffer))
@@ -1827,7 +1827,7 @@ insert_action_merge (InsertAction   *last_action,
         return FALSE;
     }
 
-    tmp = g_strconcat (last_action->edit.text, action->edit.text, NULL);
+    tmp = g_strconcat (last_action->edit.text, action->edit.text, nullptr);
     g_free (last_action->edit.text);
     last_action->length += action->length;
     last_action->edit.text = tmp;
@@ -1867,7 +1867,7 @@ delete_action_merge (DeleteAction   *last_action,
             return FALSE;
         }
 
-        tmp = g_strconcat (last_action->edit.text, action->edit.text, NULL);
+        tmp = g_strconcat (last_action->edit.text, action->edit.text, nullptr);
         g_free (last_action->edit.text);
         last_action->end += (action->end - action->start);
         last_action->edit.text = tmp;
@@ -1882,7 +1882,7 @@ delete_action_merge (DeleteAction   *last_action,
             return FALSE;
         }
 
-        tmp = g_strconcat (action->edit.text, last_action->edit.text, NULL);
+        tmp = g_strconcat (action->edit.text, last_action->edit.text, nullptr);
         g_free (last_action->edit.text);
         last_action->start = action->start;
         last_action->edit.text = tmp;
@@ -2000,8 +2000,8 @@ moo_text_buffer_get_fold_at_line (MooTextBuffer *buffer,
 
     for (l = marks; l != NULL; l = l->next)
     {
-        fold = _moo_line_mark_get_fold (l->data);
-        if (fold && fold->start == l->data)
+        fold = _moo_line_mark_get_fold ((MooLineMark *) l->data);
+        if (fold && fold->start == (MooLineMark *) l->data)
             break;
         fold = NULL;
     }

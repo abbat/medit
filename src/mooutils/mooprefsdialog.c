@@ -450,7 +450,7 @@ moo_prefs_dialog_apply (MooPrefsDialog *dialog)
 
     while (list)
     {
-        MooPrefsPage *page = list->data;
+        MooPrefsPage *page = (MooPrefsPage *) list->data;
 
         if (page->auto_apply && page_initialized (page))
             g_signal_emit_by_name (page, "apply");
@@ -537,7 +537,8 @@ moo_prefs_dialog_remove_page (MooPrefsDialog     *dialog,
     g_return_if_fail (MOO_IS_PREFS_DIALOG (dialog));
     g_return_if_fail (MOO_IS_PREFS_PAGE (page));
 
-    ref = g_object_get_data (G_OBJECT (page), "moo-prefs-dialog-row");
+    ref = (GtkTreeRowReference *) g_object_get_data (G_OBJECT (page),
+                                                     "moo-prefs-dialog-row");
     g_return_if_fail (ref && gtk_tree_row_reference_valid (ref));
 
     path = gtk_tree_row_reference_get_path (ref);

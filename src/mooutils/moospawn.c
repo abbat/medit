@@ -92,7 +92,7 @@ _moo_cmd_class_init (MooCmdClass *klass)
     signals[ABORT] =
             g_signal_new ("abort",
                           G_OBJECT_CLASS_TYPE (klass),
-                          G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+                          (GSignalFlags) (G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION),
                           G_STRUCT_OFFSET (MooCmdClass, abort),
                           g_signal_accumulator_true_handled, NULL,
                           _moo_marshal_BOOLEAN__VOID,
@@ -101,7 +101,7 @@ _moo_cmd_class_init (MooCmdClass *klass)
     signals[CMD_EXIT] =
             g_signal_new ("cmd-exit",
                           G_OBJECT_CLASS_TYPE (klass),
-                          G_SIGNAL_RUN_LAST,
+                          (GSignalFlags) G_SIGNAL_RUN_LAST,
                           G_STRUCT_OFFSET (MooCmdClass, cmd_exit),
                           g_signal_accumulator_true_handled, NULL,
                           _moo_marshal_BOOLEAN__INT,
@@ -111,7 +111,7 @@ _moo_cmd_class_init (MooCmdClass *klass)
     signals[STDOUT_LINE] =
             g_signal_new ("stdout-line",
                           G_OBJECT_CLASS_TYPE (klass),
-                          G_SIGNAL_RUN_LAST,
+                          (GSignalFlags) G_SIGNAL_RUN_LAST,
                           G_STRUCT_OFFSET (MooCmdClass, stdout_line),
                           g_signal_accumulator_true_handled, NULL,
                           _moo_marshal_BOOLEAN__STRING,
@@ -121,7 +121,7 @@ _moo_cmd_class_init (MooCmdClass *klass)
     signals[STDERR_LINE] =
             g_signal_new ("stderr-line",
                           G_OBJECT_CLASS_TYPE (klass),
-                          G_SIGNAL_RUN_LAST,
+                          (GSignalFlags) G_SIGNAL_RUN_LAST,
                           G_STRUCT_OFFSET (MooCmdClass, stderr_line),
                           g_signal_accumulator_true_handled, NULL,
                           _moo_marshal_BOOLEAN__STRING,
@@ -179,7 +179,7 @@ _moo_cmd_new (const char *working_dir,
 
     g_return_val_if_fail (argv && *argv, NULL);
 
-    cmd = g_object_new (MOO_TYPE_CMD, (const char*) NULL);
+    cmd = (MooCmd *) g_object_new (MOO_TYPE_CMD, (const char*) NULL);
 
     result = moo_cmd_run_command (cmd, working_dir, argv, envp,
                                   flags, cmd_flags, child_setup,
@@ -326,7 +326,7 @@ command_out_or_err (MooCmd         *cmd,
 
     while (lines)
     {
-        process_line (cmd, !out, lines->data, -1);
+        process_line (cmd, !out, (const char *) lines->data, (gssize) -1);
         g_free (lines->data);
         lines = g_slist_delete_link (lines, lines);
     }
@@ -428,7 +428,7 @@ real_child_setup (gpointer user_data)
     struct {
         GSpawnChildSetupFunc child_setup;
         gpointer user_data;
-    } *data = user_data;
+    } *data = (decltype(data)) user_data;
 
     setpgid (0, 0);
 
@@ -493,7 +493,7 @@ moo_cmd_run_command (MooCmd     *cmd,
     g_return_val_if_fail (!cmd->priv->running, FALSE);
 
     {
-        flags |= G_SPAWN_DEFAULT;
+        flags = (GSpawnFlags) (flags | G_SPAWN_DEFAULT);
 
         if ((flags & G_SPAWN_STDOUT_TO_DEV_NULL) || (cmd_flags & MOO_CMD_STDOUT_TO_PARENT))
             outp = NULL;
@@ -513,7 +513,7 @@ moo_cmd_run_command (MooCmd     *cmd,
 
     result = mgw_spawn_async_with_pipes (working_dir,
                                          argv, new_env,
-                                         flags | G_SPAWN_DO_NOT_REAP_CHILD,
+                                         (GSpawnFlags) (flags | G_SPAWN_DO_NOT_REAP_CHILD),
                                          real_child_setup, &data,
                                          &cmd->priv->pid,
                                          NULL, outp, errp, error);
@@ -546,7 +546,7 @@ moo_cmd_run_command (MooCmd     *cmd,
         cmd->priv->stdout_watch =
                 g_io_add_watch_full (cmd->priv->stdout_io,
                                      G_PRIORITY_DEFAULT_IDLE,
-                                     G_IO_IN | G_IO_PRI | G_IO_ERR | G_IO_HUP,
+                                     (GIOCondition) (G_IO_IN | G_IO_PRI | G_IO_ERR | G_IO_HUP),
                                      (GIOFunc) command_out, cmd,
                                      (GDestroyNotify) stdout_watch_removed);
     }
@@ -561,7 +561,7 @@ moo_cmd_run_command (MooCmd     *cmd,
         cmd->priv->stderr_watch =
                 g_io_add_watch_full (cmd->priv->stderr_io,
                                      G_PRIORITY_DEFAULT_IDLE,
-                                     G_IO_IN | G_IO_PRI | G_IO_ERR | G_IO_HUP,
+                                     (GIOCondition) (G_IO_IN | G_IO_PRI | G_IO_ERR | G_IO_HUP),
                                      (GIOFunc) command_err, cmd,
                                      (GDestroyNotify) stderr_watch_removed);
     }
@@ -714,7 +714,7 @@ moo_spawn_command_line_async_with_flags (const gchar *command_line,
   retval = g_spawn_async (NULL,
                           argv,
                           NULL,
-                          G_SPAWN_SEARCH_PATH | g_flags,
+                          (GSpawnFlags) (G_SPAWN_SEARCH_PATH | g_flags),
                           NULL,
                           NULL,
                           NULL,

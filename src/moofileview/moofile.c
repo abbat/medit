@@ -65,7 +65,7 @@ _moo_file_find_mime_type (MooFile    *file,
         file->mime_type = MOO_MIME_TYPE_UNKNOWN;
     }
 
-    file->flags |= MOO_FILE_HAS_MIME_TYPE;
+    file->flags = (MooFileFlags) (file->flags | MOO_FILE_HAS_MIME_TYPE);
 }
 
 #define moo_get_collation_key_for_filename(fn,len) ((MooCollationKey*)g_utf8_collate_key_for_filename(fn,len))
@@ -125,7 +125,7 @@ _moo_file_new (const char *dirname,
     g_free (display_name);
 
     if (basename[0] == '.')
-        file->info = MOO_FILE_INFO_IS_HIDDEN;
+        file->info = (MooFileInfo) MOO_FILE_INFO_IS_HIDDEN;
 
     return file;
 }
@@ -174,8 +174,8 @@ _moo_file_stat (MooFile    *file,
 
     fullname = g_build_filename (dirname, file->name, NULL);
 
-    file->info = MOO_FILE_INFO_EXISTS;
-    file->flags = MOO_FILE_HAS_STAT;
+    file->info = (MooFileInfo) MOO_FILE_INFO_EXISTS;
+    file->flags = (MooFileFlags) MOO_FILE_HAS_STAT;
 
     g_free (file->link_target);
     file->link_target = NULL;
@@ -192,7 +192,7 @@ _moo_file_stat (MooFile    *file,
                 _moo_message ("file '%s' does not exist", display_name);
                 g_free (display_name);
             });
-            file->info = 0;
+            file->info = (MooFileInfo) 0;
         }
         else
         {
@@ -202,8 +202,8 @@ _moo_file_stat (MooFile    *file,
                               display_name, mgw_strerror (err));
                 g_free (display_name);
             });
-            file->info = MOO_FILE_INFO_IS_LOCKED | MOO_FILE_INFO_EXISTS;
-            file->flags = 0;
+            file->info = (MooFileInfo) (MOO_FILE_INFO_IS_LOCKED | MOO_FILE_INFO_EXISTS);
+            file->flags = (MooFileFlags) 0;
         }
     }
     else
@@ -213,7 +213,7 @@ _moo_file_stat (MooFile    *file,
             static char buf[1024];
             gssize len;
 
-            file->info |= MOO_FILE_INFO_IS_LINK;
+            file->info = (MooFileInfo) (file->info | MOO_FILE_INFO_IS_LINK);
 
             if (mgw_stat (fullname, file->statbuf, &err) != 0)
             {
@@ -224,7 +224,7 @@ _moo_file_stat (MooFile    *file,
                         _moo_message ("file '%s' is a broken link", display_name);
                         g_free (display_name);
                     });
-                    file->info = MOO_FILE_INFO_IS_LINK;
+                    file->info = (MooFileInfo) MOO_FILE_INFO_IS_LINK;
                 }
                 else
                 {
@@ -234,8 +234,8 @@ _moo_file_stat (MooFile    *file,
                                       display_name, mgw_strerror (err));
                         g_free (display_name);
                     });
-                    file->info = MOO_FILE_INFO_IS_LOCKED | MOO_FILE_INFO_EXISTS;
-                    file->flags = 0;
+                    file->info = (MooFileInfo) (MOO_FILE_INFO_IS_LOCKED | MOO_FILE_INFO_EXISTS);
+                    file->flags = (MooFileFlags) 0;
                 }
             }
 
@@ -263,27 +263,27 @@ _moo_file_stat (MooFile    *file,
          !(file->info & MOO_FILE_INFO_IS_LOCKED))
     {
         if (file->statbuf->isdir)
-            file->info |= MOO_FILE_INFO_IS_DIR;
+            file->info = (MooFileInfo) (file->info | MOO_FILE_INFO_IS_DIR);
         else if (file->statbuf->isblk)
-            file->info |= MOO_FILE_INFO_IS_BLOCK_DEV;
+            file->info = (MooFileInfo) (file->info | MOO_FILE_INFO_IS_BLOCK_DEV);
         else if (file->statbuf->ischr)
-            file->info |= MOO_FILE_INFO_IS_CHAR_DEV;
+            file->info = (MooFileInfo) (file->info | MOO_FILE_INFO_IS_CHAR_DEV);
         else if (file->statbuf->isfifo)
-            file->info |= MOO_FILE_INFO_IS_FIFO;
+            file->info = (MooFileInfo) (file->info | MOO_FILE_INFO_IS_FIFO);
         else if (file->statbuf->issock)
-            file->info |= MOO_FILE_INFO_IS_SOCKET;
+            file->info = (MooFileInfo) (file->info | MOO_FILE_INFO_IS_SOCKET);
     }
 
     if (file->info & MOO_FILE_INFO_IS_DIR)
     {
-        file->flags |= MOO_FILE_HAS_MIME_TYPE;
-        file->flags |= MOO_FILE_HAS_ICON;
+        file->flags = (MooFileFlags) (file->flags | MOO_FILE_HAS_MIME_TYPE);
+        file->flags = (MooFileFlags) (file->flags | MOO_FILE_HAS_ICON);
     }
 
     file->icon = _moo_file_get_icon_type (file, dirname);
 
     if (file->name[0] == '.')
-        file->info |= MOO_FILE_INFO_IS_HIDDEN;
+        file->info = (MooFileInfo) (file->info | MOO_FILE_INFO_IS_HIDDEN);
 
     g_free (fullname);
 }
@@ -294,7 +294,7 @@ _moo_file_free_statbuf (MooFile *file)
     g_return_if_fail (file != NULL);
     g_slice_free (MgwStatBuf, file->statbuf);
     file->statbuf = NULL;
-    file->flags &= ~MOO_FILE_HAS_STAT;
+    file->flags = (MooFileFlags) (file->flags & ~MOO_FILE_HAS_STAT);
 }
 
 
@@ -355,7 +355,7 @@ _moo_file_get_icon (const MooFile  *file,
     g_return_val_if_fail (GTK_IS_WIDGET (widget), NULL);
 
     icon.mime_type = file->mime_type;
-    icon.type = file->icon;
+    icon.type = (MooIconType) file->icon;
     icon.emblem = get_icon_flags (file);
     return moo_file_icon_get_pixbuf (&icon, widget, size);
 }
@@ -388,7 +388,7 @@ _moo_file_get_icon_type (MooFile    *file,
         return icon;
     }
 
-    if (MOO_FILE_IS_SPECIAL (file))
+    if (_moo_file_test (file, (MooFileInfo) MOO_FILE_INFO_IS_SPECIAL))
     {
         if (_moo_file_test (file, MOO_FILE_INFO_IS_BLOCK_DEV))
             return MOO_ICON_BLOCK_DEVICE;
@@ -452,5 +452,5 @@ static MooIconEmblem
 get_icon_flags (const MooFile *file)
 {
     return
-        (MOO_FILE_IS_LINK (file) ? MOO_ICON_EMBLEM_LINK : 0);
+        (MooIconEmblem) (MOO_FILE_IS_LINK (file) ? MOO_ICON_EMBLEM_LINK : 0);
 }
