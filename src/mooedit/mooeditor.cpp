@@ -2113,9 +2113,9 @@ moo_editor_open_files (MooEditor        *editor,
     moo_return_error_if_fail (!files->empty ());
 
     docs = _moo_editor_open_files (editor, files, parent, error);
-    ret = !docs->empty ();
+    ret = docs && !docs->empty ();
 
-    moo_assert (docs->empty () ||
+    moo_assert (!docs || docs->empty () ||
                 docs->size () ==
                     files->size ());
 
