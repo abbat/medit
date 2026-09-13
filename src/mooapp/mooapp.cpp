@@ -1350,7 +1350,9 @@ moo_app_run (MooApp *app)
   g_signal_connect (app, "query-end",
                     G_CALLBACK (gtk_application_query_end), app);
   char *argv[] = { (char *) MOO_APP_SHORT_NAME, NULL };
+  g_application_hold (G_APPLICATION (app));
   g_application_run (G_APPLICATION (app), 1, argv);
+  g_application_release (G_APPLICATION (app));
 #else
   gtk_main ();
 #endif
