@@ -78,13 +78,7 @@ void            moo_big_paned_reorder_pane      (MooBigPaned    *paned,
                                                  MooPanePosition new_position,
                                                  int             new_index);
 
-void            moo_big_paned_open_pane         (MooBigPaned    *paned,
-                                                 GtkWidget      *pane_widget);
 void            moo_big_paned_present_pane      (MooBigPaned    *paned,
-                                                 GtkWidget      *pane_widget);
-void            moo_big_paned_attach_pane       (MooBigPaned    *paned,
-                                                 GtkWidget      *pane_widget);
-void            moo_big_paned_detach_pane       (MooBigPaned    *paned,
                                                  GtkWidget      *pane_widget);
 
 #if GTK_CHECK_VERSION(3,0,0)

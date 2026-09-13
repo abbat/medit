@@ -792,10 +792,7 @@ moo_big_paned_##name (MooBigPaned *paned,                   \
     moo_paned_##name (child, pane);                         \
 }
 
-PROXY_FUNC (open_pane)
 PROXY_FUNC (present_pane)
-PROXY_FUNC (attach_pane)
-PROXY_FUNC (detach_pane)
 
 #undef PROXY_FUNC
 
