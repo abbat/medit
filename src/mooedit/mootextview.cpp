@@ -1416,22 +1416,24 @@ moo_text_view_set_word_chars (MooTextView *view,
                               const char  *word_chars)
 {
     guint i;
+    guint n_word_chars = 0;
+    gunichar *new_word_chars = NULL;
 
     g_return_if_fail (MOO_IS_TEXT_VIEW (view));
     g_return_if_fail (!word_chars || g_utf8_validate (word_chars, -1, NULL));
 
+    if (word_chars && word_chars[0])
+    {
+        n_word_chars = g_utf8_strlen (word_chars, -1);
+        new_word_chars = g_new0 (gunichar, n_word_chars);
+
+        for (i = 0; *word_chars; i++, word_chars = g_utf8_next_char (word_chars))
+            new_word_chars[i] = g_utf8_get_char (word_chars);
+    }
+
     g_free (view->priv->word_chars);
-    view->priv->word_chars = NULL;
-    view->priv->n_word_chars = 0;
-
-    if (!word_chars || !word_chars[0])
-        return;
-
-    view->priv->n_word_chars = g_utf8_strlen (word_chars, -1);
-    view->priv->word_chars = g_new0 (gunichar, view->priv->n_word_chars);
-
-    for (i = 0; *word_chars; i++, word_chars = g_utf8_next_char (word_chars))
-        view->priv->word_chars[i] = g_utf8_get_char (word_chars);
+    view->priv->word_chars = new_word_chars;
+    view->priv->n_word_chars = n_word_chars;
 }
 
 

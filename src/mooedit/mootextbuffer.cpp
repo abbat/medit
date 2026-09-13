@@ -1326,36 +1326,34 @@ void
 moo_text_buffer_set_brackets (MooTextBuffer *buffer,
                               const gchar   *string)
 {
-    g_return_if_fail (MOO_IS_TEXT_BUFFER (buffer));
+    gunichar *left_brackets = NULL;
+    gunichar *right_brackets = NULL;
+    guint num_brackets = 0;
 
-    buffer->priv->num_brackets = 0;
-    g_free (buffer->priv->left_brackets);
-    buffer->priv->left_brackets = NULL;
-    g_free (buffer->priv->right_brackets);
-    buffer->priv->right_brackets = NULL;
+    g_return_if_fail (MOO_IS_TEXT_BUFFER (buffer));
 
     if (!string)
     {
-        buffer->priv->num_brackets = 3;
-        buffer->priv->left_brackets = g_new (gunichar, 3);
-        buffer->priv->right_brackets = g_new (gunichar, 3);
-        buffer->priv->left_brackets[0] = '(';
-        buffer->priv->left_brackets[1] = '{';
-        buffer->priv->left_brackets[2] = '[';
-        buffer->priv->right_brackets[0] = ')';
-        buffer->priv->right_brackets[1] = '}';
-        buffer->priv->right_brackets[2] = ']';
-        return;
+        num_brackets = 3;
+        left_brackets = g_new (gunichar, num_brackets);
+        right_brackets = g_new (gunichar, num_brackets);
+        left_brackets[0] = '(';
+        left_brackets[1] = '{';
+        left_brackets[2] = '[';
+        right_brackets[0] = ')';
+        right_brackets[1] = '}';
+        right_brackets[2] = ']';
     }
-    else if (!string[0])
+    else if (string[0])
     {
-        return;
+        parse_brackets (string, &left_brackets, &right_brackets, &num_brackets);
     }
 
-    parse_brackets (string,
-                    &(buffer->priv->left_brackets),
-                    &(buffer->priv->right_brackets),
-                    &(buffer->priv->num_brackets));
+    g_free (buffer->priv->left_brackets);
+    g_free (buffer->priv->right_brackets);
+    buffer->priv->left_brackets = left_brackets;
+    buffer->priv->right_brackets = right_brackets;
+    buffer->priv->num_brackets = num_brackets;
 }
 
 

@@ -537,7 +537,13 @@ completion_parse_text (MooFileEntryCompletion *cmpl,
         goto out;
     }
 
-    TAKE_STRING (cmpl->priv->display_basename, display_basename);
+    {
+        char *new_display_basename = g_strdup (display_basename);
+        if (display_basename == cmpl->priv->display_basename)
+            display_basename = NULL;
+        g_free (cmpl->priv->display_basename);
+        cmpl->priv->display_basename = new_display_basename;
+    }
     cmpl->priv->display_basename_len = strlen (cmpl->priv->display_basename);
 
     text_len = strlen (text);
@@ -546,7 +552,6 @@ completion_parse_text (MooFileEntryCompletion *cmpl,
     if (!cmpl->priv->dirname || strcmp (cmpl->priv->dirname, dirname))
     {
         completion_disconnect_folder (cmpl);
-        DELETE_MEM (cmpl->priv->dirname);
 
         folder = _moo_file_system_get_folder (cmpl->priv->fs,
                                               dirname, MOO_FILE_HAS_STAT,
@@ -561,7 +566,13 @@ completion_parse_text (MooFileEntryCompletion *cmpl,
 
         g_free (cmpl->priv->display_dirname);
         cmpl->priv->display_dirname = g_strndup (text, text_len - cmpl->priv->display_basename_len);
-        TAKE_STRING (cmpl->priv->dirname, dirname);
+        {
+            char *new_dirname = g_strdup (dirname);
+            if (dirname == cmpl->priv->dirname)
+                dirname = NULL;
+            g_free (cmpl->priv->dirname);
+            cmpl->priv->dirname = new_dirname;
+        }
 
         completion_connect_folder (cmpl, folder);
 
