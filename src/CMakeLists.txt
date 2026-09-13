@@ -152,8 +152,14 @@ target_compile_options(medit PRIVATE
     $<$<COMPILE_LANGUAGE:C>:${MOO_C_FLAGS}>
     $<$<COMPILE_LANGUAGE:CXX>:${MOO_CXX_FLAGS}>)
 
-target_precompile_headers(medit PRIVATE
-    "${CMAKE_CURRENT_SOURCE_DIR}/sysheaders.h")
+# clang-tidy cannot consume the PCH generated for the clang build: its
+# invocation changes the language options and clang rejects the mismatch.
+# GCC builds keep the common PCH; the clang CI build analyzes without it.
+if(NOT CMAKE_C_COMPILER_ID MATCHES "Clang" AND
+   NOT CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    target_precompile_headers(medit PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}/sysheaders.h")
+endif()
 
 target_link_libraries(medit PRIVATE
     PkgConfig::GTKPKG
