@@ -53,16 +53,14 @@ set(MOO_COVERAGE_DIR "${CMAKE_BINARY_DIR}/coverage")
 # less thing to wonder about when a test leaves nothing behind.
 file(MAKE_DIRECTORY "${MOO_COVERAGE_DIR}/raw")
 
-# Upstream code we carry verbatim, the same four the analyze target skips, plus
-# everything outside the tree: the system headers glib and gtk inline into every
-# file, and the sources cmake generates into the build directory. Measuring any
-# of it would move the number without anybody being able to act on it.
+# Upstream code we carry verbatim, the same vendor tree the analyze target skips,
+# plus everything outside the tree: the system headers glib and gtk inline into
+# every file, and the sources cmake generates into the build directory. Measuring
+# any of it would move the number without anybody being able to act on it.
 set(MOO_COVERAGE_IGNORE
     "/usr/"
     "${CMAKE_BINARY_DIR}/"
-    "src/vendor/gtksourceview/"
-    "src/vendor/eggsmclient/"
-    "src/vendor/ctags/readtags\\.c")
+    "src/vendor/")
 
 list(JOIN MOO_COVERAGE_IGNORE "|" _moo_coverage_ignore)
 
