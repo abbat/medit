@@ -216,15 +216,40 @@ xdg_mime_init_from_directory (const char *directory)
   return FALSE; /* Keep processing */
 }
 
+static const char *const *
+xdg_mime_get_data_dirs (void)
+{
+  static char **data_dirs;
+
+  if (data_dirs == NULL)
+    {
+      const char *const *system_dirs;
+      guint n_system_dirs = 0;
+      guint i;
+
+      system_dirs = g_get_system_data_dirs ();
+      while (system_dirs[n_system_dirs] != NULL)
+        n_system_dirs++;
+
+      data_dirs = g_new (char *, n_system_dirs + 2);
+      data_dirs[0] = g_strdup (g_get_user_data_dir ());
+      for (i = 0; i < n_system_dirs; i++)
+        data_dirs[i + 1] = g_strdup (system_dirs[i]);
+      data_dirs[n_system_dirs + 1] = NULL;
+    }
+
+  return (const char *const *) data_dirs;
+}
+
 /* Runs a command on all the directories in the search path */
 static void
 xdg_run_command_on_dirs (XdgDirectoryFunc  func,
-			 void             *user_data)
+				 void             *user_data)
 {
   const char* const *dirs;
   const char* const *p;
 
-  dirs = _moo_get_mime_data_dirs ();
+  dirs = xdg_mime_get_data_dirs ();
 
   for (p = dirs; p && *p; ++p)
     if (func (*p, user_data))

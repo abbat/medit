@@ -84,7 +84,7 @@ const char    *_xdg_get_base_name (const char    *file_name);
 
 #include <string.h>
 #include <errno.h>
-#include "mooutils/moo-mime.h"
+#include <glib.h>
 
 #if G_BYTE_ORDER != G_LITTLE_ENDIAN && G_BYTE_ORDER != G_BIG_ENDIAN
 #error G_BYTE_ORDER
