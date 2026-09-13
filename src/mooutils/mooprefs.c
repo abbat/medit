@@ -15,12 +15,10 @@
 
 #include "mooutils/mooprefs.h"
 #include "marshals.h"
-#include "mooutils/moomarkup.h"
 #include "mooutils/mooutils-fs.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooutils-gobject.h"
 #include "mooutils/mootype-macros.h"
-#include "mooglib/moo-glib.h"
 
 #define MOO_PREFS_ELEMENT "moo-prefs"
 #define PROP_VERSION "version"

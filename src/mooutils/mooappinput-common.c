@@ -15,7 +15,6 @@
 
 #include "mooutils/mooappinput-priv.h"
 
-#include "mooappinput.h"
 #include "mooapp-ipc.h"
 #include "mooutils-misc.h"
 #include "mooutils-debug.h"

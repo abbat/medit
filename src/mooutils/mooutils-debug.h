@@ -16,7 +16,6 @@
 #ifndef MOO_UTILS_DEBUG_H
 #define MOO_UTILS_DEBUG_H
 
-#include "mooglib/moo-glib.h"
 #include "mooutils/mooutils-messages.h"
 
 G_BEGIN_DECLS

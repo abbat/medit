@@ -13,13 +13,8 @@
  *   License along with medit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "mooedit/mooeditconfig.h"
-#include "mooedit/moolang.h"
 #include "mooedit/mooeditprefs.h"
-#include "mooutils/mooutils-gobject.h"
 #include "mooutils/mooutils-debug.h"
-#include "mooutils/mooutils-mem.h"
-#include "mooutils/mooprefs.h"
 
 
 #define VALUE(c_,i_)  (&(c_)->priv->values[i_])

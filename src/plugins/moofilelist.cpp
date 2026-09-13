@@ -16,11 +16,9 @@
 #include "plugins/mooplugin-builtin.h"
 #include "mooedit/mooplugin-macro.h"
 #include "mooutils/mooi18n.h"
-#include "mooutils/mootype-macros.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooutils-treeview.h"
 #include "mooutils/mooutils-fs.h"
-#include "mooutils/mooatom.h"
 
 #define DEBUG_ASSERT(expr) g_assert (expr)
 

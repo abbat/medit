@@ -14,7 +14,6 @@
  */
 
 #include "mooutils/mooutils-gobject-private.h"
-#include "mooutils/mooclosure.h"
 #include "mooutils/mootype-macros.h"
 
 

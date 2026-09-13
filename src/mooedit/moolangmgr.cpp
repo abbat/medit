@@ -18,7 +18,6 @@
 #include "mooedit/mooeditprefs.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooutils-fs.h"
-#include "mooutils/mooprefs.h"
 #include "marshals.h"
 #include "mooutils/moo-mime.h"
 

@@ -16,7 +16,6 @@
 
 #include "moofileselector.h"
 #include "mooedit/mooplugin-macro.h"
-#include "mooedit/mooeditwindow.h"
 #include "mooedit/mooedittab.h"
 #include "moofileview/moobookmarkmgr.h"
 #include "moofileview/moofile.h"
@@ -24,7 +23,6 @@
 #include "plugins/mooplugin-builtin.h"
 #include "marshals.h"
 #include "mooutils/moostock.h"
-#include "mooutils/mooprefs.h"
 #include "mooutils/mooutils-fs.h"
 #include "mooutils/mooutils.h"
 #include "mooutils/mooentry.h"
@@ -35,8 +33,6 @@
 #include "mooutils/moomenu.h"
 #include "mooutils/moobuilder.h"
 #include "mooutils/moohelp.h"
-#include "mooutils/mooatom.h"
-#include "mooglib/moo-glib.h"
 #include "mooglib/moo-stat.h"
 
 #define PREFS_LAST_DIR MOO_PLUGIN_PREFS_ROOT "/" MOO_FILE_SELECTOR_PLUGIN_ID "/last_dir"

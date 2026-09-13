@@ -31,8 +31,6 @@
 
 #include "mooutils/mooaccel.h"
 #include "mooutils/moobigpaned.h"
-#include "mooutils/moofilewriter.h"
-#include "mooutils/moomarkup.h"
 #include "mooutils/mooprefs.h"
 #include "mooutils/moouixml.h"
 #include "plugins/support/moooutputfilter.h"

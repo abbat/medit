@@ -19,7 +19,6 @@
 #include "ctags-view.h"
 #include "readtags.h"
 #include "mooutils/mooutils-misc.h"
-#include "mooutils/mootype-macros.h"
 #ifdef HAVE_UNISTD_H
 #endif
 

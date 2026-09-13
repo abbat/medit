@@ -14,12 +14,9 @@
  */
 
 #include "plugins/lsp/lsp-manager.h"
-#include "plugins/lsp/lsp-config.h"
 #include "plugins/lsp/lsp-plugin.h"
 
 #include "mooedit/mooeditfiltersettings.h"
-#include "mooutils/mooutils-file.h"
-#include "mooutils/mooprefs.h"
 
 
 /*

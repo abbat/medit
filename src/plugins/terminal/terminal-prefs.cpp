@@ -19,7 +19,6 @@
 
 #include "mooutils/moobuilder.h"
 #include "mooutils/mooi18n.h"
-#include "mooutils/mooprefs.h"
 #include "mooutils/mooprefspage.h"
 #include "mooutils/moostock.h"
 

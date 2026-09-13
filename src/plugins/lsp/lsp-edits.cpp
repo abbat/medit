@@ -17,7 +17,6 @@
 #include "plugins/lsp/lsp-manager.h"
 #include "plugins/lsp/lsp-navigate.h"
 
-#include "mooedit/mooeditconfig.h"
 #include "mooedit/mooeditor.h"
 #include "mooutils/moodialogs.h"
 #include "mooutils/mooi18n.h"

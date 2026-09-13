@@ -23,14 +23,10 @@
 
 #include "mooedit/mooedit-accels.h"
 #include "mooedit/mootextview-private.h"
-#include "mooedit/mootextview.h"
-#include "mooedit/mootextbuffer.h"
 #include "mooedit/mootextfind.h"
 #include "mooedit/mootext-private.h"
 #include "mooedit/mooeditprefs.h"
 #include "mooedit/moolangmgr.h"
-#include "mooedit/mooeditwindow.h"
-#include "mooedit/mooedit.h"
 #include "marshals.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/moobuilder.h"
@@ -38,11 +34,7 @@
 #include "mooutils/mooeditops.h"
 #include "mooutils/mooentry.h"
 #include "mooutils/mooi18n.h"
-#include "mooutils/mooatom.h"
-#include "mooutils/mootype-macros.h"
 #include "mooutils/moocompat.h"
-#include "mooutils/mooutils-gobject.h"
-#include "mooglib/moo-glib.h"
 
 #define LIGHT_BLUE "#EEF6FF"
 #define BOOL_CMP(b1,b2) ((b1 && b2) || (!b1 && !b2))

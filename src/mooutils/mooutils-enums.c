@@ -128,4 +128,3 @@ moo_close_response_get_type (void)
 }
 
 /* Generated data ends here */
-

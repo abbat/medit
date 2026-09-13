@@ -18,7 +18,6 @@
 #include "marshals.h"
 #include "mooutils/mooutils-debug.h"
 #include "mooutils/mooutils-misc.h"
-#include "mooutils/mootype-macros.h"
 
 
 struct _MooOutputFilterPrivate {

@@ -17,7 +17,6 @@
 #define MOO_TEXT_VIEW_PRIVATE_H
 
 #include "mooedit/mootextview.h"
-#include "mooedit/mootextsearch.h"
 #include "mooutils/moohistorylist.h"
 
 G_BEGIN_DECLS

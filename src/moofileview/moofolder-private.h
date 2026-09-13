@@ -16,7 +16,6 @@
 #ifndef MOO_FOLDER_PRIVATE_H
 #define MOO_FOLDER_PRIVATE_H
 
-#include "moofileview/moofolder.h"
 #include "moofileview/moofile-private.h"
 #include "moofileview/moofilesystem.h"
 

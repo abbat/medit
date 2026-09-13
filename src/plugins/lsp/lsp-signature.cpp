@@ -18,7 +18,6 @@
 #include "plugins/lsp/lsp-manager.h"
 #include "plugins/lsp/lsp-plugin.h"
 
-#include "mooutils/mooprefs.h"
 
 
 /* Only one call is being typed at a time, which is why nothing here is an

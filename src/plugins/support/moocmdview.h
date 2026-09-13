@@ -16,7 +16,6 @@
 #ifndef __MOO_CMD_VIEW__
 #define __MOO_CMD_VIEW__
 
-#include "moolineview.h"
 #include "moooutputfilter.h"
 
 G_BEGIN_DECLS

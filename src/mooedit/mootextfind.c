@@ -14,14 +14,11 @@
  */
 
 #include "mooedit/mootextfind.h"
-#include "mooedit/mootextview.h"
 #include "mooedit/mooeditdialogs.h"
 #include "mooedit/mootextsearch-private.h"
 #include "mooedit/mooeditprefs.h"
-#include "mooedit/mooedit-enums.h"
 #include "mooutils/moohistorycombo.h"
 #include "mooutils/mooentry.h"
-#include "mooutils/moodialogs.h"
 #include "mooutils/mooi18n.h"
 #include "mooutils/moohelp.h"
 #include "mooutils/moocompat.h"

@@ -172,7 +172,6 @@ G_END_DECLS
 
 #ifdef __cplusplus
 
-#include "mooutils/mooutils-cpp.h"
 
 MOO_DEFINE_GOBJ_TRAITS(MooCommandContext, MOO_TYPE_COMMAND_CONTEXT)
 

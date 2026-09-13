@@ -18,7 +18,6 @@
 #include "mooedit/mooeditview-impl.h"
 #include "mooedit/mooedit-fileops.h"
 #include "mooedit/mootextview-private.h"
-#include "mooedit/mooedit-enums.h"
 #include "mooedit/mootextbuffer.h"
 #include "mooedit/moolangmgr.h"
 #include "mooutils/mooencodings.h"

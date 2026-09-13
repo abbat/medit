@@ -17,7 +17,6 @@
 #include "plugins/lsp/lsp-plugin.h"
 
 #include "mooutils/mooi18n.h"
-#include "mooutils/mooprefs.h"
 
 
 

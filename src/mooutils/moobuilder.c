@@ -17,7 +17,6 @@
 #include "mooutils/moobuilder.h"
 
 #include "mooutils/mooaccelbutton.h"
-#include "mooutils/moocombo.h"
 #include "mooutils/mooentry.h"
 #include "mooutils/moofontsel.h"
 #include "mooutils/moohistorycombo.h"

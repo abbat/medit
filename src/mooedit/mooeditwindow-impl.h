@@ -1,7 +1,6 @@
 #ifndef MOO_EDIT_WINDOW_IMPL_H
 #define MOO_EDIT_WINDOW_IMPL_H
 
-#include "mooedit/mooeditwindow.h"
 #include "mooedit/mooeditprogress.h"
 
 G_BEGIN_DECLS

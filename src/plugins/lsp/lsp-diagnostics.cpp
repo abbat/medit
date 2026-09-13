@@ -16,10 +16,8 @@
 #include "plugins/lsp/lsp-diagnostics.h"
 #include "plugins/lsp/lsp-doc.h"
 
-#include "mooedit/mooedit.h"
 #include "mooedit/mooeditview.h"
 #include "mooedit/mootextbuffer.h"
-#include "mooedit/moolinemark.h"
 #include "mooutils/mooi18n.h"
 
 

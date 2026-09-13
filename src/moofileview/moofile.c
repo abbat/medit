@@ -27,7 +27,6 @@
 #include "mooutils/mooutils-debug.h"
 #include "marshals.h"
 #include "mooutils/moo-mime.h"
-#include "mooglib/moo-glib.h"
 #include "mooglib/moo-stat.h"
 
 #ifdef HAVE_UNISTD_H

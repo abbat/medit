@@ -16,13 +16,8 @@
 #include "mooedit/mooeditfiltersettings.h"
 #include "mooedit/mooeditprefs.h"
 #include "mooedit/mooeditaction.h"
-#include "mooedit/moolang.h"
-#include "mooedit/mooeditconfig.h"
-#include "mooedit/mooedit.h"
-#include "mooutils/mooprefs.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooutils-debug.h"
-#include "mooglib/moo-glib.h"
 
 MOO_DEBUG_INIT(filters, FALSE)
 

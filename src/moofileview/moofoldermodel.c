@@ -14,7 +14,6 @@
  */
 
 #include "moofoldermodel.h"
-#include "moofile-private.h"
 #include "moofolder-private.h"
 #include "moofoldermodel-private.h"
 

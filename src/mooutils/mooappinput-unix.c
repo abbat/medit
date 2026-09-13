@@ -15,7 +15,6 @@
 
 
 #define MOO_DO_NOT_MANGLE_GLIB_FUNCTIONS
-#include "mooglib/moo-glib.h"
 
 #include "mooutils/mooappinput-priv.h"
 

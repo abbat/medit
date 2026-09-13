@@ -18,7 +18,6 @@
 #include "mooutils/mooutils-gobject.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mootype-macros.h"
-#include "mooglib/moo-glib.h"
 
 
 typedef struct {

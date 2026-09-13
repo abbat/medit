@@ -40,18 +40,13 @@
 #ifdef MOO_ENABLE_UNIT_TESTS
 
 #include "plugins/lsp/lsp-completion.h"
-#include "plugins/lsp/lsp-config.h"
-#include "plugins/lsp/lsp-client.h"
 #include "plugins/lsp/lsp-diagnostics.h"
-#include "plugins/lsp/lsp-doc.h"
 #include "plugins/lsp/lsp-highlight.h"
-#include "plugins/lsp/lsp-json.h"
 #include "plugins/lsp/lsp-navigate.h"
 #include "plugins/lsp/lsp-references.h"
 #include "plugins/lsp/lsp-edits.h"
 #include "plugins/lsp/lsp-signature.h"
 #include "plugins/lsp/lsp-symbols.h"
-#include "mooutils/moomarkup.h"
 #include "mooutils/mooi18n.h"
 
 

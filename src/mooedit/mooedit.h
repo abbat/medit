@@ -16,8 +16,6 @@
 #pragma once
 
 #include "mooedit/mooeditconfig.h"
-#include "mooedit/mooedit-enums.h"
-#include "mooedit/mooedittypes.h"
 #include "mooedit/mooeditfileinfo.h"
 #include "mooutils/mooprefs.h"
 

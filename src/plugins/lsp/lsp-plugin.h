@@ -17,7 +17,6 @@
 #define MOO_LSP_PLUGIN_H
 
 #include "mooedit/mooplugin.h"
-#include "mooedit/mooeditwindow.h"
 
 G_BEGIN_DECLS
 

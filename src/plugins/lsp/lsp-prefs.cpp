@@ -15,13 +15,10 @@
 
 
 #include "plugins/lsp/lsp-plugin.h"
-#include "plugins/lsp/lsp-config.h"
 #include "plugins/lsp/lsp-manager.h"
 
-#include "mooedit/mooeditor.h"
 #include "mooutils/moobuilder.h"
 #include "mooutils/mooi18n.h"
-#include "mooutils/mooprefs.h"
 #include "mooutils/mooprefspage.h"
 #include "mooutils/moodialogs.h"
 

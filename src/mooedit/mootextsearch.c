@@ -16,7 +16,6 @@
 #include "mooedit/mootextsearch-private.h"
 #include "gtksourceview/gtksourceview-api.h"
 #include "mooutils/mooutils-misc.h"
-#include "mooglib/moo-glib.h"
 
 
 /* XXX lame */

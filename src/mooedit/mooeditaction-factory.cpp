@@ -16,12 +16,10 @@
 #include "mooedit/mooeditaction-factory.h"
 #include "mooedit/mooeditaction.h"
 #include "mooedit/mooedit-private.h"
-#include "mooutils/mooutils-gobject.h"
 #include "mooutils/mooactionfactory.h"
 #include "mooutils/mooactionbase.h"
 #include "mooutils/moomenuaction.h"
 #include "mooutils/mooi18n.h"
-#include "mooutils/mootype-macros.h"
 
 
 typedef GtkAction *(*MooEditActionFunc)     (MooEdit            *edit,

@@ -22,7 +22,6 @@
 #include "mooutils/mooutils-fs.h"
 #include "mooutils/mooutils.h"
 #include "mooutils/moospawn.h"
-#include "mooutils/mootype-macros.h"
 #include "mooutils/mooi18n.h"
 #include "mooutils/moo-mime.h"
 #include "mooutils/mooutils-gobject.h"

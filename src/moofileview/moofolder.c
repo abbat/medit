@@ -14,13 +14,11 @@
  */
 
 
-#include "moofileview/moofilesystem.h"
 #include "moofileview/moofolder-private.h"
 #include "mooutils/mooutils-fs.h"
 #include "mooutils/mooutils-mem.h"
 #include "mooutils/mooutils-misc.h"
 #include "marshals.h"
-#include "mooglib/moo-glib.h"
 #include "mooglib/moo-stat.h"
 #ifdef HAVE_UNISTD_H
 #endif

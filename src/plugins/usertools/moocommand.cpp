@@ -17,14 +17,9 @@
 #include "moocommand-private.h"
 #include "moocommand-exe.h"
 #include "moooutputfilterregex.h"
-#include "mooedit/mooeditwindow.h"
 #include "mooedit/mooeditor.h"
-#include "mooedit/mooedit-enums.h"
 #include "mooutils/mooutils-debug.h"
 #include "mooutils/mooutils-misc.h"
-#include "mooutils/mootype-macros.h"
-#include "mooutils/mooutils-cpp.h"
-#include "mooglib/moo-glib.h"
 
 enum {
     CTX_PROP_0,

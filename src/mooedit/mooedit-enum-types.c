@@ -1,7 +1,6 @@
 
 /* Generated data (by glib-mkenums) */
 
-#include "mooedit/mooedit-enum-types.h"
 #include "mooedit/mooedit-enums.h"
 /* enum MooEditConfigSource */
 GType
@@ -263,4 +262,3 @@ moo_text_cursor_get_type (void)
 }
 
 /* Generated data ends here */
-

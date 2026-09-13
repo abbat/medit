@@ -19,8 +19,6 @@
 #include "plugins/lsp/lsp-signature.h"
 #include "plugins/lsp/lsp-symbols.h"
 
-#include "mooedit/mootextview.h"
-#include "mooutils/mooprefs.h"
 
 
 #define LSP_COMPLETION_MAX_ITEMS 200

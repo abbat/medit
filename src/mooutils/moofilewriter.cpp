@@ -19,7 +19,6 @@
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooi18n.h"
 #include "mooutils/moocompat.h"
-#include "mooglib/moo-glib.h"
 #ifdef HAVE_UNISTD_H
 #endif
 

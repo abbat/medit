@@ -43,13 +43,9 @@
 
 #include "mooedit/moolang-private.h"
 #include "mooedit/mooeditaction.h"
-#include "mooedit/mooindenter.h"
 #include "mooedit/mootext-private.h"
-#include "mooedit/mootextbuffer.h"
-#include "mooedit/mootextsearch.h"
 #include "mooedit/mootextview-private.h"
 #include "mooedit/mooeditfiltersettings.h"
-#include "mooedit/mootextbtree.h"
 #include "gtksourceview/gtksourcecontextengine.h"
 #include "gtksourceview/gtksourceengine.h"
 #include "mooutils/mooundo.h"

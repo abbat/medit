@@ -14,7 +14,6 @@
  */
 
 #include "mooedit/mootextprint-private.h"
-#include "mooedit/mooedit.h"
 #include "mooedit/mooedit-impl.h"
 #include "mooedit/mooeditview-impl.h"
 #include "mooedit/mooeditprefs.h"
@@ -24,7 +23,6 @@
 #include "mooutils/mooi18n.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooutils-debug.h"
-#include "mooutils/mootype-macros.h"
 #include "mooglib/moo-time.h"
 
 MOO_DEBUG_INIT (printing, FALSE)

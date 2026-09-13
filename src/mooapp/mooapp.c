@@ -14,7 +14,6 @@
  *   License along with medit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "mooapp.h"
 
 #include "about.h"
 #include "eggsmclient/eggsmclient.h"

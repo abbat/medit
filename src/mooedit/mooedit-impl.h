@@ -18,7 +18,6 @@
 
 #include "mooedit/moolinemark.h"
 #include "mooedit/mooeditor.h"
-#include "mooedit/mootextview.h"
 #include "mooutils/moohistorymgr.h"
 
 G_BEGIN_DECLS

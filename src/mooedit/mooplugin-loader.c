@@ -14,7 +14,6 @@
  */
 
 #include "mooedit/mooplugin-loader.h"
-#include "mooedit/mooplugin.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooutils-debug.h"
 #include "mooutils/mooi18n.h"

@@ -22,7 +22,6 @@
 #include "mooedit/mooeditfiltersettings.h"
 #include "mooedit/mooedit-impl.h"
 #include "mooutils/mooutils.h"
-#include "mooglib/moo-glib.h"
 
 
 typedef enum {

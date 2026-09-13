@@ -24,7 +24,6 @@
 #include "mooutils/mooutils-script.h"
 #include "mooutils/mooutils-debug.h"
 #include "mooutils/moospawn.h"
-#include "mooutils/mootype-macros.h"
 #include "mooutils/moobuilder.h"
 
 #ifdef HAVE_UNISTD_H

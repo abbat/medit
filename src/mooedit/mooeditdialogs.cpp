@@ -16,14 +16,11 @@
 #include "mooedit/mooeditdialogs.h"
 #include "mooedit/mooeditprefs.h"
 #include "mooedit/mooedit-fileops.h"
-#include "mooedit/mooeditfileinfo.h"
-#include "mooutils/moodialogs.h"
 #include "mooutils/moostock.h"
 #include "mooutils/mooi18n.h"
 #include "mooutils/moobuilder.h"
 #include "mooutils/mooencodings.h"
 #include "mooutils/mooutils.h"
-#include "mooglib/moo-glib.h"
 
 MooOpenInfoArray *
 _moo_edit_open_dialog (GtkWidget *widget,

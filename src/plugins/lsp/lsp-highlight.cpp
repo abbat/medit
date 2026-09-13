@@ -17,7 +17,6 @@
 #include "plugins/lsp/lsp-manager.h"
 #include "plugins/lsp/lsp-plugin.h"
 
-#include "mooutils/mooprefs.h"
 
 
 /* Long enough that walking through a file with the arrow keys is one request

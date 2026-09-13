@@ -15,11 +15,9 @@
 
 #include "moousertools-prefs.h"
 #include "moousertools.h"
-#include "moocommand.h"
 #include "moocommanddisplay.h"
 #include "mooutils/mooprefspage.h"
 #include "mooutils/mooi18n.h"
-#include "mooutils/mooutils-treeview.h"
 #include "mooutils/mooutils.h"
 #include "mooutils/moohelp.h"
 #include "mooutils/moobuilder.h"

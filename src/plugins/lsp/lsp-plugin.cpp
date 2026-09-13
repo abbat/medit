@@ -35,18 +35,11 @@
 #include "plugins/lsp/lsp-signature.h"
 
 #include "mooedit/mooplugin-macro.h"
-#include "mooedit/mooeditor.h"
-#include "mooedit/mooeditwindow.h"
-#include "mooedit/mooeditview.h"
 #include "mooedit/mooedit-accels.h"
 #include "mooedit/mooeditaction-factory.h"
-#include "mooedit/mootextview.h"
 #include "plugins/support/moolineview.h"
 #include "mooutils/mooi18n.h"
-#include "mooutils/moopane.h"
 #include "mooutils/moostock.h"
-#include "mooutils/mooaccel.h"
-#include "mooutils/mooprefs.h"
 #include "mooutils/mooutils-misc.h"
 
 typedef struct {

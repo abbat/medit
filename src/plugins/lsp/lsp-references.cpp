@@ -18,9 +18,7 @@
 #include "plugins/lsp/lsp-navigate.h"
 #include "plugins/lsp/lsp-plugin.h"
 
-#include "mooedit/mooeditor.h"
 #include "mooutils/mooi18n.h"
-#include "mooutils/mooutils-file.h"
 
 
 

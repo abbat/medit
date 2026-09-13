@@ -34,7 +34,6 @@
  **/
 
 
-#include "mooedit/mooplugin.h"
 #include "mooedit/mooplugin-loader.h"
 #include "mooutils/mooprefsdialog.h"
 #include "mooutils/moobuilder.h"
@@ -43,7 +42,6 @@
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooutils-debug.h"
 #include "mooutils/moohelp.h"
-#include "mooutils/mootype-macros.h"
 
 
 #define PLUGIN_PREFS_ENABLED "enabled"

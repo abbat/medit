@@ -22,17 +22,14 @@
 #include "mooedit/mootextbuffer.h"
 #include "mooedit/mooeditprefs.h"
 #include "mooutils/moofileicon.h"
-#include "mooutils/moofilewatch.h"
 #include "mooutils/mooencodings.h"
 #include "mooutils/mooi18n.h"
-#include "mooutils/mootype-macros.h"
 #include "mooutils/mooutils.h"
 #include "mooutils/mooutils-fs.h"
 #include "mooutils/moocompat.h"
 #ifdef HAVE_UNISTD_H
 #endif
 
-#include "mooglib/moo-glib.h"
 
 #define ENCODING_LOCALE "LOCALE"
 

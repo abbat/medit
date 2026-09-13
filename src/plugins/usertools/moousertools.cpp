@@ -17,7 +17,6 @@
 #include "moousertools-prefs.h"
 #include "moocommand-private.h"
 #include "plugins/mooplugin-builtin.h"
-#include "mooedit/mooeditor.h"
 #include "mooedit/mooeditaction.h"
 #include "mooedit/mooeditaction-factory.h"
 #include "mooedit/mooplugin-macro.h"
@@ -26,7 +25,6 @@
 #include "mooutils/mooaccel.h"
 #include "mooutils/mooi18n.h"
 #include "mooutils/mooaction-private.h"
-#include "mooutils/mootype-macros.h"
 
 
 #define N_TOOLS 2

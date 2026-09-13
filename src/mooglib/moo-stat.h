@@ -1,6 +1,5 @@
 #pragma once
 
-#include "mooglib/moo-glib.h"
 #include "mooglib/moo-time.h"
 
 G_BEGIN_DECLS

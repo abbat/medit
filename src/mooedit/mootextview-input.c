@@ -15,7 +15,6 @@
 
 #include "mooedit/mootextview-private.h"
 #include "mooedit/mooeditview-impl.h"
-#include "mooedit/mootextiter.h"
 #include "mooedit/mootextbuffer.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooaccel.h"

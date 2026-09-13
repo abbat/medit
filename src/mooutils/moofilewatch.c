@@ -16,7 +16,6 @@
 
 #define WANT_STAT_MONITOR
 
-#include "mooglib/moo-glib.h"
 #include "mooglib/moo-stat.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooutils-mem.h"

@@ -20,7 +20,6 @@
 #include "mooedit/mootextiter.h"
 #include "mooedit/mootext-private.h"
 #include "mooedit/moolang-private.h"
-#include "mooedit/mootextstylescheme.h"
 #include "marshals.h"
 #include "mooutils/mooundo.h"
 #include "mooutils/mooutils-gobject.h"

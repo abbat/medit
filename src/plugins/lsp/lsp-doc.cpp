@@ -17,9 +17,6 @@
 #include "plugins/lsp/lsp-diagnostics.h"
 #include "plugins/lsp/lsp-plugin.h"
 
-#include "mooedit/moolang.h"
-#include "mooutils/mooutils-file.h"
-#include "mooutils/mooprefs.h"
 
 
 struct LspDoc {

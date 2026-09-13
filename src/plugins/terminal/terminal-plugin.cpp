@@ -26,15 +26,8 @@
 #include "plugins/terminal/terminal-colors.h"
 
 #include "mooedit/mooplugin-macro.h"
-#include "mooedit/mooeditor.h"
-#include "mooedit/mooeditwindow.h"
-#include "mooedit/mooedit.h"
 #include "mooedit/mooedit-accels.h"
-#include "mooedit/mooeditview.h"
-#include "mooutils/mooaccel.h"
 #include "mooutils/mooi18n.h"
-#include "mooutils/moopane.h"
-#include "mooutils/mooprefs.h"
 #include "mooutils/moostock.h"
 #include "mooutils/mooutils-misc.h"
 

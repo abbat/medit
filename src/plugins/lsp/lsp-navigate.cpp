@@ -18,10 +18,6 @@
 #include "plugins/lsp/lsp-references.h"
 #include "plugins/lsp/lsp-plugin.h"
 
-#include "mooedit/mooeditor.h"
-#include "mooedit/mootextview.h"
-#include "mooutils/mooprefs.h"
-#include "mooutils/mooutils-file.h"
 
 
 /*

@@ -15,7 +15,6 @@
 
 #include "mooplugin-builtin.h"
 
-#include "mooedit/mooplugin.h"
 #include "plugins/mooplugin-builtin.h"
 #include "mooutils/mooutils-misc.h"
 #include "plugins/ctags/ctags-plugin.h"
