@@ -141,12 +141,15 @@ moo_entry_class_init (MooEntryClass *klass)
 
     init_undo_actions ();
 
+    /* GObject vfuncs */
     gobject_class->finalize = moo_entry_finalize;
     gobject_class->set_property = moo_entry_set_property;
     gobject_class->get_property = moo_entry_get_property;
 
+    /* GtkWidget vfunc */
     widget_class->button_release_event = moo_entry_button_release;
 
+    /* GtkEntry vfuncs for text editing and UI customization */
     entry_class->populate_popup = moo_entry_populate_popup;
     entry_class->delete_from_cursor = moo_entry_delete_from_cursor;
     entry_class->cut_clipboard = moo_entry_cut_clipboard;
@@ -163,6 +166,7 @@ moo_entry_class_init (MooEntryClass *klass)
     parent_editable_iface = reinterpret_cast<GtkEditableClass*> (g_type_interface_peek(moo_entry_parent_class, GTK_TYPE_EDITABLE));
 #endif
 
+    /* Properties: undo/redo configuration */
     g_object_class_install_property (gobject_class,
                                      PROP_ENABLE_UNDO,
                                      g_param_spec_boolean ("enable-undo",
@@ -203,6 +207,7 @@ moo_entry_class_init (MooEntryClass *klass)
                                              FALSE,
                                              (GParamFlags) G_PARAM_READWRITE));
 
+    /* Signals: ACTION signals with keyboard bindings */
     signals[UNDO] = g_signal_lookup ("undo", GTK_TYPE_ENTRY);
 
     if (!signals[UNDO])
@@ -227,6 +232,9 @@ moo_entry_class_init (MooEntryClass *klass)
                               _moo_marshal_VOID__VOID,
                               G_TYPE_NONE, 0);
 
+    /* The "delete-to-start" signal is defined with _moo_signal_new_cb, which
+       installs moo_entry_delete_to_start as the default handler (runs on every
+       emission), and is also an ACTION signal for keyboard binding */
     signals[DELETE_TO_START] =
             _moo_signal_new_cb ("delete-to-start",
                                 G_OBJECT_CLASS_TYPE (klass),
@@ -236,6 +244,7 @@ moo_entry_class_init (MooEntryClass *klass)
                                 _moo_marshal_VOID__VOID,
                                 G_TYPE_NONE, 0);
 
+    /* Keyboard bindings for undo/redo signals */
     binding_set = gtk_binding_set_by_class (klass);
     gtk_binding_entry_add_signal (binding_set, GDK_KEY_z,
                                   MOO_ACCEL_CTRL_MASK,

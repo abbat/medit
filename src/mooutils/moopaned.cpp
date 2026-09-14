@@ -399,6 +399,7 @@ moo_paned_class_init (MooPanedClass *klass)
     GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
     GtkContainerClass *container_class = GTK_CONTAINER_CLASS (klass);
 
+    /* GObject vfuncs */
     gobject_class->set_property = moo_paned_set_property;
     gobject_class->get_property = moo_paned_get_property;
     gobject_class->constructor = moo_paned_constructor;
@@ -410,6 +411,7 @@ moo_paned_class_init (MooPanedClass *klass)
     gtk_widget_class_set_accessible_type (widget_class, moo_paned_accessible_get_type ());
 #endif
 
+    /* GtkWidget vfuncs: realization and sizing */
     widget_class->realize = moo_paned_realize;
     widget_class->unrealize = moo_paned_unrealize;
     widget_class->style_set = moo_paned_style_set;
@@ -426,6 +428,8 @@ moo_paned_class_init (MooPanedClass *klass)
 #endif
 
     widget_class->size_allocate = moo_paned_size_allocate;
+
+    /* Mouse and keyboard event handling */
     widget_class->motion_notify_event = moo_paned_motion;
     widget_class->enter_notify_event = moo_paned_enter;
     widget_class->leave_notify_event = moo_paned_leave;
@@ -434,6 +438,7 @@ moo_paned_class_init (MooPanedClass *klass)
     widget_class->focus = moo_paned_focus;
     widget_class->key_press_event = moo_paned_key_press;
 
+    /* GtkContainer vfuncs */
     container_class->forall = moo_paned_forall;
     container_class->set_focus_child = moo_paned_set_focus_child;
     container_class->remove = moo_paned_remove;
@@ -441,10 +446,13 @@ moo_paned_class_init (MooPanedClass *klass)
 
     klass->set_pane_size = moo_paned_set_pane_size_real;
 
+    /* Properties */
     g_object_class_install_property (gobject_class, PANED_PROP_ACTIVE_PANE,
         g_param_spec_object ("active-pane", "active-pane", "active-pane",
                              MOO_TYPE_PANE, (GParamFlags) G_PARAM_READWRITE));
 
+    /* pane-position is CONSTRUCT_ONLY: determines which pane goes on which
+       side (left/right/top/bottom) and cannot be changed after object creation */
     g_object_class_install_property (gobject_class, PANED_PROP_PANE_POSITION,
         g_param_spec_enum ("pane-position", "pane-position", "pane-position",
                            MOO_TYPE_PANE_POSITION, MOO_PANE_POS_LEFT,
@@ -475,6 +483,7 @@ moo_paned_class_init (MooPanedClass *klass)
         g_param_spec_boolean ("enable-border", "enable-border", "enable-border",
                               TRUE, (GParamFlags) (G_PARAM_CONSTRUCT | G_PARAM_READWRITE)));
 
+    /* Style properties: rendering configuration for handle size and button spacing */
     gtk_widget_class_install_style_property (widget_class,
         g_param_spec_int ("handle-size", "handle-size", "handle-size",
                           0, G_MAXINT, 5, G_PARAM_READABLE));
@@ -483,6 +492,9 @@ moo_paned_class_init (MooPanedClass *klass)
         g_param_spec_int ("button-spacing", "button-spacing", "button-spacing",
                           0, G_MAXINT, 0, G_PARAM_READABLE));
 
+    /* Signals */
+    /* The "set-pane-size" signal is G_SIGNAL_ACTION: it can be triggered by
+       keyboard binding to resize the panes */
     paned_signals[PANED_SET_PANE_SIZE] =
             g_signal_new ("set-pane-size",
                           G_OBJECT_CLASS_TYPE (klass),

@@ -161,6 +161,7 @@ moo_text_buffer_class_init (MooTextBufferClass *klass)
 
     init_undo_actions ();
 
+    /* GObject and GtkTextBuffer vfuncs */
     gobject_class->set_property = moo_text_buffer_set_property;
     gobject_class->get_property = moo_text_buffer_get_property;
     gobject_class->dispose = moo_text_buffer_dispose;
@@ -174,6 +175,7 @@ moo_text_buffer_class_init (MooTextBufferClass *klass)
 
     klass->cursor_moved = moo_text_buffer_cursor_moved;
 
+    /* Properties */
     g_object_class_install_property (gobject_class,
                                      PROP_HIGHLIGHT_SYNTAX,
                                      g_param_spec_boolean ("highlight-syntax",
@@ -254,6 +256,7 @@ moo_text_buffer_class_init (MooTextBufferClass *klass)
                                              FALSE,
                                              G_PARAM_READABLE));
 
+    /* Signals */
     signals[HIGHLIGHT_UPDATED] =
             g_signal_new ("highlight_updated",
                           G_OBJECT_CLASS_TYPE (klass),

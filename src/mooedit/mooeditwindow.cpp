@@ -352,6 +352,7 @@ moo_edit_window_class_init (MooEditWindowClass *klass)
 
     action_checks_init ();
 
+    /* GObject, GtkWidget, and MooWindow vfuncs */
     gobject_class->constructor = moo_edit_window_constructor;
     gobject_class->finalize = moo_edit_window_finalize;
     gobject_class->set_property = moo_edit_window_set_property;
@@ -361,6 +362,7 @@ moo_edit_window_class_init (MooEditWindowClass *klass)
 
     klass->before_close = moo_edit_window_before_close;
 
+    /* Properties */
     g_object_class_install_property (gobject_class, PROP_EDITOR,
         g_param_spec_object ("editor", "editor", "editor",
                              MOO_TYPE_EDITOR, (GParamFlags) (G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY)));
@@ -369,6 +371,7 @@ moo_edit_window_class_init (MooEditWindowClass *klass)
         g_param_spec_object ("active-doc", "active-doc", "active-doc",
                              MOO_TYPE_EDIT, (GParamFlags) G_PARAM_READWRITE));
 
+    /* Signals: before-close uses a custom accumulator to handle close responses from handlers. */
     signals[BEFORE_CLOSE] =
             g_signal_new ("before-close",
                           G_OBJECT_CLASS_TYPE (klass),
@@ -424,6 +427,7 @@ moo_edit_window_class_init (MooEditWindowClass *klass)
     INSTALL_PROP (PROP_HAS_STOP_CLIENTS, "has-stop-clients");
     INSTALL_PROP (PROP_CAN_MOVE_TO_SPLIT_NOTEBOOK, "can-move-to-split-notebook");
 
+    /* Actions */
     /* Translators: the heading this window's commands are listed under in
        Configure Shortcuts, beside one per plugin. The id beside it is not
        translated: it is what the accelerator paths and the preference keys
