@@ -50,6 +50,9 @@ void        lsp_doc_set_diagnostics (LspDoc     *ldoc,
                                      JsonArray  *array);
 GSList     *lsp_doc_get_diagnostics (LspDoc     *ldoc);
 
+/* The same ones as the server wrote them, for a request that hands them back. */
+JsonArray  *lsp_doc_get_raw_diagnostics (LspDoc *ldoc);
+
 /* Shows the diagnostics already stored again, after a preference changed. */
 void        lsp_doc_refresh_diagnostics (LspDoc *ldoc);
 

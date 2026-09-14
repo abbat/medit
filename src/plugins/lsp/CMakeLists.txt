@@ -1,4 +1,6 @@
 target_sources(medit PRIVATE
+    lsp-actions.cpp
+    lsp-actions.h
     lsp-client.cpp
     lsp-client.h
     lsp-completion.cpp

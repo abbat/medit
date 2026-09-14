@@ -14,6 +14,7 @@
  */
 
 #include "plugins/lsp/lsp-manager.h"
+#include "plugins/lsp/lsp-edits.h"
 #include "plugins/lsp/lsp-plugin.h"
 
 #include "mooedit/mooeditfiltersettings.h"
@@ -62,7 +63,7 @@ server_entry_free (gpointer data)
     if (entry->idle_timeout)
         g_source_remove (entry->idle_timeout);
 
-    lsp_server_set_callbacks (entry->server, NULL, NULL, NULL);
+    lsp_server_set_callbacks (entry->server, NULL, NULL, NULL, NULL);
     lsp_server_shutdown (entry->server);
     lsp_server_unref (entry->server);
 
@@ -165,6 +166,20 @@ server_state_changed (LspServer *server,
         if (lsp_doc_get_server (ldoc) == server)
             lsp_doc_open (ldoc);
     }
+}
+
+
+/*
+ * The server asking for an edit of its own, which is how a command run by a
+ * code action says what it changed. It is answered wherever it comes from:
+ * unlike a request medit made, there is no window waiting for it.
+ */
+static gboolean
+server_apply_edit (LspServer              *server,
+                   JsonNode               *edit,
+                   G_GNUC_UNUSED gpointer  data)
+{
+    return lsp_workspace_edit_apply (edit, lsp_server_get_position_encoding (server));
 }
 
 
@@ -288,7 +303,7 @@ get_server (LspServerConfig *config,
     }
 
     lsp_server_set_callbacks (entry->server, server_diagnostics,
-                              server_state_changed, NULL);
+                              server_state_changed, server_apply_edit, NULL);
 
     g_hash_table_insert (manager.servers, key, entry);
 

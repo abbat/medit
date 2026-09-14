@@ -44,6 +44,7 @@
 #include "plugins/lsp/lsp-highlight.h"
 #include "plugins/lsp/lsp-navigate.h"
 #include "plugins/lsp/lsp-references.h"
+#include "plugins/lsp/lsp-actions.h"
 #include "plugins/lsp/lsp-edits.h"
 #include "plugins/lsp/lsp-signature.h"
 #include "plugins/lsp/lsp-symbols.h"
@@ -2044,6 +2045,409 @@ test_language_and_uri_helpers (void)
 }
 
 
+/* -------------------------------------------------------------------------
+ * The code actions a server offers
+ */
+
+static GSList *
+actions_of (const char *json)
+{
+    GError *error = NULL;
+    JsonNode *node = lsp_json_parse (json, -1, &error);
+    GSList *actions;
+
+    g_assert_no_error (error);
+    g_assert_nonnull (node);
+
+    actions = lsp_code_actions_parse (node);
+
+    json_node_unref (node);
+
+    return actions;
+}
+
+
+static LspCodeAction *
+action_at (GSList     *actions,
+           guint       index,
+           const char *title)
+{
+    LspCodeAction *action = (LspCodeAction*) g_slist_nth_data (actions, index);
+
+    g_assert_nonnull (action);
+    g_assert_cmpstr (action->title, ==, title);
+
+    return action;
+}
+
+
+static void
+test_code_action_literal (void)
+{
+    /*
+     * The shape servers answer with today: a title, a kind, and the edit that
+     * makes the change, with no command anywhere in it.
+     */
+    GSList *actions = actions_of (
+        "[{\"title\": \"Add a semicolon\","
+        "  \"kind\": \"quickfix\","
+        "  \"isPreferred\": true,"
+        "  \"edit\": {\"changes\": {\"file:///tmp/a.c\": ["
+        "     {\"range\": {\"start\": {\"line\": 3, \"character\": 9},"
+        "                  \"end\": {\"line\": 3, \"character\": 9}},"
+        "      \"newText\": \";\"}]}}}]");
+    LspCodeAction *action = action_at (actions, 0, "Add a semicolon");
+    GSList *edits;
+
+    g_assert_cmpuint (g_slist_length (actions), ==, 1);
+    g_assert_cmpstr (action->kind, ==, "quickfix");
+    g_assert_true (action->preferred);
+    g_assert_null (action->disabled);
+    g_assert_null (action->command);
+    g_assert_nonnull (action->edit);
+
+    /* The edit is kept as it arrived, so that applying it is the same job. */
+    edits = lsp_workspace_edit_parse (action->edit);
+    g_assert_cmpuint (g_slist_length (edits), ==, 1);
+    check_edit (edits, 0, "/tmp/a.c", 3, 9, ";");
+    lsp_text_edits_free (edits);
+
+    lsp_code_actions_free (actions);
+}
+
+
+static void
+test_code_action_command (void)
+{
+    /*
+     * The older shape, a bare Command, which a server may still answer with
+     * and which is told from a CodeAction by "command" being a string rather
+     * than an object. Its arguments sit beside it.
+     */
+    GSList *actions = actions_of (
+        "[{\"title\": \"Organize imports\","
+        "  \"command\": \"gopls.organize\","
+        "  \"arguments\": [\"file:///tmp/a.go\", 7]}]");
+    LspCodeAction *action = action_at (actions, 0, "Organize imports");
+
+    g_assert_cmpuint (g_slist_length (actions), ==, 1);
+    g_assert_cmpstr (action->command, ==, "gopls.organize");
+    g_assert_null (action->kind);
+    g_assert_null (action->edit);
+    g_assert_nonnull (action->arguments);
+    g_assert_cmpuint (json_array_get_length (json_node_get_array (action->arguments)),
+                      ==, 2);
+
+    lsp_code_actions_free (actions);
+}
+
+
+static void
+test_code_action_nested_command (void)
+{
+    /*
+     * A CodeAction whose command is an object, which is where the arguments
+     * live in that shape -- an "arguments" beside it, as the bare Command has,
+     * is not part of a CodeAction and is not what has to be sent.
+     */
+    GSList *actions = actions_of (
+        "[{\"title\": \"Run the fixer\","
+        "  \"kind\": \"source.fixAll\","
+        "  \"command\": {\"title\": \"Run the fixer\","
+        "                \"command\": \"rust-analyzer.fix\","
+        "                \"arguments\": [{\"uri\": \"file:///tmp/a.rs\"}]}}]");
+    LspCodeAction *action = action_at (actions, 0, "Run the fixer");
+
+    g_assert_cmpstr (action->command, ==, "rust-analyzer.fix");
+    g_assert_cmpstr (action->kind, ==, "source.fixAll");
+    g_assert_nonnull (action->arguments);
+    g_assert_cmpuint (json_array_get_length (json_node_get_array (action->arguments)),
+                      ==, 1);
+    g_assert_null (action->edit);
+
+    lsp_code_actions_free (actions);
+}
+
+
+static void
+test_code_action_both (void)
+{
+    /* An action may carry both, and then both have to happen. */
+    GSList *actions = actions_of (
+        "[{\"title\": \"Extract and register\","
+        "  \"edit\": {\"changes\": {\"file:///tmp/a.c\": ["
+        "     {\"range\": {\"start\": {\"line\": 0, \"character\": 0},"
+        "                  \"end\": {\"line\": 0, \"character\": 0}},"
+        "      \"newText\": \"x\"}]}},"
+        "  \"command\": {\"command\": \"clangd.register\"}}]");
+    LspCodeAction *action = action_at (actions, 0, "Extract and register");
+
+    g_assert_nonnull (action->edit);
+    g_assert_cmpstr (action->command, ==, "clangd.register");
+
+    lsp_code_actions_free (actions);
+}
+
+
+static void
+test_code_action_disabled (void)
+{
+    /*
+     * A disabled action is still shown -- saying why a fix does not apply is
+     * the point of the member -- and an empty reason is not the same as none.
+     */
+    GSList *actions = actions_of (
+        "[{\"title\": \"Extract method\","
+        "  \"disabled\": {\"reason\": \"Select a statement first\"}},"
+        " {\"title\": \"Extract variable\","
+        "  \"disabled\": {}},"
+        " {\"title\": \"Inline\", \"command\": \"x.inline\"}]");
+    LspCodeAction *action;
+
+    g_assert_cmpuint (g_slist_length (actions), ==, 3);
+
+    action = action_at (actions, 0, "Extract method");
+    g_assert_cmpstr (action->disabled, ==, "Select a statement first");
+
+    action = action_at (actions, 1, "Extract variable");
+    g_assert_cmpstr (action->disabled, ==, "");
+
+    action = action_at (actions, 2, "Inline");
+    g_assert_null (action->disabled);
+
+    lsp_code_actions_free (actions);
+}
+
+
+static void
+test_code_action_order (void)
+{
+    /*
+     * Servers put what they think is most useful first, and nothing here
+     * knows better, so the order they sent has to survive the parse.
+     */
+    GSList *actions = actions_of (
+        "[{\"title\": \"first\", \"command\": \"a\"},"
+        " {\"title\": \"second\", \"command\": \"b\"},"
+        " {\"title\": \"third\", \"command\": \"c\"}]");
+
+    g_assert_cmpuint (g_slist_length (actions), ==, 3);
+    action_at (actions, 0, "first");
+    action_at (actions, 1, "second");
+    action_at (actions, 2, "third");
+
+    lsp_code_actions_free (actions);
+}
+
+
+static void
+test_code_action_nothing (void)
+{
+    /* Having nothing to offer is an ordinary answer, and null is one too. */
+    g_assert_null (actions_of ("[]"));
+    g_assert_null (actions_of ("null"));
+    g_assert_null (actions_of ("{}"));
+    g_assert_null (lsp_code_actions_parse (NULL));
+}
+
+
+static void
+test_code_action_malformed (void)
+{
+    /*
+     * Everything that cannot be shown or used is dropped, and what can is
+     * kept: an entry with no title has nothing to put in a menu, and one with
+     * neither an edit nor a command would need codeAction/resolve, which medit
+     * does not ask for and so will never be sent one for.
+     */
+    GSList *actions = actions_of (
+        "[7, null, \"text\","
+        " {\"title\": \"\", \"command\": \"a\"},"
+        " {\"command\": \"b\"},"
+        " {\"title\": \"needs resolving\"},"
+        " {\"title\": \"odd members\","
+        "  \"kind\": 12, \"edit\": \"not an object\","
+        "  \"command\": \"c\", \"arguments\": \"not an array\","
+        "  \"isPreferred\": \"yes\"}]");
+    LspCodeAction *action;
+
+    g_assert_cmpuint (g_slist_length (actions), ==, 1);
+
+    action = action_at (actions, 0, "odd members");
+    g_assert_cmpstr (action->command, ==, "c");
+    g_assert_null (action->kind);
+    g_assert_null (action->edit);
+    g_assert_null (action->arguments);
+    g_assert_false (action->preferred);
+
+    lsp_code_actions_free (actions);
+}
+
+
+static JsonArray *
+diagnostics_of (const char *json)
+{
+    GError *error = NULL;
+    JsonNode *node = lsp_json_parse (json, -1, &error);
+    JsonArray *array;
+
+    g_assert_no_error (error);
+    g_assert_nonnull (node);
+    g_assert_true (JSON_NODE_HOLDS_ARRAY (node));
+
+    array = json_array_ref (json_node_get_array (node));
+
+    json_node_unref (node);
+
+    return array;
+}
+
+
+/* One diagnostic on one line, from start_character to end_character. */
+#define DIAGNOSTIC(line, start, end, message) \
+    "{\"range\": {\"start\": {\"line\": " #line ", \"character\": " #start "},"  \
+    "            \"end\": {\"line\": " #line ", \"character\": " #end "}},"      \
+    " \"message\": \"" message "\"}"
+
+
+static const char *
+message_at (JsonArray *array,
+            guint      index)
+{
+    JsonNode *node = json_array_get_element (array, index);
+
+    g_assert_nonnull (node);
+    g_assert_true (JSON_NODE_HOLDS_OBJECT (node));
+
+    return lsp_json_get_string (json_node_get_object (node), "message");
+}
+
+
+static void
+test_code_action_context (void)
+{
+    /*
+     * Only the diagnostics the asked range touches are worth sending: a
+     * server decides which quick fixes to offer from them, and one from
+     * elsewhere in the file would offer a fix for somewhere else.
+     */
+    JsonArray *all = diagnostics_of (
+        "[" DIAGNOSTIC (0, 0, 4, "before")  ","
+            DIAGNOSTIC (2, 4, 9, "inside")  ","
+            DIAGNOSTIC (5, 1, 3, "after")   "]");
+    JsonArray *picked = _lsp_code_action_context (all, 2, 0, 2, 20);
+
+    g_assert_cmpuint (json_array_get_length (picked), ==, 1);
+    g_assert_cmpstr (message_at (picked, 0), ==, "inside");
+
+    json_array_unref (picked);
+    json_array_unref (all);
+}
+
+
+static void
+test_code_action_context_touching (void)
+{
+    /*
+     * The cursor sitting at either end of a diagnostic is the usual way of
+     * asking for its fix, and an empty range there has to count as touching
+     * it -- while one character further out must not.
+     */
+    JsonArray *all = diagnostics_of ("[" DIAGNOSTIC (1, 4, 8, "here") "]");
+    JsonArray *picked;
+
+    picked = _lsp_code_action_context (all, 1, 4, 1, 4);
+    g_assert_cmpuint (json_array_get_length (picked), ==, 1);
+    json_array_unref (picked);
+
+    picked = _lsp_code_action_context (all, 1, 8, 1, 8);
+    g_assert_cmpuint (json_array_get_length (picked), ==, 1);
+    json_array_unref (picked);
+
+    picked = _lsp_code_action_context (all, 1, 3, 1, 3);
+    g_assert_cmpuint (json_array_get_length (picked), ==, 0);
+    json_array_unref (picked);
+
+    picked = _lsp_code_action_context (all, 1, 9, 1, 9);
+    g_assert_cmpuint (json_array_get_length (picked), ==, 0);
+    json_array_unref (picked);
+
+    json_array_unref (all);
+}
+
+
+static void
+test_code_action_context_multiline (void)
+{
+    /*
+     * Across lines the character only decides the first and the last: a
+     * diagnostic on a line in the middle of a selection is inside it whatever
+     * its columns are.
+     */
+    JsonArray *all = diagnostics_of (
+        "[" DIAGNOSTIC (1, 0,  1, "line one")   ","
+            DIAGNOSTIC (3, 40, 44, "line three") ","
+            DIAGNOSTIC (6, 0,  1, "line six")   "]");
+    JsonArray *picked = _lsp_code_action_context (all, 2, 8, 5, 2);
+
+    g_assert_cmpuint (json_array_get_length (picked), ==, 1);
+    g_assert_cmpstr (message_at (picked, 0), ==, "line three");
+
+    json_array_unref (picked);
+    json_array_unref (all);
+}
+
+
+static void
+test_code_action_context_verbatim (void)
+{
+    /*
+     * A diagnostic goes back exactly as it arrived. Servers recognise their
+     * own by members medit never reads -- "data" above all -- and a quick fix
+     * that cannot be matched to its diagnostic is not offered at all.
+     */
+    JsonArray *all = diagnostics_of (
+        "[{\"range\": {\"start\": {\"line\": 0, \"character\": 0},"
+        "              \"end\": {\"line\": 0, \"character\": 3}},"
+        "  \"message\": \"unused\","
+        "  \"code\": \"E0601\","
+        "  \"data\": {\"fixId\": 17},"
+        "  \"source\": \"rustc\"}]");
+    JsonArray *picked = _lsp_code_action_context (all, 0, 1, 0, 1);
+    JsonObject *object;
+
+    g_assert_cmpuint (json_array_get_length (picked), ==, 1);
+
+    object = json_node_get_object (json_array_get_element (picked, 0));
+    g_assert_cmpstr (lsp_json_get_string (object, "code"), ==, "E0601");
+    g_assert_cmpstr (lsp_json_get_string (object, "source"), ==, "rustc");
+    g_assert_cmpint (lsp_json_get_int (lsp_json_get_object (object, "data"), "fixId", 0),
+                     ==, 17);
+
+    json_array_unref (picked);
+    json_array_unref (all);
+}
+
+
+static void
+test_code_action_context_edges (void)
+{
+    /* No diagnostics at all, and entries that are not diagnostics. */
+    JsonArray *all;
+    JsonArray *picked = _lsp_code_action_context (NULL, 0, 0, 0, 0);
+
+    g_assert_nonnull (picked);
+    g_assert_cmpuint (json_array_get_length (picked), ==, 0);
+    json_array_unref (picked);
+
+    all = diagnostics_of ("[7, null, \"text\", {}, {\"range\": 5}]");
+    picked = _lsp_code_action_context (all, 0, 0, 9, 9);
+    g_assert_cmpuint (json_array_get_length (picked), ==, 0);
+    json_array_unref (picked);
+    json_array_unref (all);
+}
+
+
 void
 _moo_lsp_add_unit_tests (void)
 {
@@ -2106,6 +2510,23 @@ _moo_lsp_add_unit_tests (void)
     g_test_add_func ("/lsp/rename/nothing", test_workspace_edit_nothing);
     g_test_add_func ("/lsp/rename/malformed", test_workspace_edit_malformed);
     g_test_add_func ("/lsp/rename/reversed-range", test_workspace_edit_reversed_range);
+
+    g_test_add_func ("/lsp/code-action/literal", test_code_action_literal);
+    g_test_add_func ("/lsp/code-action/command", test_code_action_command);
+    g_test_add_func ("/lsp/code-action/nested-command", test_code_action_nested_command);
+    g_test_add_func ("/lsp/code-action/both", test_code_action_both);
+    g_test_add_func ("/lsp/code-action/disabled", test_code_action_disabled);
+    g_test_add_func ("/lsp/code-action/order", test_code_action_order);
+    g_test_add_func ("/lsp/code-action/nothing", test_code_action_nothing);
+    g_test_add_func ("/lsp/code-action/malformed", test_code_action_malformed);
+    g_test_add_func ("/lsp/code-action/context", test_code_action_context);
+    g_test_add_func ("/lsp/code-action/context-touching",
+                     test_code_action_context_touching);
+    g_test_add_func ("/lsp/code-action/context-multiline",
+                     test_code_action_context_multiline);
+    g_test_add_func ("/lsp/code-action/context-verbatim",
+                     test_code_action_context_verbatim);
+    g_test_add_func ("/lsp/code-action/context-edges", test_code_action_context_edges);
 
     g_test_add_func ("/lsp/signature/active-parameter", test_signature_active_parameter);
     g_test_add_func ("/lsp/signature/offsets", test_signature_offsets);

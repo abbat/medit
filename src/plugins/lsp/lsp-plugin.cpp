@@ -30,6 +30,7 @@
 #include "plugins/lsp/lsp-navigate.h"
 #include "plugins/lsp/lsp-references.h"
 #include "plugins/lsp/lsp-edits.h"
+#include "plugins/lsp/lsp-actions.h"
 #include "plugins/lsp/lsp-completion.h"
 #include "plugins/lsp/lsp-highlight.h"
 #include "plugins/lsp/lsp-signature.h"
@@ -197,6 +198,20 @@ view_key_press (MooEditView            *view,
         return TRUE;
     }
 
+    /*
+     * Alt+Return is swallowed the same way: the text view puts a newline in
+     * rather than leaving the key to the window's accelerators.
+     */
+    if (accel_pressed (view, event, "LspCodeActions"))
+    {
+        MooEditWindow *window = moo_edit_view_get_window (view);
+
+        if (window)
+            lsp_code_actions (window, view);
+
+        return TRUE;
+    }
+
     return FALSE;
 }
 
@@ -355,6 +370,17 @@ rename_doc_cb (MooEdit *doc)
 }
 
 
+static void
+code_actions_doc_cb (MooEdit *doc)
+{
+    MooEditView *view = NULL;
+    MooEditWindow *window = window_of_doc (doc, &view);
+
+    if (window)
+        lsp_code_actions (window, view);
+}
+
+
 /*
  * The context menu entry is only worth showing on a document some server
  * handles. Whether that server can answer the question is checked again when
@@ -364,7 +390,7 @@ static void
 update_doc_actions (MooEdit *doc)
 {
     static const char *ids[] = {
-        "LspGoToDefinition", "LspFindReferences", "LspRename"
+        "LspGoToDefinition", "LspFindReferences", "LspRename", "LspCodeActions"
     };
     gboolean handled = lsp_manager_lookup_doc (doc) != NULL;
     guint i;
@@ -1033,6 +1059,13 @@ format_cb (MooEditWindow *window)
 
 
 static void
+code_actions_cb (MooEditWindow *window)
+{
+    lsp_code_actions (window, NULL);
+}
+
+
+static void
 show_references_cb (MooEditWindow *window)
 {
     moo_edit_window_show_pane (window, MOO_LSP_REFERENCES_PANE_ID);
@@ -1285,6 +1318,14 @@ lsp_plugin_init (LspPlugin *plugin)
                                  "closure-callback", rename_cb,
                                  nullptr);
 
+    moo_window_class_new_action (klass, "LspCodeActions", MOO_LSP_PLUGIN_ID,
+                                 "display-name", _("Code Actions"),
+                                 "label", _("Code _Actions..."),
+                                 "tooltip", _("Offer what the language server can do here"),
+                                 "default-accel", MOO_EDIT_ACCEL_CODE_ACTION,
+                                 "closure-callback", code_actions_cb,
+                                 nullptr);
+
     moo_window_class_new_action (klass, "GoToTypeDefinition", MOO_LSP_PLUGIN_ID,
                                  "display-name", _("Go to Type Definition"),
                                  "label", _("Go to _Type Definition"),
@@ -1329,6 +1370,13 @@ lsp_plugin_init (LspPlugin *plugin)
                                    "closure-callback", rename_doc_cb,
                                    (char*) 0);
 
+        moo_edit_class_new_action (edit_klass, "LspCodeActions",
+                                   "display-name", _("Code Actions"),
+                                   "label", _("Code _Actions..."),
+                                   "tooltip", _("Offer what the language server can do here"),
+                                   "closure-callback", code_actions_doc_cb,
+                                   (char*) 0);
+
         if (doc_xml)
         {
             plugin->doc_ui_merge_id = moo_ui_xml_new_merge_id (doc_xml);
@@ -1341,6 +1389,9 @@ lsp_plugin_init (LspPlugin *plugin)
             moo_ui_xml_add_item (doc_xml, plugin->doc_ui_merge_id,
                                  "Editor/Popup/PopupStart",
                                  "LspRename", "LspRename", -1);
+            moo_ui_xml_add_item (doc_xml, plugin->doc_ui_merge_id,
+                                 "Editor/Popup/PopupStart",
+                                 "LspCodeActions", "LspCodeActions", -1);
         }
 
         g_type_class_unref (edit_klass);
@@ -1436,6 +1487,9 @@ lsp_plugin_init (LspPlugin *plugin)
         moo_ui_xml_add_item (xml, plugin->ui_merge_id,
                              "Editor/Menubar/Document",
                              "LspFormat", "LspFormat", -1);
+        moo_ui_xml_add_item (xml, plugin->ui_merge_id,
+                             "Editor/Menubar/Document",
+                             "LspCodeActions", "LspCodeActions", -1);
     }
 
     g_type_class_unref (klass);
@@ -1462,6 +1516,7 @@ lsp_plugin_deinit (LspPlugin *plugin)
     moo_window_class_remove_action (klass, "FindReferences");
     moo_window_class_remove_action (klass, "RenameSymbol");
     moo_window_class_remove_action (klass, "LspFormat");
+    moo_window_class_remove_action (klass, "LspCodeActions");
     moo_window_class_remove_action (klass, "LspComplete");
     moo_window_class_remove_action (klass, "LspSignature");
     moo_window_class_remove_action (klass, "LspEditConfig");
@@ -1483,6 +1538,7 @@ lsp_plugin_deinit (LspPlugin *plugin)
         moo_edit_class_remove_action (edit_klass, "LspGoToDefinition");
         moo_edit_class_remove_action (edit_klass, "LspFindReferences");
         moo_edit_class_remove_action (edit_klass, "LspRename");
+        moo_edit_class_remove_action (edit_klass, "LspCodeActions");
 
         if (plugin->doc_ui_merge_id && doc_xml)
             moo_ui_xml_remove_ui (doc_xml, plugin->doc_ui_merge_id);

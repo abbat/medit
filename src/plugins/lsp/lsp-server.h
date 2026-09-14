@@ -73,9 +73,19 @@ LspServer  *lsp_server_new              (LspServerConfig    *config,
 LspServer  *lsp_server_ref              (LspServer          *server);
 void        lsp_server_unref            (LspServer          *server);
 
+/*
+ * The server asks for a WorkspaceEdit to be applied, which is how a command it
+ * ran reports what it changed. Returns whether it was applied, which is what
+ * the protocol wants said back.
+ */
+typedef gboolean (*LspServerApplyEditFunc) (LspServer  *server,
+                                            JsonNode   *edit,
+                                            gpointer    data);
+
 void        lsp_server_set_callbacks    (LspServer                *server,
                                          LspServerDiagnosticsFunc  on_diagnostics,
                                          LspServerStateFunc        on_state,
+                                         LspServerApplyEditFunc    on_apply_edit,
                                          gpointer                  data);
 
 const char *lsp_server_get_id           (LspServer          *server);

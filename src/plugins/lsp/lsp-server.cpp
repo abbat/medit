@@ -70,6 +70,7 @@ struct LspServer {
 
     LspServerDiagnosticsFunc on_diagnostics;
     LspServerStateFunc       on_state;
+    LspServerApplyEditFunc   on_apply_edit;
     gpointer                 cb_data;
 };
 
@@ -307,12 +308,14 @@ void
 lsp_server_set_callbacks (LspServer                *server,
                           LspServerDiagnosticsFunc  on_diagnostics,
                           LspServerStateFunc        on_state,
+                          LspServerApplyEditFunc    on_apply_edit,
                           gpointer                  data)
 {
     g_return_if_fail (server != NULL);
 
     server->on_diagnostics = on_diagnostics;
     server->on_state = on_state;
+    server->on_apply_edit = on_apply_edit;
     server->cb_data = data;
 }
 
@@ -628,6 +631,28 @@ handle_request (JsonNode   *id,
         json_node_take_array (node, folders);
         lsp_client_reply (server->client, id, node);
     }
+    /*
+     * How a command reports what it changed: a code action that runs one
+     * answers nothing itself, and this arrives instead. Refusing it is a real
+     * answer -- there may be no window left to change anything in -- so what
+     * was actually done is what goes back.
+     */
+    else if (strcmp (method, "workspace/applyEdit") == 0)
+    {
+        JsonNode *edit = lsp_json_get_node (params, "edit");
+        JsonObject *result = json_object_new ();
+        JsonNode *node;
+        gboolean applied = FALSE;
+
+        if (edit && server->on_apply_edit)
+            applied = server->on_apply_edit (server, edit, server->cb_data);
+
+        lsp_json_set_bool (result, "applied", applied);
+
+        node = json_node_new (JSON_NODE_OBJECT);
+        json_node_take_object (node, result);
+        lsp_client_reply (server->client, id, node);
+    }
     else if (strcmp (method, "client/registerCapability") == 0 ||
              strcmp (method, "client/unregisterCapability") == 0 ||
              strcmp (method, "window/workDoneProgress/create") == 0 ||
@@ -911,20 +936,63 @@ client_capabilities (void)
         JsonObject *workspace = json_object_new ();
         JsonObject *workspace_edit = json_object_new ();
 
+        JsonObject *execute_command = json_object_new ();
+
         /*
          * A rename comes back as a WorkspaceEdit, and the "changes" half of
          * one is all medit does: documentChanges also carries creating,
          * renaming and deleting files, which is not something an editor should
          * do on a server's say-so. Servers send it anyway, and it is read when
          * they do -- claiming it here would only ask for the file operations
-         * as well. applyEdit is the server asking to change the workspace on
-         * its own initiative, which nothing here answers.
+         * as well.
+         *
+         * applyEdit is the server changing the workspace on its own
+         * initiative, and it is answered because a code action that runs a
+         * command has no other way of reporting what the command did.
          */
         lsp_json_set_bool (workspace_edit, "documentChanges", FALSE);
         lsp_json_set_object (workspace, "workspaceEdit", workspace_edit);
-        lsp_json_set_bool (workspace, "applyEdit", FALSE);
+        lsp_json_set_bool (workspace, "applyEdit", TRUE);
+
+        lsp_json_set_bool (execute_command, "dynamicRegistration", FALSE);
+        lsp_json_set_object (workspace, "executeCommand", execute_command);
 
         lsp_json_set_object (capabilities, "workspace", workspace);
+    }
+
+    {
+        JsonObject *code_action = json_object_new ();
+        JsonObject *literal_support = json_object_new ();
+        JsonObject *kinds = json_object_new ();
+        static const char *known[] = {
+            "", "quickfix", "refactor", "refactor.extract", "refactor.inline",
+            "refactor.rewrite", "source", "source.organizeImports", NULL
+        };
+
+        /*
+         * codeActionLiteralSupport is what lets a server answer with a
+         * CodeAction rather than with the bare Command of LSP 3.7; both are
+         * read, but only the literal carries the kind and the reason a fix
+         * does not apply, which is what the menu shows.
+         *
+         * The empty string is in the list on purpose: it is what the protocol
+         * says a client sends for a kind it does not know, and it is there
+         * because medit does nothing with a kind but show the title.
+         *
+         * No resolveSupport and no dataSupport: an action that arrived without
+         * its edit would need a second round trip that is not made here, so
+         * servers are asked for complete ones.
+         */
+        lsp_json_set_array (kinds, "valueSet", lsp_json_string_array (known));
+        lsp_json_set_object (literal_support, "codeActionKind", kinds);
+
+        lsp_json_set_bool (code_action, "dynamicRegistration", FALSE);
+        lsp_json_set_object (code_action, "codeActionLiteralSupport", literal_support);
+        lsp_json_set_bool (code_action, "isPreferredSupport", TRUE);
+        lsp_json_set_bool (code_action, "disabledSupport", TRUE);
+        lsp_json_set_bool (code_action, "dataSupport", FALSE);
+
+        lsp_json_set_object (text_document, "codeAction", code_action);
     }
 
     {

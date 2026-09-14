@@ -71,6 +71,14 @@ void        lsp_text_edits_apply     (MooEditWindow      *window,
                                       GSList             *edits,
                                       LspPositionEncoding encoding);
 
+/*
+ * Applies a whole WorkspaceEdit to the window in front, which is what a
+ * server's own workspace/applyEdit carries. Returns whether anything was
+ * applied, which is what the answer to that request says.
+ */
+gboolean    lsp_workspace_edit_apply (JsonNode           *edit,
+                                      LspPositionEncoding encoding);
+
 void        lsp_text_edit_free       (LspTextEdit       *edit);
 void        lsp_text_edits_free      (GSList            *edits);
 

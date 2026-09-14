@@ -78,5 +78,13 @@
 #define MOO_EDIT_ACCEL_FIND_REFERENCES "<Shift>F12"
 /* F2 is what every editor with this feature uses, and nothing here had it. */
 #define MOO_EDIT_ACCEL_RENAME "F2"
+/*
+ * Not the Ctrl+. of VS Code: GTK+ binds that, and Ctrl+;, to the emoji chooser
+ * of every text widget, and a widget's own binding wins over an accelerator of
+ * its window. Alt+Return is what the other family of editors offers the same
+ * menu under, and nothing here or in GTK+ has it -- though the text view puts
+ * a newline in for it all the same, so the plugin matches it by hand.
+ */
+#define MOO_EDIT_ACCEL_CODE_ACTION "<Alt>Return"
 
 #endif /* MOO_EDIT_ACCELS_H */

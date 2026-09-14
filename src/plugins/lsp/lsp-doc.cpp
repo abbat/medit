@@ -32,6 +32,7 @@ struct LspDoc {
     gboolean       opened;
 
     GSList        *diagnostics;     /* LspDiagnostic* */
+    JsonArray     *raw_diagnostics; /* what the server sent them as */
 };
 
 
@@ -334,6 +335,15 @@ lsp_doc_set_diagnostics (LspDoc    *ldoc,
     lsp_diagnostics_free (ldoc->diagnostics);
     ldoc->diagnostics = lsp_diagnostics_parse (array);
 
+    /*
+     * And the array itself, untouched. A code action asks about a diagnostic
+     * by handing it back, and the member a server recognises it by is one
+     * medit has no use for and does not read out of it.
+     */
+    if (ldoc->raw_diagnostics)
+        json_array_unref (ldoc->raw_diagnostics);
+    ldoc->raw_diagnostics = array ? json_array_ref (array) : NULL;
+
     lsp_doc_refresh_diagnostics (ldoc);
 }
 
@@ -343,6 +353,14 @@ lsp_doc_get_diagnostics (LspDoc *ldoc)
 {
     g_return_val_if_fail (ldoc != NULL, NULL);
     return ldoc->diagnostics;
+}
+
+
+JsonArray *
+lsp_doc_get_raw_diagnostics (LspDoc *ldoc)
+{
+    g_return_val_if_fail (ldoc != NULL, NULL);
+    return ldoc->raw_diagnostics;
 }
 
 
@@ -437,6 +455,9 @@ lsp_doc_free (LspDoc *ldoc)
         lsp_diagnostics_clear (ldoc->doc);
 
     lsp_diagnostics_free (ldoc->diagnostics);
+
+    if (ldoc->raw_diagnostics)
+        json_array_unref (ldoc->raw_diagnostics);
 
     g_free (ldoc->uri);
     g_free (ldoc->language_id);

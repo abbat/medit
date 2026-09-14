@@ -275,6 +275,34 @@ lsp_text_edits_apply (MooEditWindow       *window,
 }
 
 
+/*
+ * A WorkspaceEdit that arrived on its own, which is what a command a code
+ * action ran reports its work with. There is no request to tie it to a window,
+ * so it goes to the one in front; without one there is nowhere to put it, and
+ * saying so is the answer the protocol wants.
+ */
+gboolean
+lsp_workspace_edit_apply (JsonNode            *edit,
+                          LspPositionEncoding  encoding)
+{
+    MooEditWindow *window = moo_editor_get_active_window (moo_editor_instance ());
+    GSList *edits;
+
+    if (!window)
+        return FALSE;
+
+    edits = lsp_workspace_edit_parse (edit);
+
+    if (!edits)
+        return FALSE;
+
+    lsp_text_edits_apply (window, edits, encoding);
+    lsp_text_edits_free (edits);
+
+    return TRUE;
+}
+
+
 /**********************************************************************/
 /* Asking for the new name
  */
