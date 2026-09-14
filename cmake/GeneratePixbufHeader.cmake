@@ -3,7 +3,11 @@ execute_process(
     OUTPUT_VARIABLE pixbuf_source
     RESULT_VARIABLE result)
 
-if (NOT result EQUAL 0)
+# RESULT_VARIABLE holds the exit status as a number when the tool ran and an
+# error string when it could not be launched at all, so compare as a string:
+# EQUAL would treat "No such file or directory" as 0 and let the build go on
+# with an empty header.
+if (NOT result STREQUAL "0")
     message(FATAL_ERROR "gdk-pixbuf-csource failed with status ${result}")
 endif()
 
