@@ -192,10 +192,19 @@ unreachable in the program as shipped: nothing ever sets
 `dnd.double_click_selects_brackets`, so the whole bracket expansion is off and only the
 unit test exercises it.
 
-The remaining 214 are 172 notes and 41 `cpp/poorly-documented-function`. Neither is
-wrong, and neither is a finding: `cpp/fixme-comment` counts the 267 FIXME/TODO markers
-and the `FIXME:` blocks that `grep` already indexes better. Read them as a map
-of what is unfinished, not as a queue.
+The remaining 214 were 172 notes and 41 `cpp/poorly-documented-function`, and neither
+is a finding on its own. `cpp/fixme-comment` did earn a pass of its own, because a
+marker is a claim about the code under it: 32 alerts, 14 in our code and 18 in
+`src/vendor/`. Two defects were behind the 14. The icon view's `draw_entry()` and the
+text view's whitespace and fold drawing still made their own cairo context inside
+`::draw` instead of transforming the one they were handed; and the text view decided
+whether the mouse cursor was hidden by asking whether the window had a cursor at all,
+which is true almost always, so the early return never fired and the cursor was reset
+on every motion event. A third marker, the About dialog's Escape key, described an
+assertion that no longer reproduces and is now a UI test. The other eleven said who
+wrote the code rather than what was wrong with it, and now say what was measured.
+`moonotebook.cpp:2635` is the one kept on purpose. The vendored 18 are left alone, the
+way the rest of `src/vendor/` is.
 
 `.github/workflows/package.yml` builds the three packaging trees the way a distribution
 would, also on every push:
