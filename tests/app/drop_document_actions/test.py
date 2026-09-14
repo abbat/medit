@@ -62,6 +62,13 @@ def save_copy(t, view):
             "Save Copy wrote the document contents")
     t.check(t.sandbox.exists("workdir", SAVE_COPY),
             "Save Copy left the original file in place")
+    # The assertion that tells Save Copy from Save Here. Everything above this
+    # line is equally true of Save Here, which also writes the target and
+    # leaves the source on disk; what makes it a copy is that the document
+    # stays on the file it came from. Read the same way Save Here reads it
+    # above, so the two are the positive and negative form of one check.
+    t.check(INNER + "/" + SAVE_COPY not in (t.frame.name or ""),
+            "Save Copy left the document on its original file")
 
 
 def cancel(t, view):
