@@ -2431,6 +2431,165 @@ effective_index (Node *parent,
 }
 
 
+/*
+ * One item or separator put into @menu_shell at the place @node holds among
+ * its siblings.
+ *
+ * The position is worked out from the tree every time instead of being
+ * remembered, because a placeholder is not a widget: its children sit directly
+ * in the menu next to the placeholder's own siblings, so where an item lands
+ * depends on how much of the tree around it is currently built.
+ */
+static void
+add_node_to_menu_shell (MooUiXml  *xml,
+                        Toplevel  *toplevel,
+                        GtkWidget *menu_shell,
+                        Node      *parent,
+                        Node      *node)
+{
+    switch (node->type)
+    {
+        case ITEM:
+            create_menu_item (xml, toplevel, GTK_MENU_SHELL (menu_shell),
+                              node, effective_index (parent, node));
+            break;
+        case SEPARATOR:
+            create_menu_separator (xml, toplevel, GTK_MENU_SHELL (menu_shell),
+                                   node, effective_index (parent, node));
+            break;
+        default:
+            g_return_if_reached ();
+    }
+
+    /* Whether a separator is shown depends on what is on either side of it,
+       and what is on either side of it has just changed. */
+    check_separators (parent, toplevel);
+}
+
+
+/* The same for a toolbar, where items and separators are tool items rather
+   than menu items. */
+static void
+add_node_to_toolbar (MooUiXml   *xml,
+                     Toplevel   *toplevel,
+                     GtkToolbar *toolbar,
+                     Node       *parent,
+                     Node       *node)
+{
+    switch (node->type)
+    {
+        case ITEM:
+            create_tool_item (xml, toplevel, toolbar,
+                              node, effective_index (parent, node));
+            break;
+        case SEPARATOR:
+            create_tool_separator (xml, toplevel, toolbar,
+                                   node, effective_index (parent, node));
+            break;
+        default:
+            g_return_if_reached ();
+    }
+
+    check_separators (parent, toplevel);
+}
+
+
+/*
+ * @node added to a toolbar toplevel.
+ *
+ * The widget the node's parent maps to is either the toolbar itself, and then
+ * the node becomes a tool item, or a menu tool button, and then it becomes an
+ * entry of that button's drop-down menu. The menu is created on demand,
+ * because a menu tool button with an empty menu would show an arrow that opens
+ * nothing.
+ */
+static void
+toplevel_add_node_to_toolbar (MooUiXml *xml,
+                              Toplevel *toplevel,
+                              Node     *node)
+{
+    GtkWidget *parent_widget;
+    Node *parent = effective_parent (node);
+
+    g_return_if_fail (parent != NULL);
+    parent_widget = toplevel_get_widget (toplevel, parent);
+    g_return_if_fail (parent_widget != NULL);
+
+    if (GTK_IS_TOOLBAR (parent_widget))
+    {
+        add_node_to_toolbar (xml, toplevel, GTK_TOOLBAR (parent_widget),
+                             parent, node);
+    }
+    else if (GTK_IS_MENU_TOOL_BUTTON (parent_widget))
+    {
+        GtkWidget *menu;
+
+        menu = menu_tool_button_get_menu (parent_widget);
+
+        if (!menu)
+        {
+            menu = gtk_menu_new ();
+            gtk_widget_show (menu);
+            menu_tool_button_set_menu (parent_widget, menu);
+        }
+
+        add_node_to_menu_shell (xml, toplevel, menu, parent, node);
+    }
+    else
+    {
+        g_return_if_reached ();
+    }
+}
+
+
+/*
+ * @node added to a menu toplevel.
+ *
+ * The parent is either a menu shell, and the node goes straight into it, or a
+ * menu item, and the node goes into that item's submenu -- which is created
+ * here if this is the first child it gets, since an item only becomes a
+ * submenu once there is something to put in it.
+ */
+static void
+toplevel_add_node_to_menu (MooUiXml *xml,
+                           Toplevel *toplevel,
+                           Node     *node)
+{
+    GtkWidget *parent_widget, *menu_shell;
+    Node *parent = effective_parent (node);
+
+    g_return_if_fail (parent != NULL);
+    parent_widget = toplevel_get_widget (toplevel, parent);
+    g_return_if_fail (parent_widget != NULL);
+
+    if (GTK_IS_MENU_SHELL (parent_widget))
+    {
+        menu_shell = parent_widget;
+    }
+    else
+    {
+        g_return_if_fail (GTK_IS_MENU_ITEM (parent_widget));
+        menu_shell = gtk_menu_item_get_submenu (GTK_MENU_ITEM (parent_widget));
+        if (!menu_shell)
+        {
+            menu_shell = gtk_menu_new ();
+            gtk_widget_show (menu_shell);
+            gtk_menu_item_set_submenu (GTK_MENU_ITEM (parent_widget), menu_shell);
+        }
+    }
+
+    add_node_to_menu_shell (xml, toplevel, menu_shell, parent, node);
+}
+
+
+/*
+ * The widget for @node created inside @toplevel.
+ *
+ * Only items and separators have widgets; the other node types are structure
+ * -- a placeholder or a merge point is a position in the tree and nothing
+ * more. Everything below this point differs between a toolbar and a menu, so
+ * the toplevel's own widget is what decides which of the two is built.
+ */
 static void
 toplevel_add_node (MooUiXml *xml,
                    Toplevel *toplevel,
@@ -2441,113 +2600,11 @@ toplevel_add_node (MooUiXml *xml,
     g_return_if_fail (node_is_ancestor (node, toplevel->node));
 
     if (GTK_IS_TOOLBAR (toplevel->widget))
-    {
-        GtkWidget *parent_widget;
-        Node *parent = effective_parent (node);
-
-        g_return_if_fail (parent != NULL);
-        parent_widget = toplevel_get_widget (toplevel, parent);
-        g_return_if_fail (parent_widget != NULL);
-
-        if (GTK_IS_TOOLBAR (parent_widget))
-        {
-            switch (node->type)
-            {
-                case ITEM:
-                    create_tool_item (xml, toplevel,
-                                      GTK_TOOLBAR (parent_widget),
-                                      node, effective_index (parent, node));
-                    break;
-                case SEPARATOR:
-                    create_tool_separator (xml, toplevel,
-                                           GTK_TOOLBAR (parent_widget),
-                                           node, effective_index (parent, node));
-                    break;
-                default:
-                    g_return_if_reached ();
-            }
-
-            check_separators (parent, toplevel);
-        }
-        else if (GTK_IS_MENU_TOOL_BUTTON (parent_widget))
-        {
-            GtkWidget *menu;
-
-            menu = menu_tool_button_get_menu (parent_widget);
-
-            if (!menu)
-            {
-                menu = gtk_menu_new ();
-                gtk_widget_show (menu);
-                menu_tool_button_set_menu (parent_widget, menu);
-            }
-
-            switch (node->type)
-            {
-                case ITEM:
-                    create_menu_item (xml, toplevel, GTK_MENU_SHELL (menu),
-                                      node, effective_index (parent, node));
-                    break;
-                case SEPARATOR:
-                    create_menu_separator (xml, toplevel, GTK_MENU_SHELL (menu),
-                                           node, effective_index (parent, node));
-                    break;
-                default:
-                    g_return_if_reached ();
-            }
-
-            check_separators (parent, toplevel);
-        }
-        else
-        {
-            g_return_if_reached ();
-        }
-    }
+        toplevel_add_node_to_toolbar (xml, toplevel, node);
     else if (GTK_IS_MENU_SHELL (toplevel->widget))
-    {
-        GtkWidget *parent_widget, *menu_shell;
-        Node *parent = effective_parent (node);
-
-        g_return_if_fail (parent != NULL);
-        parent_widget = toplevel_get_widget (toplevel, parent);
-        g_return_if_fail (parent_widget != NULL);
-
-        if (GTK_IS_MENU_SHELL (parent_widget))
-        {
-            menu_shell = parent_widget;
-        }
-        else
-        {
-            g_return_if_fail (GTK_IS_MENU_ITEM (parent_widget));
-            menu_shell = gtk_menu_item_get_submenu (GTK_MENU_ITEM (parent_widget));
-            if (!menu_shell)
-            {
-                menu_shell = gtk_menu_new ();
-                gtk_widget_show (menu_shell);
-                gtk_menu_item_set_submenu (GTK_MENU_ITEM (parent_widget), menu_shell);
-            }
-        }
-
-        switch (node->type)
-        {
-            case ITEM:
-                create_menu_item (xml, toplevel, GTK_MENU_SHELL (menu_shell),
-                                  node, effective_index (parent, node));
-                break;
-            case SEPARATOR:
-                create_menu_separator (xml, toplevel, GTK_MENU_SHELL (menu_shell),
-                                       node, effective_index (parent, node));
-                break;
-            default:
-                g_return_if_reached ();
-        }
-
-        check_separators (parent, toplevel);
-    }
+        toplevel_add_node_to_menu (xml, toplevel, node);
     else
-    {
         g_return_if_reached ();
-    }
 }
 
 

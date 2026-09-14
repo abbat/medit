@@ -227,11 +227,13 @@ moo_window_class_init (MooWindowClass *klass)
 
     moo_window_grand_parent_class = g_type_class_peek_parent (moo_window_parent_class);
 
+    /* GObject vfuncs */
     gobject_class->constructor = moo_window_constructor;
     gobject_class->dispose = moo_window_dispose;
     gobject_class->set_property = moo_window_set_property;
     gobject_class->get_property = moo_window_get_property;
 
+    /* GtkWidget and GtkWindow vfuncs */
     widget_class->delete_event = moo_window_delete_event;
     widget_class->key_press_event = moo_window_key_press_event;
     window_class->set_focus = moo_window_set_focus;
@@ -242,6 +244,7 @@ moo_window_class_init (MooWindowClass *klass)
 
     _moo_edit_ops_iface_install ();
 
+    /* Class actions: UI and window control */
     moo_window_class_new_action (klass, "ConfigureShortcuts", NULL,
                                  "label", _("Configure _Shortcuts..."),
                                  "no-accel", TRUE,
@@ -275,6 +278,8 @@ moo_window_class_init (MooWindowClass *klass)
                                         create_toolbar_style_action,
                                         NULL, NULL);
 
+    /* Edit/undo actions delegated to the currently focused edit/undo widget
+       via the MooEditOps and MooUndoOps interfaces */
     moo_window_class_new_action (klass, "Cut", NULL,
                                  "display-name", GTK_STOCK_CUT,
                                  "label", GTK_STOCK_CUT,
@@ -344,6 +349,7 @@ moo_window_class_init (MooWindowClass *klass)
                                  "condition::sensitive", "can-redo",
                                  NULL);
 
+    /* Properties */
     g_object_class_install_property (gobject_class, PROP_ACCEL_GROUP,
         g_param_spec_object ("accel-group", "accel-group", "accel-group",
                              GTK_TYPE_ACCEL_GROUP, G_PARAM_READABLE));
@@ -363,6 +369,8 @@ moo_window_class_init (MooWindowClass *klass)
         g_param_spec_object ("actions", "actions", "actions",
                              MOO_TYPE_ACTION_COLLECTION, G_PARAM_READABLE));
 
+    /* ui-xml is CONSTRUCT: must be set when creating the window to build
+       menus and toolbars from the UI definition */
     g_object_class_install_property (gobject_class, PROP_UI_XML,
         g_param_spec_object ("ui-xml", "ui-xml", "ui-xml",
                              MOO_TYPE_UI_XML, (GParamFlags) (G_PARAM_READWRITE | G_PARAM_CONSTRUCT)));
@@ -375,6 +383,7 @@ moo_window_class_init (MooWindowClass *klass)
         g_param_spec_object ("menubar", "menubar", "menubar",
                              GTK_TYPE_MENU, G_PARAM_READABLE));
 
+    /* UI visibility and state: toolbar, menubar, statusbar */
     g_object_class_install_property (gobject_class, PROP_TOOLBAR_VISIBLE,
         g_param_spec_boolean ("toolbar-visible", "toolbar-visible", "toolbar-visible",
                               TRUE, (GParamFlags) G_PARAM_READWRITE));
@@ -387,6 +396,9 @@ moo_window_class_init (MooWindowClass *klass)
         g_param_spec_boolean ("statusbar-visible", "statusbar-visible", "statusbar-visible",
                               TRUE, (GParamFlags) G_PARAM_READWRITE));
 
+    /* Read-only derived properties reflecting the capabilities of the
+       currently focused edit/undo widget (determined dynamically in
+       moo_window_get_property based on window->priv->eo_widget and uo_widget) */
     INSTALL_PROP (PROP_MEO_CAN_COPY, "can-copy");
     INSTALL_PROP (PROP_MEO_CAN_CUT, "can-cut");
     INSTALL_PROP (PROP_MEO_CAN_PASTE, "can-paste");
@@ -396,6 +408,10 @@ moo_window_class_init (MooWindowClass *klass)
     INSTALL_PROP (PROP_MUO_CAN_UNDO, "can-undo");
     INSTALL_PROP (PROP_MUO_CAN_REDO, "can-redo");
 
+    /* Signals */
+    /* The "close" signal uses moo_signal_accumulator_continue_cancel to
+       coordinate multiple close handlers: they can return CONTINUE to allow
+       closing, or CANCEL to prevent it */
     signals[CLOSE] =
             g_signal_new ("close",
                       G_OBJECT_CLASS_TYPE (klass),
@@ -1993,6 +2009,74 @@ G_STMT_START {                                                                  
     }                                                                                                           \
 } G_STMT_END
 
+/*
+ * Everything collected so far thrown away, for when collecting stopped part
+ * way through.
+ *
+ * The arrays are half filled in then, and what is in them owns memory of its
+ * own: a GParameter has both a name and a value, a condition is a string. Any
+ * of the four may be NULL, since the failure can come before they exist.
+ */
+static void
+free_collected_params (GArray       *action_params,
+                       GArray       *callback_args,
+                       GPtrArray    *conditions,
+                       GObjectClass *action_class)
+{
+    if (action_params)
+    {
+        guint i;
+        GParameter *params = (GParameter*) action_params->data;
+
+        for (i = 0; i < action_params->len; ++i)
+        {
+            g_value_unset (&params[i].value);
+            g_free ((char*) params[i].name);
+        }
+
+        g_array_free (action_params, TRUE);
+    }
+
+    if (callback_args)
+    {
+        guint i;
+        for (i = 0; i < callback_args->len; ++i)
+            g_value_unset (&g_array_index (callback_args, GValue, i));
+        g_array_free (callback_args, TRUE);
+    }
+
+    if (conditions)
+    {
+        guint i;
+        for (i = 0; i < conditions->len; ++i)
+            g_free (g_ptr_array_index (conditions, i));
+        g_ptr_array_free (conditions, TRUE);
+    }
+
+    if (action_class)
+        g_type_class_unref (action_class);
+}
+
+
+/*
+ * The variable arguments of moo_window_class_new_action() and friends read
+ * into the three things they describe: the factory that will make the action,
+ * the list of conditions to bind on it, and the values to pass to its
+ * callback.
+ *
+ * The argument list is, in order: @n_callback_args type/value pairs for the
+ * callback, then name/value pairs for the action, terminated by a NULL name.
+ * Among the names, "action-type::" gives the GType to instantiate and
+ * "condition::<prop>" binds <prop> of the action to the window property named
+ * by the value that follows; everything else has to be a property of the
+ * action class, which is why the class is not looked up until the first one
+ * turns up. The heavy lifting is in COLLECT_ARGS and COLLECT_PROPS above --
+ * they are macros because G_VALUE_COLLECT has to expand where the va_list is.
+ *
+ * Returns TRUE with the three out arguments set and owned by the caller, or
+ * FALSE with @error holding a message and nothing else touched. A va_list can
+ * only be walked once, so the caller cannot retry.
+ */
 static gboolean
 collect_params_and_props (guint              n_callback_args,
                           MooActionFactory **action_factory_p,
@@ -2068,39 +2152,10 @@ collect_params_and_props (guint              n_callback_args,
     }
 
 error:
-    if (action_params)
-    {
-        guint i;
-        GParameter *params = (GParameter*) action_params->data;
-
-        for (i = 0; i < action_params->len; ++i)
-        {
-            g_value_unset (&params[i].value);
-            g_free ((char*) params[i].name);
-        }
-
-        g_array_free (action_params, TRUE);
-    }
-
-    if (callback_args)
-    {
-        guint i;
-        for (i = 0; i < callback_args->len; ++i)
-            g_value_unset (&g_array_index (callback_args, GValue, i));
-        g_array_free (callback_args, TRUE);
-    }
-
-    if (conditions)
-    {
-        guint i;
-        for (i = 0; i < conditions->len; ++i)
-            g_free (g_ptr_array_index (conditions, i));
-        g_ptr_array_free (conditions, TRUE);
-    }
-
-    if (action_class)
-        g_type_class_unref (action_class);
-
+    /* Only reached on failure, and the success path returns rather than
+       falling through, so nothing that is still non-NULL here has an owner
+       anywhere else. */
+    free_collected_params (action_params, callback_args, conditions, action_class);
     return FALSE;
 }
 

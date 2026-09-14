@@ -662,18 +662,30 @@ cell_data_func (G_GNUC_UNUSED GtkCellLayout *layout,
     g_object_set (cell, "sensitive", sensitive, (char*)NULL);
 }
 
-static void
-setup_combo (GtkComboBox      *combo,
-             EncodingsManager *enc_mgr,
-             gboolean          save_mode,
-             gboolean          use_separators)
+/*
+ * The model behind the combo, top level first:
+ *
+ *   "Auto Detected"          only when opening; saving has to name an encoding
+ *   (separator)
+ *   the recently used ones   remembered across sessions, most recent first
+ *   (separator)
+ *   "Other"                  a subtree, one child per group, the encodings
+ *                            themselves one level below that
+ *
+ * A separator is an ordinary row with no display text -- row_separator_func()
+ * is what turns it into a line -- so the rows are only appended when the combo
+ * was asked for separators, and the index handed to set_row_recent() has to
+ * count them. That index is where a newly used encoding gets inserted later.
+ */
+static GtkTreeStore *
+create_encodings_store (EncodingsManager *enc_mgr,
+                        gboolean          save_mode,
+                        gboolean          use_separators)
 {
-    GtkCellRenderer *cell;
     GtkTreeStore *store;
     GtkTreeIter iter;
     GSList *l;
     guint i;
-    char *start;
 
     store = gtk_tree_store_new (2, G_TYPE_STRING, G_TYPE_STRING);
 
@@ -705,9 +717,13 @@ setup_combo (GtkComboBox      *combo,
                             -1);
     }
 
+    /* No separator when there is nothing above it to separate. */
     if (enc_mgr->recent && use_separators)
         gtk_tree_store_append (store, &iter, NULL);
 
+    /* No encoding in COLUMN_ENCODING: "Other" and the group rows below it are
+       headings, and cell_data_func() makes every row with children
+       insensitive so neither can be picked. */
     gtk_tree_store_append (store, &iter, NULL);
     /* Translators: remove the part before and including | */
     gtk_tree_store_set (store, &iter, COLUMN_DISPLAY, Q_("Encodings combo submenu|Other"), -1);
@@ -732,6 +748,21 @@ setup_combo (GtkComboBox      *combo,
         }
     }
 
+    return store;
+}
+
+static void
+setup_combo (GtkComboBox      *combo,
+             EncodingsManager *enc_mgr,
+             gboolean          save_mode,
+             gboolean          use_separators)
+{
+    GtkCellRenderer *cell;
+    GtkTreeStore *store;
+    char *start;
+
+    store = create_encodings_store (enc_mgr, save_mode, use_separators);
+
     gtk_combo_box_set_model (combo, GTK_TREE_MODEL (store));
     gtk_combo_box_set_entry_text_column (GTK_COMBO_BOX (combo), COLUMN_DISPLAY);
 
@@ -748,6 +779,9 @@ setup_combo (GtkComboBox      *combo,
         gtk_combo_box_set_row_separator_func (combo, (GtkTreeViewRowSeparatorFunc) row_separator_func,
                                               NULL, NULL);
 
+    /* Start on whatever was used last, falling back to UTF-8 for a save and to
+       auto-detection for an open. Copied, because encoding_combo_set_active()
+       can move the recent list and invalidate the pointer we would be reading. */
     if (save_mode)
     {
         if (enc_mgr->last_save)
@@ -763,11 +797,14 @@ setup_combo (GtkComboBox      *combo,
             start = g_strdup (MOO_ENCODING_AUTO);
     }
 
+    /* Connected before the initial selection is made, so that it is recorded
+       as last_open/last_save the same way a user's choice would be. */
     g_signal_connect (combo, "changed", G_CALLBACK (combo_changed),
                       GINT_TO_POINTER (save_mode));
     encoding_combo_set_active (GTK_COMBO_BOX (combo), start, save_mode);
 
     g_free (start);
+    /* The combo holds the model now. */
     g_object_unref (store);
 }
 

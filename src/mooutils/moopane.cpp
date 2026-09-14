@@ -606,16 +606,23 @@ create_button (MooPane      *pane,
     return button;
 }
 
+/*
+ * The bar along the top of a pane: a drag handle carrying the pane's title,
+ * and the buttons at the right end of it.
+ *
+ * Which buttons those are is what @embedded decides. A pane docked in the
+ * window can be removed, hidden, made sticky or torn off; one that is already
+ * a window of its own can only be put back or kept above the others. Both
+ * frames are built by the same code because they are identical apart from
+ * that, and a pane that is detached and attached again gets a new frame each
+ * time -- which is why the widgets that are looked at later are stored on the
+ * pane in two sets, one per frame.
+ */
 static GtkWidget *
-create_frame_widget (MooPane        *pane,
-                     MooPanePosition position,
-                     gboolean        embedded)
+create_frame_toolbar (MooPane  *pane,
+                      gboolean  embedded)
 {
-    GtkWidget *vbox, *toolbar, *separator, *handle, *table, *child_holder;
-    GtkWidget *handle_hbox, *frame_label;
-
-    vbox = gtk_vbox_new (FALSE, 0);
-    gtk_widget_show (vbox);
+    GtkWidget *toolbar, *handle, *handle_hbox, *frame_label;
 
     toolbar = gtk_hbox_new (FALSE, 0);
 
@@ -696,19 +703,25 @@ create_frame_widget (MooPane        *pane,
     }
 
     gtk_widget_show (toolbar);
-    gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
 
-    separator = gtk_hseparator_new ();
-    gtk_widget_show (separator);
-    gtk_box_pack_start (GTK_BOX (vbox), separator, FALSE, FALSE, 0);
+    return toolbar;
+}
 
-    child_holder = gtk_vbox_new (FALSE, 0);
-    gtk_widget_show (child_holder);
-    gtk_box_pack_start (GTK_BOX (vbox), child_holder, TRUE, TRUE, 0);
-    if (embedded)
-        pane->child_holder = child_holder;
-    else
-        pane->window_child_holder = child_holder;
+/*
+ * The frame put into the 2x2 table that is the pane widget proper, with the
+ * separator that sets the pane apart from the rest of the window.
+ *
+ * A table rather than a box because which cell the separator lands in is the
+ * whole point of it: it goes on the edge of the pane that faces the window, so
+ * to the right of a pane docked on the left, below one docked on the top, and
+ * so on. Its orientation follows from the same thing -- vertical between two
+ * things side by side, horizontal between two things stacked.
+ */
+static GtkWidget *
+pack_frame_in_table (GtkWidget      *vbox,
+                     MooPanePosition position)
+{
+    GtkWidget *table, *separator = NULL;
 
     table = gtk_table_new (2, 2, FALSE);
 
@@ -763,6 +776,37 @@ create_frame_widget (MooPane        *pane,
     }
 
     return table;
+}
+
+static GtkWidget *
+create_frame_widget (MooPane        *pane,
+                     MooPanePosition position,
+                     gboolean        embedded)
+{
+    GtkWidget *vbox, *toolbar, *separator, *child_holder;
+
+    vbox = gtk_vbox_new (FALSE, 0);
+    gtk_widget_show (vbox);
+
+    toolbar = create_frame_toolbar (pane, embedded);
+    gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
+
+    separator = gtk_hseparator_new ();
+    gtk_widget_show (separator);
+    gtk_box_pack_start (GTK_BOX (vbox), separator, FALSE, FALSE, 0);
+
+    /* The pane's own widget goes in here later; it is kept apart from the
+       frame so that it can be moved between the embedded frame and the window
+       one without being rebuilt. */
+    child_holder = gtk_vbox_new (FALSE, 0);
+    gtk_widget_show (child_holder);
+    gtk_box_pack_start (GTK_BOX (vbox), child_holder, TRUE, TRUE, 0);
+    if (embedded)
+        pane->child_holder = child_holder;
+    else
+        pane->window_child_holder = child_holder;
+
+    return pack_frame_in_table (vbox, position);
 }
 
 static GtkWidget *

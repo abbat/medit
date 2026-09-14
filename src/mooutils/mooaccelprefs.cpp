@@ -103,6 +103,26 @@ shortcut_new (ChoiceType  choice,
     return s;
 }
 
+/*
+ * What the three radio buttons mean for an accelerator that is not in the
+ * pending-changes table: "None" for no accelerator at all, "Default" when it
+ * still matches what the action was built with, "Custom" for anything else.
+ * The distinction is not cosmetic -- it is what apply_one() writes back, so a
+ * shortcut that happens to equal the default has to be recorded as DEFAULT and
+ * not as a custom accelerator that looks the same today.
+ */
+static ChoiceType
+choice_for_accel (const char *accel,
+                  const char *default_accel)
+{
+    if (!strcmp (accel, default_accel))
+        return DEFAULT;
+    else if (!accel[0])
+        return NONE;
+    else
+        return CUSTOM;
+}
+
 static void
 shortcut_free (Shortcut *s)
 {
@@ -546,6 +566,12 @@ tree_selection_changed (MooAccelPrefsPage *page)
     const char *default_accel, *new_accel = "";
     GtkRadioButton *new_button = NULL;
     Shortcut *shortcut;
+    ChoiceType choice;
+
+    /* Bring the shortcut frame in sync with whatever row is selected now:
+       nothing, or a group heading, leaves it empty and insensitive; an action
+       fills in its default accelerator and selects the radio button that says
+       where its current one came from. */
 
     if (gtk_tree_selection_get_selected (page->selection, NULL, &iter))
     {
@@ -559,6 +585,7 @@ tree_selection_changed (MooAccelPrefsPage *page)
     gtk_tree_row_reference_free (page->current_row);
     page->current_row = NULL;
 
+    /* A group heading has no action in COLUMN_ACTION. */
     if (!selected_action)
     {
         gtk_label_set_text (page->default_label, "");
@@ -566,6 +593,9 @@ tree_selection_changed (MooAccelPrefsPage *page)
         return;
     }
 
+    /* A row reference rather than the iter, because the accel column of this
+       row is rewritten when the user edits the shortcut and the store is
+       sorted, so the row can move. */
     path = gtk_tree_model_get_path (GTK_TREE_MODEL (page->store), &iter);
     page->current_row = gtk_tree_row_reference_new (GTK_TREE_MODEL (page->store), path);
     gtk_tree_path_free (path);
@@ -580,53 +610,44 @@ tree_selection_changed (MooAccelPrefsPage *page)
     else
         gtk_label_set_text (page->default_label, default_label);
 
+    /* Setting the buttons below would come back as "the user chose this",
+       which would record an unasked-for change and, for the accel button,
+       recurse. */
     block_radio (page);
     block_accel_set (page);
 
+    /* An entry in page->changed is an edit made since the dialog opened and
+       not applied yet, so it wins over what the action currently has. */
     shortcut = (Shortcut*) g_hash_table_lookup (page->changed, action);
 
     if (shortcut)
-    {
-        switch (shortcut->choice)
-        {
-            case NONE:
-                new_button = page->shortcut_none;
-                new_accel = NULL;
-                break;
-
-            case DEFAULT:
-                new_button = page->shortcut_default;
-                new_accel = default_accel;
-                break;
-
-            case CUSTOM:
-                new_button = page->shortcut_custom;
-                new_accel = shortcut->accel;
-                break;
-
-            default:
-                g_assert_not_reached ();
-        }
-    }
+        choice = shortcut->choice;
     else
-    {
-        const char *accel = get_action_accel (action);
+        choice = choice_for_accel (get_action_accel (action), default_accel);
 
-        if (!strcmp (accel, default_accel))
-        {
+    switch (choice)
+    {
+        case NONE:
+            new_button = page->shortcut_none;
+            /* NULL rather than "": clears the accel button instead of
+               showing an empty shortcut. */
+            new_accel = NULL;
+            break;
+
+        case DEFAULT:
             new_button = page->shortcut_default;
             new_accel = default_accel;
-        }
-        else if (!accel[0])
-        {
-            new_button = page->shortcut_none;
-            new_accel = NULL;
-        }
-        else
-        {
+            break;
+
+        case CUSTOM:
+            /* shortcut->accel only when there is a pending edit; otherwise the
+               action's own accelerator, which is what CUSTOM was derived from. */
             new_button = page->shortcut_custom;
-            new_accel = accel;
-        }
+            new_accel = shortcut ? shortcut->accel : get_action_accel (action);
+            break;
+
+        default:
+            g_assert_not_reached ();
     }
 
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (new_button), TRUE);

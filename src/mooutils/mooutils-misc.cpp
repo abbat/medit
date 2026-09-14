@@ -260,6 +260,14 @@ _moo_get_top_window (GSList *windows)
 
     static Atom list_stacking_atom = None;
 
+    /* The window manager keeps _NET_CLIENT_LIST_STACKING on the root window:
+       every managed window, bottom of the stack first. So the topmost of the
+       windows we were handed is the last one in that list that is also ours
+       and not minimized -- which is what the backwards walk at the end does.
+       Everything before it is getting the list and making sure it is the list
+       we think it is; any of those going wrong leaves the caller with NULL
+       rather than a guess. */
+
     g_return_val_if_fail (windows != NULL, NULL);
 
     if (!windows->next)
@@ -331,6 +339,9 @@ _moo_get_top_window (GSList *windows)
         return NULL;
     }
 
+    /* Backwards: topmost first. is_minimized() has to be asked per window
+       rather than inferred from the list, because a minimized window stays in
+       the stacking order. */
     for (i = nitems_return - 1; i >= 0; --i)
     {
         if (contains (xids, data[i]) && !is_minimized (display, data[i]))
@@ -342,6 +353,8 @@ _moo_get_top_window (GSList *windows)
         }
     }
 
+    /* Every one of them minimized, which the caller has no way to act on --
+       hand back the first and let it be raised. */
     XFree (data);
     g_array_free (xids, TRUE);
     g_warning ("all minimized?");
