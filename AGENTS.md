@@ -210,10 +210,11 @@ Coordinates passed to cairo are relative to the widget/window, never
 `allocation.x/y` (that offset is GTK+2's, and adding it puts the drawing outside
 the clip).
 
-`gdk_cairo_create()` on a window inside `::draw` does still paint — the text
-view's whitespace markers and the icon view's cells reach the screen that way —
-but it is deprecated and bypasses the clip, so prefer transforming the context
-you were handed. Where it appeared not to work, the real cause was ordering:
+`gdk_cairo_create()` on a window inside `::draw` does still paint, but it is
+deprecated since 3.22 and bypasses the clip, so transform the context you were
+handed instead: `cairo_save()`, `gtk_cairo_transform_to_window (cr, widget,
+window)`, `cairo_restore()`. No GTK+3 path in the tree makes a context of its own
+any more. Where it appeared not to work, the real cause was ordering:
 `GtkTextView` fills the border windows in its own `::draw` and wiped out what had
 been painted before the chain-up.
 

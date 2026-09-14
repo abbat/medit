@@ -132,9 +132,6 @@ nodes, and a widget that is not a `GtkNotebook` has none of them whatever it pas
 the render calls. That wants a CSS name and node structure of its own, which is the
 whole widget's drawing rather than a cleanup.
 
-Known and deliberately left alone: `draw_entry()` in `mooiconview.cpp` still uses
-`gdk_cairo_create()` per row (deprecated since 3.22, bypasses the clip, works).
-
 Four `#if 0` blocks survive the dead-code cleanup on purpose, because each documents a
 feature that is disabled rather than abandoned: the tree view's drag source in
 `moofileview.cpp` (drag and drop works in icon view only), `_moo_edit_print_options_dialog()`
