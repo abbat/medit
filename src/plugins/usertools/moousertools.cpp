@@ -663,6 +663,82 @@ load_directories (MooUserToolType   type,
 }
 
 
+/*
+ * One child element of <command>, into the field of info it names. Unknown
+ * names warn rather than fail: a tool file is edited by hand and written by
+ * older and newer medit alike, so one element nobody recognises should not
+ * cost the user the whole tool. A name with a colon in it is somebody else's
+ * namespace and is passed over in silence.
+ *
+ * <options> and <type> are read by _moo_command_parse_item() off the same
+ * element, which is why they are listed here only to keep them out of the
+ * unknown-element warning.
+ */
+static void
+parse_command_child (MooUserToolInfo *info,
+                     MooMarkupNode   *child,
+                     const char      *file)
+{
+    if (strcmp (child->name, KEY_NAME) == 0)
+    {
+        info->name = g_strdup (MOO_MARKUP_ELEMENT (child)->content);
+    }
+    else if (strcmp (child->name, KEY_ACCEL) == 0)
+    {
+        info->accel = g_strdup (MOO_MARKUP_ELEMENT (child)->content);
+    }
+    else if (strcmp (child->name, KEY_MENU) == 0)
+    {
+        info->menu = g_strdup (MOO_MARKUP_ELEMENT (child)->content);
+    }
+    else if (strcmp (child->name, KEY_POSITION) == 0)
+    {
+        const char *position = MOO_MARKUP_ELEMENT (child)->content;
+
+        if (position)
+        {
+            if (!g_ascii_strcasecmp (position, "end"))
+                info->position = MOO_USER_TOOL_POS_END;
+            else if (!g_ascii_strcasecmp (position, "start"))
+                info->position = MOO_USER_TOOL_POS_START;
+            else
+                g_warning ("unknown position type '%s' for tool %s in file %s",
+                           position, info->id, file);
+        }
+    }
+    /* <langs> is the old spelling of a filter that only ever selected on
+       language, so it becomes one. Either way there is room for a single
+       filter and a second one is dropped, not merged. */
+    else if (strcmp (child->name, KEY_LANGS) == 0)
+    {
+        if (info->filter)
+            g_warning ("duplicated filter in tool '%s' in file '%s'", info->id, file);
+        else
+            info->filter = g_strdup_printf ("langs: %s", MOO_MARKUP_ELEMENT (child)->content);
+    }
+    else if (strcmp (child->name, KEY_FILTER) == 0)
+    {
+        if (info->filter)
+            g_warning ("duplicated filter in tool '%s' in file '%s'", info->id, file);
+        else
+            info->filter = g_strdup (MOO_MARKUP_ELEMENT (child)->content);
+    }
+    else if (strcmp (child->name, KEY_OPTIONS) == 0 || strcmp (child->name, KEY_TYPE) == 0)
+    {
+        // handled by _moo_command_parse_item
+    }
+    else if (!strchr (child->name, ':'))
+    {
+        g_warning ("invalid element '%s' in tool '%s' in file '%s'", child->name, info->id, file);
+    }
+}
+
+/*
+ * One <command> element into a MooUserToolInfo, or NULL if it is not usable.
+ * Anything it needs to be usable -- the element name, an id, a name, and a
+ * command body the factory understands -- warns and returns NULL; anything
+ * else is filled in by parse_command_child() and defaulted when absent.
+ */
 static MooUserToolInfo *
 parse_command (MooMarkupNode    *elm,
                MooUserToolType   type,
@@ -694,6 +770,9 @@ parse_command (MooMarkupNode    *elm,
         return NULL;
     }
 
+    /* A deleted or builtin tool is a marker rather than a tool: what it says is
+       that the tool of this id from a directory read earlier is to be dropped
+       or left alone, so nothing below it is read and no name is required. */
     if (info->deleted || info->builtin)
         return info;
 
@@ -702,55 +781,7 @@ parse_command (MooMarkupNode    *elm,
         if (!MOO_MARKUP_IS_ELEMENT (child))
             continue;
 
-        if (strcmp (child->name, KEY_NAME) == 0)
-        {
-            info->name = g_strdup (MOO_MARKUP_ELEMENT (child)->content);
-        }
-        else if (strcmp (child->name, KEY_ACCEL) == 0)
-        {
-            info->accel = g_strdup (MOO_MARKUP_ELEMENT (child)->content);
-        }
-        else if (strcmp (child->name, KEY_MENU) == 0)
-        {
-            info->menu = g_strdup (MOO_MARKUP_ELEMENT (child)->content);
-        }
-        else if (strcmp (child->name, KEY_POSITION) == 0)
-        {
-            const char *position = MOO_MARKUP_ELEMENT (child)->content;
-
-            if (position)
-            {
-                if (!g_ascii_strcasecmp (position, "end"))
-                    info->position = MOO_USER_TOOL_POS_END;
-                else if (!g_ascii_strcasecmp (position, "start"))
-                    info->position = MOO_USER_TOOL_POS_START;
-                else
-                    g_warning ("unknown position type '%s' for tool %s in file %s",
-                               position, info->id, file);
-            }
-        }
-        else if (strcmp (child->name, KEY_LANGS) == 0)
-        {
-            if (info->filter)
-                g_warning ("duplicated filter in tool '%s' in file '%s'", info->id, file);
-            else
-                info->filter = g_strdup_printf ("langs: %s", MOO_MARKUP_ELEMENT (child)->content);
-        }
-        else if (strcmp (child->name, KEY_FILTER) == 0)
-        {
-            if (info->filter)
-                g_warning ("duplicated filter in tool '%s' in file '%s'", info->id, file);
-            else
-                info->filter = g_strdup (MOO_MARKUP_ELEMENT (child)->content);
-        }
-        else if (strcmp (child->name, KEY_OPTIONS) == 0 || strcmp (child->name, KEY_TYPE) == 0)
-        {
-            // handled by _moo_command_parse_item
-        }
-        else if (!strchr (child->name, ':'))
-        {
-            g_warning ("invalid element '%s' in tool '%s' in file '%s'", child->name, info->id, file);
-        }
+        parse_command_child (info, child, file);
     }
 
     if (!info->name)
@@ -760,6 +791,9 @@ parse_command (MooMarkupNode    *elm,
         return NULL;
     }
 
+    /* The command body itself -- which factory runs it and with what options --
+       is not ours to read: it belongs to whichever MooCommandFactory the
+       <type> element names. */
     info->cmd_data = _moo_command_parse_item (elm, info->name, file,
                                               &info->cmd_factory,
                                               &info->options);
