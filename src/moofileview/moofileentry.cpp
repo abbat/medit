@@ -554,6 +554,14 @@ completion_parse_text (MooFileEntryCompletion *cmpl,
     if (!cmpl->priv->dirname || strcmp (cmpl->priv->dirname, dirname))
     {
         completion_disconnect_folder (cmpl);
+        /*
+         * dirname names the folder that was just disconnected, so it goes with
+         * it. Keeping it would make the error path below leave the two out of
+         * step: the next call for the same text would match this stale dirname,
+         * take the refilter branch, and refilter a model with no folder behind
+         * it.
+         */
+        g_clear_pointer (&cmpl->priv->dirname, g_free);
 
         folder = _moo_file_system_get_folder (cmpl->priv->fs,
                                               dirname, MOO_FILE_HAS_STAT,
@@ -568,13 +576,7 @@ completion_parse_text (MooFileEntryCompletion *cmpl,
 
         g_free (cmpl->priv->display_dirname);
         cmpl->priv->display_dirname = g_strndup (text, text_len - cmpl->priv->display_basename_len);
-        {
-            char *new_dirname = g_strdup (dirname);
-            if (dirname == cmpl->priv->dirname)
-                dirname = NULL;
-            g_free (cmpl->priv->dirname);
-            cmpl->priv->dirname = new_dirname;
-        }
+        cmpl->priv->dirname = g_strdup (dirname);
 
         completion_connect_folder (cmpl, folder);
 
