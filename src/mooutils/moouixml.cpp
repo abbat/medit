@@ -2224,7 +2224,15 @@ create_tool_item (MooUiXml       *xml,
 
     }
     else
-        return TRUE;
+    {
+        /*
+         * Before the custom MooMenuToolButton was removed this branch built one
+         * for an <item> with no action= of its own. Nothing in the shipped XML
+         * has such an item, so the branch is dead -- but a plugin that adds one
+         * would otherwise have it disappear from the toolbar in silence.
+         */
+        g_return_val_if_reached (FALSE);
+    }
 
     g_return_val_if_fail (tool_item != NULL, FALSE);
 
