@@ -17,6 +17,7 @@
 #define MOO_FILE_PRIVATE_H
 
 #include "moofileview/moofile.h"
+#include "mooglib/moo-stat.h"
 
 G_BEGIN_DECLS
 
@@ -78,6 +79,7 @@ guint8       _moo_file_get_icon_type    (MooFile        *file,
                                          const char     *dirname);
 void         _moo_file_stat             (MooFile        *file,
                                          const char     *dirname);
+MooFileInfo  _moo_file_info_for_stat    (const MgwStatBuf *buf);
 void         _moo_file_free_statbuf     (MooFile        *file);
 void         _moo_file_find_mime_type   (MooFile        *file,
                                          const char     *path);

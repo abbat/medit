@@ -16,6 +16,8 @@ target_sources(medit PRIVATE
     moofileview-dialogs.h
     moofileview-impl.h
     moofileview-private.h
+    moofileview-tests.cpp
+    moofileview-tests.h
     moofileview-tools.cpp
     moofileview-tools.h
     moofileview.cpp

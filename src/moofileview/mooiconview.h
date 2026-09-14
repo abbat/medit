@@ -138,6 +138,11 @@ void        _moo_icon_view_set_drag_dest_row    (MooIconView        *view,
                                                  GtkTreePath        *path);
 GtkTreePath *_moo_icon_view_get_drag_dest_row   (MooIconView        *view);
 
+/* Scroll step for a pointer held at @x during a drag over a view @width wide,
+   0 when it is not near enough to an edge to scroll. Exposed for the tests. */
+int         _moo_icon_view_drag_scroll_delta    (int                 x,
+                                                 int                 width);
+
 
 G_END_DECLS
 

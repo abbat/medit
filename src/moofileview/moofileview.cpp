@@ -343,6 +343,12 @@ static gboolean drag_motion                 (GtkWidget      *view,
                                              int             y,
                                              guint           time,
                                              MooFileView    *fileview);
+static void     setup_drop_timeout          (MooFileView    *fileview,
+                                             gboolean        highlight_target,
+                                             GtkTreePath    *path,
+                                             GtkWidget      *widget,
+                                             int             abs_x,
+                                             int             abs_y);
 
 static gboolean moo_file_view_drop          (MooFileView    *fileview,
                                              const char     *path,
@@ -495,6 +501,7 @@ moo_file_view_class_init (MooFileViewClass *klass)
     GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
     GtkBindingSet *binding_set;
 
+    /* Virtual function overrides */
     gobject_class->finalize = moo_file_view_finalize;
     gobject_class->set_property = moo_file_view_set_property;
     gobject_class->get_property = moo_file_view_get_property;
@@ -507,6 +514,8 @@ moo_file_view_class_init (MooFileViewClass *klass)
     klass->chdir = moo_file_view_chdir_real;
     klass->drop = moo_file_view_drop;
     klass->drop_data_received = moo_file_view_drop_data_received;
+
+    /* Properties */
 
     g_object_class_install_property (gobject_class,
                                      PROP_HAS_SELECTION,
@@ -597,6 +606,7 @@ moo_file_view_class_init (MooFileViewClass *klass)
                                              MOO_FILE_VIEW_ICON,
                                              (GParamFlags) G_PARAM_READWRITE));
 
+    /* Signals: core navigation and file actions */
     signals[CHDIR] =
             g_signal_new ("chdir",
                           G_OBJECT_CLASS_TYPE (klass),
@@ -805,6 +815,7 @@ moo_file_view_class_init (MooFileViewClass *klass)
                                _moo_marshal_VOID__VOID,
                                G_TYPE_NONE, 0);
 
+    /* Default key bindings for navigation, selection, and clipboard operations */
     binding_set = gtk_binding_set_by_class (klass);
 
     gtk_binding_entry_add_signal (binding_set,
@@ -1114,6 +1125,22 @@ moo_file_view_reload (MooFileView *fileview)
 }
 
 
+/*
+ * Every action the file view has, created once when the view is built.
+ *
+ * The actions are what the toolbar, the menu and the accelerators are all made
+ * of: the XML loaded here names them, and each name is filled in below. So the
+ * list is long by nature -- it is the whole command set of the pane, written
+ * out -- and there is nothing to be gained by cutting it into pieces, since
+ * every entry is independent of the others and none of them is worth reading
+ * on its own.
+ *
+ * What is worth knowing is the two things that are not plain registration.
+ * Some actions are only meaningful part of the time, and those are bound to a
+ * property of the view so that they grey themselves out; and some are
+ * connected to a signal rather than to a function, so that the embedder can
+ * intercept them.
+ */
 static void
 init_actions (MooFileView *fileview)
 {
@@ -1123,6 +1150,8 @@ init_actions (MooFileView *fileview)
     fileview->priv->actions = moo_action_collection_new ("File Selector", _("File Selector"));
     char *ui;
 
+    /* The XML only lays the actions out; a missing or unparsable resource
+       leaves an empty layout rather than a view without actions. */
     fileview->priv->ui_xml = moo_ui_xml_new ();
     ui = moo_resource_get_text ("/ui/moofileview.xml", NULL);
     if (ui != NULL)
@@ -1133,6 +1162,7 @@ init_actions (MooFileView *fileview)
 
     group = moo_action_collection_get_group (fileview->priv->actions, NULL);
 
+    /* Navigation actions */
     moo_action_group_add_action (group, "GoUp",
                                  "label", GTK_STOCK_GO_UP,
                                  "tooltip", _("Go to parent folder"),
@@ -1175,6 +1205,7 @@ init_actions (MooFileView *fileview)
                                  "closure-callback", action_file_view_go_home,
                                  NULL);
 
+    /* File operations */
     moo_action_group_add_action (group, "NewFolder",
                                  "label", MOO_STOCK_NEW_FOLDER,
                                  "tooltip", MOO_STOCK_NEW_FOLDER,
@@ -1193,6 +1224,7 @@ init_actions (MooFileView *fileview)
     moo_bind_bool_property (action, "sensitive", fileview, "has-selection", FALSE);
     g_signal_connect (action, "activate", G_CALLBACK (file_view_delete_selected_cb), fileview);
 
+    /* View options (toggle actions) */
     action = moo_action_group_add_action (group, "ShowHiddenFiles",
                                           "action-type::", MOO_TYPE_TOGGLE_ACTION,
                                           "label", _("Show Hidden Files"),
@@ -1223,6 +1255,7 @@ init_actions (MooFileView *fileview)
                                           NULL);
     _moo_sync_toggle_action (action, fileview, "sort-folders-first", FALSE);
 
+    /* File properties and bookmarks */
     action = moo_action_group_add_action (group, "Properties",
                                           "label", GTK_STOCK_PROPERTIES,
                                           "tooltip", GTK_STOCK_PROPERTIES,
@@ -1259,6 +1292,7 @@ init_actions (MooFileView *fileview)
                                  "closure-callback", edit_bookmarks,
                                  NULL);
 
+    /* Clipboard operations */
     action = moo_action_group_add_action (group, "Cut",
                                           "label", GTK_STOCK_CUT,
                                           "tooltip", GTK_STOCK_CUT,
@@ -1291,6 +1325,8 @@ init_actions (MooFileView *fileview)
                                  "closure-callback", file_view_paste_clipboard,
                                  NULL);
 
+    /* A signal rather than a callback, so that whoever embedded the view can
+       hear the reload and act on it too. */
     moo_action_group_add_action (group, "Reload",
                                  "label", _("Reload"),
                                  "tooltip", _("Reload"),
@@ -4246,23 +4282,22 @@ entry_activate (GtkEntry       *entry,
 #define PRINT_KEY_EVENT(event)
 
 
-static gboolean
-moo_file_view_key_press (MooFileView    *fileview,
-                         GtkWidget      *widget,
-                         GdkEventKey    *event)
+/*
+ * Whether @keyval is a key that puts text in.
+ *
+ * Typing in the file list starts the path entry, so an ordinary character has
+ * to be told from everything else -- and it is "everything else" that is
+ * listed here, because there is no test the other way round: a keyval counts
+ * as text unless it is one of the keys that are not. The event's string is not
+ * enough on its own, since several of these carry one too.
+ *
+ * The list is the non-character half of gdkkeysyms.h, which is why it is this
+ * long, and why it only ever gets added to.
+ */
+gboolean
+_moo_file_view_key_is_text_input (guint keyval)
 {
-    if (fileview->priv->entry_state)
-    {
-        g_warning ("oops");
-        stop_path_entry (fileview, FALSE);
-        return FALSE;
-    }
-
-    /* return immediately if event doesn't look like text typed in */
-    if (event->state & MOO_ACCEL_MODS_MASK & ~GDK_SHIFT_MASK)
-        return FALSE;
-
-    switch (event->keyval)
+    switch (keyval)
     {
         case GDK_KEY_VoidSymbol:
         case GDK_KEY_BackSpace:
@@ -4499,34 +4534,88 @@ moo_file_view_key_press (MooFileView    *fileview,
             return FALSE;
     }
 
+    return TRUE;
+}
+
+
+/*
+ * The typed key handed on to the path entry, which takes the focus with it.
+ *
+ * The event is copied because the entry will only act on one addressed to its
+ * own window, and an event delivered to the file list carries the list's --
+ * gtk_widget_event() passes the event on as it is rather than re-addressing
+ * it. The entry is emptied first, so that what was typed becomes the whole of
+ * its contents rather than being appended to what was left there last time.
+ */
+static gboolean
+start_path_entry_with_key (MooFileView *fileview,
+                           GdkEventKey *event)
+{
+    GdkEvent *copy;
+    GtkWidget *entry = GTK_WIDGET (fileview->priv->entry);
+
+    g_return_val_if_fail (event != NULL, FALSE);
+    g_return_val_if_fail (gtk_widget_get_realized (entry), FALSE);
+
+    copy = gdk_event_copy ((GdkEvent*) event);
+    g_object_unref (copy->key.window);
+    copy->key.window = g_object_ref (gtk_widget_get_window (entry));
+
+    gtk_widget_grab_focus (entry);
+
+    path_entry_set_text (fileview, "");
+    gtk_widget_event (entry, copy);
+
+    gdk_event_free (copy);
+    return TRUE;
+}
+
+
+/*
+ * A key pressed in the file list, before the list itself sees it.
+ *
+ * What this is for is typeahead: a character typed with the list focused goes
+ * to the path entry and starts typing a name there, the way it would in a file
+ * chooser. Everything that is not a bare character -- an accelerator, a
+ * navigation key, a key the list or the view binds itself -- is left for the
+ * handlers below to deal with, and only what none of them wanted is redirected.
+ *
+ * Returns TRUE when the key was consumed here, FALSE to let it travel on.
+ */
+static gboolean
+moo_file_view_key_press (MooFileView    *fileview,
+                         GtkWidget      *widget,
+                         GdkEventKey    *event)
+{
+    if (fileview->priv->entry_state)
+    {
+        g_warning ("oops");
+        stop_path_entry (fileview, FALSE);
+        return FALSE;
+    }
+
+    /* Anything held down but Shift makes this an accelerator rather than
+       typing, and accelerators are not ours to swallow. */
+    if (event->state & MOO_ACCEL_MODS_MASK & ~GDK_SHIFT_MASK)
+        return FALSE;
+
+    if (!_moo_file_view_key_is_text_input (event->keyval))
+        return FALSE;
+
     PRINT_KEY_EVENT (event);
 
+    /* The list first, then the view: a key either of them binds keeps its
+       meaning, and typeahead only gets what is left over. */
     if (GTK_WIDGET_CLASS(G_OBJECT_GET_CLASS (widget))->key_press_event (widget, event))
         return TRUE;
 
     if (GTK_WIDGET_CLASS(G_OBJECT_GET_CLASS (fileview))->key_press_event (widget, event))
         return TRUE;
 
+    /* A keyval can be text and still produce nothing -- a dead key, for one --
+       and there is no name to start typing then. */
     if (event->string && event->length)
-    {
-        GdkEvent *copy;
-        GtkWidget *entry = GTK_WIDGET (fileview->priv->entry);
-
-        g_return_val_if_fail (event != NULL, FALSE);
-        g_return_val_if_fail (gtk_widget_get_realized (entry), FALSE);
-
-        copy = gdk_event_copy ((GdkEvent*) event);
-        g_object_unref (copy->key.window);
-        copy->key.window = g_object_ref (gtk_widget_get_window (entry));
-
-        gtk_widget_grab_focus (entry);
-
-        path_entry_set_text (fileview, "");
-        gtk_widget_event (entry, copy);
-
-        gdk_event_free (copy);
-        return TRUE;
-    }
+        return start_path_entry_with_key (fileview, event);
 
     return FALSE;
 }
@@ -5440,6 +5529,18 @@ check_drop_targets (MooFileView    *fileview,
 }
 
 
+/*
+ * The pointer moved while dragging over the file list or the bookmark list.
+ *
+ * Three things come out of this, and all three have to be redone on every
+ * motion event because the answer depends on where the pointer is now: the
+ * row drawn as the drop target, the action reported back to the source, and
+ * the timeout that opens a folder the pointer is resting on.
+ *
+ * Returns FALSE when nothing being dragged is of a type we take, which leaves
+ * the event to whoever else is interested; TRUE once the drop has been
+ * answered for, whether or not it would be accepted here.
+ */
 static gboolean
 drag_motion (GtkWidget      *widget,
              GdkDragContext *context,
@@ -5469,9 +5570,13 @@ drag_motion (GtkWidget      *widget,
         current_dir = fileview->priv->current_dir;
         source_dir = (MooFolder *) g_object_get_data (G_OBJECT (fileview), "moo-file-view-source-dir");
 
+        /* Nothing is being shown, so there is nowhere to drop and no row to
+           point at; the status is left as the previous event set it. */
         if (!current_dir)
             goto out;
 
+        /* A row under the pointer only counts when it is a directory: that is
+           a drop into it, and it is the one case that gets a highlight. */
         if (path)
         {
             MooFile *file = file_view_get_file_at_path (fileview, path);
@@ -5485,6 +5590,9 @@ drag_motion (GtkWidget      *widget,
             _moo_file_unref (file);
         }
 
+        /* Anywhere else in the view is a drop into the folder being shown,
+           which is worth doing only when it is not where the files came
+           from. */
         if (source_dir != current_dir)
             can_drop = TRUE;
     }
@@ -5499,52 +5607,16 @@ drag_motion (GtkWidget      *widget,
     else
         _moo_tree_view_set_drag_dest_row (widget, NULL);
 
+    /* Move in preference to whatever the source suggested, when the source
+       offers it at all: dragging a file about inside a file manager is
+       normally meant to move it rather than to leave a copy behind. */
     if (can_drop)
         gdk_drag_status (context, gdk_drag_context_get_actions(context) & GDK_ACTION_MOVE ?
                 GDK_ACTION_MOVE : gdk_drag_context_get_suggested_action(context), time);
     else
         gdk_drag_status (context, (GdkDragAction) 0, time);
 
-    if (highlight_target)
-    {
-        gboolean new_timeout = TRUE;
-
-        if (fileview->priv->drop_to.row)
-        {
-            GtkTreePath *old_path = gtk_tree_row_reference_get_path (fileview->priv->drop_to.row);
-
-            if (old_path && !gtk_tree_path_compare (path, old_path) &&
-                !gtk_drag_check_threshold (widget,
-                                           fileview->priv->drop_to.x,
-                                           fileview->priv->drop_to.y,
-                                           abs_x,
-                                           abs_y))
-            {
-                new_timeout = FALSE;
-                g_assert (fileview->priv->drop_to.timeout != 0);
-            }
-        }
-
-        if (new_timeout)
-        {
-            cancel_drop_open (fileview);
-
-            fileview->priv->drop_to.row =
-                    gtk_tree_row_reference_new (_moo_tree_view_get_model (widget), path);
-
-            fileview->priv->drop_to.timeout =
-                    g_timeout_add (DROP_OPEN_TIMEOUT,
-                                   (GSourceFunc) drop_open_timeout_func,
-                                   fileview);
-
-            fileview->priv->drop_to.x = abs_x;
-            fileview->priv->drop_to.y = abs_y;
-        }
-    }
-    else
-    {
-        cancel_drop_open (fileview);
-    }
+    setup_drop_timeout (fileview, highlight_target, path, widget, abs_x, abs_y);
 
 out:
     if (path)
@@ -5604,6 +5676,61 @@ button_drag_motion (MooFileView    *fileview,
 
     gdk_drag_status (context, gdk_drag_context_get_suggested_action(context), time);
     return TRUE;
+}
+
+
+static void
+setup_drop_timeout (MooFileView  *fileview,
+                    gboolean      highlight_target,
+                    GtkTreePath  *path,
+                    GtkWidget    *widget,
+                    int           abs_x,
+                    int           abs_y)
+{
+    /* Manage folder auto-open timeout: if hovering over a valid target
+       at approximately the same position as last check, keep existing timeout;
+       otherwise create a new one or cancel if target is not valid. */
+
+    if (highlight_target)
+    {
+        gboolean new_timeout = TRUE;
+
+        if (fileview->priv->drop_to.row)
+        {
+            GtkTreePath *old_path = gtk_tree_row_reference_get_path (fileview->priv->drop_to.row);
+
+            if (old_path && !gtk_tree_path_compare (path, old_path) &&
+                !gtk_drag_check_threshold (widget,
+                                           fileview->priv->drop_to.x,
+                                           fileview->priv->drop_to.y,
+                                           abs_x,
+                                           abs_y))
+            {
+                new_timeout = FALSE;
+                g_assert (fileview->priv->drop_to.timeout != 0);
+            }
+        }
+
+        if (new_timeout)
+        {
+            cancel_drop_open (fileview);
+
+            fileview->priv->drop_to.row =
+                    gtk_tree_row_reference_new (_moo_tree_view_get_model (widget), path);
+
+            fileview->priv->drop_to.timeout =
+                    g_timeout_add (DROP_OPEN_TIMEOUT,
+                                   (GSourceFunc) drop_open_timeout_func,
+                                   fileview);
+
+            fileview->priv->drop_to.x = abs_x;
+            fileview->priv->drop_to.y = abs_y;
+        }
+    }
+    else
+    {
+        cancel_drop_open (fileview);
+    }
 }
 
 
@@ -5769,6 +5896,92 @@ drop_item_activated (GObject     *item,
 }
 
 
+/*
+ * The menu that asks what to do with the files just dropped: move them, copy
+ * them, make links, or nothing.
+ *
+ * Takes over @filenames, which outlives this call either way -- the answer
+ * comes back later, from whichever item is picked, so the list has to be kept
+ * until then. It is hung on the menu, which owns it and frees it when it goes
+ * away whether an item was picked or not; the items get the same pointer
+ * without owning it, since they die with the menu. The destination is copied
+ * for the same reason, @destdir being the caller's.
+ *
+ * The accelerator labels are only labels: the modifiers they name are read
+ * off the keyboard by the caller, which is why holding one down means this
+ * menu never appears at all.
+ *
+ * The drag is finished before the menu is shown rather than after, because the
+ * source must not be left waiting for an answer the user may take any amount
+ * of time to give, or never give.
+ */
+static void
+popup_drop_action_menu (MooFileView    *fileview,
+                        GList          *filenames,
+                        const char     *destdir,
+                        GdkDragContext *context,
+                        guint           time)
+{
+    GtkWidget *menu, *item;
+    char *dir_copy = g_strdup (destdir);
+
+    menu = gtk_menu_new ();
+    g_object_ref_sink (menu);
+
+    g_object_set_data_full (G_OBJECT (menu), "moo-file-view-drop-files",
+                            filenames, (GDestroyNotify) free_string_list);
+    g_object_set_data_full (G_OBJECT (menu), "moo-file-view-drop-dir",
+                            dir_copy, g_free);
+
+#define CREATE_IT(stock,action,accel_label)                                                 \
+    item = gtk_image_menu_item_new_from_stock (stock, NULL);                                \
+    g_object_set_data (G_OBJECT (item), "moo-file-view-drop-files", filenames);             \
+    g_object_set_data (G_OBJECT (item), "moo-file-view-drop-dir", dir_copy);                \
+    g_object_set_data (G_OBJECT (item), "moo-file-view-drop-action",                        \
+                       GINT_TO_POINTER (action));                                           \
+    g_signal_connect (item, "activate", G_CALLBACK (drop_item_activated), fileview);        \
+    gtk_widget_show (item);                                                                 \
+    _moo_menu_item_set_accel_label (item, accel_label);                                     \
+    gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
+
+    CREATE_IT (MOO_STOCK_FILE_MOVE, GDK_ACTION_MOVE, "Shift");
+    CREATE_IT (MOO_STOCK_FILE_COPY, GDK_ACTION_COPY, "Control");
+    CREATE_IT (MOO_STOCK_FILE_LINK, GDK_ACTION_LINK, "Control+Shift");
+#undef CREATE_IT
+
+    item = gtk_separator_menu_item_new ();
+    gtk_widget_show (item);
+    gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
+
+    /* Cancel carries no data and no handler: dismissing the menu is all it
+       has to do, and the menu going away is what frees the list. */
+    item = gtk_image_menu_item_new_from_stock (GTK_STOCK_CANCEL, NULL);
+    gtk_widget_show (item);
+    _moo_menu_item_set_accel_label (item, "Escape");
+    gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
+
+    _moo_file_view_drag_finish (fileview, context, TRUE, FALSE, time);
+
+    /* The menu keeps itself alive while it is up, so this reference is the
+       one taken above and not the menu's last. */
+    gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL, 0, 0);
+    g_object_unref (menu);
+}
+
+
+/*
+ * Files dropped on the view, as the URIs the drag carried.
+ *
+ * The drop has to be answered before this returns, and there are two ways of
+ * doing that. When the operation is known -- a modifier held down says which,
+ * and the drag source suggested one -- the files are moved, copied or linked
+ * here and now. When it is not, the question is put to the user in a menu, and
+ * answering the drag cannot wait for that, so the source is told the drop
+ * succeeded and the files are dealt with afterwards.
+ *
+ * @x and @y are unused: where in the view the drop landed was already turned
+ * into @destdir by the caller.
+ */
 static void
 moo_file_view_drop_uris (MooFileView    *fileview,
                          char          **uris,
@@ -5788,6 +6001,8 @@ moo_file_view_drop_uris (MooFileView    *fileview,
 
     g_assert (uris != NULL);
 
+    /* One unconvertible URI abandons the whole drop: a partly carried out
+       drop would be worse than none, and there is no way to report it. */
     for (u = uris; *u; ++u)
     {
         char *file = g_filename_from_uri (*u, NULL, &error);
@@ -5808,8 +6023,10 @@ moo_file_view_drop_uris (MooFileView    *fileview,
         goto out;
     }
 
+    /* A modifier held down means the user has already chosen, so the source's
+       suggestion is taken as it stands; with no modifier there is nothing to
+       go on and the choice is worth asking about. */
     mask = _moo_get_modifiers (widget);
-
 
     if (mask & (GDK_SHIFT_MASK | GDK_CONTROL_MASK | GDK_MOD1_MASK))
         action = gdk_drag_context_get_suggested_action(context);
@@ -5829,49 +6046,11 @@ moo_file_view_drop_uris (MooFileView    *fileview,
             action = GDK_ACTION_ASK;
     }
 
+    /* From here the list belongs to the menu, and the answer arrives long
+       after this returns -- so there is nothing left to finish or free. */
     if (action == GDK_ACTION_ASK)
     {
-        GtkWidget *menu, *item;
-        char *dir_copy = g_strdup (destdir);
-
-        menu = gtk_menu_new ();
-        g_object_ref_sink (menu);
-
-        g_object_set_data_full (G_OBJECT (menu), "moo-file-view-drop-files",
-                                filenames, (GDestroyNotify) free_string_list);
-        g_object_set_data_full (G_OBJECT (menu), "moo-file-view-drop-dir",
-                                dir_copy, g_free);
-
-#define CREATE_IT(stock,action,accel_label)                                                 \
-        item = gtk_image_menu_item_new_from_stock (stock, NULL);                            \
-        g_object_set_data (G_OBJECT (item), "moo-file-view-drop-files", filenames);         \
-        g_object_set_data (G_OBJECT (item), "moo-file-view-drop-dir", dir_copy);            \
-        g_object_set_data (G_OBJECT (item), "moo-file-view-drop-action",                    \
-                           GINT_TO_POINTER (action));                                       \
-        g_signal_connect (item, "activate", G_CALLBACK (drop_item_activated), fileview);    \
-        gtk_widget_show (item);                                                             \
-        _moo_menu_item_set_accel_label (item, accel_label);                                  \
-        gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
-
-        CREATE_IT (MOO_STOCK_FILE_MOVE, GDK_ACTION_MOVE, "Shift");
-        CREATE_IT (MOO_STOCK_FILE_COPY, GDK_ACTION_COPY, "Control");
-        CREATE_IT (MOO_STOCK_FILE_LINK, GDK_ACTION_LINK, "Control+Shift");
-#undef CREATE_IT
-
-        item = gtk_separator_menu_item_new ();
-        gtk_widget_show (item);
-        gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
-
-        item = gtk_image_menu_item_new_from_stock (GTK_STOCK_CANCEL, NULL);
-        gtk_widget_show (item);
-        _moo_menu_item_set_accel_label (item, "Escape");
-        gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
-
-        _moo_file_view_drag_finish (fileview, context, TRUE, FALSE, time);
-
-        gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL, 0, 0);
-        g_object_unref (menu);
-
+        popup_drop_action_menu (fileview, filenames, destdir, context, time);
         return;
     }
 

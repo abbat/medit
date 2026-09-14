@@ -3964,6 +3964,65 @@ drag_scroll_stop (MooIconView *view)
 #define DRAG_SCROLL_MARGIN 0.1
 #define DRAG_SCROLL_TIMEOUT 100
 
+/*
+ * How far to scroll on one tick when the pointer sits at @x in a view @width
+ * pixels wide, or 0 when it is not near enough to an edge to scroll at all.
+ *
+ * Scrolling accelerates towards the edge, so that the user can pick the speed
+ * by how far they push: 15 pixels a tick at the inner boundary of the margin,
+ * four times that at the edge itself, and linearly in between. The margin is
+ * a tenth of the view but never narrower than two pixels, which is what keeps
+ * the ratio below well defined in a view too narrow to have a margin.
+ */
+int
+_moo_icon_view_drag_scroll_delta (int x,
+                                  int width)
+{
+    double ratio, margin;
+    int dist, delta;
+
+    if (x < width * DRAG_SCROLL_MARGIN)
+    {
+        dist = x;
+        delta = -1;
+    }
+    else if (x > width * (1 - DRAG_SCROLL_MARGIN))
+    {
+        /* Distance to the last pixel that is still inside the view, so that
+           the pointer on the right edge is as far in as it is on the left. */
+        dist = width - 1 - x;
+        delta = 1;
+    }
+    else
+    {
+        return 0;
+    }
+
+    margin = width * DRAG_SCROLL_MARGIN;
+    margin = MAX (margin, 2);
+    dist = CLAMP (dist, 1, margin - 1);
+    ratio = (margin - dist) / margin;
+
+    return delta * 15 * (1 + 3 * ratio);
+}
+
+
+/*
+ * Scrolls the view while the pointer is held near its edge, once every
+ * DRAG_SCROLL_TIMEOUT ms, and returns FALSE to take itself down once there is
+ * nothing left to scroll.
+ *
+ * Scrolling alone would not be enough: whatever the drag is doing -- extending
+ * a rubber-band selection, or hovering a drop target -- only updates when it
+ * gets a motion event, and the pointer is not moving. So a motion or drag-motion
+ * event is synthesized for the new position and fed back into GTK+, which is
+ * what makes the selection follow the scrolled content.
+ *
+ * Two kinds of drag end up here. drag_select is medit's own rubber band, which
+ * wants a GDK_MOTION_NOTIFY on the view's window; otherwise it is a real DND
+ * drag, which wants a GDK_DRAG_MOTION on the toplevel, since that is the window
+ * GTK+ tracks a drag against.
+ */
 static gboolean
 drag_scroll_timeout (MooIconView *view)
 {
@@ -3972,8 +4031,7 @@ drag_scroll_timeout (MooIconView *view)
     GtkAllocation *alc = &allocation;
     GtkWidget *toplevel;
     int x, y, new_offset;
-    int delta, dist;
-    double ratio, margin;
+    int delta;
     GdkModifierType mask;
     GdkEvent *event;
     DndInfo *info = view->priv->dnd_info;
@@ -3989,6 +4047,10 @@ drag_scroll_timeout (MooIconView *view)
 
     if (view->priv->drag_select)
     {
+        /* A rubber band is dragged past the edge of the view and keeps going:
+           the pointer is outside, and how far outside is the speed. Inside the
+           view there is nothing to scroll -- delta is then 0 or negative and
+           clamp_offset() below turns it into no movement. */
         if (x < 0)
             delta = x;
         else
@@ -3996,31 +4058,20 @@ drag_scroll_timeout (MooIconView *view)
     }
     else
     {
+        /* A DND drag, where the pointer stays inside the view and scrolling is
+           asked for by holding it near an edge. Left the view altogether: the
+           drag is somebody else's now. */
         if (x < 0 || x >= alc->width || y < 0 || y >= alc->height)
             goto out;
 
-        if (x < gtk_widget_get_allocated_width (widget) * DRAG_SCROLL_MARGIN)
-        {
-            dist = x;
-            delta = -1;
-        }
-        else if (x > gtk_widget_get_allocated_width (widget) * (1 - DRAG_SCROLL_MARGIN))
-        {
-            dist = gtk_widget_get_allocated_width (widget) - 1 - x;
-            delta = 1;
-        }
-        else
-        {
-            goto out;
-        }
+        delta = _moo_icon_view_drag_scroll_delta (x, gtk_widget_get_allocated_width (widget));
 
-        margin = gtk_widget_get_allocated_width (widget) * DRAG_SCROLL_MARGIN;
-        margin = MAX (margin, 2);
-        dist = CLAMP (dist, 1, margin - 1);
-        ratio = (margin - dist) / margin;
-        delta *= 15 * (1 + 3 * ratio);
+        if (delta == 0)
+            goto out;
     }
 
+    /* Nothing left to scroll in that direction: the timeout has done its job
+       and stops rather than spinning at the end of the content. */
     new_offset = clamp_offset (view, view->priv->xoffset + delta);
 
     if (new_offset == view->priv->xoffset)
@@ -4076,6 +4127,8 @@ drag_scroll_timeout (MooIconView *view)
         event->dnd.y_root += y;
     }
 
+    /* send_event: this did not come from the X server, and a handler that cares
+       about the difference is entitled to know. */
     event->any.send_event = TRUE;
     gtk_main_do_event (event);
     gdk_event_free (event);

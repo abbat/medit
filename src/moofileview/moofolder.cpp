@@ -508,6 +508,88 @@ get_names (MooFolderImpl *impl)
 }
 
 
+/*
+ * On from stat()ing to mime types and icons, when anybody wants them.
+ *
+ * Which timeout and priority the next stage runs at depends on who is asking:
+ * NORMAL for a folder the user is looking at, BACKGROUND for one being read
+ * ahead of them. An explicit want beats a background one when both are set.
+ *
+ * The stage is normally driven by a timeout source, but when the slice that
+ * just ended still has time left it is run once directly first -- stat and
+ * icons for a small folder then happen in a single iteration instead of two.
+ * The cost is blocking for as much as twice the timeout, which is what the
+ * comment below has always said and is still the deal being made.
+ */
+static void
+start_mime_type_stage (MooFolderImpl *impl)
+{
+    if (impl->wanted >= STAGE_MIME_TYPE || impl->wanted_bg >= STAGE_MIME_TYPE)
+    {
+        if (impl->wanted >= STAGE_MIME_TYPE)
+        {
+            impl->populate_priority = NORMAL_PRIORITY;
+            impl->populate_timeout = NORMAL_TIMEOUT;
+        }
+        else if (impl->wanted_bg >= STAGE_MIME_TYPE)
+        {
+            impl->populate_priority = BACKGROUND_PRIORITY;
+            impl->populate_timeout = BACKGROUND_TIMEOUT;
+        }
+
+        if (impl->populate_idle_id)
+            g_source_remove (impl->populate_idle_id);
+        impl->populate_idle_id = 0;
+        impl->populate_func = (GSourceFunc) get_icons_a_bit;
+
+        if (g_timer_elapsed (impl->timer, NULL) < impl->populate_timeout)
+        {
+            /* in this case we may block for as much as twice TIMEOUT, but usually
+               it allows stat and loading icons in one iteration */
+            TIMER_CLEAR (impl->timer);
+            if (impl->populate_func (impl))
+                impl->populate_idle_id =
+                        g_timeout_add_full (impl->populate_priority,
+                                            impl->populate_timeout,
+                                            impl->populate_func,
+                                            impl, NULL);
+        }
+        else
+        {
+            TIMER_CLEAR (impl->timer);
+            impl->populate_idle_id =
+                    g_timeout_add_full (impl->populate_priority,
+                                        impl->populate_timeout,
+                                        impl->populate_func,
+                                        impl, NULL);
+        }
+    }
+    else
+    {
+        /* Nobody wants more than stat, so the folder is as populated as it is
+           going to get and nothing is scheduled. */
+        impl->populate_func = NULL;
+        impl->populate_priority = 0;
+        impl->populate_timeout = 0;
+    }
+}
+
+
+/*
+ * One time slice of stat()ing the folder's files, as a GSourceFunc: TRUE to be
+ * called again with more to do, FALSE when every file has been stat()ed.
+ *
+ * Reading a folder is split into slices because stat() on a thousand files is
+ * long enough to be noticed, and the file view has to stay responsive while it
+ * happens. files_copy is the work list, built once on the first slice and
+ * consumed across the following ones; it holds a reference to every file on it,
+ * so a file removed from the folder meanwhile is still valid when its turn
+ * comes.
+ *
+ * The timeout is checked after a file rather than before, so that every slice
+ * makes progress even when one stat() takes longer than the whole slice was
+ * meant to.
+ */
 static gboolean
 get_stat_a_bit (MooFolderImpl *impl)
 {
@@ -530,6 +612,9 @@ get_stat_a_bit (MooFolderImpl *impl)
         MooFile *file = (MooFile *) changed->data;
         impl->files_copy = g_slist_remove_link (impl->files_copy, impl->files_copy);
 
+        /* Already stat()ed: a file added by the directory monitor was stat()ed
+           when it was added, and re-reading it here would be work for nothing
+           and a FILES_CHANGED for a file that has not changed. */
         if (!(file->flags & MOO_FILE_HAS_STAT))
         {
             _moo_file_stat (file, impl->path);
@@ -554,6 +639,8 @@ get_stat_a_bit (MooFolderImpl *impl)
 
     if (!done)
     {
+        /* The timer is cleared rather than left running: it measures one slice
+           and the next one starts it again. */
         TIMER_CLEAR (impl->timer);
         return TRUE;
     }
@@ -561,56 +648,9 @@ get_stat_a_bit (MooFolderImpl *impl)
     {
         g_assert (impl->files_copy == NULL);
         impl->populate_idle_id = 0;
-
-
         impl->done = STAGE_STAT;
 
-        if (impl->wanted >= STAGE_MIME_TYPE || impl->wanted_bg >= STAGE_MIME_TYPE)
-        {
-            if (impl->wanted >= STAGE_MIME_TYPE)
-            {
-                impl->populate_priority = NORMAL_PRIORITY;
-                impl->populate_timeout = NORMAL_TIMEOUT;
-            }
-            else if (impl->wanted_bg >= STAGE_MIME_TYPE)
-            {
-                impl->populate_priority = BACKGROUND_PRIORITY;
-                impl->populate_timeout = BACKGROUND_TIMEOUT;
-            }
-
-            if (impl->populate_idle_id)
-                g_source_remove (impl->populate_idle_id);
-            impl->populate_idle_id = 0;
-            impl->populate_func = (GSourceFunc) get_icons_a_bit;
-
-            if (g_timer_elapsed (impl->timer, NULL) < impl->populate_timeout)
-            {
-                /* in this case we may block for as much as twice TIMEOUT, but usually
-                   it allows stat and loading icons in one iteration */
-                TIMER_CLEAR (impl->timer);
-                if (impl->populate_func (impl))
-                    impl->populate_idle_id =
-                            g_timeout_add_full (impl->populate_priority,
-                                                impl->populate_timeout,
-                                                impl->populate_func,
-                                                impl, NULL);
-            }
-            else
-            {
-                TIMER_CLEAR (impl->timer);
-                impl->populate_idle_id =
-                        g_timeout_add_full (impl->populate_priority,
-                                            impl->populate_timeout,
-                                            impl->populate_func,
-                                            impl, NULL);
-            }
-        }
-        else
-        {
-            impl->populate_func = NULL;
-            impl->populate_priority = 0;
-            impl->populate_timeout = 0;
-        }
+        start_mime_type_stage (impl);
 
         return FALSE;
     }

@@ -20,6 +20,7 @@
 #include "mooedit/mooedit-tests.h"
 #include "moocpp/moocpp-tests.h"
 #include "mooutils/mooutils-tests.h"
+#include "moofileview/moofileview-tests.h"
 
 #ifdef MOO_BUILD_LSP
 #include "plugins/lsp/lsp-tests.h"
@@ -36,6 +37,7 @@ add_all_tests (void)
     _moo_add_moocpp_unit_tests ();
     _moo_add_mooutils_unit_tests ();
     _moo_add_mooedit_unit_tests ();
+    _moo_add_moofileview_unit_tests ();
 
 #ifdef MOO_BUILD_LSP
     _moo_lsp_add_unit_tests ();

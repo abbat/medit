@@ -81,4 +81,8 @@ void        _moo_file_view_drag_finish                  (MooFileView    *filevie
 /* returns list of absolute paths, must be freed together with content */
 GList      *_moo_file_view_get_filenames                (MooFileView    *fileview);
 
+/* TRUE for a keyval that puts text in, so that typing in the file list can
+   start the path entry. Exposed for the tests. */
+gboolean    _moo_file_view_key_is_text_input            (guint           keyval);
+
 G_END_DECLS

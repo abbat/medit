@@ -163,6 +163,116 @@ _moo_file_unref_data (MooFile *file, G_GNUC_UNUSED gpointer data)
 }
 
 
+/*
+ * What a stat buffer says the file is, as the one MOO_FILE_INFO_IS_* bit that
+ * describes it -- or 0 for a regular file, which has no bit of its own.
+ *
+ * The kinds are mutually exclusive, which is why this is a chain and not a set
+ * of independent tests: stat(2) reports exactly one file type, and a MooFile
+ * with two type bits would have no single icon to draw.
+ */
+MooFileInfo
+_moo_file_info_for_stat (const MgwStatBuf *buf)
+{
+    g_return_val_if_fail (buf != NULL, (MooFileInfo) 0);
+
+    if (buf->isdir)
+        return MOO_FILE_INFO_IS_DIR;
+    else if (buf->isblk)
+        return MOO_FILE_INFO_IS_BLOCK_DEV;
+    else if (buf->ischr)
+        return MOO_FILE_INFO_IS_CHAR_DEV;
+    else if (buf->isfifo)
+        return MOO_FILE_INFO_IS_FIFO;
+    else if (buf->issock)
+        return MOO_FILE_INFO_IS_SOCKET;
+    else
+        return (MooFileInfo) 0;
+}
+
+
+/*
+ * A symbolic link, once lstat() has said that is what it is.
+ *
+ * Two things are wanted of it: what it points at, which is what the file view
+ * shows, and what that target is, because a link to a directory has to behave
+ * like a directory. So statbuf is overwritten with the target's stat -- the
+ * link's own stat is of no interest to anything above -- and the link target
+ * is read separately.
+ *
+ * A link whose target does not exist keeps MOO_FILE_INFO_IS_LINK and loses
+ * MOO_FILE_INFO_EXISTS: that is what makes it a broken link rather than a file.
+ */
+static void
+file_stat_link (MooFile    *file,
+                const char *fullname)
+{
+    static char buf[1024];
+    gssize len;
+    mgw_errno_t err;
+
+    file->info = (MooFileInfo) (file->info | MOO_FILE_INFO_IS_LINK);
+
+    if (mgw_stat (fullname, file->statbuf, &err) != 0)
+    {
+        if (err.value == MGW_ENOENT)
+        {
+            MOO_DEBUG_CODE({
+                gchar *display_name = g_filename_display_name (fullname);
+                _moo_message ("file '%s' is a broken link", display_name);
+                g_free (display_name);
+            });
+            file->info = (MooFileInfo) MOO_FILE_INFO_IS_LINK;
+        }
+        else
+        {
+            MOO_DEBUG_CODE({
+                gchar *display_name = g_filename_display_name (fullname);
+                _moo_message ("error getting information for '%s': %s",
+                              display_name, mgw_strerror (err));
+                g_free (display_name);
+            });
+            file->info = (MooFileInfo) (MOO_FILE_INFO_IS_LOCKED | MOO_FILE_INFO_EXISTS);
+            file->flags = (MooFileFlags) 0;
+        }
+    }
+
+    /* The target is read even when stat() failed above: a broken link still has
+       a target worth showing, and that is often the only clue to why it is
+       broken. Failing to read it is not an error for the caller -- the file is
+       simply shown without one. */
+    errno = 0;
+    len = readlink (fullname, buf, 1024);
+    err.value = errno;
+
+    if (len == -1)
+    {
+        MOO_DEBUG_CODE({
+            gchar *display_name = g_filename_display_name (fullname);
+            _moo_message ("error getting link target for '%s': %s",
+                          display_name, mgw_strerror (err));
+            g_free (display_name);
+        });
+    }
+    else
+    {
+        file->link_target = g_strndup (buf, len);
+    }
+}
+
+
+/*
+ * Everything about a file that comes from the filesystem: whether it is there,
+ * what kind of thing it is, and whether it can be looked at at all.
+ *
+ * The three states worth keeping apart are gone (no MOO_FILE_INFO_EXISTS),
+ * there (EXISTS plus a type), and there but unreadable (EXISTS|IS_LOCKED, with
+ * flags cleared so that nothing later trusts statbuf). The last one is a
+ * directory the user has no permission for, and it is shown rather than hidden.
+ *
+ * lstat() rather than stat(), because a symbolic link has to be recognised as
+ * one before its target is looked at; file_stat_link() then does the following.
+ */
 void
 _moo_file_stat (MooFile    *file,
                 const char *dirname)
@@ -206,73 +316,16 @@ _moo_file_stat (MooFile    *file,
             file->flags = (MooFileFlags) 0;
         }
     }
-    else
+    else if (file->statbuf->islnk)
     {
-        if (file->statbuf->islnk)
-        {
-            static char buf[1024];
-            gssize len;
-
-            file->info = (MooFileInfo) (file->info | MOO_FILE_INFO_IS_LINK);
-
-            if (mgw_stat (fullname, file->statbuf, &err) != 0)
-            {
-                if (err.value == MGW_ENOENT)
-                {
-                    MOO_DEBUG_CODE({
-                        gchar *display_name = g_filename_display_name (fullname);
-                        _moo_message ("file '%s' is a broken link", display_name);
-                        g_free (display_name);
-                    });
-                    file->info = (MooFileInfo) MOO_FILE_INFO_IS_LINK;
-                }
-                else
-                {
-                    MOO_DEBUG_CODE({
-                        gchar *display_name = g_filename_display_name (fullname);
-                        _moo_message ("error getting information for '%s': %s",
-                                      display_name, mgw_strerror (err));
-                        g_free (display_name);
-                    });
-                    file->info = (MooFileInfo) (MOO_FILE_INFO_IS_LOCKED | MOO_FILE_INFO_EXISTS);
-                    file->flags = (MooFileFlags) 0;
-                }
-            }
-
-            errno = 0;
-            len = readlink (fullname, buf, 1024);
-            err.value = errno;
-
-            if (len == -1)
-            {
-                MOO_DEBUG_CODE({
-                    gchar *display_name = g_filename_display_name (fullname);
-                    _moo_message ("error getting link target for '%s': %s",
-                                  display_name, mgw_strerror (err));
-                    g_free (display_name);
-                });
-            }
-            else
-            {
-                file->link_target = g_strndup (buf, len);
-            }
-        }
+        file_stat_link (file, fullname);
     }
 
+    /* Not locked: statbuf is only worth reading when the stat above succeeded
+       and said something about the file rather than about the error. */
     if ((file->info & MOO_FILE_INFO_EXISTS) &&
          !(file->info & MOO_FILE_INFO_IS_LOCKED))
-    {
-        if (file->statbuf->isdir)
-            file->info = (MooFileInfo) (file->info | MOO_FILE_INFO_IS_DIR);
-        else if (file->statbuf->isblk)
-            file->info = (MooFileInfo) (file->info | MOO_FILE_INFO_IS_BLOCK_DEV);
-        else if (file->statbuf->ischr)
-            file->info = (MooFileInfo) (file->info | MOO_FILE_INFO_IS_CHAR_DEV);
-        else if (file->statbuf->isfifo)
-            file->info = (MooFileInfo) (file->info | MOO_FILE_INFO_IS_FIFO);
-        else if (file->statbuf->issock)
-            file->info = (MooFileInfo) (file->info | MOO_FILE_INFO_IS_SOCKET);
-    }
+        file->info = (MooFileInfo) (file->info | _moo_file_info_for_stat (file->statbuf));
 
     if (file->info & MOO_FILE_INFO_IS_DIR)
     {
@@ -282,6 +335,7 @@ _moo_file_stat (MooFile    *file,
 
     file->icon = _moo_file_get_icon_type (file, dirname);
 
+    /* A dotfile, the unix way, and nothing to do with stat. */
     if (file->name[0] == '.')
         file->info = (MooFileInfo) (file->info | MOO_FILE_INFO_IS_HIDDEN);
 
