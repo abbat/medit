@@ -543,6 +543,19 @@ class Test(object):
 
         return None
 
+    def open_menu(self, timeout=a11y.TIMEOUT):
+        """The menu some other gesture already popped up, without opening one.
+
+        For a menu a key binding puts on screen rather than a menu bar or a
+        right click: t.popup() presses Shift+F10 first, which over a menu that
+        is already open would dismiss it.
+        """
+        return self.wait(self._popup_menu, "a menu", timeout)
+
+    def no_menu(self, timeout=a11y.TIMEOUT):
+        """Wait until no menu is on screen, after one was used or dismissed."""
+        self.wait(lambda: self._popup_menu() is None, "the menu to close", timeout)
+
     def popup_at(self, node, start, end, timeout=a11y.TIMEOUT, at=0.5):
         """Right-click where a range of the node's text is drawn, and take the menu.
 

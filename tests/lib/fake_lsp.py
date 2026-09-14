@@ -33,6 +33,8 @@ The scenario, all of it optional:
     replies             method -> the result to answer requests with
     errors              method -> {code, message} to answer with instead
     reply_delay         method -> seconds to think before answering
+    apply_edit          method -> a WorkspaceEdit the server asks the client to
+                        apply, once it has answered a request for that method
 """
 
 import json
@@ -58,6 +60,8 @@ DEFAULT_CAPABILITIES = {
     "hoverProvider": True,
     "signatureHelpProvider": {"triggerCharacters": ["(", ","]},
     "completionProvider": {"triggerCharacters": ["."]},
+    "codeActionProvider": True,
+    "executeCommandProvider": {"commands": []},
 }
 
 
@@ -111,6 +115,7 @@ class FakeServer(object):
         self.scenario_path = scenario_path
         self.scenario = {}
         self.started = time.time()
+        self.next_id = 0
         self.out = sys.stdout.buffer
         self.stdin = sys.stdin.buffer
 
@@ -166,6 +171,9 @@ class FakeServer(object):
             "method": message.get("method"),
             "id": message.get("id"),
             "params": message.get("params"),
+            # Only an answer to something the server asked has one, and what it
+            # says is the whole of what the client decided.
+            "result": message.get("result"),
         }
 
         with open(path, "a") as f:
@@ -223,6 +231,25 @@ class FakeServer(object):
         # A method the scenario says nothing about is answered with null,
         # which is what a server that found nothing answers.
         self.reply(message_id, replies.get(method))
+
+        self.ask_to_apply(method)
+
+    def ask_to_apply(self, method):
+        """Ask the client to apply an edit, the way a command reports its work.
+
+        A command answers nothing useful: what it changed arrives afterwards as
+        a request of the server's own, which is the one half of the protocol
+        where the client is the one being asked.
+        """
+        edit = (self.get("apply_edit") or {}).get(method)
+
+        if edit is None:
+            return
+
+        self.next_id += 1
+        write_message(self.out, {"jsonrpc": "2.0", "id": "apply-%d" % self.next_id,
+                                 "method": "workspace/applyEdit",
+                                 "params": {"edit": edit}})
 
     # -- the loop ----------------------------------------------------------
 
@@ -283,6 +310,12 @@ class FakeServer(object):
 
             elif method == "exit":
                 return 0
+
+            # An answer to something the server asked, which arrives with an
+            # id and no method. Logged like everything else, and nothing more:
+            # replying to a reply is how two peers talk past each other.
+            elif method is None:
+                continue
 
             elif message.get("id") is not None:
                 self.answer_request(message)
