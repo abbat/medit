@@ -212,10 +212,22 @@ moo_fold_free_recursively (MooFold *fold)
         child = next;
     }
 
+    /* The marks are not taken out of the buffer here -- the only caller is
+       _moo_fold_tree_free(), which runs when the buffer itself is going away.
+       Their back-pointer is cleared all the same, so that a mark that outlives
+       this call does not hand moo_text_buffer_get_fold_at_line() a freed fold. */
     if (fold->start)
+    {
+        _moo_line_mark_set_fold (fold->start, NULL);
         g_object_unref (fold->start);
+    }
+
     if (fold->end)
+    {
+        _moo_line_mark_set_fold (fold->end, NULL);
         g_object_unref (fold->end);
+    }
+
     g_object_unref (fold);
 }
 
