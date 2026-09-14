@@ -41,3 +41,108 @@ family are gone, and `moo_editor_open_files()` always uses the active window.
 Either the preference gets its behaviour back — in `moo_editor_open_files()`, with a
 checkbox in the dialog — or it should be dropped, so that nothing in the settings file
 reads as configurable when it is not.
+
+---
+
+*The rest of this file is about the language server plugin. Nothing here is a leftover of
+removed code: these are the parts of the protocol the plugin knows about and has not asked
+for. Each entry says what is in the tree today, because in several cases the answer is
+"the capability is announced and the request is never sent".*
+
+## `textDocument/declaration` is announced and never asked
+
+`client_capabilities()` in `lsp-server.cpp` announces `linkSupport` for `definition`,
+`typeDefinition`, `implementation` **and** `declaration`, but `declaration` is the one of
+the four with no action behind it: `lsp-plugin.cpp` registers Go to Definition, Go to Type
+Definition and Go to Implementation, and nothing sends `textDocument/declaration`. The
+machinery is already general — `lsp_goto_location (window, view, method)` in
+`lsp-navigate.cpp` takes the method name, and `lsp_can_ask()` derives the provider name
+from it — so this is an action, a menu item and a UI test, not new plumbing.
+
+The alternative is to drop `declaration` from `link_methods[]`, so that nothing is claimed
+that cannot be used. For C and C++ the distinction between a declaration and a definition
+is the one that matters most, which argues for adding it rather than removing it.
+
+## Nothing is read-only: no code lens, inlay hints or semantic tokens
+
+The three features that decorate a document without being asked are all missing, and all
+three want the same thing the plugin does not have — a way to put text or marks into a
+`MooTextView` that is not part of the buffer:
+
+* **code lens** (`textDocument/codeLens`, `codeLens/resolve`) puts a clickable line above
+  a function. The commands it carries would run through the `workspace/executeCommand`
+  path `lsp-actions.cpp` already has.
+* **inlay hints** (`textDocument/inlayHint`) put parameter names and inferred types
+  between the characters of a line.
+* **semantic tokens** (`textDocument/semanticTokens/full`, `/delta`, `/range`) are the
+  server's own highlighting, layered over the language definition medit highlights with.
+  `workspace/semanticTokens/refresh` is already answered with an empty result, which is
+  the correct answer while nothing is displayed.
+
+Each needs a decision about the text view before it needs any LSP code. Semantic tokens
+also need to agree with `MooLangMgr` about which wins where, which is the hard half.
+
+## Folding, selection ranges and the hierarchies
+
+These ask the server about the shape of the code rather than about a name:
+
+* `textDocument/foldingRange` — medit has no folding at all, so this is a text view
+  feature with an LSP source, not the other way round.
+* `textDocument/selectionRange` — grow and shrink the selection by syntax. This one needs
+  nothing new in the view: it is a pair of actions over a stack of ranges.
+* `textDocument/prepareCallHierarchy` with `callHierarchy/incomingCalls` and
+  `outgoingCalls`, and the same three for the type hierarchy. The references pane in
+  `lsp-references.cpp` already shows a list of locations grouped by file; a hierarchy is
+  that pane with a tree rather than a list.
+* `textDocument/documentLink` — turn what the server says is a link into one. The hover
+  and the diagnostics tooltip already render text; nothing currently follows a URI.
+
+`selectionRange` is the cheapest of these and the one with no prerequisites.
+
+## `workspace/symbol` — the symbols pane stops at the file
+
+`lsp-symbols.cpp` asks for `textDocument/documentSymbol` and shows what one file holds.
+`workspace/symbol` is the same question asked of the project, and it is the request that
+makes a language server better than a grep. It wants a search entry rather than a pane
+that follows the current document, so it is closer to the Find in Files plugin in shape
+than to the symbols pane, even though the results are the symbols pane's rows.
+
+## The requests that are sent, but not in every form
+
+* **Range and on-type formatting.** `lsp-plugin.cpp` sends `textDocument/formatting` for
+  the whole document. `textDocument/rangeFormatting` over the selection is the obvious
+  companion; `textDocument/onTypeFormatting` would have to be driven from the view's
+  key handling, the way completion triggers are.
+* **`textDocument/prepareRename`.** `rename` is announced with `prepareSupport: false`,
+  so the rename dialog in `lsp-edits.cpp` offers to rename whatever is under the cursor
+  and finds out from the server's error that it cannot be renamed. `prepareRename` asks
+  first, and also returns the range of the name, which is what the dialog should be
+  showing as the old name instead of the word the view guessed.
+* **`codeAction/resolve`.** `lsp-server.cpp` announces `dataSupport: false` and no
+  `resolveSupport`, and `code_action_new()` in `lsp-actions.cpp` drops an action that
+  carries neither an edit nor a command for exactly that reason. Servers that compute
+  their edits lazily — and several large ones do — therefore offer fewer actions to medit
+  than to an editor that resolves. Adding it means keeping `data` on `LspCodeAction` and
+  asking again when an action without an edit is chosen.
+* **Snippets in completion.** `completionItem.snippetSupport` is `false`, so a server
+  that would have inserted `foo(${1:bar})` inserts `foo()` or the plain label. A snippet
+  needs tab stops in the view, which is the same missing piece as the read-only
+  decorations above.
+* **`documentChanges` in a WorkspaceEdit.** Announced as `false` on purpose: the
+  `documentChanges` form also carries creating, renaming and deleting files, which is not
+  something an editor should do because a server asked. `lsp_workspace_edit_parse()`
+  reads the form anyway when a server sends it regardless, but only the edits.
+
+## What a slow server cannot say
+
+`$/progress` is ignored — `lsp-server.cpp` answers `window/workDoneProgress/create` with
+an empty result and drops the notifications that follow. A server indexing a large project
+therefore looks the same as a server that has nothing to say, and the only sign of life is
+that requests return nothing useful for a minute. The status bar or the failure pane in
+`lsp-plugin.cpp` is where a percentage and a message would go.
+
+`publishDiagnostics` is likewise announced without `relatedInformation` or
+`codeDescriptionSupport`: a diagnostic that points at a second location ("first declared
+here") arrives without it, and the code that would have a documentation URL does not carry
+one. Both need somewhere to show a secondary location, which the diagnostics pane could
+grow as child rows.
