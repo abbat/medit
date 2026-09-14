@@ -132,11 +132,12 @@ nodes, and a widget that is not a `GtkNotebook` has none of them whatever it pas
 the render calls. That wants a CSS name and node structure of its own, which is the
 whole widget's drawing rather than a cleanup.
 
-Four `#if 0` blocks survive the dead-code cleanup on purpose, because each documents a
+Two `#if 0` blocks survive the dead-code cleanup on purpose, because each documents a
 feature that is disabled rather than abandoned: the tree view's drag source in
-`moofileview.cpp` (drag and drop works in icon view only), `_moo_edit_print_options_dialog()`
-in `mootextprint.cpp` (`medit.xml` still lists a `PrintOptions` item with no action behind
-it), and the overwrite-prompt code in `moofileview.cpp` (`copy_files()` runs `cp -R` with
-no prompt at all). Leave them until the features are decided.
+`moofileview.cpp` (drag and drop works in icon view only) and
+`_moo_edit_print_options_dialog()` in `mootextprint.cpp` (`medit.xml` still lists a
+`PrintOptions` item with no action behind it). Leave them until the features are decided.
+The overwrite-prompt block that used to be the third is gone; what it was for is written
+down in `doc/todo.md`.
 
 ---
