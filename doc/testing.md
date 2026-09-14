@@ -441,6 +441,13 @@ input focus to a window that has just appeared, and clicking an entry only moves
 within a window that already has it. The symptom is an entry that keeps its old text with
 no error anywhere.
 
+**The middle of a spin button is one of its arrows.** `t.click(node)` goes to the centre
+of a widget, and on a `GtkSpinButton` as narrow as the one on the View preferences page
+that is the step-down arrow: the click decrements the value and leaves the caret out of
+the text, so the digits typed next go nowhere. Click a quarter of the way across instead
+(`tests/editor/right_margin`), and assert what the spin reads before acting on it -- a
+value that never arrived is otherwise indistinguishable from a feature that ignored it.
+
 **Three widgets take the keys or the pointer away, each in its own way.** A
 `MooHistoryCombo` — the entry of the Find dialog, of Find in Files — pops up a completion
 list as soon as what is typed matches its history, and that list takes a pointer grab: the
