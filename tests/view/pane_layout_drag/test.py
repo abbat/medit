@@ -65,8 +65,8 @@ def run(t):
     t.wait(lambda: showing(t, right) == DOCUMENTS[3],
            "the first tab in the split notebook to be selected")
     reorder_tab(t, right, DOCUMENTS[3], DOCUMENTS[1])
-    t.check(pages(right) == [DOCUMENTS[1], DOCUMENTS[3]],
-            "dragging a tab reordered the split notebook: %s" % pages(right))
+    t.wait(lambda: pages(right) == [DOCUMENTS[1], DOCUMENTS[3]],
+           "dragging a tab to reorder the split notebook")
     t.check(showing(t, right) == DOCUMENTS[3],
             "the dragged document remains the one showing")
 
@@ -135,6 +135,14 @@ def tab_y(t, notebook):
 
 
 def views(t, notebook):
+    """The editable views inside one notebook, by position.
+
+    Scoped geometrically rather than by contents: the notebooks sit side by
+    side, so everything drawn at or right of this one's left edge belongs to
+    it. Filtering on the contents instead would make the caller's check that
+    all four views show the same document a tautology.
+    """
+    left = t.extents(notebook)[0]
     return [view for view in t.find_all(t.frame, role="text", depth=30)
             if ui.on_screen(view) and t.state(view, "editable")
-            and t.text(view) == CONTENTS[DOCUMENTS[3]]]
+            and t.extents(view)[0] >= left]
