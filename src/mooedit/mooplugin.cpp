@@ -1589,8 +1589,11 @@ moo_plugin_call_method_valist (gpointer        plugin,
             g_warning ("%s", error);
             g_free (error);
 
-            while (i--)
-                g_value_unset (args + i);
+            /* args[i] is left alone on purpose: a collect that failed may have
+               put the value into any state at all, and unsetting it is what
+               would crash. Everything collected before it is ours to release. */
+            for (guint j = i; j > 0; j--)
+                g_value_unset (args + j - 1);
 
             g_free (freeme);
             return;
