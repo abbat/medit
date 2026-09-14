@@ -20,6 +20,16 @@ def run(t):
     t.click(t.button(about, "Close"))
     t.no_toplevel("About")
 
+    escape_closes(t)
+
+
+def escape_closes(t):
+    """Escape closes the dialog, the way the Close button does."""
+    t.menu("Help", "About")
+    t.dialog("About")
+    t.key("Escape")
+    t.no_toplevel("About")
+
 
 def credits_dialog(t, about):
     """Credits opens a notebook of three tabs, and closes without closing About."""

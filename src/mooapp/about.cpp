@@ -394,8 +394,6 @@ about_dialog_new (GtkWidget *parent)
 void
 show_about (GtkWidget *parent)
 {
-  // FIXME: on ESC key press on gtk-3 raise
-  // gtk_widget_event: assertion 'WIDGET_REALIZED_FOR_EVENT (widget, event)'
   GtkDialog *dialog = about_dialog_new (parent);
   gtk_dialog_run (dialog);
   gtk_widget_destroy (GTK_WIDGET (dialog));
