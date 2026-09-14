@@ -19,6 +19,8 @@
 
 #include "mooedit/mooplugin.h"
 
+G_BEGIN_DECLS
+
 #define MOO_TYPE_CTAGS_ENTRY (_moo_ctags_entry_get_type ())
 
 #define MOO_TYPE_CTAGS_DOC_PLUGIN              (_moo_ctags_doc_plugin_get_type ())
@@ -55,6 +57,16 @@ struct _MooCtagsEntry
     guint file_scope : 1;
 };
 
+/* The fixed top-level rows of the tree, in the order they are created. */
+typedef enum {
+    MOO_CTAGS_GROUP_FUNCS,
+    MOO_CTAGS_GROUP_MACROS,
+    MOO_CTAGS_GROUP_TYPES,
+    MOO_CTAGS_GROUP_VARS,
+    MOO_CTAGS_GROUP_OTHER,
+    MOO_CTAGS_N_GROUPS
+} MooCtagsGroup;
+
 
 GType               _moo_ctags_doc_plugin_get_type      (void) G_GNUC_CONST;
 GtkTreeModel       *_moo_ctags_doc_plugin_get_store     (MooCtagsDocPlugin  *plugin);
@@ -64,5 +76,10 @@ MooCtagsEntry      *_moo_ctags_entry_ref                (MooCtagsEntry      *ent
 void                _moo_ctags_entry_unref              (MooCtagsEntry      *entry);
 void                _moo_ctags_entry_unref_data         (MooCtagsEntry      *entry, gpointer);
 
+/* Which group a tag of the given ctags kind goes under. Exposed for the
+   tests. */
+MooCtagsGroup       _moo_ctags_group_for_kind           (const char         *kind);
+
+G_END_DECLS
 
 #endif /* CTAGS_DOC_H */

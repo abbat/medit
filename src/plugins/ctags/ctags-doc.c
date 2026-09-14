@@ -149,49 +149,125 @@ get_iter_for_class (GtkTreeStore *store,
     *class_iter = *stored;
 }
 
+/* The labels of the fixed groups, in MooCtagsGroup order. */
+static const char * const group_labels[MOO_CTAGS_N_GROUPS] = {
+    "<b>Functions</b>",
+    "<b>Macros</b>",
+    "<b>Types</b>",
+    "<b>Variables</b>",
+    "<b>Other</b>"
+};
+
+/*
+ * The group a tag of kind @kind belongs under.
+ *
+ * The kinds are ctags' own one-letter codes, shared between languages wherever
+ * the concept is: "f" a function, "d" a #define or equivalent, "v" a variable,
+ * "t" a typedef. Every language ctags knows adds kinds of its own, so anything
+ * not listed here goes under Other instead of being dropped -- a tag stays
+ * reachable even when this function has not caught up with it.
+ *
+ * The kinds that name a container ("c", "s", "m", "g", "e") do not reach here:
+ * they get a top-level row of their own rather than a place in a group.
+ */
+MooCtagsGroup
+_moo_ctags_group_for_kind (const char *kind)
+{
+    g_return_val_if_fail (kind != NULL, MOO_CTAGS_GROUP_OTHER);
+
+    if (!strcmp (kind, "f"))
+        return MOO_CTAGS_GROUP_FUNCS;
+    else if (!strcmp (kind, "d"))
+        return MOO_CTAGS_GROUP_MACROS;
+    else if (!strcmp (kind, "v"))
+        return MOO_CTAGS_GROUP_VARS;
+    else if (!strcmp (kind, "t") || !strcmp (kind, "g"))
+        return MOO_CTAGS_GROUP_TYPES;
+    else
+        return MOO_CTAGS_GROUP_OTHER;
+}
+
+/*
+ * A tag that is a container -- a class, a struct, an enum -- or that belongs
+ * to one.
+ *
+ * These do not go into the fixed groups: the container gets a top-level row
+ * named after itself, and its members hang off that row. The row is usually
+ * already there by the time the container's own tag turns up, because ctags
+ * lists members before the thing they belong to as often as not, and each
+ * member asks for the row of its container; get_iter_for_class() is what makes
+ * that idempotent.
+ */
+static void
+process_class_entry (GtkTreeStore  *store,
+                     MooCtagsEntry *entry,
+                     GHashTable    *classes)
+{
+    GtkTreeIter iter;
+    GtkTreeIter parent_iter;
+    const char *type = NULL;
+
+    /* What the row is labelled; ctags distinguishes more kinds than the pane
+       cares to show, so several of them collapse onto one word. */
+    if (!strcmp (entry->kind, "c"))
+        type = "class";
+    else if (!strcmp (entry->kind, "g") || !strcmp (entry->kind, "e"))
+        type = "enum";
+    else if (!strcmp (entry->kind, "s") || !strcmp (entry->kind, "m"))
+        type = "struct";
+    else
+        type = entry->kind;
+
+    get_iter_for_class (store, &parent_iter,
+                        type,
+                        entry->klass ? entry->klass : entry->name,
+                        classes);
+
+    if (entry->klass || !strcmp (entry->kind, "m") || !strcmp (entry->kind, "e"))
+    {
+        gtk_tree_store_append (store, &iter, &parent_iter);
+        gtk_tree_store_set (store, &iter, MOO_CTAGS_VIEW_COLUMN_ENTRY, entry, -1);
+    }
+    else
+    {
+        /* The container itself: the row exists but so far holds only the
+           label, so this is what puts the tag on it and makes it clickable. */
+        gtk_tree_store_set (store, &parent_iter, MOO_CTAGS_VIEW_COLUMN_ENTRY, entry, -1);
+    }
+}
+
+/*
+ * The tag list turned into the tree the pane shows.
+ *
+ * There are two sorts of top-level row. The five fixed groups are created
+ * up front, so that they come out in the same order whatever order the tags
+ * arrive in, and the ones that stayed empty are taken out at the end -- which
+ * is why they are created even when there may be nothing to put in them.
+ * Alongside them sits one row per container found in the file.
+ *
+ * This is the layout for every language without a handler of its own, so the
+ * kinds it knows about are the ones the C-like languages have in common.
+ */
 static void
 process_list_simple (GSList       *entries,
                      GtkTreeStore *store)
 {
     GHashTable *classes;
-    GtkTreeIter funcs_iter;
-    GtkTreeIter macros_iter;
-    GtkTreeIter types_iter;
-    GtkTreeIter vars_iter;
-    GtkTreeIter other_iter;
-    gboolean funcs_added = FALSE;
-    gboolean macros_added = FALSE;
-    gboolean types_added = FALSE;
-    gboolean vars_added = FALSE;
-    gboolean other_added = FALSE;
+    GtkTreeIter group_iter[MOO_CTAGS_N_GROUPS];
+    gboolean group_used[MOO_CTAGS_N_GROUPS];
+    guint i;
 
     classes = g_hash_table_new_full (g_str_hash, g_str_equal, g_free,
                                      (GDestroyNotify) gtk_tree_iter_free);
 
-    gtk_tree_store_append (store, &funcs_iter, NULL);
-    gtk_tree_store_set (store, &funcs_iter,
-                        MOO_CTAGS_VIEW_COLUMN_LABEL, "<b>Functions</b>",
-                        -1);
-
-    gtk_tree_store_append (store, &macros_iter, NULL);
-    gtk_tree_store_set (store, &macros_iter,
-                        MOO_CTAGS_VIEW_COLUMN_LABEL, "<b>Macros</b>",
-                        -1);
-
-    gtk_tree_store_append (store, &types_iter, NULL);
-    gtk_tree_store_set (store, &types_iter,
-                        MOO_CTAGS_VIEW_COLUMN_LABEL, "<b>Types</b>",
-                        -1);
-
-    gtk_tree_store_append (store, &vars_iter, NULL);
-    gtk_tree_store_set (store, &vars_iter,
-                        MOO_CTAGS_VIEW_COLUMN_LABEL, "<b>Variables</b>",
-                        -1);
-
-    gtk_tree_store_append (store, &other_iter, NULL);
-    gtk_tree_store_set (store, &other_iter,
-                        MOO_CTAGS_VIEW_COLUMN_LABEL, "<b>Other</b>",
-                        -1);
+    for (i = 0; i < MOO_CTAGS_N_GROUPS; ++i)
+    {
+        group_used[i] = FALSE;
+        gtk_tree_store_append (store, &group_iter[i], NULL);
+        gtk_tree_store_set (store, &group_iter[i],
+                            MOO_CTAGS_VIEW_COLUMN_LABEL, group_labels[i],
+                            -1);
+    }
 
     while (entries)
     {
@@ -200,85 +276,31 @@ process_list_simple (GSList       *entries,
         entry = entries->data;
         entries = entries->next;
 
+        /* A tag with a class is a member of it; the bare kinds here are the
+           containers themselves. Either way the tag belongs to a container
+           row and not to a group. */
         if (entry->klass || !strcmp (entry->kind, "c") ||
             !strcmp (entry->kind, "s") || !strcmp (entry->kind, "m") ||
             !strcmp (entry->kind, "g") || !strcmp (entry->kind, "e"))
         {
-            GtkTreeIter iter;
-            GtkTreeIter parent_iter;
-            const char *type = NULL;
-
-            if (!strcmp (entry->kind, "c"))
-                type = "class";
-            else if (!strcmp (entry->kind, "g") || !strcmp (entry->kind, "e"))
-                type = "enum";
-            else if (!strcmp (entry->kind, "s") || !strcmp (entry->kind, "m"))
-                type = "struct";
-            else
-                type = entry->kind;
-
-            get_iter_for_class (store, &parent_iter,
-                                type,
-                                entry->klass ? entry->klass : entry->name,
-                                classes);
-
-            if (entry->klass || !strcmp (entry->kind, "m") || !strcmp (entry->kind, "e"))
-            {
-                gtk_tree_store_append (store, &iter, &parent_iter);
-                gtk_tree_store_set (store, &iter, MOO_CTAGS_VIEW_COLUMN_ENTRY, entry, -1);
-            }
-            else
-            {
-                gtk_tree_store_set (store, &parent_iter, MOO_CTAGS_VIEW_COLUMN_ENTRY, entry, -1);
-            }
-        }
-        else if (!strcmp (entry->kind, "f"))
-        {
-            GtkTreeIter iter;
-            gtk_tree_store_append (store, &iter, &funcs_iter);
-            gtk_tree_store_set (store, &iter, MOO_CTAGS_VIEW_COLUMN_ENTRY, entry, -1);
-            funcs_added = TRUE;
-        }
-        else if (!strcmp (entry->kind, "d"))
-        {
-            GtkTreeIter iter;
-            gtk_tree_store_append (store, &iter, &macros_iter);
-            gtk_tree_store_set (store, &iter, MOO_CTAGS_VIEW_COLUMN_ENTRY, entry, -1);
-            macros_added = TRUE;
-        }
-        else if (!strcmp (entry->kind, "v"))
-        {
-            GtkTreeIter iter;
-            gtk_tree_store_append (store, &iter, &vars_iter);
-            gtk_tree_store_set (store, &iter, MOO_CTAGS_VIEW_COLUMN_ENTRY, entry, -1);
-            vars_added = TRUE;
-        }
-        else if (!strcmp (entry->kind, "t") || !strcmp (entry->kind, "g"))
-        {
-            GtkTreeIter iter;
-            gtk_tree_store_append (store, &iter, &types_iter);
-            gtk_tree_store_set (store, &iter, MOO_CTAGS_VIEW_COLUMN_ENTRY, entry, -1);
-            types_added = TRUE;
+            process_class_entry (store, entry, classes);
         }
         else
         {
+            MooCtagsGroup group = _moo_ctags_group_for_kind (entry->kind);
             GtkTreeIter iter;
-            gtk_tree_store_append (store, &iter, &other_iter);
+
+            gtk_tree_store_append (store, &iter, &group_iter[group]);
             gtk_tree_store_set (store, &iter, MOO_CTAGS_VIEW_COLUMN_ENTRY, entry, -1);
-            other_added = TRUE;
+            group_used[group] = TRUE;
         }
     }
 
-    if (!funcs_added)
-        gtk_tree_store_remove (store, &funcs_iter);
-    if (!macros_added)
-        gtk_tree_store_remove (store, &macros_iter);
-    if (!vars_added)
-        gtk_tree_store_remove (store, &vars_iter);
-    if (!types_added)
-        gtk_tree_store_remove (store, &types_iter);
-    if (!other_added)
-        gtk_tree_store_remove (store, &other_iter);
+    /* Removing a row does not disturb the others: a GtkTreeStore keeps its
+       iters valid, which is what makes it safe to have held on to all five. */
+    for (i = 0; i < MOO_CTAGS_N_GROUPS; ++i)
+        if (!group_used[i])
+            gtk_tree_store_remove (store, &group_iter[i]);
 
     g_hash_table_destroy (classes);
 }
