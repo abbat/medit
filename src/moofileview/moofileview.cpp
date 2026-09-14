@@ -4299,6 +4299,9 @@ _moo_file_view_key_is_text_input (guint keyval)
 {
     switch (keyval)
     {
+        /* The TTY function keys: the control codes a terminal used to send.
+           Linefeed and Return carry a string, which is why the event's own
+           string cannot be the test. */
         case GDK_KEY_VoidSymbol:
         case GDK_KEY_BackSpace:
         case GDK_KEY_Tab:
@@ -4310,6 +4313,9 @@ _moo_file_view_key_is_text_input (guint keyval)
         case GDK_KEY_Sys_Req:
         case GDK_KEY_Escape:
         case GDK_KEY_Delete:
+
+        /* The input-method keys, for scripts an ASCII keyboard cannot type
+           directly. They pick and commit a character rather than being one. */
         case GDK_KEY_Multi_key:
         case GDK_KEY_Codeinput:
         case GDK_KEY_SingleCandidate:
@@ -4331,6 +4337,8 @@ _moo_file_view_key_is_text_input (guint keyval)
         case GDK_KEY_Kana_Shift:
         case GDK_KEY_Eisu_Shift:
         case GDK_KEY_Eisu_toggle:
+
+        /* Cursor motion, which the file list keeps for itself. */
         case GDK_KEY_Home:
         case GDK_KEY_Left:
         case GDK_KEY_Up:
@@ -4340,6 +4348,9 @@ _moo_file_view_key_is_text_input (guint keyval)
         case GDK_KEY_Page_Down:
         case GDK_KEY_End:
         case GDK_KEY_Begin:
+
+        /* The editing and command keys, and the two locks that sit among
+           them in keysymdef.h. */
         case GDK_KEY_Select:
         case GDK_KEY_Print:
         case GDK_KEY_Execute:
@@ -4353,6 +4364,9 @@ _moo_file_view_key_is_text_input (guint keyval)
         case GDK_KEY_Break:
         case GDK_KEY_Mode_switch:
         case GDK_KEY_Num_Lock:
+
+        /* The keypad, minus its digits and operators: those do type, and so
+           are absent from the list. */
         case GDK_KEY_KP_Tab:
         case GDK_KEY_KP_Enter:
         case GDK_KEY_KP_F1:
@@ -4370,6 +4384,8 @@ _moo_file_view_key_is_text_input (guint keyval)
         case GDK_KEY_KP_Begin:
         case GDK_KEY_KP_Insert:
         case GDK_KEY_KP_Delete:
+
+        /* The function keys, all thirty-five of the ones X defines. */
         case GDK_KEY_F1:
         case GDK_KEY_F2:
         case GDK_KEY_F3:
@@ -4405,6 +4421,9 @@ _moo_file_view_key_is_text_input (guint keyval)
         case GDK_KEY_F33:
         case GDK_KEY_F34:
         case GDK_KEY_F35:
+
+        /* The modifiers, which produce no character of their own -- they
+           change the one the next key produces. */
         case GDK_KEY_Shift_L:
         case GDK_KEY_Shift_R:
         case GDK_KEY_Control_L:
@@ -4419,6 +4438,9 @@ _moo_file_view_key_is_text_input (guint keyval)
         case GDK_KEY_Super_R:
         case GDK_KEY_Hyper_L:
         case GDK_KEY_Hyper_R:
+
+        /* The ISO 9995 keyboard-function keys: group and level switching,
+           and the typewriter-era motions that went with them. */
         case GDK_KEY_ISO_Lock:
         case GDK_KEY_ISO_Level2_Latch:
         case GDK_KEY_ISO_Level3_Shift:
@@ -4455,6 +4477,9 @@ _moo_file_view_key_is_text_input (guint keyval)
         case GDK_KEY_ISO_Emphasize:
         case GDK_KEY_ISO_Center_Object:
         case GDK_KEY_ISO_Enter:
+
+        /* The XKB extras: virtual screens, the server kill, and the AccessX
+           toggles. */
         case GDK_KEY_First_Virtual_Screen:
         case GDK_KEY_Prev_Virtual_Screen:
         case GDK_KEY_Next_Virtual_Screen:
@@ -4471,6 +4496,8 @@ _moo_file_view_key_is_text_input (guint keyval)
         case GDK_KEY_Overlay1_Enable:
         case GDK_KEY_Overlay2_Enable:
         case GDK_KEY_AudibleBell_Enable:
+
+        /* The pointer keys, which drive the mouse from the keyboard. */
         case GDK_KEY_Pointer_Left:
         case GDK_KEY_Pointer_Right:
         case GDK_KEY_Pointer_Up:
@@ -4501,6 +4528,8 @@ _moo_file_view_key_is_text_input (guint keyval)
         case GDK_KEY_Pointer_Accelerate:
         case GDK_KEY_Pointer_DfltBtnNext:
         case GDK_KEY_Pointer_DfltBtnPrev:
+
+        /* The IBM 3270 terminal keys, which a few keyboards still carry. */
         case GDK_KEY_3270_Duplicate:
         case GDK_KEY_3270_FieldMark:
         case GDK_KEY_3270_Right2:
