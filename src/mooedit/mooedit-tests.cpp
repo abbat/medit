@@ -1347,11 +1347,17 @@ _moo_add_mooedit_unit_tests (void)
         char *id = (char*) l->data;
         char *path = g_strconcat ("/mooedit/highlight/", id, nullptr);
 
-        g_test_add_data_func_full (path, id, test_highlight, g_free);
+        /* Interned rather than handed over with g_free as the destructor: glib
+           frees a test's data when that test has run, and a run of one test --
+           which is how ctest runs them, one entry each -- leaves behind the
+           data of every other test the binary registered. An interned string
+           is immortal and reachable, so the leak checker has nothing to say
+           about it either way. */
+        g_test_add_data_func (path, g_intern_string (id), test_highlight);
         g_free (path);
     }
 
-    g_slist_free (ids);
+    g_slist_free_full (ids, g_free);
     g_free (dir);
 }
 
