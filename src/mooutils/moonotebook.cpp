@@ -537,6 +537,7 @@ static void moo_notebook_class_init (MooNotebookClass *klass)
     moo_notebook_parent_class = g_type_class_peek_parent (klass);
     moo_notebook_grand_parent_class = g_type_class_peek_parent (moo_notebook_parent_class);
 
+    /* GObject vfuncs */
     gobject_class->finalize = moo_notebook_finalize;
     gobject_class->set_property = moo_notebook_set_property;
     gobject_class->get_property = moo_notebook_get_property;
@@ -548,6 +549,7 @@ static void moo_notebook_class_init (MooNotebookClass *klass)
     gtk_widget_class_set_accessible_type (widget_class, moo_notebook_accessible_get_type ());
 #endif
 
+    /* GtkWidget vfuncs: realization, sizing, rendering, event handling */
     widget_class->style_set = moo_notebook_style_set;
     widget_class->realize = moo_notebook_realize;
     widget_class->unrealize = moo_notebook_unrealize;
@@ -571,6 +573,8 @@ static void moo_notebook_class_init (MooNotebookClass *klass)
     widget_class->focus = moo_notebook_focus;
     widget_class->motion_notify_event = moo_notebook_motion;
 
+    /* Explicitly disable drag handling inherited from GtkNotebook: this class
+       manages its own mouse handling and does not use GTK's drag-and-drop */
     widget_class->drag_begin = NULL;
     widget_class->drag_end = NULL;
     widget_class->drag_motion = NULL;
@@ -579,6 +583,7 @@ static void moo_notebook_class_init (MooNotebookClass *klass)
     widget_class->drag_data_get = NULL;
     widget_class->drag_data_received = NULL;
 
+    /* GtkContainer vfuncs */
     container_class->forall = moo_notebook_forall;
     container_class->set_focus_child = moo_notebook_set_focus_child;
     container_class->remove = moo_notebook_remove;
@@ -586,6 +591,7 @@ static void moo_notebook_class_init (MooNotebookClass *klass)
 
     klass->switch_page = moo_notebook_switch_page;
 
+    /* Properties */
     g_object_class_install_property (gobject_class,
                                      PROP_PAGE,
                                      g_param_spec_int ("page",
@@ -650,6 +656,7 @@ static void moo_notebook_class_init (MooNotebookClass *klass)
                                              TRUE,
                                              (GParamFlags) (G_PARAM_READWRITE | G_PARAM_CONSTRUCT)));
 
+    /* Signals */
     signals[SWITCH_PAGE] =
             g_signal_new ("moo-switch-page",
                           G_TYPE_FROM_CLASS (gobject_class),
@@ -660,6 +667,9 @@ static void moo_notebook_class_init (MooNotebookClass *klass)
                           G_TYPE_NONE, 1,
                           G_TYPE_UINT);
 
+    /* The "populate-popup" signal uses g_signal_accumulator_true_handled: a
+       handler can return TRUE to indicate it has handled the popup (stopping
+       further handlers from running), or FALSE to let others process it */
     signals[POPULATE_POPUP] =
             g_signal_new ("populate-popup",
                           G_TYPE_FROM_CLASS (klass),
@@ -3392,58 +3402,33 @@ tab_drag_start (MooNotebook    *nb,
 }
 
 
-static void
-tab_drag_motion (MooNotebook    *nb,
-                 GdkEventMotion *event)
+/*
+ * Which position a tab being dragged has reached.
+ *
+ * @visible is the visible pages in the order they would be drawn right now,
+ * dragged page included at the position it currently holds; @x is where the
+ * dragged tab's left edge is, in label coordinates; @width is its width.
+ *
+ * A tab swaps with a neighbour when its middle passes over that neighbour's,
+ * rather than when its edge touches it: dragging by the edge makes the order
+ * flip as soon as the tabs overlap at all, which is impossible to aim with.
+ * The middle is taken over the narrower of the two tabs, so that a wide tab
+ * dragged over a narrow one behaves the same as the other way round.
+ *
+ * The first and the last position are special: there is nothing beyond them to
+ * compare against, so it is enough for the dragged tab to have gone past the
+ * near edge of the one sitting there.
+ */
+static int
+drag_tab_find_index (GSList *visible,
+                     int     x,
+                     int     width,
+                     int     num,
+                     int     cur_index)
 {
-    int x, new_index, width, offset, num, i;
-    GSList *visible, *l;
-    Page *drag_page;
-    int event_x, event_y;
-
-    if (!nb->priv->in_drag)
-    {
-        tab_drag_cancel (nb);
-        g_return_if_reached ();
-    }
-
-    if (event)
-    {
-        event_x = (int) event->x;
-        event_y = (int) event->y;
-
-        if (!translate_coords (nb->priv->tab_window, event->window, &event_x, &event_y))
-        {
-            g_critical ("oops");
-            return;
-        }
-    }
-    else
-    {
-        event_x = nb->priv->drag_mouse_x;
-    }
-
-    width = nb->priv->drag_page->label->width;
-    num = get_n_visible_pages (nb);
-
-    if (event)
-    {
-        x = event_x + nb->priv->labels_offset - nb->priv->drag_tab_x_delta;
-        nb->priv->drag_mouse_x = event_x;
-    }
-    else
-    {
-        x = nb->priv->drag_mouse_x + nb->priv->labels_offset - nb->priv->drag_tab_x_delta;
-    }
-
-    nb->priv->drag_tab_x = x;
-
-    drag_page = nb->priv->drag_page;
-    visible = get_visible_pages (nb);
-    visible = g_slist_remove (visible, drag_page);
-    visible = g_slist_insert (visible, drag_page, nb->priv->drag_page_index);
-
-    new_index = nb->priv->drag_page_index;
+    GSList *l;
+    int new_index = cur_index;
+    int offset, i;
 
     for (l = visible, i = 0, offset = 0; l != NULL; l = l->next, ++i)
     {
@@ -3453,6 +3438,7 @@ tab_drag_motion (MooNotebook    *nb,
         page = (Page *) l->data;
         min_width = MIN (page->label->width, width);
 
+        /* Where the tab already is, and the one place it cannot move to. */
         if (i == new_index)
         {
             offset += page->label->width;
@@ -3485,19 +3471,118 @@ tab_drag_motion (MooNotebook    *nb,
         offset += page->label->width;
     }
 
+    return new_index;
+}
+
+
+/*
+ * Scrolls the labels while a tab is dragged against one end of the strip, so
+ * that a tab can be moved somewhere that is not on screen.
+ *
+ * Only when there are more labels than fit: otherwise there is nothing off
+ * screen to scroll to. @x arrives in label coordinates and is put back into
+ * window coordinates here, because what decides this is where the tab is on
+ * screen and not where it is in the strip.
+ */
+static void
+tab_drag_update_scroll (MooNotebook *nb,
+                        int          x,
+                        int          width)
+{
+    if (nb->priv->labels_width <= nb->priv->labels_visible_width)
+        return;
+
+    x += (nb->priv->drag_tab_x_delta - nb->priv->labels_offset);
+
+    /* A third of the tab's width from either end: near enough to mean it, far
+       enough that the tab does not have to be pushed off the edge. */
+    if (x < width/3)
+        drag_scroll_start (nb, LEFT);
+    else if (x + width/3 > nb->priv->labels_visible_width)
+        drag_scroll_start (nb, RIGHT);
+    else
+        drag_scroll_stop (nb);
+}
+
+
+/*
+ * One step of dragging a tab: where the tab is drawn now, and which position it
+ * has been dragged to.
+ *
+ * Called with the motion event while the pointer moves, and with NULL from the
+ * scroll timeout -- the pointer is then standing still against the end of the
+ * strip and it is the labels that are moving under it, which changes the answer
+ * just as much. That is what the remembered drag_mouse_x is for.
+ *
+ * Nothing is reordered here. drag_page_index is where the tab would land, the
+ * layout draws the strip accordingly, and the actual reorder happens when the
+ * button is released.
+ */
+static void
+tab_drag_motion (MooNotebook    *nb,
+                 GdkEventMotion *event)
+{
+    int x, new_index, width, num;
+    GSList *visible;
+    Page *drag_page;
+    int event_x, event_y;
+
+    if (!nb->priv->in_drag)
+    {
+        tab_drag_cancel (nb);
+        g_return_if_reached ();
+    }
+
+    if (event)
+    {
+        /* The event came from whichever window the pointer is over, which is
+           not necessarily the tab window the coordinates are wanted in. */
+        event_x = (int) event->x;
+        event_y = (int) event->y;
+
+        if (!translate_coords (nb->priv->tab_window, event->window, &event_x, &event_y))
+        {
+            g_critical ("oops");
+            return;
+        }
+    }
+    else
+    {
+        event_x = nb->priv->drag_mouse_x;
+    }
+
+    width = nb->priv->drag_page->label->width;
+    num = get_n_visible_pages (nb);
+
+    /* From the pointer to the tab's left edge: labels_offset is how far the
+       strip is scrolled, drag_tab_x_delta where inside the tab the button was
+       pressed. Holding the latter fixed is what keeps the tab from jumping
+       under the pointer when the drag starts. */
+    if (event)
+    {
+        x = event_x + nb->priv->labels_offset - nb->priv->drag_tab_x_delta;
+        nb->priv->drag_mouse_x = event_x;
+    }
+    else
+    {
+        x = nb->priv->drag_mouse_x + nb->priv->labels_offset - nb->priv->drag_tab_x_delta;
+    }
+
+    nb->priv->drag_tab_x = x;
+
+    /* The visible pages as they are laid out at this moment: the dragged page
+       is not where the notebook has it, it is where the drag has put it. */
+    drag_page = nb->priv->drag_page;
+    visible = get_visible_pages (nb);
+    visible = g_slist_remove (visible, drag_page);
+    visible = g_slist_insert (visible, drag_page, nb->priv->drag_page_index);
+
+    new_index = drag_tab_find_index (visible, x, width, num,
+                                     nb->priv->drag_page_index);
+
     nb->priv->drag_page_index = new_index;
 
-    if (nb->priv->labels_width > nb->priv->labels_visible_width)
-    {
-        x += (nb->priv->drag_tab_x_delta - nb->priv->labels_offset);
-
-        if (x < width/3)
-            drag_scroll_start (nb, LEFT);
-        else if (x + width/3 > nb->priv->labels_visible_width)
-            drag_scroll_start (nb, RIGHT);
-        else
-            drag_scroll_stop (nb);
-    }
+    tab_drag_update_scroll (nb, x, width);
 
     gtk_widget_queue_resize (GTK_WIDGET (nb));
     g_slist_free (visible);
@@ -4111,11 +4196,151 @@ focus_from_label (MooNotebook     *nb,
 }
 
 static gboolean
+focus_from_left (MooNotebook     *nb,
+                 GtkDirectionType direction)
+{
+    if (gtk_widget_child_focus (nb->priv->action_widgets[LEFT], direction))
+        return TRUE;
+
+    switch (direction)
+    {
+        case GTK_DIR_TAB_FORWARD:
+            return focus_to_labels (nb, direction, TRUE) ||
+                    focus_to_arrows (nb, direction) ||
+                    focus_to_action_widget (nb, RIGHT, direction) ||
+                    focus_to_child (nb, direction);
+
+        case GTK_DIR_RIGHT:
+            return focus_to_labels (nb, direction, TRUE) ||
+                    focus_to_arrows (nb, direction) ||
+                    focus_to_action_widget (nb, RIGHT, direction);
+
+        /* Nothing of the notebook's lies that way, so the focus leaves it and
+           whatever contains the notebook decides where it goes. */
+        case GTK_DIR_TAB_BACKWARD:
+        case GTK_DIR_UP:
+        case GTK_DIR_LEFT:
+            return FALSE;
+
+        case GTK_DIR_DOWN:
+            return focus_to_child (nb, direction);
+    }
+
+    return FALSE;
+}
+
+
+static gboolean
+focus_from_right (MooNotebook     *nb,
+                  GtkDirectionType direction)
+{
+    if (gtk_widget_child_focus (nb->priv->action_widgets[RIGHT], direction))
+        return TRUE;
+
+    switch (direction)
+    {
+        case GTK_DIR_TAB_FORWARD:
+        case GTK_DIR_RIGHT:
+        case GTK_DIR_UP:
+            return FALSE;
+
+        case GTK_DIR_TAB_BACKWARD:
+        case GTK_DIR_LEFT:
+            return focus_to_arrows (nb, direction) ||
+                    focus_to_labels (nb, direction, FALSE) ||
+                    focus_to_action_widget (nb, LEFT, direction);
+
+        case GTK_DIR_DOWN:
+            return focus_to_child (nb, direction);
+    }
+
+    return FALSE;
+}
+
+
+static gboolean
+focus_from_arrows (MooNotebook     *nb,
+                   GtkDirectionType direction)
+{
+    if (gtk_widget_child_focus (nb->priv->arrows, direction))
+        return TRUE;
+
+    switch (direction)
+    {
+        case GTK_DIR_TAB_FORWARD:
+        case GTK_DIR_RIGHT:
+            return focus_to_action_widget (nb, RIGHT, direction);
+
+        case GTK_DIR_UP:
+            return FALSE;
+
+        case GTK_DIR_TAB_BACKWARD:
+        case GTK_DIR_LEFT:
+            return focus_to_labels (nb, direction, FALSE) ||
+                    focus_to_action_widget (nb, LEFT, direction);
+
+        case GTK_DIR_DOWN:
+            return focus_to_child (nb, direction);
+    }
+
+    return FALSE;
+}
+
+
+static gboolean
+focus_from_child (MooNotebook     *nb,
+                  GtkDirectionType direction)
+{
+    Page *page = nb->priv->current_page;
+
+    if (gtk_widget_child_focus (page->child, direction))
+        return TRUE;
+
+    switch (direction)
+    {
+        /* The page is the bottom of the notebook: below it and to either side
+           there is nothing of the notebook's left to focus. */
+        case GTK_DIR_RIGHT:
+        case GTK_DIR_LEFT:
+        case GTK_DIR_DOWN:
+        case GTK_DIR_TAB_FORWARD:
+            return FALSE;
+
+        case GTK_DIR_UP:
+        case GTK_DIR_TAB_BACKWARD:
+            return focus_to_action_widget (nb, LEFT, direction) ||
+                    focus_to_labels (nb, direction, TRUE) ||
+                    focus_to_arrows (nb, direction) ||
+                    focus_to_action_widget (nb, RIGHT, direction);
+    }
+
+    return FALSE;
+}
+
+
+/*
+ * Where the focus goes next, given where it is now.
+ *
+ * GtkContainer asks this of a container whenever the focus is to move inside
+ * it, and the answer is TRUE when the notebook took the focus and FALSE when it
+ * has nothing more in that direction -- FALSE is what lets the focus leave the
+ * notebook, so getting it wrong traps the focus rather than misplacing it.
+ *
+ * The notebook has five places the focus can be, and each of the functions
+ * above answers for one of them: an action widget on either side of the tab
+ * strip, the scroll arrows, a tab label, or the page itself. Each one first
+ * offers the direction to whatever currently holds the focus -- a composite
+ * action widget has its own insides to walk -- and only then moves on.
+ *
+ * The order within a direction is the order the things are laid out in, which
+ * is why the chains read left to right for forward and right to left for
+ * backward, and why up and down cross between the tab strip and the page.
+ */
+static gboolean
 moo_notebook_focus (GtkWidget       *widget,
                     GtkDirectionType direction)
 {
     MooNotebook *nb = MOO_NOTEBOOK (widget);
-    Page *page;
 
     switch (nb->priv->focus)
     {
@@ -4123,101 +4348,19 @@ moo_notebook_focus (GtkWidget       *widget,
             return focus_from_none (nb, widget, direction);
 
         case FOCUS_LEFT:
-            if (gtk_widget_child_focus (nb->priv->action_widgets[LEFT], direction))
-                return TRUE;
-
-            switch (direction)
-            {
-                case GTK_DIR_TAB_FORWARD:
-                    return focus_to_labels (nb, direction, TRUE) ||
-                            focus_to_arrows (nb, direction) ||
-                            focus_to_action_widget (nb, RIGHT, direction) ||
-                            focus_to_child (nb, direction);
-
-                case GTK_DIR_RIGHT:
-                    return focus_to_labels (nb, direction, TRUE) ||
-                            focus_to_arrows (nb, direction) ||
-                            focus_to_action_widget (nb, RIGHT, direction);
-
-                case GTK_DIR_TAB_BACKWARD:
-                case GTK_DIR_UP:
-                case GTK_DIR_LEFT:
-                    return FALSE;
-
-                case GTK_DIR_DOWN:
-                    return focus_to_child (nb, direction);
-            }
-            break;
+            return focus_from_left (nb, direction);
 
         case FOCUS_RIGHT:
-            if (gtk_widget_child_focus (nb->priv->action_widgets[RIGHT], direction))
-                return TRUE;
-
-            switch (direction)
-            {
-                case GTK_DIR_TAB_FORWARD:
-                case GTK_DIR_RIGHT:
-                case GTK_DIR_UP:
-                    return FALSE;
-
-                case GTK_DIR_TAB_BACKWARD:
-                case GTK_DIR_LEFT:
-                    return focus_to_arrows (nb, direction) ||
-                            focus_to_labels (nb, direction, FALSE) ||
-                            focus_to_action_widget (nb, LEFT, direction);
-
-                case GTK_DIR_DOWN:
-                    return focus_to_child (nb, direction);
-            }
-            break;
+            return focus_from_right (nb, direction);
 
         case FOCUS_ARROWS:
-            if (gtk_widget_child_focus (nb->priv->arrows, direction))
-                return TRUE;
-
-            switch (direction)
-            {
-                case GTK_DIR_TAB_FORWARD:
-                case GTK_DIR_RIGHT:
-                    return focus_to_action_widget (nb, RIGHT, direction);
-
-                case GTK_DIR_UP:
-                    return FALSE;
-
-                case GTK_DIR_TAB_BACKWARD:
-                case GTK_DIR_LEFT:
-                    return focus_to_labels (nb, direction, FALSE) ||
-                            focus_to_action_widget (nb, LEFT, direction);
-
-                case GTK_DIR_DOWN:
-                    return focus_to_child (nb, direction);
-            }
-            break;
+            return focus_from_arrows (nb, direction);
 
         case FOCUS_LABEL:
             return focus_from_label (nb, direction);
 
         case FOCUS_CHILD:
-            page = nb->priv->current_page;
-            if (gtk_widget_child_focus (page->child, direction))
-                return TRUE;
-
-            switch (direction)
-            {
-                case GTK_DIR_RIGHT:
-                case GTK_DIR_LEFT:
-                case GTK_DIR_DOWN:
-                case GTK_DIR_TAB_FORWARD:
-                    return FALSE;
-
-                case GTK_DIR_UP:
-                case GTK_DIR_TAB_BACKWARD:
-                    return focus_to_action_widget (nb, LEFT, direction) ||
-                            focus_to_labels (nb, direction, TRUE) ||
-                            focus_to_arrows (nb, direction) ||
-                            focus_to_action_widget (nb, RIGHT, direction);
-            }
-            break;
+            return focus_from_child (nb, direction);
     }
 
     g_return_val_if_reached (FALSE);
