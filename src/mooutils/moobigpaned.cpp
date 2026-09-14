@@ -903,7 +903,6 @@ static void         get_drop_area           (MooBigPaned    *paned,
                                              int             index,
                                              GdkRectangle   *rect,
                                              GdkRectangle   *button_rect);
-// static void         invalidate_drop_outline (MooBigPaned    *paned);
 
 
 static MooRegion *

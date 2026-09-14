@@ -360,6 +360,3 @@ _moo_object_ptr_free (MooObjectPtr *ptr)
     _moo_object_ptr_die (ptr);
     g_free (ptr);
 }
-
-
-/* kate: strip on; indent-width 4; */

@@ -1175,8 +1175,6 @@ try_convert_to_utf8_from_utf8 (const char *data,
     const char *invalid;
     gboolean valid_utf8;
 
-//     g_print ("try_convert_to_utf8_from_utf8()\n");
-
     if (len >= BOM_UTF8_LEN && memcmp (data, BOM_UTF8, BOM_UTF8_LEN) == 0)
     {
         data += BOM_UTF8_LEN;

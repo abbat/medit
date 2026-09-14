@@ -1963,8 +1963,6 @@ moo_notebook_insert_page (MooNotebook *nb,
     g_return_val_if_fail (gtk_widget_get_parent (child) == NULL, -1);
     g_return_val_if_fail (!label || GTK_IS_WIDGET (label), -1);
 
-    /* XXX GTK_WIDGET_SET_FLAGS (nb, GTK_CAN_FOCUS); */
-
     if (position < 0 || position > moo_notebook_get_n_pages (nb))
         position = moo_notebook_get_n_pages (nb);
 

@@ -39,17 +39,16 @@ G_END_DECLS
 #define NC_(Context,String) (String)
 #define DC_(Context,String,Domain) moo_dpgettext (Domain, Context "\004" String, strlen (Context) + 1)
 
- // On windows the following produces wrong results when there is no translation, because the
- // arguments to g_strip_context() are two different character buffers (with identical contents),
- // i.e. it generates and uses two different buffers for the same string literal. There is probably
- // a compiler flag to avoid that duplication, but it's safer to just fix the macros instead.
- //#define Q_(String) g_strip_context ((String), moo_gettext (String))
+ // Q_() and QD_() are inline functions rather than the macros they used to be. As
+ // macros, on Windows, the string literal was duplicated, so g_strip_context() was
+ // handed two different buffers with identical contents and returned the wrong result
+ // when there was no translation. A compiler flag might avoid the duplication; taking
+ // the address of one string literal is safer.
 inline static const char* Q_(const char* msgid)
 {
     return g_strip_context(msgid, _(msgid));
 }
 
-//#define QD_(String,Domain) g_strip_context ((String), D_ (String, Domain))
 inline static const char* QD_(const char* msgid, const char* domain)
 {
     return g_strip_context(msgid, D_(msgid, domain));
