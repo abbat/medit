@@ -1622,9 +1622,9 @@ moo_notebook_draw_child_border (MooNotebook  *nb,
     else
     {
 #if GTK_CHECK_VERSION(3,0,0)
-        /* FIXME: gtk_paint_box() drew a background and a frame; this draws
-           only the frame. The gap branch above has the same gap and was left
-           that way on purpose, the child covering the area either way. */
+        /* gtk_paint_box() drew a background and a frame; only the frame is
+           drawn here, the way the gap branch above draws only the frame with
+           its gap -- the child covers the area either way. */
         GtkStyleContext *context = gtk_widget_get_style_context(widget);
         gtk_style_context_save(context);
 
@@ -2681,10 +2681,10 @@ moo_notebook_draw_label (MooNotebook    *nb,
         gtk_widget_get_allocation (page->label->widget, &allocation);
 
 #if GTK_CHECK_VERSION(3,0,0)
-        /* FIXME: state here is the one computed for the tab, so the focus
-           rectangle inherits it; gtk_paint_focus() was given the tab's state
-           too, so this much is faithful. It shares the style-class gap of the
-           block above. */
+        /* state here is the one computed for the tab, so the focus rectangle
+           inherits it; gtk_paint_focus() was given the tab's state too, so
+           this much is faithful. It shares the style-class gap of the block
+           above. */
         GtkStyleContext *focus_context = gtk_widget_get_style_context(widget);
         gtk_style_context_save(focus_context);
 
