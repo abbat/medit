@@ -94,17 +94,19 @@ if(ENABLE_STRICT)
     # After -Werror above, so that deprecations warn but do not fail the build.
     moo_try_flag(-Wno-error=deprecated-declarations)
 
-    # GCC does not recognize a typed NULL pointer as a variadic sentinel when
-    # these C sources are compiled as C++. The calls are valid, but GCC warns
-    # about them as missing sentinels; keep the diagnostic without making it a
-    # build error.
-    moo_try_cxx_flag(-Wno-error=format)
-
+    # -Wstrict-null-sentinel is deliberately absent from this list. It is a
+    # portability warning about passing an uncast NULL where a variadic
+    # sentinel is expected -- a real concern for code that has to compile
+    # where NULL is the integer 0, and not one here, where the tree is built
+    # as C++ with a NULL that is already a pointer constant. Enabled, it
+    # reports every g_object_set() and gtk_widget_set_name() style call in the
+    # tree as "missing sentinel" -- 166 of them, none a defect -- and the only
+    # way to keep -Werror was -Wno-error=format, which threw away -Werror=format
+    # for the whole tree to silence one warning that should not have fired.
     foreach(flag
             -fno-nonansi-builtins
             -fno-gnu-keywords
             -Wctor-dtor-privacy
-            -Wstrict-null-sentinel
             -Woverloaded-virtual
             -Wsign-promo
             -Wnon-virtual-dtor
@@ -208,7 +210,6 @@ if(ENABLE_COVERAGE)
 endif()
 
 set(MOO_COMPILE_DEFINITIONS
-    XDG_PREFIX=_moo_edit_xdg
     G_LOG_DOMAIN="Moo"
     MOO_DATA_DIR="${MOO_DATA_DIR}"
     MOO_LIB_DIR="${MOO_LIB_DIR}"
