@@ -268,223 +268,257 @@ string_to_enum (const char *string,
 }
 
 
-gboolean
-_moo_value_convert (const GValue *src,
-                    GValue       *dest)
+/*
+ * The string a value converts to and from is a stored format: it is what ends
+ * up in the prefs file and in the ui-xml files, and it has to be read back by
+ * a later version of medit. The two directions are deliberately not symmetric
+ * -- a boolean is written "TRUE"/"FALSE" but reads back from any of
+ * 1/yes/true, an enum is written as its nick but reads back by name, by nick
+ * or as a plain number -- so they are two functions rather than one table.
+ *
+ * Writing never fails for a supported type; reading fails on anything it does
+ * not recognise, and the caller is expected to fall back to a default rather
+ * than to treat it as an error.
+ */
+static gboolean
+value_to_string (const GValue *src,
+                 GValue       *dest)
 {
-    GType src_type, dest_type;
+    GType src_type = G_VALUE_TYPE (src);
 
-    g_return_val_if_fail (G_IS_VALUE (src) && G_IS_VALUE (dest), FALSE);
-
-    src_type = G_VALUE_TYPE (src);
-    dest_type = G_VALUE_TYPE (dest);
-
-    g_return_val_if_fail (_moo_value_type_supported (src_type), FALSE);
-    g_return_val_if_fail (_moo_value_type_supported (dest_type), FALSE);
-
-    if (src_type == dest_type)
+    if (src_type == G_TYPE_BOOLEAN)
     {
-        g_value_copy (src, dest);
+        const char *string =
+                g_value_get_boolean (src) ? "TRUE" : "FALSE";
+        g_value_set_static_string (dest, string);
         return TRUE;
     }
 
-    if (dest_type == G_TYPE_STRING)
+    if (src_type == G_TYPE_DOUBLE)
     {
-        if (src_type == G_TYPE_BOOLEAN)
-        {
-            const char *string =
-                    g_value_get_boolean (src) ? "TRUE" : "FALSE";
-            g_value_set_static_string (dest, string);
-            return TRUE;
-        }
-
-        if (src_type == G_TYPE_DOUBLE)
-        {
-            char *string =
-                    g_strdup_printf ("%f", g_value_get_double (src));
-            g_value_take_string (dest, string);
-            return TRUE;
-        }
-
-        if (src_type == G_TYPE_INT)
-        {
-            char *string =
-                    g_strdup_printf ("%d", g_value_get_int (src));
-            g_value_take_string (dest, string);
-            return TRUE;
-        }
-
-        if (src_type == G_TYPE_UINT)
-        {
-            char *string =
-                    g_strdup_printf ("%u", g_value_get_uint (src));
-            g_value_take_string (dest, string);
-            return TRUE;
-        }
-
-        if (src_type == GDK_TYPE_COLOR)
-        {
-            char string[14];
-            const GdkColor *color = (const GdkColor*) g_value_get_boxed (src);
-
-            if (!color)
-            {
-                g_value_set_string (dest, NULL);
-                return TRUE;
-            }
-            else
-            {
-                g_snprintf (string, 8, "#%02x%02x%02x",
-                            color->red >> 8,
-                            color->green >> 8,
-                            color->blue >> 8);
-                g_value_set_string (dest, string);
-                return TRUE;
-            }
-        }
-
-        if (G_TYPE_IS_ENUM (src_type))
-        {
-            gpointer klass;
-            GEnumClass *enum_class;
-            GEnumValue *enum_value;
-
-            klass = g_type_class_ref (src_type);
-            g_return_val_if_fail (G_IS_ENUM_CLASS (klass), FALSE);
-            enum_class = G_ENUM_CLASS (klass);
-
-            enum_value = g_enum_get_value (enum_class,
-                                           g_value_get_enum (src));
-
-            if (!enum_value)
-            {
-                char *string = g_strdup_printf ("%d", g_value_get_enum (src));
-                g_value_take_string (dest, string);
-            }
-            else
-            {
-                g_value_set_string (dest, enum_value->value_nick);
-            }
-
-            g_type_class_unref (klass);
-            return TRUE;
-        }
-
-        if (G_TYPE_IS_FLAGS (src_type))
-        {
-            char *string = flags_to_string (g_value_get_flags (src));
-            g_value_take_string (dest, string);
-            return TRUE;
-        }
-
-        g_return_val_if_reached (FALSE);
+        /* "%f" writes the decimal separator of the locale, while the read
+           below is g_ascii_strtod() and only ever accepts a point -- so a
+           double written under a comma locale would not read back. Latent
+           rather than a defect: nothing in the tree stores a double value
+           through this path today. Whoever adds the first one should make
+           this g_ascii_formatd() at the same time. */
+        char *string =
+                g_strdup_printf ("%f", g_value_get_double (src));
+        g_value_take_string (dest, string);
+        return TRUE;
     }
 
-    if (src_type == G_TYPE_STRING)
+    if (src_type == G_TYPE_INT)
     {
-        const char *string = g_value_get_string (src);
-
-        if (dest_type == G_TYPE_BOOLEAN)
-        {
-            if (!string || !string[0])
-                g_value_set_boolean (dest, FALSE);
-            else if (g_ascii_strcasecmp (string, "1") == 0 ||
-                     g_ascii_strcasecmp (string, "yes") == 0 ||
-                     g_ascii_strcasecmp (string, "true") == 0)
-                g_value_set_boolean (dest, TRUE);
-            else if (g_ascii_strcasecmp (string, "0") == 0 ||
-                     g_ascii_strcasecmp (string, "no") == 0 ||
-                     g_ascii_strcasecmp (string, "false") == 0)
-                g_value_set_boolean (dest, FALSE);
-            else
-                return FALSE;
-            return TRUE;
-        }
-
-        if (dest_type == G_TYPE_DOUBLE)
-        {
-            double val = 0.;
-            char *end;
-
-            if (string && string[0])
-            {
-                mgw_errno_t err;
-                val = mgw_ascii_strtod (string, &end, &err);
-                if (mgw_errno_is_set (err) || !end || *end)
-                    return FALSE;
-            }
-
-            g_value_set_double (dest, val);
-            return TRUE;
-        }
-
-        if (dest_type == G_TYPE_INT)
-        {
-            int val = 0;
-
-            if (string && string[0] && !string_to_int (string, &val))
-                return FALSE;
-
-            g_value_set_int (dest, val);
-            return TRUE;
-        }
-
-        if (dest_type == G_TYPE_UINT)
-        {
-            guint val = 0;
-
-            if (string && string[0] && !string_to_uint (string, &val))
-                return FALSE;
-
-            g_value_set_uint (dest, val);
-            return TRUE;
-        }
-
-        if (dest_type == GDK_TYPE_COLOR)
-        {
-            GdkColor color;
-
-            if (!string || !string[0])
-            {
-                g_value_set_boxed (dest, NULL);
-                return TRUE;
-            }
-
-            g_return_val_if_fail (gdk_color_parse (string, &color),
-                                  FALSE);
-
-            g_value_set_boxed (dest, &color);
-            return TRUE;
-        }
-
-        if (G_TYPE_IS_ENUM (dest_type))
-        {
-            int ival;
-
-            if (string_to_enum (string, dest_type, &ival))
-            {
-                g_value_set_enum (dest, ival);
-                return TRUE;
-            }
-
-            return FALSE;
-        }
-
-        if (G_TYPE_IS_FLAGS (dest_type))
-        {
-            guint flags;
-
-            if (string_to_flags (string, dest_type, &flags))
-            {
-                g_value_set_flags (dest, flags);
-                return TRUE;
-            }
-
-            return FALSE;
-        }
-
-        g_return_val_if_reached (FALSE);
+        char *string =
+                g_strdup_printf ("%d", g_value_get_int (src));
+        g_value_take_string (dest, string);
+        return TRUE;
     }
+
+    if (src_type == G_TYPE_UINT)
+    {
+        char *string =
+                g_strdup_printf ("%u", g_value_get_uint (src));
+        g_value_take_string (dest, string);
+        return TRUE;
+    }
+
+    if (src_type == GDK_TYPE_COLOR)
+    {
+        char string[14];
+        const GdkColor *color = (const GdkColor*) g_value_get_boxed (src);
+
+        if (!color)
+        {
+            g_value_set_string (dest, NULL);
+            return TRUE;
+        }
+        else
+        {
+            /* GdkColor channels are 16 bit and the written form is the 8 bit
+               "#rrggbb" that gdk_color_parse() reads back, so the low byte of
+               each channel is dropped on the way out. */
+            g_snprintf (string, 8, "#%02x%02x%02x",
+                        color->red >> 8,
+                        color->green >> 8,
+                        color->blue >> 8);
+            g_value_set_string (dest, string);
+            return TRUE;
+        }
+    }
+
+    if (G_TYPE_IS_ENUM (src_type))
+    {
+        gpointer klass;
+        GEnumClass *enum_class;
+        GEnumValue *enum_value;
+
+        klass = g_type_class_ref (src_type);
+        g_return_val_if_fail (G_IS_ENUM_CLASS (klass), FALSE);
+        enum_class = G_ENUM_CLASS (klass);
+
+        enum_value = g_enum_get_value (enum_class,
+                                       g_value_get_enum (src));
+
+        /* A value outside the enum is written as the number it is: the enum
+           may have grown a member since the file was saved, and a number
+           survives the round trip where a made-up nick would not. */
+        if (!enum_value)
+        {
+            char *string = g_strdup_printf ("%d", g_value_get_enum (src));
+            g_value_take_string (dest, string);
+        }
+        else
+        {
+            g_value_set_string (dest, enum_value->value_nick);
+        }
+
+        g_type_class_unref (klass);
+        return TRUE;
+    }
+
+    /* Flags go out as the number they are, and an empty set as the empty
+       string; the reader below also accepts a "first|second" list of names or
+       nicks, which is what a hand-edited prefs file is likely to contain. */
+    if (G_TYPE_IS_FLAGS (src_type))
+    {
+        char *string = flags_to_string (g_value_get_flags (src));
+        g_value_take_string (dest, string);
+        return TRUE;
+    }
+
+    g_return_val_if_reached (FALSE);
+}
+
+
+static gboolean
+value_from_string (const GValue *src,
+                   GValue       *dest)
+{
+    GType dest_type = G_VALUE_TYPE (dest);
+    const char *string = g_value_get_string (src);
+
+    /* An absent or empty string is not a parse failure anywhere below: it is
+       the value a key that was never written has, and every type answers it
+       with its own zero. */
+
+    if (dest_type == G_TYPE_BOOLEAN)
+    {
+        if (!string || !string[0])
+            g_value_set_boolean (dest, FALSE);
+        else if (g_ascii_strcasecmp (string, "1") == 0 ||
+                 g_ascii_strcasecmp (string, "yes") == 0 ||
+                 g_ascii_strcasecmp (string, "true") == 0)
+            g_value_set_boolean (dest, TRUE);
+        else if (g_ascii_strcasecmp (string, "0") == 0 ||
+                 g_ascii_strcasecmp (string, "no") == 0 ||
+                 g_ascii_strcasecmp (string, "false") == 0)
+            g_value_set_boolean (dest, FALSE);
+        else
+            return FALSE;
+        return TRUE;
+    }
+
+    if (dest_type == G_TYPE_DOUBLE)
+    {
+        double val = 0.;
+        char *end;
+
+        if (string && string[0])
+        {
+            mgw_errno_t err;
+            val = mgw_ascii_strtod (string, &end, &err);
+            if (mgw_errno_is_set (err) || !end || *end)
+                return FALSE;
+        }
+
+        g_value_set_double (dest, val);
+        return TRUE;
+    }
+
+    if (dest_type == G_TYPE_INT)
+    {
+        int val = 0;
+
+        if (string && string[0] && !string_to_int (string, &val))
+            return FALSE;
+
+        g_value_set_int (dest, val);
+        return TRUE;
+    }
+
+    if (dest_type == G_TYPE_UINT)
+    {
+        guint val = 0;
+
+        if (string && string[0] && !string_to_uint (string, &val))
+            return FALSE;
+
+        g_value_set_uint (dest, val);
+        return TRUE;
+    }
+
+    if (dest_type == GDK_TYPE_COLOR)
+    {
+        GdkColor color;
+
+        if (!string || !string[0])
+        {
+            g_value_set_boxed (dest, NULL);
+            return TRUE;
+        }
+
+        g_return_val_if_fail (gdk_color_parse (string, &color),
+                              FALSE);
+
+        g_value_set_boxed (dest, &color);
+        return TRUE;
+    }
+
+    if (G_TYPE_IS_ENUM (dest_type))
+    {
+        int ival;
+
+        if (string_to_enum (string, dest_type, &ival))
+        {
+            g_value_set_enum (dest, ival);
+            return TRUE;
+        }
+
+        return FALSE;
+    }
+
+    if (G_TYPE_IS_FLAGS (dest_type))
+    {
+        guint flags;
+
+        if (string_to_flags (string, dest_type, &flags))
+        {
+            g_value_set_flags (dest, flags);
+            return TRUE;
+        }
+
+        return FALSE;
+    }
+
+    g_return_val_if_reached (FALSE);
+}
+
+
+/*
+ * What is left once neither side is a string: an enum and a set of flags are
+ * an int underneath and convert to and from one without looking at the class,
+ * and an int and a double convert both ways. Any other pair of supported types
+ * -- a boolean and a colour, say -- has no meaning and is reported as the
+ * programming error it is.
+ */
+static gboolean
+value_convert_number (const GValue *src,
+                      GValue       *dest)
+{
+    GType src_type = G_VALUE_TYPE (src);
+    GType dest_type = G_VALUE_TYPE (dest);
 
     if (G_TYPE_IS_ENUM (src_type) && dest_type == G_TYPE_INT)
     {
@@ -527,6 +561,42 @@ _moo_value_convert (const GValue *src,
     }
 
     g_return_val_if_reached (FALSE);
+}
+
+
+/*
+ * Converts between the handful of types the prefs system stores, which is what
+ * _moo_value_type_supported() lists. The work is in three pieces because the
+ * three are different in kind: writing a stored string, reading one back, and
+ * the numeric conversions that never see a string at all.
+ */
+gboolean
+_moo_value_convert (const GValue *src,
+                    GValue       *dest)
+{
+    GType src_type, dest_type;
+
+    g_return_val_if_fail (G_IS_VALUE (src) && G_IS_VALUE (dest), FALSE);
+
+    src_type = G_VALUE_TYPE (src);
+    dest_type = G_VALUE_TYPE (dest);
+
+    g_return_val_if_fail (_moo_value_type_supported (src_type), FALSE);
+    g_return_val_if_fail (_moo_value_type_supported (dest_type), FALSE);
+
+    if (src_type == dest_type)
+    {
+        g_value_copy (src, dest);
+        return TRUE;
+    }
+
+    if (dest_type == G_TYPE_STRING)
+        return value_to_string (src, dest);
+
+    if (src_type == G_TYPE_STRING)
+        return value_from_string (src, dest);
+
+    return value_convert_number (src, dest);
 }
 
 

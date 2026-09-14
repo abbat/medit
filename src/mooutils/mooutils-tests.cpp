@@ -33,6 +33,7 @@
 #include "mooutils/moobigpaned.h"
 #include "mooutils/moo-mime.h"
 #include "mooutils/mooprefs.h"
+#include "mooutils/mooutils-enums.h"
 #include "mooutils/moouixml.h"
 #include "plugins/support/moooutputfilter.h"
 #include "mooutils/moohistorylist.h"
@@ -1260,6 +1261,254 @@ test_value_and_data_memory (void)
 }
 
 
+/* -------------------------------------------------------------------------
+ * _moo_value_convert(): the string a prefs value is stored as, and back
+ */
+
+/*
+ * The two directions of the conversion are not symmetric -- a boolean goes out
+ * as "TRUE" but comes back from any of 1/yes/true, an enum goes out as its
+ * nick but comes back by name, by nick or as a number, flags go out as a
+ * number but come back from a "first|second" list -- so each direction is
+ * checked on its own rather than by round-tripping values through both.
+ */
+
+/*
+ * MooUiNodeFlags has a single member, which cannot exercise the list the
+ * reader accepts, so the flags cases use a type registered here.
+ */
+static GType
+test_convert_flags_type (void)
+{
+    static GType type;
+
+    if (G_UNLIKELY (!type))
+    {
+        static const GFlagsValue values[] = {
+            { 1 << 0, (char*) "MOO_TEST_CONVERT_FIRST", (char*) "first" },
+            { 1 << 1, (char*) "MOO_TEST_CONVERT_SECOND", (char*) "second" },
+            { 1 << 2, (char*) "MOO_TEST_CONVERT_THIRD", (char*) "third" },
+            { 0, NULL, NULL }
+        };
+
+        type = g_flags_register_static ("MooTestConvertFlags", values);
+    }
+
+    return type;
+}
+
+static void
+check_to_string (const GValue *src,
+                 const char   *expected)
+{
+    GValue dest = G_VALUE_INIT;
+
+    g_value_init (&dest, G_TYPE_STRING);
+    g_assert_true (_moo_value_convert (src, &dest));
+    g_assert_cmpstr (g_value_get_string (&dest), ==, expected);
+    g_value_unset (&dest);
+}
+
+static gboolean
+convert_from_string (const char *string,
+                     GValue     *dest)
+{
+    GValue src = G_VALUE_INIT;
+    gboolean ok;
+
+    g_value_init (&src, G_TYPE_STRING);
+    g_value_set_string (&src, string);
+    ok = _moo_value_convert (&src, dest);
+    g_value_unset (&src);
+
+    return ok;
+}
+
+static void
+test_value_to_string (void)
+{
+    GValue src = G_VALUE_INIT;
+    GdkColor color;
+
+    g_value_init (&src, G_TYPE_BOOLEAN);
+    g_value_set_boolean (&src, TRUE);
+    check_to_string (&src, "TRUE");
+    g_value_set_boolean (&src, FALSE);
+    check_to_string (&src, "FALSE");
+    g_value_unset (&src);
+
+    g_value_init (&src, G_TYPE_INT);
+    g_value_set_int (&src, -7);
+    check_to_string (&src, "-7");
+    g_value_unset (&src);
+
+    g_value_init (&src, G_TYPE_UINT);
+    g_value_set_uint (&src, 9);
+    check_to_string (&src, "9");
+    g_value_unset (&src);
+
+    /* A colour is written as the eight bit "#rrggbb" gdk_color_parse() reads,
+       so the low byte of each sixteen bit channel is dropped. */
+    g_assert_true (gdk_color_parse ("#123456", &color));
+    g_value_init (&src, GDK_TYPE_COLOR);
+    g_value_set_boxed (&src, &color);
+    check_to_string (&src, "#123456");
+    g_value_set_boxed (&src, NULL);
+    check_to_string (&src, NULL);
+    g_value_unset (&src);
+
+    g_value_init (&src, MOO_TYPE_UI_NODE_TYPE);
+    g_value_set_enum (&src, MOO_UI_NODE_PLACEHOLDER);
+    check_to_string (&src, "placeholder");
+    /* A value the enum does not have is written as the number it is: the enum
+       may have grown a member since the file was written, and a number
+       survives that where an invented nick would not. */
+    g_value_set_enum (&src, 99);
+    check_to_string (&src, "99");
+    g_value_unset (&src);
+
+    g_value_init (&src, test_convert_flags_type ());
+    g_value_set_flags (&src, 5);
+    check_to_string (&src, "5");
+    g_value_set_flags (&src, 0);
+    check_to_string (&src, "");
+    g_value_unset (&src);
+}
+
+static void
+test_value_from_string (void)
+{
+    GValue dest = G_VALUE_INIT;
+    const GdkColor *color;
+
+    /* An absent or empty string is not a parse failure for any type: it is
+       what a key that was never written reads as, and every type answers it
+       with its own zero. */
+
+    g_value_init (&dest, G_TYPE_BOOLEAN);
+    g_assert_true (convert_from_string ("yes", &dest));
+    g_assert_true (g_value_get_boolean (&dest));
+    g_assert_true (convert_from_string ("TrUe", &dest));
+    g_assert_true (g_value_get_boolean (&dest));
+    g_assert_true (convert_from_string ("1", &dest));
+    g_assert_true (g_value_get_boolean (&dest));
+    g_assert_true (convert_from_string ("no", &dest));
+    g_assert_false (g_value_get_boolean (&dest));
+    g_assert_true (convert_from_string ("", &dest));
+    g_assert_false (g_value_get_boolean (&dest));
+    g_assert_false (convert_from_string ("maybe", &dest));
+    g_value_unset (&dest);
+
+    g_value_init (&dest, G_TYPE_INT);
+    g_assert_true (convert_from_string ("-7", &dest));
+    g_assert_cmpint (g_value_get_int (&dest), ==, -7);
+    g_assert_true (convert_from_string ("", &dest));
+    g_assert_cmpint (g_value_get_int (&dest), ==, 0);
+    g_assert_false (convert_from_string ("7 apples", &dest));
+    g_value_unset (&dest);
+
+    g_value_init (&dest, G_TYPE_UINT);
+    g_assert_true (convert_from_string ("9", &dest));
+    g_assert_cmpuint (g_value_get_uint (&dest), ==, 9);
+    g_assert_false (convert_from_string ("nine", &dest));
+    g_value_unset (&dest);
+
+    g_value_init (&dest, G_TYPE_DOUBLE);
+    g_assert_true (convert_from_string ("0.5", &dest));
+    g_assert_cmpfloat (g_value_get_double (&dest), ==, 0.5);
+    g_assert_true (convert_from_string ("", &dest));
+    g_assert_cmpfloat (g_value_get_double (&dest), ==, 0.);
+    g_assert_false (convert_from_string ("half", &dest));
+    g_value_unset (&dest);
+
+    g_value_init (&dest, GDK_TYPE_COLOR);
+    g_assert_true (convert_from_string ("#123456", &dest));
+    color = (const GdkColor*) g_value_get_boxed (&dest);
+    g_assert_nonnull (color);
+    g_assert_cmpuint (color->red >> 8, ==, 0x12);
+    g_assert_cmpuint (color->green >> 8, ==, 0x34);
+    g_assert_cmpuint (color->blue >> 8, ==, 0x56);
+    g_assert_true (convert_from_string ("", &dest));
+    g_assert_null (g_value_get_boxed (&dest));
+    g_value_unset (&dest);
+
+    g_value_init (&dest, MOO_TYPE_UI_NODE_TYPE);
+    g_assert_true (convert_from_string ("placeholder", &dest));
+    g_assert_cmpint (g_value_get_enum (&dest), ==, MOO_UI_NODE_PLACEHOLDER);
+    g_assert_true (convert_from_string ("MOO_UI_NODE_ITEM", &dest));
+    g_assert_cmpint (g_value_get_enum (&dest), ==, MOO_UI_NODE_ITEM);
+    g_assert_true (convert_from_string ("2", &dest));
+    g_assert_cmpint (g_value_get_enum (&dest), ==, 2);
+    g_assert_true (convert_from_string ("", &dest));
+    g_assert_cmpint (g_value_get_enum (&dest), ==, 0);
+    g_assert_false (convert_from_string ("no-such-node", &dest));
+    g_value_unset (&dest);
+
+    g_value_init (&dest, test_convert_flags_type ());
+    g_assert_true (convert_from_string ("first|third", &dest));
+    g_assert_cmpuint (g_value_get_flags (&dest), ==, 5);
+    g_assert_true (convert_from_string ("MOO_TEST_CONVERT_SECOND", &dest));
+    g_assert_cmpuint (g_value_get_flags (&dest), ==, 2);
+    g_assert_true (convert_from_string ("5", &dest));
+    g_assert_cmpuint (g_value_get_flags (&dest), ==, 5);
+    g_assert_true (convert_from_string ("", &dest));
+    g_assert_cmpuint (g_value_get_flags (&dest), ==, 0);
+    g_assert_false (convert_from_string ("first|nonsense", &dest));
+    g_value_unset (&dest);
+}
+
+static void
+test_value_convert_number (void)
+{
+    GValue src = G_VALUE_INIT;
+    GValue dest = G_VALUE_INIT;
+
+    /* An enum and a set of flags are an int underneath and cross without
+       looking at the class, so a value outside either passes through. */
+
+    g_value_init (&src, MOO_TYPE_UI_NODE_TYPE);
+    g_value_set_enum (&src, MOO_UI_NODE_SEPARATOR);
+    g_value_init (&dest, G_TYPE_INT);
+    g_assert_true (_moo_value_convert (&src, &dest));
+    g_assert_cmpint (g_value_get_int (&dest), ==, MOO_UI_NODE_SEPARATOR);
+    g_value_unset (&src);
+    g_value_unset (&dest);
+
+    g_value_init (&src, G_TYPE_INT);
+    g_value_set_int (&src, MOO_UI_NODE_WIDGET);
+    g_value_init (&dest, MOO_TYPE_UI_NODE_TYPE);
+    g_assert_true (_moo_value_convert (&src, &dest));
+    g_assert_cmpint (g_value_get_enum (&dest), ==, MOO_UI_NODE_WIDGET);
+    g_value_unset (&dest);
+
+    g_value_init (&dest, test_convert_flags_type ());
+    g_value_set_int (&src, 6);
+    g_assert_true (_moo_value_convert (&src, &dest));
+    g_assert_cmpuint (g_value_get_flags (&dest), ==, 6);
+    g_value_unset (&src);
+
+    g_value_init (&src, G_TYPE_INT);
+    g_assert_true (_moo_value_convert (&dest, &src));
+    g_assert_cmpint (g_value_get_int (&src), ==, 6);
+    g_value_unset (&dest);
+
+    /* int <-> double, truncating towards zero the way glib's own transform
+       does -- not rounding, and not flooring negatives. */
+    g_value_init (&dest, G_TYPE_DOUBLE);
+    g_value_set_int (&src, -3);
+    g_assert_true (_moo_value_convert (&src, &dest));
+    g_assert_cmpfloat (g_value_get_double (&dest), ==, -3.);
+    g_value_set_double (&dest, -1.7);
+    g_assert_true (_moo_value_convert (&dest, &src));
+    g_assert_cmpint (g_value_get_int (&src), ==, -1);
+    g_value_set_double (&dest, 1.7);
+    g_assert_true (_moo_value_convert (&dest, &src));
+    g_assert_cmpint (g_value_get_int (&src), ==, 1);
+    g_value_unset (&src);
+    g_value_unset (&dest);
+}
+
+
 static void
 test_region_polygon_memory (void)
 {
@@ -1322,6 +1571,9 @@ _moo_add_mooutils_unit_tests (void)
     g_test_add_func ("/mooutils/prefs/memory", test_prefs_memory);
     g_test_add_func ("/mooutils/prefs/overwrite", test_prefs_overwrite);
     g_test_add_func ("/mooutils/prefs/delete-reregister", test_prefs_delete_reregister);
+    g_test_add_func ("/mooutils/value/to-string", test_value_to_string);
+    g_test_add_func ("/mooutils/value/from-string", test_value_from_string);
+    g_test_add_func ("/mooutils/value/number", test_value_convert_number);
     g_test_add_func ("/mooutils/path/utilities", test_path_utilities);
     g_test_add_func ("/mooutils/path/boundaries", test_path_boundaries);
     g_test_add_func ("/mooutils/history-list/memory", test_history_list_memory);
