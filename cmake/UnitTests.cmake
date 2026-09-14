@@ -15,9 +15,15 @@
 #
 # The locale is pinned for the same reason the UI tests pin it: a name a test
 # compares is translated, and a suite that passes in English and fails in
-# Russian is worse than no suite. The sanitizer options are left alone on
-# purpose -- what the runtime does by default, including reporting leaks and
-# exiting non-zero over them, is exactly what this should be judged on.
+# Russian is worse than no suite.
+#
+# A sanitized build runs each test through tests/lib/unit.py instead of running
+# the binary directly, so that the unit half of the suite is judged the way the
+# UI half is: leak checking on, the runtime's output in a log of its own rather
+# than mixed into stderr, a sanitizer.json beside it, and one line saying what
+# the runtime saw. Left to itself the runtime says it by exiting non-zero, which
+# is indistinguishable from glib's own status for a failed assertion and carries
+# nothing about what was reported.
 
 set(MOO_UNIT_TESTS_FILE "${CMAKE_BINARY_DIR}/unit-tests.cmake")
 
@@ -36,6 +42,27 @@ else()
     set(_moo_unit_coverage_dir "")
 endif()
 
+# The interpreter is looked for only when there is something for it to read --
+# a build without sanitizers has no logs to analyse -- because "no interpreter
+# at build time, none at run time" is a property of this fork (tests/CMakeLists
+# .txt says why), and a sanitized build is a developer's build by definition.
+# If it is not there the tests still run, straight from ctest, the way they did
+# before this wrapper existed.
+set(_moo_unit_python "")
+set(_moo_unit_wrapper "")
+
+if(ENABLE_SANITIZERS)
+    find_package(Python3 COMPONENTS Interpreter QUIET)
+
+    if(Python3_Interpreter_FOUND)
+        set(_moo_unit_python "${Python3_EXECUTABLE}")
+        set(_moo_unit_wrapper "${CMAKE_SOURCE_DIR}/tests/lib/unit.py")
+    else()
+        message(STATUS "Python3 not found: the unit tests will be judged by what "
+                       "the sanitizer runtime exits with, not by what it wrote")
+    endif()
+endif()
+
 # A target of its own rather than a POST_BUILD step, which can only be attached
 # in the directory that created the target, and one that runs on every build
 # rather than one keyed on a file, which would be skipped whenever a reconfigure
@@ -48,6 +75,10 @@ add_custom_target(unit-tests-list ALL
             "-DOUTPUT=${MOO_UNIT_TESTS_FILE}"
             "-DGTK_VERSION=${GTK_VERSION}"
             "-DCOVERAGE_DIR=${_moo_unit_coverage_dir}"
+            "-DPYTHON=${_moo_unit_python}"
+            "-DWRAPPER=${_moo_unit_wrapper}"
+            "-DSANITIZERS=${ENABLE_SANITIZERS}"
+            "-DLOG_ROOT=${CMAKE_BINARY_DIR}/unit-tests"
             -P "${CMAKE_SOURCE_DIR}/cmake/DiscoverUnitTests.cmake"
     BYPRODUCTS "${MOO_UNIT_TESTS_FILE}"
     COMMENT "Reading the unit tests out of medit"

@@ -62,9 +62,30 @@ There is no test binary and no second build. `ENABLE_UNIT_TESTS` compiles the te
 medit itself, `--unit-test` runs them before anything else happens — before the single
 instance is looked for, before the session is read, before `gtk_init()` — and the process
 exits with the result. Which means the binary running them is the sanitized binary the UI
-tests already build, so the address sanitizer is watching what they touch and a leak in a
-test fails it. An ordinary build has none of it compiled: `--unit-test` there is an
-unknown option, and no package build has ever heard of any of this.
+tests already build, so the address sanitizer is watching what they touch. An ordinary
+build has none of it compiled: `--unit-test` there is an unknown option, and no package
+build has ever heard of any of this.
+
+**Under a sanitized build ctest runs each test through `tests/lib/unit.py`**, which is why
+the entries name an interpreter. It is the unit half of what `lib/runner.py` does for the
+UI half and nothing more: it points the runtimes at `<build>/unit-tests/<test name>/`,
+turns leak checking on, runs the binary, and reads the logs back through
+`lib/sanitizer.py` — the same analysis, the same `sanitizer.json`, the same one-line
+verdict. Leak checking is on here and opt-in for a UI test because there is nothing to
+filter: these run before `gtk_init()`, so pango and fontconfig have no caches yet, and a
+clean run reports nothing at all.
+
+Without sanitizers, or with no Python3 on the machine, the entries run the binary directly
+the way they always did. An interpreter is looked for only when the build is sanitized:
+"no interpreter at build time, none at run time" holds for every build a distribution
+makes, and a sanitized build is a developer's by definition.
+
+**A test that leaks fails, and one test at a time is stricter than all of them at once.**
+glib frees a test's data when that test has run, so data handed to
+`g_test_add_data_func_full()` for the tests that *did not* run is still allocated at exit
+— invisible while the whole suite ran in one process, a leak in every one of 163 entries
+now. `g_intern_string()` is the way out where the data is a string: immortal, reachable,
+and nothing for the leak checker to say about it.
 
 The framework is glib's own (`g_test_add_func`, `g_assert_cmpint`), so it costs no
 dependency at all — which is the reason this fork can have unit tests again after the lua

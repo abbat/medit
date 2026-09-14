@@ -4,7 +4,11 @@
 # the binary and there is no binary at configure time. The output is included
 # by ctest through the TEST_INCLUDE_FILES property.
 #
-# Inputs: MEDIT, OUTPUT, GTK_VERSION, COVERAGE_DIR (empty when coverage is off).
+# Inputs: MEDIT, OUTPUT, GTK_VERSION, COVERAGE_DIR (empty when coverage is off),
+# and PYTHON/WRAPPER/SANITIZERS/LOG_ROOT, which are empty unless the build is
+# sanitized and an interpreter was found -- see cmake/UnitTests.cmake. With them
+# a test runs through the wrapper, which reads what the sanitizer runtime wrote;
+# without them it runs straight out of the binary.
 
 # glib prints a TAP plan and a comment per suite around the paths; the paths
 # are the lines that start with a slash.
@@ -25,6 +29,12 @@ if(NOT _moo_rc EQUAL 0)
 endif()
 
 string(REPLACE "\n" ";" _moo_lines "${_moo_list}")
+
+# What ctest allows a test, and what the wrapper allows the binary inside it.
+# The inner one is shorter so that a test which hangs is reported by the wrapper,
+# which can say which test it was and leave the logs, rather than killed by ctest.
+set(_moo_timeout 60)
+set(_moo_wrapper_timeout 55)
 
 set(_moo_out "# Written by cmake/DiscoverUnitTests.cmake. Do not edit.\n")
 set(_moo_count 0)
@@ -61,6 +71,22 @@ foreach(_moo_line IN LISTS _moo_lines)
         set(_moo_env "${_moo_env};LLVM_PROFILE_FILE=${COVERAGE_DIR}/raw/${_moo_name}-%p.profraw")
     endif()
 
+    # Its own log directory, named after the test the way the UI tests name
+    # theirs, because the runtime appends only a pid to the file name and two
+    # tests running one after the other would otherwise read each other's logs.
+    if(WRAPPER)
+        set(_moo_command
+            "[==[${PYTHON}]==] [==[${WRAPPER}]==]"
+            "--binary [==[${MEDIT}]==]"
+            "--log-dir [==[${LOG_ROOT}/${_moo_name}]==]"
+            "--sanitizers [==[${SANITIZERS}]==]"
+            "--timeout ${_moo_wrapper_timeout}"
+            "[==[${_moo_path}]==]")
+        string(JOIN " " _moo_command ${_moo_command})
+    else()
+        set(_moo_command "[==[${MEDIT}]==] --unit-test [==[${_moo_path}]==]")
+    endif()
+
     # RESOURCE_LOCK, so that one unit test runs at a time. They are one entry
     # each now, and ctest would otherwise start a dozen at once beside the UI
     # tests -- forty short medit processes under the address sanitizer, each
@@ -70,12 +96,12 @@ foreach(_moo_line IN LISTS _moo_lines)
     # seconds between them, which is the load unit.all used to put on the
     # machine and is what this restores.
     string(APPEND _moo_out
-        "add_test([==[${_moo_name}]==] [==[${MEDIT}]==] --unit-test [==[${_moo_path}]==])\n"
+        "add_test([==[${_moo_name}]==] ${_moo_command})\n"
         "set_tests_properties([==[${_moo_name}]==] PROPERTIES\n"
         "    LABELS \"unit;gtk${GTK_VERSION};${_moo_group}\"\n"
         "    ENVIRONMENT \"${_moo_env}\"\n"
         "    RESOURCE_LOCK unit\n"
-        "    TIMEOUT 60)\n")
+        "    TIMEOUT ${_moo_timeout})\n")
 
     math(EXPR _moo_count "${_moo_count} + 1")
 endforeach()
