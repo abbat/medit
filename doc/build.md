@@ -46,8 +46,8 @@ caller is six lines. Anything with this shape is worth suspecting: a `static` he
 
 **A Debug build had not linked for months**, and nothing noticed because every job in CI
 builds RelWithDebInfo. Two symbols were referenced only from code a release build compiles
-away — `model_contains_file()` from four `g_assert()`s in `moofoldermodel.c`, `moo_dmsg()`
-from `mooappinput-unix.c`, which calls it without the `MOO_DEBUG_INIT` that defines it —
+away — `model_contains_file()` from four `g_assert()`s in `moofoldermodel.cpp`, `moo_dmsg()`
+from `mooappinput-unix.cpp`, which calls it without the `MOO_DEBUG_INIT` that defines it —
 and both had been deleted as unused, which in a release build they truthfully look. Both
 are back, marked `G_GNUC_UNUSED` so the release build stays quiet. Anything that is only
 called from an assertion has this shape; `-DCMAKE_BUILD_TYPE=Debug` is the thing to build
@@ -182,11 +182,15 @@ tab is worth opening. 242 alerts. **Three were real** and are fixed: a null chec
 could not fire, `localtime()` behind the file list's mtime column, and an implicit
 double-to-int narrowing. Thirteen were the two filtered queries. Twelve were dismissed —
 nine the memory blind spot, one a lambda invented by a macro expansion, two in vendored
-code. **One is open on purpose**: `cpp/constant-comparison` at
-`mootextview-input.c:1086`, where `order == 1` sits inside `if (!order …)`, so the guard
-meant to reject a double-click just after a closing bracket has never run once. It
-arrived with the root commit, so it is upstream's rather than a port regression, and
-what to do with it is a decision about what double-click should select, not a cleanup.
+code. The last one, **`cpp/constant-comparison`**, was left open for a while because it
+was a question rather than a cleanup: `order == 1` sat inside `if (!order …)` in
+`_moo_text_view_extend_selection()`, so the guard meant to reject a double-click just
+after a closing bracket had never run once, and it arrived with the root commit rather
+than with the port. It is now closed by `b37b8d5`, which rejects the case the guard was
+written for and covers it with a headless unit test. Note that the block it sits in is
+unreachable in the program as shipped: nothing ever sets
+`dnd.double_click_selects_brackets`, so the whole bracket expansion is off and only the
+unit test exercises it.
 
 The remaining 214 are 172 notes and 41 `cpp/poorly-documented-function`. Neither is
 wrong, and neither is a finding: `cpp/fixme-comment` counts the 267 FIXME/TODO markers
@@ -226,7 +230,7 @@ The clang static analyzer over medit's own sources, the same command CI runs:
 ```bash
 cmake -S . -B builda -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
 cmake --build builda --target analyze          # whole tree, about 2 minutes
-clang-tidy -p builda src/mooutils/moopaned.c   # one file, a couple of seconds
+clang-tidy -p builda src/mooutils/moopaned.cpp   # one file, a couple of seconds
 ```
 
 It needs a **clang-configured build directory of its own**, a third beside `build2` and
@@ -271,7 +275,7 @@ are GitHub's own, and the compromises the rule cites were third-party.
 
 The disqualifying part is quieter. Semgrep has no preprocessor, and it **drops a file it
 cannot parse without failing** -- the scan prints "Parsed lines: ~99.9%" and exits green.
-Four files are dropped: `mootextview.c`, `mooiconview.c`, `moonotebook.c`, `moopaned.c`.
+Four files are dropped: `mootextview.cpp`, `mooiconview.cpp`, `moonotebook.cpp`, `moopaned.cpp`.
 Those are exactly the top four by `GTK_CHECK_VERSION` count (58, 51, 34 and 25; the fifth
 has 14 and parses), because they put `#if` inside argument lists. The blind spot is
 precisely the code the GTK+3 port touched hardest. A custom rule written against the
@@ -288,21 +292,28 @@ Nothing ships with the Debian/Ubuntu package -- the rules have to be fetched. 74
 
 It found four things, all cosmetic and all fixed: two doubled semicolons, one dead
 `result` variable, one pointer compared against `0`. Most of the ruleset is about kernel
-APIs that do not exist here. But it reads this code far better than Semgrep does: 61 of
-76 files parse perfectly and 99.3% of lines are read, and it skips the region it cannot
-handle rather than the file. A small header defining `G_STMT_START`/`G_STMT_END`,
-`G_BEGIN_DECLS` and the `G_GNUC_*` attributes, passed as `--macro-file-builtins`, takes
-that to 64 of 76. It never sees the 70 `.cpp` files at all; `--c++` is documented as "a
-small attempt to parse C++ files".
+APIs that do not exist here. But it read this code far better than Semgrep does: 61 of
+76 files parsed perfectly and 99.3% of lines were read, and it skips the region it
+cannot handle rather than the file. A small header defining `G_STMT_START`/`G_STMT_END`,
+`G_BEGIN_DECLS` and the `G_GNUC_*` attributes, passed as `--macro-file-builtins`, took
+that to 64 of 76. Even then it never saw the 70 `.cpp` files of the day; `--c++` is
+documented as "a small attempt to parse C++ files".
 
-So if a pattern checker is ever wanted for a rule specific to this tree -- a GTK+2 idiom
-that must not appear on the GTK+3 side, say -- Coccinelle is the one that can actually
-read the files where such a rule would matter.
+**Both measurements predate the C-to-C++ migration, and one conclusion did not survive
+it.** The tree then was 99 own `.c` files against 77 `.cpp`; it is now 150 `.cpp` and
+three `.c`, all three in the ctags plugin. Coccinelle's remaining reach is therefore
+those three files, so the one analyzer that could read the code a tree-specific rule
+would be about can no longer read any of it, and there is no point re-running it.
+Semgrep's finding stands as measured -- it has a C++ target, and the four files it drops
+it drops for `#if` inside an argument list, which the migration did not touch. If a
+pattern checker is wanted for a rule specific to this tree -- a GTK+2 idiom that must
+not appear on the GTK+3 side, say -- what is left in reach is a clang-tidy matcher,
+beside the analyzer `--target analyze` already runs.
 
 ## Code generation
 
-Only three things are generated: `marshals.[ch]` (glib-genmarshal), `moo-pixbufs.h`
-(gdk-pixbuf-csource) and `resources.c` (glib-compile-resources). Everything else that
+Only three things are generated: `marshals.h`/`marshals.cpp` (glib-genmarshal), `moo-pixbufs.h`
+(gdk-pixbuf-csource) and `resources.cpp` (glib-compile-resources). Everything else that
 used to be generated — interfaces, menu descriptions, the credits text — is a resource
 now, listed in `src/resources.xml` and read at runtime. The build needs no python, as above.
 Adding a source file means adding it to the `target_sources()` list in that directory's
@@ -317,7 +328,7 @@ looked at, not the first. Two things to get right when adding one:
 
 * **The dependency list is not a glob.** `file(GLOB_RECURSE MOO_UI_FILES … *.ui)` in
   `src/CMakeLists.txt` covers interfaces only; anything else has to be named in the
-  `DEPENDS` of the `resources.c` command by hand, or editing it rebuilds nothing.
+  `DEPENDS` of the `resources.cpp` command by hand, or editing it rebuilds nothing.
 * **Do not `preprocess="xml-stripblanks"` a file the user is meant to read.** It is
   there to shrink interfaces. For a configuration file the formatting *is* the
   documentation, and the copy in the binary should be the same bytes as the copy on
@@ -415,7 +426,7 @@ plugins keep theirs one level deeper, so two rounds of "fixes" changed nothing.
 A missing id is only reported when the dialog is opened, and some dialogs are hard to
 reach (the drop dialog needs a real drag and drop). That comparison — the ids each `.ui`
 declares against what the code asks `moo_builder_get/take/reparent` for — is how the one
-stale id left in mootextprint.c was found, and it is **a build step now**
+stale id left in mootextprint.cpp was found, and it is **a build step now**
 (`cmake/CheckBuilderIds.cmake`), so it happens whether or not anyone remembers. It scopes
 per source file, which is exact: every file that asks for an id also creates its own
 builder.
@@ -441,7 +452,7 @@ own `CMakeLists.txt`, and one call in `moo_plugin_init()` (`plugins/mooplugin-bu
   `moo_edit_window_add_pane()` returned — `moo_edit_window_show_pane (window, id)` is
   the call that does the lookup for you.
 * **The focused widget sees a key before the accelerators.**
-  `moo_window_key_press_event()` (`mooutils/moowindow.c:753`) calls
+  `moo_window_key_press_event()` (`mooutils/moowindow.cpp:751`) calls
   `gtk_window_propagate_key_event()` *before* `gtk_window_activate_key()`, the inverse
   of GtkWindow's own order, deliberately. So a widget that wants raw keys — a terminal —
   really gets `Ctrl+F`, and in exchange **no** editor accelerator fires while it has the
@@ -458,7 +469,7 @@ own `CMakeLists.txt`, and one call in `moo_plugin_init()` (`plugins/mooplugin-bu
 Three more things the LSP plugin ran into, all of which apply to any plugin:
 
 * **The document context menu is not `GtkTextView::populate-popup`.**
-  `_moo_edit_view_do_popup()` (`mooeditview.cpp:387`) builds it from
+  `_moo_edit_view_do_popup()` (`mooeditview.cpp:385`) builds it from
   `moo_editor_get_doc_ui_xml()` at the path `Editor/Popup`, out of *document*
   actions (`moo_edit_class_new_action` on `MOO_TYPE_EDIT`). A handler connected to
   the signal is simply never called; `MooTextView::populate_popup` prepends Undo

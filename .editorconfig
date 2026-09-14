@@ -12,7 +12,7 @@ end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-# Four spaces, never a tab: 88570 indented lines against 205.
+# Four spaces, never a tab: 93935 indented lines against none.
 [*.{c,h,cpp,hh}]
 indent_style = space
 indent_size = 4
@@ -43,9 +43,9 @@ trim_trailing_whitespace = false
 insert_final_newline = false
 
 # Vendored C we carry verbatim, exempt for the same reason the analyze target
-# excludes it. gtksourceview indents with tabs, the other two mostly do not;
-# rather than pick for them, impose nothing.
-[{src/gtksourceview/**,src/xdgmime/**,src/eggsmclient/**,src/plugins/ctags/readtags.c}]
+# excludes it. gtksourceview indents with tabs, the rest mostly do not; rather
+# than pick for them, impose nothing.
+[src/vendor/**]
 indent_style = unset
 indent_size = unset
 trim_trailing_whitespace = false

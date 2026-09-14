@@ -87,7 +87,7 @@ behind.
 **A string can be live, translated, and still English on screen.** Two ways, both found by
 auditing rather than by looking: a file that marks strings for translation and is not in
 `POTFILES.in` (its msgids go obsolete in every catalog, and the translations sit there
-behind `#~` while the program shows English — `moofontsel.c` and its "Show only fixed width
+behind `#~` while the program shows English — `moofontsel.cpp` and its "Show only fixed width
 fonts" spent years like that), and a literal that was never marked at all (the heading the
 editor's commands appear under in Configure Shortcuts was `"Editor"`, the window's display
 name, passed as a bare string). Both checks are worth repeating after adding a file:
@@ -151,7 +151,7 @@ measure again:
   parses the logs and fails the test on any finding.
 * **LSan: opt-in, `UI_TEST_LEAK_CHECK=1`, and off by default.** `detect_leaks=1` reports
   633 records, 121 KB at a clean exit. 344 are purely library, and the 289 that name our
-  code do not mean what they look like: the largest, 101 records from `mootextview.c:3554`,
+  code do not mean what they look like: the largest, 101 records from `mootextview.cpp:3554`,
   is `update_tab_width()`, which frees all three of the things it allocates. What is
   retained is pango's font and shaping cache, attributed to the nearest frame that is not
   a library. That is also why `tests/lsan.supp` is nearly empty — suppressing by the name
@@ -170,7 +170,7 @@ measure again:
   `MOO_DEFINE_FLAGS`'s `operator~` was casting it back to the enum — undefined, and so is
   every load after it. `operator~` returns an `int` now (`mooutils-cpp.h`), which a
   following `&` brings back into range. **C++ only** — C gives an enum the range of its
-  underlying type, so `moofile.c`'s `flags &= ~MOO_FILE_HAS_STAT` is fine as it stands.
+  underlying type, so `moofile.cpp`'s `flags &= ~MOO_FILE_HAS_STAT` is fine as it stands.
 * **TSan: pointless.** Nothing in our code creates a thread — no `g_thread_new`, no
   `pthread_create`.
 * **MSan: impossible** without an instrumented glib, gtk and pango.

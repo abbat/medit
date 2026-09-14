@@ -336,8 +336,9 @@ GTK+2 is not the lesser half: it is what runs the `#else` branch of every
 under `tests/` because that is where the harness lives and where `flake8` already reads.
 
 Vendored code is not measured — `src/vendor/gtksourceview`, `src/vendor/eggsmclient` and
-`src/vendor/ctags/readtags.c`, the same four the `analyze` target skips — and neither is anything the build
-generates or any system header glib inlines into every file.
+`src/vendor/ctags/readtags.c`, the same three the `analyze` target skips, which together
+are the whole of `src/vendor/` — and neither is anything the build generates or any
+system header glib inlines into every file.
 
 **`tests/coverage.floor` is the gate.** One number, in the tree, next to the tests it is
 about: line coverage must not fall below it. Not a cache, not a service — this is the only

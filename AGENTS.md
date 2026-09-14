@@ -11,13 +11,26 @@ defect, and those defects are fixed — the story is in `doc/bugs.md`. **Grep fo
 `FIXME:` in a file you are about to change and read the ones that are there**: what
 is left says what was tried and measured, not who to blame.
 
-Three remain, all in `moonotebook.c` and all the same root cause, and one blanket:
-`mootextview.c:21` warns about the whole file and has not been gone through block
+Three remain, all in `moonotebook.cpp` and all the same root cause, and one blanket:
+`mootextview.cpp:21` warns about the whole file and has not been gone through block
 by block.
 
 **The GTK+2 branch of every `#if GTK_CHECK_VERSION(3,0,0)` is the specification.**
 When GTK+3 misbehaves, read the `#else` branch first and ask what it achieved, then find
 the GTK+3 way to achieve the same. Do not invent new behaviour.
+
+**The tree's own sources are compiled as C++** — 150 `.cpp` and 205 `.h` under `src/`,
+against three `.c` files left in the ctags plugin. What that buys is a stricter compiler
+over a codebase that is still GObject C and calls the GTK+ C API on nearly every line;
+it is not an invitation to write C++. Nothing in the tree throws or catches, `-fno-rtti`
+is on, and templates appear in seven headers, all of them under `src/moocpp/` and
+`src/mooutils/`. Write new code the way the file around it is written.
+
+**Upstream code carried verbatim lives under `src/vendor/`**: `gtksourceview`,
+`eggsmclient`, and ctags' `readtags.c`. It is excluded from `--target analyze`
+(`cmake/Analyze.cmake`), exempt from `.editorconfig`, and outside the style measurements
+below. Do not reformat or restyle it, and keep a change there to what our build needs —
+anything else belongs upstream.
 
 ---
 
@@ -258,7 +271,7 @@ context gave `#2e3436`. This is how `MooPaned` draws its border and the two line
 beside the drag grip. Note that a separator on GTK+3 is a **background**, not a
 stroked line, so it is `gtk_render_background()` over a rectangle one pixel thick.
 
-`ui/stest.c`-style throwaway probes are cheap: a 20-line GTK+3 program that
+Throwaway probes are cheap: a 20-line GTK+3 program in the scratchpad that
 prints what these functions return settles such questions in one build. Four of
 them settled this section: the border of an entry against a container's, what
 `gtk_accelerator_parse()` makes of `"Shift"`, what a separator's background is,
@@ -320,13 +333,12 @@ static BTNode  *bt_node_new         (BTNode     *parent,
 ```
 
 This records the style rather than imposing it — the tree already follows it. Measured
-over the 344 own sources (150959 lines, the vendored directories excluded the way
-`--target analyze` excludes them): 88570 indented lines use spaces against 205 with a
-tab, calls are written `foo (x)` in 38891 places against 1180 without the space, 9462
-braces sit on a line of their own against 576 trailing a statement, and `char *p`
-outnumbers `char* p` 6139 to 97. Whitespace hygiene is at the same level — eleven lines
-in nine files carry trailing whitespace, one file ends without a newline, nothing is
-CRLF.
+over the 358 own sources under `src/` (158173 lines, `src/vendor/` excluded): 93935
+indented lines use spaces and **none** uses a tab, calls are written `foo (x)` in 45795
+places against 2965 without the space, 9753 braces sit on a line of their own against
+612 trailing a statement, and `char *p` outnumbers `char* p` 11743 to 168. Whitespace
+hygiene is now exact — no line carries trailing whitespace, every file ends with a
+newline, nothing is CRLF — which is what `.editorconfig` is there to keep true.
 
 **There is no `.clang-format`, and GNOME's own experience with one is the reason.** GTK
 ships a `.clang-format` at the top of gtk.git (`BasedOnStyle: GNU` plus eight

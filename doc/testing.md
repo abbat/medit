@@ -104,7 +104,7 @@ two undefined symbols (the Debug link above) and, from clang only,
 `g_assert (type < N_TOOLS)`. A C++ enum holds the smallest bit-field that fits its
 enumerators, so with two of them the comparison is true by construction; with three it is
 not, which is why `MOO_ACTION_CHECK_*` says nothing. In **C** an enum has the range of its
-underlying type, so the same shape in `moowindow.c` is silent — the same rule the
+underlying type, so the same shape in `moowindow.cpp` is silent — the same rule the
 `operator~` note in `doc/running.md` turns on. `(int) type < N_TOOLS` is what the rest of the tree
 already writes.
 
@@ -610,14 +610,14 @@ are already in the tree, so lookups filter on `input.on_screen()` — that turns
 opening" into another poll instead of a crash.
 
 **The locale is pinned to `C.UTF-8`**, because tests match on widget names. One
-consequence is asserted directly rather than worked around: `credits.c` fills the
+consequence is asserted directly rather than worked around: `credits.cpp` fills the
 "Translated by" tab from `_("translator-credits")` and only when the lookup returns
 something other than the msgid, so in an untranslated locale the tab is there and empty.
 
 **The panes reach the bus through an accessible of their own.** A pane and its button are
 internal children of `MooPaned`, and `GtkContainerAccessible` lists children from
 `gtk_container_get_children()`, which skips internal ones. Before `MooPanedAccessible`
-(`moopaned.c`) the paned reported one child, the document area: the file selector, the
+(`moopaned.cpp`) the paned reported one child, the document area: the file selector, the
 file list and the terminal were off the bus entirely, for a screen reader as much as for a
 test. GTK+3 only — GTK+2 keeps those types inside the gail module, which cannot be
 subclassed by linking against it — so anything inside a pane is a GTK+3 test.
@@ -733,11 +733,11 @@ DISPLAY=:99 xdotool mousemove 990 300 ; DISPLAY=:99 xdotool mouseup 1   # rubber
 ```
 
 Panes **always start closed**: `MooBigPanedConfig.active` is serialised into
-`state.xml` but never applied on load (`moobigpaned.c` — `config->active` is only
+`state.xml` but never applied on load (`moobigpaned.cpp` — `config->active` is only
 written, never read back). So a click is always required.
 
 The File Selector's default page is `MOO_FILE_VIEW_ICON` → the widget on screen is
-**`MooIconView`** (`moofileview.c:893`), not a `GtkTreeView`.
+**`MooIconView`** (`moofileview.cpp:888`), not a `GtkTreeView`.
 
 ## Comparing renders
 

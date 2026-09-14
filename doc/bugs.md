@@ -103,26 +103,26 @@ would have noticed:
 
 | where | what was wrong | what asserts it |
 |---|---|---|
-| `mooiconview.c` | GTK+2's `set-scroll-adjustments` was dropped and GtkScrollable never implemented, so the file selector's icon view — its **default** view — was put in a GtkViewport and its scroll bar had no range at all: **`value=0 max=0` with 41 files in the directory, of which the first thirty could not be reached by any means** | `app/file_selector_browse` |
-| `moopaned.c` `moo_paned_draw()` | mistake (a) in `AGENTS.md` exactly, so `draw_handle()` and `draw_border()` had not run since the port. `event_window` is one pointer shared by all four MooPaneds of a window | `app/pane_resize`, on pixels |
-| `moopaned.c` ×4 | `gtk_style_context_get_border()` is **0** on this widget where `style->xthickness` was 1, so `border_size` and `shadow_size` were 0 and there was nothing to draw even once the dispatch was right. Floored at one pixel | the same |
-| `moonotebook.c` drag snapshot | `gdk_pixbuf_new()` does not clear; the window was copied into a *second* pixbuf which was then unref'd, so a dragged tab painted uninitialised heap. `gdk_cairo_set_source_window()` was also given `+offset` where it wants `-offset`, and the failure branch stored nothing | `editor/tab_drag`, on pixels |
-| `moobigpaned.c` ×2 | the drop indicator drew on `outer`'s `cr` instead of the shaped `drop_outline` window (mistake (a) again), and its mask unioned *filled* rectangles where GTK+2 drew outlines | `app/pane_move`, on pixels, and `/mooutils/paned/drop-mask` |
+| `mooiconview.cpp` | GTK+2's `set-scroll-adjustments` was dropped and GtkScrollable never implemented, so the file selector's icon view — its **default** view — was put in a GtkViewport and its scroll bar had no range at all: **`value=0 max=0` with 41 files in the directory, of which the first thirty could not be reached by any means** | `app/file_selector_browse` |
+| `moopaned.cpp` `moo_paned_draw()` | mistake (a) in `AGENTS.md` exactly, so `draw_handle()` and `draw_border()` had not run since the port. `event_window` is one pointer shared by all four MooPaneds of a window | `app/pane_resize`, on pixels |
+| `moopaned.cpp` ×4 | `gtk_style_context_get_border()` is **0** on this widget where `style->xthickness` was 1, so `border_size` and `shadow_size` were 0 and there was nothing to draw even once the dispatch was right. Floored at one pixel | the same |
+| `moonotebook.cpp` drag snapshot | `gdk_pixbuf_new()` does not clear; the window was copied into a *second* pixbuf which was then unref'd, so a dragged tab painted uninitialised heap. `gdk_cairo_set_source_window()` was also given `+offset` where it wants `-offset`, and the failure branch stored nothing | `editor/tab_drag`, on pixels |
+| `moobigpaned.cpp` ×2 | the drop indicator drew on `outer`'s `cr` instead of the shaped `drop_outline` window (mistake (a) again), and its mask unioned *filled* rectangles where GTK+2 drew outlines | `app/pane_move`, on pixels, and `/mooutils/paned/drop-mask` |
 | `mooutils-misc.cpp` | `accel_label_set_string()` set accel 0/0 and stashed the text in object data it fed back to itself, so the second column of those menu items was empty | `/mooutils/accel/label` |
-| `moopane.c` | the five state-tinted copies of a button icon were all made with the widget's *current* state, so they were identical | — |
-| `moopaned.c` `draw_handle()` | `state \|= GTK_STATE_SELECTED` mixed a `GtkStateType` (3) into a `GtkStateFlags`, asking for ACTIVE\|PRELIGHT | — |
+| `moopane.cpp` | the five state-tinted copies of a button icon were all made with the widget's *current* state, so they were identical | — |
+| `moopaned.cpp` `draw_handle()` | `state \|= GTK_STATE_SELECTED` mixed a `GtkStateType` (3) into a `GtkStateFlags`, asking for ACTIVE\|PRELIGHT | — |
 | `mooutils-treeview.cpp` | expander lines stroked at cairo's default width 2.0 on integer coordinates — grey and doubled where `gdk_draw_line()` was one pixel, which is mistake (c) | — |
 | `moocommand-exe.cpp` | `DISPLAY` was set in *this* process around a `g_spawn_async()` given an explicit environment, so the child never read it | — |
 
 Two things that came out of the sweep are worth keeping separately.
 
-**`moofileentry.c` was marked and was not wrong.** The sweep reasoned by analogy with
+**`moofileentry.cpp` was marked and was not wrong.** The sweep reasoned by analogy with
 MooPaned, where `gtk_style_context_get_border()` measures 0. A realized `GtkEntry`
 answers 1 on every side, the same as GTK+2's `xthickness` — the difference is that an
 entry has a CSS border of its own and a bare container does not. Measure the widget you
 are about to change, not one that looks like it.
 
-**What is left in `moonotebook.c` is one problem wearing three markers.** The current tab
+**What is left in `moonotebook.cpp` is one problem wearing three markers.** The current tab
 has a line along its bottom closing it off from its page, where `gtk_paint_extension()`
 left that side open. `gtk_render_extension()` with `GTK_POS_BOTTOM`,
 `GTK_STYLE_CLASS_NOTEBOOK` and the states the right way round — GTK+2 drew the current
@@ -132,14 +132,14 @@ nodes, and a widget that is not a `GtkNotebook` has none of them whatever it pas
 the render calls. That wants a CSS name and node structure of its own, which is the
 whole widget's drawing rather than a cleanup.
 
-Known and deliberately left alone: `draw_entry()` in `mooiconview.c` still uses
+Known and deliberately left alone: `draw_entry()` in `mooiconview.cpp` still uses
 `gdk_cairo_create()` per row (deprecated since 3.22, bypasses the clip, works).
 
 Four `#if 0` blocks survive the dead-code cleanup on purpose, because each documents a
 feature that is disabled rather than abandoned: the tree view's drag source in
-`moofileview.c` (drag and drop works in icon view only), `_moo_edit_print_options_dialog()`
-in `mootextprint.c` (`medit.xml` still lists a `PrintOptions` item with no action behind
-it), and the overwrite-prompt code in `moofileview.c` (`copy_files()` runs `cp -R` with
+`moofileview.cpp` (drag and drop works in icon view only), `_moo_edit_print_options_dialog()`
+in `mootextprint.cpp` (`medit.xml` still lists a `PrintOptions` item with no action behind
+it), and the overwrite-prompt code in `moofileview.cpp` (`copy_files()` runs `cp -R` with
 no prompt at all). Leave them until the features are decided.
 
 ---
