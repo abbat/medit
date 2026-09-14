@@ -1103,16 +1103,34 @@ sm_quit (MooApp *app)
 #endif
 
 #if GTK_CHECK_VERSION(3, 0, 0)
+/*!
+ * \brief Answer the session manager's request to end the session
+ * \param application the GtkApplication, which is the MooApp itself
+ * \param app the MooApp instance
+ *
+ * GTK+2 answered once, with egg_sm_client_will_quit (sm_client,
+ * moo_app_quit (app)) -- one answer, whichever way the user decided. The
+ * GTK+3 equivalent of taking that time is an inhibitor held across the
+ * unsaved-documents dialog, and it has to be dropped whichever way the dialog
+ * is answered: a cancelled quit that keeps it leaves the session unable to log
+ * out at all, with nothing on screen to say why. A second query-end must not
+ * take a second inhibitor either, since only the cookie stored last would ever
+ * be released.
+ */
 static void
-gtk_application_query_end (GtkApplication *application,
-                           MooApp         *app)
+moo_app_query_end (GtkApplication *application,
+                   MooApp         *app)
 {
-  app->priv->session_inhibit_cookie =
-      gtk_application_inhibit (application, NULL,
-                               GTK_APPLICATION_INHIBIT_LOGOUT,
-                               _("Checking for unsaved documents"));
+  if (!app->priv->session_inhibit_cookie)
+    app->priv->session_inhibit_cookie =
+        gtk_application_inhibit (application, NULL,
+                                 GTK_APPLICATION_INHIBIT_LOGOUT,
+                                 _("Checking for unsaved documents"));
 
-  if (moo_app_quit (app) && app->priv->session_inhibit_cookie)
+  moo_app_quit (app);
+
+  /* moo_app_do_quit() has already released it when the quit went through. */
+  if (app->priv->session_inhibit_cookie)
     {
       gtk_application_uninhibit (application,
                                  app->priv->session_inhibit_cookie);
@@ -1347,9 +1365,10 @@ moo_app_run (MooApp *app)
   g_idle_add_full (G_PRIORITY_DEFAULT_IDLE + 1, (GSourceFunc) emit_started, app, NULL);
 
 #if GTK_CHECK_VERSION(3, 0, 0)
-  g_signal_connect (app, "query-end",
-                    G_CALLBACK (gtk_application_query_end), app);
   char *argv[] = { (char *) MOO_APP_SHORT_NAME, NULL };
+
+  g_signal_connect (app, "query-end", G_CALLBACK (moo_app_query_end), app);
+
   g_application_hold (G_APPLICATION (app));
   g_application_run (G_APPLICATION (app), 1, argv);
   g_application_release (G_APPLICATION (app));
