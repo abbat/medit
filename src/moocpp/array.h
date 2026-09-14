@@ -131,9 +131,20 @@ public:
 
     void clear ()
     {
-        for (gsize i = 0; i < n_elms; ++i)
-            Free () (elms[i]);
+        /*
+         * The count goes to zero before anything is freed. Free() is an unref
+         * on every instantiation in the tree, an unref runs the object's
+         * dispose, and dispose emits signals whose handlers reach back into
+         * the object that owns this array -- which would find a live count
+         * over pointers that have already been freed.
+         */
+        ElmType **freeing = elms;
+        gsize n_freeing = n_elms;
+
         n_elms = 0;
+
+        for (gsize i = 0; i < n_freeing; ++i)
+            Free () (freeing[i]);
     }
 
     void sort (GCompareFunc func)
