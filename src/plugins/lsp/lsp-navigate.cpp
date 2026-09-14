@@ -242,7 +242,7 @@ lsp_position_params (LspDoc *ldoc,
  * "documentFormattingProvider" -- so a caller whose method does not follow the
  * pattern asks lsp_server_has_provider() for the name itself.
  */
-char *
+static char *
 provider_name (const char *method)
 {
     const char *slash = strrchr (method, '/');
