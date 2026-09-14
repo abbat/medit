@@ -535,10 +535,11 @@ get_stat_a_bit (MooFolderImpl *impl)
             _moo_file_stat (file, impl->path);
             folder_emit_files (impl, FILES_CHANGED, changed);
         }
-        else
-        {
-            _moo_file_unref (file);
-        }
+
+        /* The reference files_copy took when it was built, given up here now
+           that the file is off the list -- whichever of the two paths above
+           was taken. */
+        _moo_file_unref (file);
 
         g_slist_free_1 (changed);
 
