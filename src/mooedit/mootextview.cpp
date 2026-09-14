@@ -2359,7 +2359,8 @@ moo_text_view_draw_current_line (GtkTextView    *text_view,
 static void
 draw_tab_at_iter (GtkTextView    *text_view,
                   GdkWindow      *window,
-                  GtkTextIter    *iter)
+                  GtkTextIter    *iter,
+                  cairo_t        *cr)
 {
     GdkRectangle rect;
     GdkPoint points[3];
@@ -2376,11 +2377,13 @@ draw_tab_at_iter (GtkTextView    *text_view,
 
 #if GTK_CHECK_VERSION(3,0,0)
     {
-        cairo_t *cr = gdk_cairo_create (window);
         GtkStyleContext *context = gtk_widget_get_style_context (GTK_WIDGET (text_view));
         GdkRGBA color;
         int i;
 
+        (void) window;
+
+        cairo_save (cr);
         gtk_style_context_get_color (context, GTK_STATE_FLAG_NORMAL, &color);
         gdk_cairo_set_source_rgba (cr, &color);
 
@@ -2395,12 +2398,13 @@ draw_tab_at_iter (GtkTextView    *text_view,
             cairo_rectangle (cr, points[i].x, points[i].y, 1, 1);
 
         cairo_fill (cr);
-        cairo_destroy (cr);
+        cairo_restore (cr);
     }
 #else
     gdk_draw_polygon (window,
                       GTK_WIDGET(text_view)->style->text_gc[GTK_STATE_NORMAL],
                       FALSE, points, 3);
+    (void) cr;
 #endif
 }
 
@@ -2408,7 +2412,8 @@ static void
 moo_text_view_draw_whitespace (GtkTextView       *text_view,
                                GdkWindow         *window,
                                const GtkTextIter *start,
-                               const GtkTextIter *end)
+                               const GtkTextIter *end,
+                               cairo_t           *cr)
 {
     MooTextView *view = MOO_TEXT_VIEW (text_view);
     GtkTextIter iter = *start;
@@ -2447,7 +2452,7 @@ moo_text_view_draw_whitespace (GtkTextView       *text_view,
                 if ((trailing && (view->priv->draw_whitespace & MOO_DRAW_WS_TRAILING) != 0) ||
                     (c == '\t' && (view->priv->draw_whitespace & MOO_DRAW_WS_TABS) != 0) ||
                     (c != '\t' && (view->priv->draw_whitespace & MOO_DRAW_WS_SPACES) != 0))
-                        draw_tab_at_iter (text_view, window, &iter);
+                        draw_tab_at_iter (text_view, window, &iter, cr);
             }
             else if (trailing)
             {
@@ -2632,7 +2637,19 @@ moo_text_view_expose (GtkWidget      *widget,
         if (last_line - first_line < 1000)
         {
             if (view->priv->draw_whitespace != 0)
-                moo_text_view_draw_whitespace (text_view, text_window, &start, &end);
+            {
+#if GTK_CHECK_VERSION(3,0,0)
+                /* Whitespace is painted in text_window coordinates, the way the
+                   GTK+2 expose handler painted it; the widget's cairo_t arrives
+                   in widget coordinates. */
+                cairo_save (cr);
+                gtk_cairo_transform_to_window (cr, widget, text_window);
+                moo_text_view_draw_whitespace (text_view, text_window, &start, &end, cr);
+                cairo_restore (cr);
+#else
+                moo_text_view_draw_whitespace (text_view, text_window, &start, &end, NULL);
+#endif
+            }
         }
     }
 
@@ -3304,31 +3321,39 @@ draw_fold_background (MooTextView    *view,
                       MooFold        *fold,
                       int             y,
                       int             height,
-                      int             window_width)
+                      int             window_width,
+                      cairo_t        *cr)
 {
     if (fold->collapsed)
 #if GTK_CHECK_VERSION(3,0,0)
     {
-        cairo_t *cr = gdk_cairo_create (window);
-        if (cr)
-        {
-            GtkStyleContext *context = gtk_widget_get_style_context (GTK_WIDGET(view));
-            GdkRGBA color;
-            gtk_style_context_get_color (context, GTK_STATE_FLAG_NORMAL, &color);
-            gdk_cairo_set_source_rgba (cr, &color);
-            cairo_move_to (cr, gtk_text_view_get_left_margin (GTK_TEXT_VIEW (view)), y + height - 1);
-            cairo_line_to (cr, gtk_text_view_get_left_margin (GTK_TEXT_VIEW (view)) + window_width, y + height - 1);
-            cairo_stroke (cr);
-            cairo_destroy (cr);
-        }
+        GtkStyleContext *context = gtk_widget_get_style_context (GTK_WIDGET(view));
+        GdkRGBA color;
+
+        (void) window;
+
+        /* Our caller composites the line backgrounds with MULTIPLY so that they
+           tint the text instead of covering it. This line is a foreground the
+           GTK+2 code drew straight onto the window, so it is drawn OVER. */
+        cairo_save (cr);
+        cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
+        gtk_style_context_get_color (context, GTK_STATE_FLAG_NORMAL, &color);
+        gdk_cairo_set_source_rgba (cr, &color);
+        cairo_move_to (cr, gtk_text_view_get_left_margin (GTK_TEXT_VIEW (view)), y + height - 1);
+        cairo_line_to (cr, gtk_text_view_get_left_margin (GTK_TEXT_VIEW (view)) + window_width, y + height - 1);
+        cairo_stroke (cr);
+        cairo_restore (cr);
     }
 #else
+    {
         gdk_draw_line (window,
                        GTK_WIDGET(view)->style->text_gc[GTK_STATE_NORMAL],
                        gtk_text_view_get_left_margin (GTK_TEXT_VIEW (view)),
                        y + height - 1,
                        gtk_text_view_get_left_margin (GTK_TEXT_VIEW (view)) + window_width,
                        y + height - 1);
+        (void) cr;
+    }
 #endif
 }
 
@@ -3374,7 +3399,7 @@ draw_marks_background (MooTextView    *view,
             MooFold *fold = moo_text_buffer_get_fold_at_line (get_moo_buffer (view), line);
 
             if (fold)
-                draw_fold_background (view, window, fold, y, height, window_width);
+                draw_fold_background (view, window, fold, y, height, window_width, cr);
         }
 
         if (TRUE)
