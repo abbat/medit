@@ -1368,7 +1368,9 @@ create_pane_window (MooPane *pane)
                       G_CALLBACK (pane_window_configure), pane);
 }
 
-/* FIXME use gtk_widget_reparent(), it does work now */
+/* What gtk_widget_reparent() did, held open by a reference so that removing
+   the widget from its old container does not drop the last one. The GTK+
+   function is deprecated since 3.14 and gone in GTK+ 4, so this stays. */
 static void
 reparent (GtkWidget *widget,
           GtkWidget *old_container,
