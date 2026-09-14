@@ -11,9 +11,10 @@ defect, and those defects are fixed — the story is in `doc/bugs.md`. **Grep fo
 `FIXME:` in a file you are about to change and read the ones that are there**: what
 is left says what was tried and measured, not who to blame.
 
-Three remain, all in `moonotebook.cpp` and all the same root cause, and one blanket:
-`mootextview.cpp:21` warns about the whole file and has not been gone through block
-by block.
+One remains, in `moonotebook.cpp`: the current tab's bottom line. A blanket marker
+at the top of `mootextview.cpp` warned about the whole file; all 26 of its GTK+3
+blocks have since been read against their GTK+2 branch, the two that still made a
+cairo context of their own are fixed, and the marker is gone.
 
 **The GTK+2 branch of every `#if GTK_CHECK_VERSION(3,0,0)` is the specification.**
 When GTK+3 misbehaves, read the `#else` branch first and ask what it achieved, then find
