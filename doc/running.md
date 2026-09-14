@@ -149,17 +149,22 @@ measure again:
   produces **zero** reports from either — as does the whole About dialog test. Unlike the
   static analyzer they could be a gate from day one, and they are: `tests/lib/sanitizer.py`
   parses the logs and fails the test on any finding.
-* **LSan: opt-in, `UI_TEST_LEAK_CHECK=1`, and off by default.** `detect_leaks=1` reports
-  633 records, 121 KB at a clean exit. 344 are purely library, and the 289 that name our
-  code do not mean what they look like: the largest, 101 records from `mootextview.cpp:3554`,
-  is `update_tab_width()`, which frees all three of the things it allocates. What is
-  retained is pango's font and shaping cache, attributed to the nearest frame that is not
-  a library. That is also why `tests/lsan.supp` is nearly empty — suppressing by the name
-  of the function a leak is blamed on would suppress the next real leak in that same
-  function. Note that leak checking is *on* by default in the runtime, so a sanitized
-  binary run without `ASAN_OPTIONS` exits non-zero over fontconfig's caches; the runner
-  sets the options whether or not it was told the build is sanitized, for exactly that
-  reason.
+* **LSan: a gate too, once a record is charged to whoever actually allocated it.**
+  `detect_leaks=1` on a GUI reports 633 records and 121 KB at a clean exit. 344 are purely
+  library, and the 289 that name our code do not mean what they look like: the largest,
+  101 records from `mootextview.cpp:3554`, is `update_tab_width()`, which frees all three
+  of the things it allocates. What is retained is pango's font and shaping cache,
+  attributed to the nearest frame that is not a library, which is all LSan knows how to
+  do. So `tests/lib/sanitizer.py` walks the stack past the allocator and glib wrappers to
+  the frame that asked for the memory, and a leak allocated inside a library does not fail
+  a test; an ASan error or a UBSan report always does, because both are instrumented in
+  our own code. The About dialog test, 49 records and 46 KB of them, comes out clean and
+  reads as one line. That is also why `tests/lsan.supp` is nearly empty — suppressing by
+  the name of the function a leak is blamed on would suppress the next real leak in that
+  same function. The runner asks for `UI_TEST_LEAK_CHECK=1` for the cost rather than the
+  noise: classifying needs real allocation stacks (`fast_unwind_on_malloc=0`), which slows
+  a run down. The unit tests have it on always — they run before `gtk_init()`, so none of
+  that cache exists and a clean run reports nothing at all.
 * **clang's UBSan checks two things gcc's does not**, and both showed up the first time
   the tree was built with it. `function` — a call through a pointer of another type —
   reports sixteen places, all of them how a GObject callback is called: `g_signal_connect`

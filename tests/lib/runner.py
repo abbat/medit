@@ -15,7 +15,6 @@ is left in the log directory whether it passed or not.
 
 import argparse
 import collections
-import glob
 import importlib.util
 import os
 import re
@@ -69,13 +68,6 @@ def parse_args(argv):
 # Outer phase: the sandbox
 # ---------------------------------------------------------------------------
 
-def clean_log_dir(path):
-    os.makedirs(path, exist_ok=True)
-    for pattern in ("asan.*", "ubsan.*", "*.log", "*.json", "*.png"):
-        for stale in glob.glob(os.path.join(path, pattern)):
-            os.unlink(stale)
-
-
 def x_server_state(xvfb, display):
     """Whether the display the test was given is still there.
 
@@ -93,7 +85,7 @@ def x_server_state(xvfb, display):
 
 def outer(args):
     log_dir = os.path.abspath(args.log_dir)
-    clean_log_dir(log_dir)
+    sanitizer.clean_logs(log_dir)
 
     root, dirs = sandbox.make_root(args.tmp_root)
     xvfb = None
@@ -430,7 +422,9 @@ def inner(args):
         print("FAIL: medit did not quit when asked")
         ok = False
 
-    elif code != 0:
+    # Not sanitizer.EXIT_CODE, which only says the runtime wrote something --
+    # what it wrote is read below, and library leaks are not this test's fault.
+    elif code not in (0, sanitizer.EXIT_CODE):
         print("FAIL: medit exited with %d" % code)
         ok = False
 
