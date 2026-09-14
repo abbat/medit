@@ -42,6 +42,10 @@ moo_mime_type_unknown (void)
     return "application/octet-stream";
 }
 
+/* The one piece of shared state this file has, and so the only thing
+   G_LOCK (moo_mime) is for -- glib's own content type functions do their
+   locking themselves. The strings are interned for the lifetime of the
+   process: callers compare the results by pointer. */
 static const char *
 mime_type_intern (const char *mime)
 {
@@ -50,6 +54,8 @@ mime_type_intern (const char *mime)
 
     if (mime == NULL || !strcmp (mime, MOO_MIME_TYPE_UNKNOWN))
         return MOO_MIME_TYPE_UNKNOWN;
+
+    G_LOCK (moo_mime);
 
     if (G_UNLIKELY (!hash))
         hash = g_hash_table_new (g_str_hash, g_str_equal);
@@ -60,6 +66,8 @@ mime_type_intern (const char *mime)
         g_hash_table_insert (hash, copy, copy);
         interned = copy;
     }
+
+    G_UNLOCK (moo_mime);
 
     return interned;
 }
@@ -79,7 +87,6 @@ moo_get_mime_type_for_file (const char *filename,
     if (statbuf && !statbuf->isreg)
         return MOO_MIME_TYPE_UNKNOWN;
 
-    G_LOCK (moo_mime);
     file = g_file_new_for_path (filename);
     info = g_file_query_info (file, G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
                               G_FILE_QUERY_INFO_NONE, NULL, NULL);
@@ -94,7 +101,6 @@ moo_get_mime_type_for_file (const char *filename,
     if (info)
         g_object_unref (info);
     g_object_unref (file);
-    G_UNLOCK (moo_mime);
 
     return mime;
 }
@@ -108,11 +114,9 @@ moo_get_mime_type_for_filename (const char *filename)
     if (filename == NULL)
         return NULL;
 
-    G_LOCK (moo_mime);
     content_type = g_content_type_guess (filename, NULL, 0, NULL);
     mime = mime_type_from_content_type (content_type);
     g_free (content_type);
-    G_UNLOCK (moo_mime);
 
     return mime;
 }
@@ -126,12 +130,9 @@ moo_mime_type_is_subclass (const char *mime_type,
     if (mime_type == NULL || base == NULL)
         return FALSE;
 
-    G_LOCK (moo_mime);
     ret = !strcmp (mime_type, base) ||
           (g_str_has_suffix (base, "/*") &&
            !strncmp (mime_type, base, strlen (base) - 1)) ||
-          !strcmp (base, "application/octet-stream") ||
           g_content_type_is_a (mime_type, base);
-    G_UNLOCK (moo_mime);
     return ret;
 }
