@@ -1826,7 +1826,7 @@ moo_edit_comment_selection (MooEdit *edit)
     MooLang *lang;
     GtkTextIter start, end;
     GtkTextBuffer *buffer;
-    gboolean has_selection, single_line, multi_line;
+    gboolean has_selection, single_line;
     gboolean adjust_selection = FALSE, move_insert = FALSE;
     int sel_start_line = 0, sel_start_offset = 0;
 
@@ -1834,7 +1834,7 @@ moo_edit_comment_selection (MooEdit *edit)
 
     lang = moo_edit_get_lang (edit);
 
-    if (!_moo_edit_has_comments (edit, &single_line, &multi_line))
+    if (!_moo_edit_has_comments (edit, &single_line, NULL))
         return;
 
     buffer = moo_edit_get_buffer (edit);
@@ -1853,7 +1853,11 @@ moo_edit_comment_selection (MooEdit *edit)
         sel_start_offset = gtk_text_iter_get_line_offset (&start);
     }
 
-    /* FIXME */
+    /* A language with a line comment is commented line by line even when it
+       also has a block comment. The block form is the fallback for the ones
+       that have nothing else, which is why single_line being FALSE here means
+       the language has a block comment: _moo_edit_has_comments() returned
+       TRUE, and it does that for one or the other. */
     if (single_line)
         line_comment (buffer, _moo_lang_get_line_comment (lang), &start, &end);
     else
@@ -1885,13 +1889,13 @@ moo_edit_uncomment_selection (MooEdit *edit)
     MooLang *lang;
     GtkTextIter start, end;
     GtkTextBuffer *buffer;
-    gboolean single_line, multi_line;
+    gboolean single_line;
 
     g_return_if_fail (MOO_IS_EDIT (edit));
 
     lang = moo_edit_get_lang (edit);
 
-    if (!_moo_edit_has_comments (edit, &single_line, &multi_line))
+    if (!_moo_edit_has_comments (edit, &single_line, NULL))
         return;
 
     buffer = moo_edit_get_buffer (edit);
@@ -1899,7 +1903,8 @@ moo_edit_uncomment_selection (MooEdit *edit)
 
     gtk_text_buffer_begin_user_action (buffer);
 
-    /* FIXME */
+    /* The same dispatch moo_edit_comment_selection() makes, for the same
+       reason. */
     if (single_line)
         line_uncomment (buffer, _moo_lang_get_line_comment (lang), &start, &end);
     else
