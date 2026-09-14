@@ -105,6 +105,16 @@ else()
     set(MOO_GTK2 1)
 endif()
 
+# The ctags plugin shells out to the ctags program, so a test that waits for
+# symbols in the pane needs one installed on the machine running it.
+# MOO_BUILD_CTAGS is not that: the plugin is compiled unconditionally, and
+# without this probe the test would fail rather than be disabled on a host
+# that has no ctags.
+find_program(MOO_CTAGS_EXECUTABLE ctags)
+if(MOO_CTAGS_EXECUTABLE)
+    set(MOO_HAVE_CTAGS 1)
+endif()
+
 # A test can name the cmake variables its subsystem needs in its header:
 #
 #     # requires: MOO_BUILD_TERMINAL

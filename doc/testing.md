@@ -341,7 +341,11 @@ file the same way.
 
 A test names what this build may lack in its header — `# requires: MOO_BUILD_TERMINAL`,
 `# requires: MOO_GTK3` — and a build without it registers the test **disabled**, so
-`ctest -N` lists the same tests in every build and says which cannot run.
+`ctest -N` lists the same tests in every build and says which cannot run. The names are
+cmake variables, which is also how a requirement on the *machine* rather than on the
+build is written: `MOO_HAVE_CTAGS` is a `find_program()` in `tests/CMakeLists.txt`,
+because the ctags plugin runs the `ctags` program and `MOO_BUILD_CTAGS` — which is
+always on — says only that the plugin was compiled.
 
 **Reading and acting are different mechanisms, on purpose.** Everything asserted comes
 from AT-SPI, so a test says "the Credits button is there" rather than comparing pixels,

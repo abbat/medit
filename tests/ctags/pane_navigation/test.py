@@ -1,6 +1,6 @@
 """Ctags lists symbols and jumps to the selected function.
 
-# requires: MOO_BUILD_CTAGS, MOO_GTK3
+# requires: MOO_BUILD_CTAGS, MOO_HAVE_CTAGS, MOO_GTK3
 
 The document is opened from disk so the ctags plugin can parse its filename.
 The UI test checks the complete path from the document plugin through the
