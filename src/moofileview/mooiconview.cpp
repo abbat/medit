@@ -1160,16 +1160,17 @@ num_entries (Column *column)
 static void     draw_column                 (MooIconView    *view,
                                              Column         *column,
 #if GTK_CHECK_VERSION(3,0,0)
-                                             cairo_region_t *clip
+                                             cairo_region_t *clip,
 #else
-                                             GdkRegion      *clip
+                                             GdkRegion      *clip,
 #endif
-                                            );
+                                             cairo_t        *cr);
 
 static void     draw_entry                  (MooIconView    *view,
                                              GtkTreeIter    *iter,
                                              GtkTreePath    *path,
-                                             GdkRectangle   *entry_rect);
+                                             GdkRectangle   *entry_rect,
+                                             cairo_t        *cr);
 
 static void
 get_rect_from_points (GdkRectangle *rect,
@@ -1278,7 +1279,11 @@ moo_icon_view_expose (GtkWidget      *widget,
         if (!gdk_region_empty (column_region))
 #endif
         {
-            draw_column (view, column, column_region);
+#if GTK_CHECK_VERSION(3,0,0)
+            draw_column (view, column, column_region, cr);
+#else
+            draw_column (view, column, column_region, NULL);
+#endif
         }
 
 #if GTK_CHECK_VERSION(3,0,0)
@@ -1362,11 +1367,11 @@ static void
 draw_column                                 (MooIconView     *view,
                                              Column          *column,
 #if GTK_CHECK_VERSION(3,0,0)
-                                             cairo_region_t  *clip
+                                             cairo_region_t  *clip,
 #else
-                                             GdkRegion       *clip
+                                             GdkRegion       *clip,
 #endif
-)
+                                             cairo_t         *cr)
 {
     int i;
     GtkTreeIter iter;
@@ -1405,7 +1410,7 @@ draw_column                                 (MooIconView     *view,
                                      &dummy))
         {
             entry_rect.x -= view->priv->xoffset;
-            draw_entry (view, &iter, path, &entry_rect);
+            draw_entry (view, &iter, path, &entry_rect, cr);
         }
 
         gtk_tree_model_iter_next (view->priv->model, &iter);
@@ -1419,7 +1424,8 @@ draw_column                                 (MooIconView     *view,
 static void     draw_entry                  (MooIconView    *view,
                                              GtkTreeIter    *iter,
                                              GtkTreePath    *path,
-                                             GdkRectangle   *entry_rect)
+                                             GdkRectangle   *entry_rect,
+                                             cairo_t        *cr)
 {
     GtkWidget *widget = GTK_WIDGET (view);
     GdkWindow *window = gtk_widget_get_window (widget);
@@ -1429,9 +1435,11 @@ static void     draw_entry                  (MooIconView    *view,
     gboolean selected, cursor, drop;
 
 #if GTK_CHECK_VERSION(3,0,0)
-    // FIXME: deprecated since 3.22
-    cairo_t *cr = gdk_cairo_create (window);
     GtkStyleContext *context = gtk_widget_get_style_context (widget);
+
+    (void) window;
+#else
+    (void) cr;
 #endif
 
     selected = _moo_icon_view_path_is_selected (view, path);
@@ -1571,10 +1579,6 @@ static void     draw_entry                  (MooIconView    *view,
                          entry_rect->height);
 #endif
     }
-
-#if GTK_CHECK_VERSION(3,0,0)
-    cairo_destroy (cr);
-#endif
 }
 
 
