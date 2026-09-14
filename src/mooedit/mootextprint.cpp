@@ -723,6 +723,83 @@ line_number_displayed (MooPrintOperation *op,
 }
 
 
+/* Heights are compared with a slack of a tenth of a device unit: they come out
+   of pango as doubles, and a line that fills the page exactly must not be
+   pushed onto the next one by rounding. */
+#define EPS (.1)
+
+/*
+ * How much of a wrapped line fits in what is left of the page.
+ *
+ * Walks the layout's visual lines, stopping at the first one that would
+ * overflow, and moves @iter to the buffer position where that happened -- so
+ * the part before it prints on this page and the rest starts the next one.
+ *
+ * Returns FALSE and leaves @iter alone when not even the first visual line
+ * fits; then the whole logical line moves to the next page.
+ */
+static gboolean
+split_wrapped_line (MooPrintOperation *op,
+                    int                line_no,
+                    double             page_height,
+                    const GtkTextIter *end,
+                    GtkTextIter       *iter)
+{
+    double part_height = 0;
+    gboolean is_first_line = TRUE;
+    gboolean part = FALSE;
+    PangoLayoutIter *layout_iter;
+
+    layout_iter = pango_layout_get_iter (op->priv->layout);
+
+    do
+    {
+        PangoLayoutLine *layout_line;
+        double layout_line_height;
+
+        layout_line = pango_layout_iter_get_line (layout_iter);
+        get_layout_line_size (layout_line, NULL, &layout_line_height);
+
+        /* The line number is printed next to the first visual line only, so
+           that one has to be at least as tall as the number is. */
+        if (is_first_line && line_number_displayed (op, line_no))
+            layout_line_height = MAX (layout_line_height, op->priv->ln_height);
+
+        if (page_height + part_height + layout_line_height > op->priv->page.height + EPS)
+            break;
+
+        is_first_line = FALSE;
+        part_height += layout_line_height;
+        part = TRUE;
+    }
+    while (pango_layout_iter_next_line (layout_iter));
+
+    if (part)
+    {
+        /* Where the walk stopped, as a byte index into the line. @end is the
+           end of that same line, which is what makes it an iter to set the
+           index on. */
+        int index = pango_layout_iter_get_index (layout_iter);
+        *iter = *end;
+        gtk_text_iter_set_line_index (iter, index);
+    }
+
+    pango_layout_iter_free (layout_iter);
+
+    return part;
+}
+
+
+/*
+ * Where the page breaks are, as buffer offsets in op->priv->pages, one per
+ * page. This is the whole of what pagination means here: the print operation is
+ * told how many pages there are, and drawing a page is then a matter of laying
+ * out the text between two consecutive offsets.
+ *
+ * Lines are measured one at a time by laying each one out and asking pango for
+ * its height, because a line's height depends on the fonts its tags ask for and
+ * on whether it wraps -- there is nothing to multiply a line count by.
+ */
 static void
 moo_print_operation_paginate (MooPrintOperation *op)
 {
@@ -750,6 +827,9 @@ moo_print_operation_paginate (MooPrintOperation *op)
 
     use_styles = GET_OPTION (op, MOO_PRINT_USE_STYLES);
 
+    /* Highlighting the whole printed range up front: the loop below lays out
+       every line anyway, and doing it here means the buffer is not asked to
+       highlight one line at a time from inside it. */
     if (use_styles && MOO_IS_TEXT_BUFFER (op->priv->buffer))
         _moo_text_buffer_update_highlight (MOO_TEXT_BUFFER (op->priv->buffer),
                                            &iter, &print_end, TRUE);
@@ -777,54 +857,30 @@ moo_print_operation_paginate (MooPrintOperation *op)
         if (line_number_displayed (op, line_no))
             line_height = MAX (line_height, op->priv->ln_height);
 
-#define EPS (.1)
+        /* page_height > EPS: a line taller than a whole page still has to be
+           printed, and it is printed on a page of its own rather than
+           breaking pagination. */
         if (page_height > EPS && page_height + line_height > op->priv->page.height + EPS)
         {
             gboolean part = FALSE;
 
             if (GET_OPTION (op, MOO_PRINT_WRAP) && pango_layout_get_line_count (op->priv->layout) > 1)
             {
-                double part_height = 0;
-                PangoLayoutIter *layout_iter;
-                gboolean is_first_line = TRUE;
+                part = split_wrapped_line (op, line_no, page_height, &end, &iter);
 
-                layout_iter = pango_layout_get_iter (op->priv->layout);
-
-                do
-                {
-                    PangoLayoutLine *layout_line;
-                    double layout_line_height;
-
-                    layout_line = pango_layout_iter_get_line (layout_iter);
-                    get_layout_line_size (layout_line, NULL, &layout_line_height);
-
-                    if (is_first_line && line_number_displayed (op, line_no))
-                        layout_line_height = MAX (layout_line_height, op->priv->ln_height);
-
-                    if (page_height + part_height + layout_line_height > op->priv->page.height + EPS)
-                        break;
-
-                    is_first_line = FALSE;
-                    part_height += layout_line_height;
-                    part = TRUE;
-                }
-                while (pango_layout_iter_next_line (layout_iter));
-
+                /* The part that fits was accounted for on the page being
+                   closed; what starts the new page is the rest of the line,
+                   and its height is not known until it is laid out again. */
                 if (part)
-                {
-                    int index = pango_layout_iter_get_index (layout_iter);
-                    iter = end;
-                    gtk_text_iter_set_line_index (&iter, index);
                     line_height = 0;
-                }
-
-                pango_layout_iter_free (layout_iter);
             }
 
             offset = gtk_text_iter_get_offset (&iter);
             g_array_append_val (op->priv->pages, offset);
             page_height = line_height;
 
+            /* When the line was split, @iter is already in the middle of it
+               and the rest of it is the first thing on the new page. */
             if (!part)
                 gtk_text_iter_forward_line (&iter);
         }
@@ -834,12 +890,13 @@ moo_print_operation_paginate (MooPrintOperation *op)
             gtk_text_iter_forward_line (&iter);
         }
     }
-#undef EPS
 
     gtk_print_operation_set_n_pages (GTK_PRINT_OPERATION (op), op->priv->pages->len);
 
     moo_dmsg ("moo_print_operation_paginate done");
 }
+
+#undef EPS
 
 
 static void

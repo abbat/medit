@@ -277,6 +277,7 @@ static void moo_text_view_class_init (MooTextViewClass *klass)
     _moo_text_view_parent_class = moo_text_view_parent_class;
     g_type_class_unref (g_type_class_ref (MOO_TYPE_INDENTER));
 
+    /* GObject and GtkWidget vfuncs */
     gobject_class->set_property = moo_text_view_set_property;
     gobject_class->get_property = moo_text_view_get_property;
     gobject_class->constructor = moo_text_view_constructor;
@@ -312,6 +313,7 @@ static void moo_text_view_class_init (MooTextViewClass *klass)
     text_view_class->paste_clipboard = moo_text_view_paste_clipboard;
     text_view_class->populate_popup = moo_text_view_populate_popup;
 
+    /* MooTextView vfunc slots */
     klass->extend_selection = _moo_text_view_extend_selection;
     klass->find_word_at_cursor = find_word_at_cursor;
     klass->find_interactive = find_interactive;
@@ -323,6 +325,7 @@ static void moo_text_view_class_init (MooTextViewClass *klass)
     klass->apply_style_scheme = moo_text_view_apply_style_scheme;
     klass->get_text_cursor = moo_text_view_get_text_cursor;
 
+    /* Properties */
     g_object_class_install_property (gobject_class,
                                      PROP_BUFFER,
                                      g_param_spec_object ("buffer",
@@ -331,6 +334,7 @@ static void moo_text_view_class_init (MooTextViewClass *klass)
                                              MOO_TYPE_TEXT_BUFFER,
                                              (GParamFlags) (G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY)));
 
+    /* Drawing and margin properties */
     g_object_class_install_property (gobject_class,
                                      PROP_RIGHT_MARGIN_OFFSET,
                                      g_param_spec_uint ("right-margin-offset",
@@ -412,6 +416,7 @@ static void moo_text_view_class_init (MooTextViewClass *klass)
                                              0,
                                              (GParamFlags) G_PARAM_READWRITE));
 
+    /* Indentation and editing behavior */
     g_object_class_install_property (gobject_class,
                                      PROP_INDENTER,
                                      g_param_spec_object ("indenter",
@@ -420,6 +425,7 @@ static void moo_text_view_class_init (MooTextViewClass *klass)
                                              MOO_TYPE_INDENTER,
                                              (GParamFlags) G_PARAM_READWRITE));
 
+    /* State properties and UI settings */
     g_object_class_install_property (gobject_class,
                                      PROP_HAS_TEXT,
                                      g_param_spec_boolean ("has-text",
@@ -544,6 +550,7 @@ static void moo_text_view_class_init (MooTextViewClass *klass)
                                                      DEFAULT_EXPANDER_SIZE,
                                                      G_PARAM_READABLE));
 
+    /* Signals */
     signals[UNDO] =
             _moo_signal_new_cb ("undo",
                                 G_OBJECT_CLASS_TYPE (klass),
@@ -665,6 +672,7 @@ static void moo_text_view_class_init (MooTextViewClass *klass)
                                 _moo_marshal_BOOLEAN__VOID,
                                 G_TYPE_BOOLEAN, 0);
 
+    /* Key bindings */
     binding_set = gtk_binding_set_by_class (klass);
     gtk_binding_entry_add_signal (binding_set, GDK_KEY_z, MOO_ACCEL_CTRL_MASK,
                                   "undo", 0);
@@ -1081,6 +1089,7 @@ moo_text_view_set_property (GObject        *object,
     switch (prop_id)
     {
         case PROP_BUFFER:
+            /* Construct default buffer if needed or validate provided buffer type. */
             buffer = (GtkTextBuffer *) g_value_get_object (value);
 
             if (!buffer)
@@ -1106,6 +1115,7 @@ moo_text_view_set_property (GObject        *object,
             view->priv->buffer = buffer;
             break;
 
+        /* Properties that delegate to setter functions which queue redraws. */
         case PROP_INDENTER:
             moo_text_view_set_indenter (view, (MooIndenter *) g_value_get_object (value));
             break;
@@ -1114,6 +1124,7 @@ moo_text_view_set_property (GObject        *object,
             moo_text_view_set_tab_width (view, g_value_get_uint (value));
             break;
 
+        /* Bracket highlight properties propagate to the buffer after construction. */
         case PROP_HIGHLIGHT_MATCHING_BRACKETS:
             view->priv->highlight_matching_brackets = g_value_get_boolean (value);
             if (view->priv->constructed)
@@ -1128,6 +1139,7 @@ moo_text_view_set_property (GObject        *object,
                               view->priv->highlight_mismatching_brackets, NULL);
             break;
 
+        /* Line highlighting and margin properties delegate to setter functions. */
         case PROP_HIGHLIGHT_CURRENT_LINE:
             moo_text_view_set_highlight_current_line (view, g_value_get_boolean (value));
             break;
@@ -1156,6 +1168,7 @@ moo_text_view_set_property (GObject        *object,
             set_manage_clipboard (view, g_value_get_boolean (value));
             break;
 
+        /* Properties that store and notify manually. */
         case PROP_SMART_HOME_END:
             view->priv->smart_home_end = g_value_get_boolean (value) != 0;
             g_object_notify (object, "smart-home-end");
@@ -1179,6 +1192,7 @@ moo_text_view_set_property (GObject        *object,
             set_enable_folding (view, g_value_get_boolean (value));
             break;
 
+        /* Simple store-and-notify properties for UI settings. */
         case PROP_ENABLE_QUICK_SEARCH:
             view->priv->qs.enable = g_value_get_boolean (value) != 0;
             g_object_notify (object, "enable-quick-search");
@@ -3207,6 +3221,64 @@ draw_fold_mark (MooTextView    *view,
 #endif
 }
 
+/*
+ * One line number, right-aligned so that the digits line up however many of
+ * them there are: @right_edge is where the number ends, and the layout's own
+ * width decides where it starts. The line the cursor is on is drawn bold,
+ * which is why this goes through pango markup rather than plain text.
+ */
+static void
+draw_line_number (MooTextView    *view,
+                  GdkWindow      *window,
+                  GdkRectangle   *window_area,
+                  PangoLayout    *layout,
+                  int             line,
+                  gboolean        current,
+                  int             right_edge,
+                  int             y,
+                  cairo_t        *cr)
+{
+    char str[32];
+    int x, w;
+
+    /* Line numbers are one-based on screen and zero-based in the buffer. */
+    if (current)
+        g_snprintf (str, sizeof str, "<b>%d</b>", line + 1);
+    else
+        g_snprintf (str, sizeof str, "%d", line + 1);
+
+    pango_layout_set_markup (layout, str, -1);
+    pango_layout_get_pixel_size (layout, &w, NULL);
+    x = right_edge - w;
+
+#if GTK_CHECK_VERSION(3,0,0)
+    (void) window;
+    (void) window_area;
+
+    gtk_render_layout (gtk_widget_get_style_context (GTK_WIDGET (view)),
+                       cr, x, y, layout);
+#else
+    (void) cr;
+
+    gtk_paint_layout (GTK_WIDGET (view)->style,
+                      window,
+                      gtk_widget_get_state (GTK_WIDGET (view)),
+                      FALSE, window_area,
+                      GTK_WIDGET(view), NULL,
+                      x, y, layout);
+#endif
+}
+
+
+/*
+ * The left margin, top to bottom: line numbers, fold marks and line-mark icons,
+ * for every visible line of the area being redrawn.
+ *
+ * The widths of the three are computed once before the loop rather than per
+ * line, because they are what the columns are aligned on -- a number is
+ * right-aligned against the widest one the buffer can produce, so that the
+ * column does not shift as the view scrolls past line 999.
+ */
 static void
 draw_left_margin (MooTextView    *view,
                   GdkWindow      *window,
@@ -3219,7 +3291,6 @@ draw_left_margin (MooTextView    *view,
     int line, current_line, text_width, window_width, mark_icon_width;
     GdkRectangle area;
     GtkTextIter iter;
-    char str[32];
 
     text_view = GTK_TEXT_VIEW (view);
     buffer = gtk_text_view_get_buffer (text_view);
@@ -3239,6 +3310,9 @@ draw_left_margin (MooTextView    *view,
     gtk_text_buffer_get_iter_at_mark (buffer, &iter, gtk_text_buffer_get_insert (buffer));
     current_line = gtk_text_iter_get_line (&iter);
 
+    /* The area to redraw arrives in margin-window coordinates; which lines it
+       covers is a question about the buffer, so convert once here and convert
+       each line's y back for drawing. */
     area = *window_area;
     gtk_text_view_window_to_buffer_coords (text_view,
                                            GTK_TEXT_WINDOW_LEFT,
@@ -3261,30 +3335,10 @@ draw_left_margin (MooTextView    *view,
                                                0, y, NULL, &y);
 
         if (view->priv->lm.show_numbers)
-        {
-            int x, w;
-
-            if (line == current_line)
-                g_snprintf (str, sizeof str, "<b>%d</b>", line + 1);
-            else
-                g_snprintf (str, sizeof str, "%d", line + 1);
-
-            pango_layout_set_markup (layout, str, -1);
-            pango_layout_get_pixel_size (layout, &w, NULL);
-            x = mark_icon_width + LINE_NUMBER_LPAD + text_width - w;
-
-#if GTK_CHECK_VERSION(3,0,0)
-            gtk_render_layout (gtk_widget_get_style_context (GTK_WIDGET (view)),
-                               cr, x, y, layout);
-#else
-            gtk_paint_layout (GTK_WIDGET (view)->style,
-                              window,
-                              gtk_widget_get_state (GTK_WIDGET (view)),
-                              FALSE, window_area,
-                              GTK_WIDGET(view), NULL,
-                              x, y, layout);
-#endif
-        }
+            draw_line_number (view, window, window_area, layout,
+                              line, line == current_line,
+                              mark_icon_width + LINE_NUMBER_LPAD + text_width,
+                              y, cr);
 
         if (view->priv->lm.show_folds)
         {
@@ -3304,6 +3358,8 @@ draw_left_margin (MooTextView    *view,
             g_slist_free (marks);
         }
 
+        /* Visible: a line inside a collapsed fold has no row on screen and no
+           margin of its own. */
         if (!text_iter_forward_visible_line (view, &iter, &line))
             break;
     }

@@ -1012,6 +1012,13 @@ moo_editor_load_file (MooEditor       *editor,
     moo_return_error_if_fail_p (MOO_IS_EDITOR (editor));
     moo_return_error_if_fail_p (info != NULL && G_IS_FILE (info->file));
 
+    /* One pass of "if (success)" stages rather than early returns, because the
+       uri and filename allocated right below have to be freed on every path out
+       and there is no cleanup label to jump to. The stages are: pick the
+       document to load into, load or reload it, report a failure to the user
+       unless silent, then place the new document in a window and put the cursor
+       where the history says it was. */
+
     uri = g_file_get_uri (info->file);
     filename = g_file_get_path (info->file);
     line = info->line;
@@ -1025,6 +1032,9 @@ moo_editor_load_file (MooEditor       *editor,
         success = FALSE;
     }
 
+    /* The file is not open yet. An untouched empty document in the target
+       window is scratch space rather than something the user is working on, so
+       load into it instead of adding a tab beside it. */
     if (success && !doc)
     {
         new_doc = TRUE;
@@ -1041,6 +1051,9 @@ moo_editor_load_file (MooEditor       *editor,
         }
     }
 
+    /* Nothing to reuse. new_object, unlike new_doc, is what says the reference
+       below is ours to drop and that the document still has to be put in a
+       window. */
     if (success && !doc)
     {
         new_object = TRUE;
@@ -1051,9 +1064,14 @@ moo_editor_load_file (MooEditor       *editor,
     {
         view = moo_edit_get_view (doc);
 
+        /* Reloading a document the user is looking at should leave the cursor
+           where it was, so remember the line before the buffer is replaced. */
         if (!new_doc && line < 0 && (info->flags & MOO_OPEN_FLAG_RELOAD) != 0)
             line = moo_text_view_get_cursor_line (GTK_TEXT_VIEW (view));
 
+        /* No encoding asked for: the one this file was last opened with is a
+           better guess than the default. _moo_edit_load_file() takes it as a
+           hint and still falls back if the file does not decode. */
         if (!info->encoding)
         {
             MooHistoryItem *hist_item = moo_history_mgr_find_uri (editor->priv->history, uri);
@@ -1064,6 +1082,8 @@ moo_editor_load_file (MooEditor       *editor,
 
     if (success && new_doc)
     {
+        /* "Create new" on a file that is not there yet: an empty document
+           bound to that name, not a failed load. */
         if ((info->flags & MOO_OPEN_FLAG_CREATE_NEW) && _moo_edit_file_is_new (info->file))
         {
             _moo_edit_set_status (doc, MOO_EDIT_STATUS_NEW);
@@ -1111,6 +1131,8 @@ moo_editor_load_file (MooEditor       *editor,
         moo_editor_add_doc (editor, window, doc);
     }
 
+    /* No line was asked for and this is a fresh load, so go back to where the
+       file was last left. A reload took its line from the view above. */
     if (success)
     {
         MooHistoryItem *hist_item;
@@ -1135,6 +1157,7 @@ moo_editor_load_file (MooEditor       *editor,
         gtk_widget_grab_focus (GTK_WIDGET (view));
     }
 
+    /* The window holds the document now, or nothing does and it goes away. */
     if (new_object)
         g_object_unref (doc);
 

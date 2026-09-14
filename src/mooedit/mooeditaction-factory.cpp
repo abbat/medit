@@ -262,6 +262,25 @@ moo_edit_class_new_actionv (MooEditClass       *klass,
     doc_conditions = g_ptr_array_new ();
     view_conditions = g_ptr_array_new ();
 
+    /* The name/value list is not plain g_object_new() arguments: three kinds of
+       name are recognised, and which one it is decides how the value that
+       follows is collected.
+
+         "action-type::"        the GType to instantiate, and it has to come
+                                before any property of that type -- the class
+                                is what the property lookup below needs
+         "condition::foo"       and "view-condition::foo": the value is a
+                                property name on the document (or its view),
+                                and the action's "foo" follows it. Collected as
+                                strings rather than through G_VALUE_COLLECT,
+                                because they are not properties of the action.
+         anything else          a property of the action class, collected
+                                against the type its pspec declares
+
+       Every failure is a programming error in the caller's argument list, so
+       each one warns and jumps to the cleanup at the bottom rather than
+       installing half an action. */
+
     name = first_prop_name;
     while (name)
     {
@@ -326,6 +345,8 @@ moo_edit_class_new_actionv (MooEditClass       *klass,
         }
         else
         {
+            /* No "action-type::" seen, so this is a plain MooEditAction and
+               the first ordinary property is where we find that out. */
             if (!action_class)
             {
                 if (!action_type)
@@ -360,6 +381,9 @@ moo_edit_class_new_actionv (MooEditClass       *klass,
         name = va_arg (var_args, gchar*);
     }
 
+    /* The success path is wrapped in a block only so that action_factory can be
+       declared here: every "goto error" above would otherwise jump across its
+       initialization. */
     G_STMT_START
     {
         MooActionFactory *action_factory = NULL;
@@ -374,10 +398,13 @@ moo_edit_class_new_actionv (MooEditClass       *klass,
             goto error;
         }
 
+        /* FALSE: the factory took the parameter values, so free the array and
+           not its contents. */
         _moo_param_array_free ((GParameter*) action_params->data, action_params->len);
         g_array_free (action_params, FALSE);
         action_params = NULL;
 
+        /* NULL-terminate: install_action() takes them as strv. */
         g_ptr_array_add (doc_conditions, NULL);
         g_ptr_array_add (view_conditions, NULL);
 

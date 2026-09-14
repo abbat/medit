@@ -1234,6 +1234,20 @@ static gboolean handle_ctrl_pgup    (MooTextView    *view,
                                      gboolean        up);
 
 
+/*
+ * The keys the view handles itself, before GtkTextView gets the event.
+ *
+ * These are not accelerators and cannot be: Tab, Enter and Backspace are keys
+ * the text widget already has a meaning for, and what medit does with them
+ * depends on the indenter and on where the cursor is -- an accelerator would
+ * take them away from the widget unconditionally. So the event is looked at
+ * here, and anything not recognised is passed on to GtkTextView unchanged.
+ *
+ * The modifier state is compared for equality rather than tested bit by bit:
+ * Ctrl+Up is a scroll, but Ctrl+Shift+Up is a selection and belongs to
+ * GtkTextView. moo_accel_translate_event() is what turns the hardware keycode
+ * into the keyval the user thinks they pressed, whatever layout is active.
+ */
 int
 _moo_text_view_key_press_event (GtkWidget          *widget,
                                 GdkEventKey        *event)
@@ -1256,6 +1270,10 @@ _moo_text_view_key_press_event (GtkWidget          *widget,
 
     moo_accel_translate_event (widget, event, &keyval, &mods);
 
+    /* Each of these can do several edits -- delete the selection, insert a
+       newline, indent it -- and the user expects one undo step for the key
+       they pressed, hence the user action around the ones that edit. Tab goes
+       without because handle_tab() groups what it does itself. */
     if (keyval == GDK_KEY_KP_Enter || keyval == GDK_KEY_Return)
     {
         gtk_text_buffer_begin_user_action (buffer);
@@ -1317,15 +1335,26 @@ _moo_text_view_key_press_event (GtkWidget          *widget,
     }
     else
     {
+        /* Some other modifier combination: nothing here claims it, and hiding
+           the pointer for a key we did not act on would be wrong. */
         obscure = FALSE;
     }
 
+    /* The pointer is hidden when a key edits the text, so that it is not
+       sitting on top of what is being typed. Scrolling is the exception: there
+       the pointer has not been left behind by anything and the user may well be
+       about to reach for it. */
     if (obscure && handled)
         text_view_obscure_mouse_cursor (text_view);
 
     if (handled)
         return TRUE;
 
+    /* GtkTextView is what inserts the character; in_key_press is how
+       insert_text_cb() tells a single character typed by the user from every
+       other insertion, and check_char_inserted() below emits "char-inserted"
+       for it. That happens once the user action is closed and the buffer is
+       settled, so a handler of the signal sees the text as it now stands. */
     view->priv->in_key_press = TRUE;
     _moo_text_view_ensure_primary (text_view);
     gtk_text_buffer_begin_user_action (buffer);
