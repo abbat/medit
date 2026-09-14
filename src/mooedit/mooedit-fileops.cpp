@@ -185,7 +185,12 @@ convert_file_data_to_utf8_with_prompt (const char *data,
         cached_encoding = NULL;
     }
 
-    *used_encoding = g_strdup (new_encoding);
+    /* Handed over rather than copied: the string is what the conversion above
+       wrote, the loop reassigns new_encoding on every pass, and duplicating it
+       here left the original behind -- six bytes of "UTF-8" per file opened,
+       which is what the leak checker came back with once it started charging a
+       record to whoever allocated it. */
+    *used_encoding = new_encoding;
 
     g_free (freeme);
     return text_utf8;
