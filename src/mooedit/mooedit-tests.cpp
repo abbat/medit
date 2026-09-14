@@ -46,6 +46,7 @@
 #include "mooedit/mootext-private.h"
 #include "mooedit/mootextview-private.h"
 #include "mooedit/mooeditfiltersettings.h"
+#include "mooedit/mootextsearch-private.h"
 #include "vendor/gtksourceview/gtksourcecontextengine.h"
 #include "vendor/gtksourceview/gtksourceengine.h"
 #include "mooutils/mooundo.h"
@@ -1166,6 +1167,77 @@ test_edit_filter_parsing (void)
 }
 
 
+/* Asserts that @replacement expands, once and for all matches, to @expected. */
+static void
+check_expand (const char *replacement,
+              gboolean    literal,
+              const char *expected)
+{
+    char *expanded = nullptr;
+    GError *error = nullptr;
+
+    g_assert_true (_moo_text_expand_replacement (replacement, literal, &expanded, &error));
+    g_assert_no_error (error);
+    g_assert_cmpstr (expanded, ==, expected);
+
+    g_free (expanded);
+}
+
+/* Asserts that @replacement is valid but has to be expanded per match. */
+static void
+check_expand_per_match (const char *replacement)
+{
+    char *expanded = nullptr;
+    GError *error = nullptr;
+
+    g_assert_true (_moo_text_expand_replacement (replacement, FALSE, &expanded, &error));
+    g_assert_no_error (error);
+    g_assert_null (expanded);
+}
+
+/* Asserts that @replacement is rejected, with an error rather than a crash. */
+static void
+check_expand_rejects (const char *replacement)
+{
+    char *expanded = nullptr;
+    GError *error = nullptr;
+
+    g_assert_false (_moo_text_expand_replacement (replacement, FALSE, &expanded, &error));
+    g_assert_nonnull (error);
+    g_assert_null (expanded);
+
+    g_error_free (error);
+}
+
+static void
+test_expand_replacement (void)
+{
+    /* Literal: whatever it looks like, it is text. */
+    check_expand ("plain", TRUE, "plain");
+    check_expand ("\\1 and \\t", TRUE, "\\1 and \\t");
+    check_expand ("", TRUE, "");
+
+    /* Not literal, and nothing in it that a match could change. */
+    check_expand ("plain", FALSE, "plain");
+    check_expand ("", FALSE, "");
+    check_expand ("a\\tb", FALSE, "a\tb");
+    check_expand ("a\\nb", FALSE, "a\nb");
+    /* An escaped backslash is one backslash and not the start of a
+       reference. */
+    check_expand ("a\\\\1b", FALSE, "a\\1b");
+
+    /* References: only a match can say what these are. */
+    check_expand_per_match ("\\0");
+    check_expand_per_match ("x\\1y");
+    check_expand_per_match ("\\g<name>");
+
+    /* A backslash with nothing after it, which is what a half-typed
+       replacement looks like. */
+    check_expand_rejects ("trailing\\");
+    check_expand_rejects ("\\g<unterminated");
+}
+
+
 static void
 test_text_btree_ranges (void)
 {
@@ -1235,6 +1307,7 @@ _moo_add_mooedit_unit_tests (void)
     g_test_add_func ("/mooedit/edit-action/filters", test_edit_action_filters);
     g_test_add_func ("/mooedit/edit-filter/parsing", test_edit_filter_parsing);
     g_test_add_func ("/mooedit/text-btree/ranges", test_text_btree_ranges);
+    g_test_add_func ("/mooedit/replace/expand-replacement", test_expand_replacement);
     g_test_add_func ("/mooedit/text-view/word-selection-after-closing-bracket",
                      test_text_view_word_selection_after_closing_bracket);
 

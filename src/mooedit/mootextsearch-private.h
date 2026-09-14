@@ -71,6 +71,11 @@ gboolean _moo_text_search_regex_backward    (const GtkTextIter      *start,
                                              int                    *match_len,
                                              GMatchInfo            **match_info);
 
+gboolean _moo_text_expand_replacement       (const char             *replacement,
+                                             gboolean                literal,
+                                             char                  **expanded,
+                                             GError                **error);
+
 int      _moo_text_replace_regex_all        (GtkTextIter            *start,
                                              GtkTextIter            *end,
                                              MooRegex               *regex,

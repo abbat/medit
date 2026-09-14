@@ -522,6 +522,57 @@ moo_text_search_backward (const GtkTextIter      *start,
 }
 
 
+/*
+ * Whether a replacement string is the same for every match, and what it is.
+ *
+ * A literal replacement is taken as it stands. Otherwise it is the
+ * g_regex_replace() language: \1 and \g<name> stand for what the match
+ * captured, \t and friends are escapes, and \U...\E changes case. Only the
+ * first of those depends on the match -- so a replacement without any is
+ * expanded once here, and the loop that does the replacing does not have to
+ * ask the match for anything.
+ *
+ * Returns TRUE and stores the expansion in @expanded, or NULL there when the
+ * replacement does have references and has to be expanded against each match.
+ * Returns FALSE with @error set when the replacement is not valid at all,
+ * which is the user's typo in the Replace box and not a bug.
+ */
+gboolean
+_moo_text_expand_replacement (const char  *replacement,
+                              gboolean     literal,
+                              char       **expanded,
+                              GError     **error)
+{
+    gboolean has_references = FALSE;
+
+    g_return_val_if_fail (replacement != NULL, FALSE);
+    g_return_val_if_fail (expanded != NULL, FALSE);
+
+    *expanded = NULL;
+
+    if (literal)
+    {
+        *expanded = g_strdup (replacement);
+        return TRUE;
+    }
+
+    if (!g_regex_check_replacement (replacement, &has_references, error))
+        return FALSE;
+
+    if (has_references)
+        return TRUE;
+
+    /* No references, so a NULL match info is enough to expand it: what is left
+       is escapes and case folding. */
+    *expanded = g_match_info_expand_references (NULL, replacement, error);
+
+    if (*expanded == NULL)
+        return FALSE;
+
+    return TRUE;
+}
+
+
 static int
 moo_text_replace_regex_all_real (GtkTextIter            *start,
                                  GtkTextIter            *end,
@@ -545,38 +596,25 @@ moo_text_replace_regex_all_real (GtkTextIter            *start,
     g_return_val_if_fail (regex != NULL, 0);
     g_return_val_if_fail (replacement != NULL, 0);
 
-    if (replacement_literal)
+    /* const_replacement stays NULL when the replacement has \1-style
+       references in it: those are what the loop below expands per match, and
+       everything else is expanded once, here. */
+    if (!_moo_text_expand_replacement (replacement, replacement_literal, &freeme, &error))
     {
-        const_replacement = replacement;
+        g_warning ("%s", moo_error_message (error));
+        g_error_free (error);
+        return 0;
     }
-    else
-    {
-        gboolean has_references = FALSE;
 
-        if (!g_regex_check_replacement (replacement, &has_references, &error))
-        {
-            g_warning ("%s", moo_error_message (error));
-            g_error_free (error);
-            return 0;
-        }
-
-        if (!has_references)
-        {
-            freeme = g_match_info_expand_references (NULL, replacement, &error);
-
-            if (error)
-            {
-                g_warning ("%s", moo_error_message (error));
-                g_error_free (error);
-                return 0;
-            }
-
-            const_replacement = freeme;
-        }
-    }
+    const_replacement = freeme;
 
     buffer = gtk_text_iter_get_buffer (start);
 
+    /* A mark rather than the iter, because the replacements below invalidate
+       iters and the end of the range has to survive them. Right gravity would
+       make the range grow by whatever is inserted at its end, hence FALSE.
+       An end at the end of the buffer is no limit at all, so drop it and save
+       the bookkeeping. */
     if (end && !gtk_text_iter_is_end (end))
     {
         end_mark = gtk_text_buffer_create_mark (buffer, NULL, end, TRUE);
@@ -587,6 +625,11 @@ moo_text_replace_regex_all_real (GtkTextIter            *start,
         end_mark = NULL;
     }
 
+    /* With no callback there is nobody to ask, so it is a replace-all and the
+       whole thing is one undo step, begun here. Interactively the user may
+       still answer "all" later, and then the remaining replacements are
+       grouped from that point on -- before it, each one undoes separately,
+       which is what the user who stepped through them expects. */
     if (func)
     {
         response = MOO_TEXT_REPLACE_DO_REPLACE;
@@ -612,6 +655,11 @@ moo_text_replace_regex_all_real (GtkTextIter            *start,
                                              &string, NULL, &match_len, &match_info))
             goto out;
 
+        /* A pattern that can match nothing -- "x*" say -- matches again at the
+           same place forever unless we step past it. Stepping on the first
+           empty match would skip a character the pattern is entitled to match,
+           so the step is taken only on the second empty match in a row at the
+           same position. */
         if (!match_len)
         {
             if (was_zero_match && gtk_text_iter_equal (&match_start, start))
@@ -666,6 +714,8 @@ moo_text_replace_regex_all_real (GtkTextIter            *start,
             }
         }
 
+        /* An empty match replaced by an empty string changes nothing, so it is
+           not a replacement and is not counted. */
         if (response != MOO_TEXT_REPLACE_SKIP && (match_len || *real_replacement))
         {
             count++;
@@ -705,6 +755,7 @@ moo_text_replace_regex_all_real (GtkTextIter            *start,
             was_zero_match = FALSE;
         }
 
+        /* The replacement invalidated it; the mark is what survived. */
         if (end)
             gtk_text_buffer_get_iter_at_mark (buffer, end, end_mark);
 
