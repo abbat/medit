@@ -811,7 +811,9 @@ moo_app_init_ui (MooApp *app)
   MooUiXml *xml = NULL;
   char **files, **p;
 
-  // FIXME: file ui.xml not exists, seems useless code
+  /* ui.xml is not shipped: it is an optional override, looked up in the data
+     directories with the user's own first, the way tools.xml and filters.xml
+     are. Without one the built-in default_ui below is used. */
   files = moo_get_data_files (MOO_UI_XML_FILE);
 
   for (p = files; p && *p; ++p)
