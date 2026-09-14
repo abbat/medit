@@ -99,6 +99,27 @@ model_row_inserted (G_GNUC_UNUSED GtkTreeModel *model,
 }
 
 /*!
+ * \brief Disconnect and release the model the view is showing
+ * \param plugin The window plugin instance
+ *
+ * The store belongs to the document plugin, which unrefs it when the document
+ * is closed. Holding a reference for as long as the handler is connected is
+ * what keeps that from turning the next g_signal_handler_disconnect() into a
+ * use-after-free.
+ */
+static void
+window_plugin_release_model (CtagsWindowPlugin *plugin)
+{
+  if (!plugin->model)
+    return;
+
+  g_signal_handler_disconnect (plugin->model, plugin->model_row_inserted);
+  g_object_unref (plugin->model);
+  plugin->model = NULL;
+  plugin->model_row_inserted = 0;
+}
+
+/*!
  * \brief Update the ctags view with current document's tags
  * \param plugin The window plugin instance
  * \return FALSE to indicate the idle source should be removed
@@ -119,6 +140,7 @@ window_plugin_update (CtagsWindowPlugin *plugin)
   if (!doc)
     {
       gtk_tree_view_set_model (GTK_TREE_VIEW (plugin->view), NULL);
+      window_plugin_release_model (plugin);
       return FALSE;
     }
 
@@ -129,10 +151,9 @@ window_plugin_update (CtagsWindowPlugin *plugin)
 
   if (plugin->model != model)
     {
-      if (plugin->model)
-        g_signal_handler_disconnect (plugin->model, plugin->model_row_inserted);
+      window_plugin_release_model (plugin);
 
-      plugin->model = model;
+      plugin->model = GTK_TREE_MODEL (g_object_ref (model));
       plugin->model_row_inserted =
         g_signal_connect (model, "row-inserted",
                           G_CALLBACK (model_row_inserted), plugin);
@@ -231,12 +252,10 @@ ctags_window_plugin_destroy (CtagsWindowPlugin *plugin)
 {
   MooEditWindow *window = MOO_WIN_PLUGIN (plugin)->window;
 
-  if (plugin->model)
-    g_signal_handler_disconnect (plugin->model, plugin->model_row_inserted);
+  window_plugin_release_model (plugin);
+
   if (plugin->expand_idle)
     g_source_remove (plugin->expand_idle);
-  plugin->model = NULL;
-  plugin->model_row_inserted = 0;
   plugin->expand_idle = 0;
 
   moo_edit_window_remove_pane (window, CTAGS_PLUGIN_ID);
