@@ -668,6 +668,9 @@ create_mime_icon_system (GtkIconTheme *icon_theme,
     char *content_type;
 
     content_type = g_content_type_from_mime_type (mime_type);
+    if (!content_type)
+        return NULL;
+
     icon = g_content_type_get_icon (content_type);
     if (G_IS_THEMED_ICON (icon))
     {
