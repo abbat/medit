@@ -1656,7 +1656,7 @@ moo_editor_close_docs (MooEditor    *editor,
 
     g_return_val_if_fail (MOO_IS_EDITOR (editor), FALSE);
 
-    if (docs->empty ())
+    if (!docs || docs->empty ())
         return TRUE;
 
     for (i = 0; i < docs->n_elms; ++i)
