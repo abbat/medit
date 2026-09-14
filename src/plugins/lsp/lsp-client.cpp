@@ -808,7 +808,7 @@ _lsp_client_find_message (const guint8 *data,
     static const char *terminators[] = { "\r\n\r\n", "\n\n" };
     const char *header_end = NULL;
     gsize header_len = 0;
-    gsize content_length = 0;
+    guint64 content_length = 0;
     gboolean have_length = FALSE;
     char **lines;
     char *header;
@@ -863,7 +863,12 @@ _lsp_client_find_message (const guint8 *data,
                 return -1;
             }
 
-            content_length = (gsize) g_ascii_strtoull (value, &end, 10);
+            /*
+             * Parsed and range-checked as guint64, and only then narrowed: on a
+             * 32-bit build a cast here would wrap Content-Length: 4294967296 to
+             * 0 and hand the parser an empty body for a message that is not.
+             */
+            content_length = g_ascii_strtoull (value, &end, 10);
 
             if (end == value || *end != '\0')
             {
@@ -885,11 +890,11 @@ _lsp_client_find_message (const guint8 *data,
     if (content_length > LSP_MAX_MESSAGE)
         return -1;
 
-    if (size < header_len + content_length)
+    if (size < header_len + (gsize) content_length)
         return 0;
 
     *body_offset = header_len;
-    *body_len = content_length;
+    *body_len = (gsize) content_length;
 
     return (gssize) (header_len + content_length);
 }
