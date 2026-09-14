@@ -747,7 +747,6 @@ moo_print_operation_paginate (MooPrintOperation *op)
     offset = gtk_text_iter_get_offset (&iter);
     g_array_append_val (op->priv->pages, offset);
     page_height = 0;
-    line_no = op->priv->first_line;
 
     use_styles = GET_OPTION (op, MOO_PRINT_USE_STYLES);
 
@@ -761,6 +760,11 @@ moo_print_operation_paginate (MooPrintOperation *op)
         double line_height;
 
         end = iter;
+
+        /* Taken from @iter rather than counted, because @iter does not always
+           move on by a line: a wrapped line that is split across a page break
+           stays on the same line number for the next turn. */
+        line_no = gtk_text_iter_get_line (&iter);
 
         if (!gtk_text_iter_ends_line (&end))
             gtk_text_iter_forward_to_line_end (&end);
