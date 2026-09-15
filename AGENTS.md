@@ -22,10 +22,25 @@ the GTK+3 way to achieve the same. Do not invent new behaviour.
 
 **The tree's own sources are compiled as C++** — 150 `.cpp` and 205 `.h` under `src/`,
 against three `.c` files left in the ctags plugin. What that buys is a stricter compiler
-over a codebase that is still GObject C and calls the GTK+ C API on nearly every line;
-it is not an invitation to write C++. Nothing in the tree throws or catches, `-fno-rtti`
-is on, and templates appear in seven headers, all of them under `src/moocpp/` and
-`src/mooutils/`. Write new code the way the file around it is written.
+over a codebase that is still GObject C and calls the GTK+ C API on nearly every line.
+
+The style stays GTK+/GNOME C and a wholesale rewrite is not wanted, but **C++ is there to
+be used where it makes a function shorter to read or harder to get wrong**: RAII for a
+local freed on several exits, `ObjectPtr` in place of a matching `g_object_unref`, `gstr`
+in place of a `char *` whose owner nobody can name. `src/moocpp/` already holds those, and
+`array.h` from it is the one part that went tree-wide. Where the resource has a C free
+function and no wrapper, `g_autofree`/`g_autoptr` costs less than a class and still reads
+as C. What stays out: nothing throws or catches, `-fno-rtti` is on, the standard is C++11,
+and public headers stay C inside `G_BEGIN_DECLS` — the ABI of the whole tree is behind
+them. Templates live in seven headers, all under `src/moocpp/` and `src/mooutils/`.
+
+Two mechanics decide most of these changes. A `goto` cannot jump over a local with a
+destructor — C++ forbids it — so a cleanup label converts only by turning every
+`goto out` into a `return`, which is the bulk of such a diff. And GObject allocates
+instances itself, so a non-trivial member of a private struct needs a placement `new` in
+`_init` and an explicit destructor call in `_finalize`; `mooedit.cpp:315` and
+`mooeditwindow.cpp:855` are the two that do it. Otherwise write new code the way the file
+around it is written.
 
 **Upstream code carried verbatim lives under `src/vendor/`**: `gtksourceview`,
 `eggsmclient`, and ctags' `readtags.c`. It is excluded from `--target analyze`
