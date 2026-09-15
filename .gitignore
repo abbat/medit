@@ -2,3 +2,4 @@ doxygen
 .vscode
 /build*/
 __pycache__/
+.codegraph/

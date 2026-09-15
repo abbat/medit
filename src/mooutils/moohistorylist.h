@@ -91,6 +91,7 @@ gboolean         moo_history_list_find              (MooHistoryList *list,
 
 gboolean         moo_history_list_is_empty          (MooHistoryList *list);
 guint            moo_history_list_n_user_entries    (MooHistoryList *list);
+void             moo_history_list_clear             (MooHistoryList *list);
 void             moo_history_list_set_max_entries   (MooHistoryList *list,
                                                      guint           num);
 

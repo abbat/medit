@@ -95,6 +95,9 @@ char           *moo_combo_get_text_at_iter  (MooCombo       *combo,
 void            moo_combo_set_use_button    (MooCombo       *combo,
                                              gboolean        use);
 
+void            moo_combo_set_popup_bottom_widget (MooCombo *combo,
+                                             GtkWidget      *widget);
+
 
 /***************************************************************************/
 /* GtkEntry and GtkEditable interface

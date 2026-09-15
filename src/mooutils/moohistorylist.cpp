@@ -489,6 +489,45 @@ moo_history_list_n_user_entries (MooHistoryList *list)
 }
 
 
+/* Forgets every entry the user added, leaving the built-in ones and dropping
+   the saved copy in the prefs, so that the list stays empty across restarts */
+void
+moo_history_list_clear (MooHistoryList *list)
+{
+    g_return_if_fail (MOO_IS_HISTORY_LIST (list));
+
+    /* whatever is still in the prefs would come back on the next load */
+    _moo_history_list_load (list);
+
+    if (!list->priv->num_user)
+        return;
+
+    while (list->priv->num_user)
+    {
+        _list_delete_last (list);
+        list->priv->num_user--;
+    }
+
+    if (list->priv->has_separator)
+    {
+        GtkTreeIter iter;
+
+        if (gtk_tree_model_iter_nth_child (list->priv->model, &iter, NULL,
+                                           list->priv->num_builtin))
+            _list_remove (list, &iter);
+
+        list->priv->has_separator = FALSE;
+    }
+
+    list_save_recent (list);
+
+    g_signal_emit (list, signals[CHANGED], 0);
+
+    if (moo_history_list_is_empty (list))
+        g_object_notify (G_OBJECT (list), "empty");
+}
+
+
 void
 moo_history_list_set_max_entries (MooHistoryList *list,
                                   guint           num)

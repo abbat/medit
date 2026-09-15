@@ -33,6 +33,8 @@ struct _MooComboPrivate {
 
     GtkWidget *popup;
     GtkWidget *scrolled_window;
+    GtkWidget *bottom_widget;
+    GtkWidget *bottom_box;
     GtkTreeView *treeview;
     GtkTreeViewColumn *column;
     GtkTreeModel *model;
@@ -330,11 +332,21 @@ moo_combo_destroy (GtkObject *object)
         combo->priv->treeview = NULL;
     }
 
+    if (combo->priv->bottom_widget)
+    {
+        if (combo->priv->bottom_box)
+            gtk_container_remove (GTK_CONTAINER (combo->priv->bottom_box),
+                                  combo->priv->bottom_widget);
+        g_object_unref (combo->priv->bottom_widget);
+        combo->priv->bottom_widget = NULL;
+    }
+
     if (combo->priv->popup)
     {
         gtk_widget_destroy (combo->priv->popup);
         combo->priv->popup = NULL;
         combo->priv->scrolled_window = NULL;
+        combo->priv->bottom_box = NULL;
         combo->priv->treeview = NULL;
     }
 
@@ -413,7 +425,7 @@ moo_combo_new (void)
 static void
 create_popup_window (MooCombo *combo)
 {
-    GtkWidget *scrolled_window, *frame;
+    GtkWidget *scrolled_window, *frame, *vbox, *separator;
 
     if (combo->priv->popup)
         return;
@@ -436,12 +448,36 @@ create_popup_window (MooCombo *combo)
     gtk_container_add (GTK_CONTAINER (scrolled_window), GTK_WIDGET (combo->priv->treeview));
     combo->priv->scrolled_window = scrolled_window;
 
+    /*
+     * The list is not necessarily all there is to the popup: an owner may put
+     * a widget of its own under it, so the two go into a box, with a separator
+     * drawn between them. The box is hidden while there is no such widget, and
+     * it is never shown by show_all, which would show the widget the owner may
+     * be keeping hidden.
+     */
+    vbox = gtk_vbox_new (FALSE, 0);
+    gtk_box_pack_start (GTK_BOX (vbox), scrolled_window, TRUE, TRUE, 0);
+
+    combo->priv->bottom_box = gtk_vbox_new (FALSE, 0);
+    gtk_widget_set_no_show_all (combo->priv->bottom_box, TRUE);
+    separator = gtk_hseparator_new ();
+    gtk_widget_show (separator);
+    gtk_box_pack_start (GTK_BOX (combo->priv->bottom_box), separator, FALSE, FALSE, 0);
+    gtk_box_pack_start (GTK_BOX (vbox), combo->priv->bottom_box, FALSE, FALSE, 0);
+
     frame = gtk_frame_new (NULL);
     gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_OUT);
-    gtk_container_add (GTK_CONTAINER (frame), scrolled_window);
+    gtk_container_add (GTK_CONTAINER (frame), vbox);
 
     gtk_widget_show_all (frame);
     gtk_container_add (GTK_CONTAINER (combo->priv->popup), frame);
+
+    if (combo->priv->bottom_widget)
+    {
+        gtk_box_pack_start (GTK_BOX (combo->priv->bottom_box),
+                            combo->priv->bottom_widget, FALSE, FALSE, 0);
+        gtk_widget_show (combo->priv->bottom_box);
+    }
 }
 
 static void
@@ -451,9 +487,14 @@ destroy_popup_window (MooCombo *combo)
     {
         GtkWidget *tree_view = GTK_WIDGET (combo->priv->treeview);
         gtk_container_remove (GTK_CONTAINER (gtk_widget_get_parent (tree_view)), tree_view);
+        /* the bottom widget outlives the popup, like the tree view does */
+        if (combo->priv->bottom_widget)
+            gtk_container_remove (GTK_CONTAINER (combo->priv->bottom_box),
+                                  combo->priv->bottom_widget);
         gtk_widget_destroy (combo->priv->popup);
         combo->priv->popup = NULL;
         combo->priv->scrolled_window = NULL;
+        combo->priv->bottom_box = NULL;
     }
 }
 
@@ -1337,6 +1378,47 @@ moo_combo_set_use_button (MooCombo       *combo,
         gtk_container_remove (GTK_CONTAINER (combo), combo->priv->button);
         combo->priv->button = NULL;
     }
+}
+
+
+/* Puts a widget of the owner's own under the list in the popup, or takes the
+   previous one away when widget is NULL. The widget is shown and hidden by its
+   owner; the separator above it follows it. */
+void
+moo_combo_set_popup_bottom_widget (MooCombo  *combo,
+                                   GtkWidget *widget)
+{
+    g_return_if_fail (MOO_IS_COMBO (combo));
+    g_return_if_fail (!widget || GTK_IS_WIDGET (widget));
+
+    if (combo->priv->bottom_widget == widget)
+        return;
+
+    if (combo->priv->bottom_widget)
+    {
+        if (combo->priv->bottom_box)
+            gtk_container_remove (GTK_CONTAINER (combo->priv->bottom_box),
+                                  combo->priv->bottom_widget);
+        g_object_unref (combo->priv->bottom_widget);
+    }
+
+    combo->priv->bottom_widget = widget ? GTK_WIDGET (g_object_ref_sink (widget)) : NULL;
+
+    if (combo->priv->bottom_box)
+    {
+        if (widget)
+        {
+            gtk_box_pack_start (GTK_BOX (combo->priv->bottom_box), widget, FALSE, FALSE, 0);
+            gtk_widget_show (combo->priv->bottom_box);
+        }
+        else
+        {
+            gtk_widget_hide (combo->priv->bottom_box);
+        }
+    }
+
+    if (moo_combo_popup_shown (combo))
+        moo_combo_update_popup (combo);
 }
 
 

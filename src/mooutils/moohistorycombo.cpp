@@ -20,6 +20,7 @@
 #include "marshals.h"
 #include "mooutils/moohistorycombo.h"
 #include "mooutils/mooutils-misc.h"
+#include "mooutils/mooi18n.h"
 #include "mooutils/moocompat.h"
 
 
@@ -39,6 +40,8 @@ struct _MooHistoryComboPrivate {
 
     gboolean sort_history;
     gboolean sort_completion;
+
+    GtkWidget *clear_button;
 };
 
 
@@ -286,6 +289,13 @@ moo_history_combo_dispose (GObject *object)
         combo->priv->list = NULL;
     }
 
+    if (combo->priv->clear_button)
+    {
+        moo_combo_set_popup_bottom_widget (MOO_COMBO (combo), NULL);
+        g_object_unref (combo->priv->clear_button);
+        combo->priv->clear_button = NULL;
+    }
+
     G_OBJECT_CLASS (moo_history_combo_parent_class)->dispose (object);
 }
 
@@ -318,10 +328,50 @@ get_entry_text (MooHistoryCombo *combo)
 
 
 static void
+clear_history_clicked (MooHistoryCombo *combo)
+{
+    moo_combo_popdown (MOO_COMBO (combo));
+
+    if (combo->priv->list)
+        moo_history_list_clear (combo->priv->list);
+}
+
+
+static GtkWidget *
+get_clear_button (MooHistoryCombo *combo)
+{
+    if (!combo->priv->clear_button)
+    {
+        GtkWidget *button = gtk_button_new_with_label (_("Clear History"));
+
+        gtk_button_set_relief (GTK_BUTTON (button), GTK_RELIEF_NONE);
+        /* a label wider than the combo would widen the whole popup */
+        gtk_label_set_ellipsize (GTK_LABEL (gtk_bin_get_child (GTK_BIN (button))),
+                                 PANGO_ELLIPSIZE_END);
+        gtk_widget_show (button);
+
+        g_signal_connect_swapped (button, "clicked",
+                                  G_CALLBACK (clear_history_clicked), combo);
+
+        combo->priv->clear_button = GTK_WIDGET (g_object_ref_sink (button));
+    }
+
+    return combo->priv->clear_button;
+}
+
+
+static void
 moo_history_combo_popup (MooCombo *combo)
 {
     MooHistoryCombo *entry = MOO_HISTORY_COMBO (combo);
     gboolean do_sort = FALSE;
+    gboolean offer_clear;
+
+    /* the completion popup is a list of matches and nothing else; only the
+       drop-down shows the history as such, and only it can clear it */
+    offer_clear = !entry->priv->called_popup &&
+                  entry->priv->list != NULL &&
+                  moo_history_list_n_user_entries (entry->priv->list) > 0;
 
     if (!entry->priv->called_popup)
     {
@@ -356,6 +406,8 @@ moo_history_combo_popup (MooCombo *combo)
 
     gtk_tree_model_filter_refilter (GTK_TREE_MODEL_FILTER (entry->priv->filter));
     entry->priv->disable_filter = FALSE;
+
+    moo_combo_set_popup_bottom_widget (combo, offer_clear ? get_clear_button (entry) : NULL);
 
     MOO_COMBO_CLASS(moo_history_combo_parent_class)->popup (combo);
 }

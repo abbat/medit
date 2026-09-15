@@ -964,6 +964,13 @@ history_changed (MooHistoryList *list)
 
 
 static void
+count_notify (guint *counter)
+{
+    ++*counter;
+}
+
+
+static void
 test_history_list_memory (void)
 {
     MooHistoryList *list = moo_history_list_new (NULL);
@@ -1044,6 +1051,67 @@ test_history_list_memory (void)
         g_assert_cmpuint (moo_history_list_n_user_entries (many), ==, 1);
         g_object_unref (many);
     }
+
+    g_object_unref (list);
+}
+
+
+static void
+test_history_list_clear (void)
+{
+    MooHistoryList *list = moo_history_list_new (NULL);
+    GtkTreeIter iter;
+    guint notified = 0;
+
+    g_signal_connect (list, "changed", G_CALLBACK (history_changed), NULL);
+    g_signal_connect_swapped (list, "notify::empty",
+                              G_CALLBACK (count_notify), &notified);
+
+    /* nothing to forget, so nothing happens */
+    history_changed_count = 0;
+    moo_history_list_clear (list);
+    g_assert_cmpuint (history_changed_count, ==, 0);
+    g_assert_cmpuint (notified, ==, 0);
+
+    moo_history_list_add (list, "one");
+    moo_history_list_add (list, "two");
+    g_assert_cmpuint (moo_history_list_n_user_entries (list), ==, 2);
+
+    history_changed_count = 0;
+    notified = 0;
+    moo_history_list_clear (list);
+    g_assert_cmpuint (history_changed_count, ==, 1);
+    g_assert_cmpuint (notified, ==, 1);
+    g_assert_cmpuint (moo_history_list_n_user_entries (list), ==, 0);
+    g_assert_true (moo_history_list_is_empty (list));
+    g_assert_false (moo_history_list_find (list, "one", &iter));
+    g_assert_null (moo_history_list_get_last_item (list));
+    g_assert_false (gtk_tree_model_get_iter_first (moo_history_list_get_model (list), &iter));
+
+    /* and the list still works afterwards */
+    moo_history_list_add (list, "three");
+    g_assert_cmpuint (moo_history_list_n_user_entries (list), ==, 1);
+    g_assert_true (moo_history_list_find (list, "three", &iter));
+
+    g_object_unref (list);
+}
+
+
+/* The saved copy of the history goes with it: what is cleared must not come
+   back on the next run. */
+static void
+test_history_list_clear_prefs (void)
+{
+    MooHistoryList *list = moo_history_list_new ("unit/history/find");
+
+    moo_history_list_add (list, "one");
+    moo_history_list_add (list, "two");
+    g_assert_nonnull (moo_markup_get_element (moo_prefs_get_markup (MOO_PREFS_STATE),
+                                              "unit/history/find/recent-items"));
+
+    moo_history_list_clear (list);
+    g_assert_null (moo_markup_get_element (moo_prefs_get_markup (MOO_PREFS_STATE),
+                                           "unit/history/find/recent-items"));
 
     g_object_unref (list);
 }
@@ -1578,6 +1646,8 @@ _moo_add_mooutils_unit_tests (void)
     g_test_add_func ("/mooutils/path/boundaries", test_path_boundaries);
     g_test_add_func ("/mooutils/history-list/memory", test_history_list_memory);
     g_test_add_func ("/mooutils/history-list/limit-noop", test_history_list_limit_noop);
+    g_test_add_func ("/mooutils/history-list/clear", test_history_list_clear);
+    g_test_add_func ("/mooutils/history-list/clear-prefs", test_history_list_clear_prefs);
     g_test_add_func ("/mooutils/line-reader/edges", test_line_reader_edges);
     g_test_add_func ("/mooutils/strv/reverse", test_strv_reverse);
     g_test_add_func ("/mooutils/value-and-data/memory", test_value_and_data_memory);
