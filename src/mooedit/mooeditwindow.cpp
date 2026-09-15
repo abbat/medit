@@ -789,6 +789,57 @@ moo_edit_window_class_init (MooEditWindowClass *klass)
                                  "condition::sensitive", "has-open-document",
                                  nullptr);
 
+    moo_window_class_new_action (window_class, "DuplicateLine", nullptr,
+                                 "display-name", _("Duplicate Line"),
+                                 "label", _("_Duplicate Line"),
+                                 "tooltip", _("Duplicate the line or the selection"),
+                                 "default-accel", MOO_EDIT_ACCEL_DUPLICATE_LINE,
+                                 "closure-callback", moo_text_view_duplicate_line,
+                                 "closure-proxy-func", moo_edit_window_get_active_view,
+                                 "condition::sensitive", "has-open-document",
+                                 nullptr);
+
+    moo_window_class_new_action (window_class, "MoveLinesUp", nullptr,
+                                 "display-name", _("Move Lines Up"),
+                                 "label", _("Move Lines _Up"),
+                                 "tooltip", _("Move the selected lines up"),
+                                 "default-accel", MOO_EDIT_ACCEL_MOVE_LINES_UP,
+                                 "connect-accel", TRUE,
+                                 "closure-callback", moo_text_view_move_lines_up,
+                                 "closure-proxy-func", moo_edit_window_get_active_view,
+                                 "condition::sensitive", "has-open-document",
+                                 nullptr);
+
+    moo_window_class_new_action (window_class, "MoveLinesDown", nullptr,
+                                 "display-name", _("Move Lines Down"),
+                                 "label", _("Move Lines _Down"),
+                                 "tooltip", _("Move the selected lines down"),
+                                 "default-accel", MOO_EDIT_ACCEL_MOVE_LINES_DOWN,
+                                 "connect-accel", TRUE,
+                                 "closure-callback", moo_text_view_move_lines_down,
+                                 "closure-proxy-func", moo_edit_window_get_active_view,
+                                 "condition::sensitive", "has-open-document",
+                                 nullptr);
+
+    moo_window_class_new_action (window_class, "SortLines", nullptr,
+                                 "display-name", _("Sort Lines"),
+                                 "label", _("_Sort Lines"),
+                                 "tooltip", _("Sort the selected lines"),
+                                 "closure-callback", moo_text_view_sort_lines,
+                                 "closure-proxy-func", moo_edit_window_get_active_view,
+                                 "condition::sensitive", "has-open-document",
+                                 nullptr);
+
+    moo_window_class_new_action (window_class, "GoToMatchingBracket", nullptr,
+                                 "display-name", _("Go to Matching Bracket"),
+                                 "label", _("Go to _Matching Bracket"),
+                                 "tooltip", _("Go to the bracket matching the one at the cursor"),
+                                 "default-accel", MOO_EDIT_ACCEL_MATCHING_BRACKET,
+                                 "closure-callback", moo_text_view_goto_matching_bracket,
+                                 "closure-proxy-func", moo_edit_window_get_active_view,
+                                 "condition::sensitive", "has-open-document",
+                                 nullptr);
+
     moo_window_class_new_action (window_class, "NoDocuments", nullptr,
                                  /* Insensitive menu item which appears in Window menu with no documents open */
                                  "label", _("No Documents"),

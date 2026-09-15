@@ -58,6 +58,12 @@ gboolean    _moo_text_buffer_is_bracket_tag         (MooTextBuffer      *buffer,
 void        _moo_text_buffer_set_style_scheme       (MooTextBuffer      *buffer,
                                                      MooTextStyleScheme *scheme);
 
+void        _moo_text_buffer_duplicate_line         (MooTextBuffer      *buffer);
+void        _moo_text_buffer_move_lines             (MooTextBuffer      *buffer,
+                                                     int                 delta);
+void        _moo_text_buffer_sort_lines             (MooTextBuffer      *buffer);
+void        _moo_text_buffer_goto_matching_bracket  (MooTextBuffer      *buffer);
+
 
 G_END_DECLS
 

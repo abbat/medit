@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: moo\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-06 09:58-0800\n"
+"Report-Msgid-Bugs-To: https://github.com/abbat/medit/issues\n"
+"POT-Creation-Date: 2026-09-16 00:49+0300\n"
 "PO-Revision-Date: 2007-11-10 22:45+0100\n"
 "Last-Translator: Vlastimil Ott <vlastimil@e-ott.info>\n"
 "Language-Team:  <cs@li.org>\n"
@@ -18,168 +18,136 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 "X-Generator: KBabel 1.11.4\n"
 
-#. error message for wrong commmand line
-#: ../src/medit-app/main.c:110
+#. error message for wrong command line
+#: src/medit-app/main.cpp:157
 #, c-format
 msgid "Invalid value '%s' for option %s"
 msgstr ""
 
-#. help message for command line option --new-app
-#: ../src/medit-app/main.c:117
-msgid "Run new instance of application"
-msgstr ""
-
-#. help message for command line option --use-session
-#: ../src/medit-app/main.c:119
-msgid "Load and save session"
-msgstr ""
-
-#. help message for command line option --pid=PID
-#: ../src/medit-app/main.c:121
-msgid "Use existing instance with process id PID"
-msgstr ""
-
-#. "PID" part in "--pid=PID"
-#: ../src/medit-app/main.c:122
-msgid "PID"
-msgstr ""
-
-#. help message for command line option --app-name=NAME
-#: ../src/medit-app/main.c:124
-msgid "Set instance name to NAME if it's not already running"
-msgstr ""
-
-#. "NAME" part in "--app-name=NAME"
-#: ../src/medit-app/main.c:125
-msgid "NAME"
-msgstr ""
-
-#. help message for command line option --new-window
-#: ../src/medit-app/main.c:127
-msgid "Open file(s) in a new window"
-msgstr ""
-
-#. help message for command line option --new-tab
-#: ../src/medit-app/main.c:129
-msgid "Open file(s) in a new tab"
-msgstr ""
-
-#. help message for command line option --line=LINE
-#: ../src/medit-app/main.c:135
-msgid "Open file and position cursor on line LINE"
-msgstr ""
-
-#. "LINE" part in --line=LINE
-#: ../src/medit-app/main.c:136
-msgid "LINE"
-msgstr ""
-
-#. help message for command line option --encoding=ENCODING
-#: ../src/medit-app/main.c:138
-msgid "Use character encoding ENCODING"
-msgstr ""
-
-#. "ENCODING" part in --encoding=ENCODING
-#: ../src/medit-app/main.c:139
-msgid "ENCODING"
-msgstr ""
-
-#. help message for command line option --reload
-#: ../src/medit-app/main.c:141
-msgid "Automatically reload file if it was modified on disk"
-msgstr ""
-
-#. help message for command line option --geometry=WIDTHxHEIGHT[+X+Y]
-#: ../src/medit-app/main.c:153
-msgid "Default window size and position"
-msgstr ""
-
-#. "WIDTHxHEIGHT[+X+Y]" part in --geometry=WIDTHxHEIGHT[+X+Y]
-#: ../src/medit-app/main.c:154
-msgid "WIDTHxHEIGHT[+X+Y]"
-msgstr ""
-
-#. help message for command line option --version
-#: ../src/medit-app/main.c:156
-msgid "Show version information and exit"
-msgstr ""
-
-#. "FILES" part in "medit [OPTION...] [FILES]"
-#: ../src/medit-app/main.c:172
-msgid "FILES"
-msgstr ""
-
 #. error message for wrong commmand line
-#: ../src/medit-app/main.c:254
+#: src/medit-app/main.cpp:283
 #, c-format
 msgid "%s and %s options may not be used simultaneously\n"
 msgstr ""
 
-#: ../src/medit-app/medit.desktop.in.h:1
+#: src/medit-app/main.cpp:315
+msgid "Run new instance of application"
+msgstr ""
+
+#: src/medit-app/main.cpp:316
+msgid "Load and save session"
+msgstr ""
+
+#: src/medit-app/main.cpp:317
+msgid "Use existing instance with process id PID"
+msgstr ""
+
+#: src/medit-app/main.cpp:317
+msgid "PID"
+msgstr ""
+
+#: src/medit-app/main.cpp:318
+msgid "Set instance name to NAME if it's not already running"
+msgstr ""
+
+#: src/medit-app/main.cpp:318
+msgid "NAME"
+msgstr ""
+
+#: src/medit-app/main.cpp:319
+msgid "Open file(s) in a new window"
+msgstr ""
+
+#: src/medit-app/main.cpp:320
+msgid "Open file(s) in a new tab"
+msgstr ""
+
+#: src/medit-app/main.cpp:321
+msgid "Open file and position cursor on line LINE"
+msgstr ""
+
+#: src/medit-app/main.cpp:321
+msgid "LINE"
+msgstr ""
+
+#: src/medit-app/main.cpp:322
+msgid "Use character encoding ENCODING"
+msgstr ""
+
+#: src/medit-app/main.cpp:322
+msgid "ENCODING"
+msgstr ""
+
+#: src/medit-app/main.cpp:323
+msgid "Automatically reload file if it was modified on disk"
+msgstr ""
+
+#: src/medit-app/main.cpp:327
+msgid "Default window size and position"
+msgstr ""
+
+#: src/medit-app/main.cpp:327
+msgid "WIDTHxHEIGHT[+X+Y]"
+msgstr ""
+
+#: src/medit-app/main.cpp:328
+msgid "Show version information and exit"
+msgstr ""
+
+#: src/medit-app/main.cpp:333
+msgid "FILES"
+msgstr ""
+
+#: src/medit-app/medit.desktop.in.h:1
 msgid "Text editor"
 msgstr "Textový editor"
 
-#. Label of the link to the old upstream website in the About dialog
-#: ../src/mooapp/about.c:174
+#: src/medit-app/medit.desktop.in.h:2
+#, fuzzy
+msgid "editor;texteditor;text"
+msgstr "medit je textový editor"
+
+#: src/mooapp/about.cpp:174
 msgid "old site"
 msgstr ""
 
-#. Credits button label in About dialog
-#: ../src/mooapp/about.c:220
+#: src/mooapp/about.cpp:220
 msgid "C_redits"
 msgstr ""
 
-#. License button label in About dialog
-#: ../src/mooapp/about.c:280
+#: src/mooapp/about.cpp:280
 msgid "_License"
 msgstr ""
 
-#. Close button label in the About and Credits dialogs
-#: ../src/mooapp/about.c:312 ../src/mooapp/credits.c:178
+#: src/mooapp/about.cpp:312 src/mooapp/credits.cpp:178
 msgid "_Close"
 msgstr ""
 
-#. Title of the About dialog
-#: ../src/mooapp/about.c:369
+#: src/mooapp/about.cpp:369
 msgid "About"
 msgstr ""
 
-#: ../src/mooapp/mooapp-info.h:21
+#: src/mooapp/mooapp-info.h:21
 msgid "medit is a text editor"
 msgstr "medit je textový editor"
 
-#. Tab label in Credits dialog
-#: ../src/mooapp/credits.c:140
+#: src/mooapp/credits.cpp:140
 msgid "Thanks"
 msgstr "Díky"
 
-#. Tab label in Credits dialog
-#: ../src/mooapp/credits.c:143
+#: src/mooapp/credits.cpp:143
 msgid "Written by"
 msgstr "Napsal"
 
-#. Tab label in Credits dialog
-#: ../src/mooapp/credits.c:146
+#: src/mooapp/credits.cpp:146
 msgid "Translated by"
 msgstr "Přeložili"
 
-#. Title of the Credits dialog
-#: ../src/mooapp/credits.c:233
+#: src/mooapp/credits.cpp:233
 msgid "Credits"
 msgstr ""
 
-#. Translators: this goes into About box, under Translated by tab,
-#. do not ignore it, markup isn't always used. It should be something
-#. like "Some Guy <someguy@domain.net>", with lines separated by \n
-#: ../src/mooapp/credits.c:117
-msgid "translator-credits"
-msgstr "Vlastimil Ott <vlastimil@e-ott.info>"
-
-#: ../src/mooapp/mooapp.c:993
-msgid "Report a Bug..."
-msgstr ""
-
-#: ../src/mooapp/mooapp.c:1356
+#: src/mooapp/mooapp.cpp:178
 #, c-format
 msgid ""
 "The following URL will be opened:\n"
@@ -187,24 +155,32 @@ msgid ""
 "%s"
 msgstr ""
 
-#: ../src/mooapp/mooapp.c:1363
+#: src/mooapp/mooapp.cpp:183
 msgid "Open URL?"
 msgstr ""
 
 #. Prefs dialog title
-#: ../src/mooapp/mooapp.c:1401
+#: src/mooapp/mooapp.cpp:232
 msgid "Preferences"
 msgstr ""
 
-#: ../src/mooedit/glade/mooeditprefs-file.glade.h:1
+#: src/mooapp/mooapp.cpp:293
+msgid "Report a Bug..."
+msgstr ""
+
+#: src/mooapp/mooapp.cpp:1130
+msgid "Checking for unsaved documents"
+msgstr ""
+
+#: src/mooedit/ui/mooeditprefs-file.ui:19
 msgid "<b>Loading</b>"
 msgstr "<b>Načítání</b>"
 
-#: ../src/mooedit/glade/mooeditprefs-file.glade.h:2
+#: src/mooedit/ui/mooeditprefs-file.ui:44
 msgid "Encodings to _autodetect"
 msgstr ""
 
-#: ../src/mooedit/glade/mooeditprefs-file.glade.h:3
+#: src/mooedit/ui/mooeditprefs-file.ui:57
 msgid ""
 "Comma-separated list of encodings to try when opening a file. 'LOCALE' means "
 "current locale encoding."
@@ -212,382 +188,387 @@ msgstr ""
 "Čárkami oddělený seznam kódování pro otevírání souboru. 'LOCALE' znamená "
 "nastavení v systému."
 
-#: ../src/mooedit/glade/mooeditprefs-file.glade.h:4
+#: src/mooedit/ui/mooeditprefs-file.ui:92
 msgid "<b>Saving</b>"
 msgstr "<b>Ukládání</b>"
 
-#: ../src/mooedit/glade/mooeditprefs-file.glade.h:5
+#: src/mooedit/ui/mooeditprefs-file.ui:117
 msgid "Encoding for _new files"
 msgstr ""
 
-#: ../src/mooedit/glade/mooeditprefs-file.glade.h:6
+#: src/mooedit/ui/mooeditprefs-file.ui:145
 msgid "Remove trailing _spaces"
 msgstr ""
 
-#: ../src/mooedit/glade/mooeditprefs-file.glade.h:7
+#: src/mooedit/ui/mooeditprefs-file.ui:161
 msgid "Ensure trailing new_line"
 msgstr ""
 
-#: ../src/mooedit/glade/mooeditprefs-file.glade.h:8
+#: src/mooedit/ui/mooeditprefs-file.ui:177
 msgid "Make _backups"
 msgstr ""
 
-#: ../src/mooedit/glade/mooeditprefs-file.glade.h:9
+#: src/mooedit/ui/mooeditprefs-file.ui:215
 msgid "<b>Sessions</b>"
 msgstr "<b>Sezení</b>"
 
-#: ../src/mooedit/glade/mooeditprefs-file.glade.h:10
+#: src/mooedit/ui/mooeditprefs-file.ui:234
 msgid "Enable _session support"
 msgstr ""
 
-#: ../src/mooedit/glade/mooeditprefs-file.glade.h:11
+#: src/mooedit/ui/mooeditprefs-file.ui:272
 msgid "<b>Dialogs</b>"
 msgstr "<b>Dialogy</b>"
 
-#: ../src/mooedit/glade/mooeditprefs-file.glade.h:12
+#: src/mooedit/ui/mooeditprefs-file.ui:291
 msgid "Open and Save As dialogs show current document _folder"
 msgstr ""
 
-#: ../src/mooedit/glade/mooeditprefs-filters.glade.h:1
+#: src/mooedit/ui/mooeditprefs-file.ui:329
+#, fuzzy
+msgid "<b>Autosync</b>"
+msgstr "<b>Author:</b>"
+
+#: src/mooedit/ui/mooeditprefs-file.ui:348
+msgid "Automatically sync files with disk"
+msgstr ""
+
+#: src/mooedit/ui/mooeditprefs-filters.ui:19
 msgid "<b>File filters</b>"
 msgstr "<b>Filtry souborů</b>"
 
-#: ../src/mooedit/glade/mooeditprefs-general.glade.h:1
+#: src/mooedit/ui/mooeditprefs-general.ui:35
 msgid "<b>Keyboard</b>"
 msgstr "<b>Klávesnice</b>"
 
-#: ../src/mooedit/glade/mooeditprefs-general.glade.h:2
+#: src/mooedit/ui/mooeditprefs-general.ui:54
 msgid "Smart Home and End"
 msgstr "Chytré Home a End"
 
-#: ../src/mooedit/glade/mooeditprefs-general.glade.h:3
+#: src/mooedit/ui/mooeditprefs-general.ui:77
 msgid "Enable auto indentation"
 msgstr "Povolit automatické odsazování"
 
-#: ../src/mooedit/glade/mooeditprefs-general.glade.h:4
+#: src/mooedit/ui/mooeditprefs-general.ui:89
 msgid "Do not use tabs for indentation"
 msgstr ""
 
-#: ../src/mooedit/glade/mooeditprefs-general.glade.h:5
+#: src/mooedit/ui/mooeditprefs-general.ui:112
 msgid "Backspace key unindents"
 msgstr ""
 
-#: ../src/mooedit/glade/mooeditprefs-general.glade.h:6
+#: src/mooedit/ui/mooeditprefs-general.ui:129
 msgid "Tab key indents"
 msgstr ""
 
-#: ../src/mooedit/glade/mooeditprefs-general.glade.h:7
+#: src/mooedit/ui/mooeditprefs-general.ui:163
 msgid "Indent width"
 msgstr "Šířka odsazení"
 
-#: ../src/mooedit/glade/mooeditprefs-general.glade.h:8
+#: src/mooedit/ui/mooeditprefs-general.ui:190
 msgid "Tab width"
 msgstr ""
 
-#: ../src/mooedit/glade/mooeditprefs-general.glade.h:9
+#: src/mooedit/ui/mooeditprefs-general.ui:226
 msgid "<b>Font and colors</b>"
 msgstr "<b>Písmo a barvy</b>"
 
-#: ../src/mooedit/glade/mooeditprefs-general.glade.h:10
+#: src/mooedit/ui/mooeditprefs-general.ui:254
 msgid "Font"
 msgstr "Písmo"
 
-#: ../src/mooedit/glade/mooeditprefs-general.glade.h:11
+#: src/mooedit/ui/mooeditprefs-general.ui:278
 msgid "Color scheme"
 msgstr "Barevné schéma"
 
-#: ../src/mooedit/glade/mooeditprefs-langs.glade.h:1
+#: src/mooedit/ui/mooeditprefs-langs.ui:19
 msgid "<b>Language-specific options</b>"
 msgstr "<b>Nastavení jazyků</b>"
 
-#: ../src/mooedit/glade/mooeditprefs-langs.glade.h:2
-#: ../src/mooedit/glade/mootextfind.glade.h:13
+#: src/mooedit/ui/mooeditprefs-langs.ui:61 src/mooedit/ui/mootextfind.ui:288
 msgid "Options"
 msgstr "Volby"
 
-#: ../src/mooedit/glade/mooeditprefs-langs.glade.h:3
-#: ../src/plugins/glade/moofileselector-prefs.glade.h:3
+#: src/mooedit/ui/mooeditprefs-langs.ui:74
+#: src/plugins/ui/moofileselector-prefs.ui:69
 msgid "Mime types"
 msgstr "MIME typy"
 
-#: ../src/mooedit/glade/mooeditprefs-langs.glade.h:4
-#: ../src/plugins/glade/moofileselector-prefs.glade.h:5
+#: src/mooedit/ui/mooeditprefs-langs.ui:87
+#: src/plugins/ui/moofileselector-prefs.ui:88
 msgid "Extensions"
 msgstr "Přípony"
 
-#: ../src/mooedit/glade/mooeditprefs-langs.glade.h:5
+#: src/mooedit/ui/mooeditprefs-langs.ui:126
 msgid "Language"
 msgstr "Jazyk"
 
-#: ../src/mooedit/glade/mooeditprefs-view.glade.h:1
+#: src/mooedit/ui/mooeditprefs-view.ui:27
 msgid "<b>Text wrapping</b>"
 msgstr "<b>Zalamování textu</b>"
 
-#: ../src/mooedit/glade/mooeditprefs-view.glade.h:2
+#: src/mooedit/ui/mooeditprefs-view.ui:46
 msgid "Enable text wrapping"
 msgstr "Povolit zalamování textu"
 
-#: ../src/mooedit/glade/mooeditprefs-view.glade.h:3
+#: src/mooedit/ui/mooeditprefs-view.ui:61
 msgid "Do not split words"
 msgstr "Nerozdělovat slova"
 
-#: ../src/mooedit/glade/mooeditprefs-view.glade.h:4
+#: src/mooedit/ui/mooeditprefs-view.ui:98
 msgid "<b>Highlighting</b>"
 msgstr "<b>Zvýrazňování</b>"
 
-#: ../src/mooedit/glade/mooeditprefs-view.glade.h:5
+#: src/mooedit/ui/mooeditprefs-view.ui:117
 msgid "Enable syntax highlighting"
 msgstr "Povolit zvýrazňování syntaxe"
 
-#: ../src/mooedit/glade/mooeditprefs-view.glade.h:6
+#: src/mooedit/ui/mooeditprefs-view.ui:132
 msgid "Highlight matching brackets"
 msgstr "Zvýrazňovat párové závorky"
 
-#: ../src/mooedit/glade/mooeditprefs-view.glade.h:7
+#: src/mooedit/ui/mooeditprefs-view.ui:147
 msgid "Highlight mismatching brackets"
 msgstr "Zvýrazňovat chybné závorky"
 
-#: ../src/mooedit/glade/mooeditprefs-view.glade.h:8
+#: src/mooedit/ui/mooeditprefs-view.ui:162
 msgid "Highlight current line"
 msgstr "Zvýrazňovat aktuální řádek"
 
-#: ../src/mooedit/glade/mooeditprefs-view.glade.h:9
+#: src/mooedit/ui/mooeditprefs-view.ui:199
 msgid "<b>Misc</b>"
 msgstr "<b>Různé</b>"
 
-#: ../src/mooedit/glade/mooeditprefs-view.glade.h:10
+#: src/mooedit/ui/mooeditprefs-view.ui:218
 msgid "Show line numbers"
 msgstr "Zobrazit čísla řádek"
 
-#: ../src/mooedit/glade/mooeditprefs-view.glade.h:11
+#: src/mooedit/ui/mooeditprefs-view.ui:233
 msgid "Show tabs"
 msgstr "Zobrazit tabelátory"
 
-#: ../src/mooedit/glade/mooeditprefs-view.glade.h:12
+#: src/mooedit/ui/mooeditprefs-view.ui:248
 msgid "Show spaces"
 msgstr ""
 
-#: ../src/mooedit/glade/mooeditprefs-view.glade.h:13
+#: src/mooedit/ui/mooeditprefs-view.ui:263
 msgid "Show trailing spaces"
 msgstr "Zobrazit mezery na koncích řádků"
 
 #. Part of the phrase "Draw right margin at column [XX]"
-#: ../src/mooedit/glade/mooeditprefs-view.glade.h:15
+#: src/mooedit/ui/mooeditprefs-view.ui:281
 msgid "Draw right margin"
 msgstr "Zobrazit pravý okraj"
 
 #. Part of the phrase "Draw right margin at column [XX]"
-#: ../src/mooedit/glade/mooeditprefs-view.glade.h:17
+#: src/mooedit/ui/mooeditprefs-view.ui:300
 msgid "at column"
 msgstr "na řádku"
 
-#: ../src/mooedit/glade/mooeditsavemult.glade.h:1
+#: src/mooedit/ui/mooeditsavemult.ui:55
 msgid "Select the documents you want to save:"
 msgstr "Vyberte dokumenty, které chcete uložit:"
 
-#: ../src/mooedit/glade/moopluginprefs.glade.h:1
+#: src/mooedit/ui/moopluginprefs.ui:16
 msgid "<b>Plugins</b>"
 msgstr ""
 
-#: ../src/mooedit/glade/moopluginprefs.glade.h:2
+#: src/mooedit/ui/moopluginprefs.ui:61
 msgid "<b>Version:</b>"
 msgstr "<b>Verze:</b>"
 
-#: ../src/mooedit/glade/moopluginprefs.glade.h:3
+#: src/mooedit/ui/moopluginprefs.ui:74
 msgid "<b>Author:</b>"
 msgstr "<b>Author:</b>"
 
-#: ../src/mooedit/glade/moopluginprefs.glade.h:4
+#: src/mooedit/ui/moopluginprefs.ui:89
 msgid "<b>Description:</b>"
 msgstr "<b>Popis:</b>"
 
-#: ../src/mooedit/glade/mooprint.glade.h:1
+#: src/mooedit/ui/mooprint.ui:31
 msgid "Print using text styles"
 msgstr "Tisknout pomocí textových stylů"
 
-#: ../src/mooedit/glade/mooprint.glade.h:2
+#: src/mooedit/ui/mooprint.ui:47
 msgid "Use custom font"
 msgstr "Použít zvolené písmo"
 
-#: ../src/mooedit/glade/mooprint.glade.h:3
+#: src/mooedit/ui/mooprint.ui:76
 msgid "Wrap long lines"
 msgstr "Zalamovat dlouhé řádky"
 
-#: ../src/mooedit/glade/mooprint.glade.h:4
+#: src/mooedit/ui/mooprint.ui:89
 msgid "Ellipsize long lines"
 msgstr "Vypustit znaky v dlouhých řádcích"
 
 #. Part of the phrase "Print line numbers" "every" "1" "lines"
-#: ../src/mooedit/glade/mooprint.glade.h:6
+#: src/mooedit/ui/mooprint.ui:105
 msgid "Print line numbers"
 msgstr "Tisknout čísla řádek"
 
 #. Part of the phrase "Print line numbers" "every" "1" "lines"
-#: ../src/mooedit/glade/mooprint.glade.h:8
+#: src/mooedit/ui/mooprint.ui:120
 msgid "every"
 msgstr "každé"
 
 #. Part of the phrase "Print line numbers" "every" "1" "lines"
-#: ../src/mooedit/glade/mooprint.glade.h:10
+#: src/mooedit/ui/mooprint.ui:139
 msgid "lines"
 msgstr "řádky"
 
-#: ../src/mooedit/glade/mooprint.glade.h:11
+#: src/mooedit/ui/mooprint.ui:179
 msgid "Print header"
 msgstr "Tisknout hlavičku"
 
-#: ../src/mooedit/glade/mooprint.glade.h:12
+#: src/mooedit/ui/mooprint.ui:198 src/mooedit/ui/mooprint.ui:359
 msgid "Print separator line"
 msgstr "Tisknout oddělovací linku"
 
-#: ../src/mooedit/glade/mooprint.glade.h:13
+#: src/mooedit/ui/mooprint.ui:267 src/mooedit/ui/mooprint.ui:428
 msgid "Right"
 msgstr "Vpravo"
 
-#: ../src/mooedit/glade/mooprint.glade.h:14
+#: src/mooedit/ui/mooprint.ui:280 src/mooedit/ui/mooprint.ui:441
 msgid "Center"
 msgstr "Střed"
 
-#: ../src/mooedit/glade/mooprint.glade.h:15
+#: src/mooedit/ui/mooprint.ui:293 src/mooedit/ui/mooprint.ui:454
 msgid "Left"
 msgstr "Vlevo"
 
-#: ../src/mooedit/glade/mooprint.glade.h:16
+#: src/mooedit/ui/mooprint.ui:320
 msgid "Header"
 msgstr "Hlavička"
 
-#: ../src/mooedit/glade/mooprint.glade.h:17
+#: src/mooedit/ui/mooprint.ui:340
 msgid "Print footer"
 msgstr "Tisknout patičku"
 
-#: ../src/mooedit/glade/mooprint.glade.h:18
+#: src/mooedit/ui/mooprint.ui:481
 msgid "Footer"
 msgstr "Patička"
 
-#: ../src/mooedit/glade/mooquicksearch.glade.h:1
+#: src/mooedit/ui/mooquicksearch.ui:43
 msgid "_Case sensitive"
 msgstr "Rozlišovat veli_kost znaků"
 
-#: ../src/mooedit/glade/mooquicksearch.glade.h:2
+#: src/mooedit/ui/mooquicksearch.ui:57
 msgid "_Regular expression"
 msgstr "_Regulární výraz"
 
-#: ../src/mooedit/glade/mootextfind.glade.h:1
+#: src/mooedit/ui/mootextfind.ui:37
 msgid "_Text to find"
 msgstr ""
 
-#: ../src/mooedit/glade/mootextfind.glade.h:2
+#: src/mooedit/ui/mootextfind.ui:62
 msgid "Regular e_xpression"
 msgstr ""
 
-#: ../src/mooedit/glade/mootextfind.glade.h:3 ../src/plugins/moofind.c:1116
+#: src/mooedit/ui/mootextfind.ui:86 src/plugins/moofind.cpp:1053
 msgid "Find"
 msgstr "Najít"
 
-#: ../src/mooedit/glade/mootextfind.glade.h:4
+#: src/mooedit/ui/mootextfind.ui:115
 msgid "_Replacement text"
 msgstr ""
 
-#: ../src/mooedit/glade/mootextfind.glade.h:5
+#: src/mooedit/ui/mootextfind.ui:140
 msgid "_Literal replacement"
 msgstr ""
 
-#: ../src/mooedit/glade/mootextfind.glade.h:6
+#: src/mooedit/ui/mootextfind.ui:164
 msgid "Replace With"
 msgstr "Nahradit čím"
 
-#: ../src/mooedit/glade/mootextfind.glade.h:7
+#: src/mooedit/ui/mootextfind.ui:193
 msgid "Don't _prompt on replace"
 msgstr ""
 
-#: ../src/mooedit/glade/mootextfind.glade.h:8
+#: src/mooedit/ui/mootextfind.ui:210
 msgid "Find _backwards"
 msgstr ""
 
-#: ../src/mooedit/glade/mootextfind.glade.h:9
-#: ../src/plugins/glade/moogrep.glade.h:5
+#: src/mooedit/ui/mootextfind.ui:224 src/plugins/ui/moogrep.ui:182
 msgid "Case _sensitive"
 msgstr "_Rozlišovat velikost znaků"
 
-#: ../src/mooedit/glade/mootextfind.glade.h:10
+#: src/mooedit/ui/mootextfind.ui:236
 msgid "S_elected text"
 msgstr ""
 
-#: ../src/mooedit/glade/mootextfind.glade.h:11
+#: src/mooedit/ui/mootextfind.ui:253
 msgid "From c_ursor"
 msgstr ""
 
-#: ../src/mooedit/glade/mootextfind.glade.h:12
+#: src/mooedit/ui/mootextfind.ui:268
 msgid "_Whole words only"
 msgstr ""
 
-#: ../src/mooedit/glade/mootextfind-prompt.glade.h:1
+#: src/mooedit/ui/mootextfind-prompt.ui:4
+#: src/mooedit/ui/mootextfind-prompt.ui:12
 msgid "Replace?"
 msgstr "Nahradit?"
 
-#: ../src/mooedit/glade/mootextfind-prompt.glade.h:2
+#: src/mooedit/ui/mootextfind-prompt.ui:29
 msgid "_Replace"
 msgstr "_Nahradit"
 
-#: ../src/mooedit/glade/mootextfind-prompt.glade.h:3
+#: src/mooedit/ui/mootextfind-prompt.ui:38
 msgid "Replace _All"
 msgstr "Nahradit vše"
 
-#: ../src/mooedit/glade/mootextfind-prompt.glade.h:4
-#: ../src/mooedit/mooeditwindow.c:551
+#: src/mooedit/ui/mootextfind-prompt.ui:50 src/mooedit/mooeditwindow.cpp:567
 msgid "Find _Next"
 msgstr "Najít další"
 
-#: ../src/mooedit/glade/mootextfind-prompt.glade.h:5
+#: src/mooedit/ui/mootextfind-prompt.ui:62
 msgid "Sto_p"
 msgstr "Sto_p"
 
-#: ../src/mooedit/glade/mootextgotoline.glade.h:1
-#: ../src/mooedit/mooeditwindow.c:601
+#: src/mooedit/ui/mootextgotoline.ui:20 src/mooedit/mooeditwindow.cpp:617
 msgid "Go to Line"
 msgstr "Přejít na řádek"
 
-#: ../src/mooedit/glade/mootextgotoline.glade.h:2
+#: src/mooedit/ui/mootextgotoline.ui:37
 msgid "Go to line"
 msgstr "Přejít na řádek"
 
 #. menu item label
-#: ../src/mooedit/medit.xml.h:2
+#: src/mooedit/medit.xml.h:2
 msgid "_File"
 msgstr "_Soubor"
 
 #. menu item label
-#: ../src/mooedit/medit.xml.h:4
+#: src/mooedit/medit.xml.h:4
 msgid "_Search"
 msgstr "_Hledat"
 
 #. menu item label
-#: ../src/mooedit/medit.xml.h:6
+#: src/mooedit/medit.xml.h:6
 msgid "_View"
 msgstr "_Zobrazit"
 
-#. menu item label
-#: ../src/mooedit/medit.xml.h:8
+#: src/mooedit/medit.xml.h:7
 msgid "Pa_nes"
 msgstr ""
 
 #. menu item label
-#: ../src/mooedit/medit.xml.h:10
+#: src/mooedit/medit.xml.h:9
 msgid "_Document"
 msgstr "_Dokument"
 
-#: ../src/mooedit/medit.xml.h:11
+#: src/mooedit/medit.xml.h:10
 msgid "_Tools"
 msgstr "_Nástroje"
 
 #. menu item label
-#: ../src/mooedit/medit.xml.h:13
+#: src/mooedit/medit.xml.h:12
 msgid "_Window"
 msgstr "_Okna"
 
 #. Translators: number of documents here is always greater than one, so
 #. ignore singular form (which is simply copy of the plural here)
-#: ../src/mooedit/mooeditdialogs.c:373
+#: src/mooedit/mooeditdialogs.cpp:372
 #, c-format
 msgid ""
 "There are %u documents with unsaved changes. Save changes before closing?"
@@ -597,7 +578,7 @@ msgstr[0] "%u neuložené dokumenty. Uložit změny před jejich uzavřením?"
 msgstr[1] "%u neuložených dokumentů. Uložit změny před jejich uzavřením?"
 msgstr[2] "%u neuložených dokumentů. Uložit změny před jejich uzavřením?"
 
-#: ../src/mooedit/mooeditdialogs.c:428
+#: src/mooedit/mooeditdialogs.cpp:428
 #, c-format
 msgid ""
 "Could not save file\n"
@@ -606,19 +587,19 @@ msgstr ""
 "Soubor nelze uložit\n"
 "%s"
 
-#: ../src/mooedit/mooeditdialogs.c:490
+#: src/mooedit/mooeditdialogs.cpp:490
 #, c-format
 msgid ""
 "Could not save file %s in encoding %s. Do you want to save it in UTF-8 "
 "encoding instead?"
 msgstr ""
 
-#: ../src/mooedit/mooeditdialogs.c:494
+#: src/mooedit/mooeditdialogs.cpp:494
 msgid "Save file in UTF-8 encoding?"
 msgstr ""
 
 #. Could not open file foo.txt
-#: ../src/mooedit/mooeditdialogs.c:521 ../src/mooedit/mooeditdialogs.c:588
+#: src/mooedit/mooeditdialogs.cpp:523 src/mooedit/mooeditdialogs.cpp:590
 #, c-format
 msgid ""
 "Could not open file\n"
@@ -627,25 +608,24 @@ msgstr ""
 "Nelze otevřít soubor\n"
 "%s"
 
-#: ../src/mooedit/mooeditdialogs.c:527 ../src/mooedit/mooeditdialogs.c:590
+#: src/mooedit/mooeditdialogs.cpp:530 src/mooedit/mooeditdialogs.cpp:592
 msgid "Could not open file"
 msgstr "Soubor nelze otevřít"
 
-#: ../src/mooedit/mooeditdialogs.c:532
+#: src/mooedit/mooeditdialogs.cpp:535
 #, c-format
 msgid ""
 "Could not open file using character encoding %s. Try to select another "
 "encoding below."
 msgstr ""
 
-#: ../src/mooedit/mooeditdialogs.c:535
-#, c-format
+#: src/mooedit/mooeditdialogs.cpp:538
 msgid ""
 "Could not detect file character encoding. Try to select an encoding below."
 msgstr ""
 
 #. Could not reload file foo.txt
-#: ../src/mooedit/mooeditdialogs.c:620
+#: src/mooedit/mooeditdialogs.cpp:622
 #, c-format
 msgid ""
 "Could not reload file\n"
@@ -654,25 +634,25 @@ msgstr ""
 "Nelze znovu načíst soubor\n"
 "%s"
 
-#: ../src/mooedit/mooeditdialogs.c:648
+#: src/mooedit/mooeditdialogs.cpp:650
 #, c-format
 msgid "Discard changes in file '%s'?"
 msgstr "Zahodit změny v souboru '%s'?"
 
-#: ../src/mooedit/mooeditdialogs.c:650
+#: src/mooedit/mooeditdialogs.cpp:652
 msgid "If you reload the document, changes will be discarded"
 msgstr "Pokud dokument znovu načtete, přijdete o všechny změny"
 
-#: ../src/mooedit/mooeditdialogs.c:651 ../src/mooedit/mooeditwindow.c:441
+#: src/mooedit/mooeditdialogs.cpp:653 src/mooedit/mooeditwindow.cpp:457
 msgid "_Reload"
 msgstr "Z_novu načíst"
 
-#: ../src/mooedit/mooeditdialogs.c:673
+#: src/mooedit/mooeditdialogs.cpp:675
 #, c-format
 msgid "Overwrite modified file '%s'?"
 msgstr "Přepsat změněný soubor '%s'?"
 
-#: ../src/mooedit/mooeditdialogs.c:674
+#: src/mooedit/mooeditdialogs.cpp:676
 #, c-format
 msgid ""
 "File '%s' was modified on disk by another process. If you save it, changes "
@@ -681,11 +661,11 @@ msgstr ""
 "Soubor '%s' byl na disku změněn jiným programem. Pokud jej uložíte, změny na "
 "disku se přepíší."
 
-#: ../src/mooedit/mooeditdialogs.c:676
+#: src/mooedit/mooeditdialogs.cpp:678
 msgid "Over_write"
 msgstr "Přep_sat"
 
-#: ../src/mooedit/mooeditdialogs.c:697
+#: src/mooedit/mooeditdialogs.cpp:699
 msgid ""
 "Beginning of document reached.\n"
 "Continue from the end?"
@@ -693,7 +673,7 @@ msgstr ""
 "Dosaženo začátku dokumentu.\n"
 "Pokračovat od jeho konce?"
 
-#: ../src/mooedit/mooeditdialogs.c:700
+#: src/mooedit/mooeditdialogs.cpp:702
 msgid ""
 "End of document reached.\n"
 "Continue from the beginning?"
@@ -701,46 +681,46 @@ msgstr ""
 "Dosaženo konce dokumentu.\n"
 "Pokračovat od jeho začátku?"
 
-#: ../src/mooedit/mooeditdialogs.c:740
-#, c-format
+#: src/mooedit/mooeditdialogs.cpp:742
 msgid "Invalid regular expression"
 msgstr ""
 
-#: ../src/mooedit/mooedit-fileops.c:1111 ../src/plugins/moofileselector.c:511
+#: src/mooedit/mooedit-fileops.cpp:1107 src/plugins/moofileselector.cpp:512
 msgid "Untitled"
 msgstr "Nepojmenovaný"
 
-#: ../src/mooedit/mooedit-fileops.c:1113
+#: src/mooedit/mooedit-fileops.cpp:1109
 #, c-format
 msgid "Untitled %d"
 msgstr "Nepojmenovaný %d"
 
-#: ../src/mooedit/mooeditor.c:330
+#: src/mooedit/mooeditor.cpp:323
 msgid "Open Recent Files Dialog"
 msgstr ""
 
 #. Translators: remove the part before and including |
-#: ../src/mooedit/mooeditor.c:332
+#: src/mooedit/mooeditor.cpp:325
 msgid "Open Recent|_More..."
 msgstr ""
 
-#: ../src/mooedit/mooeditor.c:598
+#: src/mooedit/mooeditor.cpp:597
 msgid "Open new editor window"
 msgstr "Otevřít nové okno editoru"
 
-#: ../src/mooedit/mooeditor.c:784
-msgid "Open Recent"
-msgstr "Otevřít nedávný"
-
-#: ../src/mooedit/mooeditor.cpp:784
-#: ../src/mooutils/moohistorycombo.cpp:345
-#: ../src/mooutils/moohistorymgr.cpp:1610
+#. The submenu is insensitive while the history is empty, so there is no
+#. need to follow that here: what can be opened is what can be forgotten.
+#. The label is the one the search history's own button carries, so that
+#. the two are translated once.
+#. the label the search history's own button carries, so that the two are
+#. translated once
+#: src/mooedit/mooeditor.cpp:784 src/mooutils/moohistorycombo.cpp:345
+#: src/mooutils/moohistorymgr.cpp:1630
 msgid "Clear History"
 msgstr "Vymazat historii"
 
-#: ../src/mooutils/moohistorymgr.cpp:1632
-msgid "Recent Files"
-msgstr "Nedávné soubory"
+#: src/mooedit/mooeditor.cpp:801
+msgid "Open Recent"
+msgstr "Otevřít nedávný"
 
 #. Translators: if translated, it should be a comma-separated list
 #. of encodings to try when opening files. Encodings names should be
@@ -749,438 +729,513 @@ msgstr "Nedávné soubory"
 #. You want to add common preferred non-UTF8 encodings used in your locale.
 #. Do not remove ISO_8859-15 and ISO_8859-1, instead leave them at the end,
 #. these are common source files encodings.
-#: ../src/mooedit/mooeditprefs.c:51
+#: src/mooedit/mooeditprefs.cpp:45
 msgid "encodings_list"
 msgstr ""
 
 #. Label of a Preferences dialog page, remove the part before and including |
-#: ../src/mooedit/mooeditprefspage.c:168
+#: src/mooedit/mooeditprefspage.cpp:164
 msgid "PreferencesPage|General"
 msgstr ""
 
 #. Label of a Preferences dialog page, remove the part before and including |
-#: ../src/mooedit/mooeditprefspage.c:204
+#: src/mooedit/mooeditprefspage.cpp:202
 msgid "PreferencesPage|File Filters"
 msgstr ""
 
 #. Label of a Preferences dialog page, remove the part before and including |
-#: ../src/mooedit/mooeditprefspage.c:257
+#: src/mooedit/mooeditprefspage.cpp:256
 msgid "PreferencesPage|View"
 msgstr ""
 
 #. Label of a Preferences dialog page, remove the part before and including |
-#: ../src/mooedit/mooeditprefspage.c:304
+#: src/mooedit/mooeditprefspage.cpp:305
 msgid "PreferencesPage|File"
 msgstr ""
 
 #. Label of a Preferences dialog page, remove the part before and including |
-#: ../src/mooedit/mooeditprefspage.c:344
+#: src/mooedit/mooeditprefspage.cpp:347
 msgid "PreferencesPage|Languages"
 msgstr ""
 
 #. Label in the Language combo box on Languages preferences page,
 #. remove the part before and including |
 #. Menu item in the Language menu
-#: ../src/mooedit/mooeditprefspage.c:561 ../src/mooedit/mooeditwindow.c:3992
+#: src/mooedit/mooeditprefspage.cpp:543 src/mooedit/mooeditwindow.cpp:4210
 msgid "Language|None"
 msgstr ""
 
 #. Column label on File Filters prefs page
-#: ../src/mooedit/mooeditprefspage.c:1024
+#: src/mooedit/mooeditprefspage.cpp:988
 msgctxt "filter-prefs-column"
 msgid "Filter"
 msgstr "Filtr"
 
 #. Column label on File Filters prefs page
-#: ../src/mooedit/mooeditprefspage.c:1026
+#: src/mooedit/mooeditprefspage.cpp:990
 msgctxt "filter-prefs-column"
 msgid "Options"
 msgstr "Volby"
 
-#: ../src/mooedit/mooeditwindow.c:424
+#. Actions
+#. Translators: the heading this window's commands are listed under in
+#. Configure Shortcuts, beside one per plugin. The id beside it is not
+#. translated: it is what the accelerator paths and the preference keys
+#. under Shortcuts/ are made of.
+#: src/mooedit/mooeditwindow.cpp:435
+msgid "Editor"
+msgstr "Editor"
+
+#: src/mooedit/mooeditwindow.cpp:440
 msgid "Create new document"
 msgstr "Vytvořit nový dokument"
 
-#: ../src/mooedit/mooeditwindow.c:432
+#: src/mooedit/mooeditwindow.cpp:448
 msgid "_Open..."
 msgstr "_Otevřít"
 
-#: ../src/mooedit/mooeditwindow.c:433
+#: src/mooedit/mooeditwindow.cpp:449
 msgid "Open..."
 msgstr "Otevřít..."
 
-#: ../src/mooedit/mooeditwindow.c:440 ../src/moofileview/moofileview.c:1281
-#: ../src/moofileview/moofileview.c:1282
+#: src/mooedit/mooeditwindow.cpp:456 src/moofileview/moofileview.cpp:1331
+#: src/moofileview/moofileview.cpp:1332
 msgid "Reload"
 msgstr "Znovu načíst"
 
-#: ../src/mooedit/mooeditwindow.c:442
+#: src/mooedit/mooeditwindow.cpp:458
 msgid "Reload document"
 msgstr "Znovu načíst dokument"
 
-#: ../src/mooedit/mooeditwindow.c:473
+#: src/mooedit/mooeditwindow.cpp:489
 msgid "Save _As..."
 msgstr "Uložit j_ako..."
 
-#: ../src/mooedit/mooeditwindow.c:474
+#: src/mooedit/mooeditwindow.cpp:490
 msgid "Save as..."
 msgstr "Uložit jako..."
 
-#: ../src/mooedit/mooeditwindow.c:484
+#: src/mooedit/mooeditwindow.cpp:500
 msgid "Close document"
 msgstr "Zavřít dokument"
 
-#: ../src/mooedit/mooeditwindow.c:492
+#: src/mooedit/mooeditwindow.cpp:508
 msgid "Close All"
 msgstr "Zavřít vše"
 
-#: ../src/mooedit/mooeditwindow.c:493
+#: src/mooedit/mooeditwindow.cpp:509
 msgid "Close A_ll"
 msgstr "Zavřít vše"
 
-#: ../src/mooedit/mooeditwindow.c:494
+#: src/mooedit/mooeditwindow.cpp:510
 msgid "Close all documents"
 msgstr "Zavřít všechny dokumenty"
 
-#: ../src/mooedit/mooeditwindow.c:501
+#: src/mooedit/mooeditwindow.cpp:517
 msgid "Previous Tab"
 msgstr "Předchozí karta"
 
-#: ../src/mooedit/mooeditwindow.c:502
+#: src/mooedit/mooeditwindow.cpp:518
 msgid "_Previous Tab"
 msgstr "_Předchozí karta"
 
-#: ../src/mooedit/mooeditwindow.c:503
+#: src/mooedit/mooeditwindow.cpp:519
 msgid "Previous tab"
 msgstr "Předchozí karta"
 
-#: ../src/mooedit/mooeditwindow.c:511
+#: src/mooedit/mooeditwindow.cpp:527
 msgid "Next Tab"
 msgstr "Další karta"
 
-#: ../src/mooedit/mooeditwindow.c:512
+#: src/mooedit/mooeditwindow.cpp:528
 msgid "_Next Tab"
 msgstr "_Další karta"
 
-#: ../src/mooedit/mooeditwindow.c:513
+#: src/mooedit/mooeditwindow.cpp:529
 msgid "Next tab"
 msgstr "Další karta"
 
-#: ../src/mooedit/mooeditwindow.c:521
+#: src/mooedit/mooeditwindow.cpp:537
 msgid "Previous Tab In View"
 msgstr ""
 
-#: ../src/mooedit/mooeditwindow.c:522
+#: src/mooedit/mooeditwindow.cpp:538
 msgid "_Previous Tab In View"
 msgstr ""
 
-#: ../src/mooedit/mooeditwindow.c:523
+#: src/mooedit/mooeditwindow.cpp:539
 msgid "Previous tab in view"
 msgstr ""
 
-#: ../src/mooedit/mooeditwindow.c:530
+#: src/mooedit/mooeditwindow.cpp:546
 msgid "Next Tab In View"
 msgstr ""
 
-#: ../src/mooedit/mooeditwindow.c:531
+#: src/mooedit/mooeditwindow.cpp:547
 msgid "_Next Tab In View"
 msgstr ""
 
-#: ../src/mooedit/mooeditwindow.c:532
+#: src/mooedit/mooeditwindow.cpp:548
 msgid "Next tab in view"
 msgstr ""
 
-#: ../src/mooedit/mooeditwindow.c:550
+#: src/mooedit/mooeditwindow.cpp:566
 msgid "Find Next"
 msgstr "Najít další"
 
-#: ../src/mooedit/mooeditwindow.c:552
+#: src/mooedit/mooeditwindow.cpp:568
 msgid "Find next"
 msgstr "Najít další"
 
-#: ../src/mooedit/mooeditwindow.c:561
+#: src/mooedit/mooeditwindow.cpp:577
 msgid "Find Previous"
 msgstr "Najít předchozí"
 
-#: ../src/mooedit/mooeditwindow.c:562
+#: src/mooedit/mooeditwindow.cpp:578
 msgid "Find _Previous"
 msgstr "Najít _předchozí"
 
-#: ../src/mooedit/mooeditwindow.c:563
+#: src/mooedit/mooeditwindow.cpp:579
 msgid "Find previous"
 msgstr "Najít předchozí"
 
-#: ../src/mooedit/mooeditwindow.c:583
+#: src/mooedit/mooeditwindow.cpp:599
 msgid "Find Current Word"
 msgstr "Najít aktuální slovo"
 
-#: ../src/mooedit/mooeditwindow.c:584
+#: src/mooedit/mooeditwindow.cpp:600
 msgid "Find Current _Word"
 msgstr "Najít aktuální s_lovo"
 
-#: ../src/mooedit/mooeditwindow.c:592
+#: src/mooedit/mooeditwindow.cpp:608
 msgid "Find Current Word Backwards"
 msgstr "Najít aktuální slovo zpětně"
 
-#: ../src/mooedit/mooeditwindow.c:593
+#: src/mooedit/mooeditwindow.cpp:609
 msgid "Find Current Word _Backwards"
 msgstr "Najít aktuální slovo z_pětně"
 
-#: ../src/mooedit/mooeditwindow.c:602
+#: src/mooedit/mooeditwindow.cpp:618
 msgid "_Go to Line..."
 msgstr "Přejít na řáde_k..."
 
-#: ../src/mooedit/mooeditwindow.c:603
+#: src/mooedit/mooeditwindow.cpp:619
 msgid "Go to line..."
 msgstr "Přejít na řádek..."
 
-#: ../src/mooedit/mooeditwindow.c:612
+#: src/mooedit/mooeditwindow.cpp:628
 msgid "Toggle Text Wrapping"
 msgstr "Přepnout zalamování textu"
 
-#: ../src/mooedit/mooeditwindow.c:613
+#: src/mooedit/mooeditwindow.cpp:629
 msgid "_Wrap Text"
 msgstr "_Zalamovat text"
 
-#: ../src/mooedit/mooeditwindow.c:620
+#: src/mooedit/mooeditwindow.cpp:636
 msgid "Toggle Line Numbers Display"
 msgstr "Přepnout zobrazení čísel řádků"
 
-#: ../src/mooedit/mooeditwindow.c:621
+#: src/mooedit/mooeditwindow.cpp:637
 msgid "Show _Line Numbers"
 msgstr ""
 
-#: ../src/mooedit/mooeditwindow.c:627
+#: src/mooedit/mooeditwindow.cpp:643
 msgid "Focus Document"
 msgstr "Zaměřit dokument"
 
-#: ../src/mooedit/mooeditwindow.c:628
+#: src/mooedit/mooeditwindow.cpp:644
 msgid "_Focus Document"
 msgstr "Zaměři_t dokument"
 
-#: ../src/mooedit/mooeditwindow.c:635 ../src/mooedit/mooeditwindow.c:636
+#: src/mooedit/mooeditwindow.cpp:651 src/mooedit/mooeditwindow.cpp:652
 msgid "Focus Other Split Notebook"
 msgstr ""
 
-#: ../src/mooedit/mooeditwindow.c:643
+#: src/mooedit/mooeditwindow.cpp:659
 msgid "Move to Split Notebook"
 msgstr ""
 
-#: ../src/mooedit/mooeditwindow.c:644
+#: src/mooedit/mooeditwindow.cpp:660
 msgid "_Move to Split Notebook"
 msgstr ""
 
-#: ../src/mooedit/mooeditwindow.c:652 ../src/mooedit/mooeditwindow.c:653
+#: src/mooedit/mooeditwindow.cpp:668 src/mooedit/mooeditwindow.cpp:669
 msgid "Split View Horizontally"
 msgstr ""
 
-#: ../src/mooedit/mooeditwindow.c:660 ../src/mooedit/mooeditwindow.c:661
+#: src/mooedit/mooeditwindow.cpp:676 src/mooedit/mooeditwindow.cpp:677
 msgid "Split View Vertically"
 msgstr ""
 
-#: ../src/mooedit/mooeditwindow.c:667 ../src/mooedit/mooeditwindow.c:668
+#: src/mooedit/mooeditwindow.cpp:683 src/mooedit/mooeditwindow.cpp:684
 msgid "Focus Next Split View"
 msgstr ""
 
-#: ../src/mooedit/mooeditwindow.c:712
+#: src/mooedit/mooeditwindow.cpp:728
 msgid "Toggle Bookmark"
 msgstr "Přepnout záložku"
 
-#: ../src/mooedit/mooeditwindow.c:713
+#: src/mooedit/mooeditwindow.cpp:729
 msgid "Toggle _Bookmark"
 msgstr ""
 
-#: ../src/mooedit/mooeditwindow.c:721
+#: src/mooedit/mooeditwindow.cpp:737
 msgid "Next Bookmark"
 msgstr "Další záložka"
 
-#: ../src/mooedit/mooeditwindow.c:722
+#: src/mooedit/mooeditwindow.cpp:738
 msgid "_Next Bookmark"
 msgstr ""
 
-#: ../src/mooedit/mooeditwindow.c:729
+#: src/mooedit/mooeditwindow.cpp:745
 msgid "Previous Bookmark"
 msgstr "Předchozí záložka"
 
-#: ../src/mooedit/mooeditwindow.c:730
+#: src/mooedit/mooeditwindow.cpp:746
 msgid "_Previous Bookmark"
 msgstr ""
 
 #. action
-#: ../src/mooedit/mooeditwindow.c:738 ../src/mooedit/mooeditwindow.c:739
-#: ../src/mooedit/mooeditwindow.c:740
+#: src/mooedit/mooeditwindow.cpp:754 src/mooedit/mooeditwindow.cpp:755
+#: src/mooedit/mooeditwindow.cpp:756
 msgid "Comment"
 msgstr "Zakomentovat"
 
 #. action
-#: ../src/mooedit/mooeditwindow.c:748 ../src/mooedit/mooeditwindow.c:749
-#: ../src/mooedit/mooeditwindow.c:750
+#: src/mooedit/mooeditwindow.cpp:764 src/mooedit/mooeditwindow.cpp:765
+#: src/mooedit/mooeditwindow.cpp:766
 msgid "Uncomment"
 msgstr "Odkomentovat"
 
+#: src/mooedit/mooeditwindow.cpp:793
+msgid "Duplicate Line"
+msgstr "Zdvojit řádek"
+
+#: src/mooedit/mooeditwindow.cpp:794
+msgid "_Duplicate Line"
+msgstr "Z_dvojit řádek"
+
+#: src/mooedit/mooeditwindow.cpp:795
+msgid "Duplicate the line or the selection"
+msgstr "Zdvojit řádek nebo výběr"
+
+#: src/mooedit/mooeditwindow.cpp:803
+msgid "Move Lines Up"
+msgstr "Posunout řádky nahoru"
+
+#: src/mooedit/mooeditwindow.cpp:804
+msgid "Move Lines _Up"
+msgstr "Posunout řádky na_horu"
+
+#: src/mooedit/mooeditwindow.cpp:805
+msgid "Move the selected lines up"
+msgstr "Posunout vybrané řádky nahoru"
+
+#: src/mooedit/mooeditwindow.cpp:814
+msgid "Move Lines Down"
+msgstr "Posunout řádky dolů"
+
+#: src/mooedit/mooeditwindow.cpp:815
+msgid "Move Lines _Down"
+msgstr "Posunout řádky _dolů"
+
+#: src/mooedit/mooeditwindow.cpp:816
+msgid "Move the selected lines down"
+msgstr "Posunout vybrané řádky dolů"
+
+#: src/mooedit/mooeditwindow.cpp:825
+msgid "Sort Lines"
+msgstr "Seřadit řádky"
+
+#: src/mooedit/mooeditwindow.cpp:826
+msgid "_Sort Lines"
+msgstr "_Seřadit řádky"
+
+#: src/mooedit/mooeditwindow.cpp:827
+msgid "Sort the selected lines"
+msgstr "Seřadit vybrané řádky"
+
+#: src/mooedit/mooeditwindow.cpp:834
+msgid "Go to Matching Bracket"
+msgstr "Přejít na odpovídající závorku"
+
+#: src/mooedit/mooeditwindow.cpp:835
+msgid "Go to _Matching Bracket"
+msgstr "Přejít na odpovídající _závorku"
+
+#: src/mooedit/mooeditwindow.cpp:836
+msgid "Go to the bracket matching the one at the cursor"
+msgstr "Přejít na závorku odpovídající té pod kurzorem"
+
 #. Insensitive menu item which appears in Window menu with no documents open
-#: ../src/mooedit/mooeditwindow.c:778
+#: src/mooedit/mooeditwindow.cpp:845
 msgid "No Documents"
 msgstr "Žádné dokumenty"
 
-#: ../src/mooedit/mooeditwindow.c:786
+#: src/mooedit/mooeditwindow.cpp:853
 msgid "Page Setup"
 msgstr "Nastavení strany"
 
-#: ../src/mooedit/mooeditwindow.c:787
+#: src/mooedit/mooeditwindow.cpp:854
 msgid "Page S_etup..."
 msgstr "Nastavení strany..."
 
-#: ../src/mooedit/mooeditwindow.c:788
+#: src/mooedit/mooeditwindow.cpp:855
 msgid "Page Setup..."
 msgstr "_Nastavení strany..."
 
-#: ../src/mooedit/mooeditwindow.c:804 ../src/mooedit/mooeditwindow.c:805
+#: src/mooedit/mooeditwindow.cpp:871 src/mooedit/mooeditwindow.cpp:872
 msgid "Print..."
 msgstr "Tisk..."
 
-#: ../src/mooedit/mooeditwindow.c:813 ../src/mooedit/mooeditwindow.c:2032
+#: src/mooedit/mooeditwindow.cpp:880 src/mooedit/mooeditwindow.cpp:2155
 msgid "Export as PDF"
 msgstr "Exportovat do PDF"
 
-#: ../src/mooedit/mooeditwindow.c:814
+#: src/mooedit/mooeditwindow.cpp:881
 msgid "E_xport as PDF..."
 msgstr "Exportovat do PDF..."
 
-#: ../src/mooedit/mooeditwindow.c:815
+#: src/mooedit/mooeditwindow.cpp:882
 msgid "Export as PDF..."
 msgstr "Exportovat do PDF..."
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [new file]"
-#: ../src/mooedit/mooeditwindow.c:1087
+#: src/mooedit/mooeditwindow.cpp:1163
 #, c-format
 msgid "%s [new file]"
 msgstr "%s [nový soubor]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [modified on disk]"
-#: ../src/mooedit/mooeditwindow.c:1090
+#: src/mooedit/mooeditwindow.cpp:1166
 #, c-format
 msgid "%s [modified on disk]"
 msgstr "%s [změněn na disku]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [deleted]"
-#: ../src/mooedit/mooeditwindow.c:1093
+#: src/mooedit/mooeditwindow.cpp:1169
 #, c-format
 msgid "%s [deleted]"
 msgstr "%s [smazán]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [new file] [modified]"
-#: ../src/mooedit/mooeditwindow.c:1101
+#: src/mooedit/mooeditwindow.cpp:1177
 #, c-format
 msgid "%s [new file] [modified]"
 msgstr "%s [nový soubor][změněn]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [modified on disk] [modified]"
-#: ../src/mooedit/mooeditwindow.c:1104
+#: src/mooedit/mooeditwindow.cpp:1180
 #, c-format
 msgid "%s [modified on disk] [modified]"
 msgstr "%s [změněn na disku][změněn]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [deleted] [modified]"
-#: ../src/mooedit/mooeditwindow.c:1107
+#: src/mooedit/mooeditwindow.cpp:1183
 #, c-format
 msgid "%s [deleted] [modified]"
 msgstr "%s [smazán][změněn]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [modified]"
-#: ../src/mooedit/mooeditwindow.c:1110
+#: src/mooedit/mooeditwindow.cpp:1186
 #, c-format
 msgid "%s [modified]"
 msgstr "%s [změněn]"
 
-#: ../src/mooedit/mooeditwindow.c:1357
+#: src/mooedit/mooeditwindow.cpp:1426
 msgid "Reopen Using Encoding"
 msgstr ""
 
-#: ../src/mooedit/mooeditwindow.c:1407
+#: src/mooedit/mooeditwindow.cpp:1476
 msgid "_Encoding"
 msgstr ""
 
-#: ../src/mooedit/mooeditwindow.c:1461
+#: src/mooedit/mooeditwindow.cpp:1530
 msgid "Line En_dings"
 msgstr ""
 
-#: ../src/mooedit/mooeditwindow.c:1468
+#: src/mooedit/mooeditwindow.cpp:1537
 msgid "_Windows (CR+LF)"
 msgstr ""
 
-#: ../src/mooedit/mooeditwindow.c:1477
+#: src/mooedit/mooeditwindow.cpp:1542
 msgid "_Unix (LF)"
 msgstr ""
 
-#: ../src/mooedit/mooeditwindow.c:1481
+#: src/mooedit/mooeditwindow.cpp:1546
 msgid "_Mac (CR)"
 msgstr ""
 
 #. Item in document tab context menu
-#: ../src/mooedit/mooeditwindow.c:2239
+#: src/mooedit/mooeditwindow.cpp:2428
 msgctxt "tab-context-menu"
 msgid "Close"
 msgstr ""
 
 #. Item in document tab context menu
-#: ../src/mooedit/mooeditwindow.c:2251
+#: src/mooedit/mooeditwindow.cpp:2436
 msgctxt "tab-context-menu"
 msgid "Close All Others"
 msgstr ""
 
 #. Item in document tab context menu
-#: ../src/mooedit/mooeditwindow.c:2269
+#: src/mooedit/mooeditwindow.cpp:2445
+msgctxt "tab-context-menu"
+msgid "Copy Full Path"
+msgstr ""
+
+#. Item in document tab context menu
+#: src/mooedit/mooeditwindow.cpp:2455
 msgctxt "tab-context-menu"
 msgid "Detach"
 msgstr "Odpojit"
 
 #. Item in document tab context menu
-#: ../src/mooedit/mooeditwindow.c:2279
+#: src/mooedit/mooeditwindow.cpp:2461
 msgctxt "tab-context-menu"
 msgid "Move to Split Notebook"
 msgstr ""
 
-#: ../src/mooedit/mooeditwindow.c:3846
+#: src/mooedit/mooeditwindow.cpp:4052
 #, c-format
 msgid "Line: %s Col: %s"
 msgstr ""
 
-#: ../src/mooedit/mooeditwindow.c:3847
+#: src/mooedit/mooeditwindow.cpp:4053
 #, c-format
 msgid "Chars: %s"
 msgstr ""
 
 #. Label in the editor window statusbar - Overwrite or Insert mode
-#: ../src/mooedit/mooeditwindow.c:3890
+#: src/mooedit/mooeditwindow.cpp:4096
 msgid "OVR"
 msgstr ""
 
-#: ../src/mooedit/mooeditwindow.c:3890
+#: src/mooedit/mooeditwindow.cpp:4096
 msgid "INS"
 msgstr ""
 
-#: ../src/mooedit/mooeditwindow.c:3987
+#: src/mooedit/mooeditwindow.cpp:4205
 msgid "_Language"
 msgstr "_Jazyk"
 
-#: ../src/mooedit/mooplugin.c:1425
+#: src/mooedit/mooplugin.cpp:1415
 msgctxt "Prefs page label"
 msgid "Plugins"
 msgstr ""
 
-#: ../src/mooedit/mooplugin.c:1450
+#: src/mooedit/mooplugin.cpp:1442
 msgctxt "plugin-prefs-column"
 msgid "Enabled"
 msgstr "Povoleno"
 
-#: ../src/mooedit/mooplugin.c:1456
+#: src/mooedit/mooplugin.cpp:1448
 msgctxt "plugin-prefs-column"
 msgid "Plugin"
 msgstr ""
 
 #. Translators: remove the part before and including |
-#: ../src/mooedit/mooplugin-loader.c:227
+#: src/mooedit/mooplugin-loader.cpp:214
 #, c-format
 msgid ""
 "console message|ignoring file '%s', module version '%s' is not compatible "
@@ -1188,51 +1243,51 @@ msgid ""
 msgstr ""
 
 #. Translators: remove the part before and including |
-#: ../src/mooedit/mooplugin-loader.c:237
+#: src/mooedit/mooplugin-loader.cpp:224
 #, c-format
 msgid "console message|invalid module version '%s' in file '%s'"
 msgstr ""
 
-#: ../src/mooedit/mootextfind.c:165
+#: src/mooedit/mootextfind.cpp:158
 msgctxt "Dialog title"
 msgid "Replace"
 msgstr ""
 
-#: ../src/mooedit/mootextfind.c:171
+#: src/mooedit/mootextfind.cpp:164
 msgctxt "Dialog title"
 msgid "Find"
 msgstr ""
 
-#: ../src/mooedit/mootextfind.c:475
+#: src/mooedit/mootextfind.cpp:454
 msgid "No search term entered"
 msgstr "Nebyl zadán výraz k hledání"
 
-#: ../src/mooedit/mootextfind.c:778 ../src/mooedit/mootextfind.c:884
-#: ../src/mooedit/mootextfind.c:1039
+#: src/mooedit/mootextfind.cpp:758 src/mooedit/mootextfind.cpp:864
+#: src/mooedit/mootextfind.cpp:1019
 msgid "Search hit top, continuing at bottom"
 msgstr "Dosaženo začátku, hledá se od konce"
 
-#: ../src/mooedit/mootextfind.c:780 ../src/mooedit/mootextfind.c:882
-#: ../src/mooedit/mootextfind.c:962
+#: src/mooedit/mootextfind.cpp:760 src/mooedit/mootextfind.cpp:862
+#: src/mooedit/mootextfind.cpp:942
 msgid "Search hit bottom, continuing at top"
 msgstr "Dosaženo konce, hledá se od začátku"
 
-#: ../src/mooedit/mootextfind.c:789 ../src/mooedit/mootextfind.c:894
-#: ../src/mooedit/mootextfind.c:970 ../src/mooedit/mootextfind.c:1047
+#: src/mooedit/mootextfind.cpp:769 src/mooedit/mootextfind.cpp:874
+#: src/mooedit/mootextfind.cpp:950 src/mooedit/mootextfind.cpp:1027
 #, c-format
 msgid "Pattern not found: %s"
 msgstr "Vzorek nenalezen: %s"
 
-#: ../src/mooedit/mootextfind.c:876
+#: src/mooedit/mootextfind.cpp:856
 #, c-format
 msgid "Found single instance of pattern '%s'"
 msgstr "Nalezen jeden výskyt vzorku '%s'"
 
-#: ../src/mooedit/mootextfind.c:1082
+#: src/mooedit/mootextfind.cpp:1062
 msgid "No replacement made"
 msgstr "Nic nebylo nahrazeno"
 
-#: ../src/mooedit/mootextfind.c:1088
+#: src/mooedit/mootextfind.cpp:1068
 #, c-format
 msgid "%u replacement made"
 msgid_plural "%u replacements made"
@@ -1240,304 +1295,246 @@ msgstr[0] "%u výskyty nahrazeny"
 msgstr[1] "%u výskytů nahrazeny"
 msgstr[2] "%u výskytů nahrazeny"
 
-#: ../src/moofileview/glade/moobookmark-editor.glade.h:1
-#: ../src/moofileview/moofileview.c:1241 ../src/moofileview/moofileview.c:1242
+#: src/moofileview/ui/moobookmark-editor.ui:4
+#: src/moofileview/moofileview.cpp:1288 src/moofileview/moofileview.cpp:1289
 msgid "Edit Bookmarks"
 msgstr "Upravit záložky"
 
-#: ../src/moofileview/glade/moobookmark-editor.glade.h:2
+#: src/moofileview/ui/moobookmark-editor.ui:23
 msgid "Icon"
 msgstr "Ikona"
 
-#: ../src/moofileview/glade/moobookmark-editor.glade.h:3
+#: src/moofileview/ui/moobookmark-editor.ui:43
 msgid "Path"
 msgstr "Cesta"
 
-#: ../src/moofileview/glade/moobookmark-editor.glade.h:4
+#: src/moofileview/ui/moobookmark-editor.ui:90
 msgid "Add bookmark"
 msgstr "Přidat záložku"
 
-#: ../src/moofileview/glade/moobookmark-editor.glade.h:5
-#: ../src/plugins/glade/moofileselector-prefs.glade.h:11
+#: src/moofileview/ui/moobookmark-editor.ui:114
+#: src/plugins/ui/moofileselector-prefs.ui:203
 msgid "New"
 msgstr "Nový"
 
-#: ../src/moofileview/glade/moobookmark-editor.glade.h:6
+#: src/moofileview/ui/moobookmark-editor.ui:136
 msgid "Add separator"
 msgstr "Přidat oddělovač"
 
-#: ../src/moofileview/glade/moobookmark-editor.glade.h:7
+#: src/moofileview/ui/moobookmark-editor.ui:137
 msgid "Add Separator"
 msgstr "Přidat oddělovač"
 
-#: ../src/moofileview/glade/moobookmark-editor.glade.h:8
+#: src/moofileview/ui/moobookmark-editor.ui:160
 msgid "Delete selected items"
 msgstr "Smazat vybrané položky"
 
-#: ../src/moofileview/glade/moobookmark-editor.glade.h:9
-#: ../src/plugins/glade/moofileselector-prefs.glade.h:12
+#: src/moofileview/ui/moobookmark-editor.ui:184
+#: src/plugins/ui/moofileselector-prefs.ui:220
 msgid "Delete"
 msgstr "Smazat"
 
-#: ../src/moofileview/glade/moocreatefolder.glade.h:1
+#: src/moofileview/ui/moocreatefolder.ui:4
 msgid "Create Folder"
 msgstr "Vytvořit adresář"
 
-#: ../src/moofileview/glade/moofileprops.glade.h:1
+#: src/moofileview/ui/moofileprops.ui:82
 msgid "General"
 msgstr "Obecné"
 
-#: ../src/moofileview/glade/moofileview-drop.glade.h:1
-#: ../src/plugins/glade/moofileselector.glade.h:1
-#: ../src/plugins/moofileselector.c:907 ../src/plugins/moofileselector.c:932
+#: src/moofileview/ui/moofileview-drop.ui:5 src/plugins/ui/moofileselector.ui:4
+#: src/plugins/moofileselector.cpp:913 src/plugins/moofileselector.cpp:938
 msgid "Save As"
 msgstr "Uložit jako"
 
 #. Column label in file selector bookmark editor
-#: ../src/moofileview/moobookmarkmgr.c:961
+#: src/moofileview/moobookmarkmgr.cpp:847
 msgctxt "fileview-bookmark-editor"
 msgid "Icon"
 msgstr "Ikona"
 
 #. Column label in file selector bookmark editor
-#: ../src/moofileview/moobookmarkmgr.c:977
+#: src/moofileview/moobookmarkmgr.cpp:863
 msgctxt "fileview-bookmark-editor"
 msgid "Label"
 msgstr ""
 
 #. Column label in file selector bookmark editor
-#: ../src/moofileview/moobookmarkmgr.c:995
+#: src/moofileview/moobookmarkmgr.cpp:881
 msgctxt "fileview-bookmark-editor"
 msgid "Path"
 msgstr "Cesta"
 
-#: ../src/moofileview/moofileview.c:1115 ../src/plugins/moofileselector.c:647
-#: ../src/plugins/moofileselector.c:648 ../src/plugins/moofileselector.c:1290
-#: ../src/plugins/moofileselector-prefs.c:72
+#: src/moofileview/moofileview.cpp:1150 src/plugins/moofileselector.cpp:648
+#: src/plugins/moofileselector.cpp:649 src/plugins/moofileselector.cpp:1297
+#: src/plugins/moofileselector-prefs.cpp:70
 msgid "File Selector"
 msgstr "Výběr souborů"
 
-#: ../src/moofileview/moofileview.c:1124
+#: src/moofileview/moofileview.cpp:1168
 msgid "Go to parent folder"
 msgstr "Přejít do rodičovského adresáře"
 
-#: ../src/moofileview/moofileview.c:1173 ../src/moofileview/moofileview.c:3350
+#: src/moofileview/moofileview.cpp:1218 src/moofileview/moofileview.cpp:3395
 msgid "Delete..."
 msgstr "Smazat..."
 
-#: ../src/moofileview/moofileview.c:1174 ../src/moofileview/moofileview.c:3351
+#: src/moofileview/moofileview.cpp:1219 src/moofileview/moofileview.cpp:3396
 msgid "Delete selected files"
 msgstr ""
 
-#: ../src/moofileview/moofileview.c:1184 ../src/moofileview/moofileview.c:1185
+#: src/moofileview/moofileview.cpp:1230 src/moofileview/moofileview.cpp:1231
 msgid "Show Hidden Files"
 msgstr "Zobrazit skryté soubory"
 
-#: ../src/moofileview/moofileview.c:1193 ../src/moofileview/moofileview.c:1194
+#: src/moofileview/moofileview.cpp:1239 src/moofileview/moofileview.cpp:1240
 msgid "Show Parent Folder"
 msgstr "Zobrazit rodičovský adresář"
 
-#: ../src/moofileview/moofileview.c:1200 ../src/moofileview/moofileview.c:1201
+#: src/moofileview/moofileview.cpp:1246 src/moofileview/moofileview.cpp:1247
 msgid "Case Sensitive Sort"
 msgstr "Třídit podle velikosti znaků"
 
-#: ../src/moofileview/moofileview.c:1207 ../src/moofileview/moofileview.c:1208
+#: src/moofileview/moofileview.cpp:1253 src/moofileview/moofileview.cpp:1254
 msgid "Show Folders First"
 msgstr ""
 
-#: ../src/moofileview/moofileview.c:1224 ../src/moofileview/moofileview.c:1225
-#: ../src/moofileview/moofileview.xml.h:3
+#. Menubar
+#: src/moofileview/moofileview.cpp:1271 src/moofileview/moofileview.cpp:1272
+#: src/moofileview/moofileview.xml.h:6
 msgid "Bookmarks"
 msgstr "Záložky"
 
-#: ../src/moofileview/moofileview.c:1233 ../src/moofileview/moofileview.c:1234
+#: src/moofileview/moofileview.cpp:1280 src/moofileview/moofileview.cpp:1281
 msgid "Add Bookmark"
 msgstr "Přidat záložku"
 
-#: ../src/moofileview/moofileview.c:1585
-#: ../src/plugins/usertools/glade/mooedittools-exe.glade.h:1
+#: src/moofileview/moofileview.cpp:1646
+#: src/plugins/usertools/ui/mooedittools-exe.ui:33
 msgid "Filter"
 msgstr "Filtr"
 
-#: ../src/moofileview/moofileview.c:3194
+#: src/moofileview/moofileview.cpp:3239
 #, c-format
 msgid "Move folder %s to Trash?"
 msgstr ""
 
-#: ../src/moofileview/moofileview.c:3197
+#: src/moofileview/moofileview.cpp:3242
 #, c-format
 msgid "Move file %s to Trash?"
 msgstr ""
 
-#: ../src/moofileview/moofileview.c:3202
+#: src/moofileview/moofileview.cpp:3247
 msgid "Move selected files to Trash?"
 msgstr ""
 
-#: ../src/moofileview/moofileview.c:3210
+#: src/moofileview/moofileview.cpp:3255
 #, c-format
 msgid "Delete folder %s and all its content?"
 msgstr ""
 
-#: ../src/moofileview/moofileview.c:3213
+#: src/moofileview/moofileview.cpp:3258
 #, c-format
 msgid "Delete file %s?"
 msgstr ""
 
-#: ../src/moofileview/moofileview.c:3218
+#: src/moofileview/moofileview.cpp:3263
 msgid "Delete selected files?"
 msgstr ""
 
-#: ../src/moofileview/moofileview.c:3280
+#: src/moofileview/moofileview.cpp:3325
 #, c-format
 msgid "Could not delete folder %s"
 msgstr ""
 
-#: ../src/moofileview/moofileview.c:3283
+#: src/moofileview/moofileview.cpp:3328
 #, c-format
 msgid "Could not delete file %s"
 msgstr ""
 
-#: ../src/moofileview/moofileview.c:3344
+#: src/moofileview/moofileview.cpp:3389
 msgid "Move to Trash..."
 msgstr ""
 
-#: ../src/moofileview/moofileview.c:3345
+#: src/moofileview/moofileview.cpp:3390
 msgid "Move selected files to Trash"
 msgstr ""
 
 #. Translators: this is a context menu item label in the file selector, remove the part before and including |
-#: ../src/moofileview/moofileview-tools.c:335
+#: src/moofileview/moofileview-tools.cpp:332
 msgid "Open with|Default Application"
 msgstr ""
 
-#: ../src/moofileview/moofileview.xml.h:1
+#. -*- Mode: XML; indent-tabs-mode: nil; c-basic-offset: 2 -*-
+#: src/moofileview/moofileview.xml.h:2
 msgid "View"
 msgstr "Zobrazení"
 
-#: ../src/moofileview/moofileview.xml.h:2
+#. <item action="SortFoldersFirst"/>
+#: src/moofileview/moofileview.xml.h:4
 msgid "Open _With"
 msgstr "Otevřít po_mocí"
 
-#: ../src/moolua/mooluaplugin.cpp:112
-msgid "Lua"
-msgstr ""
-
-#: ../src/moolua/mooluaplugin.cpp:112
-msgid "Lua support"
-msgstr ""
-
-#: ../src/moopython/plugins/medit/runpython.py:43
-msgid "Python Output"
-msgstr "Výstupu Pythonu"
-
-#: ../src/moopython/plugins/python.py:48 ../src/moopython/plugins/python.py:49
-msgid "Python Console"
-msgstr "Konzole Pythonu"
-
-#: ../src/moopython/plugins/python.py:56 ../src/moopython/plugins/python.py:57
-msgid "Run File"
-msgstr "Spustit soubor"
-
-#: ../src/moopython/plugins/terminal.py:177
-msgid "Terminal"
-msgstr "Terminál"
-
-#: ../src/moopython/plugins/terminal.py:225
-msgid "Default"
-msgstr ""
-
-#: ../src/moopython/plugins/terminal.py:226
-msgid "Black on White"
-msgstr ""
-
-#: ../src/moopython/plugins/terminal.py:229
-msgid "Black on Light Yellow"
-msgstr ""
-
-#: ../src/moopython/plugins/terminal.py:232
-msgid "Marble"
-msgstr ""
-
-#: ../src/moopython/plugins/terminal.py:235
-msgid "Green on Black"
-msgstr ""
-
-#: ../src/moopython/plugins/terminal.py:238
-msgid "Paper, Light"
-msgstr ""
-
-#: ../src/moopython/plugins/terminal.py:241
-msgid "Paper"
-msgstr ""
-
-#: ../src/moopython/plugins/terminal.py:244
-msgid "Linux Colors"
-msgstr ""
-
-#: ../src/moopython/plugins/terminal.py:247
-msgid "VIM Colors"
-msgstr ""
-
-#: ../src/moopython/plugins/terminal.py:250
-msgid "White on Black"
-msgstr ""
-
-#: ../src/mooutils/glade/mooaccelprefs.glade.h:2
-msgid "Shortcut|None"
-msgstr ""
-
-#: ../src/mooutils/glade/mooaccelprefs.glade.h:4
-msgid "Shortcut|Default"
-msgstr ""
-
-#: ../src/mooutils/glade/mooaccelprefs.glade.h:6
-msgid "Shortcut|Custom"
-msgstr ""
-
-#: ../src/mooutils/glade/mooaccelprefs.glade.h:7
-msgid "Default key:"
-msgstr "Předvolená klávesa:"
-
-#: ../src/mooutils/glade/mooaccelprefs.glade.h:8
-msgid "Shortcut for selected action"
-msgstr "Klávesová zkratka pro vybranou akci"
-
-#: ../src/mooutils/ui/mooaccelprefs.ui:16
+#: src/mooutils/ui/mooaccelprefs.ui:16
 msgid "Search"
 msgstr "Hledat"
 
+#: src/mooutils/ui/mooaccelprefs.ui:76
+msgctxt "Shortcut"
+msgid "None"
+msgstr ""
+
+#: src/mooutils/ui/mooaccelprefs.ui:89
+#, fuzzy
+msgctxt "Shortcut"
+msgid "Default"
+msgstr "_Výchozí"
+
+#: src/mooutils/ui/mooaccelprefs.ui:105
+msgctxt "Shortcut"
+msgid "Custom"
+msgstr ""
+
+#: src/mooutils/ui/mooaccelprefs.ui:135
+msgid "Default key:"
+msgstr "Předvolená klávesa:"
+
+#: src/mooutils/ui/mooaccelprefs.ui:165
+msgid "Shortcut for selected action"
+msgstr "Klávesová zkratka pro vybranou akci"
+
 #. Column label in Configure Shortcuts dialog
-#: ../src/mooutils/mooaccelprefs.c:261
+#: src/mooutils/mooaccelprefs.cpp:320
 msgctxt "accel-editor-column"
 msgid "Action"
 msgstr ""
 
 #. Column label in Configure Shortcuts dialog
-#: ../src/mooutils/mooaccelprefs.c:270
+#: src/mooutils/mooaccelprefs.cpp:329
 msgctxt "accel-editor-column"
 msgid "Shortcut"
 msgstr ""
 
 #. Column label in Configure Shortcuts dialog
-#: ../src/mooutils/mooaccelprefs.c:279
+#: src/mooutils/mooaccelprefs.cpp:338
 msgctxt "accel-editor-column"
 msgid "Global"
 msgstr ""
 
-#: ../src/mooutils/mooaccelprefs.c:804
+#: src/mooutils/mooaccelprefs.cpp:875
 msgid "Configure Shortcuts"
 msgstr "Nastavit klávesové zkratky"
 
-#: ../src/mooutils/moodialogs.c:419
+#: src/mooutils/moodialogs.cpp:402
 #, c-format
 msgid "Save changes to document \"%s\" before closing?"
 msgstr "Uložit změny v dokumentu \"%s\" před jeho uzavřením?"
 
-#: ../src/mooutils/moodialogs.c:420
+#: src/mooutils/moodialogs.cpp:403
 msgid "Save changes to the document before closing?"
 msgstr "Uložit změny v dokumentu před jeho uzavřením?"
 
-#: ../src/mooutils/moodialogs.c:425
+#: src/mooutils/moodialogs.cpp:408
 msgid "If you don't save, changes will be discarded"
 msgstr "Pokud jej neuložíte, změny budou ztraceny"
 
@@ -1549,400 +1546,381 @@ msgstr "Pokud jej neuložíte, změny budou ztraceny"
 #. 3 - "SE & SW Asian",
 #. 4 - "Middle Eastern",
 #. 5 - "Unicode"
-#: ../src/mooutils/mooencodings.c:179
+#: src/mooutils/mooencodings.cpp:176
 msgid "012345"
 msgstr "510234"
 
-#: ../src/mooutils/mooencodings.c:703
+#: src/mooutils/mooencodings.cpp:696
 msgid "Auto Detected"
 msgstr "Autodetekce"
 
 #. Translators: remove the part before and including |
-#: ../src/mooutils/mooencodings.c:732
+#: src/mooutils/mooencodings.cpp:729
 msgid "Encodings combo submenu|Other"
 msgstr "Další"
 
-#: ../src/mooutils/mooencodings.c:831
+#: src/mooutils/mooencodings.cpp:849
 msgid "Charact_er encoding"
 msgstr "_Kódování"
 
-#: ../src/mooutils/mooencodings-data.h:27
+#: src/mooutils/mooencodings-data.h:27
 msgid "West European"
 msgstr "západoevropské"
 
-#: ../src/mooutils/mooencodings-data.h:28
+#: src/mooutils/mooencodings-data.h:28
 msgid "East European"
 msgstr "východoevropské"
 
-#: ../src/mooutils/mooencodings-data.h:29
+#: src/mooutils/mooencodings-data.h:29
 msgid "East Asian"
 msgstr "východoasijské"
 
-#: ../src/mooutils/mooencodings-data.h:30
+#: src/mooutils/mooencodings-data.h:30
 msgid "SE & SW Asian"
 msgstr "JV & JZ asijské"
 
-#: ../src/mooutils/mooencodings-data.h:31
+#: src/mooutils/mooencodings-data.h:31
 msgid "Middle Eastern"
 msgstr "Střední Východ"
 
-#: ../src/mooutils/mooencodings-data.h:32
+#: src/mooutils/mooencodings-data.h:32
 msgid "Unicode"
 msgstr "Unicode"
 
-#: ../src/mooutils/mooencodings-data.h:53
+#: src/mooutils/mooencodings-data.h:53
 msgid "Ascii"
 msgstr "Ascii"
 
-#: ../src/mooutils/mooencodings-data.h:55
-#: ../src/mooutils/mooencodings-data.h:68
-#: ../src/mooutils/mooencodings-data.h:113
-#: ../src/mooutils/mooencodings-data.h:138
-#: ../src/mooutils/mooencodings-data.h:151
+#: src/mooutils/mooencodings-data.h:55 src/mooutils/mooencodings-data.h:68
+#: src/mooutils/mooencodings-data.h:121 src/mooutils/mooencodings-data.h:146
+#: src/mooutils/mooencodings-data.h:159
 msgid "Western"
 msgstr "Západní"
 
-#: ../src/mooutils/mooencodings-data.h:56
-#: ../src/mooutils/mooencodings-data.h:114
-#: ../src/mooutils/mooencodings-data.h:128
-#: ../src/mooutils/mooencodings-data.h:149
+#: src/mooutils/mooencodings-data.h:56 src/mooutils/mooencodings-data.h:122
+#: src/mooutils/mooencodings-data.h:136 src/mooutils/mooencodings-data.h:157
 msgid "Central European"
 msgstr "středoevropské"
 
-#: ../src/mooutils/mooencodings-data.h:57
+#: src/mooutils/mooencodings-data.h:57
 msgid "South European"
 msgstr "jihoevropské"
 
-#: ../src/mooutils/mooencodings-data.h:58
-#: ../src/mooutils/mooencodings-data.h:66
-#: ../src/mooutils/mooencodings-data.h:156
+#: src/mooutils/mooencodings-data.h:58 src/mooutils/mooencodings-data.h:66
+#: src/mooutils/mooencodings-data.h:164
 msgid "Baltic"
 msgstr "Baltské"
 
-#: ../src/mooutils/mooencodings-data.h:59
-#: ../src/mooutils/mooencodings-data.h:115
-#: ../src/mooutils/mooencodings-data.h:122
-#: ../src/mooutils/mooencodings-data.h:124
-#: ../src/mooutils/mooencodings-data.h:130
-#: ../src/mooutils/mooencodings-data.h:150
+#: src/mooutils/mooencodings-data.h:59 src/mooutils/mooencodings-data.h:123
+#: src/mooutils/mooencodings-data.h:130 src/mooutils/mooencodings-data.h:132
+#: src/mooutils/mooencodings-data.h:138 src/mooutils/mooencodings-data.h:158
 msgid "Cyrillic"
 msgstr "Azbuka"
 
-#: ../src/mooutils/mooencodings-data.h:60
-#: ../src/mooutils/mooencodings-data.h:118
-#: ../src/mooutils/mooencodings-data.h:127
-#: ../src/mooutils/mooencodings-data.h:155
+#: src/mooutils/mooencodings-data.h:60 src/mooutils/mooencodings-data.h:126
+#: src/mooutils/mooencodings-data.h:135 src/mooutils/mooencodings-data.h:163
 msgid "Arabic"
 msgstr "Arabské"
 
-#: ../src/mooutils/mooencodings-data.h:61
-#: ../src/mooutils/mooencodings-data.h:133
-#: ../src/mooutils/mooencodings-data.h:152
+#: src/mooutils/mooencodings-data.h:61 src/mooutils/mooencodings-data.h:141
+#: src/mooutils/mooencodings-data.h:160
 msgid "Greek"
 msgstr "Řečtina"
 
-#: ../src/mooutils/mooencodings-data.h:62
+#: src/mooutils/mooencodings-data.h:62
 msgid "Hebrew Visual"
 msgstr "Hebrejština"
 
-#: ../src/mooutils/mooencodings-data.h:63
-#: ../src/mooutils/mooencodings-data.h:117
-#: ../src/mooutils/mooencodings-data.h:136
-#: ../src/mooutils/mooencodings-data.h:154
+#: src/mooutils/mooencodings-data.h:63 src/mooutils/mooencodings-data.h:125
+#: src/mooutils/mooencodings-data.h:144 src/mooutils/mooencodings-data.h:162
 msgid "Hebrew"
 msgstr "Hebrejština"
 
-#: ../src/mooutils/mooencodings-data.h:64
-#: ../src/mooutils/mooencodings-data.h:116
-#: ../src/mooutils/mooencodings-data.h:140
-#: ../src/mooutils/mooencodings-data.h:153
+#: src/mooutils/mooencodings-data.h:64 src/mooutils/mooencodings-data.h:124
+#: src/mooutils/mooencodings-data.h:148 src/mooutils/mooencodings-data.h:161
 msgid "Turkish"
 msgstr "Turečtina"
 
-#: ../src/mooutils/mooencodings-data.h:65
+#: src/mooutils/mooencodings-data.h:65
 msgid "Nordic"
 msgstr "severské"
 
-#: ../src/mooutils/mooencodings-data.h:67
+#: src/mooutils/mooencodings-data.h:67
 msgid "Celtic"
 msgstr "keltské"
 
-#: ../src/mooutils/mooencodings-data.h:69
-#: ../src/mooutils/mooencodings-data.h:139
+#: src/mooutils/mooencodings-data.h:69 src/mooutils/mooencodings-data.h:147
 msgid "Romanian"
 msgstr "románské"
 
 #. Label of an encoding menu item, remove the part before and including |
-#: ../src/mooutils/mooencodings-data.h:72
+#: src/mooutils/mooencodings-data.h:72
 msgid "encoding label|UTF-7"
 msgstr ""
 
 #. Label of an encoding menu item, remove the part before and including |
-#: ../src/mooutils/mooencodings-data.h:74
+#: src/mooutils/mooencodings-data.h:74
 msgid "encoding label|UTF-32BE-BOM (big-endian, with BOM)"
 msgstr ""
 
 #. Label of an encoding menu item, remove the part before and including |
-#: ../src/mooutils/mooencodings-data.h:76
+#: src/mooutils/mooencodings-data.h:76
 msgid "encoding label|UTF-32LE-BOM (little-endian, with BOM)"
 msgstr ""
 
 #. Label of an encoding menu item, remove the part before and including |
-#: ../src/mooutils/mooencodings-data.h:78
+#: src/mooutils/mooencodings-data.h:78
 msgid "encoding label|UTF-32BE (big-endian, no BOM)"
 msgstr ""
 
 #. Label of an encoding menu item, remove the part before and including |
-#: ../src/mooutils/mooencodings-data.h:80
+#: src/mooutils/mooencodings-data.h:80
 msgid "encoding label|UTF-32LE (little-endian, no BOM)"
 msgstr ""
 
 #. Label of an encoding menu item, remove the part before and including |
-#: ../src/mooutils/mooencodings-data.h:82
+#: src/mooutils/mooencodings-data.h:82
 msgid "encoding label|UTF-16BE-BOM (big-endian, with BOM)"
 msgstr ""
 
 #. Label of an encoding menu item, remove the part before and including |
-#: ../src/mooutils/mooencodings-data.h:84
+#: src/mooutils/mooencodings-data.h:84
 msgid "encoding label|UTF-16LE-BOM (little-endian, with BOM)"
 msgstr ""
 
 #. Label of an encoding menu item, remove the part before and including |
-#: ../src/mooutils/mooencodings-data.h:86
+#: src/mooutils/mooencodings-data.h:86
 msgid "encoding label|UTF-16BE (big-endian, no BOM)"
 msgstr ""
 
 #. Label of an encoding menu item, remove the part before and including |
-#: ../src/mooutils/mooencodings-data.h:88
+#: src/mooutils/mooencodings-data.h:88
 msgid "encoding label|UTF-16LE (little-endian, no BOM)"
 msgstr ""
 
 #. Label of an encoding menu item, remove the part before and including |
-#: ../src/mooutils/mooencodings-data.h:90
+#: src/mooutils/mooencodings-data.h:90
 msgid "encoding label|UTF-8-BOM"
 msgstr ""
 
 #. Label of an encoding menu item, remove the part before and including |
-#: ../src/mooutils/mooencodings-data.h:92
+#: src/mooutils/mooencodings-data.h:92 src/mooutils/mooencodings-data.h:96
+msgid "encoding label|UTF-32-BOM"
+msgstr ""
+
+#. Label of an encoding menu item, remove the part before and including |
+#: src/mooutils/mooencodings-data.h:94 src/mooutils/mooencodings-data.h:98
+msgid "encoding label|UTF-16-BOM"
+msgstr ""
+
+#. Label of an encoding menu item, remove the part before and including |
+#: src/mooutils/mooencodings-data.h:100
 msgid "encoding label|UTF-32"
 msgstr ""
 
 #. Label of an encoding menu item, remove the part before and including |
-#: ../src/mooutils/mooencodings-data.h:94
+#: src/mooutils/mooencodings-data.h:102
 msgid "encoding label|UTF-16"
 msgstr ""
 
 #. Label of an encoding menu item, remove the part before and including |
-#: ../src/mooutils/mooencodings-data.h:96
+#: src/mooutils/mooencodings-data.h:104
 msgid "encoding label|UTF-8"
 msgstr ""
 
-#: ../src/mooutils/mooencodings-data.h:98
+#: src/mooutils/mooencodings-data.h:106
 msgid "Armenian"
 msgstr "Arménština"
 
-#: ../src/mooutils/mooencodings-data.h:99
-#: ../src/mooutils/mooencodings-data.h:100
-#: ../src/mooutils/mooencodings-data.h:105
+#: src/mooutils/mooencodings-data.h:107 src/mooutils/mooencodings-data.h:108
+#: src/mooutils/mooencodings-data.h:113
 msgid "Chinese Traditional"
 msgstr "Tradiční čínština"
 
-#: ../src/mooutils/mooencodings-data.h:101
+#: src/mooutils/mooencodings-data.h:109
 msgid "Cyrillic/Russian"
 msgstr "Azbuka (ruská)"
 
-#: ../src/mooutils/mooencodings-data.h:103
-#: ../src/mooutils/mooencodings-data.h:120
-#: ../src/mooutils/mooencodings-data.h:143
+#: src/mooutils/mooencodings-data.h:111 src/mooutils/mooencodings-data.h:128
+#: src/mooutils/mooencodings-data.h:151
 msgid "Japanese"
 msgstr "Japonština"
 
-#: ../src/mooutils/mooencodings-data.h:104
-#: ../src/mooutils/mooencodings-data.h:121
-#: ../src/mooutils/mooencodings-data.h:123
-#: ../src/mooutils/mooencodings-data.h:146
+#: src/mooutils/mooencodings-data.h:112 src/mooutils/mooencodings-data.h:129
+#: src/mooutils/mooencodings-data.h:131 src/mooutils/mooencodings-data.h:154
 msgid "Korean"
 msgstr "Korejština"
 
-#: ../src/mooutils/mooencodings-data.h:107
-#: ../src/mooutils/mooencodings-data.h:108
-#: ../src/mooutils/mooencodings-data.h:109
-#: ../src/mooutils/mooencodings-data.h:111
+#: src/mooutils/mooencodings-data.h:115 src/mooutils/mooencodings-data.h:116
+#: src/mooutils/mooencodings-data.h:117 src/mooutils/mooencodings-data.h:119
 msgid "Chinese Simplified"
 msgstr "Zjednodušená čínština"
 
-#: ../src/mooutils/mooencodings-data.h:110
+#: src/mooutils/mooencodings-data.h:118
 msgid "Georgian"
 msgstr "Gruzínština"
 
-#: ../src/mooutils/mooencodings-data.h:125
-#: ../src/mooutils/mooencodings-data.h:141
+#: src/mooutils/mooencodings-data.h:133 src/mooutils/mooencodings-data.h:149
 msgid "Cyrillic/Ukrainian"
 msgstr "Azbuka (ukrajinská)"
 
-#: ../src/mooutils/mooencodings-data.h:129
+#: src/mooutils/mooencodings-data.h:137
 msgid "Croatian"
 msgstr "Chorvatština"
 
-#: ../src/mooutils/mooencodings-data.h:131
+#: src/mooutils/mooencodings-data.h:139
 msgid "Hindi"
 msgstr "Hindi"
 
-#: ../src/mooutils/mooencodings-data.h:132
+#: src/mooutils/mooencodings-data.h:140
 msgid "Persian"
 msgstr "Perština"
 
-#: ../src/mooutils/mooencodings-data.h:134
+#: src/mooutils/mooencodings-data.h:142
 msgid "Gujarati"
 msgstr "Gujarati"
 
-#: ../src/mooutils/mooencodings-data.h:135
+#: src/mooutils/mooencodings-data.h:143
 msgid "Gurmukhi"
 msgstr "Gurmukhi"
 
-#: ../src/mooutils/mooencodings-data.h:137
+#: src/mooutils/mooencodings-data.h:145
 msgid "Icelandic"
 msgstr "Islandština"
 
-#: ../src/mooutils/mooencodings-data.h:144
-#: ../src/mooutils/mooencodings-data.h:147
-#: ../src/mooutils/mooencodings-data.h:157
+#: src/mooutils/mooencodings-data.h:152 src/mooutils/mooencodings-data.h:155
+#: src/mooutils/mooencodings-data.h:165
 msgid "Vietnamese"
 msgstr "Vietnamština"
 
-#: ../src/mooutils/mooencodings-data.h:145
+#: src/mooutils/mooencodings-data.h:153
 msgid "Thai"
 msgstr "Thajština"
 
 #. menu item in Insert Special Character submenu of text entry context menu
-#: ../src/mooutils/mooentry.c:533
+#: src/mooutils/mooentry.cpp:523
 msgctxt "insert-special-char"
 msgid "Line End"
 msgstr ""
 
 #. menu item in Insert Special Character submenu of text entry context menu
-#: ../src/mooutils/mooentry.c:535
+#: src/mooutils/mooentry.cpp:525
 msgctxt "insert-special-char"
 msgid "Tab"
 msgstr ""
 
 #. label of Insert Special Character submenu in text entry context menu
-#: ../src/mooutils/mooentry.c:578
+#: src/mooutils/mooentry.cpp:572
 msgctxt "insert-special-char"
 msgid "Insert Special Character"
 msgstr ""
 
-#: ../src/mooutils/moofiledialog.c:650
+#: src/mooutils/moofiledialog.cpp:570
 msgid "Selected file is not a regular file"
 msgstr ""
 
-#: ../src/mooutils/moofilewriter.c:101
+#: src/mooutils/moofilewriter.cpp:91
 #, c-format
 msgid "Could not open %s: %s"
 msgstr ""
 
-#: ../src/mooutils/moofilewriter.c:291 ../src/mooutils/mooutils-fs.c:386
-#: ../src/mooutils/mooutils-fs.c:405 ../src/mooutils/mooutils-fs.c:421
+#: src/mooutils/moofilewriter.cpp:280
 #, c-format
 msgid "Could not create folder %s: %s"
 msgstr ""
 
-#: ../src/mooutils/moofiltermgr.c:545
+#: src/mooutils/moofiltermgr.cpp:548
 msgid "_Show"
 msgstr ""
 
-#: ../src/mooutils/moohelp.c:205
-msgid "Help files not found"
-msgstr ""
+#: src/mooutils/moofontsel.cpp:496
+msgid "Show only fixed width fonts"
+msgstr "Zobrazovat jen písma s pevnou šířkou"
 
-#: ../src/mooutils/moohelp.c:217
-#, c-format
-msgid "File '%s' is missing in the directory '%s'"
+#: src/mooutils/moohelp.cpp:32
+#, fuzzy
+msgid "Could not open the medit web site"
 msgstr ""
+"Nelze otevřít soubor\n"
+"%s"
 
-#: ../src/mooutils/moohelp.c:220
-msgid "Could not find help file"
-msgstr ""
+#: src/mooutils/moohistorymgr.cpp:1652
+msgid "Recent Files"
+msgstr "Nedávné soubory"
 
-#: ../src/mooutils/moopane.c:702
+#: src/mooutils/moopane.cpp:662
 msgid "Remove pane"
 msgstr "Odstranit panel"
 
-#: ../src/mooutils/moopane.c:712
+#: src/mooutils/moopane.cpp:672
 msgid "Hide pane"
 msgstr "Skrýt panel"
 
-#: ../src/mooutils/moopane.c:716
+#: src/mooutils/moopane.cpp:676
 msgid "Sticky"
 msgstr "Přišpendlit"
 
-#: ../src/mooutils/moopane.c:720
+#: src/mooutils/moopane.cpp:680
 msgid "Detach pane"
 msgstr "Odpojit panel"
 
-#: ../src/mooutils/moopane.c:733
+#: src/mooutils/moopane.cpp:693
 msgid "Attach"
 msgstr "Ukotvit"
 
-#: ../src/mooutils/moopane.c:737
+#: src/mooutils/moopane.cpp:697
 msgid "Keep on top"
 msgstr "Stále navrchu"
 
-#: ../src/mooutils/moostock.c:29
+#: src/mooutils/moostock.cpp:27
 msgid "Save _None"
 msgstr "Neukládat _nic"
 
-#: ../src/mooutils/moostock.c:30
+#: src/mooutils/moostock.cpp:28
 msgid "Save _Selected"
 msgstr "Uložit _vybrané"
 
-#: ../src/mooutils/moostock.c:32
+#: src/mooutils/moostock.cpp:30
 msgid "Move"
 msgstr "Přesunout"
 
-#: ../src/mooutils/moostock.c:33
+#: src/mooutils/moostock.cpp:31
 msgid "Link"
 msgstr "Odkaz"
 
-#: ../src/mooutils/moostock.c:35 ../src/plugins/moofileselector.c:1136
+#: src/mooutils/moostock.cpp:33 src/plugins/moofileselector.cpp:1142
 msgid "Save Copy"
 msgstr "Uložit kopii"
 
-#: ../src/mooutils/moostock.c:36
+#: src/mooutils/moostock.cpp:34
 msgid "_New Folder"
 msgstr "Nový _adresář"
 
-#: ../src/mooutils/moostock.c:37
+#: src/mooutils/moostock.cpp:35
 msgid "New _Window"
 msgstr "Nové _okno"
 
 #. This is error message in file selector when rm
 #. fails for some strange reason
-#: ../src/mooutils/mooutils-fs.c:226
+#: src/mooutils/mooutils-fs.cpp:102
 #, c-format
 msgid "Could not run 'rm' command: %s"
 msgstr ""
 
 #. This is error message in file selector when rm
 #. fails to delete a file or folder
-#: ../src/mooutils/mooutils-fs.c:244
+#: src/mooutils/mooutils-fs.cpp:123
 #, c-format
 msgid "'rm' command failed: %s"
 msgstr ""
 
-#: ../src/mooutils/mooutils-fs.c:294 ../src/mooutils/mooutils-fs.c:314
-#: ../src/mooutils/mooutils-fs.c:341
+#: src/mooutils/mooutils-fs.cpp:152
 #, c-format
 msgid "Could not remove %s: %s"
 msgstr ""
 
-#: ../src/mooutils/mooutils-fs.c:450
-#, c-format
-msgid "Could not rename file %s to %s: %s"
-msgstr ""
-
 #. Translators: remove the part before and including |
-#: ../src/mooutils/mooutils-misc.c:1803
+#: src/mooutils/mooutils-misc.cpp:1607
 #, c-format
 msgid "console message|in file %s, line %d, function %s: %s"
 msgstr ""
@@ -1950,86 +1928,88 @@ msgstr ""
 #. "Unknown error" may be displayed if there is a bug in the program
 #. and proper error message has not been set. It doesn't provide any
 #. useful information obviously
-#: ../src/mooutils/mooutils-misc.c:2186
+#: src/mooutils/mooutils-misc.cpp:1847
 msgid "Unknown error"
 msgstr ""
 
-#: ../src/mooutils/moowindow.c:248
+#: src/mooutils/moowindow.cpp:249
 msgid "Configure _Shortcuts..."
 msgstr "Nastavit _klávesové zkratky..."
 
-#: ../src/mooutils/moowindow.c:256 ../src/mooutils/moowindow.c:257
+#: src/mooutils/moowindow.cpp:257 src/mooutils/moowindow.cpp:258
 msgid "Show Toolbar"
 msgstr "Zobrazit nástrojovou lištu"
 
-#: ../src/mooutils/moowindow.c:263 ../src/mooutils/moowindow.c:264
+#: src/mooutils/moowindow.cpp:264 src/mooutils/moowindow.cpp:265
 msgid "Show Menubar"
 msgstr "Zobrazit nabídku"
 
-#: ../src/mooutils/moowindow.c:271 ../src/mooutils/moowindow.c:272
+#: src/mooutils/moowindow.cpp:272 src/mooutils/moowindow.cpp:273
 msgid "Show Statusbar"
 msgstr ""
 
-#: ../src/mooutils/moowindow.c:508
+#: src/mooutils/moowindow.cpp:480
 #, c-format
 msgid "Could not parse geometry string '%s'\n"
 msgstr ""
 
-#: ../src/mooutils/moowindow.c:1254
+#: src/mooutils/moowindow.cpp:1190
 msgid "_Icons Only"
 msgstr "Jen _ikony"
 
-#: ../src/mooutils/moowindow.c:1255
+#: src/mooutils/moowindow.cpp:1191
 msgid "_Labels Only"
 msgstr "Jen _popisky"
 
-#: ../src/mooutils/moowindow.c:1256
+#: src/mooutils/moowindow.cpp:1192
 msgid "Labels _Below Icons"
 msgstr ""
 
-#: ../src/mooutils/moowindow.c:1257
+#: src/mooutils/moowindow.cpp:1193
 msgid "Labels Be_side Icons"
 msgstr ""
 
-#: ../src/mooutils/moowindow.c:1267
+#: src/mooutils/moowindow.cpp:1203
 msgid "Toolbar _Style"
 msgstr "Styl nástrojové lišty"
 
 #. label of Ctags plugin pane
-#: ../src/plugins/ctags/ctags-plugin.c:119
-#: ../src/plugins/ctags/ctags-plugin.c:120
+#: src/plugins/ctags/ctags-plugin.c:232 src/plugins/ctags/ctags-plugin.c:233
 msgctxt "window-pane"
 msgid "Functions"
 msgstr ""
 
-#: ../src/plugins/glade/moofileselector.glade.h:2
+#: src/plugins/ui/moofileselector.ui:25
 msgid "Save as"
 msgstr "Uložit jako"
 
-#: ../src/plugins/glade/moofileselector.glade.h:3
+#: src/plugins/ui/moofileselector.ui:89
 msgid "Create File"
 msgstr "Vytvořit soubor"
 
-#: ../src/plugins/ui/moofileselector.ui:109
+#: src/plugins/ui/moofileselector.ui:109
 msgid "File name"
 msgstr "Název souboru"
 
-#: ../src/plugins/glade/moofileselector-prefs.glade.h:1
+#: src/plugins/ui/moofileselector-prefs.ui:18
 msgid "<b>Open With</b>"
 msgstr "<b>Otevřít pomocí</b>"
 
-#: ../src/plugins/glade/moofileselector-prefs.glade.h:2
+#: src/plugins/ui/moofileselector-prefs.ui:64
+#: src/plugins/ui/moofileselector-prefs.ui:178
 msgid ""
 "Semicolon-separated list of mime types, e.g. 'text/*;application/x-glade'"
 msgstr ""
 "Seznam MIME typů oddělený středníky, např. 'text/*;application/x-glade'"
 
-#: ../src/plugins/glade/moofileselector-prefs.glade.h:4
+#: src/plugins/ui/moofileselector-prefs.ui:83
+#: src/plugins/ui/moofileselector-prefs.ui:164
 msgid "Semicolon-separated list of file globs, e.g. '*.txt;foo.*;*bar*'"
 msgstr "Seznam masek pro soubory oddělený středníky, např. '*.txt; *soubor*'"
 
-#: ../src/plugins/glade/moofileselector-prefs.glade.h:7
-#, no-c-format
+#: src/plugins/ui/moofileselector-prefs.ui:102
+#: src/plugins/ui/moofileselector-prefs.ui:150
+#, c-format
 msgid ""
 "Shell command to open the file: '%f' is replaced with file path, e.g. "
 "'foobar %f'"
@@ -2037,65 +2017,72 @@ msgstr ""
 "Příkaz shellu pro otevření souboru: '%f' je nahrazeno cestou k souboru, "
 "např. 'prikaz %f'"
 
-#: ../src/plugins/glade/moofileselector-prefs.glade.h:8
+#: src/plugins/ui/moofileselector-prefs.ui:107
 msgid "Command"
 msgstr "Příkaz"
 
-#: ../src/plugins/glade/moofileselector-prefs.glade.h:9
+#: src/plugins/ui/moofileselector-prefs.ui:121
+#: src/plugins/ui/moofileselector-prefs.ui:138
 msgid "Menu item label"
 msgstr "Jméno položky v menu"
 
-#: ../src/plugins/glade/moofileselector-prefs.glade.h:10
+#: src/plugins/ui/moofileselector-prefs.ui:126
 msgid "Name"
 msgstr "Jméno"
 
-#: ../src/plugins/glade/moofileselector-prefs.glade.h:13
+#: src/plugins/ui/moofileselector-prefs.ui:238
 msgid "Move down"
 msgstr "Posunout dolů"
 
-#: ../src/plugins/glade/moofileselector-prefs.glade.h:14
+#: src/plugins/ui/moofileselector-prefs.ui:256
 msgid "Move up"
 msgstr "Posunout nahoru"
 
-#: ../src/plugins/glade/moofind.glade.h:1
-#: ../src/plugins/glade/moogrep.glade.h:1
+#: src/plugins/ui/moofind.ui:4 src/plugins/moofind.cpp:249
+#: src/plugins/moofind.cpp:250 src/plugins/moofind.cpp:952
+msgid "Find File"
+msgstr "Najít soubor"
+
+#: src/plugins/ui/moofind.ui:34 src/plugins/ui/moogrep.ui:35
 msgid "_Pattern"
 msgstr "_Vzorek"
 
-#: ../src/plugins/glade/moofind.glade.h:2
-#: ../src/plugins/glade/moogrep.glade.h:3
+#: src/plugins/ui/moofind.ui:53 src/plugins/ui/moogrep.ui:75
 msgid "_Directory"
 msgstr "_Adresář"
 
-#: ../src/plugins/glade/moofind.glade.h:3
-#: ../src/plugins/glade/moogrep.glade.h:4
+#: src/plugins/ui/moofind.ui:74 src/plugins/ui/moogrep.ui:96
 msgid "S_kip files"
 msgstr "Přes_kočit soubory"
 
-#: ../src/plugins/glade/moogrep.glade.h:2
+#: src/plugins/ui/moogrep.ui:4 src/plugins/moofind.cpp:921
+msgid "Find in Files"
+msgstr "Najít v souborech"
+
+#: src/plugins/ui/moogrep.ui:54
 msgid "Fi_les"
 msgstr "S_oubory"
 
-#: ../src/plugins/moofilelist.c:2353 ../src/plugins/moofilelist.c:2354
-#: ../src/plugins/moofilelist.c:2411
+#: src/plugins/moofilelist.cpp:2328 src/plugins/moofilelist.cpp:2329
+#: src/plugins/moofilelist.cpp:2386
 msgid "File List"
 msgstr ""
 
-#: ../src/plugins/moofilelist.c:2411
+#: src/plugins/moofilelist.cpp:2386
 msgid "List of files"
 msgstr ""
 
-#: ../src/plugins/moofileselector.c:388
+#: src/plugins/moofileselector.cpp:386
 #, c-format
 msgid "Create file in folder '%s'"
 msgstr "Vytvořit soubor v adresáři '%s'"
 
-#: ../src/plugins/moofileselector.c:443
+#: src/plugins/moofileselector.cpp:442
 #, c-format
 msgid "Could not create file '%s'"
 msgstr "Nelze vytvořit soubor '%s'"
 
-#: ../src/plugins/moofileselector.c:444 ../src/plugins/moofileselector.c:820
+#: src/plugins/moofileselector.cpp:443 src/plugins/moofileselector.cpp:824
 #, c-format
 msgid ""
 "Could not convert '%s' to filename encoding. Please consider simpler name, "
@@ -2104,84 +2091,73 @@ msgstr ""
 "Nelze zkonvertovat '%s' do kódování jména souboru. Použijte prosím "
 "jednodušší jméno, třeba soubor.bla nebo podobné"
 
-#: ../src/plugins/moofileselector.c:459
+#: src/plugins/moofileselector.cpp:458
 #, c-format
 msgid "File '%s' already exists"
 msgstr "Soubor '%s' už existuje"
 
-#: ../src/plugins/moofileselector.c:612
+#: src/plugins/moofileselector.cpp:613
 msgid "Go to current document directory"
 msgstr "Přejít do adresáře dokumentu"
 
-#: ../src/plugins/moofileselector.c:624 ../src/plugins/moofileselector.c:625
+#: src/plugins/moofileselector.cpp:625 src/plugins/moofileselector.cpp:626
 msgid "New File..."
 msgstr "Nový soubor..."
 
-#: ../src/plugins/moofileselector.c:819
+#: src/plugins/moofileselector.cpp:823
 #, c-format
 msgid "Could not save file as '%s'"
 msgstr "Soubor nelze uložit jako '%s'"
 
-#: ../src/plugins/moofileselector.c:952
+#: src/plugins/moofileselector.cpp:958
 msgid "Save Copy As"
 msgstr "Uložit kopii jako"
 
-#: ../src/plugins/moofileselector.c:978
+#: src/plugins/moofileselector.cpp:984
 msgid "Rename To"
 msgstr "Přejmenovat na"
 
-#: ../src/plugins/moofileselector.c:1118
+#: src/plugins/moofileselector.cpp:1124
 msgid "Move Here"
 msgstr "Přesunout sem"
 
-#: ../src/plugins/moofileselector.c:1119
+#: src/plugins/moofileselector.cpp:1125
 msgid "Move/Rename..."
 msgstr "Přesunout/Přejmenovat..."
 
-#: ../src/plugins/moofileselector.c:1127
+#: src/plugins/moofileselector.cpp:1133
 msgid "Save Here"
 msgstr "Uložit zde"
 
-#: ../src/plugins/moofileselector.c:1128
+#: src/plugins/moofileselector.cpp:1134
 msgid "Save As..."
 msgstr "Uložit jako..."
 
-#: ../src/plugins/moofileselector.c:1137
+#: src/plugins/moofileselector.cpp:1143
 msgid "Save Copy As..."
 msgstr "Uložit kopii jako..."
 
-#: ../src/plugins/moofileselector.c:1291
+#: src/plugins/moofileselector.cpp:1298
 msgid "File selector pane for editor window"
 msgstr "Panel výběru souborů pro okno editoru"
 
-#: ../src/plugins/moofind.c:186
+#: src/plugins/moofind.cpp:175
 msgid "Search Results"
 msgstr "Výsledky hledání"
 
-#: ../src/plugins/moofind.c:250 ../src/plugins/moofind.c:251
+#: src/plugins/moofind.cpp:240 src/plugins/moofind.cpp:241
 msgid "Find In Files"
 msgstr "Najít v souborech"
 
-#: ../src/plugins/moofind.c:252
+#: src/plugins/moofind.cpp:242
 msgid "Find in files"
 msgstr "Najít v souborech"
 
-#: ../src/plugins/moofind.c:260 ../src/plugins/moofind.c:261
-#: ../src/plugins/moofind.c:996
-#: ../src/plugins/ui/moofind.ui:4
-msgid "Find File"
-msgstr "Najít soubor"
-
-#: ../src/plugins/moofind.c:262
+#: src/plugins/moofind.cpp:251
 msgid "Find file"
 msgstr "Najít soubor"
 
-#: ../src/plugins/moofind.c:965
-#: ../src/plugins/ui/moogrep.ui:4
-msgid "Find in Files"
-msgstr "Najít v souborech"
-
-#: ../src/plugins/moofind.c:1048 ../src/plugins/moofind.c:1074
+#: src/plugins/moofind.cpp:1009
 #, c-format
 msgid "*** %u match found ***"
 msgid_plural "*** %u matches found ***"
@@ -2189,7 +2165,7 @@ msgstr[0] "*** Nalezeny %u shody ***"
 msgstr[1] "*** Nalezeno %u shod ***"
 msgstr[2] "*** Nalezeno %u shod ***"
 
-#: ../src/plugins/moofind.c:1055 ../src/plugins/moofind.c:1080
+#: src/plugins/moofind.cpp:1016
 #, c-format
 msgid "*** %u file found ***"
 msgid_plural "*** %u files found ***"
@@ -2197,222 +2173,822 @@ msgstr[0] "*** Nalezeny %u soubory ***"
 msgstr[1] "*** Nalezeno %u souborů ***"
 msgstr[2] "*** Nalezeno %u souborů ***"
 
-#: ../src/plugins/moofind.c:1116
+#: src/plugins/moofind.cpp:1053
 msgid "Finds everything"
 msgstr "Najde vše"
 
 #. label of Output window pane
-#: ../src/plugins/support/mooeditwindowoutput.c:47
-#: ../src/plugins/support/mooeditwindowoutput.c:48
+#: src/plugins/support/mooeditwindowoutput.cpp:47
+#: src/plugins/support/mooeditwindowoutput.cpp:48
 msgctxt "window-pane"
 msgid "Output"
 msgstr "Výstup"
 
+#: src/plugins/lsp/lsp-actions.cpp:289
+msgid "The command failed"
+msgstr "Příkaz selhal"
+
+#: src/plugins/lsp/lsp-actions.cpp:521
+msgid "Code actions failed"
+msgstr "Akce kódu selhaly"
+
+#: src/plugins/lsp/lsp-actions.cpp:536
+msgid "No code actions here"
+msgstr "Zde nejsou žádné akce kódu"
+
+#: src/plugins/lsp/lsp-actions.cpp:537
+msgid "The server has nothing to offer at this place."
+msgstr "Server nemá na tomto místě co nabídnout."
+
+#: src/plugins/lsp/lsp-diagnostics.cpp:79
+msgctxt "diagnostic severity"
+msgid "warning"
+msgstr "varování"
+
+#: src/plugins/lsp/lsp-diagnostics.cpp:81
+msgctxt "diagnostic severity"
+msgid "information"
+msgstr "informace"
+
+#: src/plugins/lsp/lsp-diagnostics.cpp:83
+msgctxt "diagnostic severity"
+msgid "hint"
+msgstr "nápověda"
+
+#: src/plugins/lsp/lsp-diagnostics.cpp:86
+msgctxt "diagnostic severity"
+msgid "error"
+msgstr "chyba"
+
+#: src/plugins/lsp/lsp-edits.cpp:363 src/plugins/lsp/lsp-plugin.cpp:1328
+#: src/plugins/lsp/lsp-plugin.cpp:1381
+msgid "Rename"
+msgstr "Přejmenovat"
+
+#: src/plugins/lsp/lsp-edits.cpp:367
+msgid "_Rename"
+msgstr "Pře_jmenovat"
+
+#: src/plugins/lsp/lsp-edits.cpp:374
+#, c-format
+msgid "New name for '%s'"
+msgstr "Nový název pro „%s“"
+
+#: src/plugins/lsp/lsp-edits.cpp:375
+msgid "New name"
+msgstr "Nový název"
+
+#: src/plugins/lsp/lsp-edits.cpp:463 src/plugins/lsp/lsp-edits.cpp:473
+msgid "Rename failed"
+msgstr "Přejmenování se nezdařilo"
+
+#: src/plugins/lsp/lsp-edits.cpp:474
+msgid "The server had nothing to change."
+msgstr "Server neměl co změnit."
+
+#: src/plugins/lsp/lsp-edits.cpp:577
+msgid "Formatting failed"
+msgstr "Formátování se nezdařilo"
+
+#: src/plugins/lsp/lsp-plugin.cpp:104 src/plugins/lsp/lsp-plugin.cpp:1293
+msgid "LSP"
+msgstr "LSP"
+
+#: src/plugins/lsp/lsp-plugin.cpp:104
+msgid "Language server protocol client"
+msgstr "Klient protokolu jazykového serveru"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1191 src/plugins/lsp/lsp-plugin.cpp:1296
+#: src/plugins/lsp/lsp-plugin.cpp:1297
+msgid "Diagnostics"
+msgstr "Diagnostika"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1205 src/plugins/lsp/lsp-plugin.cpp:1447
+#: src/plugins/lsp/lsp-plugin.cpp:1448
+msgid "References"
+msgstr "Použití"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1213 src/plugins/lsp/lsp-plugin.cpp:1455
+#: src/plugins/lsp/lsp-plugin.cpp:1456
+msgid "Symbols"
+msgstr "Symboly"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1298
+msgid "Show the diagnostics pane"
+msgstr "Zobrazit panel diagnostiky"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1304 src/plugins/lsp/lsp-plugin.cpp:1367
+msgid "Go to Definition"
+msgstr "Přejít na definici"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1305 src/plugins/lsp/lsp-plugin.cpp:1368
+msgid "Go to _Definition"
+msgstr "Přejít na _definici"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1306 src/plugins/lsp/lsp-plugin.cpp:1369
+msgid "Go to the definition of what is under the cursor"
+msgstr "Přejít na definici toho, co je pod kurzorem"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1312 src/plugins/lsp/lsp-plugin.cpp:1374
+msgid "Find References"
+msgstr "Najít použití"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1313 src/plugins/lsp/lsp-plugin.cpp:1375
+msgid "Find _References"
+msgstr "Najít _použití"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1314 src/plugins/lsp/lsp-plugin.cpp:1376
+msgid "List every use of what is under the cursor"
+msgstr "Vypsat všechna použití toho, co je pod kurzorem"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1321
+msgid "Format Document"
+msgstr "Naformátovat dokument"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1322
+msgid "_Format Document"
+msgstr "_Naformátovat dokument"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1323
+msgid "Let the language server lay the document out"
+msgstr "Nechat dokument naformátovat jazykovým serverem"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1329 src/plugins/lsp/lsp-plugin.cpp:1382
+msgid "_Rename..."
+msgstr "Pře_jmenovat…"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1330 src/plugins/lsp/lsp-plugin.cpp:1383
+msgid "Rename what is under the cursor everywhere"
+msgstr "Přejmenovat všude to, co je pod kurzorem"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1336 src/plugins/lsp/lsp-plugin.cpp:1388
+msgid "Code Actions"
+msgstr "Akce kódu"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1337 src/plugins/lsp/lsp-plugin.cpp:1389
+msgid "Code _Actions..."
+msgstr "A_kce kódu…"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1338 src/plugins/lsp/lsp-plugin.cpp:1390
+msgid "Offer what the language server can do here"
+msgstr "Nabídne, co zde jazykový server umí"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1344
+msgid "Go to Type Definition"
+msgstr "Přejít na definici typu"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1345
+msgid "Go to _Type Definition"
+msgstr "Přejít na definici _typu"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1346
+msgid "Go to the definition of the type of what is under the cursor"
+msgstr "Přejít na definici typu toho, co je pod kurzorem"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1351
+msgid "Go to Implementation"
+msgstr "Přejít na implementaci"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1352
+msgid "Go to _Implementation"
+msgstr "Přejít na _implementaci"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1353
+msgid "Go to the implementation of what is under the cursor"
+msgstr "Přejít na implementaci toho, co je pod kurzorem"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1415
+msgid "LSP Servers"
+msgstr "Servery LSP"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1416
+msgid "LSP _Servers..."
+msgstr "_Servery LSP…"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1417
+msgid "Edit the list of language servers"
+msgstr "Upravit seznam jazykových serverů"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1423 src/plugins/lsp/lsp-plugin.cpp:1424
+msgid "Restart Language Servers"
+msgstr "Restartovat jazykové servery"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1425
+msgid "Re-read the configuration and start every server again"
+msgstr "Znovu načíst nastavení a spustit každý server znovu"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1431
+msgid "Complete Word"
+msgstr "Doplnit slovo"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1432
+msgid "_Complete Word"
+msgstr "_Doplnit slovo"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1433
+msgid "Ask the language server what could go here"
+msgstr "Zeptat se jazykového serveru, co sem může patřit"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1439
+msgid "Parameter Hints"
+msgstr "Nápověda k parametrům"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1440
+msgid "_Parameter Hints"
+msgstr "Nápověda k _parametrům"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1441
+msgid "Show what the call being typed takes"
+msgstr "Zobrazit, co přijímá právě psané volání"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1449
+msgid "Show the references pane"
+msgstr "Zobrazit panel použití"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1457
+msgid "Show the symbol tree"
+msgstr "Zobrazit strom symbolů"
+
+#: src/plugins/lsp/lsp-server.cpp:919
+#, c-format
+msgid "%s failed to start: %s"
+msgstr "%s se nepodařilo spustit: %s"
+
+#: src/plugins/lsp/lsp-server.cpp:920 src/plugins/lsp/lsp-server.cpp:1304
+msgid "unknown error"
+msgstr "neznámá chyba"
+
+#: src/plugins/lsp/lsp-server.cpp:926
+#, c-format
+msgid "%s answered the initialize request with no capabilities"
+msgstr "%s odpověděl na inicializační požadavek bez jakýchkoli schopností"
+
+#: src/plugins/lsp/lsp-server.cpp:948
+#, c-format
+msgid "%s did not answer the initialize request in %d seconds"
+msgstr "%s neodpověděl na inicializační požadavek do %d sekund"
+
+#: src/plugins/lsp/lsp-server.cpp:1261
+#, c-format
+msgid ""
+"%s exited immediately %d times in a row; check the command in the LSP "
+"configuration file"
+msgstr ""
+"%s se %d× po sobě okamžitě ukončil; zkontrolujte příkaz v konfiguračním "
+"souboru LSP"
+
+#: src/plugins/lsp/lsp-server.cpp:1303
+#, c-format
+msgid "could not run %s: %s"
+msgstr "nepodařilo se spustit %s: %s"
+
+#: src/plugins/lsp/lsp-prefs.cpp:37
+msgid "Could not create the LSP configuration file"
+msgstr "Nepodařilo se vytvořit konfigurační soubor LSP"
+
+#: src/plugins/lsp/lsp-prefs.cpp:80
+msgid "Language Servers"
+msgstr "Jazykové servery"
+
+#: src/plugins/lsp/lsp-references.cpp:333
+msgid "The server refused the question"
+msgstr "Server dotaz odmítl"
+
+#.
+#. * An empty answer is shown as a sentence rather than as an empty pane: a
+#. * pane with nothing in it is what a question that was never asked looks
+#. * like, and the two are worth telling apart.
+#.
+#: src/plugins/lsp/lsp-references.cpp:345
+msgid "No references found"
+msgstr "Nebyla nalezena žádná použití"
+
+#: src/plugins/lsp/lsp-symbols.cpp:32
+msgctxt "symbol kind"
+msgid "file"
+msgstr "soubor"
+
+#: src/plugins/lsp/lsp-symbols.cpp:33
+msgctxt "symbol kind"
+msgid "module"
+msgstr "modul"
+
+#: src/plugins/lsp/lsp-symbols.cpp:34
+msgctxt "symbol kind"
+msgid "namespace"
+msgstr "jmenný prostor"
+
+#: src/plugins/lsp/lsp-symbols.cpp:35
+msgctxt "symbol kind"
+msgid "package"
+msgstr "balíček"
+
+#: src/plugins/lsp/lsp-symbols.cpp:36
+msgctxt "symbol kind"
+msgid "class"
+msgstr "třída"
+
+#: src/plugins/lsp/lsp-symbols.cpp:37
+msgctxt "symbol kind"
+msgid "method"
+msgstr "metoda"
+
+#: src/plugins/lsp/lsp-symbols.cpp:38
+msgctxt "symbol kind"
+msgid "property"
+msgstr "vlastnost"
+
+#: src/plugins/lsp/lsp-symbols.cpp:39
+msgctxt "symbol kind"
+msgid "field"
+msgstr "položka"
+
+#: src/plugins/lsp/lsp-symbols.cpp:40
+msgctxt "symbol kind"
+msgid "constructor"
+msgstr "konstruktor"
+
+#: src/plugins/lsp/lsp-symbols.cpp:41
+msgctxt "symbol kind"
+msgid "enum"
+msgstr "výčet"
+
+#: src/plugins/lsp/lsp-symbols.cpp:42
+msgctxt "symbol kind"
+msgid "interface"
+msgstr "rozhraní"
+
+#: src/plugins/lsp/lsp-symbols.cpp:43
+msgctxt "symbol kind"
+msgid "function"
+msgstr "funkce"
+
+#: src/plugins/lsp/lsp-symbols.cpp:44
+msgctxt "symbol kind"
+msgid "variable"
+msgstr "proměnná"
+
+#: src/plugins/lsp/lsp-symbols.cpp:45
+msgctxt "symbol kind"
+msgid "constant"
+msgstr "konstanta"
+
+#: src/plugins/lsp/lsp-symbols.cpp:46
+msgctxt "symbol kind"
+msgid "string"
+msgstr "řetězec"
+
+#: src/plugins/lsp/lsp-symbols.cpp:47
+msgctxt "symbol kind"
+msgid "number"
+msgstr "číslo"
+
+#: src/plugins/lsp/lsp-symbols.cpp:48
+msgctxt "symbol kind"
+msgid "boolean"
+msgstr "pravdivostní hodnota"
+
+#: src/plugins/lsp/lsp-symbols.cpp:49
+msgctxt "symbol kind"
+msgid "array"
+msgstr "pole"
+
+#: src/plugins/lsp/lsp-symbols.cpp:50
+msgctxt "symbol kind"
+msgid "object"
+msgstr "objekt"
+
+#: src/plugins/lsp/lsp-symbols.cpp:51
+msgctxt "symbol kind"
+msgid "key"
+msgstr "klíč"
+
+#: src/plugins/lsp/lsp-symbols.cpp:52
+msgctxt "symbol kind"
+msgid "null"
+msgstr "null"
+
+#: src/plugins/lsp/lsp-symbols.cpp:53
+msgctxt "symbol kind"
+msgid "enum member"
+msgstr "prvek výčtu"
+
+#: src/plugins/lsp/lsp-symbols.cpp:54
+msgctxt "symbol kind"
+msgid "struct"
+msgstr "struktura"
+
+#: src/plugins/lsp/lsp-symbols.cpp:55
+msgctxt "symbol kind"
+msgid "event"
+msgstr "událost"
+
+#: src/plugins/lsp/lsp-symbols.cpp:56
+msgctxt "symbol kind"
+msgid "operator"
+msgstr "operátor"
+
+#: src/plugins/lsp/lsp-symbols.cpp:57
+msgctxt "symbol kind"
+msgid "type parameter"
+msgstr "typový parametr"
+
+#: src/plugins/lsp/ui/lsp-prefs.ui:22
+msgid "Underline problems and list them in the _Diagnostics pane"
+msgstr "Podtrhávat problémy a vypisovat je v panelu _Diagnostika"
+
+#: src/plugins/lsp/ui/lsp-prefs.ui:34
+msgid "_Complete words"
+msgstr "_Doplňovat slova"
+
+#: src/plugins/lsp/ui/lsp-prefs.ui:46
+msgid "Show the _parameters of a call"
+msgstr "Zobrazovat _parametry volání"
+
+#: src/plugins/lsp/ui/lsp-prefs.ui:49
+msgid "While the call is being typed, and on Ctrl+Shift+Space."
+msgstr "Během psaní volání a po stisku Ctrl+Shift+Mezerník."
+
+#: src/plugins/lsp/ui/lsp-prefs.ui:59
+msgid "_Mark the other uses of what the cursor is in"
+msgstr "_Označovat ostatní použití toho, v čem je kurzor"
+
+#: src/plugins/lsp/ui/lsp-prefs.ui:71
+msgid "Describe what is under the _pointer"
+msgstr "Popisovat, co je pod _ukazatelem"
+
+#: src/plugins/lsp/ui/lsp-prefs.ui:87
+msgid "Send changes to the server _after"
+msgstr "Odesílat změny na server _po"
+
+#: src/plugins/lsp/ui/lsp-prefs.ui:110
+msgid "milliseconds of quiet"
+msgstr "milisekundách klidu"
+
+#: src/plugins/lsp/ui/lsp-prefs.ui:125
+msgid "_Log the protocol to standard error"
+msgstr "Zapisovat protokol na standardní chybový _výstup"
+
+#: src/plugins/lsp/ui/lsp-prefs.ui:128
+msgid ""
+"Every message to and from every server. The MEDIT_LSP_DEBUG environment "
+"variable does the same."
+msgstr ""
+"Každá zpráva ke každému serveru i od něj. Proměnná prostředí MEDIT_LSP_DEBUG "
+"dělá totéž."
+
+#: src/plugins/lsp/ui/lsp-prefs.ui:142
+msgid "_Edit the Server List"
+msgstr "_Upravit seznam serverů"
+
+#: src/plugins/lsp/ui/lsp-prefs.ui:144
+msgid ""
+"Opens your copy of lsp.xml, creating it from the installed one if you have "
+"none."
+msgstr ""
+"Otevře vaši kopii lsp.xml; pokud žádnou nemáte, vytvoří ji z nainstalované."
+
+#: src/plugins/lsp/ui/lsp-prefs.ui:154
+msgid "_Restart Servers"
+msgstr "_Restartovat servery"
+
+#: src/plugins/lsp/ui/lsp-prefs.ui:156
+msgid "Re-reads the configuration file and starts over with every server."
+msgstr "Znovu načte konfigurační soubor a začne znovu s každým serverem."
+
+#: src/plugins/terminal/terminal-colors.cpp:26
+msgid "Default"
+msgstr ""
+
+#: src/plugins/terminal/terminal-colors.cpp:28
+msgid "Black on White"
+msgstr ""
+
+#: src/plugins/terminal/terminal-colors.cpp:33
+msgid "Black on Light Yellow"
+msgstr ""
+
+#: src/plugins/terminal/terminal-colors.cpp:38
+msgid "Marble"
+msgstr ""
+
+#: src/plugins/terminal/terminal-colors.cpp:43
+msgid "Green on Black"
+msgstr ""
+
+#: src/plugins/terminal/terminal-colors.cpp:48
+msgid "Paper, Light"
+msgstr ""
+
+#: src/plugins/terminal/terminal-colors.cpp:53
+msgid "Paper"
+msgstr ""
+
+#: src/plugins/terminal/terminal-colors.cpp:58
+msgid "Linux Colors"
+msgstr ""
+
+#: src/plugins/terminal/terminal-colors.cpp:63
+msgid "VIM Colors"
+msgstr ""
+
+#: src/plugins/terminal/terminal-colors.cpp:68
+msgid "White on Black"
+msgstr ""
+
+#. start_shell() would reset the terminal and wipe this out. Applying
+#. the preferences starts a shell again, which is what the message
+#. asks the user to do.
+#: src/plugins/terminal/terminal-plugin.cpp:238
+msgid ""
+"The shell keeps exiting immediately, not restarting it. Check the shell in "
+"the Terminal preferences."
+msgstr ""
+"Shell se stále okamžitě ukončuje, nebude znovu spuštěn. Zkontrolujte shell v "
+"nastavení terminálu."
+
+#: src/plugins/terminal/terminal-plugin.cpp:272
+#: src/plugins/terminal/terminal-plugin.cpp:770
+#: src/plugins/terminal/terminal-plugin.cpp:821
+#: src/plugins/terminal/terminal-plugin.cpp:824
+#: src/plugins/terminal/terminal-plugin.cpp:825
+#: src/plugins/terminal/terminal-plugin.cpp:889
+#: src/plugins/terminal/terminal-prefs.cpp:133
+msgid "Terminal"
+msgstr "Terminál"
+
+#: src/plugins/terminal/terminal-plugin.cpp:570
+msgid "“cd” to current file directory"
+msgstr "„cd“ do adresáře aktuálního souboru"
+
+#: src/plugins/terminal/terminal-plugin.cpp:577
+msgid "“pushd” to current file directory"
+msgstr "„pushd“ do adresáře aktuálního souboru"
+
+#: src/plugins/terminal/terminal-plugin.cpp:826
+msgid "Show the terminal pane"
+msgstr "Zobrazit panel terminálu"
+
+#: src/plugins/terminal/terminal-plugin.cpp:839
+#: src/plugins/terminal/terminal-plugin.cpp:840
+msgid "Copy in Terminal"
+msgstr "Kopírovat v terminálu"
+
+#: src/plugins/terminal/terminal-plugin.cpp:841
+msgid "Copy the selection in the terminal pane"
+msgstr "Kopírovat výběr v panelu terminálu"
+
+#: src/plugins/terminal/terminal-plugin.cpp:848
+#: src/plugins/terminal/terminal-plugin.cpp:849
+msgid "Paste in Terminal"
+msgstr "Vložit v terminálu"
+
+#: src/plugins/terminal/terminal-plugin.cpp:850
+msgid "Paste the clipboard into the terminal pane"
+msgstr "Vložit schránku do panelu terminálu"
+
+#: src/plugins/terminal/terminal-plugin.cpp:889
+msgid "Terminal pane"
+msgstr "Panel terminálu"
+
+#: src/plugins/terminal/ui/terminal-prefs.ui:20
+msgid "S_hell"
+msgstr "S_hell"
+
+#: src/plugins/terminal/ui/terminal-prefs.ui:34
+msgid ""
+"Leave empty to use the login shell. Takes effect the next time the shell is "
+"started."
+msgstr ""
+"Ponechte prázdné pro použití přihlašovacího shellu. Projeví se při příštím "
+"spuštění shellu."
+
+#: src/plugins/terminal/ui/terminal-prefs.ui:45
+msgid "Color _scheme"
+msgstr "_Barevné schéma"
+
+#: src/plugins/terminal/ui/terminal-prefs.ui:68
+msgid "_Font"
+msgstr "_Písmo"
+
+#: src/plugins/terminal/ui/terminal-prefs.ui:93
+msgid "_Default"
+msgstr "_Výchozí"
+
+#: src/plugins/terminal/ui/terminal-prefs.ui:95
+msgid "Use the system monospace font"
+msgstr "Použít systémové neproporcionální písmo"
+
 #. Output filter for shell commands. Translators: remove the part before and including |.
-#: ../src/plugins/usertools/filters.xml.h:2
+#: src/plugins/usertools/filters.xml.h:2
 msgid "Filter|Default"
 msgstr ""
 
 #. Output filter for shell commands. Translators: remove the part before and including |.
-#: ../src/plugins/usertools/filters.xml.h:4
+#: src/plugins/usertools/filters.xml.h:4
 msgid "Filter|None"
 msgstr "Žádný"
 
 #. Output filter for shell commands. Translators: remove the part before and including |.
-#: ../src/plugins/usertools/filters.xml.h:6
+#: src/plugins/usertools/filters.xml.h:6
 msgid "Filter|Bison"
 msgstr ""
 
 #. Output filter for shell commands. Translators: remove the part before and including |.
-#: ../src/plugins/usertools/filters.xml.h:8
+#: src/plugins/usertools/filters.xml.h:8
 msgid "Filter|Python"
 msgstr ""
 
 #. Output filter for shell commands. Translators: remove the part before and including |.
-#: ../src/plugins/usertools/filters.xml.h:10
+#: src/plugins/usertools/filters.xml.h:10
 msgid "Filter|LaTeX"
 msgstr ""
 
 #. Output filter for shell commands. Translators: remove the part before and including |.
-#: ../src/plugins/usertools/filters.xml.h:12
+#: src/plugins/usertools/filters.xml.h:12
 msgid "Filter|Make"
 msgstr ""
 
-#: ../src/plugins/usertools/glade/mooedittools-exe.glade.h:2
+#: src/plugins/usertools/ui/mooedittools-exe.ui:59
 msgid "Output"
 msgstr "Výstup"
 
-#: ../src/plugins/usertools/glade/mooedittools-exe.glade.h:3
+#: src/plugins/usertools/ui/mooedittools-exe.ui:83
 msgid "Input"
 msgstr "Vstup"
 
-#: ../src/plugins/usertools/glade/moousertools.glade.h:1
+#: src/plugins/usertools/ui/moousertools.ui:45
 msgid "New item"
 msgstr "Nová položka"
 
-#: ../src/plugins/usertools/glade/moousertools.glade.h:2
+#: src/plugins/usertools/ui/moousertools.ui:63
 msgid "Delete item"
 msgstr "Smazat položku"
 
-#: ../src/plugins/usertools/glade/moousertools.glade.h:3
+#: src/plugins/usertools/ui/moousertools.ui:81
 msgid "Move item down"
 msgstr "Přesunout položku níže"
 
-#: ../src/plugins/usertools/glade/moousertools.glade.h:4
+#: src/plugins/usertools/ui/moousertools.ui:99
 msgid "Move item up"
 msgstr "Přesunout položku výše"
 
-#: ../src/plugins/usertools/glade/moousertools.glade.h:5
+#: src/plugins/usertools/ui/moousertools.ui:141
 msgid "Enabled"
 msgstr "Povoleno"
 
-#: ../src/plugins/usertools/glade/moousertools.glade.h:6
+#: src/plugins/usertools/ui/moousertools.ui:156
 msgid "_Files"
 msgstr ""
 
-#: ../src/plugins/usertools/glade/moousertools.glade.h:7
+#: src/plugins/usertools/ui/moousertools.ui:183
 msgid "_Requires"
 msgstr ""
 
-#: ../src/plugins/usertools/glade/moousertools.glade.h:8
+#: src/plugins/usertools/ui/moousertools.ui:210
 msgid "_Save"
 msgstr ""
 
-#: ../src/plugins/usertools/glade/moousertools.glade.h:9
+#: src/plugins/usertools/ui/moousertools.ui:237
 msgid "_Type"
 msgstr ""
 
 #. Label of a notebook tab on the User Tools preferences page
-#: ../src/plugins/usertools/glade/moousertools.glade.h:11
+#: src/plugins/usertools/ui/moousertools.ui:318
 msgctxt "user-tools-prefs"
 msgid "Tools menu"
 msgstr ""
 
 #. Label of a notebook tab on the User Tools preferences page
-#: ../src/plugins/usertools/glade/moousertools.glade.h:13
+#: src/plugins/usertools/ui/moousertools.ui:335
 msgctxt "user-tools-prefs"
 msgid "Context menu"
 msgstr ""
 
 #. Translators: this is an action for output of a shell command, remove the part before and including |
-#: ../src/plugins/usertools/moocommand-exe.c:89
+#: src/plugins/usertools/moocommand-exe.cpp:67
 msgid "Output|None"
 msgstr "Žádný"
 
 #. Translators: this is an action for output of a shell command, remove the part before and including |
-#: ../src/plugins/usertools/moocommand-exe.c:91
+#: src/plugins/usertools/moocommand-exe.cpp:69
 msgid "Output|None, asynchronous"
 msgstr "Žádný, asynchronní"
 
 #. Translators: this is an action for output of a shell command, remove the part before and including |
-#: ../src/plugins/usertools/moocommand-exe.c:94
-msgid "Output|Console"
-msgstr ""
-
-#. Translators: this is an action for output of a shell command, remove the part before and including |
-#: ../src/plugins/usertools/moocommand-exe.c:97
+#: src/plugins/usertools/moocommand-exe.cpp:71
 msgid "Output|Output pane"
 msgstr "Výstupní panel"
 
 #. Translators: this is an action for output of a shell command, remove the part before and including |
-#: ../src/plugins/usertools/moocommand-exe.c:99
+#: src/plugins/usertools/moocommand-exe.cpp:73
 msgid "Output|Insert into the document"
 msgstr "Vložit do dokumentu"
 
 #. Translators: this is an action for output of a shell command, remove the part before and including |
-#: ../src/plugins/usertools/moocommand-exe.c:101
+#: src/plugins/usertools/moocommand-exe.cpp:75
 msgid "Output|New document"
 msgstr "Nový dokument"
 
-#: ../src/plugins/usertools/moocommand-exe.c:819
+#: src/plugins/usertools/moocommand-exe.cpp:778
 msgid "Shell command"
 msgstr "Příkaz shellu"
 
 #. Translators: this is a kind of input for a shell command, remove the part before and including |
-#: ../src/plugins/usertools/moocommand-exe.c:1063
+#: src/plugins/usertools/moocommand-exe.cpp:1019
 msgid "Input|None"
 msgstr "Žádný"
 
 #. Translators: this is a kind of input for a shell command, remove the part before and including |
-#: ../src/plugins/usertools/moocommand-exe.c:1065
+#: src/plugins/usertools/moocommand-exe.cpp:1021
 msgid "Input|Selected lines"
 msgstr "Vybrané řádky"
 
 #. Translators: this is a kind of input for a shell command, remove the part before and including |
-#: ../src/plugins/usertools/moocommand-exe.c:1067
+#: src/plugins/usertools/moocommand-exe.cpp:1023
 msgid "Input|Selection"
 msgstr "Výběr"
 
 #. Translators: this is a kind of input for a shell command, remove the part before and including |
-#: ../src/plugins/usertools/moocommand-exe.c:1069
+#: src/plugins/usertools/moocommand-exe.cpp:1025
 msgid "Input|Whole document"
 msgstr "Celý dokument"
 
 #. Translators: this is a kind of input for a shell command, remove the part before and including |
-#: ../src/plugins/usertools/moocommand-exe.c:1071
+#: src/plugins/usertools/moocommand-exe.cpp:1027
 msgid "Input|Document copy"
 msgstr ""
 
-#: ../src/plugins/usertools/moocommand-script.cpp:279
-msgid "Lua script"
-msgstr "Skript Lua"
-
-#: ../src/plugins/usertools/moocommand-script.cpp:285
-msgid "Python script"
-msgstr "Skript v Pythonu"
-
-#: ../src/plugins/usertools/moousertools.c:394
-#: ../src/plugins/usertools/moousertools-prefs.c:559
+#: src/plugins/usertools/moousertools.cpp:390
+#: src/plugins/usertools/moousertools-prefs.cpp:582
 msgid "Tools"
 msgstr "Nástroje"
 
-#: ../src/plugins/usertools/moousertools.c:1376
+#: src/plugins/usertools/moousertools.cpp:1405
 msgid "User Tools"
 msgstr ""
 
-#: ../src/plugins/usertools/moousertools.c:1377
+#: src/plugins/usertools/moousertools.cpp:1406
 msgid "Configurable tools"
 msgstr ""
 
-#: ../src/plugins/usertools/moousertools-prefs.c:109
+#: src/plugins/usertools/moousertools-prefs.cpp:108
 msgid "New Command"
 msgstr "Nový příkaz"
 
 #. 'Requires' combo box entry on Tools prefs page
-#: ../src/plugins/usertools/moousertools-prefs.c:162
+#: src/plugins/usertools/moousertools-prefs.cpp:161
 msgctxt "Requires-combo"
 msgid "Nothing"
 msgstr ""
 
 #. 'Requires' combo box entry on Tools prefs page
-#: ../src/plugins/usertools/moousertools-prefs.c:164
+#: src/plugins/usertools/moousertools-prefs.cpp:163
 msgctxt "Requires-combo"
 msgid "Document"
 msgstr ""
 
 #. 'Requires' combo box entry on Tools prefs page
-#: ../src/plugins/usertools/moousertools-prefs.c:166
+#: src/plugins/usertools/moousertools-prefs.cpp:165
 msgctxt "Requires-combo"
 msgid "File on disk"
 msgstr ""
 
 #. 'Save' combo box entry on Tools prefs page
-#: ../src/plugins/usertools/moousertools-prefs.c:177
+#: src/plugins/usertools/moousertools-prefs.cpp:177
 msgctxt "Save-combo"
 msgid "Nothing"
 msgstr ""
 
 #. 'Save' combo box entry on Tools prefs page
-#: ../src/plugins/usertools/moousertools-prefs.c:179
+#: src/plugins/usertools/moousertools-prefs.cpp:179
 msgctxt "Save-combo"
 msgid "Current document"
 msgstr ""
 
 #. 'Save' combo box entry on Tools prefs page
-#: ../src/plugins/usertools/moousertools-prefs.c:181
+#: src/plugins/usertools/moousertools-prefs.cpp:181
 msgctxt "Save-combo"
 msgid "All documents"
 msgstr ""
+
+#~ msgid "translator-credits"
+#~ msgstr "Vlastimil Ott <vlastimil@e-ott.info>"
+
+#~ msgid "Python Output"
+#~ msgstr "Výstupu Pythonu"
+
+#~ msgid "Python Console"
+#~ msgstr "Konzole Pythonu"
+
+#~ msgid "Run File"
+#~ msgstr "Spustit soubor"
+
+#~ msgid "Lua script"
+#~ msgstr "Skript Lua"
+
+#~ msgid "Python script"
+#~ msgstr "Skript v Pythonu"
 
 #~ msgid "Could not save file"
 #~ msgstr "Soubor nelze uložit"
@@ -2447,7 +3023,6 @@ msgstr ""
 
 #~ msgid "Python support"
 #~ msgstr "Podpora Pythonu"
-
 
 #~ msgid "Terminal plugin"
 #~ msgstr "Plugin pro terminál"
@@ -2496,563 +3071,3 @@ msgstr ""
 
 #~ msgid "CVS and SVN dirs"
 #~ msgstr "Adresáře CVS a SVN"
-
-#: ../src/plugins/lsp/lsp-edits.cpp:332
-#: ../src/plugins/lsp/lsp-plugin.cpp:1284
-#: ../src/plugins/lsp/lsp-plugin.cpp:1329
-msgid "Rename"
-msgstr "Přejmenovat"
-
-#: ../src/plugins/lsp/lsp-edits.cpp:336
-msgid "_Rename"
-msgstr "Pře_jmenovat"
-
-#: ../src/plugins/lsp/lsp-edits.cpp:343
-msgid "New name for '%s'"
-msgstr "Nový název pro „%s“"
-
-#: ../src/plugins/lsp/lsp-edits.cpp:344
-msgid "New name"
-msgstr "Nový název"
-
-#: ../src/plugins/lsp/lsp-edits.cpp:432
-#: ../src/plugins/lsp/lsp-edits.cpp:442
-msgid "Rename failed"
-msgstr "Přejmenování se nezdařilo"
-
-#: ../src/plugins/lsp/lsp-edits.cpp:443
-msgid "The server had nothing to change."
-msgstr "Server neměl co změnit."
-
-#: ../src/plugins/lsp/lsp-edits.cpp:546
-msgid "Formatting failed"
-msgstr "Formátování se nezdařilo"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:113
-msgid "LSP"
-msgstr "LSP"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:113
-msgid "Language server protocol client"
-msgstr "Klient protokolu jazykového serveru"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1153
-#: ../src/plugins/lsp/lsp-plugin.cpp:1252
-#: ../src/plugins/lsp/lsp-plugin.cpp:1253
-msgid "Diagnostics"
-msgstr "Diagnostika"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1167
-#: ../src/plugins/lsp/lsp-plugin.cpp:1385
-#: ../src/plugins/lsp/lsp-plugin.cpp:1386
-msgid "References"
-msgstr "Použití"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1175
-#: ../src/plugins/lsp/lsp-plugin.cpp:1393
-#: ../src/plugins/lsp/lsp-plugin.cpp:1394
-msgid "Symbols"
-msgstr "Symboly"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1254
-msgid "Show the diagnostics pane"
-msgstr "Zobrazit panel diagnostiky"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1260
-#: ../src/plugins/lsp/lsp-plugin.cpp:1315
-msgid "Go to Definition"
-msgstr "Přejít na definici"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1261
-#: ../src/plugins/lsp/lsp-plugin.cpp:1316
-msgid "Go to _Definition"
-msgstr "Přejít na _definici"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1262
-#: ../src/plugins/lsp/lsp-plugin.cpp:1317
-msgid "Go to the definition of what is under the cursor"
-msgstr "Přejít na definici toho, co je pod kurzorem"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1268
-#: ../src/plugins/lsp/lsp-plugin.cpp:1322
-msgid "Find References"
-msgstr "Najít použití"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1269
-#: ../src/plugins/lsp/lsp-plugin.cpp:1323
-msgid "Find _References"
-msgstr "Najít _použití"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1270
-#: ../src/plugins/lsp/lsp-plugin.cpp:1324
-msgid "List every use of what is under the cursor"
-msgstr "Vypsat všechna použití toho, co je pod kurzorem"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1277
-msgid "Format Document"
-msgstr "Naformátovat dokument"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1278
-msgid "_Format Document"
-msgstr "_Naformátovat dokument"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1279
-msgid "Let the language server lay the document out"
-msgstr "Nechat dokument naformátovat jazykovým serverem"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1285
-#: ../src/plugins/lsp/lsp-plugin.cpp:1330
-msgid "_Rename..."
-msgstr "Pře_jmenovat…"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1286
-#: ../src/plugins/lsp/lsp-plugin.cpp:1331
-msgid "Rename what is under the cursor everywhere"
-msgstr "Přejmenovat všude to, co je pod kurzorem"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1322
-#: ../src/plugins/lsp/lsp-plugin.cpp:1374
-msgid "Code Actions"
-msgstr "Akce kódu"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1323
-#: ../src/plugins/lsp/lsp-plugin.cpp:1375
-msgid "Code _Actions..."
-msgstr "A_kce kódu…"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1324
-#: ../src/plugins/lsp/lsp-plugin.cpp:1376
-msgid "Offer what the language server can do here"
-msgstr "Nabídne, co zde jazykový server umí"
-
-#: ../src/plugins/lsp/lsp-actions.cpp:289
-msgid "The command failed"
-msgstr "Příkaz selhal"
-
-#: ../src/plugins/lsp/lsp-actions.cpp:521
-msgid "Code actions failed"
-msgstr "Akce kódu selhaly"
-
-#: ../src/plugins/lsp/lsp-actions.cpp:536
-msgid "No code actions here"
-msgstr "Zde nejsou žádné akce kódu"
-
-#: ../src/plugins/lsp/lsp-actions.cpp:537
-msgid "The server has nothing to offer at this place."
-msgstr "Server nemá na tomto místě co nabídnout."
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1292
-msgid "Go to Type Definition"
-msgstr "Přejít na definici typu"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1293
-msgid "Go to _Type Definition"
-msgstr "Přejít na definici _typu"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1294
-msgid "Go to the definition of the type of what is under the cursor"
-msgstr "Přejít na definici typu toho, co je pod kurzorem"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1299
-msgid "Go to Implementation"
-msgstr "Přejít na implementaci"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1300
-msgid "Go to _Implementation"
-msgstr "Přejít na _implementaci"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1301
-msgid "Go to the implementation of what is under the cursor"
-msgstr "Přejít na implementaci toho, co je pod kurzorem"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1353
-msgid "LSP Servers"
-msgstr "Servery LSP"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1354
-msgid "LSP _Servers..."
-msgstr "_Servery LSP…"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1355
-msgid "Edit the list of language servers"
-msgstr "Upravit seznam jazykových serverů"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1361
-#: ../src/plugins/lsp/lsp-plugin.cpp:1362
-msgid "Restart Language Servers"
-msgstr "Restartovat jazykové servery"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1363
-msgid "Re-read the configuration and start every server again"
-msgstr "Znovu načíst nastavení a spustit každý server znovu"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1369
-msgid "Complete Word"
-msgstr "Doplnit slovo"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1370
-msgid "_Complete Word"
-msgstr "_Doplnit slovo"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1371
-msgid "Ask the language server what could go here"
-msgstr "Zeptat se jazykového serveru, co sem může patřit"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1377
-msgid "Parameter Hints"
-msgstr "Nápověda k parametrům"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1378
-msgid "_Parameter Hints"
-msgstr "Nápověda k _parametrům"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1379
-msgid "Show what the call being typed takes"
-msgstr "Zobrazit, co přijímá právě psané volání"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1387
-msgid "Show the references pane"
-msgstr "Zobrazit panel použití"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1395
-msgid "Show the symbol tree"
-msgstr "Zobrazit strom symbolů"
-
-#: ../src/plugins/lsp/lsp-server.cpp:744
-msgid "%s failed to start: %s"
-msgstr "%s se nepodařilo spustit: %s"
-
-#: ../src/plugins/lsp/lsp-server.cpp:745
-#: ../src/plugins/lsp/lsp-server.cpp:1073
-msgid "unknown error"
-msgstr "neznámá chyba"
-
-#: ../src/plugins/lsp/lsp-server.cpp:751
-msgid "%s answered the initialize request with no capabilities"
-msgstr "%s odpověděl na inicializační požadavek bez jakýchkoli schopností"
-
-#: ../src/plugins/lsp/lsp-server.cpp:773
-msgid "%s did not answer the initialize request in %d seconds"
-msgstr "%s neodpověděl na inicializační požadavek do %d sekund"
-
-#: ../src/plugins/lsp/lsp-server.cpp:1030
-msgid ""
-"%s exited immediately %d times in a row; check the command in the LSP "
-"configuration file"
-msgstr ""
-"%s se %d× po sobě okamžitě ukončil; zkontrolujte příkaz v konfiguračním "
-"souboru LSP"
-
-#: ../src/plugins/lsp/lsp-server.cpp:1072
-msgid "could not run %s: %s"
-msgstr "nepodařilo se spustit %s: %s"
-
-#: ../src/plugins/lsp/lsp-prefs.cpp:43
-msgid "Could not create the LSP configuration file"
-msgstr "Nepodařilo se vytvořit konfigurační soubor LSP"
-
-#: ../src/plugins/lsp/lsp-prefs.cpp:86
-msgid "Language Servers"
-msgstr "Jazykové servery"
-
-#: ../src/plugins/lsp/lsp-references.cpp:335
-msgid "The server refused the question"
-msgstr "Server dotaz odmítl"
-
-#: ../src/plugins/lsp/lsp-references.cpp:347
-msgid "No references found"
-msgstr "Nebyla nalezena žádná použití"
-
-#: ../src/plugins/lsp/ui/lsp-prefs.ui:22
-msgid "Underline problems and list them in the _Diagnostics pane"
-msgstr "Podtrhávat problémy a vypisovat je v panelu _Diagnostika"
-
-#: ../src/plugins/lsp/ui/lsp-prefs.ui:34
-msgid "_Complete words"
-msgstr "_Doplňovat slova"
-
-#: ../src/plugins/lsp/ui/lsp-prefs.ui:46
-msgid "Show the _parameters of a call"
-msgstr "Zobrazovat _parametry volání"
-
-#: ../src/plugins/lsp/ui/lsp-prefs.ui:49
-msgid "While the call is being typed, and on Ctrl+Shift+Space."
-msgstr "Během psaní volání a po stisku Ctrl+Shift+Mezerník."
-
-#: ../src/plugins/lsp/ui/lsp-prefs.ui:59
-msgid "_Mark the other uses of what the cursor is in"
-msgstr "_Označovat ostatní použití toho, v čem je kurzor"
-
-#: ../src/plugins/lsp/ui/lsp-prefs.ui:71
-msgid "Describe what is under the _pointer"
-msgstr "Popisovat, co je pod _ukazatelem"
-
-#: ../src/plugins/lsp/ui/lsp-prefs.ui:87
-msgid "Send changes to the server _after"
-msgstr "Odesílat změny na server _po"
-
-#: ../src/plugins/lsp/ui/lsp-prefs.ui:110
-msgid "milliseconds of quiet"
-msgstr "milisekundách klidu"
-
-#: ../src/plugins/lsp/ui/lsp-prefs.ui:125
-msgid "_Log the protocol to standard error"
-msgstr "Zapisovat protokol na standardní chybový _výstup"
-
-#: ../src/plugins/lsp/ui/lsp-prefs.ui:128
-msgid ""
-"Every message to and from every server. The MEDIT_LSP_DEBUG environment "
-"variable does the same."
-msgstr ""
-"Každá zpráva ke každému serveru i od něj. Proměnná prostředí "
-"MEDIT_LSP_DEBUG dělá totéž."
-
-#: ../src/plugins/lsp/ui/lsp-prefs.ui:142
-msgid "_Edit the Server List"
-msgstr "_Upravit seznam serverů"
-
-#: ../src/plugins/lsp/ui/lsp-prefs.ui:144
-msgid ""
-"Opens your copy of lsp.xml, creating it from the installed one if you "
-"have none."
-msgstr ""
-"Otevře vaši kopii lsp.xml; pokud žádnou nemáte, vytvoří ji z "
-"nainstalované."
-
-#: ../src/plugins/lsp/ui/lsp-prefs.ui:154
-msgid "_Restart Servers"
-msgstr "_Restartovat servery"
-
-#: ../src/plugins/lsp/ui/lsp-prefs.ui:156
-msgid "Re-reads the configuration file and starts over with every server."
-msgstr "Znovu načte konfigurační soubor a začne znovu s každým serverem."
-
-#: ../src/plugins/terminal/terminal-plugin.cpp:251
-msgid ""
-"The shell keeps exiting immediately, not restarting it. Check the shell "
-"in the Terminal preferences."
-msgstr ""
-"Shell se stále okamžitě ukončuje, nebude znovu spuštěn. Zkontrolujte "
-"shell v nastavení terminálu."
-
-#: ../src/plugins/terminal/terminal-plugin.cpp:583
-msgid "“cd” to current file directory"
-msgstr "„cd“ do adresáře aktuálního souboru"
-
-#: ../src/plugins/terminal/terminal-plugin.cpp:590
-msgid "“pushd” to current file directory"
-msgstr "„pushd“ do adresáře aktuálního souboru"
-
-#: ../src/plugins/terminal/terminal-plugin.cpp:830
-msgid "Show the terminal pane"
-msgstr "Zobrazit panel terminálu"
-
-#: ../src/plugins/terminal/terminal-plugin.cpp:843
-#: ../src/plugins/terminal/terminal-plugin.cpp:844
-msgid "Copy in Terminal"
-msgstr "Kopírovat v terminálu"
-
-#: ../src/plugins/terminal/terminal-plugin.cpp:845
-msgid "Copy the selection in the terminal pane"
-msgstr "Kopírovat výběr v panelu terminálu"
-
-#: ../src/plugins/terminal/terminal-plugin.cpp:852
-#: ../src/plugins/terminal/terminal-plugin.cpp:853
-msgid "Paste in Terminal"
-msgstr "Vložit v terminálu"
-
-#: ../src/plugins/terminal/terminal-plugin.cpp:854
-msgid "Paste the clipboard into the terminal pane"
-msgstr "Vložit schránku do panelu terminálu"
-
-#: ../src/plugins/terminal/terminal-plugin.cpp:893
-msgid "Terminal pane"
-msgstr "Panel terminálu"
-
-#: ../src/plugins/terminal/ui/terminal-prefs.ui:20
-msgid "S_hell"
-msgstr "S_hell"
-
-#: ../src/plugins/terminal/ui/terminal-prefs.ui:34
-msgid ""
-"Leave empty to use the login shell. Takes effect the next time the shell "
-"is started."
-msgstr ""
-"Ponechte prázdné pro použití přihlašovacího shellu. Projeví se při "
-"příštím spuštění shellu."
-
-#: ../src/plugins/terminal/ui/terminal-prefs.ui:45
-msgid "Color _scheme"
-msgstr "_Barevné schéma"
-
-#: ../src/plugins/terminal/ui/terminal-prefs.ui:68
-msgid "_Font"
-msgstr "_Písmo"
-
-#: ../src/plugins/terminal/ui/terminal-prefs.ui:93
-msgid "_Default"
-msgstr "_Výchozí"
-
-#: ../src/plugins/terminal/ui/terminal-prefs.ui:95
-msgid "Use the system monospace font"
-msgstr "Použít systémové neproporcionální písmo"
-
-#: ../src/plugins/lsp/lsp-diagnostics.cpp:82
-msgctxt "diagnostic severity"
-msgid "warning"
-msgstr "varování"
-
-#: ../src/plugins/lsp/lsp-diagnostics.cpp:84
-msgctxt "diagnostic severity"
-msgid "information"
-msgstr "informace"
-
-#: ../src/plugins/lsp/lsp-diagnostics.cpp:86
-msgctxt "diagnostic severity"
-msgid "hint"
-msgstr "nápověda"
-
-#: ../src/plugins/lsp/lsp-diagnostics.cpp:89
-msgctxt "diagnostic severity"
-msgid "error"
-msgstr "chyba"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:33
-msgctxt "symbol kind"
-msgid "file"
-msgstr "soubor"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:34
-msgctxt "symbol kind"
-msgid "module"
-msgstr "modul"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:35
-msgctxt "symbol kind"
-msgid "namespace"
-msgstr "jmenný prostor"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:36
-msgctxt "symbol kind"
-msgid "package"
-msgstr "balíček"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:37
-msgctxt "symbol kind"
-msgid "class"
-msgstr "třída"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:38
-msgctxt "symbol kind"
-msgid "method"
-msgstr "metoda"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:39
-msgctxt "symbol kind"
-msgid "property"
-msgstr "vlastnost"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:40
-msgctxt "symbol kind"
-msgid "field"
-msgstr "položka"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:41
-msgctxt "symbol kind"
-msgid "constructor"
-msgstr "konstruktor"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:42
-msgctxt "symbol kind"
-msgid "enum"
-msgstr "výčet"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:43
-msgctxt "symbol kind"
-msgid "interface"
-msgstr "rozhraní"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:44
-msgctxt "symbol kind"
-msgid "function"
-msgstr "funkce"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:45
-msgctxt "symbol kind"
-msgid "variable"
-msgstr "proměnná"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:46
-msgctxt "symbol kind"
-msgid "constant"
-msgstr "konstanta"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:47
-msgctxt "symbol kind"
-msgid "string"
-msgstr "řetězec"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:48
-msgctxt "symbol kind"
-msgid "number"
-msgstr "číslo"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:49
-msgctxt "symbol kind"
-msgid "boolean"
-msgstr "pravdivostní hodnota"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:50
-msgctxt "symbol kind"
-msgid "array"
-msgstr "pole"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:51
-msgctxt "symbol kind"
-msgid "object"
-msgstr "objekt"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:52
-msgctxt "symbol kind"
-msgid "key"
-msgstr "klíč"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:53
-msgctxt "symbol kind"
-msgid "null"
-msgstr "null"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:54
-msgctxt "symbol kind"
-msgid "enum member"
-msgstr "prvek výčtu"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:55
-msgctxt "symbol kind"
-msgid "struct"
-msgstr "struktura"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:56
-msgctxt "symbol kind"
-msgid "event"
-msgstr "událost"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:57
-msgctxt "symbol kind"
-msgid "operator"
-msgstr "operátor"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:58
-msgctxt "symbol kind"
-msgid "type parameter"
-msgstr "typový parametr"
-
-#: ../src/mooutils/moofontsel.c:503
-msgid "Show only fixed width fonts"
-msgstr "Zobrazovat jen písma s pevnou šířkou"
-
-#. Translators: the heading this window's commands are listed under in
-#. Configure Shortcuts, beside one per plugin.
-#: ../src/mooedit/mooeditwindow.cpp:436
-msgid "Editor"
-msgstr "Editor"

@@ -1110,6 +1110,126 @@ test_edit_action_filters (void)
 }
 
 
+static char *
+buffer_text (MooTextBuffer *buffer)
+{
+    GtkTextIter start, end;
+    gtk_text_buffer_get_bounds (GTK_TEXT_BUFFER (buffer), &start, &end);
+    return gtk_text_buffer_get_text (GTK_TEXT_BUFFER (buffer), &start, &end, TRUE);
+}
+
+
+static void
+place_cursor_at_line (MooTextBuffer *buffer,
+                      int            line)
+{
+    GtkTextIter iter;
+    gtk_text_buffer_get_iter_at_line (GTK_TEXT_BUFFER (buffer), &iter, line);
+    gtk_text_buffer_place_cursor (GTK_TEXT_BUFFER (buffer), &iter);
+}
+
+
+static void
+select_whole_lines (MooTextBuffer *buffer,
+                    int            first,
+                    int            last)
+{
+    GtkTextIter start, end;
+
+    gtk_text_buffer_get_iter_at_line (GTK_TEXT_BUFFER (buffer), &start, first);
+    gtk_text_buffer_get_iter_at_line (GTK_TEXT_BUFFER (buffer), &end, last);
+
+    if (!gtk_text_iter_ends_line (&end))
+        gtk_text_iter_forward_to_line_end (&end);
+
+    gtk_text_buffer_select_range (GTK_TEXT_BUFFER (buffer), &start, &end);
+}
+
+
+static void
+assert_line_op (const char *text,
+                void      (*op) (MooTextBuffer *buffer),
+                int         cursor_line,
+                int         select_first,
+                int         select_last,
+                const char *expected)
+{
+    MooTextBuffer *buffer = new_text_buffer (text);
+    char *result;
+
+    if (select_first >= 0)
+        select_whole_lines (buffer, select_first, select_last);
+    else
+        place_cursor_at_line (buffer, cursor_line);
+
+    op (buffer);
+
+    result = buffer_text (buffer);
+    g_assert_cmpstr (result, ==, expected);
+
+    g_free (result);
+    g_object_unref (buffer);
+}
+
+
+static void
+move_lines_up (MooTextBuffer *buffer)
+{
+    _moo_text_buffer_move_lines (buffer, -1);
+}
+
+
+static void
+move_lines_down (MooTextBuffer *buffer)
+{
+    _moo_text_buffer_move_lines (buffer, 1);
+}
+
+
+static void
+test_text_buffer_line_operations (void)
+{
+    MooTextBuffer *buffer;
+    GtkTextIter iter;
+
+    /* The last line has no newline of its own, and the copy needs one. */
+    assert_line_op ("b\na\nc", _moo_text_buffer_duplicate_line, 2, -1, -1, "b\na\nc\nc");
+    assert_line_op ("b\na\nc", _moo_text_buffer_duplicate_line, 0, -1, -1, "b\nb\na\nc");
+    assert_line_op ("b\na\nc", _moo_text_buffer_duplicate_line, 0, 1, 1, "b\naa\nc");
+
+    assert_line_op ("b\na\nc", move_lines_up, 1, -1, -1, "a\nb\nc");
+    assert_line_op ("b\na\nc", move_lines_down, 1, -1, -1, "b\nc\na");
+    /* The first line has nowhere to go up and the last nowhere to go down. */
+    assert_line_op ("b\na\nc", move_lines_up, 0, -1, -1, "b\na\nc");
+    assert_line_op ("b\na\nc", move_lines_down, 2, -1, -1, "b\na\nc");
+    assert_line_op ("b\na\nc", move_lines_down, 0, 0, 1, "c\nb\na");
+
+    /* Without a selection there is nothing to sort. */
+    assert_line_op ("b\na\nc", _moo_text_buffer_sort_lines, 0, -1, -1, "b\na\nc");
+    assert_line_op ("b\na\nc", _moo_text_buffer_sort_lines, 0, 0, 2, "a\nb\nc");
+    assert_line_op ("c\nb\na\nd", _moo_text_buffer_sort_lines, 0, 0, 2, "a\nb\nc\nd");
+
+    /* The bracket the cursor is on, and the one it is behind. */
+    buffer = new_text_buffer ("(x)y");
+    gtk_text_buffer_get_iter_at_offset (GTK_TEXT_BUFFER (buffer), &iter, 0);
+    gtk_text_buffer_place_cursor (GTK_TEXT_BUFFER (buffer), &iter);
+    _moo_text_buffer_goto_matching_bracket (buffer);
+    gtk_text_buffer_get_iter_at_mark (GTK_TEXT_BUFFER (buffer), &iter,
+                                      gtk_text_buffer_get_insert (GTK_TEXT_BUFFER (buffer)));
+    g_assert_cmpint (gtk_text_iter_get_offset (&iter), ==, 2);
+
+    /* Not at a bracket at all: the cursor stays where it was. */
+    gtk_text_buffer_get_iter_at_offset (GTK_TEXT_BUFFER (buffer), &iter, 4);
+    gtk_text_buffer_place_cursor (GTK_TEXT_BUFFER (buffer), &iter);
+    _moo_text_buffer_goto_matching_bracket (buffer);
+    gtk_text_buffer_get_iter_at_mark (GTK_TEXT_BUFFER (buffer), &iter,
+                                      gtk_text_buffer_get_insert (GTK_TEXT_BUFFER (buffer)));
+    g_assert_cmpint (gtk_text_iter_get_offset (&iter), ==, 4);
+
+    g_object_unref (buffer);
+}
+
+
 static void
 test_text_view_word_selection_after_closing_bracket (void)
 {
@@ -1310,6 +1430,8 @@ _moo_add_mooedit_unit_tests (void)
     g_test_add_func ("/mooedit/replace/expand-replacement", test_expand_replacement);
     g_test_add_func ("/mooedit/text-view/word-selection-after-closing-bracket",
                      test_text_view_word_selection_after_closing_bracket);
+    g_test_add_func ("/mooedit/text-buffer/line-operations",
+                     test_text_buffer_line_operations);
 
     if (entries == nullptr)
     {

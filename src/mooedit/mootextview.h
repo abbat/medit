@@ -150,6 +150,12 @@ void         moo_text_view_add_child_in_border      (MooTextView        *view,
 void         moo_text_view_indent                   (MooTextView        *view);
 void         moo_text_view_unindent                 (MooTextView        *view);
 
+void         moo_text_view_duplicate_line           (MooTextView        *view);
+void         moo_text_view_move_lines_up            (MooTextView        *view);
+void         moo_text_view_move_lines_down          (MooTextView        *view);
+void         moo_text_view_sort_lines               (MooTextView        *view);
+void         moo_text_view_goto_matching_bracket    (MooTextView        *view);
+
 
 G_END_DECLS
 

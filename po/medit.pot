@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: medit\n"
 "Report-Msgid-Bugs-To: https://github.com/abbat/medit/issues\n"
-"POT-Creation-Date: 2026-09-15 22:23+0300\n"
+"POT-Creation-Date: 2026-09-16 00:49+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -484,7 +484,7 @@ msgstr ""
 msgid "Find _backwards"
 msgstr ""
 
-#: src/mooedit/ui/mootextfind.ui:224 src/plugins/ui/moogrep.ui:180
+#: src/mooedit/ui/mootextfind.ui:224 src/plugins/ui/moogrep.ui:182
 msgid "Case _sensitive"
 msgstr ""
 
@@ -744,7 +744,7 @@ msgstr ""
 #. Label in the Language combo box on Languages preferences page,
 #. remove the part before and including |
 #. Menu item in the Language menu
-#: src/mooedit/mooeditprefspage.cpp:543 src/mooedit/mooeditwindow.cpp:4159
+#: src/mooedit/mooeditprefspage.cpp:543 src/mooedit/mooeditwindow.cpp:4210
 msgid "Language|None"
 msgstr ""
 
@@ -990,155 +990,215 @@ msgstr ""
 msgid "Uncomment"
 msgstr ""
 
-#. Insensitive menu item which appears in Window menu with no documents open
-#: src/mooedit/mooeditwindow.cpp:794
-msgid "No Documents"
+#: src/mooedit/mooeditwindow.cpp:793
+msgid "Duplicate Line"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:802
-msgid "Page Setup"
+#: src/mooedit/mooeditwindow.cpp:794
+msgid "_Duplicate Line"
+msgstr ""
+
+#: src/mooedit/mooeditwindow.cpp:795
+msgid "Duplicate the line or the selection"
 msgstr ""
 
 #: src/mooedit/mooeditwindow.cpp:803
-msgid "Page S_etup..."
+msgid "Move Lines Up"
 msgstr ""
 
 #: src/mooedit/mooeditwindow.cpp:804
+msgid "Move Lines _Up"
+msgstr ""
+
+#: src/mooedit/mooeditwindow.cpp:805
+msgid "Move the selected lines up"
+msgstr ""
+
+#: src/mooedit/mooeditwindow.cpp:814
+msgid "Move Lines Down"
+msgstr ""
+
+#: src/mooedit/mooeditwindow.cpp:815
+msgid "Move Lines _Down"
+msgstr ""
+
+#: src/mooedit/mooeditwindow.cpp:816
+msgid "Move the selected lines down"
+msgstr ""
+
+#: src/mooedit/mooeditwindow.cpp:825
+msgid "Sort Lines"
+msgstr ""
+
+#: src/mooedit/mooeditwindow.cpp:826
+msgid "_Sort Lines"
+msgstr ""
+
+#: src/mooedit/mooeditwindow.cpp:827
+msgid "Sort the selected lines"
+msgstr ""
+
+#: src/mooedit/mooeditwindow.cpp:834
+msgid "Go to Matching Bracket"
+msgstr ""
+
+#: src/mooedit/mooeditwindow.cpp:835
+msgid "Go to _Matching Bracket"
+msgstr ""
+
+#: src/mooedit/mooeditwindow.cpp:836
+msgid "Go to the bracket matching the one at the cursor"
+msgstr ""
+
+#. Insensitive menu item which appears in Window menu with no documents open
+#: src/mooedit/mooeditwindow.cpp:845
+msgid "No Documents"
+msgstr ""
+
+#: src/mooedit/mooeditwindow.cpp:853
+msgid "Page Setup"
+msgstr ""
+
+#: src/mooedit/mooeditwindow.cpp:854
+msgid "Page S_etup..."
+msgstr ""
+
+#: src/mooedit/mooeditwindow.cpp:855
 msgid "Page Setup..."
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:820 src/mooedit/mooeditwindow.cpp:821
+#: src/mooedit/mooeditwindow.cpp:871 src/mooedit/mooeditwindow.cpp:872
 msgid "Print..."
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:829 src/mooedit/mooeditwindow.cpp:2104
+#: src/mooedit/mooeditwindow.cpp:880 src/mooedit/mooeditwindow.cpp:2155
 msgid "Export as PDF"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:830
+#: src/mooedit/mooeditwindow.cpp:881
 msgid "E_xport as PDF..."
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:831
+#: src/mooedit/mooeditwindow.cpp:882
 msgid "Export as PDF..."
 msgstr ""
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [new file]"
-#: src/mooedit/mooeditwindow.cpp:1112
+#: src/mooedit/mooeditwindow.cpp:1163
 #, c-format
 msgid "%s [new file]"
 msgstr ""
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [modified on disk]"
-#: src/mooedit/mooeditwindow.cpp:1115
+#: src/mooedit/mooeditwindow.cpp:1166
 #, c-format
 msgid "%s [modified on disk]"
 msgstr ""
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [deleted]"
-#: src/mooedit/mooeditwindow.cpp:1118
+#: src/mooedit/mooeditwindow.cpp:1169
 #, c-format
 msgid "%s [deleted]"
 msgstr ""
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [new file] [modified]"
-#: src/mooedit/mooeditwindow.cpp:1126
+#: src/mooedit/mooeditwindow.cpp:1177
 #, c-format
 msgid "%s [new file] [modified]"
 msgstr ""
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [modified on disk] [modified]"
-#: src/mooedit/mooeditwindow.cpp:1129
+#: src/mooedit/mooeditwindow.cpp:1180
 #, c-format
 msgid "%s [modified on disk] [modified]"
 msgstr ""
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [deleted] [modified]"
-#: src/mooedit/mooeditwindow.cpp:1132
+#: src/mooedit/mooeditwindow.cpp:1183
 #, c-format
 msgid "%s [deleted] [modified]"
 msgstr ""
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [modified]"
-#: src/mooedit/mooeditwindow.cpp:1135
+#: src/mooedit/mooeditwindow.cpp:1186
 #, c-format
 msgid "%s [modified]"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:1375
+#: src/mooedit/mooeditwindow.cpp:1426
 msgid "Reopen Using Encoding"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:1425
+#: src/mooedit/mooeditwindow.cpp:1476
 msgid "_Encoding"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:1479
+#: src/mooedit/mooeditwindow.cpp:1530
 msgid "Line En_dings"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:1486
+#: src/mooedit/mooeditwindow.cpp:1537
 msgid "_Windows (CR+LF)"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:1491
+#: src/mooedit/mooeditwindow.cpp:1542
 msgid "_Unix (LF)"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:1495
+#: src/mooedit/mooeditwindow.cpp:1546
 msgid "_Mac (CR)"
 msgstr ""
 
 #. Item in document tab context menu
-#: src/mooedit/mooeditwindow.cpp:2377
+#: src/mooedit/mooeditwindow.cpp:2428
 msgctxt "tab-context-menu"
 msgid "Close"
 msgstr ""
 
 #. Item in document tab context menu
-#: src/mooedit/mooeditwindow.cpp:2385
+#: src/mooedit/mooeditwindow.cpp:2436
 msgctxt "tab-context-menu"
 msgid "Close All Others"
 msgstr ""
 
 #. Item in document tab context menu
-#: src/mooedit/mooeditwindow.cpp:2394
+#: src/mooedit/mooeditwindow.cpp:2445
 msgctxt "tab-context-menu"
 msgid "Copy Full Path"
 msgstr ""
 
 #. Item in document tab context menu
-#: src/mooedit/mooeditwindow.cpp:2404
+#: src/mooedit/mooeditwindow.cpp:2455
 msgctxt "tab-context-menu"
 msgid "Detach"
 msgstr ""
 
 #. Item in document tab context menu
-#: src/mooedit/mooeditwindow.cpp:2410
+#: src/mooedit/mooeditwindow.cpp:2461
 msgctxt "tab-context-menu"
 msgid "Move to Split Notebook"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:4001
+#: src/mooedit/mooeditwindow.cpp:4052
 #, c-format
 msgid "Line: %s Col: %s"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:4002
+#: src/mooedit/mooeditwindow.cpp:4053
 #, c-format
 msgid "Chars: %s"
 msgstr ""
 
 #. Label in the editor window statusbar - Overwrite or Insert mode
-#: src/mooedit/mooeditwindow.cpp:4045
+#: src/mooedit/mooeditwindow.cpp:4096
 msgid "OVR"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:4045
+#: src/mooedit/mooeditwindow.cpp:4096
 msgid "INS"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:4154
+#: src/mooedit/mooeditwindow.cpp:4205
 msgid "_Language"
 msgstr ""
 
@@ -1958,15 +2018,15 @@ msgstr ""
 msgid "Find File"
 msgstr ""
 
-#: src/plugins/ui/moofind.ui:32 src/plugins/ui/moogrep.ui:33
+#: src/plugins/ui/moofind.ui:34 src/plugins/ui/moogrep.ui:35
 msgid "_Pattern"
 msgstr ""
 
-#: src/plugins/ui/moofind.ui:51 src/plugins/ui/moogrep.ui:73
+#: src/plugins/ui/moofind.ui:53 src/plugins/ui/moogrep.ui:75
 msgid "_Directory"
 msgstr ""
 
-#: src/plugins/ui/moofind.ui:72 src/plugins/ui/moogrep.ui:94
+#: src/plugins/ui/moofind.ui:74 src/plugins/ui/moogrep.ui:96
 msgid "S_kip files"
 msgstr ""
 
@@ -1974,7 +2034,7 @@ msgstr ""
 msgid "Find in Files"
 msgstr ""
 
-#: src/plugins/ui/moogrep.ui:52
+#: src/plugins/ui/moogrep.ui:54
 msgid "Fi_les"
 msgstr ""
 
@@ -2131,8 +2191,8 @@ msgctxt "diagnostic severity"
 msgid "error"
 msgstr ""
 
-#: src/plugins/lsp/lsp-edits.cpp:363 src/plugins/lsp/lsp-plugin.cpp:1314
-#: src/plugins/lsp/lsp-plugin.cpp:1367
+#: src/plugins/lsp/lsp-edits.cpp:363 src/plugins/lsp/lsp-plugin.cpp:1328
+#: src/plugins/lsp/lsp-plugin.cpp:1381
 msgid "Rename"
 msgstr ""
 
@@ -2161,7 +2221,7 @@ msgstr ""
 msgid "Formatting failed"
 msgstr ""
 
-#: src/plugins/lsp/lsp-plugin.cpp:104 src/plugins/lsp/lsp-plugin.cpp:1279
+#: src/plugins/lsp/lsp-plugin.cpp:104 src/plugins/lsp/lsp-plugin.cpp:1293
 msgid "LSP"
 msgstr ""
 
@@ -2169,184 +2229,184 @@ msgstr ""
 msgid "Language server protocol client"
 msgstr ""
 
-#: src/plugins/lsp/lsp-plugin.cpp:1177 src/plugins/lsp/lsp-plugin.cpp:1282
-#: src/plugins/lsp/lsp-plugin.cpp:1283
+#: src/plugins/lsp/lsp-plugin.cpp:1191 src/plugins/lsp/lsp-plugin.cpp:1296
+#: src/plugins/lsp/lsp-plugin.cpp:1297
 msgid "Diagnostics"
 msgstr ""
 
-#: src/plugins/lsp/lsp-plugin.cpp:1191 src/plugins/lsp/lsp-plugin.cpp:1433
-#: src/plugins/lsp/lsp-plugin.cpp:1434
+#: src/plugins/lsp/lsp-plugin.cpp:1205 src/plugins/lsp/lsp-plugin.cpp:1447
+#: src/plugins/lsp/lsp-plugin.cpp:1448
 msgid "References"
 msgstr ""
 
-#: src/plugins/lsp/lsp-plugin.cpp:1199 src/plugins/lsp/lsp-plugin.cpp:1441
-#: src/plugins/lsp/lsp-plugin.cpp:1442
+#: src/plugins/lsp/lsp-plugin.cpp:1213 src/plugins/lsp/lsp-plugin.cpp:1455
+#: src/plugins/lsp/lsp-plugin.cpp:1456
 msgid "Symbols"
 msgstr ""
 
-#: src/plugins/lsp/lsp-plugin.cpp:1284
+#: src/plugins/lsp/lsp-plugin.cpp:1298
 msgid "Show the diagnostics pane"
 msgstr ""
 
-#: src/plugins/lsp/lsp-plugin.cpp:1290 src/plugins/lsp/lsp-plugin.cpp:1353
+#: src/plugins/lsp/lsp-plugin.cpp:1304 src/plugins/lsp/lsp-plugin.cpp:1367
 msgid "Go to Definition"
 msgstr ""
 
-#: src/plugins/lsp/lsp-plugin.cpp:1291 src/plugins/lsp/lsp-plugin.cpp:1354
+#: src/plugins/lsp/lsp-plugin.cpp:1305 src/plugins/lsp/lsp-plugin.cpp:1368
 msgid "Go to _Definition"
 msgstr ""
 
-#: src/plugins/lsp/lsp-plugin.cpp:1292 src/plugins/lsp/lsp-plugin.cpp:1355
+#: src/plugins/lsp/lsp-plugin.cpp:1306 src/plugins/lsp/lsp-plugin.cpp:1369
 msgid "Go to the definition of what is under the cursor"
 msgstr ""
 
-#: src/plugins/lsp/lsp-plugin.cpp:1298 src/plugins/lsp/lsp-plugin.cpp:1360
+#: src/plugins/lsp/lsp-plugin.cpp:1312 src/plugins/lsp/lsp-plugin.cpp:1374
 msgid "Find References"
 msgstr ""
 
-#: src/plugins/lsp/lsp-plugin.cpp:1299 src/plugins/lsp/lsp-plugin.cpp:1361
+#: src/plugins/lsp/lsp-plugin.cpp:1313 src/plugins/lsp/lsp-plugin.cpp:1375
 msgid "Find _References"
 msgstr ""
 
-#: src/plugins/lsp/lsp-plugin.cpp:1300 src/plugins/lsp/lsp-plugin.cpp:1362
+#: src/plugins/lsp/lsp-plugin.cpp:1314 src/plugins/lsp/lsp-plugin.cpp:1376
 msgid "List every use of what is under the cursor"
 msgstr ""
 
-#: src/plugins/lsp/lsp-plugin.cpp:1307
+#: src/plugins/lsp/lsp-plugin.cpp:1321
 msgid "Format Document"
 msgstr ""
 
-#: src/plugins/lsp/lsp-plugin.cpp:1308
+#: src/plugins/lsp/lsp-plugin.cpp:1322
 msgid "_Format Document"
 msgstr ""
 
-#: src/plugins/lsp/lsp-plugin.cpp:1309
+#: src/plugins/lsp/lsp-plugin.cpp:1323
 msgid "Let the language server lay the document out"
 msgstr ""
 
-#: src/plugins/lsp/lsp-plugin.cpp:1315 src/plugins/lsp/lsp-plugin.cpp:1368
+#: src/plugins/lsp/lsp-plugin.cpp:1329 src/plugins/lsp/lsp-plugin.cpp:1382
 msgid "_Rename..."
 msgstr ""
 
-#: src/plugins/lsp/lsp-plugin.cpp:1316 src/plugins/lsp/lsp-plugin.cpp:1369
+#: src/plugins/lsp/lsp-plugin.cpp:1330 src/plugins/lsp/lsp-plugin.cpp:1383
 msgid "Rename what is under the cursor everywhere"
 msgstr ""
 
-#: src/plugins/lsp/lsp-plugin.cpp:1322 src/plugins/lsp/lsp-plugin.cpp:1374
+#: src/plugins/lsp/lsp-plugin.cpp:1336 src/plugins/lsp/lsp-plugin.cpp:1388
 msgid "Code Actions"
 msgstr ""
 
-#: src/plugins/lsp/lsp-plugin.cpp:1323 src/plugins/lsp/lsp-plugin.cpp:1375
+#: src/plugins/lsp/lsp-plugin.cpp:1337 src/plugins/lsp/lsp-plugin.cpp:1389
 msgid "Code _Actions..."
 msgstr ""
 
-#: src/plugins/lsp/lsp-plugin.cpp:1324 src/plugins/lsp/lsp-plugin.cpp:1376
+#: src/plugins/lsp/lsp-plugin.cpp:1338 src/plugins/lsp/lsp-plugin.cpp:1390
 msgid "Offer what the language server can do here"
 msgstr ""
 
-#: src/plugins/lsp/lsp-plugin.cpp:1330
+#: src/plugins/lsp/lsp-plugin.cpp:1344
 msgid "Go to Type Definition"
 msgstr ""
 
-#: src/plugins/lsp/lsp-plugin.cpp:1331
+#: src/plugins/lsp/lsp-plugin.cpp:1345
 msgid "Go to _Type Definition"
 msgstr ""
 
-#: src/plugins/lsp/lsp-plugin.cpp:1332
+#: src/plugins/lsp/lsp-plugin.cpp:1346
 msgid "Go to the definition of the type of what is under the cursor"
 msgstr ""
 
-#: src/plugins/lsp/lsp-plugin.cpp:1337
+#: src/plugins/lsp/lsp-plugin.cpp:1351
 msgid "Go to Implementation"
 msgstr ""
 
-#: src/plugins/lsp/lsp-plugin.cpp:1338
+#: src/plugins/lsp/lsp-plugin.cpp:1352
 msgid "Go to _Implementation"
 msgstr ""
 
-#: src/plugins/lsp/lsp-plugin.cpp:1339
+#: src/plugins/lsp/lsp-plugin.cpp:1353
 msgid "Go to the implementation of what is under the cursor"
 msgstr ""
 
-#: src/plugins/lsp/lsp-plugin.cpp:1401
+#: src/plugins/lsp/lsp-plugin.cpp:1415
 msgid "LSP Servers"
 msgstr ""
 
-#: src/plugins/lsp/lsp-plugin.cpp:1402
+#: src/plugins/lsp/lsp-plugin.cpp:1416
 msgid "LSP _Servers..."
 msgstr ""
 
-#: src/plugins/lsp/lsp-plugin.cpp:1403
+#: src/plugins/lsp/lsp-plugin.cpp:1417
 msgid "Edit the list of language servers"
 msgstr ""
 
-#: src/plugins/lsp/lsp-plugin.cpp:1409 src/plugins/lsp/lsp-plugin.cpp:1410
+#: src/plugins/lsp/lsp-plugin.cpp:1423 src/plugins/lsp/lsp-plugin.cpp:1424
 msgid "Restart Language Servers"
 msgstr ""
 
-#: src/plugins/lsp/lsp-plugin.cpp:1411
+#: src/plugins/lsp/lsp-plugin.cpp:1425
 msgid "Re-read the configuration and start every server again"
 msgstr ""
 
-#: src/plugins/lsp/lsp-plugin.cpp:1417
+#: src/plugins/lsp/lsp-plugin.cpp:1431
 msgid "Complete Word"
 msgstr ""
 
-#: src/plugins/lsp/lsp-plugin.cpp:1418
+#: src/plugins/lsp/lsp-plugin.cpp:1432
 msgid "_Complete Word"
 msgstr ""
 
-#: src/plugins/lsp/lsp-plugin.cpp:1419
+#: src/plugins/lsp/lsp-plugin.cpp:1433
 msgid "Ask the language server what could go here"
 msgstr ""
 
-#: src/plugins/lsp/lsp-plugin.cpp:1425
+#: src/plugins/lsp/lsp-plugin.cpp:1439
 msgid "Parameter Hints"
 msgstr ""
 
-#: src/plugins/lsp/lsp-plugin.cpp:1426
+#: src/plugins/lsp/lsp-plugin.cpp:1440
 msgid "_Parameter Hints"
 msgstr ""
 
-#: src/plugins/lsp/lsp-plugin.cpp:1427
+#: src/plugins/lsp/lsp-plugin.cpp:1441
 msgid "Show what the call being typed takes"
 msgstr ""
 
-#: src/plugins/lsp/lsp-plugin.cpp:1435
+#: src/plugins/lsp/lsp-plugin.cpp:1449
 msgid "Show the references pane"
 msgstr ""
 
-#: src/plugins/lsp/lsp-plugin.cpp:1443
+#: src/plugins/lsp/lsp-plugin.cpp:1457
 msgid "Show the symbol tree"
 msgstr ""
 
-#: src/plugins/lsp/lsp-server.cpp:762
+#: src/plugins/lsp/lsp-server.cpp:919
 #, c-format
 msgid "%s failed to start: %s"
 msgstr ""
 
-#: src/plugins/lsp/lsp-server.cpp:763 src/plugins/lsp/lsp-server.cpp:1134
+#: src/plugins/lsp/lsp-server.cpp:920 src/plugins/lsp/lsp-server.cpp:1304
 msgid "unknown error"
 msgstr ""
 
-#: src/plugins/lsp/lsp-server.cpp:769
+#: src/plugins/lsp/lsp-server.cpp:926
 #, c-format
 msgid "%s answered the initialize request with no capabilities"
 msgstr ""
 
-#: src/plugins/lsp/lsp-server.cpp:791
+#: src/plugins/lsp/lsp-server.cpp:948
 #, c-format
 msgid "%s did not answer the initialize request in %d seconds"
 msgstr ""
 
-#: src/plugins/lsp/lsp-server.cpp:1091
+#: src/plugins/lsp/lsp-server.cpp:1261
 #, c-format
 msgid ""
 "%s exited immediately %d times in a row; check the command in the LSP "
 "configuration file"
 msgstr ""
 
-#: src/plugins/lsp/lsp-server.cpp:1133
+#: src/plugins/lsp/lsp-server.cpp:1303
 #, c-format
 msgid "could not run %s: %s"
 msgstr ""

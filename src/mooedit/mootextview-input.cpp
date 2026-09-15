@@ -16,6 +16,7 @@
 #include "mooedit/mootextview-private.h"
 #include "mooedit/mooeditview-impl.h"
 #include "mooedit/mootextbuffer.h"
+#include "mooedit/mootext-private.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooaccel.h"
 #include "mooutils/moocompat.h"
@@ -1471,6 +1472,69 @@ moo_text_view_unindent (MooTextView *view)
 {
     g_return_if_fail (MOO_IS_TEXT_VIEW (view));
     tab_unindent (view);
+}
+
+
+/* The line operations themselves are on the buffer; all the view adds is
+   showing where the cursor ended up. */
+static MooTextBuffer *
+get_moo_buffer (MooTextView *view)
+{
+    return MOO_TEXT_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (view)));
+}
+
+
+static void
+scroll_to_insert (MooTextView *view)
+{
+    GtkTextBuffer *buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (view));
+    gtk_text_view_scroll_mark_onscreen (GTK_TEXT_VIEW (view),
+                                        gtk_text_buffer_get_insert (buffer));
+}
+
+
+void
+moo_text_view_duplicate_line (MooTextView *view)
+{
+    g_return_if_fail (MOO_IS_TEXT_VIEW (view));
+    _moo_text_buffer_duplicate_line (get_moo_buffer (view));
+    scroll_to_insert (view);
+}
+
+
+void
+moo_text_view_move_lines_up (MooTextView *view)
+{
+    g_return_if_fail (MOO_IS_TEXT_VIEW (view));
+    _moo_text_buffer_move_lines (get_moo_buffer (view), -1);
+    scroll_to_insert (view);
+}
+
+
+void
+moo_text_view_move_lines_down (MooTextView *view)
+{
+    g_return_if_fail (MOO_IS_TEXT_VIEW (view));
+    _moo_text_buffer_move_lines (get_moo_buffer (view), 1);
+    scroll_to_insert (view);
+}
+
+
+void
+moo_text_view_sort_lines (MooTextView *view)
+{
+    g_return_if_fail (MOO_IS_TEXT_VIEW (view));
+    _moo_text_buffer_sort_lines (get_moo_buffer (view));
+    scroll_to_insert (view);
+}
+
+
+void
+moo_text_view_goto_matching_bracket (MooTextView *view)
+{
+    g_return_if_fail (MOO_IS_TEXT_VIEW (view));
+    _moo_text_buffer_goto_matching_bracket (get_moo_buffer (view));
+    scroll_to_insert (view);
 }
 
 

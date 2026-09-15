@@ -52,6 +52,11 @@
       <item action="Comment"/>
       <item action="Uncomment"/>
       <separator/>
+      <item action="DuplicateLine"/>
+      <item action="MoveLinesUp"/>
+      <item action="MoveLinesDown"/>
+      <item action="SortLines"/>
+      <separator/>
       <placeholder name="UserMenu"/>
       <separator/>
       <item action="ConfigureShortcuts"/>
@@ -72,6 +77,7 @@
       <item action="FindCurrentBack"/>
       <separator/>
       <item action="GoToLine"/>
+      <item action="GoToMatchingBracket"/>
       <separator/>
       <item action="NextPlaceholder"/>
       <item action="PrevPlaceholder"/>

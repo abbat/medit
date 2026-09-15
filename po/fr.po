@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: moo\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-06 09:58-0800\n"
+"Report-Msgid-Bugs-To: https://github.com/abbat/medit/issues\n"
+"POT-Creation-Date: 2026-09-16 00:49+0300\n"
 "PO-Revision-Date: 2014-08-05 02:59+0200\n"
 "Last-Translator: Yannick Duchêne <yannick_duchene@yahoo.fr>\n"
 "Language-Team: Yannick Duchêne <yannick_duchene@yahoo.fr>\n"
@@ -17,170 +17,137 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Virtaal 0.7.0\n"
 
-#. error message for wrong commmand line
-#: ../src/medit-app/main.c:110
+#. error message for wrong command line
+#: src/medit-app/main.cpp:157
 #, c-format
 msgid "Invalid value '%s' for option %s"
 msgstr "Valeur « %s » incorrecte pour l’option %s"
 
-#. help message for command line option --new-app
-#: ../src/medit-app/main.c:117
-msgid "Run new instance of application"
-msgstr "Ouvrir une nouvelle instance de l’application"
-
-#. help message for command line option --use-session
-#: ../src/medit-app/main.c:119
-msgid "Load and save session"
-msgstr "Applique le chargement et la sauvegarde de cession"
-
-#. help message for command line option --pid=PID
-#: ../src/medit-app/main.c:121
-msgid "Use existing instance with process id PID"
-msgstr "Réutilise le processus existant dont l’ID est PID"
-
-#. "PID" part in "--pid=PID"
-#: ../src/medit-app/main.c:122
-msgid "PID"
-msgstr "PID"
-
-#. help message for command line option --app-name=NAME
-#: ../src/medit-app/main.c:124
-msgid "Set instance name to NAME if it's not already running"
-msgstr ""
-"Si elle n’est pas déjà en cours d’exécution, donne à l’instance le nom NOM"
-
-#. "NAME" part in "--app-name=NAME"
-#: ../src/medit-app/main.c:125
-msgid "NAME"
-msgstr "NOM"
-
-#. help message for command line option --new-window
-#: ../src/medit-app/main.c:127
-msgid "Open file(s) in a new window"
-msgstr "Ouvre le(s) fichier(s) dans une nouvelle fenêtre"
-
-#. help message for command line option --new-tab
-#: ../src/medit-app/main.c:129
-msgid "Open file(s) in a new tab"
-msgstr "Ouvre le(s) fichier(s) dans un/des nouveau(x) onglet(s)"
-
-#. help message for command line option --line=LINE
-#: ../src/medit-app/main.c:135
-msgid "Open file and position cursor on line LINE"
-msgstr "Positionne le curseur à la ligne LIGNE du fichier à ouvrir"
-
-#. "LINE" part in --line=LINE
-#: ../src/medit-app/main.c:136
-msgid "LINE"
-msgstr "LIGNE"
-
-#. help message for command line option --encoding=ENCODING
-#: ../src/medit-app/main.c:138
-msgid "Use character encoding ENCODING"
-msgstr "Utilise l’encodage de caractère ENCODAGE"
-
-#. "ENCODING" part in --encoding=ENCODING
-#: ../src/medit-app/main.c:139
-msgid "ENCODING"
-msgstr "ENCODAGE"
-
-#. help message for command line option --reload
-#: ../src/medit-app/main.c:141
-msgid "Automatically reload file if it was modified on disk"
-msgstr "Recharge automatiquement le fichier s’il a été modifié sur le disque"
-
-#. help message for command line option --geometry=WIDTHxHEIGHT[+X+Y]
-#: ../src/medit-app/main.c:153
-msgid "Default window size and position"
-msgstr "Dimensions et emplacement par défaut pour la fenêtre"
-
-#. "WIDTHxHEIGHT[+X+Y]" part in --geometry=WIDTHxHEIGHT[+X+Y]
-#: ../src/medit-app/main.c:154
-msgid "WIDTHxHEIGHT[+X+Y]"
-msgstr "LARGEURxHAUTEUR[+X+Y]"
-
-#. help message for command line option --version
-#: ../src/medit-app/main.c:156
-msgid "Show version information and exit"
-msgstr "Affiche l’information sur la version et quitte"
-
-#. "FILES" part in "medit [OPTION...] [FILES]"
-#: ../src/medit-app/main.c:172
-msgid "FILES"
-msgstr "FICHIERS"
-
 #. error message for wrong commmand line
-#: ../src/medit-app/main.c:254
+#: src/medit-app/main.cpp:283
 #, c-format
 msgid "%s and %s options may not be used simultaneously\n"
 msgstr "Les options %s et %s ne peuvent être simultanément utilisées\n"
 
-#: ../src/medit-app/medit.desktop.in.h:1
+#: src/medit-app/main.cpp:315
+msgid "Run new instance of application"
+msgstr "Ouvrir une nouvelle instance de l’application"
+
+#: src/medit-app/main.cpp:316
+msgid "Load and save session"
+msgstr "Applique le chargement et la sauvegarde de cession"
+
+#: src/medit-app/main.cpp:317
+msgid "Use existing instance with process id PID"
+msgstr "Réutilise le processus existant dont l’ID est PID"
+
+#: src/medit-app/main.cpp:317
+msgid "PID"
+msgstr "PID"
+
+#: src/medit-app/main.cpp:318
+msgid "Set instance name to NAME if it's not already running"
+msgstr ""
+"Si elle n’est pas déjà en cours d’exécution, donne à l’instance le nom NOM"
+
+#: src/medit-app/main.cpp:318
+msgid "NAME"
+msgstr "NOM"
+
+#: src/medit-app/main.cpp:319
+msgid "Open file(s) in a new window"
+msgstr "Ouvre le(s) fichier(s) dans une nouvelle fenêtre"
+
+#: src/medit-app/main.cpp:320
+msgid "Open file(s) in a new tab"
+msgstr "Ouvre le(s) fichier(s) dans un/des nouveau(x) onglet(s)"
+
+#: src/medit-app/main.cpp:321
+msgid "Open file and position cursor on line LINE"
+msgstr "Positionne le curseur à la ligne LIGNE du fichier à ouvrir"
+
+#: src/medit-app/main.cpp:321
+msgid "LINE"
+msgstr "LIGNE"
+
+#: src/medit-app/main.cpp:322
+msgid "Use character encoding ENCODING"
+msgstr "Utilise l’encodage de caractère ENCODAGE"
+
+#: src/medit-app/main.cpp:322
+msgid "ENCODING"
+msgstr "ENCODAGE"
+
+#: src/medit-app/main.cpp:323
+msgid "Automatically reload file if it was modified on disk"
+msgstr "Recharge automatiquement le fichier s’il a été modifié sur le disque"
+
+#: src/medit-app/main.cpp:327
+msgid "Default window size and position"
+msgstr "Dimensions et emplacement par défaut pour la fenêtre"
+
+#: src/medit-app/main.cpp:327
+msgid "WIDTHxHEIGHT[+X+Y]"
+msgstr "LARGEURxHAUTEUR[+X+Y]"
+
+#: src/medit-app/main.cpp:328
+msgid "Show version information and exit"
+msgstr "Affiche l’information sur la version et quitte"
+
+#: src/medit-app/main.cpp:333
+msgid "FILES"
+msgstr "FICHIERS"
+
+#: src/medit-app/medit.desktop.in.h:1
 msgid "Text editor"
 msgstr "Éditeur de texte"
 
-#. Label of the link to the old upstream website in the About dialog
-#: ../src/mooapp/about.c:174
+#: src/medit-app/medit.desktop.in.h:2
+#, fuzzy
+msgid "editor;texteditor;text"
+msgstr "Medit est un éditeur de texte"
+
+#: src/mooapp/about.cpp:174
 msgid "old site"
 msgstr "ancien site"
 
-#. Credits button label in About dialog
-#: ../src/mooapp/about.c:220
+#: src/mooapp/about.cpp:220
 msgid "C_redits"
 msgstr "C_rédits"
 
-#. License button label in About dialog
-#: ../src/mooapp/about.c:280
+#: src/mooapp/about.cpp:280
 msgid "_License"
 msgstr "_License"
 
-#. Close button label in the About and Credits dialogs
-#: ../src/mooapp/about.c:312 ../src/mooapp/credits.c:178
+#: src/mooapp/about.cpp:312 src/mooapp/credits.cpp:178
 msgid "_Close"
 msgstr "_Fermer"
 
-#. Title of the About dialog
-#: ../src/mooapp/about.c:369
+#: src/mooapp/about.cpp:369
 msgid "About"
 msgstr "À propos"
 
-#: ../src/mooapp/mooapp-info.h:21
+#: src/mooapp/mooapp-info.h:21
 msgid "medit is a text editor"
 msgstr "Medit est un éditeur de texte"
 
-#. Tab label in Credits dialog
-#: ../src/mooapp/credits.c:140
+#: src/mooapp/credits.cpp:140
 msgid "Thanks"
 msgstr "Remerciements"
 
-#. Tab label in Credits dialog
-#: ../src/mooapp/credits.c:143
+#: src/mooapp/credits.cpp:143
 msgid "Written by"
 msgstr "Écrit par"
 
-#. Tab label in Credits dialog
-#: ../src/mooapp/credits.c:146
+#: src/mooapp/credits.cpp:146
 msgid "Translated by"
 msgstr "Traduit par"
 
-#. Title of the Credits dialog
-#: ../src/mooapp/credits.c:233
+#: src/mooapp/credits.cpp:233
 msgid "Credits"
 msgstr "Crédits"
 
-#. Translators: this goes into About box, under Translated by tab,
-#. do not ignore it, markup isn't always used. It should be something
-#. like "Some Guy <someguy@domain.net>", with lines separated by \n
-#: ../src/mooapp/credits.c:117
-msgid "translator-credits"
-msgstr ""
-"Collilieux <mccnews@free.fr>\\nYannick Duchêne <yannick_duchene@yahoo.fr>"
-
-#: ../src/mooapp/mooapp.c:993
-msgid "Report a Bug..."
-msgstr "Signaler un bug…"
-
-#: ../src/mooapp/mooapp.c:1356
+#: src/mooapp/mooapp.cpp:178
 #, c-format
 msgid ""
 "The following URL will be opened:\n"
@@ -191,419 +158,434 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/mooapp/mooapp.c:1363
+#: src/mooapp/mooapp.cpp:183
 msgid "Open URL?"
 msgstr "Ouvrir l’URL ?"
 
 #. Prefs dialog title
-#: ../src/mooapp/mooapp.c:1401
+#: src/mooapp/mooapp.cpp:232
 msgid "Preferences"
 msgstr "Préférences"
 
-#: ../src/mooedit/glade/mooeditprefs-file.glade.h:1
+#: src/mooapp/mooapp.cpp:293
+msgid "Report a Bug..."
+msgstr "Signaler un bug…"
+
+#: src/mooapp/mooapp.cpp:1130
+msgid "Checking for unsaved documents"
+msgstr ""
+
+#: src/mooedit/ui/mooeditprefs-file.ui:19
 msgid "<b>Loading</b>"
 msgstr "<b>Chargement</b>"
 
-#: ../src/mooedit/glade/mooeditprefs-file.glade.h:2
+#: src/mooedit/ui/mooeditprefs-file.ui:44
 msgid "Encodings to _autodetect"
 msgstr "Encodages à _détecter"
 
-#: ../src/mooedit/glade/mooeditprefs-file.glade.h:3
-msgid "Comma-separated list of encodings to try when opening a file. 'LOCALE' means current locale encoding."
+#: src/mooedit/ui/mooeditprefs-file.ui:57
+msgid ""
+"Comma-separated list of encodings to try when opening a file. 'LOCALE' means "
+"current locale encoding."
 msgstr ""
 "Liste d’encodages, séparés par une virgule, à essayer au moment d’ouvrir un "
 "fichier. « LOCALE » désigne l’encodage local courant."
 
-#: ../src/mooedit/glade/mooeditprefs-file.glade.h:4
+#: src/mooedit/ui/mooeditprefs-file.ui:92
 msgid "<b>Saving</b>"
 msgstr "<b>Enregistrement</b>"
 
-#: ../src/mooedit/glade/mooeditprefs-file.glade.h:5
+#: src/mooedit/ui/mooeditprefs-file.ui:117
 msgid "Encoding for _new files"
 msgstr "Encodage pour les _nouveaux fichiers"
 
-#: ../src/mooedit/glade/mooeditprefs-file.glade.h:6
+#: src/mooedit/ui/mooeditprefs-file.ui:145
 msgid "Remove trailing _spaces"
 msgstr "Supprimer les e_spaces de fin de ligne"
 
-#: ../src/mooedit/glade/mooeditprefs-file.glade.h:7
+#: src/mooedit/ui/mooeditprefs-file.ui:161
 msgid "Ensure trailing new_line"
 msgstr "Garantir que le fichier se termine par un saut de ligne"
 
-#: ../src/mooedit/glade/mooeditprefs-file.glade.h:8
+#: src/mooedit/ui/mooeditprefs-file.ui:177
 msgid "Make _backups"
 msgstr "Faire des copies de sécurité"
 
-#: ../src/mooedit/glade/mooeditprefs-file.glade.h:9
+#: src/mooedit/ui/mooeditprefs-file.ui:215
 msgid "<b>Sessions</b>"
 msgstr "<b>Sessions</b>"
 
-#: ../src/mooedit/glade/mooeditprefs-file.glade.h:10
+#: src/mooedit/ui/mooeditprefs-file.ui:234
 msgid "Enable _session support"
 msgstr "Activer la prise en charge des sessions"
 
-#: ../src/mooedit/glade/mooeditprefs-file.glade.h:11
+#: src/mooedit/ui/mooeditprefs-file.ui:272
 msgid "<b>Dialogs</b>"
 msgstr "<b>Dialogues</b>"
 
-#: ../src/mooedit/glade/mooeditprefs-file.glade.h:12
+#: src/mooedit/ui/mooeditprefs-file.ui:291
 msgid "Open and Save As dialogs show current document _folder"
 msgstr ""
 "Les boites d’ouverture et d’enregistrement, s’ouvrent sur le répertoire du "
 "fichier courant"
 
-#: ../src/mooedit/glade/mooeditprefs-filters.glade.h:1
+#: src/mooedit/ui/mooeditprefs-file.ui:329
+#, fuzzy
+msgid "<b>Autosync</b>"
+msgstr "<b>Auteur :</b>"
+
+#: src/mooedit/ui/mooeditprefs-file.ui:348
+#, fuzzy
+msgid "Automatically sync files with disk"
+msgstr "Recharge automatiquement le fichier s’il a été modifié sur le disque"
+
+#: src/mooedit/ui/mooeditprefs-filters.ui:19
 msgid "<b>File filters</b>"
 msgstr "<b>Filtres de fichier</b>"
 
-#: ../src/mooedit/glade/mooeditprefs-general.glade.h:1
+#: src/mooedit/ui/mooeditprefs-general.ui:35
 msgid "<b>Keyboard</b>"
 msgstr "<b>Clavier</b>"
 
-#: ../src/mooedit/glade/mooeditprefs-general.glade.h:2
+#: src/mooedit/ui/mooeditprefs-general.ui:54
 msgid "Smart Home and End"
 msgstr "Touches de début et de fin intelligentes"
 
-#: ../src/mooedit/glade/mooeditprefs-general.glade.h:3
+#: src/mooedit/ui/mooeditprefs-general.ui:77
 msgid "Enable auto indentation"
 msgstr "Indentation automatique"
 
-#: ../src/mooedit/glade/mooeditprefs-general.glade.h:4
+#: src/mooedit/ui/mooeditprefs-general.ui:89
 msgid "Do not use tabs for indentation"
 msgstr "Pour l’indentation, ne pas utiliser les caractères de tabulation"
 
-#: ../src/mooedit/glade/mooeditprefs-general.glade.h:5
+#: src/mooedit/ui/mooeditprefs-general.ui:112
 msgid "Backspace key unindents"
 msgstr "La touche espace‑arrière supprime l’espace d’indentation"
 
-#: ../src/mooedit/glade/mooeditprefs-general.glade.h:6
+#: src/mooedit/ui/mooeditprefs-general.ui:129
 msgid "Tab key indents"
 msgstr "Tabulation et indentation"
 
-#: ../src/mooedit/glade/mooeditprefs-general.glade.h:7
+#: src/mooedit/ui/mooeditprefs-general.ui:163
 msgid "Indent width"
 msgstr "Largeur de l’indentation"
 
-#: ../src/mooedit/glade/mooeditprefs-general.glade.h:8
+#: src/mooedit/ui/mooeditprefs-general.ui:190
 msgid "Tab width"
 msgstr "Largeur de la tabulation"
 
-#: ../src/mooedit/glade/mooeditprefs-general.glade.h:9
+#: src/mooedit/ui/mooeditprefs-general.ui:226
 msgid "<b>Font and colors</b>"
 msgstr "<b>Polices et couleurs</b>"
 
-#: ../src/mooedit/glade/mooeditprefs-general.glade.h:10
+#: src/mooedit/ui/mooeditprefs-general.ui:254
 msgid "Font"
 msgstr "Police"
 
-#: ../src/mooedit/glade/mooeditprefs-general.glade.h:11
+#: src/mooedit/ui/mooeditprefs-general.ui:278
 msgid "Color scheme"
 msgstr "Thème de couleur"
 
-#: ../src/mooedit/glade/mooeditprefs-langs.glade.h:1
+#: src/mooedit/ui/mooeditprefs-langs.ui:19
 msgid "<b>Language-specific options</b>"
 msgstr "<b>Options spécifiques aux langages</b>"
 
-#: ../src/mooedit/glade/mooeditprefs-langs.glade.h:2
-#: ../src/mooedit/glade/mootextfind.glade.h:13
+#: src/mooedit/ui/mooeditprefs-langs.ui:61 src/mooedit/ui/mootextfind.ui:288
 msgid "Options"
 msgstr "Options"
 
-#: ../src/mooedit/glade/mooeditprefs-langs.glade.h:3
-#: ../src/plugins/glade/moofileselector-prefs.glade.h:3
+#: src/mooedit/ui/mooeditprefs-langs.ui:74
+#: src/plugins/ui/moofileselector-prefs.ui:69
 msgid "Mime types"
 msgstr "Types MIME"
 
-#: ../src/mooedit/glade/mooeditprefs-langs.glade.h:4
-#: ../src/plugins/glade/moofileselector-prefs.glade.h:5
+#: src/mooedit/ui/mooeditprefs-langs.ui:87
+#: src/plugins/ui/moofileselector-prefs.ui:88
 msgid "Extensions"
 msgstr "Extensions"
 
-#: ../src/mooedit/glade/mooeditprefs-langs.glade.h:5
+#: src/mooedit/ui/mooeditprefs-langs.ui:126
 msgid "Language"
 msgstr "Langage"
 
-#: ../src/mooedit/glade/mooeditprefs-view.glade.h:1
+#: src/mooedit/ui/mooeditprefs-view.ui:27
 msgid "<b>Text wrapping</b>"
 msgstr "<b>Renvoi du texte</b>"
 
-#: ../src/mooedit/glade/mooeditprefs-view.glade.h:2
+#: src/mooedit/ui/mooeditprefs-view.ui:46
 msgid "Enable text wrapping"
 msgstr "Appliquer le renvoi à la ligne"
 
-#: ../src/mooedit/glade/mooeditprefs-view.glade.h:3
+#: src/mooedit/ui/mooeditprefs-view.ui:61
 msgid "Do not split words"
 msgstr "Ne pas couper les mots"
 
-#: ../src/mooedit/glade/mooeditprefs-view.glade.h:4
+#: src/mooedit/ui/mooeditprefs-view.ui:98
 msgid "<b>Highlighting</b>"
 msgstr "<b>Mise en valeur</b>"
 
-#: ../src/mooedit/glade/mooeditprefs-view.glade.h:5
+#: src/mooedit/ui/mooeditprefs-view.ui:117
 msgid "Enable syntax highlighting"
 msgstr "Appliquer la mise en valeur syntaxique"
 
-#: ../src/mooedit/glade/mooeditprefs-view.glade.h:6
+#: src/mooedit/ui/mooeditprefs-view.ui:132
 msgid "Highlight matching brackets"
 msgstr "Montrer les parenthèses correspondantes"
 
-#: ../src/mooedit/glade/mooeditprefs-view.glade.h:7
+#: src/mooedit/ui/mooeditprefs-view.ui:147
 msgid "Highlight mismatching brackets"
 msgstr "Montrer les parenthèses orphelines"
 
-#: ../src/mooedit/glade/mooeditprefs-view.glade.h:8
+#: src/mooedit/ui/mooeditprefs-view.ui:162
 msgid "Highlight current line"
 msgstr "Surligner la ligne courante"
 
-#: ../src/mooedit/glade/mooeditprefs-view.glade.h:9
+#: src/mooedit/ui/mooeditprefs-view.ui:199
 msgid "<b>Misc</b>"
 msgstr "<b>Divers</b>"
 
-#: ../src/mooedit/glade/mooeditprefs-view.glade.h:10
+#: src/mooedit/ui/mooeditprefs-view.ui:218
 msgid "Show line numbers"
 msgstr "Afficher les numéros de ligne"
 
-#: ../src/mooedit/glade/mooeditprefs-view.glade.h:11
+#: src/mooedit/ui/mooeditprefs-view.ui:233
 msgid "Show tabs"
 msgstr "Montrer les tabulations"
 
-#: ../src/mooedit/glade/mooeditprefs-view.glade.h:12
+#: src/mooedit/ui/mooeditprefs-view.ui:248
 msgid "Show spaces"
 msgstr "Montrer les espaces"
 
-#: ../src/mooedit/glade/mooeditprefs-view.glade.h:13
+#: src/mooedit/ui/mooeditprefs-view.ui:263
 msgid "Show trailing spaces"
 msgstr "Montrer les espaces de fin de ligne"
 
 #. Part of the phrase "Draw right margin at column [XX]"
-#: ../src/mooedit/glade/mooeditprefs-view.glade.h:15
+#: src/mooedit/ui/mooeditprefs-view.ui:281
 msgid "Draw right margin"
 msgstr "Dessiner la marge de droite"
 
 #. Part of the phrase "Draw right margin at column [XX]"
-#: ../src/mooedit/glade/mooeditprefs-view.glade.h:17
+#: src/mooedit/ui/mooeditprefs-view.ui:300
 msgid "at column"
 msgstr "à la colonne"
 
-#: ../src/mooedit/glade/mooeditsavemult.glade.h:1
+#: src/mooedit/ui/mooeditsavemult.ui:55
 msgid "Select the documents you want to save:"
 msgstr "Choisir les documents à enregistrer :"
 
-#: ../src/mooedit/glade/moopluginprefs.glade.h:1
+#: src/mooedit/ui/moopluginprefs.ui:16
 msgid "<b>Plugins</b>"
 msgstr "<b>Plug‑ins</b>"
 
-#: ../src/mooedit/glade/moopluginprefs.glade.h:2
+#: src/mooedit/ui/moopluginprefs.ui:61
 msgid "<b>Version:</b>"
 msgstr "<b>Version :</b>"
 
-#: ../src/mooedit/glade/moopluginprefs.glade.h:3
+#: src/mooedit/ui/moopluginprefs.ui:74
 msgid "<b>Author:</b>"
 msgstr "<b>Auteur :</b>"
 
-#: ../src/mooedit/glade/moopluginprefs.glade.h:4
+#: src/mooedit/ui/moopluginprefs.ui:89
 msgid "<b>Description:</b>"
 msgstr "<b>Description :</b>"
 
-#: ../src/mooedit/glade/mooprint.glade.h:1
+#: src/mooedit/ui/mooprint.ui:31
 msgid "Print using text styles"
 msgstr "Imprimer avec les styles de texte"
 
-#: ../src/mooedit/glade/mooprint.glade.h:2
+#: src/mooedit/ui/mooprint.ui:47
 msgid "Use custom font"
 msgstr "Utiliser une police personnalisée"
 
-#: ../src/mooedit/glade/mooprint.glade.h:3
+#: src/mooedit/ui/mooprint.ui:76
 msgid "Wrap long lines"
 msgstr "Renvoi des lignes longues"
 
-#: ../src/mooedit/glade/mooprint.glade.h:4
+#: src/mooedit/ui/mooprint.ui:89
 msgid "Ellipsize long lines"
 msgstr "Tronquer l’affichage des lignes longues"
 
 #. Part of the phrase "Print line numbers" "every" "1" "lines"
-#: ../src/mooedit/glade/mooprint.glade.h:6
+#: src/mooedit/ui/mooprint.ui:105
 msgid "Print line numbers"
 msgstr "Imprimer les numéros de ligne"
 
 #. Part of the phrase "Print line numbers" "every" "1" "lines"
-#: ../src/mooedit/glade/mooprint.glade.h:8
+#: src/mooedit/ui/mooprint.ui:120
 msgid "every"
 msgstr "chaque"
 
 #. Part of the phrase "Print line numbers" "every" "1" "lines"
-#: ../src/mooedit/glade/mooprint.glade.h:10
+#: src/mooedit/ui/mooprint.ui:139
 msgid "lines"
 msgstr "lignes"
 
-#: ../src/mooedit/glade/mooprint.glade.h:11
+#: src/mooedit/ui/mooprint.ui:179
 msgid "Print header"
 msgstr "Imprimer l’en‑tête"
 
-#: ../src/mooedit/glade/mooprint.glade.h:12
+#: src/mooedit/ui/mooprint.ui:198 src/mooedit/ui/mooprint.ui:359
 msgid "Print separator line"
 msgstr "Imprimer la ligne de séparation"
 
-#: ../src/mooedit/glade/mooprint.glade.h:13
+#: src/mooedit/ui/mooprint.ui:267 src/mooedit/ui/mooprint.ui:428
 msgid "Right"
 msgstr "Droite"
 
-#: ../src/mooedit/glade/mooprint.glade.h:14
+#: src/mooedit/ui/mooprint.ui:280 src/mooedit/ui/mooprint.ui:441
 msgid "Center"
 msgstr "Centre"
 
-#: ../src/mooedit/glade/mooprint.glade.h:15
+#: src/mooedit/ui/mooprint.ui:293 src/mooedit/ui/mooprint.ui:454
 msgid "Left"
 msgstr "Gauche"
 
-#: ../src/mooedit/glade/mooprint.glade.h:16
+#: src/mooedit/ui/mooprint.ui:320
 msgid "Header"
 msgstr "En‑tête"
 
-#: ../src/mooedit/glade/mooprint.glade.h:17
+#: src/mooedit/ui/mooprint.ui:340
 msgid "Print footer"
 msgstr "Imprimer le pied de page"
 
-#: ../src/mooedit/glade/mooprint.glade.h:18
+#: src/mooedit/ui/mooprint.ui:481
 msgid "Footer"
 msgstr "Pied de page"
 
-#: ../src/mooedit/glade/mooquicksearch.glade.h:1
+#: src/mooedit/ui/mooquicksearch.ui:43
 msgid "_Case sensitive"
 msgstr "Sensible à la _casse"
 
-#: ../src/mooedit/glade/mooquicksearch.glade.h:2
+#: src/mooedit/ui/mooquicksearch.ui:57
 msgid "_Regular expression"
 msgstr "Expression _régulière"
 
-#: ../src/mooedit/glade/mootextfind.glade.h:1
+#: src/mooedit/ui/mootextfind.ui:37
 msgid "_Text to find"
 msgstr "_Texte à rechercher"
 
-#: ../src/mooedit/glade/mootextfind.glade.h:2
+#: src/mooedit/ui/mootextfind.ui:62
 msgid "Regular e_xpression"
 msgstr "E_xpression régulière"
 
-#: ../src/mooedit/glade/mootextfind.glade.h:3
-#: ../src/plugins/moofind.c:1116
+#: src/mooedit/ui/mootextfind.ui:86 src/plugins/moofind.cpp:1053
 msgid "Find"
 msgstr "Rechercher"
 
-#: ../src/mooedit/glade/mootextfind.glade.h:4
+#: src/mooedit/ui/mootextfind.ui:115
 msgid "_Replacement text"
 msgstr "Texte de substitution"
 
-#: ../src/mooedit/glade/mootextfind.glade.h:5
+#: src/mooedit/ui/mootextfind.ui:140
 msgid "_Literal replacement"
 msgstr "Substitution littérale"
 
-#: ../src/mooedit/glade/mootextfind.glade.h:6
+#: src/mooedit/ui/mootextfind.ui:164
 msgid "Replace With"
 msgstr "Remplacer par"
 
-#: ../src/mooedit/glade/mootextfind.glade.h:7
+#: src/mooedit/ui/mootextfind.ui:193
 msgid "Don't _prompt on replace"
 msgstr "Ne pas demander confirmations des substitutions"
 
-#: ../src/mooedit/glade/mootextfind.glade.h:8
+#: src/mooedit/ui/mootextfind.ui:210
 msgid "Find _backwards"
 msgstr "Rechercher en arrière"
 
-#: ../src/mooedit/glade/mootextfind.glade.h:9
-#: ../src/plugins/glade/moogrep.glade.h:5
+#: src/mooedit/ui/mootextfind.ui:224 src/plugins/ui/moogrep.ui:182
 msgid "Case _sensitive"
 msgstr "_Sensible à la casse"
 
-#: ../src/mooedit/glade/mootextfind.glade.h:10
+#: src/mooedit/ui/mootextfind.ui:236
 msgid "S_elected text"
 msgstr "Dans le texte s_électionné"
 
-#: ../src/mooedit/glade/mootextfind.glade.h:11
+#: src/mooedit/ui/mootextfind.ui:253
 msgid "From c_ursor"
 msgstr "Depuis le c_urseur"
 
-#: ../src/mooedit/glade/mootextfind.glade.h:12
+#: src/mooedit/ui/mootextfind.ui:268
 msgid "_Whole words only"
 msgstr "Mots _entiers seulement"
 
-#: ../src/mooedit/glade/mootextfind-prompt.glade.h:1
+#: src/mooedit/ui/mootextfind-prompt.ui:4
+#: src/mooedit/ui/mootextfind-prompt.ui:12
 msgid "Replace?"
 msgstr "Remplacer ?"
 
-#: ../src/mooedit/glade/mootextfind-prompt.glade.h:2
+#: src/mooedit/ui/mootextfind-prompt.ui:29
 msgid "_Replace"
 msgstr "_Remplacer"
 
-#: ../src/mooedit/glade/mootextfind-prompt.glade.h:3
+#: src/mooedit/ui/mootextfind-prompt.ui:38
 msgid "Replace _All"
 msgstr "_Tout remplacer"
 
-#: ../src/mooedit/glade/mootextfind-prompt.glade.h:4
-#: ../src/mooedit/mooeditwindow.c:551
+#: src/mooedit/ui/mootextfind-prompt.ui:50 src/mooedit/mooeditwindow.cpp:567
 msgid "Find _Next"
 msgstr "Rechercher le _suivant"
 
-#: ../src/mooedit/glade/mootextfind-prompt.glade.h:5
+#: src/mooedit/ui/mootextfind-prompt.ui:62
 msgid "Sto_p"
 msgstr "_Arrêter"
 
-#: ../src/mooedit/glade/mootextgotoline.glade.h:1
-#: ../src/mooedit/mooeditwindow.c:601
+#: src/mooedit/ui/mootextgotoline.ui:20 src/mooedit/mooeditwindow.cpp:617
 msgid "Go to Line"
 msgstr "Aller à la ligne"
 
-#: ../src/mooedit/glade/mootextgotoline.glade.h:2
+#: src/mooedit/ui/mootextgotoline.ui:37
 msgid "Go to line"
 msgstr "Aller à la ligne"
 
 #. menu item label
-#: ../src/mooedit/medit.xml.h:2
+#: src/mooedit/medit.xml.h:2
 msgid "_File"
 msgstr "_Fichier"
 
 #. menu item label
-#: ../src/mooedit/medit.xml.h:4
+#: src/mooedit/medit.xml.h:4
 msgid "_Search"
 msgstr "Re_chercher"
 
 #. menu item label
-#: ../src/mooedit/medit.xml.h:6
+#: src/mooedit/medit.xml.h:6
 msgid "_View"
 msgstr "_Vue"
 
-#. menu item label
-#: ../src/mooedit/medit.xml.h:8
+#: src/mooedit/medit.xml.h:7
 msgid "Pa_nes"
 msgstr "Pa_nneaux"
 
 #. menu item label
-#: ../src/mooedit/medit.xml.h:10
+#: src/mooedit/medit.xml.h:9
 msgid "_Document"
 msgstr "_Document"
 
-#: ../src/mooedit/medit.xml.h:11
+#: src/mooedit/medit.xml.h:10
 msgid "_Tools"
 msgstr "_Outils"
 
 #. menu item label
-#: ../src/mooedit/medit.xml.h:13
+#: src/mooedit/medit.xml.h:12
 msgid "_Window"
 msgstr "_Fenêtre"
 
 #. Translators: number of documents here is always greater than one, so
 #. ignore singular form (which is simply copy of the plural here)
-#: ../src/mooedit/mooeditdialogs.c:373
+#: src/mooedit/mooeditdialogs.cpp:372
 #, c-format
-msgid "There are %u documents with unsaved changes. Save changes before closing?"
-msgid_plural "There are %u documents with unsaved changes. Save changes before closing?"
+msgid ""
+"There are %u documents with unsaved changes. Save changes before closing?"
+msgid_plural ""
+"There are %u documents with unsaved changes. Save changes before closing?"
 msgstr[0] ""
-"Il y a %u documents modifiés. Enregistrer les modifications avant de "
-"fermer ?"
+"Il y a %u documents modifiés. Enregistrer les modifications avant de fermer ?"
 msgstr[1] ""
-"Il y a %u documents modifiés. Enregistrer les modifications avant de "
-"fermer ?"
+"Il y a %u documents modifiés. Enregistrer les modifications avant de fermer ?"
 
-#: ../src/mooedit/mooeditdialogs.c:428
+#: src/mooedit/mooeditdialogs.cpp:428
 #, c-format
 msgid ""
 "Could not save file\n"
@@ -612,20 +594,21 @@ msgstr ""
 "Le fichier n’a pas put être enregistré \n"
 "%s"
 
-#: ../src/mooedit/mooeditdialogs.c:490
+#: src/mooedit/mooeditdialogs.cpp:490
 #, c-format
-msgid "Could not save file %s in encoding %s. Do you want to save it in UTF-8 encoding instead?"
+msgid ""
+"Could not save file %s in encoding %s. Do you want to save it in UTF-8 "
+"encoding instead?"
 msgstr ""
 "Le fichier « %s » n’a pas put être enregistré dans l’encodage %s. "
 "Souhaitez‑vous l’enregistrer en UTF‑8 à la place ?"
 
-#: ../src/mooedit/mooeditdialogs.c:494
+#: src/mooedit/mooeditdialogs.cpp:494
 msgid "Save file in UTF-8 encoding?"
 msgstr "Enregistrer le fichier dans l’encodage UTF‑8 ?"
 
 #. Could not open file foo.txt
-#: ../src/mooedit/mooeditdialogs.c:521
-#: ../src/mooedit/mooeditdialogs.c:588
+#: src/mooedit/mooeditdialogs.cpp:523 src/mooedit/mooeditdialogs.cpp:590
 #, c-format
 msgid ""
 "Could not open file\n"
@@ -634,27 +617,28 @@ msgstr ""
 "Le fichier n’a pas put être ouvert\n"
 "%s"
 
-#: ../src/mooedit/mooeditdialogs.c:527
-#: ../src/mooedit/mooeditdialogs.c:590
+#: src/mooedit/mooeditdialogs.cpp:530 src/mooedit/mooeditdialogs.cpp:592
 msgid "Could not open file"
 msgstr "Le fichier n’a pas put être ouvert"
 
-#: ../src/mooedit/mooeditdialogs.c:532
+#: src/mooedit/mooeditdialogs.cpp:535
 #, c-format
-msgid "Could not open file using character encoding %s. Try to select another encoding below."
+msgid ""
+"Could not open file using character encoding %s. Try to select another "
+"encoding below."
 msgstr ""
 "Le fichier n’a pas put être ouvert en utilisant l’encodage de caractère %s. "
 "Essayez d’envisager l’un des encodages ci‑dessous."
 
-#: ../src/mooedit/mooeditdialogs.c:535
-#, c-format
-msgid "Could not detect file character encoding. Try to select an encoding below."
+#: src/mooedit/mooeditdialogs.cpp:538
+msgid ""
+"Could not detect file character encoding. Try to select an encoding below."
 msgstr ""
 "L’encodage des caractères du fichier n’a pas put être deviné. Essayez "
 "d’indiquer l’un des encodages ci‑dessous."
 
 #. Could not reload file foo.txt
-#: ../src/mooedit/mooeditdialogs.c:620
+#: src/mooedit/mooeditdialogs.cpp:622
 #, c-format
 msgid ""
 "Could not reload file\n"
@@ -663,37 +647,38 @@ msgstr ""
 "Le fichier n’a pas put être rechargé\n"
 "%s"
 
-#: ../src/mooedit/mooeditdialogs.c:648
+#: src/mooedit/mooeditdialogs.cpp:650
 #, c-format
 msgid "Discard changes in file '%s'?"
 msgstr "Abandonner les modifications apportées au fichier « %s » ?"
 
-#: ../src/mooedit/mooeditdialogs.c:650
+#: src/mooedit/mooeditdialogs.cpp:652
 msgid "If you reload the document, changes will be discarded"
 msgstr "Si vous rechargez le document, les modifications seront abandonnées"
 
-#: ../src/mooedit/mooeditdialogs.c:651
-#: ../src/mooedit/mooeditwindow.c:441
+#: src/mooedit/mooeditdialogs.cpp:653 src/mooedit/mooeditwindow.cpp:457
 msgid "_Reload"
 msgstr "_Recharger"
 
-#: ../src/mooedit/mooeditdialogs.c:673
+#: src/mooedit/mooeditdialogs.cpp:675
 #, c-format
 msgid "Overwrite modified file '%s'?"
 msgstr "Sur‑écrire le fichier modifié « %s » ?"
 
-#: ../src/mooedit/mooeditdialogs.c:674
+#: src/mooedit/mooeditdialogs.cpp:676
 #, c-format
-msgid "File '%s' was modified on disk by another process. If you save it, changes on disk will be lost."
+msgid ""
+"File '%s' was modified on disk by another process. If you save it, changes "
+"on disk will be lost."
 msgstr ""
 "Le fichier « %s » a été modifié sur le disque par un autre programme. Si "
 "vous l’enregistrez, les modifications sur le disque seront perdues."
 
-#: ../src/mooedit/mooeditdialogs.c:676
+#: src/mooedit/mooeditdialogs.cpp:678
 msgid "Over_write"
 msgstr "_Sur‑écrire"
 
-#: ../src/mooedit/mooeditdialogs.c:697
+#: src/mooedit/mooeditdialogs.cpp:699
 msgid ""
 "Beginning of document reached.\n"
 "Continue from the end?"
@@ -701,7 +686,7 @@ msgstr ""
 "Début du document atteint.\n"
 "Continuer depuis la fin ?"
 
-#: ../src/mooedit/mooeditdialogs.c:700
+#: src/mooedit/mooeditdialogs.cpp:702
 msgid ""
 "End of document reached.\n"
 "Continue from the beginning?"
@@ -709,47 +694,46 @@ msgstr ""
 "Fin du document atteinte.\n"
 "Continuer depuis début ?"
 
-#: ../src/mooedit/mooeditdialogs.c:740
-#, c-format
+#: src/mooedit/mooeditdialogs.cpp:742
 msgid "Invalid regular expression"
 msgstr "L’expression régulière est incorrecte"
 
-#: ../src/mooedit/mooedit-fileops.c:1111
-#: ../src/plugins/moofileselector.c:511
+#: src/mooedit/mooedit-fileops.cpp:1107 src/plugins/moofileselector.cpp:512
 msgid "Untitled"
 msgstr "Sans titre"
 
-#: ../src/mooedit/mooedit-fileops.c:1113
+#: src/mooedit/mooedit-fileops.cpp:1109
 #, c-format
 msgid "Untitled %d"
 msgstr "Sans titre %d"
 
-#: ../src/mooedit/mooeditor.c:330
+#: src/mooedit/mooeditor.cpp:323
 msgid "Open Recent Files Dialog"
 msgstr "Boite d’ouverture des fichiers récents"
 
 #. Translators: remove the part before and including |
-#: ../src/mooedit/mooeditor.c:332
+#: src/mooedit/mooeditor.cpp:325
 msgid "Open Recent|_More..."
 msgstr "Plus…"
 
-#: ../src/mooedit/mooeditor.c:598
+#: src/mooedit/mooeditor.cpp:597
 msgid "Open new editor window"
 msgstr "Ouvrir dans une nouvelle fenêtre"
 
-#: ../src/mooedit/mooeditor.c:784
-msgid "Open Recent"
-msgstr "Récemment ouvert(s)"
-
-#: ../src/mooedit/mooeditor.cpp:784
-#: ../src/mooutils/moohistorycombo.cpp:345
-#: ../src/mooutils/moohistorymgr.cpp:1610
+#. The submenu is insensitive while the history is empty, so there is no
+#. need to follow that here: what can be opened is what can be forgotten.
+#. The label is the one the search history's own button carries, so that
+#. the two are translated once.
+#. the label the search history's own button carries, so that the two are
+#. translated once
+#: src/mooedit/mooeditor.cpp:784 src/mooutils/moohistorycombo.cpp:345
+#: src/mooutils/moohistorymgr.cpp:1630
 msgid "Clear History"
 msgstr "Effacer l'historique"
 
-#: ../src/mooutils/moohistorymgr.cpp:1632
-msgid "Recent Files"
-msgstr "Fichiers récents"
+#: src/mooedit/mooeditor.cpp:801
+msgid "Open Recent"
+msgstr "Récemment ouvert(s)"
 
 #. Translators: if translated, it should be a comma-separated list
 #. of encodings to try when opening files. Encodings names should be
@@ -758,824 +742,816 @@ msgstr "Fichiers récents"
 #. You want to add common preferred non-UTF8 encodings used in your locale.
 #. Do not remove ISO_8859-15 and ISO_8859-1, instead leave them at the end,
 #. these are common source files encodings.
-#: ../src/mooedit/mooeditprefs.c:51
+#: src/mooedit/mooeditprefs.cpp:45
 msgid "encodings_list"
 msgstr ""
 
 #. Label of a Preferences dialog page, remove the part before and including |
-#: ../src/mooedit/mooeditprefspage.c:168
+#: src/mooedit/mooeditprefspage.cpp:164
 msgid "PreferencesPage|General"
 msgstr "Général"
 
 #. Label of a Preferences dialog page, remove the part before and including |
-#: ../src/mooedit/mooeditprefspage.c:204
+#: src/mooedit/mooeditprefspage.cpp:202
 msgid "PreferencesPage|File Filters"
 msgstr "Filtres de fichier"
 
 #. Label of a Preferences dialog page, remove the part before and including |
-#: ../src/mooedit/mooeditprefspage.c:257
+#: src/mooedit/mooeditprefspage.cpp:256
 msgid "PreferencesPage|View"
 msgstr "Affichage"
 
 #. Label of a Preferences dialog page, remove the part before and including |
-#: ../src/mooedit/mooeditprefspage.c:304
+#: src/mooedit/mooeditprefspage.cpp:305
 msgid "PreferencesPage|File"
 msgstr "Fichier"
 
 #. Label of a Preferences dialog page, remove the part before and including |
-#: ../src/mooedit/mooeditprefspage.c:344
+#: src/mooedit/mooeditprefspage.cpp:347
 msgid "PreferencesPage|Languages"
 msgstr "Langages"
 
 #. Label in the Language combo box on Languages preferences page,
 #. remove the part before and including |
 #. Menu item in the Language menu
-#: ../src/mooedit/mooeditprefspage.c:561
-#: ../src/mooedit/mooeditwindow.c:3992
+#: src/mooedit/mooeditprefspage.cpp:543 src/mooedit/mooeditwindow.cpp:4210
 msgid "Language|None"
 msgstr "Aucun"
 
 #. Column label on File Filters prefs page
-#: ../src/mooedit/mooeditprefspage.c:1024
+#: src/mooedit/mooeditprefspage.cpp:988
 msgctxt "filter-prefs-column"
 msgid "Filter"
 msgstr "Filtre"
 
 #. Column label on File Filters prefs page
-#: ../src/mooedit/mooeditprefspage.c:1026
+#: src/mooedit/mooeditprefspage.cpp:990
 msgctxt "filter-prefs-column"
 msgid "Options"
 msgstr "Options"
 
-#: ../src/mooedit/mooeditwindow.c:424
+#. Actions
+#. Translators: the heading this window's commands are listed under in
+#. Configure Shortcuts, beside one per plugin. The id beside it is not
+#. translated: it is what the accelerator paths and the preference keys
+#. under Shortcuts/ are made of.
+#: src/mooedit/mooeditwindow.cpp:435
+msgid "Editor"
+msgstr "Éditeur"
+
+#: src/mooedit/mooeditwindow.cpp:440
 msgid "Create new document"
 msgstr "Créer un nouveau document"
 
-#: ../src/mooedit/mooeditwindow.c:432
+#: src/mooedit/mooeditwindow.cpp:448
 msgid "_Open..."
 msgstr "_Ouvrir…"
 
-#: ../src/mooedit/mooeditwindow.c:433
+#: src/mooedit/mooeditwindow.cpp:449
 msgid "Open..."
 msgstr "Ouvrir…"
 
-#: ../src/mooedit/mooeditwindow.c:440
-#: ../src/moofileview/moofileview.c:1281
-#: ../src/moofileview/moofileview.c:1282
+#: src/mooedit/mooeditwindow.cpp:456 src/moofileview/moofileview.cpp:1331
+#: src/moofileview/moofileview.cpp:1332
 msgid "Reload"
 msgstr "Recharger"
 
-#: ../src/mooedit/mooeditwindow.c:442
+#: src/mooedit/mooeditwindow.cpp:458
 msgid "Reload document"
 msgstr "Recharger le document"
 
-#: ../src/mooedit/mooeditwindow.c:473
+#: src/mooedit/mooeditwindow.cpp:489
 msgid "Save _As..."
 msgstr "Enregistrer _sous…"
 
-#: ../src/mooedit/mooeditwindow.c:474
+#: src/mooedit/mooeditwindow.cpp:490
 msgid "Save as..."
 msgstr "Enregistrer sous…"
 
-#: ../src/mooedit/mooeditwindow.c:484
+#: src/mooedit/mooeditwindow.cpp:500
 msgid "Close document"
 msgstr "Fermer le document"
 
-#: ../src/mooedit/mooeditwindow.c:492
+#: src/mooedit/mooeditwindow.cpp:508
 msgid "Close All"
 msgstr "Tout fermer"
 
-#: ../src/mooedit/mooeditwindow.c:493
+#: src/mooedit/mooeditwindow.cpp:509
 msgid "Close A_ll"
 msgstr "Tout fermer"
 
-#: ../src/mooedit/mooeditwindow.c:494
+#: src/mooedit/mooeditwindow.cpp:510
 msgid "Close all documents"
 msgstr "Fermer tous les documents"
 
-#: ../src/mooedit/mooeditwindow.c:501
+#: src/mooedit/mooeditwindow.cpp:517
 msgid "Previous Tab"
 msgstr "Onglet précédent"
 
-#: ../src/mooedit/mooeditwindow.c:502
+#: src/mooedit/mooeditwindow.cpp:518
 msgid "_Previous Tab"
 msgstr "Onglet _précédent"
 
-#: ../src/mooedit/mooeditwindow.c:503
+#: src/mooedit/mooeditwindow.cpp:519
 msgid "Previous tab"
 msgstr "Onglet précédent"
 
-#: ../src/mooedit/mooeditwindow.c:511
+#: src/mooedit/mooeditwindow.cpp:527
 msgid "Next Tab"
 msgstr "Onglet suivant"
 
-#: ../src/mooedit/mooeditwindow.c:512
+#: src/mooedit/mooeditwindow.cpp:528
 msgid "_Next Tab"
 msgstr "Onglet _suivant"
 
-#: ../src/mooedit/mooeditwindow.c:513
+#: src/mooedit/mooeditwindow.cpp:529
 msgid "Next tab"
 msgstr "Onglet suivant"
 
-#: ../src/mooedit/mooeditwindow.c:521
+#: src/mooedit/mooeditwindow.cpp:537
 msgid "Previous Tab In View"
 msgstr "Onglet d’avant"
 
-#: ../src/mooedit/mooeditwindow.c:522
+#: src/mooedit/mooeditwindow.cpp:538
 msgid "_Previous Tab In View"
 msgstr "Onglet d’_avant"
 
-#: ../src/mooedit/mooeditwindow.c:523
+#: src/mooedit/mooeditwindow.cpp:539
 msgid "Previous tab in view"
 msgstr "Onglet d’avant"
 
-#: ../src/mooedit/mooeditwindow.c:530
+#: src/mooedit/mooeditwindow.cpp:546
 msgid "Next Tab In View"
 msgstr "Onglet d’après"
 
-#: ../src/mooedit/mooeditwindow.c:531
+#: src/mooedit/mooeditwindow.cpp:547
 msgid "_Next Tab In View"
 msgstr "Onglet d’apr_ès"
 
-#: ../src/mooedit/mooeditwindow.c:532
+#: src/mooedit/mooeditwindow.cpp:548
 msgid "Next tab in view"
 msgstr "Onglet d’après"
 
-#: ../src/mooedit/mooeditwindow.c:550
+#: src/mooedit/mooeditwindow.cpp:566
 msgid "Find Next"
 msgstr "Rechercher le suivant"
 
-#: ../src/mooedit/mooeditwindow.c:552
+#: src/mooedit/mooeditwindow.cpp:568
 msgid "Find next"
 msgstr "Rechercher le suivant"
 
-#: ../src/mooedit/mooeditwindow.c:561
+#: src/mooedit/mooeditwindow.cpp:577
 msgid "Find Previous"
 msgstr "Rechercher le précédent"
 
-#: ../src/mooedit/mooeditwindow.c:562
+#: src/mooedit/mooeditwindow.cpp:578
 msgid "Find _Previous"
 msgstr "Rechercher le _précédent"
 
-#: ../src/mooedit/mooeditwindow.c:563
+#: src/mooedit/mooeditwindow.cpp:579
 msgid "Find previous"
 msgstr "Rechercher le précédent"
 
-#: ../src/mooedit/mooeditwindow.c:583
+#: src/mooedit/mooeditwindow.cpp:599
 msgid "Find Current Word"
 msgstr "Rechercher le mot actuel"
 
-#: ../src/mooedit/mooeditwindow.c:584
+#: src/mooedit/mooeditwindow.cpp:600
 msgid "Find Current _Word"
 msgstr "Rechercher le _mot actuel"
 
-#: ../src/mooedit/mooeditwindow.c:592
+#: src/mooedit/mooeditwindow.cpp:608
 msgid "Find Current Word Backwards"
 msgstr "Rechercher le mot actuel en arrière"
 
-#: ../src/mooedit/mooeditwindow.c:593
+#: src/mooedit/mooeditwindow.cpp:609
 msgid "Find Current Word _Backwards"
 msgstr "Rechercher le m_ot courant en arrière"
 
-#: ../src/mooedit/mooeditwindow.c:602
+#: src/mooedit/mooeditwindow.cpp:618
 msgid "_Go to Line..."
 msgstr "_Aller à la ligne…"
 
-#: ../src/mooedit/mooeditwindow.c:603
+#: src/mooedit/mooeditwindow.cpp:619
 msgid "Go to line..."
 msgstr "Aller à la ligne…"
 
-#: ../src/mooedit/mooeditwindow.c:612
+#: src/mooedit/mooeditwindow.cpp:628
 msgid "Toggle Text Wrapping"
 msgstr "Basculer l’état du renvoi à la ligne"
 
-#: ../src/mooedit/mooeditwindow.c:613
+#: src/mooedit/mooeditwindow.cpp:629
 msgid "_Wrap Text"
 msgstr "_Renvoi à la ligne"
 
-#: ../src/mooedit/mooeditwindow.c:620
+#: src/mooedit/mooeditwindow.cpp:636
 msgid "Toggle Line Numbers Display"
 msgstr "Basculer l’état d’affichage des numéros de ligne"
 
-#: ../src/mooedit/mooeditwindow.c:621
+#: src/mooedit/mooeditwindow.cpp:637
 msgid "Show _Line Numbers"
 msgstr "Afficher les numéros de _ligne"
 
-#: ../src/mooedit/mooeditwindow.c:627
+#: src/mooedit/mooeditwindow.cpp:643
 msgid "Focus Document"
 msgstr "Focus au document"
 
-#: ../src/mooedit/mooeditwindow.c:628
+#: src/mooedit/mooeditwindow.cpp:644
 msgid "_Focus Document"
 msgstr "_Focus au document"
 
-#: ../src/mooedit/mooeditwindow.c:635
-#: ../src/mooedit/mooeditwindow.c:636
+#: src/mooedit/mooeditwindow.cpp:651 src/mooedit/mooeditwindow.cpp:652
 msgid "Focus Other Split Notebook"
 msgstr "Donner le focus à l’autre espace double"
 
-#: ../src/mooedit/mooeditwindow.c:643
+#: src/mooedit/mooeditwindow.cpp:659
 msgid "Move to Split Notebook"
 msgstr "Déplacer de / vers  l’espace double"
 
-#: ../src/mooedit/mooeditwindow.c:644
+#: src/mooedit/mooeditwindow.cpp:660
 msgid "_Move to Split Notebook"
 msgstr "_Déplacer de / vers l’espace double"
 
-#: ../src/mooedit/mooeditwindow.c:652
-#: ../src/mooedit/mooeditwindow.c:653
+#: src/mooedit/mooeditwindow.cpp:668 src/mooedit/mooeditwindow.cpp:669
 msgid "Split View Horizontally"
 msgstr "Diviser l’espace horizontalement"
 
-#: ../src/mooedit/mooeditwindow.c:660
-#: ../src/mooedit/mooeditwindow.c:661
+#: src/mooedit/mooeditwindow.cpp:676 src/mooedit/mooeditwindow.cpp:677
 msgid "Split View Vertically"
 msgstr "Diviser l’espace verticalement"
 
-#: ../src/mooedit/mooeditwindow.c:667
-#: ../src/mooedit/mooeditwindow.c:668
+#: src/mooedit/mooeditwindow.cpp:683 src/mooedit/mooeditwindow.cpp:684
 msgid "Focus Next Split View"
 msgstr "Donner le focus à l’espace double suivant"
 
-#: ../src/mooedit/mooeditwindow.c:712
+#: src/mooedit/mooeditwindow.cpp:728
 msgid "Toggle Bookmark"
 msgstr "Basculer signet / pas de signet"
 
-#: ../src/mooedit/mooeditwindow.c:713
+#: src/mooedit/mooeditwindow.cpp:729
 msgid "Toggle _Bookmark"
 msgstr "_Basculer signet / pas de signet"
 
-#: ../src/mooedit/mooeditwindow.c:721
+#: src/mooedit/mooeditwindow.cpp:737
 msgid "Next Bookmark"
 msgstr "Signet suivant"
 
-#: ../src/mooedit/mooeditwindow.c:722
+#: src/mooedit/mooeditwindow.cpp:738
 msgid "_Next Bookmark"
 msgstr "Signet _suivant"
 
-#: ../src/mooedit/mooeditwindow.c:729
+#: src/mooedit/mooeditwindow.cpp:745
 msgid "Previous Bookmark"
 msgstr "Signet précédent"
 
-#: ../src/mooedit/mooeditwindow.c:730
+#: src/mooedit/mooeditwindow.cpp:746
 msgid "_Previous Bookmark"
 msgstr "Signet _précédent"
 
 #. action
-#: ../src/mooedit/mooeditwindow.c:738
-#: ../src/mooedit/mooeditwindow.c:739
-#: ../src/mooedit/mooeditwindow.c:740
+#: src/mooedit/mooeditwindow.cpp:754 src/mooedit/mooeditwindow.cpp:755
+#: src/mooedit/mooeditwindow.cpp:756
 msgid "Comment"
 msgstr "Commenter"
 
 #. action
-#: ../src/mooedit/mooeditwindow.c:748
-#: ../src/mooedit/mooeditwindow.c:749
-#: ../src/mooedit/mooeditwindow.c:750
+#: src/mooedit/mooeditwindow.cpp:764 src/mooedit/mooeditwindow.cpp:765
+#: src/mooedit/mooeditwindow.cpp:766
 msgid "Uncomment"
 msgstr "Dé‑commenter"
 
+#: src/mooedit/mooeditwindow.cpp:793
+msgid "Duplicate Line"
+msgstr "Dupliquer la ligne"
+
+#: src/mooedit/mooeditwindow.cpp:794
+msgid "_Duplicate Line"
+msgstr "_Dupliquer la ligne"
+
+#: src/mooedit/mooeditwindow.cpp:795
+msgid "Duplicate the line or the selection"
+msgstr "Dupliquer la ligne ou la sélection"
+
+#: src/mooedit/mooeditwindow.cpp:803
+msgid "Move Lines Up"
+msgstr "Déplacer les lignes vers le haut"
+
+#: src/mooedit/mooeditwindow.cpp:804
+msgid "Move Lines _Up"
+msgstr "Déplacer les lignes vers le _haut"
+
+#: src/mooedit/mooeditwindow.cpp:805
+msgid "Move the selected lines up"
+msgstr "Déplacer les lignes sélectionnées vers le haut"
+
+#: src/mooedit/mooeditwindow.cpp:814
+msgid "Move Lines Down"
+msgstr "Déplacer les lignes vers le bas"
+
+#: src/mooedit/mooeditwindow.cpp:815
+msgid "Move Lines _Down"
+msgstr "Déplacer les lignes vers le _bas"
+
+#: src/mooedit/mooeditwindow.cpp:816
+msgid "Move the selected lines down"
+msgstr "Déplacer les lignes sélectionnées vers le bas"
+
+#: src/mooedit/mooeditwindow.cpp:825
+msgid "Sort Lines"
+msgstr "Trier les lignes"
+
+#: src/mooedit/mooeditwindow.cpp:826
+msgid "_Sort Lines"
+msgstr "_Trier les lignes"
+
+#: src/mooedit/mooeditwindow.cpp:827
+msgid "Sort the selected lines"
+msgstr "Trier les lignes sélectionnées"
+
+#: src/mooedit/mooeditwindow.cpp:834
+msgid "Go to Matching Bracket"
+msgstr "Aller à la parenthèse correspondante"
+
+#: src/mooedit/mooeditwindow.cpp:835
+msgid "Go to _Matching Bracket"
+msgstr "Aller à la parenthèse _correspondante"
+
+#: src/mooedit/mooeditwindow.cpp:836
+msgid "Go to the bracket matching the one at the cursor"
+msgstr "Aller à la parenthèse correspondant à celle sous le curseur"
+
 #. Insensitive menu item which appears in Window menu with no documents open
-#: ../src/mooedit/mooeditwindow.c:778
+#: src/mooedit/mooeditwindow.cpp:845
 msgid "No Documents"
 msgstr "Pas de document"
 
-#: ../src/mooedit/mooeditwindow.c:786
+#: src/mooedit/mooeditwindow.cpp:853
 msgid "Page Setup"
 msgstr "Mise en page"
 
-#: ../src/mooedit/mooeditwindow.c:787
+#: src/mooedit/mooeditwindow.cpp:854
 msgid "Page S_etup..."
 msgstr "Mise en _page…"
 
-#: ../src/mooedit/mooeditwindow.c:788
+#: src/mooedit/mooeditwindow.cpp:855
 msgid "Page Setup..."
 msgstr "Mise en page…"
 
-#: ../src/mooedit/mooeditwindow.c:804
-#: ../src/mooedit/mooeditwindow.c:805
+#: src/mooedit/mooeditwindow.cpp:871 src/mooedit/mooeditwindow.cpp:872
 msgid "Print..."
 msgstr "Imprimer…"
 
-#: ../src/mooedit/mooeditwindow.c:813
-#: ../src/mooedit/mooeditwindow.c:2032
+#: src/mooedit/mooeditwindow.cpp:880 src/mooedit/mooeditwindow.cpp:2155
 msgid "Export as PDF"
 msgstr "Exporter en PDF"
 
-#: ../src/mooedit/mooeditwindow.c:814
+#: src/mooedit/mooeditwindow.cpp:881
 msgid "E_xport as PDF..."
 msgstr "E_xporter en PDF…"
 
-#: ../src/mooedit/mooeditwindow.c:815
+#: src/mooedit/mooeditwindow.cpp:882
 msgid "Export as PDF..."
 msgstr "Exporter en PDF…"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [new file]"
-#: ../src/mooedit/mooeditwindow.c:1087
+#: src/mooedit/mooeditwindow.cpp:1163
 #, c-format
 msgid "%s [new file]"
 msgstr "%s [nouveau fichier]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [modified on disk]"
-#: ../src/mooedit/mooeditwindow.c:1090
+#: src/mooedit/mooeditwindow.cpp:1166
 #, c-format
 msgid "%s [modified on disk]"
 msgstr "%s [modifié sur le disque]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [deleted]"
-#: ../src/mooedit/mooeditwindow.c:1093
+#: src/mooedit/mooeditwindow.cpp:1169
 #, c-format
 msgid "%s [deleted]"
 msgstr "%s [supprimé]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [new file] [modified]"
-#: ../src/mooedit/mooeditwindow.c:1101
+#: src/mooedit/mooeditwindow.cpp:1177
 #, c-format
 msgid "%s [new file] [modified]"
 msgstr "%s [nouveau fichier] [modifié]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [modified on disk] [modified]"
-#: ../src/mooedit/mooeditwindow.c:1104
+#: src/mooedit/mooeditwindow.cpp:1180
 #, c-format
 msgid "%s [modified on disk] [modified]"
 msgstr "%s [modifié sur le disque] [modifié]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [deleted] [modified]"
-#: ../src/mooedit/mooeditwindow.c:1107
+#: src/mooedit/mooeditwindow.cpp:1183
 #, c-format
 msgid "%s [deleted] [modified]"
 msgstr "%s [supprimé] [modifié]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [modified]"
-#: ../src/mooedit/mooeditwindow.c:1110
+#: src/mooedit/mooeditwindow.cpp:1186
 #, c-format
 msgid "%s [modified]"
 msgstr "%s [modifié]"
 
-#: ../src/mooedit/mooeditwindow.c:1357
+#: src/mooedit/mooeditwindow.cpp:1426
 msgid "Reopen Using Encoding"
 msgstr "Réouvrir en utilisant l’encodage"
 
-#: ../src/mooedit/mooeditwindow.c:1407
+#: src/mooedit/mooeditwindow.cpp:1476
 msgid "_Encoding"
 msgstr "Encodage"
 
-#: ../src/mooedit/mooeditwindow.c:1461
+#: src/mooedit/mooeditwindow.cpp:1530
 msgid "Line En_dings"
 msgstr "Fins de ligne"
 
-#: ../src/mooedit/mooeditwindow.c:1468
+#: src/mooedit/mooeditwindow.cpp:1537
 msgid "_Windows (CR+LF)"
 msgstr "_Windows (CR + LF)"
 
-#: ../src/mooedit/mooeditwindow.c:1477
+#: src/mooedit/mooeditwindow.cpp:1542
 msgid "_Unix (LF)"
 msgstr "_UNIX (LF)"
 
-#: ../src/mooedit/mooeditwindow.c:1481
+#: src/mooedit/mooeditwindow.cpp:1546
 msgid "_Mac (CR)"
 msgstr "_Mac (CR)"
 
 #. Item in document tab context menu
-#: ../src/mooedit/mooeditwindow.c:2239
+#: src/mooedit/mooeditwindow.cpp:2428
 msgctxt "tab-context-menu"
 msgid "Close"
 msgstr "Fermer"
 
 #. Item in document tab context menu
-#: ../src/mooedit/mooeditwindow.c:2251
+#: src/mooedit/mooeditwindow.cpp:2436
 msgctxt "tab-context-menu"
 msgid "Close All Others"
 msgstr "Fermer tous les autres"
 
 #. Item in document tab context menu
-#: ../src/mooedit/mooeditwindow.c:2269
+#: src/mooedit/mooeditwindow.cpp:2445
+msgctxt "tab-context-menu"
+msgid "Copy Full Path"
+msgstr ""
+
+#. Item in document tab context menu
+#: src/mooedit/mooeditwindow.cpp:2455
 msgctxt "tab-context-menu"
 msgid "Detach"
 msgstr "Détacher"
 
 #. Item in document tab context menu
-#: ../src/mooedit/mooeditwindow.c:2279
+#: src/mooedit/mooeditwindow.cpp:2461
 msgctxt "tab-context-menu"
 msgid "Move to Split Notebook"
 msgstr "Déplacer de / vers l’espace double"
 
-#: ../src/mooedit/mooeditwindow.c:3846
+#: src/mooedit/mooeditwindow.cpp:4052
 #, c-format
 msgid "Line: %s Col: %s"
 msgstr "Ligne : %s, Col : %s"
 
-#: ../src/mooedit/mooeditwindow.c:3847
+#: src/mooedit/mooeditwindow.cpp:4053
 #, c-format
 msgid "Chars: %s"
 msgstr "Caractères : %s"
 
 #. Label in the editor window statusbar - Overwrite or Insert mode
-#: ../src/mooedit/mooeditwindow.c:3890
+#: src/mooedit/mooeditwindow.cpp:4096
 msgid "OVR"
 msgstr "SÉ"
 
-#: ../src/mooedit/mooeditwindow.c:3890
+#: src/mooedit/mooeditwindow.cpp:4096
 msgid "INS"
 msgstr "INS"
 
-#: ../src/mooedit/mooeditwindow.c:3987
+#: src/mooedit/mooeditwindow.cpp:4205
 msgid "_Language"
 msgstr "_Langage"
 
-#: ../src/mooedit/mooplugin.c:1425
+#: src/mooedit/mooplugin.cpp:1415
 msgctxt "Prefs page label"
 msgid "Plugins"
 msgstr "Plug‑ins"
 
-#: ../src/mooedit/mooplugin.c:1450
+#: src/mooedit/mooplugin.cpp:1442
 msgctxt "plugin-prefs-column"
 msgid "Enabled"
 msgstr "Activé"
 
-#: ../src/mooedit/mooplugin.c:1456
+#: src/mooedit/mooplugin.cpp:1448
 msgctxt "plugin-prefs-column"
 msgid "Plugin"
 msgstr "Plug‑in"
 
 #. Translators: remove the part before and including |
-#: ../src/mooedit/mooplugin-loader.c:227
+#: src/mooedit/mooplugin-loader.cpp:214
 #, c-format
-msgid "console message|ignoring file '%s', module version '%s' is not compatible with current version %u.%u"
+msgid ""
+"console message|ignoring file '%s', module version '%s' is not compatible "
+"with current version %u.%u"
 msgstr ""
 "Le fichier « %s » a été ignoré, le module de version « %s » n’est pas "
 "compatible avec la version courante « %u.%u »"
 
 #. Translators: remove the part before and including |
-#: ../src/mooedit/mooplugin-loader.c:237
+#: src/mooedit/mooplugin-loader.cpp:224
 #, c-format
 msgid "console message|invalid module version '%s' in file '%s'"
 msgstr "Version de module invalide — « %s », dans le fichier « %s »"
 
-#: ../src/mooedit/mootextfind.c:165
+#: src/mooedit/mootextfind.cpp:158
 msgctxt "Dialog title"
 msgid "Replace"
 msgstr "Remplacer"
 
-#: ../src/mooedit/mootextfind.c:171
+#: src/mooedit/mootextfind.cpp:164
 msgctxt "Dialog title"
 msgid "Find"
 msgstr "Rechercher"
 
-#: ../src/mooedit/mootextfind.c:475
+#: src/mooedit/mootextfind.cpp:454
 msgid "No search term entered"
 msgstr "Aucun terme de recherche n’a été entré"
 
-#: ../src/mooedit/mootextfind.c:778
-#: ../src/mooedit/mootextfind.c:884
-#: ../src/mooedit/mootextfind.c:1039
+#: src/mooedit/mootextfind.cpp:758 src/mooedit/mootextfind.cpp:864
+#: src/mooedit/mootextfind.cpp:1019
 msgid "Search hit top, continuing at bottom"
 msgstr "Début du document atteint, reprise depuis la fin"
 
-#: ../src/mooedit/mootextfind.c:780
-#: ../src/mooedit/mootextfind.c:882
-#: ../src/mooedit/mootextfind.c:962
+#: src/mooedit/mootextfind.cpp:760 src/mooedit/mootextfind.cpp:862
+#: src/mooedit/mootextfind.cpp:942
 msgid "Search hit bottom, continuing at top"
 msgstr "Fin du document atteinte, reprise depuis le début"
 
-#: ../src/mooedit/mootextfind.c:789
-#: ../src/mooedit/mootextfind.c:894
-#: ../src/mooedit/mootextfind.c:970
-#: ../src/mooedit/mootextfind.c:1047
+#: src/mooedit/mootextfind.cpp:769 src/mooedit/mootextfind.cpp:874
+#: src/mooedit/mootextfind.cpp:950 src/mooedit/mootextfind.cpp:1027
 #, c-format
 msgid "Pattern not found: %s"
 msgstr "Motif introuvable : %s"
 
-#: ../src/mooedit/mootextfind.c:876
+#: src/mooedit/mootextfind.cpp:856
 #, c-format
 msgid "Found single instance of pattern '%s'"
 msgstr "Une seule occurrence du motif « %s » trouvée"
 
-#: ../src/mooedit/mootextfind.c:1082
+#: src/mooedit/mootextfind.cpp:1062
 msgid "No replacement made"
 msgstr "Aucun remplacement effectué"
 
-#: ../src/mooedit/mootextfind.c:1088
+#: src/mooedit/mootextfind.cpp:1068
 #, c-format
 msgid "%u replacement made"
 msgid_plural "%u replacements made"
 msgstr[0] "%u remplacement effectué"
 msgstr[1] "%u remplacements effectués"
 
-#: ../src/moofileview/glade/moobookmark-editor.glade.h:1
-#: ../src/moofileview/moofileview.c:1241
-#: ../src/moofileview/moofileview.c:1242
+#: src/moofileview/ui/moobookmark-editor.ui:4
+#: src/moofileview/moofileview.cpp:1288 src/moofileview/moofileview.cpp:1289
 msgid "Edit Bookmarks"
 msgstr "Modifier les signets"
 
-#: ../src/moofileview/glade/moobookmark-editor.glade.h:2
+#: src/moofileview/ui/moobookmark-editor.ui:23
 msgid "Icon"
 msgstr "Icône"
 
-#: ../src/moofileview/glade/moobookmark-editor.glade.h:3
+#: src/moofileview/ui/moobookmark-editor.ui:43
 msgid "Path"
 msgstr "Chemin"
 
-#: ../src/moofileview/glade/moobookmark-editor.glade.h:4
+#: src/moofileview/ui/moobookmark-editor.ui:90
 msgid "Add bookmark"
 msgstr "Ajouter un signet"
 
-#: ../src/moofileview/glade/moobookmark-editor.glade.h:5
-#: ../src/plugins/glade/moofileselector-prefs.glade.h:11
+#: src/moofileview/ui/moobookmark-editor.ui:114
+#: src/plugins/ui/moofileselector-prefs.ui:203
 msgid "New"
 msgstr "Nouveau"
 
-#: ../src/moofileview/glade/moobookmark-editor.glade.h:6
+#: src/moofileview/ui/moobookmark-editor.ui:136
 msgid "Add separator"
 msgstr "Ajouter un séparateur"
 
-#: ../src/moofileview/glade/moobookmark-editor.glade.h:7
+#: src/moofileview/ui/moobookmark-editor.ui:137
 msgid "Add Separator"
 msgstr "Ajouter un séparateur"
 
-#: ../src/moofileview/glade/moobookmark-editor.glade.h:8
+#: src/moofileview/ui/moobookmark-editor.ui:160
 msgid "Delete selected items"
 msgstr "Supprimer les éléments sélectionnés"
 
-#: ../src/moofileview/glade/moobookmark-editor.glade.h:9
-#: ../src/plugins/glade/moofileselector-prefs.glade.h:12
+#: src/moofileview/ui/moobookmark-editor.ui:184
+#: src/plugins/ui/moofileselector-prefs.ui:220
 msgid "Delete"
 msgstr "Supprimer"
 
-#: ../src/moofileview/glade/moocreatefolder.glade.h:1
+#: src/moofileview/ui/moocreatefolder.ui:4
 msgid "Create Folder"
 msgstr "Créer un dossier"
 
-#: ../src/moofileview/glade/moofileprops.glade.h:1
+#: src/moofileview/ui/moofileprops.ui:82
 msgid "General"
 msgstr "Général"
 
-#: ../src/moofileview/glade/moofileview-drop.glade.h:1
-#: ../src/plugins/glade/moofileselector.glade.h:1
-#: ../src/plugins/moofileselector.c:907
-#: ../src/plugins/moofileselector.c:932
+#: src/moofileview/ui/moofileview-drop.ui:5 src/plugins/ui/moofileselector.ui:4
+#: src/plugins/moofileselector.cpp:913 src/plugins/moofileselector.cpp:938
 msgid "Save As"
 msgstr "Enregistrer sous"
 
 #. Column label in file selector bookmark editor
-#: ../src/moofileview/moobookmarkmgr.c:961
+#: src/moofileview/moobookmarkmgr.cpp:847
 msgctxt "fileview-bookmark-editor"
 msgid "Icon"
 msgstr "Icône"
 
 #. Column label in file selector bookmark editor
-#: ../src/moofileview/moobookmarkmgr.c:977
+#: src/moofileview/moobookmarkmgr.cpp:863
 msgctxt "fileview-bookmark-editor"
 msgid "Label"
 msgstr "Étiquette"
 
 #. Column label in file selector bookmark editor
-#: ../src/moofileview/moobookmarkmgr.c:995
+#: src/moofileview/moobookmarkmgr.cpp:881
 msgctxt "fileview-bookmark-editor"
 msgid "Path"
 msgstr "Chemin"
 
-#: ../src/moofileview/moofileview.c:1115
-#: ../src/plugins/moofileselector.c:647
-#: ../src/plugins/moofileselector.c:648
-#: ../src/plugins/moofileselector.c:1290
-#: ../src/plugins/moofileselector-prefs.c:72
+#: src/moofileview/moofileview.cpp:1150 src/plugins/moofileselector.cpp:648
+#: src/plugins/moofileselector.cpp:649 src/plugins/moofileselector.cpp:1297
+#: src/plugins/moofileselector-prefs.cpp:70
 msgid "File Selector"
 msgstr "Sélecteur de fichier"
 
-#: ../src/moofileview/moofileview.c:1124
+#: src/moofileview/moofileview.cpp:1168
 msgid "Go to parent folder"
 msgstr "Aller au dossier parent"
 
-#: ../src/moofileview/moofileview.c:1173
-#: ../src/moofileview/moofileview.c:3350
+#: src/moofileview/moofileview.cpp:1218 src/moofileview/moofileview.cpp:3395
 msgid "Delete..."
 msgstr "Supprimer…"
 
-#: ../src/moofileview/moofileview.c:1174
-#: ../src/moofileview/moofileview.c:3351
+#: src/moofileview/moofileview.cpp:1219 src/moofileview/moofileview.cpp:3396
 msgid "Delete selected files"
 msgstr "Supprimer les fichiers sélectionnés"
 
-#: ../src/moofileview/moofileview.c:1184
-#: ../src/moofileview/moofileview.c:1185
+#: src/moofileview/moofileview.cpp:1230 src/moofileview/moofileview.cpp:1231
 msgid "Show Hidden Files"
 msgstr "Montrer les fichiers cachés"
 
-#: ../src/moofileview/moofileview.c:1193
-#: ../src/moofileview/moofileview.c:1194
+#: src/moofileview/moofileview.cpp:1239 src/moofileview/moofileview.cpp:1240
 msgid "Show Parent Folder"
 msgstr "Montrer le dossier parent"
 
-#: ../src/moofileview/moofileview.c:1200
-#: ../src/moofileview/moofileview.c:1201
+#: src/moofileview/moofileview.cpp:1246 src/moofileview/moofileview.cpp:1247
 msgid "Case Sensitive Sort"
 msgstr "Tri sensible à la casse"
 
-#: ../src/moofileview/moofileview.c:1207
-#: ../src/moofileview/moofileview.c:1208
+#: src/moofileview/moofileview.cpp:1253 src/moofileview/moofileview.cpp:1254
 msgid "Show Folders First"
 msgstr "Afficher les répertoires en premier"
 
-#: ../src/moofileview/moofileview.c:1224
-#: ../src/moofileview/moofileview.c:1225
-#: ../src/moofileview/moofileview.xml.h:3
+#. Menubar
+#: src/moofileview/moofileview.cpp:1271 src/moofileview/moofileview.cpp:1272
+#: src/moofileview/moofileview.xml.h:6
 msgid "Bookmarks"
 msgstr "Signets"
 
-#: ../src/moofileview/moofileview.c:1233
-#: ../src/moofileview/moofileview.c:1234
+#: src/moofileview/moofileview.cpp:1280 src/moofileview/moofileview.cpp:1281
 msgid "Add Bookmark"
 msgstr "Ajouter un signet"
 
-#: ../src/moofileview/moofileview.c:1585
-#: ../src/plugins/usertools/glade/mooedittools-exe.glade.h:1
+#: src/moofileview/moofileview.cpp:1646
+#: src/plugins/usertools/ui/mooedittools-exe.ui:33
 msgid "Filter"
 msgstr "Filtre"
 
-#: ../src/moofileview/moofileview.c:3194
+#: src/moofileview/moofileview.cpp:3239
 #, c-format
 msgid "Move folder %s to Trash?"
 msgstr "Déplacer le répertoire « %s » vers la corbeille ?"
 
-#: ../src/moofileview/moofileview.c:3197
+#: src/moofileview/moofileview.cpp:3242
 #, c-format
 msgid "Move file %s to Trash?"
 msgstr "Déplacer le fichier « %s » vers la corbeille ?"
 
-#: ../src/moofileview/moofileview.c:3202
+#: src/moofileview/moofileview.cpp:3247
 msgid "Move selected files to Trash?"
 msgstr "Déplacer les fichiers sélectionnés vers la corbeille ?"
 
-#: ../src/moofileview/moofileview.c:3210
+#: src/moofileview/moofileview.cpp:3255
 #, c-format
 msgid "Delete folder %s and all its content?"
 msgstr "Supprimer le répertoire « %s » et tout ce qu’il contient ?"
 
-#: ../src/moofileview/moofileview.c:3213
+#: src/moofileview/moofileview.cpp:3258
 #, c-format
 msgid "Delete file %s?"
 msgstr "Supprimer le fichier « %s » ?"
 
-#: ../src/moofileview/moofileview.c:3218
+#: src/moofileview/moofileview.cpp:3263
 msgid "Delete selected files?"
 msgstr "Supprimer les fichiers sélectionnés ?"
 
-#: ../src/moofileview/moofileview.c:3280
+#: src/moofileview/moofileview.cpp:3325
 #, c-format
 msgid "Could not delete folder %s"
 msgstr "Le répertoire « %s » n’a pas put être supprimé"
 
-#: ../src/moofileview/moofileview.c:3283
+#: src/moofileview/moofileview.cpp:3328
 #, c-format
 msgid "Could not delete file %s"
 msgstr "Le fichier « %s » n’a pas put être supprimé"
 
-#: ../src/moofileview/moofileview.c:3344
+#: src/moofileview/moofileview.cpp:3389
 msgid "Move to Trash..."
 msgstr "Déplacer vers la corbeille…"
 
-#: ../src/moofileview/moofileview.c:3345
+#: src/moofileview/moofileview.cpp:3390
 msgid "Move selected files to Trash"
 msgstr "Déplacer les fichiers sélectionnés vers la corbeille"
 
 #. Translators: this is a context menu item label in the file selector, remove the part before and including |
-#: ../src/moofileview/moofileview-tools.c:335
+#: src/moofileview/moofileview-tools.cpp:332
 msgid "Open with|Default Application"
 msgstr "Application par défaut"
 
-#: ../src/moofileview/moofileview.xml.h:1
+#. -*- Mode: XML; indent-tabs-mode: nil; c-basic-offset: 2 -*-
+#: src/moofileview/moofileview.xml.h:2
 msgid "View"
 msgstr "Vue"
 
-#: ../src/moofileview/moofileview.xml.h:2
+#. <item action="SortFoldersFirst"/>
+#: src/moofileview/moofileview.xml.h:4
 msgid "Open _With"
 msgstr "Ouvrir _avec"
 
-#: ../src/moolua/mooluaplugin.cpp:112
-msgid "Lua"
-msgstr "Lua"
-
-#: ../src/moolua/mooluaplugin.cpp:112
-msgid "Lua support"
-msgstr "Prise en charge de Lua"
-
-#: ../src/moopython/plugins/medit/runpython.py:43
-msgid "Python Output"
-msgstr "Sortie python"
-
-#: ../src/moopython/plugins/python.py:48
-#: ../src/moopython/plugins/python.py:49
-msgid "Python Console"
-msgstr "Console Python"
-
-#: ../src/moopython/plugins/python.py:56
-#: ../src/moopython/plugins/python.py:57
-msgid "Run File"
-msgstr "Exécuter le fichier"
-
-#: ../src/moopython/plugins/terminal.py:177
-msgid "Terminal"
-msgstr "Terminal"
-
-#: ../src/moopython/plugins/terminal.py:225
-msgid "Default"
-msgstr "Par défaut"
-
-#: ../src/moopython/plugins/terminal.py:226
-msgid "Black on White"
-msgstr "Noir sur blanc"
-
-#: ../src/moopython/plugins/terminal.py:229
-msgid "Black on Light Yellow"
-msgstr "Noir sur jaune‑pastel"
-
-#: ../src/moopython/plugins/terminal.py:232
-msgid "Marble"
-msgstr "Marbre"
-
-#: ../src/moopython/plugins/terminal.py:235
-msgid "Green on Black"
-msgstr "Vert sur noir"
-
-#: ../src/moopython/plugins/terminal.py:238
-msgid "Paper, Light"
-msgstr "Papier, clair"
-
-#: ../src/moopython/plugins/terminal.py:241
-msgid "Paper"
-msgstr "Papier"
-
-#: ../src/moopython/plugins/terminal.py:244
-msgid "Linux Colors"
-msgstr "Couleurs de Linux"
-
-#: ../src/moopython/plugins/terminal.py:247
-msgid "VIM Colors"
-msgstr "Couleurs de VIM"
-
-#: ../src/moopython/plugins/terminal.py:250
-msgid "White on Black"
-msgstr "Blanc sur noir"
-
-#: ../src/mooutils/glade/mooaccelprefs.glade.h:2
-msgid "Shortcut|None"
-msgstr "Aucun"
-
-#: ../src/mooutils/glade/mooaccelprefs.glade.h:4
-msgid "Shortcut|Default"
-msgstr "Par défaut"
-
-#: ../src/mooutils/glade/mooaccelprefs.glade.h:6
-msgid "Shortcut|Custom"
-msgstr "Personnalisé"
-
-#: ../src/mooutils/glade/mooaccelprefs.glade.h:7
-msgid "Default key:"
-msgstr "Touche par défaut :"
-
-#: ../src/mooutils/glade/mooaccelprefs.glade.h:8
-msgid "Shortcut for selected action"
-msgstr "Raccourci pour l’action sélectionnée"
-
-#: ../src/mooutils/ui/mooaccelprefs.ui:16
+#: src/mooutils/ui/mooaccelprefs.ui:16
 msgid "Search"
 msgstr "Rechercher"
 
+#: src/mooutils/ui/mooaccelprefs.ui:76
+#, fuzzy
+msgctxt "Shortcut"
+msgid "None"
+msgstr "Aucun"
+
+#: src/mooutils/ui/mooaccelprefs.ui:89
+#, fuzzy
+msgctxt "Shortcut"
+msgid "Default"
+msgstr "Par défaut"
+
+#: src/mooutils/ui/mooaccelprefs.ui:105
+#, fuzzy
+msgctxt "Shortcut"
+msgid "Custom"
+msgstr "Personnalisé"
+
+#: src/mooutils/ui/mooaccelprefs.ui:135
+msgid "Default key:"
+msgstr "Touche par défaut :"
+
+#: src/mooutils/ui/mooaccelprefs.ui:165
+msgid "Shortcut for selected action"
+msgstr "Raccourci pour l’action sélectionnée"
+
 #. Column label in Configure Shortcuts dialog
-#: ../src/mooutils/mooaccelprefs.c:261
+#: src/mooutils/mooaccelprefs.cpp:320
 msgctxt "accel-editor-column"
 msgid "Action"
 msgstr "Action"
 
 #. Column label in Configure Shortcuts dialog
-#: ../src/mooutils/mooaccelprefs.c:270
+#: src/mooutils/mooaccelprefs.cpp:329
 msgctxt "accel-editor-column"
 msgid "Shortcut"
 msgstr "Raccourci"
 
 #. Column label in Configure Shortcuts dialog
-#: ../src/mooutils/mooaccelprefs.c:279
+#: src/mooutils/mooaccelprefs.cpp:338
 msgctxt "accel-editor-column"
 msgid "Global"
 msgstr "Global"
 
-#: ../src/mooutils/mooaccelprefs.c:804
+#: src/mooutils/mooaccelprefs.cpp:875
 msgid "Configure Shortcuts"
 msgstr "Configurer les raccourcis…"
 
-#: ../src/mooutils/moodialogs.c:419
+#: src/mooutils/moodialogs.cpp:402
 #, c-format
 msgid "Save changes to document \"%s\" before closing?"
 msgstr ""
-"Enregistrer les modifications apportées au document « %s » avant de "
-"quitter ?"
+"Enregistrer les modifications apportées au document « %s » avant de quitter ?"
 
-#: ../src/mooutils/moodialogs.c:420
+#: src/mooutils/moodialogs.cpp:403
 msgid "Save changes to the document before closing?"
 msgstr "Enregistrer les modifications apportées au document avant de quitter ?"
 
-#: ../src/mooutils/moodialogs.c:425
+#: src/mooutils/moodialogs.cpp:408
 msgid "If you don't save, changes will be discarded"
 msgstr "Si vous ne sauvegardez pas, les modifications seront abandonnées"
 
@@ -1587,404 +1563,383 @@ msgstr "Si vous ne sauvegardez pas, les modifications seront abandonnées"
 #. 3 - "SE & SW Asian",
 #. 4 - "Middle Eastern",
 #. 5 - "Unicode"
-#: ../src/mooutils/mooencodings.c:179
+#: src/mooutils/mooencodings.cpp:176
 msgid "012345"
 msgstr "012345"
 
-#: ../src/mooutils/mooencodings.c:703
+#: src/mooutils/mooencodings.cpp:696
 msgid "Auto Detected"
 msgstr "Auto-détecté"
 
 #. Translators: remove the part before and including |
-#: ../src/mooutils/mooencodings.c:732
+#: src/mooutils/mooencodings.cpp:729
 msgid "Encodings combo submenu|Other"
 msgstr "Autre"
 
-#: ../src/mooutils/mooencodings.c:831
+#: src/mooutils/mooencodings.cpp:849
 msgid "Charact_er encoding"
 msgstr "_Encodage"
 
-#: ../src/mooutils/mooencodings-data.h:27
+#: src/mooutils/mooencodings-data.h:27
 msgid "West European"
 msgstr "Européen de l’ouest"
 
-#: ../src/mooutils/mooencodings-data.h:28
+#: src/mooutils/mooencodings-data.h:28
 msgid "East European"
 msgstr "Européen de l’est"
 
-#: ../src/mooutils/mooencodings-data.h:29
+#: src/mooutils/mooencodings-data.h:29
 msgid "East Asian"
 msgstr "Asiatique de l’est"
 
-#: ../src/mooutils/mooencodings-data.h:30
+#: src/mooutils/mooencodings-data.h:30
 msgid "SE & SW Asian"
 msgstr "SE et SO Asiatique"
 
-#: ../src/mooutils/mooencodings-data.h:31
+#: src/mooutils/mooencodings-data.h:31
 msgid "Middle Eastern"
 msgstr "Moyen‑Oriental"
 
-#: ../src/mooutils/mooencodings-data.h:32
+#: src/mooutils/mooencodings-data.h:32
 msgid "Unicode"
 msgstr "Unicode"
 
-#: ../src/mooutils/mooencodings-data.h:53
+#: src/mooutils/mooencodings-data.h:53
 msgid "Ascii"
 msgstr "ASCII"
 
-#: ../src/mooutils/mooencodings-data.h:55
-#: ../src/mooutils/mooencodings-data.h:68
-#: ../src/mooutils/mooencodings-data.h:113
-#: ../src/mooutils/mooencodings-data.h:138
-#: ../src/mooutils/mooencodings-data.h:151
+#: src/mooutils/mooencodings-data.h:55 src/mooutils/mooencodings-data.h:68
+#: src/mooutils/mooencodings-data.h:121 src/mooutils/mooencodings-data.h:146
+#: src/mooutils/mooencodings-data.h:159
 msgid "Western"
 msgstr "Occidental"
 
-#: ../src/mooutils/mooencodings-data.h:56
-#: ../src/mooutils/mooencodings-data.h:114
-#: ../src/mooutils/mooencodings-data.h:128
-#: ../src/mooutils/mooencodings-data.h:149
+#: src/mooutils/mooencodings-data.h:56 src/mooutils/mooencodings-data.h:122
+#: src/mooutils/mooencodings-data.h:136 src/mooutils/mooencodings-data.h:157
 msgid "Central European"
 msgstr "Europe centrale"
 
-#: ../src/mooutils/mooencodings-data.h:57
+#: src/mooutils/mooencodings-data.h:57
 msgid "South European"
 msgstr "Europe méridionale"
 
-#: ../src/mooutils/mooencodings-data.h:58
-#: ../src/mooutils/mooencodings-data.h:66
-#: ../src/mooutils/mooencodings-data.h:156
+#: src/mooutils/mooencodings-data.h:58 src/mooutils/mooencodings-data.h:66
+#: src/mooutils/mooencodings-data.h:164
 msgid "Baltic"
 msgstr "Balte"
 
-#: ../src/mooutils/mooencodings-data.h:59
-#: ../src/mooutils/mooencodings-data.h:115
-#: ../src/mooutils/mooencodings-data.h:122
-#: ../src/mooutils/mooencodings-data.h:124
-#: ../src/mooutils/mooencodings-data.h:130
-#: ../src/mooutils/mooencodings-data.h:150
+#: src/mooutils/mooencodings-data.h:59 src/mooutils/mooencodings-data.h:123
+#: src/mooutils/mooencodings-data.h:130 src/mooutils/mooencodings-data.h:132
+#: src/mooutils/mooencodings-data.h:138 src/mooutils/mooencodings-data.h:158
 msgid "Cyrillic"
 msgstr "Cyrillique"
 
-#: ../src/mooutils/mooencodings-data.h:60
-#: ../src/mooutils/mooencodings-data.h:118
-#: ../src/mooutils/mooencodings-data.h:127
-#: ../src/mooutils/mooencodings-data.h:155
+#: src/mooutils/mooencodings-data.h:60 src/mooutils/mooencodings-data.h:126
+#: src/mooutils/mooencodings-data.h:135 src/mooutils/mooencodings-data.h:163
 msgid "Arabic"
 msgstr "Arabe"
 
-#: ../src/mooutils/mooencodings-data.h:61
-#: ../src/mooutils/mooencodings-data.h:133
-#: ../src/mooutils/mooencodings-data.h:152
+#: src/mooutils/mooencodings-data.h:61 src/mooutils/mooencodings-data.h:141
+#: src/mooutils/mooencodings-data.h:160
 msgid "Greek"
 msgstr "Grec"
 
-#: ../src/mooutils/mooencodings-data.h:62
+#: src/mooutils/mooencodings-data.h:62
 msgid "Hebrew Visual"
 msgstr "Hébreu visuel"
 
-#: ../src/mooutils/mooencodings-data.h:63
-#: ../src/mooutils/mooencodings-data.h:117
-#: ../src/mooutils/mooencodings-data.h:136
-#: ../src/mooutils/mooencodings-data.h:154
+#: src/mooutils/mooencodings-data.h:63 src/mooutils/mooencodings-data.h:125
+#: src/mooutils/mooencodings-data.h:144 src/mooutils/mooencodings-data.h:162
 msgid "Hebrew"
 msgstr "Hébreu"
 
-#: ../src/mooutils/mooencodings-data.h:64
-#: ../src/mooutils/mooencodings-data.h:116
-#: ../src/mooutils/mooencodings-data.h:140
-#: ../src/mooutils/mooencodings-data.h:153
+#: src/mooutils/mooencodings-data.h:64 src/mooutils/mooencodings-data.h:124
+#: src/mooutils/mooencodings-data.h:148 src/mooutils/mooencodings-data.h:161
 msgid "Turkish"
 msgstr "Turc"
 
-#: ../src/mooutils/mooencodings-data.h:65
+#: src/mooutils/mooencodings-data.h:65
 msgid "Nordic"
 msgstr "Nordique"
 
-#: ../src/mooutils/mooencodings-data.h:67
+#: src/mooutils/mooencodings-data.h:67
 msgid "Celtic"
 msgstr "Celtique"
 
-#: ../src/mooutils/mooencodings-data.h:69
-#: ../src/mooutils/mooencodings-data.h:139
+#: src/mooutils/mooencodings-data.h:69 src/mooutils/mooencodings-data.h:147
 msgid "Romanian"
 msgstr "Roumain"
 
 #. Label of an encoding menu item, remove the part before and including |
-#: ../src/mooutils/mooencodings-data.h:72
+#: src/mooutils/mooencodings-data.h:72
 msgid "encoding label|UTF-7"
 msgstr "UTF‑7"
 
 #. Label of an encoding menu item, remove the part before and including |
-#: ../src/mooutils/mooencodings-data.h:74
+#: src/mooutils/mooencodings-data.h:74
 msgid "encoding label|UTF-32BE-BOM (big-endian, with BOM)"
 msgstr "UTF‑32BE‑BOM (gros‑boutiste avec BOM)"
 
 #. Label of an encoding menu item, remove the part before and including |
-#: ../src/mooutils/mooencodings-data.h:76
+#: src/mooutils/mooencodings-data.h:76
 msgid "encoding label|UTF-32LE-BOM (little-endian, with BOM)"
 msgstr "UTF‑32LE‑BOM (petit‑boutiste avec BOM)"
 
 #. Label of an encoding menu item, remove the part before and including |
-#: ../src/mooutils/mooencodings-data.h:78
+#: src/mooutils/mooencodings-data.h:78
 msgid "encoding label|UTF-32BE (big-endian, no BOM)"
 msgstr "UTF‑32BE (gros‑boutiste sans BOM)"
 
 #. Label of an encoding menu item, remove the part before and including |
-#: ../src/mooutils/mooencodings-data.h:80
+#: src/mooutils/mooencodings-data.h:80
 msgid "encoding label|UTF-32LE (little-endian, no BOM)"
 msgstr "UTF‑32LE (petit‑boutiste sans BOM)"
 
 #. Label of an encoding menu item, remove the part before and including |
-#: ../src/mooutils/mooencodings-data.h:82
+#: src/mooutils/mooencodings-data.h:82
 msgid "encoding label|UTF-16BE-BOM (big-endian, with BOM)"
 msgstr "UTF‑16BE‑BOM (gros‑boutiste avec BOM)"
 
 #. Label of an encoding menu item, remove the part before and including |
-#: ../src/mooutils/mooencodings-data.h:84
+#: src/mooutils/mooencodings-data.h:84
 msgid "encoding label|UTF-16LE-BOM (little-endian, with BOM)"
 msgstr "UTF‑16LE‑BOM (petit‑boutiste avec BOM)"
 
 #. Label of an encoding menu item, remove the part before and including |
-#: ../src/mooutils/mooencodings-data.h:86
+#: src/mooutils/mooencodings-data.h:86
 msgid "encoding label|UTF-16BE (big-endian, no BOM)"
 msgstr "UTF‑16BE (gros‑boutiste sans BOM)"
 
 #. Label of an encoding menu item, remove the part before and including |
-#: ../src/mooutils/mooencodings-data.h:88
+#: src/mooutils/mooencodings-data.h:88
 msgid "encoding label|UTF-16LE (little-endian, no BOM)"
 msgstr "UTF‑16LE (petit‑boutiste sans BOM)"
 
 #. Label of an encoding menu item, remove the part before and including |
-#: ../src/mooutils/mooencodings-data.h:90
+#: src/mooutils/mooencodings-data.h:90
 msgid "encoding label|UTF-8-BOM"
 msgstr "UTF‑8‑BOM"
 
 #. Label of an encoding menu item, remove the part before and including |
-#: ../src/mooutils/mooencodings-data.h:92
+#: src/mooutils/mooencodings-data.h:92 src/mooutils/mooencodings-data.h:96
+#, fuzzy
+msgid "encoding label|UTF-32-BOM"
+msgstr "UTF‑8‑BOM"
+
+#. Label of an encoding menu item, remove the part before and including |
+#: src/mooutils/mooencodings-data.h:94 src/mooutils/mooencodings-data.h:98
+#, fuzzy
+msgid "encoding label|UTF-16-BOM"
+msgstr "UTF‑8‑BOM"
+
+#. Label of an encoding menu item, remove the part before and including |
+#: src/mooutils/mooencodings-data.h:100
 msgid "encoding label|UTF-32"
 msgstr "UTF‑32"
 
 #. Label of an encoding menu item, remove the part before and including |
-#: ../src/mooutils/mooencodings-data.h:94
+#: src/mooutils/mooencodings-data.h:102
 msgid "encoding label|UTF-16"
 msgstr "UTF‑16"
 
 #. Label of an encoding menu item, remove the part before and including |
-#: ../src/mooutils/mooencodings-data.h:96
+#: src/mooutils/mooencodings-data.h:104
 msgid "encoding label|UTF-8"
 msgstr "UTF‑8"
 
-#: ../src/mooutils/mooencodings-data.h:98
+#: src/mooutils/mooencodings-data.h:106
 msgid "Armenian"
 msgstr "Arménien"
 
-#: ../src/mooutils/mooencodings-data.h:99
-#: ../src/mooutils/mooencodings-data.h:100
-#: ../src/mooutils/mooencodings-data.h:105
+#: src/mooutils/mooencodings-data.h:107 src/mooutils/mooencodings-data.h:108
+#: src/mooutils/mooencodings-data.h:113
 msgid "Chinese Traditional"
 msgstr "Chinois traditionnel"
 
-#: ../src/mooutils/mooencodings-data.h:101
+#: src/mooutils/mooencodings-data.h:109
 msgid "Cyrillic/Russian"
 msgstr "Cyrillique / Russe"
 
-#: ../src/mooutils/mooencodings-data.h:103
-#: ../src/mooutils/mooencodings-data.h:120
-#: ../src/mooutils/mooencodings-data.h:143
+#: src/mooutils/mooencodings-data.h:111 src/mooutils/mooencodings-data.h:128
+#: src/mooutils/mooencodings-data.h:151
 msgid "Japanese"
 msgstr "Japonais"
 
-#: ../src/mooutils/mooencodings-data.h:104
-#: ../src/mooutils/mooencodings-data.h:121
-#: ../src/mooutils/mooencodings-data.h:123
-#: ../src/mooutils/mooencodings-data.h:146
+#: src/mooutils/mooencodings-data.h:112 src/mooutils/mooencodings-data.h:129
+#: src/mooutils/mooencodings-data.h:131 src/mooutils/mooencodings-data.h:154
 msgid "Korean"
 msgstr "Coréen"
 
-#: ../src/mooutils/mooencodings-data.h:107
-#: ../src/mooutils/mooencodings-data.h:108
-#: ../src/mooutils/mooencodings-data.h:109
-#: ../src/mooutils/mooencodings-data.h:111
+#: src/mooutils/mooencodings-data.h:115 src/mooutils/mooencodings-data.h:116
+#: src/mooutils/mooencodings-data.h:117 src/mooutils/mooencodings-data.h:119
 msgid "Chinese Simplified"
 msgstr "Chinois simplifié"
 
-#: ../src/mooutils/mooencodings-data.h:110
+#: src/mooutils/mooencodings-data.h:118
 msgid "Georgian"
 msgstr "Géorgien"
 
-#: ../src/mooutils/mooencodings-data.h:125
-#: ../src/mooutils/mooencodings-data.h:141
+#: src/mooutils/mooencodings-data.h:133 src/mooutils/mooencodings-data.h:149
 msgid "Cyrillic/Ukrainian"
 msgstr "Cyrillique / Ukrainien"
 
-#: ../src/mooutils/mooencodings-data.h:129
+#: src/mooutils/mooencodings-data.h:137
 msgid "Croatian"
 msgstr "Croate"
 
-#: ../src/mooutils/mooencodings-data.h:131
+#: src/mooutils/mooencodings-data.h:139
 msgid "Hindi"
 msgstr "Hindi"
 
-#: ../src/mooutils/mooencodings-data.h:132
+#: src/mooutils/mooencodings-data.h:140
 msgid "Persian"
 msgstr "Persan"
 
-#: ../src/mooutils/mooencodings-data.h:134
+#: src/mooutils/mooencodings-data.h:142
 msgid "Gujarati"
 msgstr "Gujarati"
 
-#: ../src/mooutils/mooencodings-data.h:135
+#: src/mooutils/mooencodings-data.h:143
 msgid "Gurmukhi"
 msgstr "Gurmukhi"
 
-#: ../src/mooutils/mooencodings-data.h:137
+#: src/mooutils/mooencodings-data.h:145
 msgid "Icelandic"
 msgstr "Islandais"
 
-#: ../src/mooutils/mooencodings-data.h:144
-#: ../src/mooutils/mooencodings-data.h:147
-#: ../src/mooutils/mooencodings-data.h:157
+#: src/mooutils/mooencodings-data.h:152 src/mooutils/mooencodings-data.h:155
+#: src/mooutils/mooencodings-data.h:165
 msgid "Vietnamese"
 msgstr "Vietnamien"
 
-#: ../src/mooutils/mooencodings-data.h:145
+#: src/mooutils/mooencodings-data.h:153
 msgid "Thai"
 msgstr "Thaï"
 
 #. menu item in Insert Special Character submenu of text entry context menu
-#: ../src/mooutils/mooentry.c:533
+#: src/mooutils/mooentry.cpp:523
 msgctxt "insert-special-char"
 msgid "Line End"
 msgstr "Saut de ligne"
 
 #. menu item in Insert Special Character submenu of text entry context menu
-#: ../src/mooutils/mooentry.c:535
+#: src/mooutils/mooentry.cpp:525
 msgctxt "insert-special-char"
 msgid "Tab"
 msgstr "Tabulation"
 
 #. label of Insert Special Character submenu in text entry context menu
-#: ../src/mooutils/mooentry.c:578
+#: src/mooutils/mooentry.cpp:572
 msgctxt "insert-special-char"
 msgid "Insert Special Character"
 msgstr "Insérer un caractère spécial"
 
-#: ../src/mooutils/moofiledialog.c:650
+#: src/mooutils/moofiledialog.cpp:570
 msgid "Selected file is not a regular file"
 msgstr "Le fichier sélectionné n’est pas un fichier régulier"
 
-#: ../src/mooutils/moofilewriter.c:101
+#: src/mooutils/moofilewriter.cpp:91
 #, c-format
 msgid "Could not open %s: %s"
 msgstr "Le fichier « %s » n’a pas put être ouvert : %s"
 
-#: ../src/mooutils/moofilewriter.c:291
-#: ../src/mooutils/mooutils-fs.c:386
-#: ../src/mooutils/mooutils-fs.c:405
-#: ../src/mooutils/mooutils-fs.c:421
+#: src/mooutils/moofilewriter.cpp:280
 #, c-format
 msgid "Could not create folder %s: %s"
 msgstr "Le répertoire « %s » n’a pas put être créé : %s"
 
-#: ../src/mooutils/moofiltermgr.c:545
+#: src/mooutils/moofiltermgr.cpp:548
 msgid "_Show"
 msgstr "_Montrer"
 
-#: ../src/mooutils/moohelp.c:205
-msgid "Help files not found"
-msgstr "Fichiers d’aide non trouvés"
+#: src/mooutils/moofontsel.cpp:496
+msgid "Show only fixed width fonts"
+msgstr "Ne montrer que les polices à chasse fixe"
 
-#: ../src/mooutils/moohelp.c:217
-#, c-format
-msgid "File '%s' is missing in the directory '%s'"
-msgstr "Le fichier « %s » est manquant dans le répertoire « %s »"
+#: src/mooutils/moohelp.cpp:32
+#, fuzzy
+msgid "Could not open the medit web site"
+msgstr ""
+"Le fichier n’a pas put être ouvert\n"
+"%s"
 
-#: ../src/mooutils/moohelp.c:220
-msgid "Could not find help file"
-msgstr "Le fichier d’aide n’a pas put être trouvé"
+#: src/mooutils/moohistorymgr.cpp:1652
+msgid "Recent Files"
+msgstr "Fichiers récents"
 
-#: ../src/mooutils/moopane.c:702
+#: src/mooutils/moopane.cpp:662
 msgid "Remove pane"
 msgstr "Retirer le panneau"
 
-#: ../src/mooutils/moopane.c:712
+#: src/mooutils/moopane.cpp:672
 msgid "Hide pane"
 msgstr "Cacher le panneau"
 
-#: ../src/mooutils/moopane.c:716
+#: src/mooutils/moopane.cpp:676
 msgid "Sticky"
 msgstr "Fixé"
 
-#: ../src/mooutils/moopane.c:720
+#: src/mooutils/moopane.cpp:680
 msgid "Detach pane"
 msgstr "Détacher le panneau"
 
-#: ../src/mooutils/moopane.c:733
+#: src/mooutils/moopane.cpp:693
 msgid "Attach"
 msgstr "Attacher"
 
-#: ../src/mooutils/moopane.c:737
+#: src/mooutils/moopane.cpp:697
 msgid "Keep on top"
 msgstr "Garder au premier plan"
 
-#: ../src/mooutils/moostock.c:29
+#: src/mooutils/moostock.cpp:27
 msgid "Save _None"
 msgstr "Ne _rien enregistrer"
 
-#: ../src/mooutils/moostock.c:30
+#: src/mooutils/moostock.cpp:28
 msgid "Save _Selected"
 msgstr "Enregistrer _Sélectionné"
 
-#: ../src/mooutils/moostock.c:32
+#: src/mooutils/moostock.cpp:30
 msgid "Move"
 msgstr "Déplacer"
 
-#: ../src/mooutils/moostock.c:33
+#: src/mooutils/moostock.cpp:31
 msgid "Link"
 msgstr "Lien"
 
-#: ../src/mooutils/moostock.c:35
-#: ../src/plugins/moofileselector.c:1136
+#: src/mooutils/moostock.cpp:33 src/plugins/moofileselector.cpp:1142
 msgid "Save Copy"
 msgstr "Enregistrer une copie"
 
-#: ../src/mooutils/moostock.c:36
+#: src/mooutils/moostock.cpp:34
 msgid "_New Folder"
 msgstr "_Nouveau dossier"
 
-#: ../src/mooutils/moostock.c:37
+#: src/mooutils/moostock.cpp:35
 msgid "New _Window"
 msgstr "Nouvelle _fenêtre"
 
 #. This is error message in file selector when rm
 #. fails for some strange reason
-#: ../src/mooutils/mooutils-fs.c:226
+#: src/mooutils/mooutils-fs.cpp:102
 #, c-format
 msgid "Could not run 'rm' command: %s"
 msgstr "La commande “rm” n’a pas put être exécutée : %s"
 
 #. This is error message in file selector when rm
 #. fails to delete a file or folder
-#: ../src/mooutils/mooutils-fs.c:244
+#: src/mooutils/mooutils-fs.cpp:123
 #, c-format
 msgid "'rm' command failed: %s"
 msgstr "La commande “rm” a échoué : %s"
 
-#: ../src/mooutils/mooutils-fs.c:294
-#: ../src/mooutils/mooutils-fs.c:314
-#: ../src/mooutils/mooutils-fs.c:341
+#: src/mooutils/mooutils-fs.cpp:152
 #, c-format
 msgid "Could not remove %s: %s"
 msgstr "« %s » n’a pas put être supprimé : %s"
 
-#: ../src/mooutils/mooutils-fs.c:450
-#, c-format
-msgid "Could not rename file %s to %s: %s"
-msgstr "Le fichier « %s » n’a pas put être renommé en « %s » : %s"
-
 #. Translators: remove the part before and including |
-#: ../src/mooutils/mooutils-misc.c:1803
+#: src/mooutils/mooutils-misc.cpp:1607
 #, c-format
 msgid "console message|in file %s, line %d, function %s: %s"
 msgstr "Fichier « %s », ligne %d, fonction “%s” : %s"
@@ -1992,475 +1947,1102 @@ msgstr "Fichier « %s », ligne %d, fonction “%s” : %s"
 #. "Unknown error" may be displayed if there is a bug in the program
 #. and proper error message has not been set. It doesn't provide any
 #. useful information obviously
-#: ../src/mooutils/mooutils-misc.c:2186
+#: src/mooutils/mooutils-misc.cpp:1847
 msgid "Unknown error"
 msgstr "Erreur inconnue"
 
-#: ../src/mooutils/moowindow.c:248
+#: src/mooutils/moowindow.cpp:249
 msgid "Configure _Shortcuts..."
 msgstr "Configurer les _raccourcis…"
 
-#: ../src/mooutils/moowindow.c:256
-#: ../src/mooutils/moowindow.c:257
+#: src/mooutils/moowindow.cpp:257 src/mooutils/moowindow.cpp:258
 msgid "Show Toolbar"
 msgstr "Afficher la barre d’outils"
 
-#: ../src/mooutils/moowindow.c:263
-#: ../src/mooutils/moowindow.c:264
+#: src/mooutils/moowindow.cpp:264 src/mooutils/moowindow.cpp:265
 msgid "Show Menubar"
 msgstr "Afficher la barre de menu"
 
-#: ../src/mooutils/moowindow.c:271
-#: ../src/mooutils/moowindow.c:272
+#: src/mooutils/moowindow.cpp:272 src/mooutils/moowindow.cpp:273
 msgid "Show Statusbar"
 msgstr "Afficher la barre d’état"
 
-#: ../src/mooutils/moowindow.c:508
+#: src/mooutils/moowindow.cpp:480
 #, c-format
 msgid "Could not parse geometry string '%s'\n"
 msgstr "L’expression géométrique “%s” n’a pas put être interprétée\n"
 
-#: ../src/mooutils/moowindow.c:1254
+#: src/mooutils/moowindow.cpp:1190
 msgid "_Icons Only"
 msgstr "_Icônes seules"
 
-#: ../src/mooutils/moowindow.c:1255
+#: src/mooutils/moowindow.cpp:1191
 msgid "_Labels Only"
 msgstr "_Étiquettes seules"
 
-#: ../src/mooutils/moowindow.c:1256
+#: src/mooutils/moowindow.cpp:1192
 msgid "Labels _Below Icons"
 msgstr "Étiquettes _sous les icônes"
 
-#: ../src/mooutils/moowindow.c:1257
+#: src/mooutils/moowindow.cpp:1193
 msgid "Labels Be_side Icons"
 msgstr "Étiquettes sur le _côté des icônes"
 
-#: ../src/mooutils/moowindow.c:1267
+#: src/mooutils/moowindow.cpp:1203
 msgid "Toolbar _Style"
 msgstr "_Style de la barre d’outils"
 
 #. label of Ctags plugin pane
-#: ../src/plugins/ctags/ctags-plugin.c:119
-#: ../src/plugins/ctags/ctags-plugin.c:120
+#: src/plugins/ctags/ctags-plugin.c:232 src/plugins/ctags/ctags-plugin.c:233
 msgctxt "window-pane"
 msgid "Functions"
 msgstr "Fonctions"
 
-#: ../src/plugins/glade/moofileselector.glade.h:2
+#: src/plugins/ui/moofileselector.ui:25
 msgid "Save as"
 msgstr "Enregistrer sous"
 
-#: ../src/plugins/glade/moofileselector.glade.h:3
+#: src/plugins/ui/moofileselector.ui:89
 msgid "Create File"
 msgstr "Créer le fichier"
 
-#: ../src/plugins/ui/moofileselector.ui:109
+#: src/plugins/ui/moofileselector.ui:109
 msgid "File name"
 msgstr "Nom du fichier"
 
-#: ../src/plugins/glade/moofileselector-prefs.glade.h:1
+#: src/plugins/ui/moofileselector-prefs.ui:18
 msgid "<b>Open With</b>"
 msgstr "<b>Ouvrir avec</b>"
 
-#: ../src/plugins/glade/moofileselector-prefs.glade.h:2
-msgid "Semicolon-separated list of mime types, e.g. 'text/*;application/x-glade'"
+#: src/plugins/ui/moofileselector-prefs.ui:64
+#: src/plugins/ui/moofileselector-prefs.ui:178
+msgid ""
+"Semicolon-separated list of mime types, e.g. 'text/*;application/x-glade'"
 msgstr ""
-"Liste de types MIME séparés par des points‑virgules, par ex. "
-"“text/*;application/x-glade”"
+"Liste de types MIME séparés par des points‑virgules, par ex. “text/*;"
+"application/x-glade”"
 
-#: ../src/plugins/glade/moofileselector-prefs.glade.h:4
+#: src/plugins/ui/moofileselector-prefs.ui:83
+#: src/plugins/ui/moofileselector-prefs.ui:164
 msgid "Semicolon-separated list of file globs, e.g. '*.txt;foo.*;*bar*'"
 msgstr ""
-"Liste d’extensions de fichier, séparés par des points‑virgules, par ex. "
-"“*.txt;toto.*;*pan*”"
+"Liste d’extensions de fichier, séparés par des points‑virgules, par ex. “*."
+"txt;toto.*;*pan*”"
 
-#: ../src/plugins/glade/moofileselector-prefs.glade.h:7
-#, no-c-format
-msgid "Shell command to open the file: '%f' is replaced with file path, e.g. 'foobar %f'"
+#: src/plugins/ui/moofileselector-prefs.ui:102
+#: src/plugins/ui/moofileselector-prefs.ui:150
+#, c-format
+msgid ""
+"Shell command to open the file: '%f' is replaced with file path, e.g. "
+"'foobar %f'"
 msgstr ""
 "Commande du shell pour l’ouverture du fichier, où “%f” est remplacé par le "
 "chemin du fichier : par ex. “machinchose %f”"
 
-#: ../src/plugins/glade/moofileselector-prefs.glade.h:8
+#: src/plugins/ui/moofileselector-prefs.ui:107
 msgid "Command"
 msgstr "Commande"
 
-#: ../src/plugins/glade/moofileselector-prefs.glade.h:9
+#: src/plugins/ui/moofileselector-prefs.ui:121
+#: src/plugins/ui/moofileselector-prefs.ui:138
 msgid "Menu item label"
 msgstr "Nom de l’entrée de menu"
 
-#: ../src/plugins/glade/moofileselector-prefs.glade.h:10
+#: src/plugins/ui/moofileselector-prefs.ui:126
 msgid "Name"
 msgstr "Nom"
 
-#: ../src/plugins/glade/moofileselector-prefs.glade.h:13
+#: src/plugins/ui/moofileselector-prefs.ui:238
 msgid "Move down"
 msgstr "Descendre"
 
-#: ../src/plugins/glade/moofileselector-prefs.glade.h:14
+#: src/plugins/ui/moofileselector-prefs.ui:256
 msgid "Move up"
 msgstr "Monter"
 
-#: ../src/plugins/glade/moofind.glade.h:1
-#: ../src/plugins/glade/moogrep.glade.h:1
+#: src/plugins/ui/moofind.ui:4 src/plugins/moofind.cpp:249
+#: src/plugins/moofind.cpp:250 src/plugins/moofind.cpp:952
+msgid "Find File"
+msgstr "Rechercher un fichier"
+
+#: src/plugins/ui/moofind.ui:34 src/plugins/ui/moogrep.ui:35
 msgid "_Pattern"
 msgstr "_Motif"
 
-#: ../src/plugins/glade/moofind.glade.h:2
-#: ../src/plugins/glade/moogrep.glade.h:3
+#: src/plugins/ui/moofind.ui:53 src/plugins/ui/moogrep.ui:75
 msgid "_Directory"
 msgstr "_Répertoire"
 
-#: ../src/plugins/glade/moofind.glade.h:3
-#: ../src/plugins/glade/moogrep.glade.h:4
+#: src/plugins/ui/moofind.ui:74 src/plugins/ui/moogrep.ui:96
 msgid "S_kip files"
 msgstr "_Passer les fichiers"
 
-#: ../src/plugins/glade/moogrep.glade.h:2
+#: src/plugins/ui/moogrep.ui:4 src/plugins/moofind.cpp:921
+msgid "Find in Files"
+msgstr "Rechercher dans des fichiers"
+
+#: src/plugins/ui/moogrep.ui:54
 msgid "Fi_les"
 msgstr "Fi_chiers"
 
-#: ../src/plugins/moofilelist.c:2353
-#: ../src/plugins/moofilelist.c:2354
-#: ../src/plugins/moofilelist.c:2411
+#: src/plugins/moofilelist.cpp:2328 src/plugins/moofilelist.cpp:2329
+#: src/plugins/moofilelist.cpp:2386
 msgid "File List"
 msgstr "Liste de fichiers"
 
-#: ../src/plugins/moofilelist.c:2411
+#: src/plugins/moofilelist.cpp:2386
 msgid "List of files"
 msgstr "Liste des fichiers"
 
-#: ../src/plugins/moofileselector.c:388
+#: src/plugins/moofileselector.cpp:386
 #, c-format
 msgid "Create file in folder '%s'"
 msgstr "Créer un fichier dans le répertoire « %s »"
 
-#: ../src/plugins/moofileselector.c:443
+#: src/plugins/moofileselector.cpp:442
 #, c-format
 msgid "Could not create file '%s'"
 msgstr "Le fichier « %s » n’a pas put être créé"
 
-#: ../src/plugins/moofileselector.c:444
-#: ../src/plugins/moofileselector.c:820
+#: src/plugins/moofileselector.cpp:443 src/plugins/moofileselector.cpp:824
 #, c-format
-msgid "Could not convert '%s' to filename encoding. Please consider simpler name, such as foo.blah or blah.foo"
+msgid ""
+"Could not convert '%s' to filename encoding. Please consider simpler name, "
+"such as foo.blah or blah.foo"
 msgstr ""
 "Le chemin de fichier « %s » n’a pas put être encodé. Envisagez un nom plus "
 "simple, comme « toto.txt » ou « texte.toto »"
 
-#: ../src/plugins/moofileselector.c:459
+#: src/plugins/moofileselector.cpp:458
 #, c-format
 msgid "File '%s' already exists"
 msgstr "Le fichier « %s » existe déjà"
 
-#: ../src/plugins/moofileselector.c:612
+#: src/plugins/moofileselector.cpp:613
 msgid "Go to current document directory"
 msgstr "Se rendre dans le répertoire du document courant"
 
-#: ../src/plugins/moofileselector.c:624
-#: ../src/plugins/moofileselector.c:625
+#: src/plugins/moofileselector.cpp:625 src/plugins/moofileselector.cpp:626
 msgid "New File..."
 msgstr "Nouveau fichier…"
 
-#: ../src/plugins/moofileselector.c:819
+#: src/plugins/moofileselector.cpp:823
 #, c-format
 msgid "Could not save file as '%s'"
 msgstr "Le fichier n’a pas put être enregistré en temps que « %s »"
 
-#: ../src/plugins/moofileselector.c:952
+#: src/plugins/moofileselector.cpp:958
 msgid "Save Copy As"
 msgstr "Enregistrer une copie sous"
 
-#: ../src/plugins/moofileselector.c:978
+#: src/plugins/moofileselector.cpp:984
 msgid "Rename To"
 msgstr "Renommer en"
 
-#: ../src/plugins/moofileselector.c:1118
+#: src/plugins/moofileselector.cpp:1124
 msgid "Move Here"
 msgstr "Déplacer ici"
 
-#: ../src/plugins/moofileselector.c:1119
+#: src/plugins/moofileselector.cpp:1125
 msgid "Move/Rename..."
 msgstr "Déplacer / renommer…"
 
-#: ../src/plugins/moofileselector.c:1127
+#: src/plugins/moofileselector.cpp:1133
 msgid "Save Here"
 msgstr "Enregistrer ici"
 
-#: ../src/plugins/moofileselector.c:1128
+#: src/plugins/moofileselector.cpp:1134
 msgid "Save As..."
 msgstr "Enregistrer sous…"
 
-#: ../src/plugins/moofileselector.c:1137
+#: src/plugins/moofileselector.cpp:1143
 msgid "Save Copy As..."
 msgstr "Enregistrer une copie sous…"
 
-#: ../src/plugins/moofileselector.c:1291
+#: src/plugins/moofileselector.cpp:1298
 msgid "File selector pane for editor window"
 msgstr "Panneau du sélecteur de fichier pour la fenêtre de l’éditeur"
 
-#: ../src/plugins/moofind.c:186
+#: src/plugins/moofind.cpp:175
 msgid "Search Results"
 msgstr "Résultats de la recherche"
 
-#: ../src/plugins/moofind.c:250
-#: ../src/plugins/moofind.c:251
+#: src/plugins/moofind.cpp:240 src/plugins/moofind.cpp:241
 msgid "Find In Files"
 msgstr "Rechercher dans des fichiers"
 
-#: ../src/plugins/moofind.c:252
+#: src/plugins/moofind.cpp:242
 msgid "Find in files"
 msgstr "Rechercher dans des fichiers"
 
-#: ../src/plugins/moofind.c:260
-#: ../src/plugins/moofind.c:261
-#: ../src/plugins/moofind.c:996
-#: ../src/plugins/ui/moofind.ui:4
-msgid "Find File"
-msgstr "Rechercher un fichier"
-
-#: ../src/plugins/moofind.c:262
+#: src/plugins/moofind.cpp:251
 msgid "Find file"
 msgstr "Rechercher un fichier"
 
-#: ../src/plugins/moofind.c:965
-#: ../src/plugins/ui/moogrep.ui:4
-msgid "Find in Files"
-msgstr "Rechercher dans des fichiers"
-
-#: ../src/plugins/moofind.c:1048
-#: ../src/plugins/moofind.c:1074
+#: src/plugins/moofind.cpp:1009
 #, c-format
 msgid "*** %u match found ***"
 msgid_plural "*** %u matches found ***"
 msgstr[0] "*** %u concordance trouvée ***"
 msgstr[1] "*** %u concordances trouvées ***"
 
-#: ../src/plugins/moofind.c:1055
-#: ../src/plugins/moofind.c:1080
+#: src/plugins/moofind.cpp:1016
 #, c-format
 msgid "*** %u file found ***"
 msgid_plural "*** %u files found ***"
 msgstr[0] "*** %u fichier trouvé ***"
 msgstr[1] "*** %u fichiers trouvés ***"
 
-#: ../src/plugins/moofind.c:1116
+#: src/plugins/moofind.cpp:1053
 msgid "Finds everything"
 msgstr "Rechercher tout"
 
 #. label of Output window pane
-#: ../src/plugins/support/mooeditwindowoutput.c:47
-#: ../src/plugins/support/mooeditwindowoutput.c:48
+#: src/plugins/support/mooeditwindowoutput.cpp:47
+#: src/plugins/support/mooeditwindowoutput.cpp:48
 msgctxt "window-pane"
 msgid "Output"
 msgstr "Sortie"
 
+#: src/plugins/lsp/lsp-actions.cpp:289
+msgid "The command failed"
+msgstr "La commande a échoué"
+
+#: src/plugins/lsp/lsp-actions.cpp:521
+msgid "Code actions failed"
+msgstr "Échec des actions de code"
+
+#: src/plugins/lsp/lsp-actions.cpp:536
+msgid "No code actions here"
+msgstr "Aucune action de code ici"
+
+#: src/plugins/lsp/lsp-actions.cpp:537
+msgid "The server has nothing to offer at this place."
+msgstr "Le serveur n'a rien à proposer à cet endroit."
+
+#: src/plugins/lsp/lsp-diagnostics.cpp:79
+msgctxt "diagnostic severity"
+msgid "warning"
+msgstr "avertissement"
+
+#: src/plugins/lsp/lsp-diagnostics.cpp:81
+msgctxt "diagnostic severity"
+msgid "information"
+msgstr "information"
+
+#: src/plugins/lsp/lsp-diagnostics.cpp:83
+msgctxt "diagnostic severity"
+msgid "hint"
+msgstr "indication"
+
+#: src/plugins/lsp/lsp-diagnostics.cpp:86
+msgctxt "diagnostic severity"
+msgid "error"
+msgstr "erreur"
+
+#: src/plugins/lsp/lsp-edits.cpp:363 src/plugins/lsp/lsp-plugin.cpp:1328
+#: src/plugins/lsp/lsp-plugin.cpp:1381
+msgid "Rename"
+msgstr "Renommer"
+
+#: src/plugins/lsp/lsp-edits.cpp:367
+msgid "_Rename"
+msgstr "_Renommer"
+
+#: src/plugins/lsp/lsp-edits.cpp:374
+#, c-format
+msgid "New name for '%s'"
+msgstr "Nouveau nom pour « %s »"
+
+#: src/plugins/lsp/lsp-edits.cpp:375
+msgid "New name"
+msgstr "Nouveau nom"
+
+#: src/plugins/lsp/lsp-edits.cpp:463 src/plugins/lsp/lsp-edits.cpp:473
+msgid "Rename failed"
+msgstr "Échec du renommage"
+
+#: src/plugins/lsp/lsp-edits.cpp:474
+msgid "The server had nothing to change."
+msgstr "Le serveur n'avait rien à changer."
+
+#: src/plugins/lsp/lsp-edits.cpp:577
+msgid "Formatting failed"
+msgstr "Échec du formatage"
+
+#: src/plugins/lsp/lsp-plugin.cpp:104 src/plugins/lsp/lsp-plugin.cpp:1293
+msgid "LSP"
+msgstr "LSP"
+
+#: src/plugins/lsp/lsp-plugin.cpp:104
+msgid "Language server protocol client"
+msgstr "Client du protocole de serveur de langage"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1191 src/plugins/lsp/lsp-plugin.cpp:1296
+#: src/plugins/lsp/lsp-plugin.cpp:1297
+msgid "Diagnostics"
+msgstr "Diagnostics"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1205 src/plugins/lsp/lsp-plugin.cpp:1447
+#: src/plugins/lsp/lsp-plugin.cpp:1448
+msgid "References"
+msgstr "Références"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1213 src/plugins/lsp/lsp-plugin.cpp:1455
+#: src/plugins/lsp/lsp-plugin.cpp:1456
+msgid "Symbols"
+msgstr "Symboles"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1298
+msgid "Show the diagnostics pane"
+msgstr "Afficher le panneau des diagnostics"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1304 src/plugins/lsp/lsp-plugin.cpp:1367
+msgid "Go to Definition"
+msgstr "Aller à la définition"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1305 src/plugins/lsp/lsp-plugin.cpp:1368
+msgid "Go to _Definition"
+msgstr "Aller à la _définition"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1306 src/plugins/lsp/lsp-plugin.cpp:1369
+msgid "Go to the definition of what is under the cursor"
+msgstr "Aller à la définition de ce qui est sous le curseur"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1312 src/plugins/lsp/lsp-plugin.cpp:1374
+msgid "Find References"
+msgstr "Chercher les références"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1313 src/plugins/lsp/lsp-plugin.cpp:1375
+msgid "Find _References"
+msgstr "Chercher les _références"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1314 src/plugins/lsp/lsp-plugin.cpp:1376
+msgid "List every use of what is under the cursor"
+msgstr "Lister toutes les utilisations de ce qui est sous le curseur"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1321
+msgid "Format Document"
+msgstr "Formater le document"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1322
+msgid "_Format Document"
+msgstr "_Formater le document"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1323
+msgid "Let the language server lay the document out"
+msgstr "Laisser le serveur de langage mettre le document en forme"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1329 src/plugins/lsp/lsp-plugin.cpp:1382
+msgid "_Rename..."
+msgstr "_Renommer…"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1330 src/plugins/lsp/lsp-plugin.cpp:1383
+msgid "Rename what is under the cursor everywhere"
+msgstr "Renommer partout ce qui est sous le curseur"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1336 src/plugins/lsp/lsp-plugin.cpp:1388
+msgid "Code Actions"
+msgstr "Actions de code"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1337 src/plugins/lsp/lsp-plugin.cpp:1389
+msgid "Code _Actions..."
+msgstr "_Actions de code…"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1338 src/plugins/lsp/lsp-plugin.cpp:1390
+msgid "Offer what the language server can do here"
+msgstr "Proposer ce que le serveur de langage peut faire ici"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1344
+msgid "Go to Type Definition"
+msgstr "Aller à la définition du type"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1345
+msgid "Go to _Type Definition"
+msgstr "Aller à la définition du _type"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1346
+msgid "Go to the definition of the type of what is under the cursor"
+msgstr "Aller à la définition du type de ce qui est sous le curseur"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1351
+msgid "Go to Implementation"
+msgstr "Aller à l'implémentation"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1352
+msgid "Go to _Implementation"
+msgstr "Aller à l'_implémentation"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1353
+msgid "Go to the implementation of what is under the cursor"
+msgstr "Aller à l'implémentation de ce qui est sous le curseur"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1415
+msgid "LSP Servers"
+msgstr "Serveurs LSP"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1416
+msgid "LSP _Servers..."
+msgstr "_Serveurs LSP…"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1417
+msgid "Edit the list of language servers"
+msgstr "Modifier la liste des serveurs de langage"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1423 src/plugins/lsp/lsp-plugin.cpp:1424
+msgid "Restart Language Servers"
+msgstr "Redémarrer les serveurs de langage"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1425
+msgid "Re-read the configuration and start every server again"
+msgstr "Relire la configuration et redémarrer chaque serveur"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1431
+msgid "Complete Word"
+msgstr "Compléter le mot"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1432
+msgid "_Complete Word"
+msgstr "_Compléter le mot"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1433
+msgid "Ask the language server what could go here"
+msgstr "Demander au serveur de langage ce qui pourrait aller ici"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1439
+msgid "Parameter Hints"
+msgstr "Aide sur les paramètres"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1440
+msgid "_Parameter Hints"
+msgstr "Aide sur les _paramètres"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1441
+msgid "Show what the call being typed takes"
+msgstr "Afficher ce que prend l'appel en cours de saisie"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1449
+msgid "Show the references pane"
+msgstr "Afficher le panneau des références"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1457
+msgid "Show the symbol tree"
+msgstr "Afficher l'arbre des symboles"
+
+#: src/plugins/lsp/lsp-server.cpp:919
+#, c-format
+msgid "%s failed to start: %s"
+msgstr "%s n'a pas pu démarrer : %s"
+
+#: src/plugins/lsp/lsp-server.cpp:920 src/plugins/lsp/lsp-server.cpp:1304
+msgid "unknown error"
+msgstr "erreur inconnue"
+
+#: src/plugins/lsp/lsp-server.cpp:926
+#, c-format
+msgid "%s answered the initialize request with no capabilities"
+msgstr "%s a répondu à la requête d'initialisation sans aucune capacité"
+
+#: src/plugins/lsp/lsp-server.cpp:948
+#, c-format
+msgid "%s did not answer the initialize request in %d seconds"
+msgstr "%s n'a pas répondu à la requête d'initialisation en %d secondes"
+
+#: src/plugins/lsp/lsp-server.cpp:1261
+#, c-format
+msgid ""
+"%s exited immediately %d times in a row; check the command in the LSP "
+"configuration file"
+msgstr ""
+"%s s'est arrêté immédiatement %d fois de suite ; vérifiez la commande dans "
+"le fichier de configuration LSP"
+
+#: src/plugins/lsp/lsp-server.cpp:1303
+#, c-format
+msgid "could not run %s: %s"
+msgstr "impossible d'exécuter %s : %s"
+
+#: src/plugins/lsp/lsp-prefs.cpp:37
+msgid "Could not create the LSP configuration file"
+msgstr "Impossible de créer le fichier de configuration LSP"
+
+#: src/plugins/lsp/lsp-prefs.cpp:80
+msgid "Language Servers"
+msgstr "Serveurs de langage"
+
+#: src/plugins/lsp/lsp-references.cpp:333
+msgid "The server refused the question"
+msgstr "Le serveur a refusé la question"
+
+#.
+#. * An empty answer is shown as a sentence rather than as an empty pane: a
+#. * pane with nothing in it is what a question that was never asked looks
+#. * like, and the two are worth telling apart.
+#.
+#: src/plugins/lsp/lsp-references.cpp:345
+msgid "No references found"
+msgstr "Aucune référence trouvée"
+
+#: src/plugins/lsp/lsp-symbols.cpp:32
+msgctxt "symbol kind"
+msgid "file"
+msgstr "fichier"
+
+#: src/plugins/lsp/lsp-symbols.cpp:33
+msgctxt "symbol kind"
+msgid "module"
+msgstr "module"
+
+#: src/plugins/lsp/lsp-symbols.cpp:34
+msgctxt "symbol kind"
+msgid "namespace"
+msgstr "espace de noms"
+
+#: src/plugins/lsp/lsp-symbols.cpp:35
+msgctxt "symbol kind"
+msgid "package"
+msgstr "paquet"
+
+#: src/plugins/lsp/lsp-symbols.cpp:36
+msgctxt "symbol kind"
+msgid "class"
+msgstr "classe"
+
+#: src/plugins/lsp/lsp-symbols.cpp:37
+msgctxt "symbol kind"
+msgid "method"
+msgstr "méthode"
+
+#: src/plugins/lsp/lsp-symbols.cpp:38
+msgctxt "symbol kind"
+msgid "property"
+msgstr "propriété"
+
+#: src/plugins/lsp/lsp-symbols.cpp:39
+msgctxt "symbol kind"
+msgid "field"
+msgstr "champ"
+
+#: src/plugins/lsp/lsp-symbols.cpp:40
+msgctxt "symbol kind"
+msgid "constructor"
+msgstr "constructeur"
+
+#: src/plugins/lsp/lsp-symbols.cpp:41
+msgctxt "symbol kind"
+msgid "enum"
+msgstr "énumération"
+
+#: src/plugins/lsp/lsp-symbols.cpp:42
+msgctxt "symbol kind"
+msgid "interface"
+msgstr "interface"
+
+#: src/plugins/lsp/lsp-symbols.cpp:43
+msgctxt "symbol kind"
+msgid "function"
+msgstr "fonction"
+
+#: src/plugins/lsp/lsp-symbols.cpp:44
+msgctxt "symbol kind"
+msgid "variable"
+msgstr "variable"
+
+#: src/plugins/lsp/lsp-symbols.cpp:45
+msgctxt "symbol kind"
+msgid "constant"
+msgstr "constante"
+
+#: src/plugins/lsp/lsp-symbols.cpp:46
+msgctxt "symbol kind"
+msgid "string"
+msgstr "chaîne"
+
+#: src/plugins/lsp/lsp-symbols.cpp:47
+msgctxt "symbol kind"
+msgid "number"
+msgstr "nombre"
+
+#: src/plugins/lsp/lsp-symbols.cpp:48
+msgctxt "symbol kind"
+msgid "boolean"
+msgstr "booléen"
+
+#: src/plugins/lsp/lsp-symbols.cpp:49
+msgctxt "symbol kind"
+msgid "array"
+msgstr "tableau"
+
+#: src/plugins/lsp/lsp-symbols.cpp:50
+msgctxt "symbol kind"
+msgid "object"
+msgstr "objet"
+
+#: src/plugins/lsp/lsp-symbols.cpp:51
+msgctxt "symbol kind"
+msgid "key"
+msgstr "clé"
+
+#: src/plugins/lsp/lsp-symbols.cpp:52
+msgctxt "symbol kind"
+msgid "null"
+msgstr "nul"
+
+#: src/plugins/lsp/lsp-symbols.cpp:53
+msgctxt "symbol kind"
+msgid "enum member"
+msgstr "valeur d'énumération"
+
+#: src/plugins/lsp/lsp-symbols.cpp:54
+msgctxt "symbol kind"
+msgid "struct"
+msgstr "structure"
+
+#: src/plugins/lsp/lsp-symbols.cpp:55
+msgctxt "symbol kind"
+msgid "event"
+msgstr "événement"
+
+#: src/plugins/lsp/lsp-symbols.cpp:56
+msgctxt "symbol kind"
+msgid "operator"
+msgstr "opérateur"
+
+#: src/plugins/lsp/lsp-symbols.cpp:57
+msgctxt "symbol kind"
+msgid "type parameter"
+msgstr "paramètre de type"
+
+#: src/plugins/lsp/ui/lsp-prefs.ui:22
+msgid "Underline problems and list them in the _Diagnostics pane"
+msgstr "Souligner les problèmes et les lister dans le panneau _Diagnostics"
+
+#: src/plugins/lsp/ui/lsp-prefs.ui:34
+msgid "_Complete words"
+msgstr "_Compléter les mots"
+
+#: src/plugins/lsp/ui/lsp-prefs.ui:46
+msgid "Show the _parameters of a call"
+msgstr "Afficher les _paramètres d'un appel"
+
+#: src/plugins/lsp/ui/lsp-prefs.ui:49
+msgid "While the call is being typed, and on Ctrl+Shift+Space."
+msgstr "Pendant la saisie de l'appel, et avec Ctrl+Maj+Espace."
+
+#: src/plugins/lsp/ui/lsp-prefs.ui:59
+msgid "_Mark the other uses of what the cursor is in"
+msgstr "_Marquer les autres utilisations de ce où se trouve le curseur"
+
+#: src/plugins/lsp/ui/lsp-prefs.ui:71
+msgid "Describe what is under the _pointer"
+msgstr "Décrire ce qui est sous le _pointeur"
+
+#: src/plugins/lsp/ui/lsp-prefs.ui:87
+msgid "Send changes to the server _after"
+msgstr "Envoyer les modifications au serveur _après"
+
+#: src/plugins/lsp/ui/lsp-prefs.ui:110
+msgid "milliseconds of quiet"
+msgstr "millisecondes de silence"
+
+#: src/plugins/lsp/ui/lsp-prefs.ui:125
+msgid "_Log the protocol to standard error"
+msgstr "_Journaliser le protocole sur la sortie d'erreur standard"
+
+#: src/plugins/lsp/ui/lsp-prefs.ui:128
+msgid ""
+"Every message to and from every server. The MEDIT_LSP_DEBUG environment "
+"variable does the same."
+msgstr ""
+"Chaque message vers et depuis chaque serveur. La variable d'environnement "
+"MEDIT_LSP_DEBUG fait la même chose."
+
+#: src/plugins/lsp/ui/lsp-prefs.ui:142
+msgid "_Edit the Server List"
+msgstr "_Modifier la liste des serveurs"
+
+#: src/plugins/lsp/ui/lsp-prefs.ui:144
+msgid ""
+"Opens your copy of lsp.xml, creating it from the installed one if you have "
+"none."
+msgstr ""
+"Ouvre votre copie de lsp.xml, en la créant à partir de celle installée si "
+"vous n'en avez pas."
+
+#: src/plugins/lsp/ui/lsp-prefs.ui:154
+msgid "_Restart Servers"
+msgstr "_Redémarrer les serveurs"
+
+#: src/plugins/lsp/ui/lsp-prefs.ui:156
+msgid "Re-reads the configuration file and starts over with every server."
+msgstr "Relit le fichier de configuration et recommence avec chaque serveur."
+
+#: src/plugins/terminal/terminal-colors.cpp:26
+msgid "Default"
+msgstr "Par défaut"
+
+#: src/plugins/terminal/terminal-colors.cpp:28
+msgid "Black on White"
+msgstr "Noir sur blanc"
+
+#: src/plugins/terminal/terminal-colors.cpp:33
+msgid "Black on Light Yellow"
+msgstr "Noir sur jaune‑pastel"
+
+#: src/plugins/terminal/terminal-colors.cpp:38
+msgid "Marble"
+msgstr "Marbre"
+
+#: src/plugins/terminal/terminal-colors.cpp:43
+msgid "Green on Black"
+msgstr "Vert sur noir"
+
+#: src/plugins/terminal/terminal-colors.cpp:48
+msgid "Paper, Light"
+msgstr "Papier, clair"
+
+#: src/plugins/terminal/terminal-colors.cpp:53
+msgid "Paper"
+msgstr "Papier"
+
+#: src/plugins/terminal/terminal-colors.cpp:58
+msgid "Linux Colors"
+msgstr "Couleurs de Linux"
+
+#: src/plugins/terminal/terminal-colors.cpp:63
+msgid "VIM Colors"
+msgstr "Couleurs de VIM"
+
+#: src/plugins/terminal/terminal-colors.cpp:68
+msgid "White on Black"
+msgstr "Blanc sur noir"
+
+#. start_shell() would reset the terminal and wipe this out. Applying
+#. the preferences starts a shell again, which is what the message
+#. asks the user to do.
+#: src/plugins/terminal/terminal-plugin.cpp:238
+msgid ""
+"The shell keeps exiting immediately, not restarting it. Check the shell in "
+"the Terminal preferences."
+msgstr ""
+"Le shell s'arrête immédiatement à chaque fois ; il ne sera pas redémarré. "
+"Vérifiez le shell dans les préférences du terminal."
+
+#: src/plugins/terminal/terminal-plugin.cpp:272
+#: src/plugins/terminal/terminal-plugin.cpp:770
+#: src/plugins/terminal/terminal-plugin.cpp:821
+#: src/plugins/terminal/terminal-plugin.cpp:824
+#: src/plugins/terminal/terminal-plugin.cpp:825
+#: src/plugins/terminal/terminal-plugin.cpp:889
+#: src/plugins/terminal/terminal-prefs.cpp:133
+msgid "Terminal"
+msgstr "Terminal"
+
+#: src/plugins/terminal/terminal-plugin.cpp:570
+msgid "“cd” to current file directory"
+msgstr "« cd » vers le répertoire du fichier courant"
+
+#: src/plugins/terminal/terminal-plugin.cpp:577
+msgid "“pushd” to current file directory"
+msgstr "« pushd » vers le répertoire du fichier courant"
+
+#: src/plugins/terminal/terminal-plugin.cpp:826
+msgid "Show the terminal pane"
+msgstr "Afficher le panneau du terminal"
+
+#: src/plugins/terminal/terminal-plugin.cpp:839
+#: src/plugins/terminal/terminal-plugin.cpp:840
+msgid "Copy in Terminal"
+msgstr "Copier dans le terminal"
+
+#: src/plugins/terminal/terminal-plugin.cpp:841
+msgid "Copy the selection in the terminal pane"
+msgstr "Copier la sélection dans le panneau du terminal"
+
+#: src/plugins/terminal/terminal-plugin.cpp:848
+#: src/plugins/terminal/terminal-plugin.cpp:849
+msgid "Paste in Terminal"
+msgstr "Coller dans le terminal"
+
+#: src/plugins/terminal/terminal-plugin.cpp:850
+msgid "Paste the clipboard into the terminal pane"
+msgstr "Coller le presse-papiers dans le panneau du terminal"
+
+#: src/plugins/terminal/terminal-plugin.cpp:889
+msgid "Terminal pane"
+msgstr "Panneau du terminal"
+
+#: src/plugins/terminal/ui/terminal-prefs.ui:20
+msgid "S_hell"
+msgstr "S_hell"
+
+#: src/plugins/terminal/ui/terminal-prefs.ui:34
+msgid ""
+"Leave empty to use the login shell. Takes effect the next time the shell is "
+"started."
+msgstr ""
+"Laisser vide pour utiliser le shell de connexion. Prend effet au prochain "
+"démarrage du shell."
+
+#: src/plugins/terminal/ui/terminal-prefs.ui:45
+msgid "Color _scheme"
+msgstr "_Jeu de couleurs"
+
+#: src/plugins/terminal/ui/terminal-prefs.ui:68
+msgid "_Font"
+msgstr "_Police"
+
+#: src/plugins/terminal/ui/terminal-prefs.ui:93
+msgid "_Default"
+msgstr "Par _défaut"
+
+#: src/plugins/terminal/ui/terminal-prefs.ui:95
+msgid "Use the system monospace font"
+msgstr "Utiliser la police à chasse fixe du système"
+
 #. Output filter for shell commands. Translators: remove the part before and including |.
-#: ../src/plugins/usertools/filters.xml.h:2
+#: src/plugins/usertools/filters.xml.h:2
 msgid "Filter|Default"
 msgstr "Par défaut"
 
 #. Output filter for shell commands. Translators: remove the part before and including |.
-#: ../src/plugins/usertools/filters.xml.h:4
+#: src/plugins/usertools/filters.xml.h:4
 msgid "Filter|None"
 msgstr "Aucun"
 
 #. Output filter for shell commands. Translators: remove the part before and including |.
-#: ../src/plugins/usertools/filters.xml.h:6
+#: src/plugins/usertools/filters.xml.h:6
 msgid "Filter|Bison"
 msgstr "Bison"
 
 #. Output filter for shell commands. Translators: remove the part before and including |.
-#: ../src/plugins/usertools/filters.xml.h:8
+#: src/plugins/usertools/filters.xml.h:8
 msgid "Filter|Python"
 msgstr "Python"
 
 #. Output filter for shell commands. Translators: remove the part before and including |.
-#: ../src/plugins/usertools/filters.xml.h:10
+#: src/plugins/usertools/filters.xml.h:10
 msgid "Filter|LaTeX"
 msgstr "LaTeX"
 
 #. Output filter for shell commands. Translators: remove the part before and including |.
-#: ../src/plugins/usertools/filters.xml.h:12
+#: src/plugins/usertools/filters.xml.h:12
 msgid "Filter|Make"
 msgstr "Make"
 
-#: ../src/plugins/usertools/glade/mooedittools-exe.glade.h:2
+#: src/plugins/usertools/ui/mooedittools-exe.ui:59
 msgid "Output"
 msgstr "Sortie"
 
-#: ../src/plugins/usertools/glade/mooedittools-exe.glade.h:3
+#: src/plugins/usertools/ui/mooedittools-exe.ui:83
 msgid "Input"
 msgstr "Entrée"
 
-#: ../src/plugins/usertools/glade/moousertools.glade.h:1
+#: src/plugins/usertools/ui/moousertools.ui:45
 msgid "New item"
 msgstr "Nouvel élément"
 
-#: ../src/plugins/usertools/glade/moousertools.glade.h:2
+#: src/plugins/usertools/ui/moousertools.ui:63
 msgid "Delete item"
 msgstr "Effacer l’élément"
 
-#: ../src/plugins/usertools/glade/moousertools.glade.h:3
+#: src/plugins/usertools/ui/moousertools.ui:81
 msgid "Move item down"
 msgstr "Déplacer l’élément vers le bas"
 
-#: ../src/plugins/usertools/glade/moousertools.glade.h:4
+#: src/plugins/usertools/ui/moousertools.ui:99
 msgid "Move item up"
 msgstr "Déplacer l’élément vers le haut"
 
-#: ../src/plugins/usertools/glade/moousertools.glade.h:5
+#: src/plugins/usertools/ui/moousertools.ui:141
 msgid "Enabled"
 msgstr "Activé"
 
-#: ../src/plugins/usertools/glade/moousertools.glade.h:6
+#: src/plugins/usertools/ui/moousertools.ui:156
 msgid "_Files"
 msgstr "_Fichiers"
 
-#: ../src/plugins/usertools/glade/moousertools.glade.h:7
+#: src/plugins/usertools/ui/moousertools.ui:183
 msgid "_Requires"
 msgstr "Pré_requis"
 
-#: ../src/plugins/usertools/glade/moousertools.glade.h:8
+#: src/plugins/usertools/ui/moousertools.ui:210
 msgid "_Save"
 msgstr "_Enregistrer"
 
-#: ../src/plugins/usertools/glade/moousertools.glade.h:9
+#: src/plugins/usertools/ui/moousertools.ui:237
 msgid "_Type"
 msgstr "_Type"
 
 #. Label of a notebook tab on the User Tools preferences page
-#: ../src/plugins/usertools/glade/moousertools.glade.h:11
+#: src/plugins/usertools/ui/moousertools.ui:318
 msgctxt "user-tools-prefs"
 msgid "Tools menu"
 msgstr "Menu « Outils »"
 
 #. Label of a notebook tab on the User Tools preferences page
-#: ../src/plugins/usertools/glade/moousertools.glade.h:13
+#: src/plugins/usertools/ui/moousertools.ui:335
 msgctxt "user-tools-prefs"
 msgid "Context menu"
 msgstr "Menu contextuel"
 
 #. Translators: this is an action for output of a shell command, remove the part before and including |
-#: ../src/plugins/usertools/moocommand-exe.c:89
+#: src/plugins/usertools/moocommand-exe.cpp:67
 msgid "Output|None"
 msgstr "Aucune"
 
 #. Translators: this is an action for output of a shell command, remove the part before and including |
-#: ../src/plugins/usertools/moocommand-exe.c:91
+#: src/plugins/usertools/moocommand-exe.cpp:69
 msgid "Output|None, asynchronous"
 msgstr "Aucune, asynchrone"
 
 #. Translators: this is an action for output of a shell command, remove the part before and including |
-#: ../src/plugins/usertools/moocommand-exe.c:94
-msgid "Output|Console"
-msgstr "Terminal"
-
-#. Translators: this is an action for output of a shell command, remove the part before and including |
-#: ../src/plugins/usertools/moocommand-exe.c:97
+#: src/plugins/usertools/moocommand-exe.cpp:71
 msgid "Output|Output pane"
 msgstr "Panneau de sortie"
 
 #. Translators: this is an action for output of a shell command, remove the part before and including |
-#: ../src/plugins/usertools/moocommand-exe.c:99
+#: src/plugins/usertools/moocommand-exe.cpp:73
 msgid "Output|Insert into the document"
 msgstr "Insérée dans le document"
 
 #. Translators: this is an action for output of a shell command, remove the part before and including |
-#: ../src/plugins/usertools/moocommand-exe.c:101
+#: src/plugins/usertools/moocommand-exe.cpp:75
 msgid "Output|New document"
 msgstr "Dans un nouveau document"
 
-#: ../src/plugins/usertools/moocommand-exe.c:819
+#: src/plugins/usertools/moocommand-exe.cpp:778
 msgid "Shell command"
 msgstr "Script shell — Sh"
 
 #. Translators: this is a kind of input for a shell command, remove the part before and including |
-#: ../src/plugins/usertools/moocommand-exe.c:1063
+#: src/plugins/usertools/moocommand-exe.cpp:1019
 msgid "Input|None"
 msgstr "Aucune"
 
 #. Translators: this is a kind of input for a shell command, remove the part before and including |
-#: ../src/plugins/usertools/moocommand-exe.c:1065
+#: src/plugins/usertools/moocommand-exe.cpp:1021
 msgid "Input|Selected lines"
 msgstr "Lignes sélectionnées"
 
 #. Translators: this is a kind of input for a shell command, remove the part before and including |
-#: ../src/plugins/usertools/moocommand-exe.c:1067
+#: src/plugins/usertools/moocommand-exe.cpp:1023
 msgid "Input|Selection"
 msgstr "Sélection"
 
 #. Translators: this is a kind of input for a shell command, remove the part before and including |
-#: ../src/plugins/usertools/moocommand-exe.c:1069
+#: src/plugins/usertools/moocommand-exe.cpp:1025
 msgid "Input|Whole document"
 msgstr "Tout le document"
 
 #. Translators: this is a kind of input for a shell command, remove the part before and including |
-#: ../src/plugins/usertools/moocommand-exe.c:1071
+#: src/plugins/usertools/moocommand-exe.cpp:1027
 msgid "Input|Document copy"
 msgstr "Copie du document"
 
-#: ../src/plugins/usertools/moocommand-script.cpp:279
-msgid "Lua script"
-msgstr "Script Lua"
-
-#: ../src/plugins/usertools/moocommand-script.cpp:285
-msgid "Python script"
-msgstr "Script Python"
-
-#: ../src/plugins/usertools/moousertools.c:394
-#: ../src/plugins/usertools/moousertools-prefs.c:559
+#: src/plugins/usertools/moousertools.cpp:390
+#: src/plugins/usertools/moousertools-prefs.cpp:582
 msgid "Tools"
 msgstr "Outils"
 
-#: ../src/plugins/usertools/moousertools.c:1376
+#: src/plugins/usertools/moousertools.cpp:1405
 msgid "User Tools"
 msgstr "Outils de l’utilisateur(rice)"
 
-#: ../src/plugins/usertools/moousertools.c:1377
+#: src/plugins/usertools/moousertools.cpp:1406
 msgid "Configurable tools"
 msgstr "Outils configurables"
 
-#: ../src/plugins/usertools/moousertools-prefs.c:109
+#: src/plugins/usertools/moousertools-prefs.cpp:108
 msgid "New Command"
 msgstr "Nouvelle commande"
 
 #. 'Requires' combo box entry on Tools prefs page
-#: ../src/plugins/usertools/moousertools-prefs.c:162
+#: src/plugins/usertools/moousertools-prefs.cpp:161
 msgctxt "Requires-combo"
 msgid "Nothing"
 msgstr "Aucun"
 
 #. 'Requires' combo box entry on Tools prefs page
-#: ../src/plugins/usertools/moousertools-prefs.c:164
+#: src/plugins/usertools/moousertools-prefs.cpp:163
 msgctxt "Requires-combo"
 msgid "Document"
 msgstr "Un document"
 
 #. 'Requires' combo box entry on Tools prefs page
-#: ../src/plugins/usertools/moousertools-prefs.c:166
+#: src/plugins/usertools/moousertools-prefs.cpp:165
 msgctxt "Requires-combo"
 msgid "File on disk"
 msgstr "Le fichier est sur le disque"
 
 #. 'Save' combo box entry on Tools prefs page
-#: ../src/plugins/usertools/moousertools-prefs.c:177
+#: src/plugins/usertools/moousertools-prefs.cpp:177
 msgctxt "Save-combo"
 msgid "Nothing"
 msgstr "Rien"
 
 #. 'Save' combo box entry on Tools prefs page
-#: ../src/plugins/usertools/moousertools-prefs.c:179
+#: src/plugins/usertools/moousertools-prefs.cpp:179
 msgctxt "Save-combo"
 msgid "Current document"
 msgstr "Le document en cours"
 
 #. 'Save' combo box entry on Tools prefs page
-#: ../src/plugins/usertools/moousertools-prefs.c:181
+#: src/plugins/usertools/moousertools-prefs.cpp:181
 msgctxt "Save-combo"
 msgid "All documents"
 msgstr "Tous les documents"
+
+#~ msgid "translator-credits"
+#~ msgstr ""
+#~ "Collilieux <mccnews@free.fr>\\nYannick Duchêne <yannick_duchene@yahoo.fr>"
+
+#~ msgid "Lua"
+#~ msgstr "Lua"
+
+#~ msgid "Lua support"
+#~ msgstr "Prise en charge de Lua"
+
+#~ msgid "Python Output"
+#~ msgstr "Sortie python"
+
+#~ msgid "Python Console"
+#~ msgstr "Console Python"
+
+#~ msgid "Run File"
+#~ msgstr "Exécuter le fichier"
+
+#~ msgid "Shortcut|None"
+#~ msgstr "Aucun"
+
+#~ msgid "Shortcut|Default"
+#~ msgstr "Par défaut"
+
+#~ msgid "Shortcut|Custom"
+#~ msgstr "Personnalisé"
+
+#~ msgid "Help files not found"
+#~ msgstr "Fichiers d’aide non trouvés"
+
+#, c-format
+#~ msgid "File '%s' is missing in the directory '%s'"
+#~ msgstr "Le fichier « %s » est manquant dans le répertoire « %s »"
+
+#~ msgid "Could not find help file"
+#~ msgstr "Le fichier d’aide n’a pas put être trouvé"
+
+#, c-format
+#~ msgid "Could not rename file %s to %s: %s"
+#~ msgstr "Le fichier « %s » n’a pas put être renommé en « %s » : %s"
+
+#~ msgid "Output|Console"
+#~ msgstr "Terminal"
+
+#~ msgid "Lua script"
+#~ msgstr "Script Lua"
+
+#~ msgid "Python script"
+#~ msgstr "Script Python"
 
 #~ msgid "Could not save file"
 #~ msgstr "Impossible d’enregistrer le fichier"
@@ -2495,7 +3077,6 @@ msgstr "Tous les documents"
 
 #~ msgid "Python support"
 #~ msgstr "Support python"
-
 
 #~ msgid "Terminal plugin"
 #~ msgstr "Plugin Terminal"
@@ -2748,571 +3329,5 @@ msgstr "Tous les documents"
 #~ msgid "_Build"
 #~ msgstr "_Compiler"
 
-#~ msgid "Custom"
-#~ msgstr "Personnalisé"
-
-#~ msgid "None"
-#~ msgstr "Aucun"
-
 #~ msgid "Search:"
 #~ msgstr "Rechercher :"
-
-#: ../src/plugins/lsp/lsp-edits.cpp:332
-#: ../src/plugins/lsp/lsp-plugin.cpp:1284
-#: ../src/plugins/lsp/lsp-plugin.cpp:1329
-msgid "Rename"
-msgstr "Renommer"
-
-#: ../src/plugins/lsp/lsp-edits.cpp:336
-msgid "_Rename"
-msgstr "_Renommer"
-
-#: ../src/plugins/lsp/lsp-edits.cpp:343
-msgid "New name for '%s'"
-msgstr "Nouveau nom pour « %s »"
-
-#: ../src/plugins/lsp/lsp-edits.cpp:344
-msgid "New name"
-msgstr "Nouveau nom"
-
-#: ../src/plugins/lsp/lsp-edits.cpp:432
-#: ../src/plugins/lsp/lsp-edits.cpp:442
-msgid "Rename failed"
-msgstr "Échec du renommage"
-
-#: ../src/plugins/lsp/lsp-edits.cpp:443
-msgid "The server had nothing to change."
-msgstr "Le serveur n'avait rien à changer."
-
-#: ../src/plugins/lsp/lsp-edits.cpp:546
-msgid "Formatting failed"
-msgstr "Échec du formatage"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:113
-msgid "LSP"
-msgstr "LSP"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:113
-msgid "Language server protocol client"
-msgstr "Client du protocole de serveur de langage"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1153
-#: ../src/plugins/lsp/lsp-plugin.cpp:1252
-#: ../src/plugins/lsp/lsp-plugin.cpp:1253
-msgid "Diagnostics"
-msgstr "Diagnostics"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1167
-#: ../src/plugins/lsp/lsp-plugin.cpp:1385
-#: ../src/plugins/lsp/lsp-plugin.cpp:1386
-msgid "References"
-msgstr "Références"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1175
-#: ../src/plugins/lsp/lsp-plugin.cpp:1393
-#: ../src/plugins/lsp/lsp-plugin.cpp:1394
-msgid "Symbols"
-msgstr "Symboles"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1254
-msgid "Show the diagnostics pane"
-msgstr "Afficher le panneau des diagnostics"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1260
-#: ../src/plugins/lsp/lsp-plugin.cpp:1315
-msgid "Go to Definition"
-msgstr "Aller à la définition"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1261
-#: ../src/plugins/lsp/lsp-plugin.cpp:1316
-msgid "Go to _Definition"
-msgstr "Aller à la _définition"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1262
-#: ../src/plugins/lsp/lsp-plugin.cpp:1317
-msgid "Go to the definition of what is under the cursor"
-msgstr "Aller à la définition de ce qui est sous le curseur"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1268
-#: ../src/plugins/lsp/lsp-plugin.cpp:1322
-msgid "Find References"
-msgstr "Chercher les références"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1269
-#: ../src/plugins/lsp/lsp-plugin.cpp:1323
-msgid "Find _References"
-msgstr "Chercher les _références"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1270
-#: ../src/plugins/lsp/lsp-plugin.cpp:1324
-msgid "List every use of what is under the cursor"
-msgstr "Lister toutes les utilisations de ce qui est sous le curseur"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1277
-msgid "Format Document"
-msgstr "Formater le document"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1278
-msgid "_Format Document"
-msgstr "_Formater le document"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1279
-msgid "Let the language server lay the document out"
-msgstr "Laisser le serveur de langage mettre le document en forme"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1285
-#: ../src/plugins/lsp/lsp-plugin.cpp:1330
-msgid "_Rename..."
-msgstr "_Renommer…"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1286
-#: ../src/plugins/lsp/lsp-plugin.cpp:1331
-msgid "Rename what is under the cursor everywhere"
-msgstr "Renommer partout ce qui est sous le curseur"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1322
-#: ../src/plugins/lsp/lsp-plugin.cpp:1374
-msgid "Code Actions"
-msgstr "Actions de code"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1323
-#: ../src/plugins/lsp/lsp-plugin.cpp:1375
-msgid "Code _Actions..."
-msgstr "_Actions de code…"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1324
-#: ../src/plugins/lsp/lsp-plugin.cpp:1376
-msgid "Offer what the language server can do here"
-msgstr "Proposer ce que le serveur de langage peut faire ici"
-
-#: ../src/plugins/lsp/lsp-actions.cpp:289
-msgid "The command failed"
-msgstr "La commande a échoué"
-
-#: ../src/plugins/lsp/lsp-actions.cpp:521
-msgid "Code actions failed"
-msgstr "Échec des actions de code"
-
-#: ../src/plugins/lsp/lsp-actions.cpp:536
-msgid "No code actions here"
-msgstr "Aucune action de code ici"
-
-#: ../src/plugins/lsp/lsp-actions.cpp:537
-msgid "The server has nothing to offer at this place."
-msgstr "Le serveur n'a rien à proposer à cet endroit."
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1292
-msgid "Go to Type Definition"
-msgstr "Aller à la définition du type"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1293
-msgid "Go to _Type Definition"
-msgstr "Aller à la définition du _type"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1294
-msgid "Go to the definition of the type of what is under the cursor"
-msgstr "Aller à la définition du type de ce qui est sous le curseur"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1299
-msgid "Go to Implementation"
-msgstr "Aller à l'implémentation"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1300
-msgid "Go to _Implementation"
-msgstr "Aller à l'_implémentation"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1301
-msgid "Go to the implementation of what is under the cursor"
-msgstr "Aller à l'implémentation de ce qui est sous le curseur"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1353
-msgid "LSP Servers"
-msgstr "Serveurs LSP"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1354
-msgid "LSP _Servers..."
-msgstr "_Serveurs LSP…"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1355
-msgid "Edit the list of language servers"
-msgstr "Modifier la liste des serveurs de langage"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1361
-#: ../src/plugins/lsp/lsp-plugin.cpp:1362
-msgid "Restart Language Servers"
-msgstr "Redémarrer les serveurs de langage"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1363
-msgid "Re-read the configuration and start every server again"
-msgstr "Relire la configuration et redémarrer chaque serveur"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1369
-msgid "Complete Word"
-msgstr "Compléter le mot"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1370
-msgid "_Complete Word"
-msgstr "_Compléter le mot"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1371
-msgid "Ask the language server what could go here"
-msgstr "Demander au serveur de langage ce qui pourrait aller ici"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1377
-msgid "Parameter Hints"
-msgstr "Aide sur les paramètres"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1378
-msgid "_Parameter Hints"
-msgstr "Aide sur les _paramètres"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1379
-msgid "Show what the call being typed takes"
-msgstr "Afficher ce que prend l'appel en cours de saisie"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1387
-msgid "Show the references pane"
-msgstr "Afficher le panneau des références"
-
-#: ../src/plugins/lsp/lsp-plugin.cpp:1395
-msgid "Show the symbol tree"
-msgstr "Afficher l'arbre des symboles"
-
-#: ../src/plugins/lsp/lsp-server.cpp:744
-msgid "%s failed to start: %s"
-msgstr "%s n'a pas pu démarrer : %s"
-
-#: ../src/plugins/lsp/lsp-server.cpp:745
-#: ../src/plugins/lsp/lsp-server.cpp:1073
-msgid "unknown error"
-msgstr "erreur inconnue"
-
-#: ../src/plugins/lsp/lsp-server.cpp:751
-msgid "%s answered the initialize request with no capabilities"
-msgstr "%s a répondu à la requête d'initialisation sans aucune capacité"
-
-#: ../src/plugins/lsp/lsp-server.cpp:773
-msgid "%s did not answer the initialize request in %d seconds"
-msgstr "%s n'a pas répondu à la requête d'initialisation en %d secondes"
-
-#: ../src/plugins/lsp/lsp-server.cpp:1030
-msgid ""
-"%s exited immediately %d times in a row; check the command in the LSP "
-"configuration file"
-msgstr ""
-"%s s'est arrêté immédiatement %d fois de suite ; vérifiez la commande "
-"dans le fichier de configuration LSP"
-
-#: ../src/plugins/lsp/lsp-server.cpp:1072
-msgid "could not run %s: %s"
-msgstr "impossible d'exécuter %s : %s"
-
-#: ../src/plugins/lsp/lsp-prefs.cpp:43
-msgid "Could not create the LSP configuration file"
-msgstr "Impossible de créer le fichier de configuration LSP"
-
-#: ../src/plugins/lsp/lsp-prefs.cpp:86
-msgid "Language Servers"
-msgstr "Serveurs de langage"
-
-#: ../src/plugins/lsp/lsp-references.cpp:335
-msgid "The server refused the question"
-msgstr "Le serveur a refusé la question"
-
-#: ../src/plugins/lsp/lsp-references.cpp:347
-msgid "No references found"
-msgstr "Aucune référence trouvée"
-
-#: ../src/plugins/lsp/ui/lsp-prefs.ui:22
-msgid "Underline problems and list them in the _Diagnostics pane"
-msgstr "Souligner les problèmes et les lister dans le panneau _Diagnostics"
-
-#: ../src/plugins/lsp/ui/lsp-prefs.ui:34
-msgid "_Complete words"
-msgstr "_Compléter les mots"
-
-#: ../src/plugins/lsp/ui/lsp-prefs.ui:46
-msgid "Show the _parameters of a call"
-msgstr "Afficher les _paramètres d'un appel"
-
-#: ../src/plugins/lsp/ui/lsp-prefs.ui:49
-msgid "While the call is being typed, and on Ctrl+Shift+Space."
-msgstr "Pendant la saisie de l'appel, et avec Ctrl+Maj+Espace."
-
-#: ../src/plugins/lsp/ui/lsp-prefs.ui:59
-msgid "_Mark the other uses of what the cursor is in"
-msgstr "_Marquer les autres utilisations de ce où se trouve le curseur"
-
-#: ../src/plugins/lsp/ui/lsp-prefs.ui:71
-msgid "Describe what is under the _pointer"
-msgstr "Décrire ce qui est sous le _pointeur"
-
-#: ../src/plugins/lsp/ui/lsp-prefs.ui:87
-msgid "Send changes to the server _after"
-msgstr "Envoyer les modifications au serveur _après"
-
-#: ../src/plugins/lsp/ui/lsp-prefs.ui:110
-msgid "milliseconds of quiet"
-msgstr "millisecondes de silence"
-
-#: ../src/plugins/lsp/ui/lsp-prefs.ui:125
-msgid "_Log the protocol to standard error"
-msgstr "_Journaliser le protocole sur la sortie d'erreur standard"
-
-#: ../src/plugins/lsp/ui/lsp-prefs.ui:128
-msgid ""
-"Every message to and from every server. The MEDIT_LSP_DEBUG environment "
-"variable does the same."
-msgstr ""
-"Chaque message vers et depuis chaque serveur. La variable d'environnement "
-"MEDIT_LSP_DEBUG fait la même chose."
-
-#: ../src/plugins/lsp/ui/lsp-prefs.ui:142
-msgid "_Edit the Server List"
-msgstr "_Modifier la liste des serveurs"
-
-#: ../src/plugins/lsp/ui/lsp-prefs.ui:144
-msgid ""
-"Opens your copy of lsp.xml, creating it from the installed one if you "
-"have none."
-msgstr ""
-"Ouvre votre copie de lsp.xml, en la créant à partir de celle installée si "
-"vous n'en avez pas."
-
-#: ../src/plugins/lsp/ui/lsp-prefs.ui:154
-msgid "_Restart Servers"
-msgstr "_Redémarrer les serveurs"
-
-#: ../src/plugins/lsp/ui/lsp-prefs.ui:156
-msgid "Re-reads the configuration file and starts over with every server."
-msgstr "Relit le fichier de configuration et recommence avec chaque serveur."
-
-#: ../src/plugins/terminal/terminal-plugin.cpp:251
-msgid ""
-"The shell keeps exiting immediately, not restarting it. Check the shell "
-"in the Terminal preferences."
-msgstr ""
-"Le shell s'arrête immédiatement à chaque fois ; il ne sera pas redémarré. "
-"Vérifiez le shell dans les préférences du terminal."
-
-#: ../src/plugins/terminal/terminal-plugin.cpp:583
-msgid "“cd” to current file directory"
-msgstr "« cd » vers le répertoire du fichier courant"
-
-#: ../src/plugins/terminal/terminal-plugin.cpp:590
-msgid "“pushd” to current file directory"
-msgstr "« pushd » vers le répertoire du fichier courant"
-
-#: ../src/plugins/terminal/terminal-plugin.cpp:830
-msgid "Show the terminal pane"
-msgstr "Afficher le panneau du terminal"
-
-#: ../src/plugins/terminal/terminal-plugin.cpp:843
-#: ../src/plugins/terminal/terminal-plugin.cpp:844
-msgid "Copy in Terminal"
-msgstr "Copier dans le terminal"
-
-#: ../src/plugins/terminal/terminal-plugin.cpp:845
-msgid "Copy the selection in the terminal pane"
-msgstr "Copier la sélection dans le panneau du terminal"
-
-#: ../src/plugins/terminal/terminal-plugin.cpp:852
-#: ../src/plugins/terminal/terminal-plugin.cpp:853
-msgid "Paste in Terminal"
-msgstr "Coller dans le terminal"
-
-#: ../src/plugins/terminal/terminal-plugin.cpp:854
-msgid "Paste the clipboard into the terminal pane"
-msgstr "Coller le presse-papiers dans le panneau du terminal"
-
-#: ../src/plugins/terminal/terminal-plugin.cpp:893
-msgid "Terminal pane"
-msgstr "Panneau du terminal"
-
-#: ../src/plugins/terminal/ui/terminal-prefs.ui:20
-msgid "S_hell"
-msgstr "S_hell"
-
-#: ../src/plugins/terminal/ui/terminal-prefs.ui:34
-msgid ""
-"Leave empty to use the login shell. Takes effect the next time the shell "
-"is started."
-msgstr ""
-"Laisser vide pour utiliser le shell de connexion. Prend effet au prochain "
-"démarrage du shell."
-
-#: ../src/plugins/terminal/ui/terminal-prefs.ui:45
-msgid "Color _scheme"
-msgstr "_Jeu de couleurs"
-
-#: ../src/plugins/terminal/ui/terminal-prefs.ui:68
-msgid "_Font"
-msgstr "_Police"
-
-#: ../src/plugins/terminal/ui/terminal-prefs.ui:93
-msgid "_Default"
-msgstr "Par _défaut"
-
-#: ../src/plugins/terminal/ui/terminal-prefs.ui:95
-msgid "Use the system monospace font"
-msgstr "Utiliser la police à chasse fixe du système"
-
-#: ../src/plugins/lsp/lsp-diagnostics.cpp:82
-msgctxt "diagnostic severity"
-msgid "warning"
-msgstr "avertissement"
-
-#: ../src/plugins/lsp/lsp-diagnostics.cpp:84
-msgctxt "diagnostic severity"
-msgid "information"
-msgstr "information"
-
-#: ../src/plugins/lsp/lsp-diagnostics.cpp:86
-msgctxt "diagnostic severity"
-msgid "hint"
-msgstr "indication"
-
-#: ../src/plugins/lsp/lsp-diagnostics.cpp:89
-msgctxt "diagnostic severity"
-msgid "error"
-msgstr "erreur"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:33
-msgctxt "symbol kind"
-msgid "file"
-msgstr "fichier"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:34
-msgctxt "symbol kind"
-msgid "module"
-msgstr "module"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:35
-msgctxt "symbol kind"
-msgid "namespace"
-msgstr "espace de noms"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:36
-msgctxt "symbol kind"
-msgid "package"
-msgstr "paquet"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:37
-msgctxt "symbol kind"
-msgid "class"
-msgstr "classe"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:38
-msgctxt "symbol kind"
-msgid "method"
-msgstr "méthode"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:39
-msgctxt "symbol kind"
-msgid "property"
-msgstr "propriété"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:40
-msgctxt "symbol kind"
-msgid "field"
-msgstr "champ"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:41
-msgctxt "symbol kind"
-msgid "constructor"
-msgstr "constructeur"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:42
-msgctxt "symbol kind"
-msgid "enum"
-msgstr "énumération"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:43
-msgctxt "symbol kind"
-msgid "interface"
-msgstr "interface"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:44
-msgctxt "symbol kind"
-msgid "function"
-msgstr "fonction"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:45
-msgctxt "symbol kind"
-msgid "variable"
-msgstr "variable"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:46
-msgctxt "symbol kind"
-msgid "constant"
-msgstr "constante"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:47
-msgctxt "symbol kind"
-msgid "string"
-msgstr "chaîne"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:48
-msgctxt "symbol kind"
-msgid "number"
-msgstr "nombre"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:49
-msgctxt "symbol kind"
-msgid "boolean"
-msgstr "booléen"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:50
-msgctxt "symbol kind"
-msgid "array"
-msgstr "tableau"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:51
-msgctxt "symbol kind"
-msgid "object"
-msgstr "objet"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:52
-msgctxt "symbol kind"
-msgid "key"
-msgstr "clé"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:53
-msgctxt "symbol kind"
-msgid "null"
-msgstr "nul"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:54
-msgctxt "symbol kind"
-msgid "enum member"
-msgstr "valeur d'énumération"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:55
-msgctxt "symbol kind"
-msgid "struct"
-msgstr "structure"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:56
-msgctxt "symbol kind"
-msgid "event"
-msgstr "événement"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:57
-msgctxt "symbol kind"
-msgid "operator"
-msgstr "opérateur"
-
-#: ../src/plugins/lsp/lsp-symbols.cpp:58
-msgctxt "symbol kind"
-msgid "type parameter"
-msgstr "paramètre de type"
-
-#: ../src/mooutils/moofontsel.c:503
-msgid "Show only fixed width fonts"
-msgstr "Ne montrer que les polices à chasse fixe"
-
-#. Translators: the heading this window's commands are listed under in
-#. Configure Shortcuts, beside one per plugin.
-#: ../src/mooedit/mooeditwindow.cpp:436
-msgid "Editor"
-msgstr "Éditeur"

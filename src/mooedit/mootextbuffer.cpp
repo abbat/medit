@@ -2035,3 +2035,247 @@ moo_text_buffer_toggle_folds (MooTextBuffer *buffer)
     if (_moo_fold_tree_toggle (buffer->priv->fold_tree))
         g_signal_emit (buffer, signals[FOLD_TOGGLED], 0, NULL);
 }
+
+
+/*
+ * The line operations of the Edit menu. They live on the buffer rather than on
+ * the view because none of them needs a widget: what they touch is the text
+ * and the two selection marks, which is also what a test can reach without a
+ * display.
+ */
+
+static void
+get_selected_lines (GtkTextBuffer *buffer,
+                    GtkTextIter   *start,
+                    GtkTextIter   *end,
+                    gboolean      *has_selection)
+{
+    *has_selection = gtk_text_buffer_get_selection_bounds (buffer, start, end);
+
+    gtk_text_iter_set_line_offset (start, 0);
+
+    /* A selection stopping at the start of a line does not include that line. */
+    if (gtk_text_iter_starts_line (end) &&
+        gtk_text_iter_get_line (end) > gtk_text_iter_get_line (start))
+        gtk_text_iter_backward_char (end);
+    else if (!gtk_text_iter_ends_line (end))
+        gtk_text_iter_forward_to_line_end (end);
+}
+
+
+static void
+select_lines (GtkTextBuffer *buffer,
+              int            first,
+              int            last,
+              gboolean       select,
+              int            offset)
+{
+    GtkTextIter start, end;
+
+    gtk_text_buffer_get_iter_at_line (buffer, &start, first);
+
+    if (select)
+    {
+        gtk_text_buffer_get_iter_at_line (buffer, &end, last);
+
+        if (!gtk_text_iter_ends_line (&end))
+            gtk_text_iter_forward_to_line_end (&end);
+
+        gtk_text_buffer_select_range (buffer, &start, &end);
+    }
+    else
+    {
+        /* Walked rather than set: the line moved to may be shorter. */
+        while (offset-- > 0 && !gtk_text_iter_ends_line (&start))
+            gtk_text_iter_forward_char (&start);
+
+        gtk_text_buffer_place_cursor (buffer, &start);
+    }
+}
+
+
+void
+_moo_text_buffer_duplicate_line (MooTextBuffer *buffer)
+{
+    GtkTextBuffer *tb;
+    GtkTextIter start, end;
+    char *text;
+
+    g_return_if_fail (MOO_IS_TEXT_BUFFER (buffer));
+
+    tb = GTK_TEXT_BUFFER (buffer);
+
+    if (gtk_text_buffer_get_selection_bounds (tb, &start, &end))
+    {
+        text = gtk_text_buffer_get_text (tb, &start, &end, TRUE);
+
+        gtk_text_buffer_begin_user_action (tb);
+        gtk_text_buffer_insert (tb, &end, text, -1);
+        gtk_text_buffer_end_user_action (tb);
+    }
+    else
+    {
+        gtk_text_buffer_get_iter_at_mark (tb, &start, gtk_text_buffer_get_insert (tb));
+        end = start;
+        gtk_text_iter_set_line_offset (&start, 0);
+
+        if (!gtk_text_iter_ends_line (&end))
+            gtk_text_iter_forward_to_line_end (&end);
+
+        text = gtk_text_buffer_get_text (tb, &start, &end, TRUE);
+
+        /* The copy goes below, carrying the newline the last line of a buffer
+           does not have. */
+        gtk_text_buffer_begin_user_action (tb);
+        gtk_text_buffer_insert (tb, &end, "\n", -1);
+        gtk_text_buffer_insert (tb, &end, text, -1);
+        gtk_text_buffer_end_user_action (tb);
+    }
+
+    g_free (text);
+}
+
+
+void
+_moo_text_buffer_move_lines (MooTextBuffer *buffer,
+                             int            delta)
+{
+    GtkTextBuffer *tb;
+    GtkTextIter start, end;
+    gboolean has_selection;
+    int first, last, offset, i, n;
+    char **lines;
+    char *moved;
+    char *text;
+
+    g_return_if_fail (MOO_IS_TEXT_BUFFER (buffer));
+    g_return_if_fail (delta == 1 || delta == -1);
+
+    tb = GTK_TEXT_BUFFER (buffer);
+
+    gtk_text_buffer_get_iter_at_mark (tb, &start, gtk_text_buffer_get_insert (tb));
+    offset = gtk_text_iter_get_line_offset (&start);
+
+    get_selected_lines (tb, &start, &end, &has_selection);
+    first = gtk_text_iter_get_line (&start);
+    last = gtk_text_iter_get_line (&end);
+
+    if (first + delta < 0 || last + delta > gtk_text_buffer_get_line_count (tb) - 1)
+        return;
+
+    /* The block and the line it changes places with, as whole lines and
+       without a trailing newline, so that the last line of the buffer is not a
+       case of its own. */
+    gtk_text_buffer_get_iter_at_line (tb, &start, delta < 0 ? first - 1 : first);
+    gtk_text_buffer_get_iter_at_line (tb, &end, delta < 0 ? last : last + 1);
+
+    if (!gtk_text_iter_ends_line (&end))
+        gtk_text_iter_forward_to_line_end (&end);
+
+    text = gtk_text_buffer_get_text (tb, &start, &end, TRUE);
+    lines = g_strsplit (text, "\n", -1);
+    g_free (text);
+    n = (int) g_strv_length (lines);
+
+    /* Rotating that block by one line is the move: going up the neighbour is
+       its first line, going down its last. */
+    if (delta < 0)
+    {
+        moved = lines[0];
+        for (i = 0; i + 1 < n; ++i)
+            lines[i] = lines[i + 1];
+        lines[n - 1] = moved;
+    }
+    else
+    {
+        moved = lines[n - 1];
+        for (i = n - 1; i > 0; --i)
+            lines[i] = lines[i - 1];
+        lines[0] = moved;
+    }
+
+    text = g_strjoinv ("\n", lines);
+    g_strfreev (lines);
+
+    gtk_text_buffer_begin_user_action (tb);
+    gtk_text_buffer_delete (tb, &start, &end);
+    gtk_text_buffer_insert (tb, &start, text, -1);
+    gtk_text_buffer_end_user_action (tb);
+    g_free (text);
+
+    select_lines (tb, first + delta, last + delta, has_selection, offset);
+}
+
+
+static int
+cmp_lines (const void *a,
+           const void *b)
+{
+    return strcmp (*(const char* const*) a, *(const char* const*) b);
+}
+
+
+void
+_moo_text_buffer_sort_lines (MooTextBuffer *buffer)
+{
+    GtkTextBuffer *tb;
+    GtkTextIter start, end;
+    gboolean has_selection;
+    int first, last;
+    char **lines;
+    char *text;
+
+    g_return_if_fail (MOO_IS_TEXT_BUFFER (buffer));
+
+    tb = GTK_TEXT_BUFFER (buffer);
+
+    get_selected_lines (tb, &start, &end, &has_selection);
+
+    /* One line is sorted already. */
+    if (!has_selection)
+        return;
+
+    first = gtk_text_iter_get_line (&start);
+    last = gtk_text_iter_get_line (&end);
+
+    text = gtk_text_buffer_get_text (tb, &start, &end, TRUE);
+    lines = g_strsplit (text, "\n", -1);
+    g_free (text);
+
+    qsort (lines, g_strv_length (lines), sizeof (char*), cmp_lines);
+
+    text = g_strjoinv ("\n", lines);
+    g_strfreev (lines);
+
+    gtk_text_buffer_begin_user_action (tb);
+    gtk_text_buffer_delete (tb, &start, &end);
+    gtk_text_buffer_insert (tb, &start, text, -1);
+    gtk_text_buffer_end_user_action (tb);
+    g_free (text);
+
+    select_lines (tb, first, last, TRUE, 0);
+}
+
+
+void
+_moo_text_buffer_goto_matching_bracket (MooTextBuffer *buffer)
+{
+    GtkTextBuffer *tb;
+    GtkTextIter iter;
+
+    g_return_if_fail (MOO_IS_TEXT_BUFFER (buffer));
+
+    tb = GTK_TEXT_BUFFER (buffer);
+    gtk_text_buffer_get_iter_at_mark (tb, &iter, gtk_text_buffer_get_insert (tb));
+
+    /* The same bracket the highlighting picks: the one on either side of the
+       cursor. A mismatched pair goes nowhere, since where it went would be
+       wrong. */
+    if (!moo_text_iter_at_bracket (&iter))
+        return;
+
+    if (moo_text_iter_find_matching_bracket (&iter, -1) != MOO_BRACKET_MATCH_CORRECT)
+        return;
+
+    gtk_text_buffer_place_cursor (tb, &iter);
+}
