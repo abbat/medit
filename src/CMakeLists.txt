@@ -201,8 +201,13 @@ install(TARGETS medit RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 # Application data
 # ---------------------------------------------------------------------------
 
+# menu.xml and context.xml are the tools the Tools menu and the document's
+# context menu offer out of the box; moousertools.cpp reads all three by name
+# from the data directories, so all three have to be installed.
 install(FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/plugins/usertools/filters.xml"
+    "${CMAKE_CURRENT_SOURCE_DIR}/plugins/usertools/menu.xml"
+    "${CMAKE_CURRENT_SOURCE_DIR}/plugins/usertools/context.xml"
     DESTINATION "${MOO_DATA_DIR}")
 
 if(MOO_BUILD_LSP)
