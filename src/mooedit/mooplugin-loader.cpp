@@ -233,93 +233,84 @@ static ModuleInfo *
 parse_ini_file (const char *dir,
                 const char *ini_file)
 {
-    GKeyFile *key_file;
-    GError *error = NULL;
-    char *ini_file_path;
-    char *file = NULL, *loader = NULL, *id = NULL, *version = NULL;
-    MooPluginInfo *info = NULL;
-    MooPluginParams *params = NULL;
-    ModuleInfo *module_info = NULL;
-
-    ini_file_path = g_build_filename (dir, ini_file, nullptr);
-    key_file = g_key_file_new ();
+    g_autoptr(GError) error = NULL;
+    g_autofree char *ini_file_path = g_build_filename (dir, ini_file, nullptr);
+    g_autoptr(GKeyFile) key_file = g_key_file_new ();
 
     if (!g_key_file_load_from_file (key_file, ini_file_path, G_KEY_FILE_NONE, &error))
     {
         g_warning ("error parsing plugin ini file '%s': %s", ini_file_path, error->message);
-        goto out;
+        return NULL;
     }
 
     if (!g_key_file_has_group (key_file, GROUP_MODULE))
     {
         g_warning ("plugin ini file '%s' does not have '" GROUP_MODULE "' group", ini_file_path);
-        goto out;
+        return NULL;
     }
 
-    if (!(version = g_key_file_get_string (key_file, GROUP_MODULE, KEY_VERSION, &error)))
+    g_autofree char *version = g_key_file_get_string (key_file, GROUP_MODULE, KEY_VERSION, &error);
+
+    if (!version)
     {
         g_warning ("plugin ini file '%s' does not specify version of module system", ini_file_path);
-        goto out;
+        return NULL;
     }
 
     if (!check_version (version, ini_file_path))
-        goto out;
+        return NULL;
 
-    if (!(loader = g_key_file_get_string (key_file, GROUP_MODULE, KEY_LOADER, &error)))
+    g_autofree char *loader = g_key_file_get_string (key_file, GROUP_MODULE, KEY_LOADER, &error);
+
+    if (!loader)
     {
         g_warning ("plugin ini file '%s' does not specify module type", ini_file_path);
-        goto out;
+        return NULL;
     }
 
-    if (!(file = g_key_file_get_string (key_file, GROUP_MODULE, KEY_FILE, &error)))
+    g_autofree char *file = g_key_file_get_string (key_file, GROUP_MODULE, KEY_FILE, &error);
+
+    if (!file)
     {
         g_warning ("plugin ini file '%s' does not specify module file", ini_file_path);
-        goto out;
+        return NULL;
     }
 
     if (!g_path_is_absolute (file))
     {
-        char *tmp = file;
-        file = g_build_filename (dir, file, nullptr);
-        g_free (tmp);
+        g_autofree char *relative = g_steal_pointer (&file);
+        file = g_build_filename (dir, relative, nullptr);
     }
+
+    g_autofree char *id = NULL;
+    MooPluginInfo *info = NULL;
+    MooPluginParams *params = NULL;
 
     if (g_key_file_has_group (key_file, GROUP_PLUGIN))
     {
-        if (!(id = g_key_file_get_string (key_file, GROUP_PLUGIN, KEY_ID, NULL)))
+        id = g_key_file_get_string (key_file, GROUP_PLUGIN, KEY_ID, NULL);
+
+        if (!id)
         {
             g_warning ("plugin ini file '%s' does not specify plugin id", ini_file_path);
-            goto out;
+            return NULL;
         }
 
         if (!parse_plugin_info (key_file, id, &info, &params))
-            goto out;
+        {
+            moo_plugin_info_free (info);
+            moo_plugin_params_free (params);
+            return NULL;
+        }
     }
 
-    module_info = g_new0 (ModuleInfo, 1);
-    module_info->loader = loader;
+    ModuleInfo *module_info = g_new0 (ModuleInfo, 1);
+    module_info->loader = g_steal_pointer (&loader);
     module_info->file = g_build_path (dir, file, nullptr);
-    module_info->plugin_id = id;
+    module_info->plugin_id = g_steal_pointer (&id);
     module_info->plugin_info = info;
     module_info->plugin_params = params;
-    module_info->ini_file = ini_file_path;
-    ini_file_path = NULL;
-
-out:
-    if (error)
-        g_error_free (error);
-    g_free (ini_file_path);
-    g_key_file_free (key_file);
-    g_free (file);
-    g_free (version);
-
-    if (!module_info)
-    {
-        g_free (loader);
-        g_free (id);
-        moo_plugin_info_free (info);
-        moo_plugin_params_free (params);
-    }
+    module_info->ini_file = g_steal_pointer (&ini_file_path);
 
     return module_info;
 }
