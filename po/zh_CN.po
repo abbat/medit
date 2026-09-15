@@ -1491,6 +1491,10 @@ msgstr "默认键:"
 msgid "Shortcut for selected action"
 msgstr "被选中动作的快捷键"
 
+#: ../src/mooutils/ui/mooaccelprefs.ui:16
+msgid "Search"
+msgstr "查找"
+
 #. Column label in Configure Shortcuts dialog
 #: ../src/mooutils/mooaccelprefs.c:261
 msgctxt "accel-editor-column"

@@ -1520,6 +1520,10 @@ msgstr "Domyślny klawisz:"
 msgid "Shortcut for selected action"
 msgstr "Skrót do wybranej akcji"
 
+#: ../src/mooutils/ui/mooaccelprefs.ui:16
+msgid "Search"
+msgstr "Szukaj"
+
 #. Column label in Configure Shortcuts dialog
 #: ../src/mooutils/mooaccelprefs.c:261
 msgctxt "accel-editor-column"

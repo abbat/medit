@@ -1513,6 +1513,10 @@ msgstr "Standardtaste:"
 msgid "Shortcut for selected action"
 msgstr "Verknüpfung zu ausgewählter Aktion"
 
+#: ../src/mooutils/ui/mooaccelprefs.ui:16
+msgid "Search"
+msgstr "Suchen"
+
 #. Column label in Configure Shortcuts dialog
 #: ../src/mooutils/mooaccelprefs.c:261
 msgctxt "accel-editor-column"

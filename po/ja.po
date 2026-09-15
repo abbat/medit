@@ -1508,6 +1508,10 @@ msgstr "デフォルトキー:"
 msgid "Shortcut for selected action"
 msgstr "選択されたアクションのショートカット"
 
+#: ../src/mooutils/ui/mooaccelprefs.ui:16
+msgid "Search"
+msgstr "検索"
+
 #. Column label in Configure Shortcuts dialog
 #: ../src/mooutils/mooaccelprefs.c:261
 msgctxt "accel-editor-column"

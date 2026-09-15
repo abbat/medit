@@ -1500,6 +1500,10 @@ msgstr "Předvolená klávesa:"
 msgid "Shortcut for selected action"
 msgstr "Klávesová zkratka pro vybranou akci"
 
+#: ../src/mooutils/ui/mooaccelprefs.ui:16
+msgid "Search"
+msgstr "Hledat"
+
 #. Column label in Configure Shortcuts dialog
 #: ../src/mooutils/mooaccelprefs.c:261
 msgctxt "accel-editor-column"

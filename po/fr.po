@@ -1536,6 +1536,10 @@ msgstr "Touche par défaut :"
 msgid "Shortcut for selected action"
 msgstr "Raccourci pour l’action sélectionnée"
 
+#: ../src/mooutils/ui/mooaccelprefs.ui:16
+msgid "Search"
+msgstr "Rechercher"
+
 #. Column label in Configure Shortcuts dialog
 #: ../src/mooutils/mooaccelprefs.c:261
 msgctxt "accel-editor-column"

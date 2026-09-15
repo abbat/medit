@@ -1498,6 +1498,10 @@ msgstr "Standaardtoets:"
 msgid "Shortcut for selected action"
 msgstr "Sneltoets voor gekozen actie"
 
+#: ../src/mooutils/ui/mooaccelprefs.ui:16
+msgid "Search"
+msgstr "Zoeken"
+
 #. Column label in Configure Shortcuts dialog
 #: ../src/mooutils/mooaccelprefs.c:261
 msgctxt "accel-editor-column"

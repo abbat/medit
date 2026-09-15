@@ -1564,6 +1564,10 @@ msgstr "Клавиша по умолчанию:"
 msgid "Shortcut for selected action"
 msgstr "Комбинация клавиш для выбранного действия"
 
+#: ../src/mooutils/ui/mooaccelprefs.ui:16
+msgid "Search"
+msgstr "Поиск"
+
 #. Column label in Configure Shortcuts dialog
 #: ../src/mooutils/mooaccelprefs.c:263
 msgctxt "accel-editor-column"
