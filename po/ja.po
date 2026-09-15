@@ -2054,22 +2054,22 @@ msgstr "上へ移動"
 
 #: ../src/plugins/glade/moofind.glade.h:1
 #: ../src/plugins/glade/moogrep.glade.h:1
-msgid "_Pattern:"
-msgstr "パターン(_P):"
+msgid "_Pattern"
+msgstr "パターン(_P)"
 
 #: ../src/plugins/glade/moofind.glade.h:2
 #: ../src/plugins/glade/moogrep.glade.h:3
-msgid "_Directory:"
-msgstr "ディレクトリー(_D):"
+msgid "_Directory"
+msgstr "ディレクトリー(_D)"
 
 #: ../src/plugins/glade/moofind.glade.h:3
 #: ../src/plugins/glade/moogrep.glade.h:4
-msgid "S_kip files:"
-msgstr "スキップするファイル(_K):"
+msgid "S_kip files"
+msgstr "スキップするファイル(_K)"
 
 #: ../src/plugins/glade/moogrep.glade.h:2
-msgid "Fi_les:"
-msgstr "ファイル(_L):"
+msgid "Fi_les"
+msgstr "ファイル(_L)"
 
 #: ../src/plugins/moofilelist.c:2353 ../src/plugins/moofilelist.c:2354
 #: ../src/plugins/moofilelist.c:2411
@@ -2163,6 +2163,7 @@ msgstr "複数のファイル内を検索"
 
 #: ../src/plugins/moofind.c:260 ../src/plugins/moofind.c:261
 #: ../src/plugins/moofind.c:996
+#: ../src/plugins/ui/moofind.ui:4
 msgid "Find File"
 msgstr "ファイルを検索"
 
@@ -2171,6 +2172,7 @@ msgid "Find file"
 msgstr "ファイルを検索"
 
 #: ../src/plugins/moofind.c:965
+#: ../src/plugins/ui/moogrep.ui:4
 msgid "Find in Files"
 msgstr "複数のファイル内を検索"
 
@@ -2521,6 +2523,37 @@ msgstr "名前を変更(_R)..."
 #: ../src/plugins/lsp/lsp-plugin.cpp:1331
 msgid "Rename what is under the cursor everywhere"
 msgstr "カーソル位置にあるものの名前をすべての箇所で変更します"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1322
+#: ../src/plugins/lsp/lsp-plugin.cpp:1374
+msgid "Code Actions"
+msgstr "コードアクション"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1323
+#: ../src/plugins/lsp/lsp-plugin.cpp:1375
+msgid "Code _Actions..."
+msgstr "コードアクション(_A)..."
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1324
+#: ../src/plugins/lsp/lsp-plugin.cpp:1376
+msgid "Offer what the language server can do here"
+msgstr "この位置で言語サーバーができることを提示します"
+
+#: ../src/plugins/lsp/lsp-actions.cpp:289
+msgid "The command failed"
+msgstr "コマンドが失敗しました"
+
+#: ../src/plugins/lsp/lsp-actions.cpp:521
+msgid "Code actions failed"
+msgstr "コードアクションが失敗しました"
+
+#: ../src/plugins/lsp/lsp-actions.cpp:536
+msgid "No code actions here"
+msgstr "ここにコードアクションはありません"
+
+#: ../src/plugins/lsp/lsp-actions.cpp:537
+msgid "The server has nothing to offer at this place."
+msgstr "サーバーはこの位置で提示できるものがありません。"
 
 #: ../src/plugins/lsp/lsp-plugin.cpp:1292
 msgid "Go to Type Definition"

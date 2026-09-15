@@ -2094,22 +2094,22 @@ msgstr "Monter"
 
 #: ../src/plugins/glade/moofind.glade.h:1
 #: ../src/plugins/glade/moogrep.glade.h:1
-msgid "_Pattern:"
-msgstr "_Motif :"
+msgid "_Pattern"
+msgstr "_Motif"
 
 #: ../src/plugins/glade/moofind.glade.h:2
 #: ../src/plugins/glade/moogrep.glade.h:3
-msgid "_Directory:"
-msgstr "_Répertoire :"
+msgid "_Directory"
+msgstr "_Répertoire"
 
 #: ../src/plugins/glade/moofind.glade.h:3
 #: ../src/plugins/glade/moogrep.glade.h:4
-msgid "S_kip files:"
-msgstr "_Passer les fichiers :"
+msgid "S_kip files"
+msgstr "_Passer les fichiers"
 
 #: ../src/plugins/glade/moogrep.glade.h:2
-msgid "Fi_les:"
-msgstr "Fi_chiers :"
+msgid "Fi_les"
+msgstr "Fi_chiers"
 
 #: ../src/plugins/moofilelist.c:2353
 #: ../src/plugins/moofilelist.c:2354
@@ -2206,6 +2206,7 @@ msgstr "Rechercher dans des fichiers"
 #: ../src/plugins/moofind.c:260
 #: ../src/plugins/moofind.c:261
 #: ../src/plugins/moofind.c:996
+#: ../src/plugins/ui/moofind.ui:4
 msgid "Find File"
 msgstr "Rechercher un fichier"
 
@@ -2214,6 +2215,7 @@ msgid "Find file"
 msgstr "Rechercher un fichier"
 
 #: ../src/plugins/moofind.c:965
+#: ../src/plugins/ui/moogrep.ui:4
 msgid "Find in Files"
 msgstr "Rechercher dans des fichiers"
 
@@ -2867,6 +2869,37 @@ msgstr "_Renommer…"
 #: ../src/plugins/lsp/lsp-plugin.cpp:1331
 msgid "Rename what is under the cursor everywhere"
 msgstr "Renommer partout ce qui est sous le curseur"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1322
+#: ../src/plugins/lsp/lsp-plugin.cpp:1374
+msgid "Code Actions"
+msgstr "Actions de code"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1323
+#: ../src/plugins/lsp/lsp-plugin.cpp:1375
+msgid "Code _Actions..."
+msgstr "_Actions de code…"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1324
+#: ../src/plugins/lsp/lsp-plugin.cpp:1376
+msgid "Offer what the language server can do here"
+msgstr "Proposer ce que le serveur de langage peut faire ici"
+
+#: ../src/plugins/lsp/lsp-actions.cpp:289
+msgid "The command failed"
+msgstr "La commande a échoué"
+
+#: ../src/plugins/lsp/lsp-actions.cpp:521
+msgid "Code actions failed"
+msgstr "Échec des actions de code"
+
+#: ../src/plugins/lsp/lsp-actions.cpp:536
+msgid "No code actions here"
+msgstr "Aucune action de code ici"
+
+#: ../src/plugins/lsp/lsp-actions.cpp:537
+msgid "The server has nothing to offer at this place."
+msgstr "Le serveur n'a rien à proposer à cet endroit."
 
 #: ../src/plugins/lsp/lsp-plugin.cpp:1292
 msgid "Go to Type Definition"

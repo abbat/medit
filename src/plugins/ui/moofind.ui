@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <interface>
   <object class="GtkDialog" id="Find">
-    <property name="title">Find File</property>
+    <property name="title" translatable="yes">Find File</property>
     <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox2">
@@ -29,7 +29,7 @@
                           <object class="GtkLabel" id="label6">
                             <property name="visible">True</property>
                             <property name="xalign">1</property>
-                            <property name="label" translatable="yes">_Pattern:</property>
+                            <property name="label" translatable="yes">_Pattern</property>
                             <property name="use_underline">True</property>
                             <property name="mnemonic_widget">pattern_combo</property>
                           </object>
@@ -48,7 +48,7 @@
                           <object class="GtkLabel" id="label8">
                             <property name="visible">True</property>
                             <property name="xalign">1</property>
-                            <property name="label" translatable="yes">_Directory:</property>
+                            <property name="label" translatable="yes">_Directory</property>
                             <property name="use_underline">True</property>
                             <property name="mnemonic_widget">dir_combo</property>
                           </object>
@@ -69,7 +69,7 @@
                           <object class="GtkLabel" id="label9">
                             <property name="visible">True</property>
                             <property name="xalign">1</property>
-                            <property name="label" translatable="yes">S_kip files:</property>
+                            <property name="label" translatable="yes">S_kip files</property>
                             <property name="use_underline">True</property>
                             <property name="mnemonic_widget">skip_combo</property>
                           </object>

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <interface>
   <object class="GtkDialog" id="Grep">
-    <property name="title">Find in Files</property>
+    <property name="title" translatable="yes">Find in Files</property>
     <property name="modal">True</property>
     <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
     <child internal-child="vbox">
@@ -30,7 +30,7 @@
                           <object class="GtkLabel" id="label1">
                             <property name="visible">True</property>
                             <property name="xalign">1</property>
-                            <property name="label" translatable="yes">_Pattern:</property>
+                            <property name="label" translatable="yes">_Pattern</property>
                             <property name="use_underline">True</property>
                             <property name="mnemonic_widget">pattern_combo</property>
                           </object>
@@ -49,7 +49,7 @@
                           <object class="GtkLabel" id="label2">
                             <property name="visible">True</property>
                             <property name="xalign">1</property>
-                            <property name="label" translatable="yes">Fi_les:</property>
+                            <property name="label" translatable="yes">Fi_les</property>
                             <property name="use_underline">True</property>
                             <property name="mnemonic_widget">glob_combo</property>
                           </object>
@@ -70,7 +70,7 @@
                           <object class="GtkLabel" id="label3">
                             <property name="visible">True</property>
                             <property name="xalign">1</property>
-                            <property name="label" translatable="yes">_Directory:</property>
+                            <property name="label" translatable="yes">_Directory</property>
                             <property name="use_underline">True</property>
                             <property name="mnemonic_widget">dir_combo</property>
                           </object>
@@ -91,7 +91,7 @@
                           <object class="GtkLabel" id="label5">
                             <property name="visible">True</property>
                             <property name="xalign">1</property>
-                            <property name="label" translatable="yes">S_kip files:</property>
+                            <property name="label" translatable="yes">S_kip files</property>
                             <property name="use_underline">True</property>
                             <property name="mnemonic_widget">skip_combo</property>
                           </object>

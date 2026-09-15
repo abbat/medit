@@ -2049,22 +2049,22 @@ msgstr "Posunout nahoru"
 
 #: ../src/plugins/glade/moofind.glade.h:1
 #: ../src/plugins/glade/moogrep.glade.h:1
-msgid "_Pattern:"
-msgstr "_Vzorek:"
+msgid "_Pattern"
+msgstr "_Vzorek"
 
 #: ../src/plugins/glade/moofind.glade.h:2
 #: ../src/plugins/glade/moogrep.glade.h:3
-msgid "_Directory:"
-msgstr "_Adresář:"
+msgid "_Directory"
+msgstr "_Adresář"
 
 #: ../src/plugins/glade/moofind.glade.h:3
 #: ../src/plugins/glade/moogrep.glade.h:4
-msgid "S_kip files:"
-msgstr "Přes_kočit soubory:"
+msgid "S_kip files"
+msgstr "Přes_kočit soubory"
 
 #: ../src/plugins/glade/moogrep.glade.h:2
-msgid "Fi_les:"
-msgstr "S_oubory:"
+msgid "Fi_les"
+msgstr "S_oubory"
 
 #: ../src/plugins/moofilelist.c:2353 ../src/plugins/moofilelist.c:2354
 #: ../src/plugins/moofilelist.c:2411
@@ -2158,6 +2158,7 @@ msgstr "Najít v souborech"
 
 #: ../src/plugins/moofind.c:260 ../src/plugins/moofind.c:261
 #: ../src/plugins/moofind.c:996
+#: ../src/plugins/ui/moofind.ui:4
 msgid "Find File"
 msgstr "Najít soubor"
 
@@ -2166,6 +2167,7 @@ msgid "Find file"
 msgstr "Najít soubor"
 
 #: ../src/plugins/moofind.c:965
+#: ../src/plugins/ui/moogrep.ui:4
 msgid "Find in Files"
 msgstr "Najít v souborech"
 
@@ -2604,6 +2606,37 @@ msgstr "Pře_jmenovat…"
 #: ../src/plugins/lsp/lsp-plugin.cpp:1331
 msgid "Rename what is under the cursor everywhere"
 msgstr "Přejmenovat všude to, co je pod kurzorem"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1322
+#: ../src/plugins/lsp/lsp-plugin.cpp:1374
+msgid "Code Actions"
+msgstr "Akce kódu"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1323
+#: ../src/plugins/lsp/lsp-plugin.cpp:1375
+msgid "Code _Actions..."
+msgstr "A_kce kódu…"
+
+#: ../src/plugins/lsp/lsp-plugin.cpp:1324
+#: ../src/plugins/lsp/lsp-plugin.cpp:1376
+msgid "Offer what the language server can do here"
+msgstr "Nabídne, co zde jazykový server umí"
+
+#: ../src/plugins/lsp/lsp-actions.cpp:289
+msgid "The command failed"
+msgstr "Příkaz selhal"
+
+#: ../src/plugins/lsp/lsp-actions.cpp:521
+msgid "Code actions failed"
+msgstr "Akce kódu selhaly"
+
+#: ../src/plugins/lsp/lsp-actions.cpp:536
+msgid "No code actions here"
+msgstr "Zde nejsou žádné akce kódu"
+
+#: ../src/plugins/lsp/lsp-actions.cpp:537
+msgid "The server has nothing to offer at this place."
+msgstr "Server nemá na tomto místě co nabídnout."
 
 #: ../src/plugins/lsp/lsp-plugin.cpp:1292
 msgid "Go to Type Definition"
