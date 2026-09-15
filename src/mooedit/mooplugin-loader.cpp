@@ -306,7 +306,7 @@ parse_ini_file (const char *dir,
 
     ModuleInfo *module_info = g_new0 (ModuleInfo, 1);
     module_info->loader = g_steal_pointer (&loader);
-    module_info->file = g_build_path (dir, file, nullptr);
+    module_info->file = g_steal_pointer (&file);
     module_info->plugin_id = g_steal_pointer (&id);
     module_info->plugin_info = info;
     module_info->plugin_params = params;
