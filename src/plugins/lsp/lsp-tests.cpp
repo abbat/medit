@@ -48,6 +48,7 @@
 #include "plugins/lsp/lsp-edits.h"
 #include "plugins/lsp/lsp-signature.h"
 #include "plugins/lsp/lsp-symbols.h"
+#include "plugins/lsp/lsp-server.h"
 #include "mooutils/mooi18n.h"
 
 
@@ -2448,6 +2449,46 @@ test_code_action_context_edges (void)
 }
 
 
+/*
+ * Every shape a $/progress arrives in: a begin with all three parts, the
+ * report that follows with no title of its own, and the several ways a server
+ * says almost nothing.
+ */
+static void
+test_progress_format (void)
+{
+    char *text;
+
+    text = lsp_progress_format ("Indexing", "src/main.c", 42);
+    g_assert_cmpstr (text, ==, "Indexing: src/main.c (42%)");
+    g_free (text);
+
+    text = lsp_progress_format ("Indexing", NULL, -1);
+    g_assert_cmpstr (text, ==, "Indexing");
+    g_free (text);
+
+    text = lsp_progress_format ("Indexing", NULL, 0);
+    g_assert_cmpstr (text, ==, "Indexing (0%)");
+    g_free (text);
+
+    text = lsp_progress_format (NULL, "loading", -1);
+    g_assert_cmpstr (text, ==, "loading");
+    g_free (text);
+
+    /* An empty string is a title the server did not send. */
+    text = lsp_progress_format ("", "loading", -1);
+    g_assert_cmpstr (text, ==, "loading");
+    g_free (text);
+
+    text = lsp_progress_format (NULL, NULL, 7);
+    g_assert_cmpstr (text, ==, "7%");
+    g_free (text);
+
+    g_assert_null (lsp_progress_format (NULL, NULL, -1));
+    g_assert_null (lsp_progress_format ("", "", -1));
+}
+
+
 void
 _moo_lsp_add_unit_tests (void)
 {
@@ -2540,6 +2581,8 @@ _moo_lsp_add_unit_tests (void)
     g_test_add_func ("/lsp/highlight/nothing", test_highlight_nothing);
     g_test_add_func ("/lsp/highlight/malformed", test_highlight_malformed);
     g_test_add_func ("/lsp/client/framing", test_client_framing);
+
+    g_test_add_func ("/lsp/progress/format", test_progress_format);
 }
 
 #endif /* MOO_ENABLE_UNIT_TESTS */

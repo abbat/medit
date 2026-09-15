@@ -564,6 +564,20 @@ fill_pane (LspWindowPlugin *stuff)
     }
 
     /*
+     * What the server is busy with, for the same reason the failure above is
+     * here: while it indexes a project it answers nothing, and an empty pane
+     * says that as badly as it says there is nothing wrong. It is a line of
+     * its own above the diagnostics, and it goes away when the server says it
+     * is done.
+     */
+    {
+        const char *progress = lsp_server_get_progress (server);
+
+        if (progress)
+            moo_line_view_write_line (stuff->output, progress, -1, stuff->detail_tag);
+    }
+
+    /*
      * "Underline problems and list them in the Diagnostics pane" -- the second
      * half of that sentence is this. Without it the marks came off the document
      * and the pane went on listing them.

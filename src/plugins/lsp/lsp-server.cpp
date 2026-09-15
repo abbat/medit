@@ -54,6 +54,10 @@ struct LspServer {
     LspServerState   state;
     char            *error_message;
 
+    char            *progress_token;    /* the one $/progress being shown */
+    char            *progress_title;
+    char            *progress_text;
+
     JsonObject      *capabilities;
     LspPositionEncoding encoding;
     LspSyncKind      sync_kind;
@@ -71,6 +75,7 @@ struct LspServer {
     LspServerDiagnosticsFunc on_diagnostics;
     LspServerStateFunc       on_state;
     LspServerApplyEditFunc   on_apply_edit;
+    LspServerProgressFunc    on_progress;
     gpointer                 cb_data;
 };
 
@@ -107,6 +112,19 @@ clear_queue (LspServer *server)
 
     while ((item = g_queue_pop_head (server->queued)) != NULL)
         queued_message_free ((LspQueuedMessage*) item);
+}
+
+
+static void
+clear_progress (LspServer *server)
+{
+    g_free (server->progress_token);
+    g_free (server->progress_title);
+    g_free (server->progress_text);
+
+    server->progress_token = NULL;
+    server->progress_title = NULL;
+    server->progress_text = NULL;
 }
 
 
@@ -176,6 +194,9 @@ drop_client (LspServer *server)
     if (!server->client)
         return;
 
+    /* Whatever it was busy with died with it. */
+    clear_progress (server);
+
     lsp_client_disconnect (server->client);
     lsp_client_unref (server->client);
     server->client = NULL;
@@ -210,6 +231,9 @@ lsp_server_unref (LspServer *server)
     g_free (server->root_dir);
     g_free (server->root_uri);
     g_free (server->error_message);
+    g_free (server->progress_token);
+    g_free (server->progress_title);
+    g_free (server->progress_text);
     g_free (server);
 }
 
@@ -251,6 +275,14 @@ lsp_server_get_error (LspServer *server)
 {
     g_return_val_if_fail (server != NULL, NULL);
     return server->error_message;
+}
+
+
+const char *
+lsp_server_get_progress (LspServer *server)
+{
+    g_return_val_if_fail (server != NULL, NULL);
+    return server->progress_text;
 }
 
 
@@ -309,6 +341,7 @@ lsp_server_set_callbacks (LspServer                *server,
                           LspServerDiagnosticsFunc  on_diagnostics,
                           LspServerStateFunc        on_state,
                           LspServerApplyEditFunc    on_apply_edit,
+                          LspServerProgressFunc     on_progress,
                           gpointer                  data)
 {
     g_return_if_fail (server != NULL);
@@ -316,6 +349,7 @@ lsp_server_set_callbacks (LspServer                *server,
     server->on_diagnostics = on_diagnostics;
     server->on_state = on_state;
     server->on_apply_edit = on_apply_edit;
+    server->on_progress = on_progress;
     server->cb_data = data;
 }
 
@@ -558,6 +592,125 @@ lsp_server_did_close (LspServer  *server,
 /* What the server sends us
  */
 
+char *
+lsp_progress_format (const char *title,
+                     const char *message,
+                     gint64      percentage)
+{
+    GString *text;
+
+    if ((!title || !*title) && (!message || !*message) && percentage < 0)
+        return NULL;
+
+    text = g_string_new (NULL);
+
+    if (title && *title)
+        g_string_append (text, title);
+
+    if (message && *message)
+    {
+        if (text->len)
+            g_string_append (text, ": ");
+        g_string_append (text, message);
+    }
+
+    if (percentage >= 0)
+    {
+        if (text->len)
+            g_string_append_printf (text, " (%" G_GINT64_FORMAT "%%)", percentage);
+        else
+            g_string_append_printf (text, "%" G_GINT64_FORMAT "%%", percentage);
+    }
+
+    return g_string_free (text, FALSE);
+}
+
+
+/* The token is a number as often as it is a string. */
+static char *
+get_progress_token (JsonObject *params)
+{
+    JsonNode *node = lsp_json_get_node (params, "token");
+    GType type;
+
+    if (!node || !JSON_NODE_HOLDS_VALUE (node))
+        return NULL;
+
+    type = json_node_get_value_type (node);
+
+    if (type == G_TYPE_STRING)
+        return g_strdup (json_node_get_string (node));
+
+    if (type == G_TYPE_INT64 || type == G_TYPE_DOUBLE)
+        return g_strdup_printf ("%" G_GINT64_FORMAT, json_node_get_int (node));
+
+    return NULL;
+}
+
+
+/*
+ * What a server that indexes a project before it can answer anything says
+ * while it does. One token at a time: several may run at once, and there is
+ * one line to show them in, so the first one to begin is the one shown and the
+ * rest are dropped until it ends. A report carries no title of its own, which
+ * is why the title of the begin is kept.
+ */
+static void
+handle_progress (LspServer  *server,
+                 JsonObject *params)
+{
+    char *token = get_progress_token (params);
+    JsonObject *value = lsp_json_get_object (params, "value");
+    const char *kind = lsp_json_get_string (value, "kind");
+
+    if (!token || !kind)
+    {
+        g_free (token);
+        return;
+    }
+
+    if (server->progress_token && strcmp (server->progress_token, token) != 0)
+    {
+        g_free (token);
+        return;
+    }
+
+    if (strcmp (kind, "end") == 0)
+    {
+        clear_progress (server);
+    }
+    else if (strcmp (kind, "begin") == 0 || strcmp (kind, "report") == 0)
+    {
+        const char *title = lsp_json_get_string (value, "title");
+
+        if (!server->progress_token)
+            server->progress_token = g_strdup (token);
+
+        if (title)
+        {
+            g_free (server->progress_title);
+            server->progress_title = g_strdup (title);
+        }
+
+        g_free (server->progress_text);
+        server->progress_text =
+            lsp_progress_format (server->progress_title,
+                                 lsp_json_get_string (value, "message"),
+                                 lsp_json_get_int (value, "percentage", -1));
+    }
+    else
+    {
+        g_free (token);
+        return;
+    }
+
+    g_free (token);
+
+    if (server->on_progress)
+        server->on_progress (server, server->cb_data);
+}
+
+
 static void
 handle_notification (const char *method,
                      JsonObject *params,
@@ -581,9 +734,13 @@ handle_notification (const char *method,
         if (text && _moo_lsp_debug ())
             g_printerr ("lsp: %s: %s\n", server->id, text);
     }
+    else if (strcmp (method, "$/progress") == 0)
+    {
+        handle_progress (server, params);
+    }
     else
     {
-        /* $/progress, telemetry/event and whatever else; nothing to do. */
+        /* telemetry/event and whatever else; nothing to do. */
     }
 }
 
@@ -1002,6 +1159,19 @@ client_capabilities (void)
         lsp_json_set_bool (document_symbol, "hierarchicalDocumentSymbolSupport", TRUE);
 
         lsp_json_set_object (text_document, "documentSymbol", document_symbol);
+    }
+
+    {
+        JsonObject *window = json_object_new ();
+
+        /*
+         * Without this a server sends no $/progress at all, and one that
+         * indexes a project before it can answer anything looks exactly like
+         * one with nothing to say.
+         */
+        lsp_json_set_bool (window, "workDoneProgress", TRUE);
+
+        lsp_json_set_object (capabilities, "window", window);
     }
 
     lsp_json_set_object (text_document, "synchronization", synchronization);

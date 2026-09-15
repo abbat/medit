@@ -63,7 +63,7 @@ server_entry_free (gpointer data)
     if (entry->idle_timeout)
         g_source_remove (entry->idle_timeout);
 
-    lsp_server_set_callbacks (entry->server, NULL, NULL, NULL, NULL);
+    lsp_server_set_callbacks (entry->server, NULL, NULL, NULL, NULL, NULL);
     lsp_server_shutdown (entry->server);
     lsp_server_unref (entry->server);
 
@@ -165,6 +165,28 @@ server_state_changed (LspServer *server,
 
         if (lsp_doc_get_server (ldoc) == server)
             lsp_doc_open (ldoc);
+    }
+}
+
+
+/*
+ * What the server is busy with changed. Nothing about the documents did, so
+ * unlike the ready branch above this only tells the listeners to look again:
+ * the pane of every window showing a document of that server is where the line
+ * is drawn.
+ */
+static void
+server_progress (LspServer *server,
+                 G_GNUC_UNUSED gpointer data)
+{
+    GSList *l;
+
+    for (l = manager.docs; l != NULL; l = l->next)
+    {
+        LspDoc *ldoc = (LspDoc*) l->data;
+
+        if (lsp_doc_get_server (ldoc) == server)
+            notify_listeners (lsp_doc_get_doc (ldoc));
     }
 }
 
@@ -303,7 +325,8 @@ get_server (LspServerConfig *config,
     }
 
     lsp_server_set_callbacks (entry->server, server_diagnostics,
-                              server_state_changed, server_apply_edit, NULL);
+                              server_state_changed, server_apply_edit,
+                              server_progress, NULL);
 
     g_hash_table_insert (manager.servers, key, entry);
 

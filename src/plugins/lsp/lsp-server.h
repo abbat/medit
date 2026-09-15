@@ -68,6 +68,14 @@ typedef void (*LspServerDiagnosticsFunc) (LspServer  *server,
 typedef void (*LspServerStateFunc)       (LspServer  *server,
                                           gpointer    data);
 
+/*
+ * What the server says it is busy with changed, which is a $/progress that
+ * began, reported or ended. Unlike the state, this says nothing about the
+ * documents: only what lsp_server_get_progress() returns is different.
+ */
+typedef void (*LspServerProgressFunc)    (LspServer  *server,
+                                          gpointer    data);
+
 LspServer  *lsp_server_new              (LspServerConfig    *config,
                                          const char         *root_dir);
 LspServer  *lsp_server_ref              (LspServer          *server);
@@ -86,6 +94,7 @@ void        lsp_server_set_callbacks    (LspServer                *server,
                                          LspServerDiagnosticsFunc  on_diagnostics,
                                          LspServerStateFunc        on_state,
                                          LspServerApplyEditFunc    on_apply_edit,
+                                         LspServerProgressFunc     on_progress,
                                          gpointer                  data);
 
 const char *lsp_server_get_id           (LspServer          *server);
@@ -95,6 +104,21 @@ gboolean    lsp_server_is_ready         (LspServer          *server);
 
 /* Why it is in LSP_SERVER_FAILED, ready to be shown to the user. */
 const char *lsp_server_get_error        (LspServer          *server);
+
+/*
+ * What the server is busy with, ready to be shown to the user, or NULL when it
+ * has not said or has finished saying it.
+ */
+const char *lsp_server_get_progress     (LspServer          *server);
+
+/*
+ * The one line a $/progress becomes: "title: message (42%)", with every part
+ * of it optional. NULL when there is nothing to say. Pass a negative
+ * percentage for a progress that does not count.
+ */
+char       *lsp_progress_format         (const char         *title,
+                                         const char         *message,
+                                         gint64              percentage);
 
 LspPositionEncoding lsp_server_get_position_encoding (LspServer *server);
 LspSyncKind lsp_server_get_sync_kind    (LspServer          *server);
