@@ -54,9 +54,11 @@ Everything that kept medit out of the distributions is gone:
   python unless `-DENABLE_UI_TESTS=ON` asks it to.
 * **Language servers.** A builtin client speaks the language server protocol to
   whichever servers are installed: problems underlined in the text and listed in
-  a pane, a tree of what the document contains, go to definition, find
-  references, rename, format the document, the signature of the call being
-  typed, the other uses of what the cursor is in, hover and completion.
+  a pane, a tree of what the document contains, go to definition, type
+  definition and implementation, find references, rename, format the document,
+  the fixes a server offers for what is wrong under the cursor, the signature of
+  the call being typed, the other uses of what the cursor is in, hover and
+  completion, and what a server is busy with while it is busy.
   Which server handles which files is one small xml file, and
   `Tools → LSP Servers…` opens your copy of it. It needs json-glib, which does
   not depend on gtk, so both builds have it (`-DENABLE_LSP=OFF` to leave it
