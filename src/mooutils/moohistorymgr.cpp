@@ -851,14 +851,34 @@ format_for_update (MooHistoryItem *item,
                    UpdateType     type)
 {
     GString *buffer;
-    const char *update_types[4] = {"update", "remove", "add", "clear"};
+    const char *update_type = NULL;
 
-    g_return_val_if_fail (type < 4, NULL);
+    /* The names parse_update_item() reads back, as a switch rather than a table
+       indexed by the type: the type covers its own range, so a check that the
+       index is inside the table is one clang sees through, and a switch over
+       every value is what says the same thing to a compiler. */
+    switch (type)
+    {
+        case UPDATE_ITEM_UPDATE:
+            update_type = "update";
+            break;
+        case UPDATE_ITEM_REMOVE:
+            update_type = "remove";
+            break;
+        case UPDATE_ITEM_ADD:
+            update_type = "add";
+            break;
+        case UPDATE_ITEM_CLEAR:
+            update_type = "clear";
+            break;
+    }
+
+    g_return_val_if_fail (update_type != NULL, NULL);
 
     buffer = g_string_new (NULL);
     g_string_append_printf (buffer, "<%s %s=\"%s\" %s=\"%s\">\n",
                             ELM_UPDATE, PROP_VERSION, PROP_VERSION_VALUE,
-                            PROP_TYPE, update_types[type]);
+                            PROP_TYPE, update_type);
 
     /* a clear names no item: it is the whole list that goes */
     if (item)
