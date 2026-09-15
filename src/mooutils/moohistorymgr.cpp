@@ -70,7 +70,8 @@ struct _MooHistoryItem {
 typedef enum {
     UPDATE_ITEM_UPDATE,
     UPDATE_ITEM_REMOVE,
-    UPDATE_ITEM_ADD
+    UPDATE_ITEM_ADD,
+    UPDATE_ITEM_CLEAR
 } UpdateType;
 
 static GObject     *moo_history_mgr_constructor (GType           type,
@@ -114,6 +115,7 @@ static void         ipc_notify_update_file      (MooHistoryMgr   *mgr,
                                                  MooHistoryItem  *item);
 static void         ipc_notify_remove_file      (MooHistoryMgr   *mgr,
                                                  MooHistoryItem  *item);
+static void         ipc_notify_clear            (MooHistoryMgr   *mgr);
 
 G_DEFINE_TYPE_WITH_CODE (MooHistoryMgr, moo_history_mgr, G_TYPE_OBJECT, G_ADD_PRIVATE(MooHistoryMgr))
 
@@ -741,11 +743,20 @@ parse_update_item (MooMarkupDoc   *xml,
         *type = UPDATE_ITEM_REMOVE;
     else if (strcmp (update_type_string, "update") == 0)
         *type = UPDATE_ITEM_UPDATE;
+    else if (strcmp (update_type_string, "clear") == 0)
+        *type = UPDATE_ITEM_CLEAR;
     else
     {
         g_critical ("invalid value '%s' for attribute '%s'",
                     update_type_string, PROP_TYPE);
         return FALSE;
+    }
+
+    /* nothing is named by a clear, so there is no item element to read */
+    if (*type == UPDATE_ITEM_CLEAR)
+    {
+        *item = NULL;
+        return TRUE;
     }
 
     for (child = root->children; child != NULL; child = child->next)
@@ -839,16 +850,18 @@ format_for_update (MooHistoryItem *item,
                    UpdateType     type)
 {
     GString *buffer;
-    const char *update_types[3] = {"update", "remove", "add"};
+    const char *update_types[4] = {"update", "remove", "add", "clear"};
 
-    g_return_val_if_fail (type < 3, NULL);
+    g_return_val_if_fail (type < 4, NULL);
 
     buffer = g_string_new (NULL);
     g_string_append_printf (buffer, "<%s %s=\"%s\" %s=\"%s\">\n",
                             ELM_UPDATE, PROP_VERSION, PROP_VERSION_VALUE,
                             PROP_TYPE, update_types[type]);
 
-    moo_history_item_format (item, buffer);
+    /* a clear names no item: it is the whole list that goes */
+    if (item)
+        moo_history_item_format (item, buffer);
 
     g_string_append (buffer, "</" ELM_UPDATE ">\n");
 
@@ -1032,6 +1045,51 @@ moo_history_mgr_remove_uri (MooHistoryMgr *mgr,
 }
 
 
+/* Forgets every file at once, rather than one moo_history_mgr_remove_uri()
+   after another: each of those saves and tells the other instances about the
+   one uri it removed, which for a list five thousand entries long is five
+   thousand broadcasts to say the same thing. */
+static void
+moo_history_mgr_clear_real (MooHistoryMgr *mgr,
+                           gboolean      notify)
+{
+    g_return_if_fail (MOO_IS_HISTORY_MGR (mgr));
+
+    ensure_files (mgr);
+
+    if (!mgr->priv->files->length)
+        return;
+
+    while (mgr->priv->files->head)
+    {
+        MooHistoryItem *item = mgr->priv->files->head->data;
+        moo_history_item_queue_delete_link (mgr->priv->files, mgr->priv->files->head);
+        moo_history_item_free (item);
+    }
+
+    g_hash_table_remove_all (mgr->priv->hash);
+
+    g_signal_emit (mgr, signals[CHANGED], 0);
+
+    if (notify)
+    {
+        /* the saved copy goes with it -- moo_history_mgr_save() unlinks the
+           file when there is nothing left to write -- so that what is
+           forgotten does not come back on the next run */
+        schedule_save (mgr);
+        ipc_notify_clear (mgr);
+    }
+
+    g_object_notify (G_OBJECT (mgr), "empty");
+}
+
+void
+moo_history_mgr_clear (MooHistoryMgr *mgr)
+{
+    moo_history_mgr_clear_real (mgr, TRUE);
+}
+
+
 static void
 ipc_callback (GObject    *obj,
               const char *data,
@@ -1069,6 +1127,9 @@ ipc_callback (GObject    *obj,
                 break;
             case UPDATE_ITEM_REMOVE:
                 moo_history_mgr_remove_uri_real (mgr, moo_history_item_get_uri (item), FALSE);
+                break;
+            case UPDATE_ITEM_CLEAR:
+                moo_history_mgr_clear_real (mgr, FALSE);
                 break;
         }
 
@@ -1110,6 +1171,12 @@ ipc_notify_remove_file (MooHistoryMgr  *mgr,
                         MooHistoryItem *item)
 {
     ipc_notify (mgr, item, UPDATE_ITEM_REMOVE);
+}
+
+static void
+ipc_notify_clear (MooHistoryMgr *mgr)
+{
+    ipc_notify (mgr, NULL, UPDATE_ITEM_CLEAR);
 }
 
 

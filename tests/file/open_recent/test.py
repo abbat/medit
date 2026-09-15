@@ -20,6 +20,7 @@ SECOND = "beta.txt"
 
 RECENT = ("File", "Open Recent")
 MORE = "More..."
+CLEAR = "Clear History"
 
 
 def setup(s):
@@ -33,7 +34,8 @@ def run(t):
            "both files to be open; the strip is %s" % order(t))
 
     listed = recent(t)
-    t.check(sorted(name for name in listed if name != MORE) == sorted([FIRST, SECOND]),
+    t.check(sorted(name for name in listed if name not in (MORE, CLEAR))
+            == sorted([FIRST, SECOND]),
             "both files are in the recent list: %s" % ", ".join(listed))
     t.check(MORE in listed, "and the dialog is offered at the foot of it")
 
@@ -64,7 +66,7 @@ def run(t):
 
 
 def recent(t):
-    """The names in the Open Recent submenu, the "More..." item included."""
+    """The names in the Open Recent submenu, the items at its foot included."""
     menu = t.menu(*RECENT)
 
     names = [item.name for item in t.on_screen(t.find_all(menu, depth=1)) if item.name]

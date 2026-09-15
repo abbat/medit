@@ -740,6 +740,16 @@ recent_item_activated (GSList   *items,
     }
 }
 
+static void
+clear_recent_history (void)
+{
+    MooEditor *editor = moo_editor_instance ();
+
+    g_return_if_fail (MOO_IS_EDITOR (editor));
+
+    moo_history_mgr_clear (editor->priv->history);
+}
+
 static GtkWidget *
 create_recent_menu (GtkAction *action)
 {
@@ -765,6 +775,15 @@ create_recent_menu (GtkAction *action)
 
     action_more = moo_window_get_action (window, RECENT_DIALOG_ACTION_ID);
     item = gtk_action_create_menu_item (action_more);
+    gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
+
+    /* The submenu is insensitive while the history is empty, so there is no
+       need to follow that here: what can be opened is what can be forgotten.
+       The label is the one the search history's own button carries, so that
+       the two are translated once. */
+    item = gtk_menu_item_new_with_label (_("Clear History"));
+    gtk_widget_show (item);
+    g_signal_connect (item, "activate", G_CALLBACK (clear_recent_history), NULL);
     gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 
     item = gtk_menu_item_new ();

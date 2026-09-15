@@ -60,6 +60,7 @@ void        moo_history_mgr_remove_uri          (MooHistoryMgr  *mgr,
                                                  const char     *uri);
 MooHistoryItem  *moo_history_mgr_find_uri       (MooHistoryMgr  *mgr,
                                                  const char     *uri);
+void        moo_history_mgr_clear               (MooHistoryMgr  *mgr);
 
 void        moo_history_mgr_shutdown            (MooHistoryMgr  *mgr);
 

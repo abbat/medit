@@ -722,6 +722,11 @@ msgstr "Abrir ventana nueva del editor"
 msgid "Open Recent"
 msgstr "Abrir reciente"
 
+#: ../src/mooedit/mooeditor.cpp:784
+#: ../src/mooutils/moohistorycombo.cpp:345
+msgid "Clear History"
+msgstr "Limpiar historial"
+
 #. Translators: if translated, it should be a comma-separated list
 #. of encodings to try when opening files. Encodings names should be
 #. those understood by iconv, or "LOCALE" which means user's locale
