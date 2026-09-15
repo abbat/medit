@@ -77,7 +77,7 @@ def claim_the_extension(t):
     # language is a step inside it rather than an entry of the list itself.
     choose(t, combo(t, dialog), SECTION, HAIKU)
 
-    entry = field(t, dialog, "Extensions:")
+    entry = field(t, dialog, "Extensions")
     t.focus()
     t.click(entry)
     t.key("ctrl+a")

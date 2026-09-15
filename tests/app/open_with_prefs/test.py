@@ -69,9 +69,9 @@ def describe_the_program(t):
     t.click(page_buttons(t, dialog)[0])
     t.wait(lambda: rows(t, dialog) != [], "New to put a row in the list")
 
-    fill(t, dialog, "Name:", NAME)
-    fill(t, dialog, "Command:", "%s %%f" % t.sandbox.path("bin", "shouty"))
-    fill(t, dialog, "Extensions:", "*.txt")
+    fill(t, dialog, "Name", NAME)
+    fill(t, dialog, "Command", "%s %%f" % t.sandbox.path("bin", "shouty"))
+    fill(t, dialog, "Extensions", "*.txt")
 
     t.click(t.button(dialog, "OK"))
     t.no_toplevel("Preferences")
