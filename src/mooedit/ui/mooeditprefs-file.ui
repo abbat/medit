@@ -41,7 +41,7 @@
                           <object class="GtkLabel" id="label12">
                             <property name="visible">True</property>
                             <property name="xalign">0</property>
-                            <property name="label" translatable="yes">Encodings to _autodetect:</property>
+                            <property name="label" translatable="yes">Encodings to _autodetect</property>
                             <property name="use_underline">True</property>
                             <property name="mnemonic_widget">entry_encodings</property>
                           </object>
@@ -114,7 +114,7 @@
                           <object class="GtkLabel" id="label5">
                             <property name="visible">True</property>
                             <property name="xalign">0</property>
-                            <property name="label" translatable="yes">Encoding for _new files:</property>
+                            <property name="label" translatable="yes">Encoding for _new files</property>
                             <property name="use_underline">True</property>
                             <property name="mnemonic_widget">encoding_save</property>
                           </object>

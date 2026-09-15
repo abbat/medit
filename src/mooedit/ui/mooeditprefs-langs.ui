@@ -58,7 +58,7 @@
                           <object class="GtkLabel" id="label11">
                             <property name="visible">True</property>
                             <property name="xalign">1</property>
-                            <property name="label" translatable="yes">Options:</property>
+                            <property name="label" translatable="yes">Options</property>
                           </object>
                           <packing>
                             <property name="top_attach">3</property>
@@ -71,7 +71,7 @@
                           <object class="GtkLabel" id="label_mimetypes">
                             <property name="visible">True</property>
                             <property name="xalign">1</property>
-                            <property name="label" translatable="yes">Mime types:</property>
+                            <property name="label" translatable="yes">Mime types</property>
                           </object>
                           <packing>
                             <property name="top_attach">1</property>
@@ -84,7 +84,7 @@
                           <object class="GtkLabel" id="label_extensions">
                             <property name="visible">True</property>
                             <property name="xalign">1</property>
-                            <property name="label" translatable="yes">Extensions:</property>
+                            <property name="label" translatable="yes">Extensions</property>
                           </object>
                           <packing>
                             <property name="top_attach">2</property>
@@ -123,7 +123,7 @@
                           <object class="GtkLabel" id="label768">
                             <property name="visible">True</property>
                             <property name="xalign">1</property>
-                            <property name="label" translatable="yes">Language:</property>
+                            <property name="label" translatable="yes">Language</property>
                           </object>
                           <packing>
                             <property name="x_options">GTK_FILL</property>

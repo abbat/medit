@@ -66,7 +66,7 @@
                                   <object class="GtkLabel" id="label6">
                                     <property name="visible">True</property>
                                     <property name="xalign">1</property>
-                                    <property name="label" translatable="yes">Mime types:</property>
+                                    <property name="label" translatable="yes">Mime types</property>
                                   </object>
                                 </child>
                               </object>
@@ -85,7 +85,7 @@
                                   <object class="GtkLabel" id="label5">
                                     <property name="visible">True</property>
                                     <property name="xalign">1</property>
-                                    <property name="label" translatable="yes">Extensions:</property>
+                                    <property name="label" translatable="yes">Extensions</property>
                                   </object>
                                 </child>
                               </object>
@@ -104,7 +104,7 @@
                                   <object class="GtkLabel" id="label2">
                                     <property name="visible">True</property>
                                     <property name="xalign">1</property>
-                                    <property name="label" translatable="yes">Command:</property>
+                                    <property name="label" translatable="yes">Command</property>
                                   </object>
                                 </child>
                               </object>
@@ -123,7 +123,7 @@
                                   <object class="GtkLabel" id="label4">
                                     <property name="visible">True</property>
                                     <property name="xalign">1</property>
-                                    <property name="label" translatable="yes">Name:</property>
+                                    <property name="label" translatable="yes">Name</property>
                                   </object>
                                 </child>
                               </object>

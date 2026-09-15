@@ -142,6 +142,10 @@ msgstr "_Sulje"
 msgid "About"
 msgstr "Tietoja"
 
+#: ../src/mooapp/mooapp-info.h:21
+msgid "medit is a text editor"
+msgstr "medit on tekstieditori"
+
 #. Tab label in Credits dialog
 #: ../src/mooapp/credits.c:140
 msgid "Thanks"
@@ -198,8 +202,8 @@ msgid "<b>Loading</b>"
 msgstr "<b>Ladataan</b>"
 
 #: ../src/mooedit/glade/mooeditprefs-file.glade.h:2
-msgid "Encodings to _autodetect:"
-msgstr "_Automaattisesti tunnistettavat koodaukset:"
+msgid "Encodings to _autodetect"
+msgstr "_Automaattisesti tunnistettavat koodaukset"
 
 #: ../src/mooedit/glade/mooeditprefs-file.glade.h:3
 msgid ""
@@ -214,8 +218,8 @@ msgid "<b>Saving</b>"
 msgstr "<b>Tallennetaan</b>"
 
 #: ../src/mooedit/glade/mooeditprefs-file.glade.h:5
-msgid "Encoding for _new files:"
-msgstr "_Uusien tiedostojen koodaus:"
+msgid "Encoding for _new files"
+msgstr "_Uusien tiedostojen koodaus"
 
 #: ../src/mooedit/glade/mooeditprefs-file.glade.h:6
 msgid "Remove trailing _spaces"
@@ -275,46 +279,47 @@ msgid "Tab key indents"
 msgstr "Sarkainnäppäin sisentää"
 
 #: ../src/mooedit/glade/mooeditprefs-general.glade.h:7
-msgid "Indent width:"
-msgstr "Sisennys:"
+msgid "Indent width"
+msgstr "Sisennys"
 
 #: ../src/mooedit/glade/mooeditprefs-general.glade.h:8
-msgid "Tab width:"
-msgstr "Sarkausleveys:"
+msgid "Tab width"
+msgstr "Sarkausleveys"
 
 #: ../src/mooedit/glade/mooeditprefs-general.glade.h:9
 msgid "<b>Font and colors</b>"
 msgstr "<b>Kirjasin ja värit</b>"
 
 #: ../src/mooedit/glade/mooeditprefs-general.glade.h:10
-msgid "Font:"
-msgstr "Kirjasin:"
+msgid "Font"
+msgstr "Kirjasin"
 
 #: ../src/mooedit/glade/mooeditprefs-general.glade.h:11
-msgid "Color scheme:"
-msgstr "Väriteema:"
+msgid "Color scheme"
+msgstr "Väriteema"
 
 #: ../src/mooedit/glade/mooeditprefs-langs.glade.h:1
 msgid "<b>Language-specific options</b>"
 msgstr "<b>Kielikohtaiset asetukset</b>"
 
 #: ../src/mooedit/glade/mooeditprefs-langs.glade.h:2
-msgid "Options:"
-msgstr "Asetukset:"
+#: ../src/mooedit/glade/mootextfind.glade.h:13
+msgid "Options"
+msgstr "Asetukset"
 
 #: ../src/mooedit/glade/mooeditprefs-langs.glade.h:3
 #: ../src/plugins/glade/moofileselector-prefs.glade.h:3
-msgid "Mime types:"
-msgstr "MIME-tyypit:"
+msgid "Mime types"
+msgstr "MIME-tyypit"
 
 #: ../src/mooedit/glade/mooeditprefs-langs.glade.h:4
 #: ../src/plugins/glade/moofileselector-prefs.glade.h:5
-msgid "Extensions:"
-msgstr "Laajennukset:"
+msgid "Extensions"
+msgstr "Laajennukset"
 
 #: ../src/mooedit/glade/mooeditprefs-langs.glade.h:5
-msgid "Language:"
-msgstr "Kieli:"
+msgid "Language"
+msgstr "Kieli"
 
 #: ../src/mooedit/glade/mooeditprefs-view.glade.h:1
 msgid "<b>Text wrapping</b>"
@@ -404,8 +409,8 @@ msgid "Print using text styles"
 msgstr "Tulosta käyttäen tekstityylejä"
 
 #: ../src/mooedit/glade/mooprint.glade.h:2
-msgid "Use custom font:"
-msgstr "Käytä omaa kirjasinta:"
+msgid "Use custom font"
+msgstr "Käytä omaa kirjasinta"
 
 #: ../src/mooedit/glade/mooprint.glade.h:3
 msgid "Wrap long lines"
@@ -439,16 +444,16 @@ msgid "Print separator line"
 msgstr "Tulosta erotinviiva"
 
 #: ../src/mooedit/glade/mooprint.glade.h:13
-msgid "Right:"
-msgstr "Oikea:"
+msgid "Right"
+msgstr "Oikea"
 
 #: ../src/mooedit/glade/mooprint.glade.h:14
-msgid "Center:"
-msgstr "Centro:"
+msgid "Center"
+msgstr "Centro"
 
 #: ../src/mooedit/glade/mooprint.glade.h:15
-msgid "Left:"
-msgstr "Vasen:"
+msgid "Left"
+msgstr "Vasen"
 
 #: ../src/mooedit/glade/mooprint.glade.h:16
 msgid "Header"
@@ -471,8 +476,8 @@ msgid "_Regular expression"
 msgstr "_Säännöllinen lauseke"
 
 #: ../src/mooedit/glade/mootextfind.glade.h:1
-msgid "_Text to find:"
-msgstr "_Etsittävä teksti:"
+msgid "_Text to find"
+msgstr "_Etsittävä teksti"
 
 #: ../src/mooedit/glade/mootextfind.glade.h:2
 msgid "Regular e_xpression"
@@ -483,8 +488,8 @@ msgid "Find"
 msgstr "Etsi"
 
 #: ../src/mooedit/glade/mootextfind.glade.h:4
-msgid "_Replacement text:"
-msgstr "_Korvaava teksti:"
+msgid "_Replacement text"
+msgstr "_Korvaava teksti"
 
 #: ../src/mooedit/glade/mootextfind.glade.h:5
 msgid "_Literal replacement"
@@ -519,10 +524,6 @@ msgstr "_Kohdistimesta"
 msgid "_Whole words only"
 msgstr "Vain k_okonaiset sanat"
 
-#: ../src/mooedit/glade/mootextfind.glade.h:13
-msgid "Options"
-msgstr "Asetukset"
-
 #: ../src/mooedit/glade/mootextfind-prompt.glade.h:1
 msgid "Replace?"
 msgstr "Korvataanko?"
@@ -550,8 +551,8 @@ msgid "Go to Line"
 msgstr "Siirry riville"
 
 #: ../src/mooedit/glade/mootextgotoline.glade.h:2
-msgid "Go to line:"
-msgstr "Siirry riville:"
+msgid "Go to line"
+msgstr "Siirry riville"
 
 #. menu item label
 #: ../src/mooedit/medit.xml.h:2
@@ -1257,12 +1258,12 @@ msgid "Edit Bookmarks"
 msgstr "Muokkaa kirjanmerkkejä"
 
 #: ../src/moofileview/glade/moobookmark-editor.glade.h:2
-msgid "Icon:"
-msgstr "Kuvake:"
+msgid "Icon"
+msgstr "Kuvake"
 
 #: ../src/moofileview/glade/moobookmark-editor.glade.h:3
-msgid "Path:"
-msgstr "Sijainti:"
+msgid "Path"
+msgstr "Sijainti"
 
 #: ../src/moofileview/glade/moobookmark-editor.glade.h:4
 msgid "Add bookmark"
@@ -1366,6 +1367,7 @@ msgid "Add Bookmark"
 msgstr "Lisää kirjanmerkki"
 
 #: ../src/moofileview/moofileview.c:1585
+#: ../src/plugins/usertools/glade/mooedittools-exe.glade.h:1
 msgid "Filter"
 msgstr "Suodin"
 
@@ -1573,8 +1575,8 @@ msgid "Encodings combo submenu|Other"
 msgstr "Muu"
 
 #: ../src/mooutils/mooencodings.c:831
-msgid "Charact_er encoding:"
-msgstr "_Merkistökoodaus:"
+msgid "Charact_er encoding"
+msgstr "_Merkistökoodaus"
 
 #: ../src/mooutils/mooencodings-data.h:27
 msgid "West European"
@@ -1859,8 +1861,8 @@ msgid "Could not create folder %s: %s"
 msgstr "Kansiota %s ei voitu luoda: %s"
 
 #: ../src/mooutils/moofiltermgr.c:545
-msgid "_Show:"
-msgstr "_Näytä:"
+msgid "_Show"
+msgstr "_Näytä"
 
 #: ../src/mooutils/moohelp.c:205
 msgid "Help files not found"
@@ -2021,6 +2023,10 @@ msgstr "Tallenna nimellä"
 msgid "Create File"
 msgstr "Luo tiedosto"
 
+#: ../src/plugins/ui/moofileselector.ui:109
+msgid "File name"
+msgstr "Tiedostonimi"
+
 #: ../src/plugins/glade/moofileselector-prefs.glade.h:1
 msgid "<b>Open With</b>"
 msgstr "<b>Avaa ohjelmalla</b>"
@@ -2048,16 +2054,16 @@ msgstr ""
 "\"foobar %f\""
 
 #: ../src/plugins/glade/moofileselector-prefs.glade.h:8
-msgid "Command:"
-msgstr "Komento:"
+msgid "Command"
+msgstr "Komento"
 
 #: ../src/plugins/glade/moofileselector-prefs.glade.h:9
 msgid "Menu item label"
 msgstr "Valikkokohdan teksti"
 
 #: ../src/plugins/glade/moofileselector-prefs.glade.h:10
-msgid "Name:"
-msgstr "Nimi:"
+msgid "Name"
+msgstr "Nimi"
 
 #: ../src/plugins/glade/moofileselector-prefs.glade.h:13
 msgid "Move down"
@@ -2097,8 +2103,8 @@ msgstr "Tiedostojen luettelo"
 
 #: ../src/plugins/moofileselector.c:388
 #, c-format
-msgid "Create file in folder '%s':"
-msgstr "Luo tiedosto kansioon \"%s\":"
+msgid "Create file in folder '%s'"
+msgstr "Luo tiedosto kansioon \"%s\""
 
 #: ../src/plugins/moofileselector.c:443
 #, c-format
@@ -2246,17 +2252,13 @@ msgstr "LaTeX"
 msgid "Filter|Make"
 msgstr "make"
 
-#: ../src/plugins/usertools/glade/mooedittools-exe.glade.h:1
-msgid "Filter:"
-msgstr "Suodin:"
-
 #: ../src/plugins/usertools/glade/mooedittools-exe.glade.h:2
-msgid "Output:"
-msgstr "Tuloste:"
+msgid "Output"
+msgstr "Tuloste"
 
 #: ../src/plugins/usertools/glade/mooedittools-exe.glade.h:3
-msgid "Input:"
-msgstr "Syöte:"
+msgid "Input"
+msgstr "Syöte"
 
 #: ../src/plugins/usertools/glade/moousertools.glade.h:1
 msgid "New item"
@@ -2279,20 +2281,20 @@ msgid "Enabled"
 msgstr "Käytössä"
 
 #: ../src/plugins/usertools/glade/moousertools.glade.h:6
-msgid "_Files:"
-msgstr "T_iedostot:"
+msgid "_Files"
+msgstr "T_iedostot"
 
 #: ../src/plugins/usertools/glade/moousertools.glade.h:7
-msgid "_Requires:"
-msgstr "_Vaatii:"
+msgid "_Requires"
+msgstr "_Vaatii"
 
 #: ../src/plugins/usertools/glade/moousertools.glade.h:8
-msgid "_Save:"
-msgstr "_Tallenna:"
+msgid "_Save"
+msgstr "_Tallenna"
 
 #: ../src/plugins/usertools/glade/moousertools.glade.h:9
-msgid "_Type:"
-msgstr "T_yyppi:"
+msgid "_Type"
+msgstr "T_yyppi"
 
 #. Label of a notebook tab on the User Tools preferences page
 #: ../src/plugins/usertools/glade/moousertools.glade.h:11
@@ -2489,9 +2491,6 @@ msgstr "Kaikki asiakirjat"
 #~ msgid "Languages and files"
 #~ msgstr "Tipos de archivos"
 
-#~ msgid "medit is a text editor"
-#~ msgstr "medit es un editor de texto"
-
 #~ msgid "DPatch"
 #~ msgstr "DPatch"
 
@@ -2550,12 +2549,12 @@ msgid "_Rename"
 msgstr "_Nimeä uudelleen"
 
 #: ../src/plugins/lsp/lsp-edits.cpp:343
-msgid "New name for '%s':"
-msgstr "Kohteen ”%s” uusi nimi:"
+msgid "New name for '%s'"
+msgstr "Kohteen ”%s” uusi nimi"
 
 #: ../src/plugins/lsp/lsp-edits.cpp:344
-msgid "New name:"
-msgstr "Uusi nimi:"
+msgid "New name"
+msgstr "Uusi nimi"
 
 #: ../src/plugins/lsp/lsp-edits.cpp:432
 #: ../src/plugins/lsp/lsp-edits.cpp:442
@@ -2830,8 +2829,8 @@ msgid "Describe what is under the _pointer"
 msgstr "Kuvaile, mikä on _osoittimen alla"
 
 #: ../src/plugins/lsp/ui/lsp-prefs.ui:87
-msgid "Send changes to the server _after:"
-msgstr "Lähetä muutokset palvelimelle _viiveellä:"
+msgid "Send changes to the server _after"
+msgstr "Lähetä muutokset palvelimelle _viiveellä"
 
 #: ../src/plugins/lsp/ui/lsp-prefs.ui:110
 msgid "milliseconds of quiet"
@@ -2914,8 +2913,8 @@ msgid "Terminal pane"
 msgstr "Päätepaneeli"
 
 #: ../src/plugins/terminal/ui/terminal-prefs.ui:20
-msgid "S_hell:"
-msgstr "_Komentotulkki:"
+msgid "S_hell"
+msgstr "_Komentotulkki"
 
 #: ../src/plugins/terminal/ui/terminal-prefs.ui:34
 msgid ""
@@ -2926,12 +2925,12 @@ msgstr ""
 "komentotulkki käynnistetään seuraavan kerran."
 
 #: ../src/plugins/terminal/ui/terminal-prefs.ui:45
-msgid "Color _scheme:"
-msgstr "_Väriteema:"
+msgid "Color _scheme"
+msgstr "_Väriteema"
 
 #: ../src/plugins/terminal/ui/terminal-prefs.ui:68
-msgid "_Font:"
-msgstr "_Fontti:"
+msgid "_Font"
+msgstr "_Fontti"
 
 #: ../src/plugins/terminal/ui/terminal-prefs.ui:93
 msgid "_Default"

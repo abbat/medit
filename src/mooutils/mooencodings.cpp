@@ -846,7 +846,7 @@ _moo_encodings_attach_combo (GtkWidget  *dialog,
     gtk_widget_show (hbox);
     gtk_box_pack_start (GTK_BOX (parent), hbox, FALSE, FALSE, 0);
 
-    label = gtk_label_new_with_mnemonic (_("Charact_er encoding:"));
+    label = gtk_label_new_with_mnemonic (_("Charact_er encoding"));
     gtk_widget_show (label);
     gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 

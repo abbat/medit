@@ -143,6 +143,10 @@ msgstr "_Zamknij"
 msgid "About"
 msgstr "O programie"
 
+#: ../src/mooapp/mooapp-info.h:21
+msgid "medit is a text editor"
+msgstr "medit to edytor tekstu"
+
 #. Tab label in Credits dialog
 #: ../src/mooapp/credits.c:140
 msgid "Thanks"
@@ -199,8 +203,8 @@ msgid "<b>Loading</b>"
 msgstr "<b>Otwieranie</b>"
 
 #: ../src/mooedit/glade/mooeditprefs-file.glade.h:2
-msgid "Encodings to _autodetect:"
-msgstr "_Automatycznie wykrywane kodowania:"
+msgid "Encodings to _autodetect"
+msgstr "_Automatycznie wykrywane kodowania"
 
 #: ../src/mooedit/glade/mooeditprefs-file.glade.h:3
 msgid ""
@@ -215,8 +219,8 @@ msgid "<b>Saving</b>"
 msgstr "<b>Zapisywanie</b>"
 
 #: ../src/mooedit/glade/mooeditprefs-file.glade.h:5
-msgid "Encoding for _new files:"
-msgstr "Kodowanie _nowych plików:"
+msgid "Encoding for _new files"
+msgstr "Kodowanie _nowych plików"
 
 #: ../src/mooedit/glade/mooeditprefs-file.glade.h:6
 msgid "Remove trailing _spaces"
@@ -277,46 +281,47 @@ msgid "Tab key indents"
 msgstr "Klawisz Tab tworzy wcięcia"
 
 #: ../src/mooedit/glade/mooeditprefs-general.glade.h:7
-msgid "Indent width:"
-msgstr "Szerokość wcięcia:"
+msgid "Indent width"
+msgstr "Szerokość wcięcia"
 
 #: ../src/mooedit/glade/mooeditprefs-general.glade.h:8
-msgid "Tab width:"
-msgstr "Szerokość tabulacji:"
+msgid "Tab width"
+msgstr "Szerokość tabulacji"
 
 #: ../src/mooedit/glade/mooeditprefs-general.glade.h:9
 msgid "<b>Font and colors</b>"
 msgstr "<b>Czcionka i kolory</b>"
 
 #: ../src/mooedit/glade/mooeditprefs-general.glade.h:10
-msgid "Font:"
-msgstr "Czcionka:"
+msgid "Font"
+msgstr "Czcionka"
 
 #: ../src/mooedit/glade/mooeditprefs-general.glade.h:11
-msgid "Color scheme:"
-msgstr "Schemat kolorów:"
+msgid "Color scheme"
+msgstr "Schemat kolorów"
 
 #: ../src/mooedit/glade/mooeditprefs-langs.glade.h:1
 msgid "<b>Language-specific options</b>"
 msgstr "<b>Opcje specyficzne dla języka</b>"
 
 #: ../src/mooedit/glade/mooeditprefs-langs.glade.h:2
-msgid "Options:"
-msgstr "Opcje:"
+#: ../src/mooedit/glade/mootextfind.glade.h:13
+msgid "Options"
+msgstr "Opcje"
 
 #: ../src/mooedit/glade/mooeditprefs-langs.glade.h:3
 #: ../src/plugins/glade/moofileselector-prefs.glade.h:3
-msgid "Mime types:"
-msgstr "Typy mime:"
+msgid "Mime types"
+msgstr "Typy mime"
 
 #: ../src/mooedit/glade/mooeditprefs-langs.glade.h:4
 #: ../src/plugins/glade/moofileselector-prefs.glade.h:5
-msgid "Extensions:"
-msgstr "Rozszerzenia:"
+msgid "Extensions"
+msgstr "Rozszerzenia"
 
 #: ../src/mooedit/glade/mooeditprefs-langs.glade.h:5
-msgid "Language:"
-msgstr "Język:"
+msgid "Language"
+msgstr "Język"
 
 #: ../src/mooedit/glade/mooeditprefs-view.glade.h:1
 msgid "<b>Text wrapping</b>"
@@ -405,8 +410,8 @@ msgid "Print using text styles"
 msgstr "Drukuj używając stylów tekstu"
 
 #: ../src/mooedit/glade/mooprint.glade.h:2
-msgid "Use custom font:"
-msgstr "Użyj własnej czcionki:"
+msgid "Use custom font"
+msgstr "Użyj własnej czcionki"
 
 #: ../src/mooedit/glade/mooprint.glade.h:3
 msgid "Wrap long lines"
@@ -440,16 +445,16 @@ msgid "Print separator line"
 msgstr "Drukuj separator wierszy"
 
 #: ../src/mooedit/glade/mooprint.glade.h:13
-msgid "Right:"
-msgstr "Prawo:"
+msgid "Right"
+msgstr "Prawo"
 
 #: ../src/mooedit/glade/mooprint.glade.h:14
-msgid "Center:"
-msgstr "Środek:"
+msgid "Center"
+msgstr "Środek"
 
 #: ../src/mooedit/glade/mooprint.glade.h:15
-msgid "Left:"
-msgstr "Lewo:"
+msgid "Left"
+msgstr "Lewo"
 
 #: ../src/mooedit/glade/mooprint.glade.h:16
 msgid "Header"
@@ -472,8 +477,8 @@ msgid "_Regular expression"
 msgstr "_Wyrażenie regularne"
 
 #: ../src/mooedit/glade/mootextfind.glade.h:1
-msgid "_Text to find:"
-msgstr "_Tekst do wyszukania:"
+msgid "_Text to find"
+msgstr "_Tekst do wyszukania"
 
 #: ../src/mooedit/glade/mootextfind.glade.h:2
 msgid "Regular e_xpression"
@@ -484,8 +489,8 @@ msgid "Find"
 msgstr "Znajdź"
 
 #: ../src/mooedit/glade/mootextfind.glade.h:4
-msgid "_Replacement text:"
-msgstr "No_wy tekst:"
+msgid "_Replacement text"
+msgstr "No_wy tekst"
 
 #: ../src/mooedit/glade/mootextfind.glade.h:5
 msgid "_Literal replacement"
@@ -520,10 +525,6 @@ msgstr "Od _kursora"
 msgid "_Whole words only"
 msgstr "Tylko całe _wyrazy"
 
-#: ../src/mooedit/glade/mootextfind.glade.h:13
-msgid "Options"
-msgstr "Opcje"
-
 #: ../src/mooedit/glade/mootextfind-prompt.glade.h:1
 msgid "Replace?"
 msgstr "Zamienić?"
@@ -551,8 +552,8 @@ msgid "Go to Line"
 msgstr "Przejdź do wiersza"
 
 #: ../src/mooedit/glade/mootextgotoline.glade.h:2
-msgid "Go to line:"
-msgstr "Przejdź do wiersza:"
+msgid "Go to line"
+msgstr "Przejdź do wiersza"
 
 #. menu item label
 #: ../src/mooedit/medit.xml.h:2
@@ -596,12 +597,9 @@ msgid ""
 "There are %u documents with unsaved changes. Save changes before closing?"
 msgid_plural ""
 "There are %u documents with unsaved changes. Save changes before closing?"
-msgstr[0] ""
-"Niektóre dokumenty nie zostały zapisane (%u). Zapisać zmiany przed "
-"zamknięciem?"
-msgstr[1] ""
-"Niektóre dokumenty nie zostały zapisane (%u). Zapisać zmiany przed "
-"zamknięciem?"
+msgstr[0] "Niektóre dokumenty nie zostały zapisane (%u). Zapisać zmiany przed zamknięciem?"
+msgstr[1] "Niektóre dokumenty nie zostały zapisane (%u). Zapisać zmiany przed zamknięciem?"
+msgstr[2] "Niektóre dokumenty nie zostały zapisane (%u). Zapisać zmiany przed zamknięciem?"
 
 #: ../src/mooedit/mooeditdialogs.c:428
 #, c-format
@@ -1258,7 +1256,8 @@ msgstr "Nie wykonano żadnej zamiany"
 msgid "%u replacement made"
 msgid_plural "%u replacements made"
 msgstr[0] "Wykonano %u zamianę"
-msgstr[1] "Wykonano %u zamian(y)"
+msgstr[1] "Wykonano %u zamiany"
+msgstr[2] "Wykonano %u zamian"
 
 #: ../src/moofileview/glade/moobookmark-editor.glade.h:1
 #: ../src/moofileview/moofileview.c:1241 ../src/moofileview/moofileview.c:1242
@@ -1266,12 +1265,12 @@ msgid "Edit Bookmarks"
 msgstr "Edytuj zakładki"
 
 #: ../src/moofileview/glade/moobookmark-editor.glade.h:2
-msgid "Icon:"
-msgstr "Ikona:"
+msgid "Icon"
+msgstr "Ikona"
 
 #: ../src/moofileview/glade/moobookmark-editor.glade.h:3
-msgid "Path:"
-msgstr "Ścieżka:"
+msgid "Path"
+msgstr "Ścieżka"
 
 #: ../src/moofileview/glade/moobookmark-editor.glade.h:4
 msgid "Add bookmark"
@@ -1375,6 +1374,7 @@ msgid "Add Bookmark"
 msgstr "Dodaj zakładkę"
 
 #: ../src/moofileview/moofileview.c:1585
+#: ../src/plugins/usertools/glade/mooedittools-exe.glade.h:1
 msgid "Filter"
 msgstr "Filtr"
 
@@ -1582,8 +1582,8 @@ msgid "Encodings combo submenu|Other"
 msgstr "Inne"
 
 #: ../src/mooutils/mooencodings.c:831
-msgid "Charact_er encoding:"
-msgstr "Kod_owanie znaków:"
+msgid "Charact_er encoding"
+msgstr "Kod_owanie znaków"
 
 #: ../src/mooutils/mooencodings-data.h:27
 msgid "West European"
@@ -1867,8 +1867,8 @@ msgid "Could not create folder %s: %s"
 msgstr "Nie udało się utworzyć folderu %s: %s"
 
 #: ../src/mooutils/moofiltermgr.c:545
-msgid "_Show:"
-msgstr "_Pokaż:"
+msgid "_Show"
+msgstr "_Pokaż"
 
 #: ../src/mooutils/moohelp.c:205
 msgid "Help files not found"
@@ -2029,6 +2029,10 @@ msgstr "Zapisz jako"
 msgid "Create File"
 msgstr "Utwórz plik"
 
+#: ../src/plugins/ui/moofileselector.ui:109
+msgid "File name"
+msgstr "Nazwa pliku"
+
 #: ../src/plugins/glade/moofileselector-prefs.glade.h:1
 msgid "<b>Open With</b>"
 msgstr "<b>Otwórz w</b>"
@@ -2054,16 +2058,16 @@ msgstr ""
 "np. 'foobar %f'"
 
 #: ../src/plugins/glade/moofileselector-prefs.glade.h:8
-msgid "Command:"
-msgstr "Polecenie:"
+msgid "Command"
+msgstr "Polecenie"
 
 #: ../src/plugins/glade/moofileselector-prefs.glade.h:9
 msgid "Menu item label"
 msgstr "Tekst menu"
 
 #: ../src/plugins/glade/moofileselector-prefs.glade.h:10
-msgid "Name:"
-msgstr "Nazwa:"
+msgid "Name"
+msgstr "Nazwa"
 
 #: ../src/plugins/glade/moofileselector-prefs.glade.h:13
 msgid "Move down"
@@ -2103,8 +2107,8 @@ msgstr "Lista plików"
 
 #: ../src/plugins/moofileselector.c:388
 #, c-format
-msgid "Create file in folder '%s':"
-msgstr "Utwórz plik w katalogu '%s':"
+msgid "Create file in folder '%s'"
+msgstr "Utwórz plik w katalogu '%s'"
 
 #: ../src/plugins/moofileselector.c:443
 #, c-format
@@ -2202,14 +2206,16 @@ msgstr "Wyszukaj w plikach"
 msgid "*** %u match found ***"
 msgid_plural "*** %u matches found ***"
 msgstr[0] "*** znaleziono %u dopasowanie ***"
-msgstr[1] "*** znaleziono dopasowań: %u ***"
+msgstr[1] "*** znaleziono %u dopasowania ***"
+msgstr[2] "*** znaleziono %u dopasowań ***"
 
 #: ../src/plugins/moofind.c:1055 ../src/plugins/moofind.c:1080
 #, c-format
 msgid "*** %u file found ***"
 msgid_plural "*** %u files found ***"
 msgstr[0] "*** znaleziono %u plik ***"
-msgstr[1] "*** znaleziono plików: %u ***"
+msgstr[1] "*** znaleziono %u pliki ***"
+msgstr[2] "*** znaleziono %u plików ***"
 
 #: ../src/plugins/moofind.c:1116
 msgid "Finds everything"
@@ -2252,17 +2258,13 @@ msgstr "LaTeX"
 msgid "Filter|Make"
 msgstr "Make"
 
-#: ../src/plugins/usertools/glade/mooedittools-exe.glade.h:1
-msgid "Filter:"
-msgstr "Filtr:"
-
 #: ../src/plugins/usertools/glade/mooedittools-exe.glade.h:2
-msgid "Output:"
-msgstr "Wyjście:"
+msgid "Output"
+msgstr "Wyjście"
 
 #: ../src/plugins/usertools/glade/mooedittools-exe.glade.h:3
-msgid "Input:"
-msgstr "Wejście:"
+msgid "Input"
+msgstr "Wejście"
 
 #: ../src/plugins/usertools/glade/moousertools.glade.h:1
 msgid "New item"
@@ -2285,20 +2287,20 @@ msgid "Enabled"
 msgstr "Włączony"
 
 #: ../src/plugins/usertools/glade/moousertools.glade.h:6
-msgid "_Files:"
-msgstr "_Pliki:"
+msgid "_Files"
+msgstr "_Pliki"
 
 #: ../src/plugins/usertools/glade/moousertools.glade.h:7
-msgid "_Requires:"
-msgstr "_Wymaga:"
+msgid "_Requires"
+msgstr "_Wymaga"
 
 #: ../src/plugins/usertools/glade/moousertools.glade.h:8
-msgid "_Save:"
-msgstr "_Zapisz:"
+msgid "_Save"
+msgstr "_Zapisz"
 
 #: ../src/plugins/usertools/glade/moousertools.glade.h:9
-msgid "_Type:"
-msgstr "_Typ:"
+msgid "_Type"
+msgstr "_Typ"
 
 #. Label of a notebook tab on the User Tools preferences page
 #: ../src/plugins/usertools/glade/moousertools.glade.h:11
@@ -2444,12 +2446,12 @@ msgid "_Rename"
 msgstr "Zmień _nazwę"
 
 #: ../src/plugins/lsp/lsp-edits.cpp:343
-msgid "New name for '%s':"
-msgstr "Nowa nazwa dla „%s”:"
+msgid "New name for '%s'"
+msgstr "Nowa nazwa dla „%s”"
 
 #: ../src/plugins/lsp/lsp-edits.cpp:344
-msgid "New name:"
-msgstr "Nowa nazwa:"
+msgid "New name"
+msgstr "Nowa nazwa"
 
 #: ../src/plugins/lsp/lsp-edits.cpp:432
 #: ../src/plugins/lsp/lsp-edits.cpp:442
@@ -2724,8 +2726,8 @@ msgid "Describe what is under the _pointer"
 msgstr "Opisuj to, co jest pod _wskaźnikiem"
 
 #: ../src/plugins/lsp/ui/lsp-prefs.ui:87
-msgid "Send changes to the server _after:"
-msgstr "Wysyłaj zmiany do serwera _po:"
+msgid "Send changes to the server _after"
+msgstr "Wysyłaj zmiany do serwera _po"
 
 #: ../src/plugins/lsp/ui/lsp-prefs.ui:110
 msgid "milliseconds of quiet"
@@ -2808,8 +2810,8 @@ msgid "Terminal pane"
 msgstr "Panel terminala"
 
 #: ../src/plugins/terminal/ui/terminal-prefs.ui:20
-msgid "S_hell:"
-msgstr "Po_włoka:"
+msgid "S_hell"
+msgstr "Po_włoka"
 
 #: ../src/plugins/terminal/ui/terminal-prefs.ui:34
 msgid ""
@@ -2820,12 +2822,12 @@ msgstr ""
 "uruchomieniu powłoki."
 
 #: ../src/plugins/terminal/ui/terminal-prefs.ui:45
-msgid "Color _scheme:"
-msgstr "_Schemat kolorów:"
+msgid "Color _scheme"
+msgstr "_Schemat kolorów"
 
 #: ../src/plugins/terminal/ui/terminal-prefs.ui:68
-msgid "_Font:"
-msgstr "_Czcionka:"
+msgid "_Font"
+msgstr "_Czcionka"
 
 #: ../src/plugins/terminal/ui/terminal-prefs.ui:93
 msgid "_Default"

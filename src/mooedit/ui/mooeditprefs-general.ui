@@ -160,7 +160,7 @@
                           <object class="GtkLabel" id="label32">
                             <property name="visible">True</property>
                             <property name="xalign">1</property>
-                            <property name="label" translatable="yes">Indent width:</property>
+                            <property name="label" translatable="yes">Indent width</property>
                             <property name="mnemonic_widget">indent_width</property>
                           </object>
                           <packing>
@@ -187,7 +187,7 @@
                           <object class="GtkLabel" id="label19">
                             <property name="visible">True</property>
                             <property name="xalign">1</property>
-                            <property name="label" translatable="yes">Tab width:</property>
+                            <property name="label" translatable="yes">Tab width</property>
                             <property name="mnemonic_widget">tab_width</property>
                           </object>
                           <packing>
@@ -251,7 +251,7 @@
                           <object class="GtkLabel" id="label99">
                             <property name="visible">True</property>
                             <property name="xalign">1</property>
-                            <property name="label" translatable="yes">Font:</property>
+                            <property name="label" translatable="yes">Font</property>
                           </object>
                           <packing>
                             <property name="x_options">GTK_FILL</property>
@@ -275,7 +275,7 @@
                           <object class="GtkLabel" id="label100">
                             <property name="visible">True</property>
                             <property name="xalign">1</property>
-                            <property name="label" translatable="yes">Color scheme:</property>
+                            <property name="label" translatable="yes">Color scheme</property>
                           </object>
                           <packing>
                             <property name="top_attach">1</property>

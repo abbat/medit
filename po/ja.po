@@ -143,6 +143,10 @@ msgstr "閉じる(_C)"
 msgid "About"
 msgstr "情報"
 
+#: ../src/mooapp/mooapp-info.h:21
+msgid "medit is a text editor"
+msgstr "medit はテキストエディタです"
+
 #. Tab label in Credits dialog
 #: ../src/mooapp/credits.c:140
 msgid "Thanks"
@@ -199,8 +203,8 @@ msgid "<b>Loading</b>"
 msgstr "<b>読込中</b>"
 
 #: ../src/mooedit/glade/mooeditprefs-file.glade.h:2
-msgid "Encodings to _autodetect:"
-msgstr "自動検出するエンコーディング(_A):"
+msgid "Encodings to _autodetect"
+msgstr "自動検出するエンコーディング(_A)"
 
 #: ../src/mooedit/glade/mooeditprefs-file.glade.h:3
 msgid ""
@@ -215,8 +219,8 @@ msgid "<b>Saving</b>"
 msgstr "<b>保存中</b>"
 
 #: ../src/mooedit/glade/mooeditprefs-file.glade.h:5
-msgid "Encoding for _new files:"
-msgstr "新規ファイルのエンコーディング(_N):"
+msgid "Encoding for _new files"
+msgstr "新規ファイルのエンコーディング(_N)"
 
 #: ../src/mooedit/glade/mooeditprefs-file.glade.h:6
 msgid "Remove trailing _spaces"
@@ -275,46 +279,47 @@ msgid "Tab key indents"
 msgstr "タブキーインデント"
 
 #: ../src/mooedit/glade/mooeditprefs-general.glade.h:7
-msgid "Indent width:"
-msgstr "インデント幅:"
+msgid "Indent width"
+msgstr "インデント幅"
 
 #: ../src/mooedit/glade/mooeditprefs-general.glade.h:8
-msgid "Tab width:"
-msgstr "タブ幅:"
+msgid "Tab width"
+msgstr "タブ幅"
 
 #: ../src/mooedit/glade/mooeditprefs-general.glade.h:9
 msgid "<b>Font and colors</b>"
 msgstr "<b>フォントと色</b>"
 
 #: ../src/mooedit/glade/mooeditprefs-general.glade.h:10
-msgid "Font:"
-msgstr "フォント:"
+msgid "Font"
+msgstr "フォント"
 
 #: ../src/mooedit/glade/mooeditprefs-general.glade.h:11
-msgid "Color scheme:"
-msgstr "カラースキーム:"
+msgid "Color scheme"
+msgstr "カラースキーム"
 
 #: ../src/mooedit/glade/mooeditprefs-langs.glade.h:1
 msgid "<b>Language-specific options</b>"
 msgstr "<b>言語固有のオプション</b>"
 
 #: ../src/mooedit/glade/mooeditprefs-langs.glade.h:2
-msgid "Options:"
-msgstr "オプション:"
+#: ../src/mooedit/glade/mootextfind.glade.h:13
+msgid "Options"
+msgstr "オプション"
 
 #: ../src/mooedit/glade/mooeditprefs-langs.glade.h:3
 #: ../src/plugins/glade/moofileselector-prefs.glade.h:3
-msgid "Mime types:"
-msgstr "MIME タイプ:"
+msgid "Mime types"
+msgstr "MIME タイプ"
 
 #: ../src/mooedit/glade/mooeditprefs-langs.glade.h:4
 #: ../src/plugins/glade/moofileselector-prefs.glade.h:5
-msgid "Extensions:"
-msgstr "機能拡張:"
+msgid "Extensions"
+msgstr "機能拡張"
 
 #: ../src/mooedit/glade/mooeditprefs-langs.glade.h:5
-msgid "Language:"
-msgstr "言語:"
+msgid "Language"
+msgstr "言語"
 
 #: ../src/mooedit/glade/mooeditprefs-view.glade.h:1
 msgid "<b>Text wrapping</b>"
@@ -403,8 +408,8 @@ msgid "Print using text styles"
 msgstr "テキストスタイルを使用して印刷"
 
 #: ../src/mooedit/glade/mooprint.glade.h:2
-msgid "Use custom font:"
-msgstr "カスタムフォントを使用:"
+msgid "Use custom font"
+msgstr "カスタムフォントを使用"
 
 #: ../src/mooedit/glade/mooprint.glade.h:3
 msgid "Wrap long lines"
@@ -438,16 +443,16 @@ msgid "Print separator line"
 msgstr "分割線を印刷"
 
 #: ../src/mooedit/glade/mooprint.glade.h:13
-msgid "Right:"
-msgstr "右:"
+msgid "Right"
+msgstr "右"
 
 #: ../src/mooedit/glade/mooprint.glade.h:14
-msgid "Center:"
-msgstr "中央:"
+msgid "Center"
+msgstr "中央"
 
 #: ../src/mooedit/glade/mooprint.glade.h:15
-msgid "Left:"
-msgstr "左:"
+msgid "Left"
+msgstr "左"
 
 #: ../src/mooedit/glade/mooprint.glade.h:16
 msgid "Header"
@@ -470,8 +475,8 @@ msgid "_Regular expression"
 msgstr "正規表現(_R)"
 
 #: ../src/mooedit/glade/mootextfind.glade.h:1
-msgid "_Text to find:"
-msgstr "検索するテキスト(_T):"
+msgid "_Text to find"
+msgstr "検索するテキスト(_T)"
 
 #: ../src/mooedit/glade/mootextfind.glade.h:2
 msgid "Regular e_xpression"
@@ -482,8 +487,8 @@ msgid "Find"
 msgstr "検索"
 
 #: ../src/mooedit/glade/mootextfind.glade.h:4
-msgid "_Replacement text:"
-msgstr "置換するテキスト(_R):"
+msgid "_Replacement text"
+msgstr "置換するテキスト(_R)"
 
 #: ../src/mooedit/glade/mootextfind.glade.h:5
 msgid "_Literal replacement"
@@ -518,10 +523,6 @@ msgstr "カーソルから(_U)"
 msgid "_Whole words only"
 msgstr "完全に一致する単語のみ(_W)"
 
-#: ../src/mooedit/glade/mootextfind.glade.h:13
-msgid "Options"
-msgstr "オプション"
-
 #: ../src/mooedit/glade/mootextfind-prompt.glade.h:1
 msgid "Replace?"
 msgstr "置き換えますか？"
@@ -549,8 +550,8 @@ msgid "Go to Line"
 msgstr "行へ移動"
 
 #: ../src/mooedit/glade/mootextgotoline.glade.h:2
-msgid "Go to line:"
-msgstr "行へ移動:"
+msgid "Go to line"
+msgstr "行へ移動"
 
 #. menu item label
 #: ../src/mooedit/medit.xml.h:2
@@ -595,8 +596,6 @@ msgid ""
 msgid_plural ""
 "There are %u documents with unsaved changes. Save changes before closing?"
 msgstr[0] ""
-"変更が保存されていないドキュメント %u があります。閉じる前に保存しますか？"
-msgstr[1] ""
 "変更が保存されていないドキュメント %u があります。閉じる前に保存しますか？"
 
 #: ../src/mooedit/mooeditdialogs.c:428
@@ -1245,7 +1244,6 @@ msgstr "置換はなされませんでした"
 msgid "%u replacement made"
 msgid_plural "%u replacements made"
 msgstr[0] "%u 箇所置き換えられました"
-msgstr[1] "%u 箇所置き換えられました"
 
 #: ../src/moofileview/glade/moobookmark-editor.glade.h:1
 #: ../src/moofileview/moofileview.c:1241 ../src/moofileview/moofileview.c:1242
@@ -1253,12 +1251,12 @@ msgid "Edit Bookmarks"
 msgstr "ブックマークを編集"
 
 #: ../src/moofileview/glade/moobookmark-editor.glade.h:2
-msgid "Icon:"
-msgstr "アイコン:"
+msgid "Icon"
+msgstr "アイコン"
 
 #: ../src/moofileview/glade/moobookmark-editor.glade.h:3
-msgid "Path:"
-msgstr "パス:"
+msgid "Path"
+msgstr "パス"
 
 #: ../src/moofileview/glade/moobookmark-editor.glade.h:4
 msgid "Add bookmark"
@@ -1362,6 +1360,7 @@ msgid "Add Bookmark"
 msgstr "ブックマークを追加"
 
 #: ../src/moofileview/moofileview.c:1585
+#: ../src/plugins/usertools/glade/mooedittools-exe.glade.h:1
 msgid "Filter"
 msgstr "フィルター"
 
@@ -1569,8 +1568,8 @@ msgid "Encodings combo submenu|Other"
 msgstr "その他"
 
 #: ../src/mooutils/mooencodings.c:831
-msgid "Charact_er encoding:"
-msgstr "文字エンコーディング(_E):"
+msgid "Charact_er encoding"
+msgstr "文字エンコーディング(_E)"
 
 #: ../src/mooutils/mooencodings-data.h:27
 msgid "West European"
@@ -1854,8 +1853,8 @@ msgid "Could not create folder %s: %s"
 msgstr "%s を作成することができませんでした: %s"
 
 #: ../src/mooutils/moofiltermgr.c:545
-msgid "_Show:"
-msgstr "表示(_S):"
+msgid "_Show"
+msgstr "表示(_S)"
 
 #: ../src/mooutils/moohelp.c:205
 msgid "Help files not found"
@@ -2016,6 +2015,10 @@ msgstr "別名で保存"
 msgid "Create File"
 msgstr "ファイルを作成"
 
+#: ../src/plugins/ui/moofileselector.ui:109
+msgid "File name"
+msgstr "ファイル名"
+
 #: ../src/plugins/glade/moofileselector-prefs.glade.h:1
 msgid "<b>Open With</b>"
 msgstr "<b>指定されたアプリで開く</b>"
@@ -2037,16 +2040,16 @@ msgid ""
 msgstr ""
 
 #: ../src/plugins/glade/moofileselector-prefs.glade.h:8
-msgid "Command:"
-msgstr "コマンド:"
+msgid "Command"
+msgstr "コマンド"
 
 #: ../src/plugins/glade/moofileselector-prefs.glade.h:9
 msgid "Menu item label"
 msgstr "メニューアイテムラベル"
 
 #: ../src/plugins/glade/moofileselector-prefs.glade.h:10
-msgid "Name:"
-msgstr "名称:"
+msgid "Name"
+msgstr "名称"
 
 #: ../src/plugins/glade/moofileselector-prefs.glade.h:13
 msgid "Move down"
@@ -2086,8 +2089,8 @@ msgstr "ファイルのリスト"
 
 #: ../src/plugins/moofileselector.c:388
 #, c-format
-msgid "Create file in folder '%s':"
-msgstr "フォルダー '%s' 内にファイルを作成:"
+msgid "Create file in folder '%s'"
+msgstr "フォルダー '%s' 内にファイルを作成"
 
 #: ../src/plugins/moofileselector.c:443
 #, c-format
@@ -2185,14 +2188,12 @@ msgstr "複数のファイル内を検索"
 msgid "*** %u match found ***"
 msgid_plural "*** %u matches found ***"
 msgstr[0] "*** %u 箇所合致する箇所が見つかりました ***"
-msgstr[1] "*** %u 箇所合致する箇所が見つかりました ***"
 
 #: ../src/plugins/moofind.c:1055 ../src/plugins/moofind.c:1080
 #, c-format
 msgid "*** %u file found ***"
 msgid_plural "*** %u files found ***"
 msgstr[0] "*** %u ファイル見つかりました ***"
-msgstr[1] "*** %u ファイル見つかりました ***"
 
 #: ../src/plugins/moofind.c:1116
 msgid "Finds everything"
@@ -2235,17 +2236,13 @@ msgstr "LaTeX"
 msgid "Filter|Make"
 msgstr "Make"
 
-#: ../src/plugins/usertools/glade/mooedittools-exe.glade.h:1
-msgid "Filter:"
-msgstr "フィルター:"
-
 #: ../src/plugins/usertools/glade/mooedittools-exe.glade.h:2
-msgid "Output:"
-msgstr "出力:"
+msgid "Output"
+msgstr "出力"
 
 #: ../src/plugins/usertools/glade/mooedittools-exe.glade.h:3
-msgid "Input:"
-msgstr "入力:"
+msgid "Input"
+msgstr "入力"
 
 #: ../src/plugins/usertools/glade/moousertools.glade.h:1
 msgid "New item"
@@ -2268,20 +2265,20 @@ msgid "Enabled"
 msgstr "有効化"
 
 #: ../src/plugins/usertools/glade/moousertools.glade.h:6
-msgid "_Files:"
-msgstr "ファイル(_F):"
+msgid "_Files"
+msgstr "ファイル(_F)"
 
 #: ../src/plugins/usertools/glade/moousertools.glade.h:7
-msgid "_Requires:"
-msgstr "必要物(_R):"
+msgid "_Requires"
+msgstr "必要物(_R)"
 
 #: ../src/plugins/usertools/glade/moousertools.glade.h:8
-msgid "_Save:"
-msgstr "保存(_S):"
+msgid "_Save"
+msgstr "保存(_S)"
 
 #: ../src/plugins/usertools/glade/moousertools.glade.h:9
-msgid "_Type:"
-msgstr "タイプ(_T):"
+msgid "_Type"
+msgstr "タイプ(_T)"
 
 #. Label of a notebook tab on the User Tools preferences page
 #: ../src/plugins/usertools/glade/moousertools.glade.h:11
@@ -2426,12 +2423,12 @@ msgid "_Rename"
 msgstr "名前を変更(_R)"
 
 #: ../src/plugins/lsp/lsp-edits.cpp:343
-msgid "New name for '%s':"
-msgstr "「%s」の新しい名前:"
+msgid "New name for '%s'"
+msgstr "「%s」の新しい名前"
 
 #: ../src/plugins/lsp/lsp-edits.cpp:344
-msgid "New name:"
-msgstr "新しい名前:"
+msgid "New name"
+msgstr "新しい名前"
 
 #: ../src/plugins/lsp/lsp-edits.cpp:432
 #: ../src/plugins/lsp/lsp-edits.cpp:442
@@ -2704,8 +2701,8 @@ msgid "Describe what is under the _pointer"
 msgstr "ポインタの下にあるものを説明する(_P)"
 
 #: ../src/plugins/lsp/ui/lsp-prefs.ui:87
-msgid "Send changes to the server _after:"
-msgstr "変更をサーバーへ送るまでの待ち時間(_A):"
+msgid "Send changes to the server _after"
+msgstr "変更をサーバーへ送るまでの待ち時間(_A)"
 
 #: ../src/plugins/lsp/ui/lsp-prefs.ui:110
 msgid "milliseconds of quiet"
@@ -2780,8 +2777,8 @@ msgid "Terminal pane"
 msgstr "端末ペイン"
 
 #: ../src/plugins/terminal/ui/terminal-prefs.ui:20
-msgid "S_hell:"
-msgstr "シェル(_H):"
+msgid "S_hell"
+msgstr "シェル(_H)"
 
 #: ../src/plugins/terminal/ui/terminal-prefs.ui:34
 msgid ""
@@ -2790,12 +2787,12 @@ msgid ""
 msgstr "空にするとログインシェルを使います。次にシェルを起動したときに反映されます。"
 
 #: ../src/plugins/terminal/ui/terminal-prefs.ui:45
-msgid "Color _scheme:"
-msgstr "配色(_S):"
+msgid "Color _scheme"
+msgstr "配色(_S)"
 
 #: ../src/plugins/terminal/ui/terminal-prefs.ui:68
-msgid "_Font:"
-msgstr "フォント(_F):"
+msgid "_Font"
+msgstr "フォント(_F)"
 
 #: ../src/plugins/terminal/ui/terminal-prefs.ui:93
 msgid "_Default"

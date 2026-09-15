@@ -545,7 +545,7 @@ moo_filter_mgr_attach (MooFilterMgr   *mgr,
     gtk_widget_show (hbox);
     gtk_box_pack_end (GTK_BOX (parent), hbox, FALSE, FALSE, 0);
 
-    label = gtk_label_new_with_mnemonic (_("_Show:"));
+    label = gtk_label_new_with_mnemonic (_("_Show"));
     gtk_widget_show (label);
     gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 

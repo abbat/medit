@@ -153,7 +153,7 @@
                       <object class="GtkLabel" id="label8">
                         <property name="visible">True</property>
                         <property name="xalign">1</property>
-                        <property name="label" translatable="yes">_Files:</property>
+                        <property name="label" translatable="yes">_Files</property>
                         <property name="use_underline">True</property>
                         <property name="mnemonic_widget">filter</property>
                       </object>
@@ -180,7 +180,7 @@
                       <object class="GtkLabel" id="label1">
                         <property name="visible">True</property>
                         <property name="xalign">1</property>
-                        <property name="label" translatable="yes">_Requires:</property>
+                        <property name="label" translatable="yes">_Requires</property>
                         <property name="use_underline">True</property>
                         <property name="mnemonic_widget">combo_requires</property>
                       </object>
@@ -207,7 +207,7 @@
                       <object class="GtkLabel" id="label2">
                         <property name="visible">True</property>
                         <property name="xalign">1</property>
-                        <property name="label" translatable="yes">_Save:</property>
+                        <property name="label" translatable="yes">_Save</property>
                         <property name="use_underline">True</property>
                         <property name="mnemonic_widget">combo_save</property>
                       </object>
@@ -234,7 +234,7 @@
                       <object class="GtkLabel" id="label5">
                         <property name="visible">True</property>
                         <property name="xalign">1</property>
-                        <property name="label" translatable="yes">_Type:</property>
+                        <property name="label" translatable="yes">_Type</property>
                         <property name="use_underline">True</property>
                         <property name="mnemonic_widget">combo_type</property>
                       </object>

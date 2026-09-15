@@ -43,22 +43,23 @@ If the UI comes up in English, check `find locale -type f | wc -l` in the build
 directory — if it is empty, rebuild: the catalogs are a build target
 (`cmake --build build3`).
 
-**Nothing regenerates the .pot any more.** intltool went with autotools, and the tree
-carries no template — `po/POTFILES.in` is only a list. To find out what a catalog is
-missing, build one by hand and merge:
+**`po/update-pot.py` regenerates the template**, and `po/medit.pot` is in the tree.
+intltool went with autotools; the script does the two of its jobs that xgettext does not
+do by itself. It drops the `[type: gettext/glade]` prefixes, and it rewrites the files
+that mark a string on an attribute or a key — the ui `.xml` files and the `.desktop.in`
+— as the `<file>.h` of `N_()` calls intltool generated, which is where the `medit.xml.h`
+references in the catalogs come from. Without that second step the menu strings are
+dropped from the template without a word:
 
 ```bash
-sed -e 's/^\[type: gettext\/glade\][[:space:]]*//' -e '/^#/d' po/POTFILES.in > files.txt
-xgettext --directory=. --files-from=files.txt --from-code=UTF-8 \
-    --keyword=_ --keyword=N_ --keyword=Q_ --keyword=C_:1c,2 --keyword=NC_:1c,2 \
-    --add-comments -o medit.pot
-msgmerge --no-fuzzy-matching po/ru.po medit.pot -o /tmp/ru.po
-msgfmt --statistics -o /dev/null /tmp/ru.po
+python3 po/update-pot.py
+msgmerge --update --backup=none po/ru.po po/medit.pot
+msgfmt --statistics --check -o /dev/null po/ru.po
 ```
 
-This is an approximation — xgettext treats `.xml` as C and does not understand
-`.desktop.in`, both of which intltool handled — so trust it for "which msgid is
-missing", not for the absolute counts.
+`POTFILES.in` is the input, so a path that went stale takes its file's strings with it;
+seventeen entries still said `.c` after the C++ port and were silently contributing
+nothing.
 
 **A translation can be present and still not appear.** The glade era left msgids that
 no longer match the code: dialog titles were extracted as `"Dialog title|About"` (the
@@ -77,12 +78,11 @@ before inventing a wording; that is why the terminal's context menu came up in R
 with only nine new strings to write. For strings gtk itself carries, `D_(str, "gtk30")`
 borrows gtk's catalog the same way (`"Pick a Font"`); the python plugin used `"gtk20"`.
 
-Catalog state, measured with the command above: `ru` is complete (626 strings) and is the
-one to check first; `fr` and `es` are one string short, `pl` is complete but carries nine
-fuzzy entries, `de` 20 short, `fi` 24, `ja` 29; `cs` (190 short) and `zh_CN` (215) are
-still half empty, and `nl` 119. Every string of the terminal and of the LSP client is
-translated in all ten, which is the one part of the tree where the newer catalogs are not
-behind.
+Catalog state against the current template (623 strings): `ru` is complete and is the one
+to check first; `es` and `fr` are 12 short, `pl` 11 short with nine fuzzy entries, `de` 31,
+`fi` 35, `ja` 40; `nl` is 124 short, and `cs` (191) and `zh_CN` (218) are still half empty.
+Every string of the terminal and of the LSP client is translated in all ten, which is the
+one part of the tree where the newer catalogs are not behind.
 
 **A string can be live, translated, and still English on screen.** Two ways, both found by
 auditing rather than by looking: a file that marks strings for translation and is not in
@@ -98,12 +98,22 @@ Note when translating a display name that the *id* beside it is not one: acceler
 and the `Shortcuts/` preference keys are built from the id, so translating that would make
 a user's key bindings locale-dependent.
 
-`ja.po` and `pl.po` still fail `msgfmt --check` on plural forms, which is pre-existing and
-about the header rather than any one string; `--check-format` is clean everywhere, the one
-Japanese entry that had lost a `%s` having been fixed. `fi.po` had a Spanish string in one
-obsolete entry, which is what reviving one blindly can cost. Two things to keep true when adding
-to a catalog: a translated string with a mnemonic keeps the underscore (on a letter of the
-translation, not of the English), and `msgctxt` entries have to be appended with their
+A label that introduces an entry, a combo box or a spin button carries no trailing
+colon; the widget beside it says what it is. Colons are for a heading over a list and
+for a label:value pair, where they do separate something. A msgid that loses one can
+collide with a msgid that never had it — "Options:" and "Options" were two entries in
+every catalog — so merge, and watch for an obsolete `#~` entry of the same msgid,
+which msgfmt reports as a duplicate definition.
+
+All ten catalogs pass `msgfmt --check --check-format`. `ja.po` and `pl.po` did not: their
+plural entries carried two forms each while the headers declare one and three, which is
+about the entry rather than the header — Japanese does not inflect for number, and Polish
+needs a third form for 2–4 (`%u zamiany`) apart from the one for 5 and up (`%u zamian`).
+
+`fi.po` had a Spanish string in one obsolete entry, which is what reviving one
+blindly can cost. Two things to keep true when adding to a catalog: a translated
+string with a mnemonic keeps the underscore (on a letter of the translation, not of
+the English), and `msgctxt` entries have to be appended with their
 context or the lookup misses -- `C_("symbol kind", "class")` is not the same msgid as a
 bare "class", and a catalog that has one still shows the other in English.
 

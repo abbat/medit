@@ -144,6 +144,10 @@ msgstr ""
 msgid "About"
 msgstr ""
 
+#: ../src/mooapp/mooapp-info.h:21
+msgid "medit is a text editor"
+msgstr "medit je textový editor"
+
 #. Tab label in Credits dialog
 #: ../src/mooapp/credits.c:140
 msgid "Thanks"
@@ -197,7 +201,7 @@ msgid "<b>Loading</b>"
 msgstr "<b>Načítání</b>"
 
 #: ../src/mooedit/glade/mooeditprefs-file.glade.h:2
-msgid "Encodings to _autodetect:"
+msgid "Encodings to _autodetect"
 msgstr ""
 
 #: ../src/mooedit/glade/mooeditprefs-file.glade.h:3
@@ -213,7 +217,7 @@ msgid "<b>Saving</b>"
 msgstr "<b>Ukládání</b>"
 
 #: ../src/mooedit/glade/mooeditprefs-file.glade.h:5
-msgid "Encoding for _new files:"
+msgid "Encoding for _new files"
 msgstr ""
 
 #: ../src/mooedit/glade/mooeditprefs-file.glade.h:6
@@ -273,11 +277,11 @@ msgid "Tab key indents"
 msgstr ""
 
 #: ../src/mooedit/glade/mooeditprefs-general.glade.h:7
-msgid "Indent width:"
-msgstr "Šířka odsazení:"
+msgid "Indent width"
+msgstr "Šířka odsazení"
 
 #: ../src/mooedit/glade/mooeditprefs-general.glade.h:8
-msgid "Tab width:"
+msgid "Tab width"
 msgstr ""
 
 #: ../src/mooedit/glade/mooeditprefs-general.glade.h:9
@@ -285,34 +289,35 @@ msgid "<b>Font and colors</b>"
 msgstr "<b>Písmo a barvy</b>"
 
 #: ../src/mooedit/glade/mooeditprefs-general.glade.h:10
-msgid "Font:"
-msgstr "Písmo:"
+msgid "Font"
+msgstr "Písmo"
 
 #: ../src/mooedit/glade/mooeditprefs-general.glade.h:11
-msgid "Color scheme:"
-msgstr "Barevné schéma:"
+msgid "Color scheme"
+msgstr "Barevné schéma"
 
 #: ../src/mooedit/glade/mooeditprefs-langs.glade.h:1
 msgid "<b>Language-specific options</b>"
 msgstr "<b>Nastavení jazyků</b>"
 
 #: ../src/mooedit/glade/mooeditprefs-langs.glade.h:2
-msgid "Options:"
-msgstr "Volby:"
+#: ../src/mooedit/glade/mootextfind.glade.h:13
+msgid "Options"
+msgstr "Volby"
 
 #: ../src/mooedit/glade/mooeditprefs-langs.glade.h:3
 #: ../src/plugins/glade/moofileselector-prefs.glade.h:3
-msgid "Mime types:"
-msgstr "MIME typy:"
+msgid "Mime types"
+msgstr "MIME typy"
 
 #: ../src/mooedit/glade/mooeditprefs-langs.glade.h:4
 #: ../src/plugins/glade/moofileselector-prefs.glade.h:5
-msgid "Extensions:"
-msgstr "Přípony:"
+msgid "Extensions"
+msgstr "Přípony"
 
 #: ../src/mooedit/glade/mooeditprefs-langs.glade.h:5
-msgid "Language:"
-msgstr "Jazyk:"
+msgid "Language"
+msgstr "Jazyk"
 
 #: ../src/mooedit/glade/mooeditprefs-view.glade.h:1
 msgid "<b>Text wrapping</b>"
@@ -401,8 +406,8 @@ msgid "Print using text styles"
 msgstr "Tisknout pomocí textových stylů"
 
 #: ../src/mooedit/glade/mooprint.glade.h:2
-msgid "Use custom font:"
-msgstr "Použít zvolené písmo:"
+msgid "Use custom font"
+msgstr "Použít zvolené písmo"
 
 #: ../src/mooedit/glade/mooprint.glade.h:3
 msgid "Wrap long lines"
@@ -436,16 +441,16 @@ msgid "Print separator line"
 msgstr "Tisknout oddělovací linku"
 
 #: ../src/mooedit/glade/mooprint.glade.h:13
-msgid "Right:"
-msgstr "Vpravo:"
+msgid "Right"
+msgstr "Vpravo"
 
 #: ../src/mooedit/glade/mooprint.glade.h:14
-msgid "Center:"
-msgstr "Střed:"
+msgid "Center"
+msgstr "Střed"
 
 #: ../src/mooedit/glade/mooprint.glade.h:15
-msgid "Left:"
-msgstr "Vlevo:"
+msgid "Left"
+msgstr "Vlevo"
 
 #: ../src/mooedit/glade/mooprint.glade.h:16
 msgid "Header"
@@ -468,7 +473,7 @@ msgid "_Regular expression"
 msgstr "_Regulární výraz"
 
 #: ../src/mooedit/glade/mootextfind.glade.h:1
-msgid "_Text to find:"
+msgid "_Text to find"
 msgstr ""
 
 #: ../src/mooedit/glade/mootextfind.glade.h:2
@@ -480,7 +485,7 @@ msgid "Find"
 msgstr "Najít"
 
 #: ../src/mooedit/glade/mootextfind.glade.h:4
-msgid "_Replacement text:"
+msgid "_Replacement text"
 msgstr ""
 
 #: ../src/mooedit/glade/mootextfind.glade.h:5
@@ -516,10 +521,6 @@ msgstr ""
 msgid "_Whole words only"
 msgstr ""
 
-#: ../src/mooedit/glade/mootextfind.glade.h:13
-msgid "Options"
-msgstr "Volby"
-
 #: ../src/mooedit/glade/mootextfind-prompt.glade.h:1
 msgid "Replace?"
 msgstr "Nahradit?"
@@ -547,8 +548,8 @@ msgid "Go to Line"
 msgstr "Přejít na řádek"
 
 #: ../src/mooedit/glade/mootextgotoline.glade.h:2
-msgid "Go to line:"
-msgstr "Přejít na řádek:"
+msgid "Go to line"
+msgstr "Přejít na řádek"
 
 #. menu item label
 #: ../src/mooedit/medit.xml.h:2
@@ -1245,12 +1246,12 @@ msgid "Edit Bookmarks"
 msgstr "Upravit záložky"
 
 #: ../src/moofileview/glade/moobookmark-editor.glade.h:2
-msgid "Icon:"
-msgstr "Ikona:"
+msgid "Icon"
+msgstr "Ikona"
 
 #: ../src/moofileview/glade/moobookmark-editor.glade.h:3
-msgid "Path:"
-msgstr "Cesta:"
+msgid "Path"
+msgstr "Cesta"
 
 #: ../src/moofileview/glade/moobookmark-editor.glade.h:4
 msgid "Add bookmark"
@@ -1354,6 +1355,7 @@ msgid "Add Bookmark"
 msgstr "Přidat záložku"
 
 #: ../src/moofileview/moofileview.c:1585
+#: ../src/plugins/usertools/glade/mooedittools-exe.glade.h:1
 msgid "Filter"
 msgstr "Filtr"
 
@@ -1561,8 +1563,8 @@ msgid "Encodings combo submenu|Other"
 msgstr "Další"
 
 #: ../src/mooutils/mooencodings.c:831
-msgid "Charact_er encoding:"
-msgstr "_Kódování:"
+msgid "Charact_er encoding"
+msgstr "_Kódování"
 
 #: ../src/mooutils/mooencodings-data.h:27
 msgid "West European"
@@ -1846,7 +1848,7 @@ msgid "Could not create folder %s: %s"
 msgstr ""
 
 #: ../src/mooutils/moofiltermgr.c:545
-msgid "_Show:"
+msgid "_Show"
 msgstr ""
 
 #: ../src/mooutils/moohelp.c:205
@@ -2008,6 +2010,10 @@ msgstr "Uložit jako"
 msgid "Create File"
 msgstr "Vytvořit soubor"
 
+#: ../src/plugins/ui/moofileselector.ui:109
+msgid "File name"
+msgstr "Název souboru"
+
 #: ../src/plugins/glade/moofileselector-prefs.glade.h:1
 msgid "<b>Open With</b>"
 msgstr "<b>Otevřít pomocí</b>"
@@ -2032,16 +2038,16 @@ msgstr ""
 "např. 'prikaz %f'"
 
 #: ../src/plugins/glade/moofileselector-prefs.glade.h:8
-msgid "Command:"
-msgstr "Příkaz:"
+msgid "Command"
+msgstr "Příkaz"
 
 #: ../src/plugins/glade/moofileselector-prefs.glade.h:9
 msgid "Menu item label"
 msgstr "Jméno položky v menu"
 
 #: ../src/plugins/glade/moofileselector-prefs.glade.h:10
-msgid "Name:"
-msgstr "Jméno:"
+msgid "Name"
+msgstr "Jméno"
 
 #: ../src/plugins/glade/moofileselector-prefs.glade.h:13
 msgid "Move down"
@@ -2081,8 +2087,8 @@ msgstr ""
 
 #: ../src/plugins/moofileselector.c:388
 #, c-format
-msgid "Create file in folder '%s':"
-msgstr "Vytvořit soubor v adresáři '%s':"
+msgid "Create file in folder '%s'"
+msgstr "Vytvořit soubor v adresáři '%s'"
 
 #: ../src/plugins/moofileselector.c:443
 #, c-format
@@ -2232,17 +2238,13 @@ msgstr ""
 msgid "Filter|Make"
 msgstr ""
 
-#: ../src/plugins/usertools/glade/mooedittools-exe.glade.h:1
-msgid "Filter:"
-msgstr "Filtr:"
-
 #: ../src/plugins/usertools/glade/mooedittools-exe.glade.h:2
-msgid "Output:"
-msgstr "Výstup:"
+msgid "Output"
+msgstr "Výstup"
 
 #: ../src/plugins/usertools/glade/mooedittools-exe.glade.h:3
-msgid "Input:"
-msgstr "Vstup:"
+msgid "Input"
+msgstr "Vstup"
 
 #: ../src/plugins/usertools/glade/moousertools.glade.h:1
 msgid "New item"
@@ -2265,19 +2267,19 @@ msgid "Enabled"
 msgstr "Povoleno"
 
 #: ../src/plugins/usertools/glade/moousertools.glade.h:6
-msgid "_Files:"
+msgid "_Files"
 msgstr ""
 
 #: ../src/plugins/usertools/glade/moousertools.glade.h:7
-msgid "_Requires:"
+msgid "_Requires"
 msgstr ""
 
 #: ../src/plugins/usertools/glade/moousertools.glade.h:8
-msgid "_Save:"
+msgid "_Save"
 msgstr ""
 
 #: ../src/plugins/usertools/glade/moousertools.glade.h:9
-msgid "_Type:"
+msgid "_Type"
 msgstr ""
 
 #. Label of a notebook tab on the User Tools preferences page
@@ -2468,9 +2470,6 @@ msgstr ""
 #~ msgid "Languages and files"
 #~ msgstr "Jazyky a soubory"
 
-#~ msgid "medit is a text editor"
-#~ msgstr "medit je textový editor"
-
 #~ msgid "DPatch"
 #~ msgstr "DPatch"
 
@@ -2509,12 +2508,12 @@ msgid "_Rename"
 msgstr "Pře_jmenovat"
 
 #: ../src/plugins/lsp/lsp-edits.cpp:343
-msgid "New name for '%s':"
-msgstr "Nový název pro „%s“:"
+msgid "New name for '%s'"
+msgstr "Nový název pro „%s“"
 
 #: ../src/plugins/lsp/lsp-edits.cpp:344
-msgid "New name:"
-msgstr "Nový název:"
+msgid "New name"
+msgstr "Nový název"
 
 #: ../src/plugins/lsp/lsp-edits.cpp:432
 #: ../src/plugins/lsp/lsp-edits.cpp:442
@@ -2789,8 +2788,8 @@ msgid "Describe what is under the _pointer"
 msgstr "Popisovat, co je pod _ukazatelem"
 
 #: ../src/plugins/lsp/ui/lsp-prefs.ui:87
-msgid "Send changes to the server _after:"
-msgstr "Odesílat změny na server _po:"
+msgid "Send changes to the server _after"
+msgstr "Odesílat změny na server _po"
 
 #: ../src/plugins/lsp/ui/lsp-prefs.ui:110
 msgid "milliseconds of quiet"
@@ -2871,8 +2870,8 @@ msgid "Terminal pane"
 msgstr "Panel terminálu"
 
 #: ../src/plugins/terminal/ui/terminal-prefs.ui:20
-msgid "S_hell:"
-msgstr "S_hell:"
+msgid "S_hell"
+msgstr "S_hell"
 
 #: ../src/plugins/terminal/ui/terminal-prefs.ui:34
 msgid ""
@@ -2883,12 +2882,12 @@ msgstr ""
 "příštím spuštění shellu."
 
 #: ../src/plugins/terminal/ui/terminal-prefs.ui:45
-msgid "Color _scheme:"
-msgstr "_Barevné schéma:"
+msgid "Color _scheme"
+msgstr "_Barevné schéma"
 
 #: ../src/plugins/terminal/ui/terminal-prefs.ui:68
-msgid "_Font:"
-msgstr "_Písmo:"
+msgid "_Font"
+msgstr "_Písmo"
 
 #: ../src/plugins/terminal/ui/terminal-prefs.ui:93
 msgid "_Default"

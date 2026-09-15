@@ -106,7 +106,7 @@
                 <child>
                   <object class="GtkLabel" id="label">
                     <property name="xalign">0</property>
-                    <property name="label">File name:</property>
+                    <property name="label" translatable="yes">File name</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>

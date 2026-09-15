@@ -383,7 +383,7 @@ create_new_file_dialog (GtkWidget         *parent,
     gtk_entry_set_text (GTK_ENTRY (moo_builder_get (*builder, "new_file_entry")), start_text);
     moo_entry_clear_undo (MOO_ENTRY (moo_builder_get (*builder, "new_file_entry")));
 
-    label_text = g_strdup_printf (_("Create file in folder '%s':"), display_dirname);
+    label_text = g_strdup_printf (_("Create file in folder '%s'"), display_dirname);
     gtk_label_set_text (GTK_LABEL (moo_builder_get (*builder, "label")), label_text);
 
     gtk_widget_show_all (dialog);

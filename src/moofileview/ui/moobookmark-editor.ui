@@ -20,7 +20,7 @@
                 <child>
                   <object class="GtkLabel" id="label1">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">Icon:</property>
+                    <property name="label" translatable="yes">Icon</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -40,7 +40,7 @@
                 <child>
                   <object class="GtkLabel" id="label3">
                     <property name="xalign">0</property>
-                    <property name="label" translatable="yes">Path:</property>
+                    <property name="label" translatable="yes">Path</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>

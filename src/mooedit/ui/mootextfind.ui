@@ -34,7 +34,7 @@
                           <object class="GtkLabel" id="label3">
                             <property name="visible">True</property>
                             <property name="xalign">0</property>
-                            <property name="label" translatable="yes">_Text to find:</property>
+                            <property name="label" translatable="yes">_Text to find</property>
                             <property name="use_underline">True</property>
                             <property name="mnemonic_widget">search_entry</property>
                           </object>
@@ -112,7 +112,7 @@
                           <object class="GtkLabel" id="label4">
                             <property name="visible">True</property>
                             <property name="xalign">0</property>
-                            <property name="label" translatable="yes">_Replacement text:</property>
+                            <property name="label" translatable="yes">_Replacement text</property>
                             <property name="use_underline">True</property>
                             <property name="mnemonic_widget">replace_entry</property>
                           </object>

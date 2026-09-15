@@ -371,8 +371,8 @@ ask_for_name (MooEditWindow *window,
     gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
     gtk_window_set_position (GTK_WINDOW (dialog), GTK_WIN_POS_CENTER_ON_PARENT);
 
-    text = old_name && old_name[0] ? g_strdup_printf (_("New name for '%s':"), old_name)
-                                   : g_strdup (_("New name:"));
+    text = old_name && old_name[0] ? g_strdup_printf (_("New name for '%s'"), old_name)
+                                   : g_strdup (_("New name"));
     label = gtk_label_new (text);
     g_free (text);
 
