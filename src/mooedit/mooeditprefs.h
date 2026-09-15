@@ -35,7 +35,6 @@ const char *moo_edit_setting            (const char *setting_name);
 #define MOO_EDIT_PREFS_TITLE_FORMAT             "window_title"
 #define MOO_EDIT_PREFS_TITLE_FORMAT_NO_DOC      "window_title_no_doc"
 #define MOO_EDIT_PREFS_USE_TABS                 "use_tabs"
-#define MOO_EDIT_PREFS_OPEN_NEW_WINDOW          "open_new_window"
 
 #define MOO_EDIT_PREFS_SAVE_SESSION             "save_session"
 

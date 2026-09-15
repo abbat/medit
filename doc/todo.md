@@ -3,11 +3,11 @@
 *For agents working in this tree. Nothing here is a promise; each entry is something the
 code once meant to do, with what is in the tree today and what it would take.*
 
-These came out of commented-out code that CodeQL's `cpp/commented-out-code` reported.
-The blocks themselves are gone — each named functions, flags or dialogs that do not
-exist, so none of them would have compiled and none could have been switched back on —
-but two of them described something the program still does not do. `git log -S` on the
-names below finds the removal and the original text. The rest turned out to describe
+The first entry came out of commented-out code that CodeQL's `cpp/commented-out-code`
+reported. The blocks themselves are gone — each named functions, flags or dialogs that
+do not exist, so none of them would have compiled and none could have been switched back
+on — but one of them described something the program still does not do. `git log -S` on
+the names below finds the removal and the original text. The rest turned out to describe
 work that has since been done: `moo_editor_create_doc()` makes a document outside any
 window today, and `moo_notebook_insert_page()` calls `gtk_widget_set_can_focus()` a few
 lines below where the disabled `GTK_WIDGET_SET_FLAGS` sat.
@@ -29,18 +29,21 @@ name; replace, skip, or copy under a new name — rather than a special case for
 same-directory drop. Reporting what the spawned command did is the other half: a `cp`
 that fails for any reason is silent today.
 
-## `open_new_window` is a preference nothing reads
+## Folding is drawn, toggled and never created
 
-`MOO_EDIT_PREFS_OPEN_NEW_WINDOW` is registered in `mooeditprefs.cpp` with a default of
-`FALSE`, and that is all that happens to it: no code reads it, and the preferences dialog
-does not show it. The one place that did read it was `_moo_editor_open_uri()`, which
-opened a file in a new window rather than in the active one when the preference was set
-and no `MOO_OPEN_NEW_TAB` flag overrode it. That function and the whole `MOO_OPEN_*` flag
-family are gone, and `moo_editor_open_files()` always uses the active window.
+`moofold.cpp` is 797 lines of fold tree, `MooTextBuffer` keeps one for every buffer,
+`mootextview.cpp` draws the expander in the line margin and paints the collapsed lines,
+and `mootextview-input.cpp` turns a click on the expander into a toggle. What no code
+does is make a fold: `_moo_fold_tree_add()` has no caller but `mooedit-tests.cpp`,
+`mootextbuffer.h` exports `get_fold_at_line`, `toggle_fold` and `toggle_folds` and no
+way to add one, and `enable-folding` is never set, so `MooTextView::enable_folding`
+stays `FALSE` for the life of the process and none of the drawing ever runs.
 
-Either the preference gets its behaviour back — in `moo_editor_open_files()`, with a
-checkbox in the dialog — or it should be dropped, so that nothing in the settings file
-reads as configurable when it is not.
+The missing half is whatever decides where a fold starts and ends — the indentation is
+the version that needs no server, `textDocument/foldingRange` is the version that knows
+what a function is — plus an action to fold and unfold and the property set to `TRUE`
+when it is on. The other answer is to delete `moofold.cpp`, its test, the three signals
+and the margin drawing, and to start over the day someone wants folding.
 
 ---
 
@@ -86,8 +89,8 @@ also need to agree with `MooLangMgr` about which wins where, which is the hard h
 
 These ask the server about the shape of the code rather than about a name:
 
-* `textDocument/foldingRange` — medit has no folding at all, so this is a text view
-  feature with an LSP source, not the other way round.
+* `textDocument/foldingRange` — the fold tree is there and nothing fills it, so this is
+  a source for the entry above rather than a feature of its own.
 * `textDocument/selectionRange` — grow and shrink the selection by syntax. This one needs
   nothing new in the view: it is a pair of actions over a stack of ranges.
 * `textDocument/prepareCallHierarchy` with `callHierarchy/incomingCalls` and
@@ -134,12 +137,6 @@ than to the symbols pane, even though the results are the symbols pane's rows.
   reads the form anyway when a server sends it regardless, but only the edits.
 
 ## What a slow server cannot say
-
-`$/progress` is ignored — `lsp-server.cpp` answers `window/workDoneProgress/create` with
-an empty result and drops the notifications that follow. A server indexing a large project
-therefore looks the same as a server that has nothing to say, and the only sign of life is
-that requests return nothing useful for a minute. The status bar or the failure pane in
-`lsp-plugin.cpp` is where a percentage and a message would go.
 
 `publishDiagnostics` is likewise announced without `relatedInformation` or
 `codeDescriptionSupport`: a diagnostic that points at a second location ("first declared
