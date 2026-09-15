@@ -6,7 +6,7 @@
 # have to carry the same version.
 
 Name:           medit
-Version:        1.3.6
+Version:        1.3.7
 Release:        1%{?dist}
 Summary:        Useful programming and around-programming text editor
 Group:          Productivity/Text/Editors
@@ -82,6 +82,10 @@ rm -rf %{buildroot}
 %{_mandir}/man1/%{name}.1*
 
 %changelog
+* Wed Sep 16 2026 Anton Batenev <antonbatenev@yandex.ru> - 1.3.7-1
+- The tree compiled as C++, the line operations of the Edit menu, code
+  actions and progress in the language server plugin, nine defects fixed
+
 * Wed Sep 09 2026 Anton Batenev <antonbatenev@yandex.ru> - 1.3.6-1
 - Four defects the new tests found, in the tab strip, the Document menu and
   Preferences / Tools

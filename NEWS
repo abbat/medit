@@ -1,3 +1,48 @@
+2026-09-16  Anton Batenev  <antonbatenev@yandex.ru>
+
+    * === Released 1.3.7 ===
+
+    The sources are C++ now. Everything that was C is compiled as C++ and
+    named .cpp, the hand-written pointer array is a template, ownership is
+    said by the type rather than by a comment, and the helpers nothing ever
+    called are gone -- the script and file utilities, the regex wrapper, the
+    open, save and reload info accessors, the paned proxies. The code that
+    came from elsewhere and is carried verbatim -- the gtksourceview widget,
+    the XDG MIME implementation and ctags' tag reader -- moved under
+    src/vendor/, where the style rules, the analyzer and the coverage figures
+    leave it alone, and the MIME lookup asks the system implementation where
+    there is one. Session management on GTK+3 is GtkApplication's rather than
+    the GTK+2 client's.
+    A headless suite grew up beside the UI one: 180 tests that need no
+    display, over the language server client's parsing, the markup and UI XML
+    trees, the B-tree the line buffer is, the preference store, the history
+    lists, the output filters and the search. They found what parsers always
+    hide, and a malformed position, range, text edit or symbol, a signed
+    Content-Length, a plugin ini file that does not parse and a search
+    expression that is not a regular expression are refused now instead of
+    acted on. The unit tests run under the sanitizers' own verdict, and the
+    two toolkits together cover 74.9% of the lines.
+    The defects, all of them in code a user meets: typing a bracket right
+    after a closing one expanded it into a pair; removing a fold nested in
+    another walked the tree that was being destroyed; printing with line
+    numbers numbered the lines it had printed before, not the one on the
+    page; a combo's drop-down on GTK+3 was placed and sized by GTK+2's rules;
+    whitespace, the fold lines and the file selector's icon view drew on a
+    context of their own rather than the one they were handed; the completion
+    of a path kept the directory it had already left; the session inhibitor
+    survived a cancelled logout; the ctags pane let go of the model it was
+    showing. The encoding name of every file opened, the file reference of
+    every folder read and the nodes of every rebuilt menu were leaked.
+    New, on top of that: the Edit menu has Duplicate Line, Move Lines Up and
+    Down, Sort Lines and Go to Matching Bracket, which are the five commands
+    every editor has; the language server plugin offers the code actions a
+    server suggests, and says what a server is busy with while it is busy;
+    the search history can be emptied from its own drop-down and the recent
+    files from the menu that lists them; the Tools menu is installed with the
+    tools it is supposed to come with. The code actions, the shortcut
+    editor's search box and the new menu entries are translated into all ten
+    languages.
+
 2026-09-09  Anton Batenev  <antonbatenev@yandex.ru>
 
     * === Released 1.3.6 ===

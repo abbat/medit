@@ -1,3 +1,24 @@
+medit (1.3.7) unstable; urgency=low
+
+  * Compile the whole tree as C++, move the code carried in from elsewhere
+    under src/vendor/, and drop the helpers nothing ever called.
+  * Use GtkApplication for session management on GTK+3.
+  * Add Duplicate Line, Move Lines Up and Down, Sort Lines and Go to Matching
+    Bracket to the Edit menu.
+  * Add textDocument/codeAction to the language server plugin, and show what a
+    server is busy with while it is busy.
+  * Let the search history and the recent files list be emptied from the UI.
+  * Fix bracket expansion after a closing bracket, the removal of a nested
+    fold, the line numbers of a printed page, the placement of a combo's
+    drop-down on GTK+3, the drawing of whitespace, fold lines and icon view
+    entries, path completion after leaving a directory, a session inhibitor
+    that survived a cancelled logout, and three leaks.
+  * Test what needs no display: 180 headless tests, the language server
+    client's parsers hardened against what they found, and 74.9% of the lines
+    covered over both toolkits.
+
+ -- Anton Batenev <antonbatenev@yandex.ru>  Wed, 16 Sep 2026 01:20:00 +0300
+
 medit (1.3.6) unstable; urgency=low
 
   * Fix the scroll arrows of an overfull document tab strip, which were drawn
