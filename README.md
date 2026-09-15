@@ -74,8 +74,14 @@ Everything that kept medit out of the distributions is gone:
   0.28.2 from 2011 — and vte is optional either way (`-DENABLE_TERMINAL=OFF`).
 * **CMake** instead of autotools. The build is out of source, so a gtk-2 and a
   gtk-3 build directory can live side by side.
-* Windows, macOS, the python and lua bindings, the HTML widget and about 2000
-  lines of dead code were removed.
+* **C++ instead of C.** Every source in the tree is compiled as C++ and named
+  `.cpp`, so what used to be a comment about who frees what is the type of the
+  thing being freed, and a function with nine exits has no cleanup label at the
+  end of it. The code carried in from elsewhere — gtksourceview, the XDG MIME
+  implementation and ctags' tag reader — is kept verbatim under `src/vendor/`.
+* Windows, macOS, the python and lua bindings, the HTML widget and everything
+  nothing called were removed: the sources are some 27000 lines smaller than
+  1.2.92, with the language server client and the terminal pane added on top.
 * Bug fixes on top of 1.2.92, including a crash in the user tools preferences
   and a set of leaks.
 
