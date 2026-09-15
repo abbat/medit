@@ -743,8 +743,13 @@ msgstr "Avaa viimeaikainen"
 
 #: ../src/mooedit/mooeditor.cpp:784
 #: ../src/mooutils/moohistorycombo.cpp:345
+#: ../src/mooutils/moohistorymgr.cpp:1610
 msgid "Clear History"
 msgstr "Tyhjennä historia"
+
+#: ../src/mooutils/moohistorymgr.cpp:1632
+msgid "Recent Files"
+msgstr "Viimeaikaiset tiedostot"
 
 #. Translators: if translated, it should be a comma-separated list
 #. of encodings to try when opening files. Encodings names should be

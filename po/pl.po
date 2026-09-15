@@ -746,8 +746,13 @@ msgstr "Ostatnio otwierane"
 
 #: ../src/mooedit/mooeditor.cpp:784
 #: ../src/mooutils/moohistorycombo.cpp:345
+#: ../src/mooutils/moohistorymgr.cpp:1610
 msgid "Clear History"
 msgstr "Wyczyść historię"
+
+#: ../src/mooutils/moohistorymgr.cpp:1632
+msgid "Recent Files"
+msgstr "Ostatnio otwierane pliki"
 
 #. Translators: if translated, it should be a comma-separated list
 #. of encodings to try when opening files. Encodings names should be

@@ -20,6 +20,7 @@ SECOND = "beta.txt"
 
 RECENT = ("File", "Open Recent")
 MORE = "More..."
+DIALOG = "Recent Files"
 CLEAR = "Clear History"
 
 
@@ -51,10 +52,9 @@ def run(t):
            "the recent entry to open its file; the strip is %s" % order(t))
 
     # And the dialog behind "More...", which is the other widget the same list
-    # is drawn into: it has no title, so it is found as the only dialog there is.
+    # is drawn into.
     t.menu(*RECENT, MORE)
-    dialog = t.wait(lambda: t.find(t.app, role="dialog", depth=2),
-                    "the recent files dialog to open")
+    dialog = t.dialog(DIALOG)
 
     row = t.need(dialog, role="table cell", name_prefix=SECOND,
                  what="the %s row of the recent files dialog" % SECOND)

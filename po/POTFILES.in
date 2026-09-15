@@ -47,6 +47,7 @@ src/mooutils/moofiltermgr.c
 src/mooutils/moofontsel.c
 src/mooutils/moohelp.c
 src/mooutils/moohistorycombo.cpp
+src/mooutils/moohistorymgr.cpp
 src/mooutils/moopane.c
 src/mooutils/moostock.c
 src/mooutils/mooutils-file.c

@@ -18,6 +18,7 @@
  **/
 
 #include "mooutils/moohistorymgr.h"
+#include "mooutils/mooi18n.h"
 #include "mooutils/moofileicon.h"
 #include "mooutils/mooapp-ipc.h"
 #include "mooutils/moofilewatch.h"
@@ -1588,6 +1589,35 @@ row_activated (GtkDialog *dialog)
     gtk_dialog_response (dialog, GTK_RESPONSE_OK);
 }
 
+/* Emptying the list is not one of the answers the dialog is waiting for: it
+   leaves the dialog up, with nothing left to open, rather than closing it. So
+   the button is not added as a response widget -- it is put into the box the
+   dialog keeps its own buttons in, where gtk_dialog_get_action_area() would
+   have found it if that were not deprecated, and asking a button already in
+   there for its parent comes to the same box. */
+static void
+add_clear_button (GtkWidget     *dialog,
+                  MooHistoryMgr *mgr)
+{
+    GtkWidget *button, *area;
+
+    area = gtk_widget_get_parent (gtk_dialog_get_widget_for_response (GTK_DIALOG (dialog),
+                                                                     GTK_RESPONSE_CANCEL));
+    g_return_if_fail (GTK_IS_BUTTON_BOX (area));
+
+    /* the label the search history's own button carries, so that the two are
+       translated once */
+    button = gtk_button_new_with_label (_("Clear History"));
+    gtk_widget_show (button);
+
+    g_signal_connect_swapped (button, "clicked",
+                              G_CALLBACK (moo_history_mgr_clear), mgr);
+    moo_bind_bool_property (button, "sensitive", mgr, "empty", TRUE);
+
+    gtk_container_add (GTK_CONTAINER (area), button);
+    gtk_button_box_set_child_secondary (GTK_BUTTON_BOX (area), button, TRUE);
+}
+
 GtkWidget *
 moo_history_mgr_create_dialog (MooHistoryMgr   *mgr,
                                MooHistoryCallback callback,
@@ -1599,7 +1629,7 @@ moo_history_mgr_create_dialog (MooHistoryMgr   *mgr,
     g_return_val_if_fail (MOO_IS_HISTORY_MGR (mgr), NULL);
     g_return_val_if_fail (callback != NULL, NULL);
 
-    dialog = gtk_dialog_new_with_buttons ("", NULL, GTK_DIALOG_DESTROY_WITH_PARENT,
+    dialog = gtk_dialog_new_with_buttons (_("Recent Files"), NULL, GTK_DIALOG_DESTROY_WITH_PARENT,
                                           GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                                           GTK_STOCK_OPEN, GTK_RESPONSE_OK,
                                           NULL);
@@ -1625,6 +1655,8 @@ moo_history_mgr_create_dialog (MooHistoryMgr   *mgr,
                               G_CALLBACK (row_activated), dialog);
     g_signal_connect_swapped (dialog, "response",
                               G_CALLBACK (dialog_response), tree_view);
+
+    add_clear_button (dialog, mgr);
 
     return dialog;
 }
