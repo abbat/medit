@@ -357,32 +357,39 @@ line to write. A point rather than a tenth because a tenth is jitter and would h
 floor chasing noise, and rather than five because the whole purpose of the file is that the
 ground already taken stays taken — a point is the most this arrangement ever leaves
 undefended. Adding a test is usually worth more than that on its own: `tests/lsp` moved
-`src/plugins/lsp` from nothing to 82%.
+`src/plugins/lsp` from nothing to 90%.
 
 Lowering it is a legitimate commit too — covered code was deleted, a test was retired — and
 the reason belongs in the file beside the number.
 
-**What it says today**, from the first run of the whole thing: 41.57% of lines and 27.45%
-of functions, GTK+2 at 38.56% and GTK+3 at 41.37%. Merging the two is worth only 0.2 pp
-over GTK+3 alone — the lines only the GTK+2 build runs are few, which is a fact about this
-tree rather than a reason to stop measuring it, since they are exactly the `#else` branches
-nothing else exercises.
+**What it says today**: 74.91% of lines and 57.60% of functions, GTK+2 at 48.84% and GTK+3
+at 75.24%. The merged number comes out 0.33 pp under GTK+3 alone, which is arithmetic and
+not a loss — the GTK+2 build compiles 984 lines the GTK+3 build does not, and the 446 of
+them the tests reach move the numerator less than the rest move the denominator. Those
+lines are exactly the `#else` branches nothing else exercises, which is the reason to merge.
 
-The interesting part is not the total but where it is spent, and it maps onto what has been
-written recently rather than onto what matters:
+The interesting part is not the total but where it is spent:
 
 | | lines |
 |---|---|
-| `src/plugins/terminal` | 85.6% |
-| `src/plugins/lsp` | 82.2% |
-| `src/mooapp` | 70.1% |
-| `src/mooutils` | 46.9% |
-| `src/mooedit` | 41.9% |
-| `src/moofileview` | 26.4% |
-| `src/plugins/usertools` | 6.5% |
-| `src/plugins/ctags` | 3.1% |
+| `src/plugins/lsp` | 90.4% |
+| `src/plugins/ctags` | 88.8% |
+| `src/plugins/terminal` | 85.2% |
+| `src/mooedit` | 77.0% |
+| `src/plugins/support` | 76.1% |
+| `src/mooutils` | 75.3% |
+| `src/mooapp` | 72.5% |
+| `src/moocpp` | 71.0% |
+| `src/moofileview` | 67.4% |
+| `src/mooglib` | 67.1% |
+| `src/plugins/usertools` | 64.8% |
+| `src/medit-app` | 47.6% |
 
-The two subsystems with tests of their own are at 80%+; the file view, which every
-open-file dialog goes through, is at a quarter; the user tools and the ctags plugin are
-effectively unmeasured. That is where a test buys the most, and the floor is what keeps the
-number from quietly going the other way while features are added.
+Every subsystem with tests of its own clears 85% now, the two that were effectively
+unmeasured — the user tools and the ctags plugin — are at 65% and 89%, and the file view
+every open-file dialog goes through has gone from a quarter to two thirds. What is left low
+is `src/medit-app`, which is startup and command-line handling that a UI test reaches only
+by the one path that starts the editor. Function coverage trails line coverage by 17 pp
+because `src/mooutils` and `src/mooglib` carry hundreds of small wrappers a UI run never
+calls. The floor is what keeps any of this from quietly going the other way while features
+are added.
