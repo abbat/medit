@@ -16,9 +16,9 @@ what its child asked for. The list came up at the corner of the dialog and a
 third of the width, over the fields instead of under the entry.
 
 The height is the other half of the same question, and the one with no landmark
-to compare against: a popup sized by anything other than its rows has empty space
-below the last one, so what the test asks is that the window ends where the rows
-do.
+to compare against: a popup sized by anything other than what is in it has empty
+space below the last of it, so what the test asks is that the window ends where
+its contents do -- the rows, and under them the button that clears the history.
 """
 
 CONTENT = "one\nalpha\ntwo\nbeta\nthree\n"
@@ -81,10 +81,21 @@ def run(t):
 
     bottom = max(t.extents(row)[1] + t.extents(row)[3] for row in rows)
 
-    t.check(0 <= py + ph - bottom <= SLACK,
-            "and the window ends where its rows do: it ends at y=%d, the last "
-            "row at y=%d" % (py + ph, bottom))
-    t.log("ok: the list is under the combo, as wide as it and as tall as its rows")
+    # The rows are not the foot of the window any more: the drop-down ends with
+    # the button that empties the history, which tests/search/find_history_clear
+    # presses. Here it is only a part of the height, the last one.
+    clear = t.need(popup, role="push button",
+                   what="the button that clears the history")
+    _, cy, _, ch = t.extents(clear)
+
+    t.check(cy >= bottom - SLACK,
+            "the rows are followed by the button that clears them: it starts "
+            "at y=%d, the last row ends at y=%d" % (cy, bottom))
+    t.check(0 <= py + ph - (cy + ch) <= SLACK,
+            "and the window ends where that button does: it ends at y=%d, the "
+            "button at y=%d" % (py + ph, cy + ch))
+    t.log("ok: the list is under the combo, as wide as it and as tall as what "
+          "it holds")
 
     # And it is a list to pick from, not only something to look at.
     t.click(row_named(t, rows, "beta"))
