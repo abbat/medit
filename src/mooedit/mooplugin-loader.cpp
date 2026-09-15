@@ -145,7 +145,7 @@ moo_plugin_loader_register (const MooPluginLoader *loader,
 }
 
 
-static gboolean
+static void
 parse_plugin_info (GKeyFile         *key_file,
                    const char       *plugin_id,
                    MooPluginInfo   **info_p,
@@ -180,8 +180,6 @@ parse_plugin_info (GKeyFile         *key_file,
     g_free (description);
     g_free (author);
     g_free (version);
-
-    return TRUE;
 }
 
 
@@ -296,12 +294,7 @@ parse_ini_file (const char *dir,
             return NULL;
         }
 
-        if (!parse_plugin_info (key_file, id, &info, &params))
-        {
-            moo_plugin_info_free (info);
-            moo_plugin_params_free (params);
-            return NULL;
-        }
+        parse_plugin_info (key_file, id, &info, &params);
     }
 
     ModuleInfo *module_info = g_new0 (ModuleInfo, 1);
