@@ -32,6 +32,7 @@ struct _MooComboPrivate {
     GtkSizeGroup* size_group;
 
     GtkWidget *popup;
+    GtkWidget *scrolled_window;
     GtkTreeView *treeview;
     GtkTreeViewColumn *column;
     GtkTreeModel *model;
@@ -333,6 +334,7 @@ moo_combo_destroy (GtkObject *object)
     {
         gtk_widget_destroy (combo->priv->popup);
         combo->priv->popup = NULL;
+        combo->priv->scrolled_window = NULL;
         combo->priv->treeview = NULL;
     }
 
@@ -432,6 +434,7 @@ create_popup_window (MooCombo *combo)
     gtk_widget_set_size_request (gtk_scrolled_window_get_vscrollbar (GTK_SCROLLED_WINDOW (scrolled_window)), -1, 0);
     gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scrolled_window), GTK_SHADOW_NONE);
     gtk_container_add (GTK_CONTAINER (scrolled_window), GTK_WIDGET (combo->priv->treeview));
+    combo->priv->scrolled_window = scrolled_window;
 
     frame = gtk_frame_new (NULL);
     gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_OUT);
@@ -450,6 +453,7 @@ destroy_popup_window (MooCombo *combo)
         gtk_container_remove (GTK_CONTAINER (gtk_widget_get_parent (tree_view)), tree_view);
         gtk_widget_destroy (combo->priv->popup);
         combo->priv->popup = NULL;
+        combo->priv->scrolled_window = NULL;
     }
 }
 
@@ -690,22 +694,37 @@ count_separators (GtkTreeModel *model,
 static gboolean
 resize_popup (MooCombo *combo)
 {
-    GtkWidget *widget = GTK_WIDGET (combo->entry);
+    GtkWidget *widget = GTK_WIDGET (combo);
+    GtkAllocation allocation;
     int x, y;
     int matches, items, height, x_border, y_border;
     GdkScreen *screen;
     int monitor_num;
     GdkRectangle monitor;
     GtkRequisition popup_req;
-    GtkRequisition combo_req;
     gboolean above;
-    int width;
+    int width, list_height;
     int separator_height = 0, vert_separator = 0;
     int selected;
 
     g_return_val_if_fail (gtk_widget_get_realized (combo->entry), FALSE);
 
+    /*
+     * The list hangs under the combo, so where the combo is on the screen is
+     * the question. A widget with no window of its own -- which the entry is
+     * on GTK+3, and the table always was -- draws on the window of an ancestor,
+     * and that window's origin is the ancestor's: the allocation is what says
+     * where inside it the widget sits.
+     */
+    gtk_widget_get_allocation (widget, &allocation);
     gdk_window_get_origin (gtk_widget_get_window (widget), &x, &y);
+
+    if (!gtk_widget_get_has_window (widget))
+    {
+        x += allocation.x;
+        y += allocation.y;
+    }
+
     /* XXX */
     entry_get_borders (GTK_ENTRY (combo->entry), &x_border, &y_border);
 
@@ -744,25 +763,60 @@ resize_popup (MooCombo *combo)
     monitor_num = gdk_screen_get_monitor_at_window (screen, gtk_widget_get_window (widget));
     gdk_screen_get_monitor_geometry (screen, monitor_num, &monitor);
 
-    width = gtk_widget_get_allocated_width (GTK_WIDGET(combo));
-    width = MIN (width, monitor.width) - 2 * x_border;
+    width = MIN (allocation.width, monitor.width) - 2 * x_border;
     gtk_widget_style_get (GTK_WIDGET (combo->priv->treeview), "vertical-separator",
                           &vert_separator, NULL);
-    gtk_widget_set_size_request (GTK_WIDGET (combo->priv->treeview), width,
-                                 separator_height + items * (height + vert_separator));
+    list_height = separator_height + items * (height + vert_separator);
+
+#if GTK_CHECK_VERSION(3,0,0)
+    /*
+     * A GTK+3 scrolled window asks for nothing on behalf of its child -- the
+     * child can scroll, so its size is not the scrolled window's -- and a size
+     * request on the tree view therefore never reaches the popup, which came
+     * up as wide as its longest row and no wider. What a scrolled window does
+     * ask for is its content size, so that is where the list size goes.
+     *
+     * A scrollbar whose policy allows it to appear reserves its own room even
+     * while it is hidden, so the policy has to say "never" wherever nothing
+     * scrolls; and with nothing scrolling sideways it is the column that has
+     * to promise not to grow, or a long row would widen the popup past the
+     * combo. A fixed column clips such a row instead.
+     */
+    {
+        GtkScrolledWindow *swin = GTK_SCROLLED_WINDOW (combo->priv->scrolled_window);
+        gboolean scroll = items < matches;
+        int list_width = width;
+        int bar_width = 0;
+
+        gtk_scrolled_window_set_policy (swin, GTK_POLICY_NEVER,
+                                        scroll ? GTK_POLICY_AUTOMATIC : GTK_POLICY_NEVER);
+
+        if (scroll)
+            gtk_widget_get_preferred_width (gtk_scrolled_window_get_vscrollbar (swin),
+                                            NULL, &bar_width);
+
+        list_width = MAX (list_width - bar_width, 1);
+
+        gtk_tree_view_column_set_sizing (combo->priv->column, GTK_TREE_VIEW_COLUMN_FIXED);
+        gtk_tree_view_column_set_fixed_width (combo->priv->column, list_width);
+        gtk_scrolled_window_set_min_content_width (swin, list_width);
+        gtk_scrolled_window_set_min_content_height (swin, list_height);
+    }
+#else
+    gtk_widget_set_size_request (GTK_WIDGET (combo->priv->treeview), width, list_height);
+#endif
 
     gtk_widget_set_size_request (combo->priv->popup, -1, -1);
     gtk_widget_size_request (combo->priv->popup, &popup_req);
-    gtk_widget_size_request (widget, &combo_req);
 
     if (x < monitor.x)
         x = monitor.x;
     else if (x + popup_req.width > monitor.x + monitor.width)
         x = monitor.x + monitor.width - popup_req.width;
 
-    if (y + combo_req.height + popup_req.height <= monitor.y + monitor.height)
+    if (y + allocation.height + popup_req.height <= monitor.y + monitor.height)
     {
-        y += combo_req.height;
+        y += allocation.height;
         above = FALSE;
     }
     else
