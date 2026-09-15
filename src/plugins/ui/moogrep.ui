@@ -22,6 +22,8 @@
                     <property name="visible">True</property>
                     <property name="n_rows">4</property>
                     <property name="n_columns">2</property>
+                    <property name="column_spacing">6</property>
+                    <property name="row_spacing">6</property>
                     <child>
                       <object class="GtkEventBox" id="eventbox1">
                         <property name="visible">True</property>
