@@ -52,6 +52,16 @@ worked example: nine `goto`s into a seventeen-line cleanup block became nine `re
 no block at all. For a small edit inside a function that still looks like C, match what is
 around it — the mixed file is worse than either style.
 
+**Leave the testable part testable.** Every test in this tree drives the real binary through
+the UI, so anything tangled into a widget, a signal handler or a global is reachable only by
+a whole run of medit, and the awkward cases — a parse error, a path that does not exist, the
+third branch of a state machine — are usually not reachable at all. When writing a new
+function or reworking an old one, lift the part that only computes into a `static` function
+of its own that takes what it needs and returns what it decided, and leave the plumbing
+around it. It reads better, and it is the difference between a branch a test can reach and
+one only a user can. `tests/` and `tests/coverage.floor` say what the suite covers today;
+`doc/testing-panes.md` explains both.
+
 **Upstream code carried verbatim lives under `src/vendor/`**: `gtksourceview`,
 `eggsmclient`, and ctags' `readtags.c`. It is excluded from `--target analyze`
 (`cmake/Analyze.cmake`), exempt from `.editorconfig`, and outside the style measurements
