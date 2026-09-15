@@ -39,8 +39,18 @@ destructor — C++ forbids it — so a cleanup label converts only by turning ev
 `goto out` into a `return`, which is the bulk of such a diff. And GObject allocates
 instances itself, so a non-trivial member of a private struct needs a placement `new` in
 `_init` and an explicit destructor call in `_finalize`; `mooedit.cpp:315` and
-`mooeditwindow.cpp:855` are the two that do it. Otherwise write new code the way the file
-around it is written.
+`mooeditwindow.cpp:855` are the two that do it.
+
+**New code, and any function being rewritten anyway, should take the C++ shape.** Declare
+a variable where it is first given a value, not in a block at the top — a name that cannot
+be read before it means something is one fewer thing to track. Give every owned resource an
+owner that releases it: `g_autofree`, `g_autoptr(T)`, `gstr`, `ObjectPtr`, a `std::` container
+where the data is ours. Return on failure instead of jumping to a label, and hand ownership
+out with `g_steal_pointer`. Prefer `const`, prefer the narrowest scope, and let the type say
+what the C idiom used to say in a comment. `parse_ini_file` in `mooplugin-loader.cpp` is the
+worked example: nine `goto`s into a seventeen-line cleanup block became nine `return`s and
+no block at all. For a small edit inside a function that still looks like C, match what is
+around it — the mixed file is worse than either style.
 
 **Upstream code carried verbatim lives under `src/vendor/`**: `gtksourceview`,
 `eggsmclient`, and ctags' `readtags.c`. It is excluded from `--target analyze`
