@@ -80,9 +80,8 @@ Everything that kept medit out of the distributions is gone:
   end of it. The code carried in from elsewhere — gtksourceview, the XDG MIME
   implementation and ctags' tag reader — is kept verbatim under `src/vendor/`.
 * Windows, macOS, the python and lua bindings, the HTML widget and everything
-  nothing called were removed: counting neither tree's tests, the sources are
-  some 31000 lines smaller than 1.2.92, with the language server client and the
-  terminal pane added on top.
+  nothing called were removed, and the tree is smaller than 1.2.92 even with
+  the language server client and the terminal pane added on top.
 * Bug fixes on top of 1.2.92, including a crash in the user tools preferences
   and a set of leaks.
 
