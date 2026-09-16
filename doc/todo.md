@@ -34,6 +34,11 @@ wrong, and are updated in the same commit. Packaging is last of all — CI build
 packages on every push, and a broken one really matters only at a release, where there is
 time to fix it.
 
+When nothing on this list is open, the list is not the answer; the code is. The coverage
+table, CodeQL's alerts, the warnings the strict build prints, the `XXX` and `FIXME` somebody
+left behind, a function nobody calls any more — read those, and write what they say into this
+file at the rung it belongs to.
+
 This file used to open with the file view overwriting a dropped file without asking. That
 entry is gone because the code is: `run_command_on_files()` in `moofileview.cpp` asks once
 for every name already taken in the destination, and reads what the command it spawned did.
@@ -42,27 +47,6 @@ rest of those blocks described work that has since been done — `moo_editor_cre
 makes a document outside any window today, and `moo_notebook_insert_page()` calls
 `gtk_widget_set_can_focus()` a few lines below where the disabled `GTK_WIDGET_SET_FLAGS`
 sat. `git log -S` on those names finds the removal and the original text.
-
-## A user tool that cannot start says so to nobody
-
-`moocommand-exe.cpp` runs a tool three ways, and two of them lose the failure. `run_sync()`
-and the async launch both end in the same line — `g_message ("%s: could not run command: %s
-(command line was '%s')")` — which is stderr, and a medit started from a desktop file has no
-terminal for anyone to read it in. A tool whose command line has an unpaired quote, or which
-names a program that is not installed, is a menu item that does nothing and explains nothing.
-`moo_error_dialog()` does not appear anywhere in `src/plugins/usertools`.
-
-The third way is not affected: a tool that runs in the output pane says what it said on
-screen, because that is what the pane is for.
-
-There is a second half, and it is the one the file view had. `run_command()` calls
-`run_sync()` with `NULL` for both `exit_status` and `output_err`, so a tool that starts and
-then fails is silent too — the exit status is not asked for and the standard error is thrown
-away. What this wants is the dialog the rest of the program puts an error in, and the
-`WIFEXITED`/`WEXITSTATUS` pair that `rm_fr()` in `mooutils-fs.cpp` has always had.
-
-A tool whose command does not exist is the test, and there is room for it:
-`src/plugins/usertools` is at 64.8%, the second lowest module in the tree.
 
 ## Folding is drawn, toggled and never created
 

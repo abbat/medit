@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: moo\n"
 "Report-Msgid-Bugs-To: https://github.com/abbat/medit/issues\n"
-"POT-Creation-Date: 2026-09-16 03:11+0300\n"
+"POT-Creation-Date: 2026-09-16 13:27+0300\n"
 "PO-Revision-Date: 2012-01-31 14:17+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Tommi Nieminen <translator@legisign.org>\n"
@@ -513,7 +513,7 @@ msgstr "Vain k_okonaiset sanat"
 msgid "Replace?"
 msgstr "Korvataanko?"
 
-#: src/mooedit/ui/mootextfind-prompt.ui:29 src/moofileview/moofileview.cpp:5909
+#: src/mooedit/ui/mootextfind-prompt.ui:29 src/moofileview/moofileview.cpp:5907
 msgid "_Replace"
 msgstr "K_orvaa"
 
@@ -521,7 +521,7 @@ msgstr "K_orvaa"
 msgid "Replace _All"
 msgstr "Korvaa k_aikki"
 
-#: src/mooedit/ui/mootextfind-prompt.ui:50 src/mooedit/mooeditwindow.cpp:567
+#: src/mooedit/ui/mootextfind-prompt.ui:50 src/mooedit/mooeditwindow.cpp:566
 msgid "Find _Next"
 msgstr "Etsi _seuraava"
 
@@ -529,7 +529,7 @@ msgstr "Etsi _seuraava"
 msgid "Sto_p"
 msgstr "K_eskeytä"
 
-#: src/mooedit/ui/mootextgotoline.ui:20 src/mooedit/mooeditwindow.cpp:617
+#: src/mooedit/ui/mootextgotoline.ui:20 src/mooedit/mooeditwindow.cpp:616
 msgid "Go to Line"
 msgstr "Siirry riville"
 
@@ -654,7 +654,7 @@ msgstr "Hylätäänkö tiedoston ”%s” muutokset?"
 msgid "If you reload the document, changes will be discarded"
 msgstr "Jos lataat asiakirjan uudelleen, muutokset hylätään"
 
-#: src/mooedit/mooeditdialogs.cpp:653 src/mooedit/mooeditwindow.cpp:457
+#: src/mooedit/mooeditdialogs.cpp:653 src/mooedit/mooeditwindow.cpp:456
 msgid "_Reload"
 msgstr "Lataa _uudelleen"
 
@@ -772,7 +772,7 @@ msgstr "Kielet"
 #. Label in the Language combo box on Languages preferences page,
 #. remove the part before and including |
 #. Menu item in the Language menu
-#: src/mooedit/mooeditprefspage.cpp:543 src/mooedit/mooeditwindow.cpp:4210
+#: src/mooedit/mooeditprefspage.cpp:543 src/mooedit/mooeditwindow.cpp:4317
 msgid "Language|None"
 msgstr "Ei mitään"
 
@@ -793,388 +793,388 @@ msgstr "Asetukset"
 #. Configure Shortcuts, beside one per plugin. The id beside it is not
 #. translated: it is what the accelerator paths and the preference keys
 #. under Shortcuts/ are made of.
-#: src/mooedit/mooeditwindow.cpp:435
+#: src/mooedit/mooeditwindow.cpp:434
 msgid "Editor"
 msgstr "Muokkain"
 
-#: src/mooedit/mooeditwindow.cpp:440
+#: src/mooedit/mooeditwindow.cpp:439
 msgid "Create new document"
 msgstr "Luo uusi asiakirja"
 
-#: src/mooedit/mooeditwindow.cpp:448
+#: src/mooedit/mooeditwindow.cpp:447
 msgid "_Open..."
 msgstr "_Avaa..."
 
-#: src/mooedit/mooeditwindow.cpp:449
+#: src/mooedit/mooeditwindow.cpp:448
 msgid "Open..."
 msgstr "Avaa..."
 
-#: src/mooedit/mooeditwindow.cpp:456 src/moofileview/moofileview.cpp:1330
+#: src/mooedit/mooeditwindow.cpp:455 src/moofileview/moofileview.cpp:1330
 #: src/moofileview/moofileview.cpp:1331
 msgid "Reload"
 msgstr "Lataa uudelleen"
 
-#: src/mooedit/mooeditwindow.cpp:458
+#: src/mooedit/mooeditwindow.cpp:457
 msgid "Reload document"
 msgstr "Lataa asiakirja uudelleen"
 
-#: src/mooedit/mooeditwindow.cpp:489
+#: src/mooedit/mooeditwindow.cpp:488
 msgid "Save _As..."
 msgstr "Tallenna _nimellä..."
 
-#: src/mooedit/mooeditwindow.cpp:490
+#: src/mooedit/mooeditwindow.cpp:489
 msgid "Save as..."
 msgstr "Tallenna nimellä..."
 
-#: src/mooedit/mooeditwindow.cpp:500
+#: src/mooedit/mooeditwindow.cpp:499
 msgid "Close document"
 msgstr "Sulje asiakirja"
 
-#: src/mooedit/mooeditwindow.cpp:508
+#: src/mooedit/mooeditwindow.cpp:507
 msgid "Close All"
 msgstr "Sulje kaikki"
 
-#: src/mooedit/mooeditwindow.cpp:509
+#: src/mooedit/mooeditwindow.cpp:508
 msgid "Close A_ll"
 msgstr "Sulje k_aikki"
 
-#: src/mooedit/mooeditwindow.cpp:510
+#: src/mooedit/mooeditwindow.cpp:509
 msgid "Close all documents"
 msgstr "Sulje kaikki asiakirjat"
 
-#: src/mooedit/mooeditwindow.cpp:517
+#: src/mooedit/mooeditwindow.cpp:516
 msgid "Previous Tab"
 msgstr "Edellinen välilehti"
 
-#: src/mooedit/mooeditwindow.cpp:518
+#: src/mooedit/mooeditwindow.cpp:517
 msgid "_Previous Tab"
 msgstr "_Edellinen välilehti"
 
-#: src/mooedit/mooeditwindow.cpp:519
+#: src/mooedit/mooeditwindow.cpp:518
 msgid "Previous tab"
 msgstr "Edellinen välilehti"
 
-#: src/mooedit/mooeditwindow.cpp:527
+#: src/mooedit/mooeditwindow.cpp:526
 msgid "Next Tab"
 msgstr "Seuraava välilehti"
 
-#: src/mooedit/mooeditwindow.cpp:528
+#: src/mooedit/mooeditwindow.cpp:527
 msgid "_Next Tab"
 msgstr "_Seuraava välilehti"
 
-#: src/mooedit/mooeditwindow.cpp:529
+#: src/mooedit/mooeditwindow.cpp:528
 msgid "Next tab"
 msgstr "Seuraava välilehti"
 
-#: src/mooedit/mooeditwindow.cpp:537
+#: src/mooedit/mooeditwindow.cpp:536
 msgid "Previous Tab In View"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:538
+#: src/mooedit/mooeditwindow.cpp:537
 msgid "_Previous Tab In View"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:539
+#: src/mooedit/mooeditwindow.cpp:538
 msgid "Previous tab in view"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:546
+#: src/mooedit/mooeditwindow.cpp:545
 msgid "Next Tab In View"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:547
+#: src/mooedit/mooeditwindow.cpp:546
 msgid "_Next Tab In View"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:548
+#: src/mooedit/mooeditwindow.cpp:547
 msgid "Next tab in view"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:566
+#: src/mooedit/mooeditwindow.cpp:565
 msgid "Find Next"
 msgstr "Etsi seuraava"
 
-#: src/mooedit/mooeditwindow.cpp:568
+#: src/mooedit/mooeditwindow.cpp:567
 msgid "Find next"
 msgstr "Etsi seuraava"
 
-#: src/mooedit/mooeditwindow.cpp:577
+#: src/mooedit/mooeditwindow.cpp:576
 msgid "Find Previous"
 msgstr "Etsi edellinen"
 
-#: src/mooedit/mooeditwindow.cpp:578
+#: src/mooedit/mooeditwindow.cpp:577
 msgid "Find _Previous"
 msgstr "Etsi e_dellinen"
 
-#: src/mooedit/mooeditwindow.cpp:579
+#: src/mooedit/mooeditwindow.cpp:578
 msgid "Find previous"
 msgstr "Etsi edellinen"
 
-#: src/mooedit/mooeditwindow.cpp:599
+#: src/mooedit/mooeditwindow.cpp:598
 msgid "Find Current Word"
 msgstr "Etsi tätä sanaa"
 
-#: src/mooedit/mooeditwindow.cpp:600
+#: src/mooedit/mooeditwindow.cpp:599
 msgid "Find Current _Word"
 msgstr "Etsi tätä _sanaa"
 
-#: src/mooedit/mooeditwindow.cpp:608
+#: src/mooedit/mooeditwindow.cpp:607
 msgid "Find Current Word Backwards"
 msgstr "Etsi tätä sanaa taaksepäin"
 
-#: src/mooedit/mooeditwindow.cpp:609
+#: src/mooedit/mooeditwindow.cpp:608
 msgid "Find Current Word _Backwards"
 msgstr "Etsi tätä s_anaa taaksepäin"
 
-#: src/mooedit/mooeditwindow.cpp:618
+#: src/mooedit/mooeditwindow.cpp:617
 msgid "_Go to Line..."
 msgstr "Siirry ri_ville..."
 
-#: src/mooedit/mooeditwindow.cpp:619
+#: src/mooedit/mooeditwindow.cpp:618
 msgid "Go to line..."
 msgstr "Siirry riville..."
 
-#: src/mooedit/mooeditwindow.cpp:628
+#: src/mooedit/mooeditwindow.cpp:627
 msgid "Toggle Text Wrapping"
 msgstr "Rivitä/Älä rivitä"
 
-#: src/mooedit/mooeditwindow.cpp:629
+#: src/mooedit/mooeditwindow.cpp:628
 msgid "_Wrap Text"
 msgstr "_Rivitä teksti"
 
-#: src/mooedit/mooeditwindow.cpp:636
+#: src/mooedit/mooeditwindow.cpp:635
 msgid "Toggle Line Numbers Display"
 msgstr "Näytä/Älä näytä rivinumeroita"
 
-#: src/mooedit/mooeditwindow.cpp:637
+#: src/mooedit/mooeditwindow.cpp:636
 msgid "Show _Line Numbers"
 msgstr "_Näytä rivinumerointi"
 
-#: src/mooedit/mooeditwindow.cpp:643
+#: src/mooedit/mooeditwindow.cpp:642
 msgid "Focus Document"
 msgstr "Kohdista asiakirja"
 
 # arnau
-#: src/mooedit/mooeditwindow.cpp:644
+#: src/mooedit/mooeditwindow.cpp:643
 msgid "_Focus Document"
 msgstr "Ko_hdista asiakirja"
 
-#: src/mooedit/mooeditwindow.cpp:651 src/mooedit/mooeditwindow.cpp:652
+#: src/mooedit/mooeditwindow.cpp:650 src/mooedit/mooeditwindow.cpp:651
 msgid "Focus Other Split Notebook"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:659
+#: src/mooedit/mooeditwindow.cpp:658
 msgid "Move to Split Notebook"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:660
+#: src/mooedit/mooeditwindow.cpp:659
 msgid "_Move to Split Notebook"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:668 src/mooedit/mooeditwindow.cpp:669
+#: src/mooedit/mooeditwindow.cpp:667 src/mooedit/mooeditwindow.cpp:668
 msgid "Split View Horizontally"
 msgstr "Jaa näkymä vaakasuunnassa"
 
-#: src/mooedit/mooeditwindow.cpp:676 src/mooedit/mooeditwindow.cpp:677
+#: src/mooedit/mooeditwindow.cpp:675 src/mooedit/mooeditwindow.cpp:676
 msgid "Split View Vertically"
 msgstr "Jaa näkymä pystysuunnassa"
 
-#: src/mooedit/mooeditwindow.cpp:683 src/mooedit/mooeditwindow.cpp:684
+#: src/mooedit/mooeditwindow.cpp:682 src/mooedit/mooeditwindow.cpp:683
 msgid "Focus Next Split View"
 msgstr "Kohdista seuraavaan kehykseen"
 
-#: src/mooedit/mooeditwindow.cpp:728
+#: src/mooedit/mooeditwindow.cpp:727
 msgid "Toggle Bookmark"
 msgstr "Aseta/Poista kirjanmerkki"
 
-#: src/mooedit/mooeditwindow.cpp:729
+#: src/mooedit/mooeditwindow.cpp:728
 msgid "Toggle _Bookmark"
 msgstr "Aseta tai poista _kirjanmerkki"
 
-#: src/mooedit/mooeditwindow.cpp:737
+#: src/mooedit/mooeditwindow.cpp:736
 msgid "Next Bookmark"
 msgstr "Seuraava kirjanmerkki"
 
-#: src/mooedit/mooeditwindow.cpp:738
+#: src/mooedit/mooeditwindow.cpp:737
 msgid "_Next Bookmark"
 msgstr "_Seuraava kirjanmerkki"
 
-#: src/mooedit/mooeditwindow.cpp:745
+#: src/mooedit/mooeditwindow.cpp:744
 msgid "Previous Bookmark"
 msgstr "Edellinen kirjanmerkki"
 
-#: src/mooedit/mooeditwindow.cpp:746
+#: src/mooedit/mooeditwindow.cpp:745
 msgid "_Previous Bookmark"
 msgstr "E_dellinen kirjanmerkki"
 
 #. action
-#: src/mooedit/mooeditwindow.cpp:754 src/mooedit/mooeditwindow.cpp:755
-#: src/mooedit/mooeditwindow.cpp:756
+#: src/mooedit/mooeditwindow.cpp:753 src/mooedit/mooeditwindow.cpp:754
+#: src/mooedit/mooeditwindow.cpp:755
 msgid "Comment"
 msgstr "Kommentoi"
 
 #. action
-#: src/mooedit/mooeditwindow.cpp:764 src/mooedit/mooeditwindow.cpp:765
-#: src/mooedit/mooeditwindow.cpp:766
+#: src/mooedit/mooeditwindow.cpp:763 src/mooedit/mooeditwindow.cpp:764
+#: src/mooedit/mooeditwindow.cpp:765
 msgid "Uncomment"
 msgstr "Poista kommentista"
 
-#: src/mooedit/mooeditwindow.cpp:793
+#: src/mooedit/mooeditwindow.cpp:792
 msgid "Duplicate Line"
 msgstr "Monista rivi"
 
-#: src/mooedit/mooeditwindow.cpp:794
+#: src/mooedit/mooeditwindow.cpp:793
 msgid "_Duplicate Line"
 msgstr "_Monista rivi"
 
-#: src/mooedit/mooeditwindow.cpp:795
+#: src/mooedit/mooeditwindow.cpp:794
 msgid "Duplicate the line or the selection"
 msgstr "Monista rivi tai valinta"
 
-#: src/mooedit/mooeditwindow.cpp:803
+#: src/mooedit/mooeditwindow.cpp:802
 msgid "Move Lines Up"
 msgstr "Siirrä rivejä ylös"
 
-#: src/mooedit/mooeditwindow.cpp:804
+#: src/mooedit/mooeditwindow.cpp:803
 msgid "Move Lines _Up"
 msgstr "Siirrä rivejä _ylös"
 
-#: src/mooedit/mooeditwindow.cpp:805
+#: src/mooedit/mooeditwindow.cpp:804
 msgid "Move the selected lines up"
 msgstr "Siirrä valittuja rivejä ylös"
 
-#: src/mooedit/mooeditwindow.cpp:814
+#: src/mooedit/mooeditwindow.cpp:813
 msgid "Move Lines Down"
 msgstr "Siirrä rivejä alas"
 
-#: src/mooedit/mooeditwindow.cpp:815
+#: src/mooedit/mooeditwindow.cpp:814
 msgid "Move Lines _Down"
 msgstr "Siirrä rivejä _alas"
 
-#: src/mooedit/mooeditwindow.cpp:816
+#: src/mooedit/mooeditwindow.cpp:815
 msgid "Move the selected lines down"
 msgstr "Siirrä valittuja rivejä alas"
 
-#: src/mooedit/mooeditwindow.cpp:825
+#: src/mooedit/mooeditwindow.cpp:824
 msgid "Sort Lines"
 msgstr "Lajittele rivit"
 
-#: src/mooedit/mooeditwindow.cpp:826
+#: src/mooedit/mooeditwindow.cpp:825
 msgid "_Sort Lines"
 msgstr "_Lajittele rivit"
 
-#: src/mooedit/mooeditwindow.cpp:827
+#: src/mooedit/mooeditwindow.cpp:826
 msgid "Sort the selected lines"
 msgstr "Lajittele valitut rivit"
 
-#: src/mooedit/mooeditwindow.cpp:834
+#: src/mooedit/mooeditwindow.cpp:833
 msgid "Go to Matching Bracket"
 msgstr "Siirry vastaavaan sulkeeseen"
 
-#: src/mooedit/mooeditwindow.cpp:835
+#: src/mooedit/mooeditwindow.cpp:834
 msgid "Go to _Matching Bracket"
 msgstr "Siirry _vastaavaan sulkeeseen"
 
-#: src/mooedit/mooeditwindow.cpp:836
+#: src/mooedit/mooeditwindow.cpp:835
 msgid "Go to the bracket matching the one at the cursor"
 msgstr "Siirry sulkeeseen, joka vastaa kohdistimen kohdalla olevaa"
 
 #. Insensitive menu item which appears in Window menu with no documents open
-#: src/mooedit/mooeditwindow.cpp:845
+#: src/mooedit/mooeditwindow.cpp:844
 msgid "No Documents"
 msgstr "Ei asiakirjoja"
 
-#: src/mooedit/mooeditwindow.cpp:853
+#: src/mooedit/mooeditwindow.cpp:852
 msgid "Page Setup"
 msgstr "Sivun asetukset"
 
-#: src/mooedit/mooeditwindow.cpp:854
+#: src/mooedit/mooeditwindow.cpp:853
 msgid "Page S_etup..."
 msgstr "_Sivun asetukset..."
 
-#: src/mooedit/mooeditwindow.cpp:855
+#: src/mooedit/mooeditwindow.cpp:854
 msgid "Page Setup..."
 msgstr "Sivun asetukset..."
 
-#: src/mooedit/mooeditwindow.cpp:871 src/mooedit/mooeditwindow.cpp:872
+#: src/mooedit/mooeditwindow.cpp:870 src/mooedit/mooeditwindow.cpp:871
 msgid "Print..."
 msgstr "Tulosta..."
 
-#: src/mooedit/mooeditwindow.cpp:880 src/mooedit/mooeditwindow.cpp:2155
+#: src/mooedit/mooeditwindow.cpp:879 src/mooedit/mooeditwindow.cpp:2153
 msgid "Export as PDF"
 msgstr "Vie PDF:nä"
 
-#: src/mooedit/mooeditwindow.cpp:881
+#: src/mooedit/mooeditwindow.cpp:880
 msgid "E_xport as PDF..."
 msgstr "_Vie PDF:nä..."
 
-#: src/mooedit/mooeditwindow.cpp:882
+#: src/mooedit/mooeditwindow.cpp:881
 msgid "Export as PDF..."
 msgstr "Vie PDF:nä..."
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [new file]"
-#: src/mooedit/mooeditwindow.cpp:1163
+#: src/mooedit/mooeditwindow.cpp:1161
 #, c-format
 msgid "%s [new file]"
 msgstr "%s [uusi tiedosto]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [modified on disk]"
-#: src/mooedit/mooeditwindow.cpp:1166
+#: src/mooedit/mooeditwindow.cpp:1164
 #, c-format
 msgid "%s [modified on disk]"
 msgstr "%s [muokattu levyllä]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [deleted]"
-#: src/mooedit/mooeditwindow.cpp:1169
+#: src/mooedit/mooeditwindow.cpp:1167
 #, c-format
 msgid "%s [deleted]"
 msgstr "%s [poistettu]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [new file] [modified]"
-#: src/mooedit/mooeditwindow.cpp:1177
+#: src/mooedit/mooeditwindow.cpp:1175
 #, c-format
 msgid "%s [new file] [modified]"
 msgstr "%s [uusi tiedosto] [muokattu]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [modified on disk] [modified]"
-#: src/mooedit/mooeditwindow.cpp:1180
+#: src/mooedit/mooeditwindow.cpp:1178
 #, c-format
 msgid "%s [modified on disk] [modified]"
 msgstr "%s [muokattu levyllä] [muokattu]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [deleted] [modified]"
-#: src/mooedit/mooeditwindow.cpp:1183
+#: src/mooedit/mooeditwindow.cpp:1181
 #, c-format
 msgid "%s [deleted] [modified]"
 msgstr "%s [poistettu] [muokattu]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [modified]"
-#: src/mooedit/mooeditwindow.cpp:1186
+#: src/mooedit/mooeditwindow.cpp:1184
 #, c-format
 msgid "%s [modified]"
 msgstr "%s [muokattu]"
 
-#: src/mooedit/mooeditwindow.cpp:1426
+#: src/mooedit/mooeditwindow.cpp:1424
 msgid "Reopen Using Encoding"
 msgstr "Avaa uudelleen koodauksella"
 
-#: src/mooedit/mooeditwindow.cpp:1476
+#: src/mooedit/mooeditwindow.cpp:1474
 msgid "_Encoding"
 msgstr "K_oodaus"
 
-#: src/mooedit/mooeditwindow.cpp:1530
+#: src/mooedit/mooeditwindow.cpp:1528
 msgid "Line En_dings"
 msgstr "_Rivinloput"
 
-#: src/mooedit/mooeditwindow.cpp:1537
+#: src/mooedit/mooeditwindow.cpp:1535
 msgid "_Windows (CR+LF)"
 msgstr "_Windows (CR+LF)"
 
-#: src/mooedit/mooeditwindow.cpp:1542
+#: src/mooedit/mooeditwindow.cpp:1540
 msgid "_Unix (LF)"
 msgstr "_UNIX (LF)"
 
-#: src/mooedit/mooeditwindow.cpp:1546
+#: src/mooedit/mooeditwindow.cpp:1544
 msgid "_Mac (CR)"
 msgstr "_Mac (CR)"
 
@@ -1208,26 +1208,26 @@ msgctxt "tab-context-menu"
 msgid "Move to Split Notebook"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:4052
+#: src/mooedit/mooeditwindow.cpp:4159
 #, c-format
 msgid "Line: %s Col: %s"
 msgstr "Rivi: %s Sar: %s"
 
-#: src/mooedit/mooeditwindow.cpp:4053
+#: src/mooedit/mooeditwindow.cpp:4160
 #, c-format
 msgid "Chars: %s"
 msgstr "Merkkejä: %s"
 
 #. Label in the editor window statusbar - Overwrite or Insert mode
-#: src/mooedit/mooeditwindow.cpp:4096
+#: src/mooedit/mooeditwindow.cpp:4203
 msgid "OVR"
 msgstr "KOR"
 
-#: src/mooedit/mooeditwindow.cpp:4096
+#: src/mooedit/mooeditwindow.cpp:4203
 msgid "INS"
 msgstr "LIS"
 
-#: src/mooedit/mooeditwindow.cpp:4205
+#: src/mooedit/mooeditwindow.cpp:4312
 msgid "_Language"
 msgstr "_Kieli"
 
@@ -1474,12 +1474,12 @@ msgid "Move selected files to Trash"
 msgstr "Siirrä valitut tiedostot roskakoriin"
 
 #. Translators: the first %s is a file name, the second one is a folder name
-#: src/moofileview/moofileview.cpp:5892
+#: src/moofileview/moofileview.cpp:5890
 #, c-format
 msgid "A file named \"%s\" already exists in \"%s\""
 msgstr "Tiedosto nimeltä \"%s\" on jo kansiossa \"%s\""
 
-#: src/moofileview/moofileview.cpp:5900
+#: src/moofileview/moofileview.cpp:5898
 msgid ""
 "Replacing it overwrites its contents. The name below is used instead if you "
 "choose to rename."
@@ -1487,55 +1487,55 @@ msgstr ""
 "Korvaaminen ylikirjoittaa sen sisällön. Jos valitset uudelleennimeämisen, "
 "käytetään alla olevaa nimeä."
 
-#: src/moofileview/moofileview.cpp:5903
+#: src/moofileview/moofileview.cpp:5901
 msgid ""
 "This is that file itself, so it can only be put there under the name below."
 msgstr ""
 "Tämä on sama tiedosto, joten se voidaan sijoittaa sinne vain alla olevalla "
 "nimellä."
 
-#: src/moofileview/moofileview.cpp:5907
+#: src/moofileview/moofileview.cpp:5905
 msgid "_Skip"
 msgstr "Ohi_ta"
 
-#: src/moofileview/moofileview.cpp:5910
+#: src/moofileview/moofileview.cpp:5908
 msgid "Re_name"
 msgstr "Nimeä _uudelleen"
 
-#: src/moofileview/moofileview.cpp:5950
+#: src/moofileview/moofileview.cpp:5948
 msgid "Invalid file name"
 msgstr "Virheellinen tiedostonimi"
 
-#: src/moofileview/moofileview.cpp:5951
+#: src/moofileview/moofileview.cpp:5949
 msgid "The name must not be empty and must not contain a path separator."
 msgstr "Nimi ei saa olla tyhjä eikä sisältää polkuerotinta."
 
 #. Translators: %s stands for a file name
-#: src/moofileview/moofileview.cpp:5964
+#: src/moofileview/moofileview.cpp:5962
 #, c-format
 msgid "A file named \"%s\" already exists"
 msgstr "Tiedosto \"%s\" on jo olemassa"
 
 #. Translators: %s stands for the name of a command, e.g. "cp"
-#: src/moofileview/moofileview.cpp:6033
+#: src/moofileview/moofileview.cpp:6031
 #, c-format
 msgid "'%s' command failed"
 msgstr "Komento \"%s\" epäonnistui"
 
 #. Translators: %s stands for a file name
-#: src/moofileview/moofileview.cpp:6174
+#: src/moofileview/moofileview.cpp:6172
 #, c-format
 msgid "Could not copy \"%s\""
 msgstr "Ei voitu kopioida tiedostoa \"%s\""
 
 #. Translators: %s stands for a file name
-#: src/moofileview/moofileview.cpp:6187
+#: src/moofileview/moofileview.cpp:6185
 #, c-format
 msgid "Could not move \"%s\""
 msgstr "Ei voitu siirtää tiedostoa \"%s\""
 
 #. Translators: %s stands for a file name
-#: src/moofileview/moofileview.cpp:6200
+#: src/moofileview/moofileview.cpp:6198
 #, c-format
 msgid "Could not create a link to \"%s\""
 msgstr "Ei voitu luoda linkkiä tiedostoon \"%s\""
@@ -2266,7 +2266,10 @@ msgctxt "window-pane"
 msgid "Output"
 msgstr "Tuloste"
 
+#. What the command said before it gave up, if it said anything: its
+#. standard error is the only account of itself it left.
 #: src/plugins/lsp/lsp-actions.cpp:289
+#: src/plugins/usertools/moocommand-exe.cpp:554
 msgid "The command failed"
 msgstr "Komento epäonnistui"
 
@@ -2790,47 +2793,48 @@ msgstr ""
 "Komentotulkki päättyy joka kerta heti, joten sitä ei käynnistetä uudelleen. "
 "Tarkista komentotulkki päätteen asetuksista."
 
-#: src/plugins/terminal/terminal-plugin.cpp:272
-#: src/plugins/terminal/terminal-plugin.cpp:770
-#: src/plugins/terminal/terminal-plugin.cpp:821
-#: src/plugins/terminal/terminal-plugin.cpp:824
-#: src/plugins/terminal/terminal-plugin.cpp:825
-#: src/plugins/terminal/terminal-plugin.cpp:889
+#: src/plugins/terminal/terminal-plugin.cpp:283
+#: src/plugins/terminal/terminal-plugin.cpp:291
+#: src/plugins/terminal/terminal-plugin.cpp:795
+#: src/plugins/terminal/terminal-plugin.cpp:846
+#: src/plugins/terminal/terminal-plugin.cpp:849
+#: src/plugins/terminal/terminal-plugin.cpp:850
+#: src/plugins/terminal/terminal-plugin.cpp:914
 #: src/plugins/terminal/terminal-prefs.cpp:133
 msgid "Terminal"
 msgstr "Pääte"
 
-#: src/plugins/terminal/terminal-plugin.cpp:570
+#: src/plugins/terminal/terminal-plugin.cpp:590
 msgid "“cd” to current file directory"
 msgstr "”cd” nykyisen tiedoston hakemistoon"
 
-#: src/plugins/terminal/terminal-plugin.cpp:577
+#: src/plugins/terminal/terminal-plugin.cpp:597
 msgid "“pushd” to current file directory"
 msgstr "”pushd” nykyisen tiedoston hakemistoon"
 
-#: src/plugins/terminal/terminal-plugin.cpp:826
+#: src/plugins/terminal/terminal-plugin.cpp:851
 msgid "Show the terminal pane"
 msgstr "Näytä päätepaneeli"
 
-#: src/plugins/terminal/terminal-plugin.cpp:839
-#: src/plugins/terminal/terminal-plugin.cpp:840
+#: src/plugins/terminal/terminal-plugin.cpp:864
+#: src/plugins/terminal/terminal-plugin.cpp:865
 msgid "Copy in Terminal"
 msgstr "Kopioi päätteessä"
 
-#: src/plugins/terminal/terminal-plugin.cpp:841
+#: src/plugins/terminal/terminal-plugin.cpp:866
 msgid "Copy the selection in the terminal pane"
 msgstr "Kopioi valinta päätepaneelissa"
 
-#: src/plugins/terminal/terminal-plugin.cpp:848
-#: src/plugins/terminal/terminal-plugin.cpp:849
+#: src/plugins/terminal/terminal-plugin.cpp:873
+#: src/plugins/terminal/terminal-plugin.cpp:874
 msgid "Paste in Terminal"
 msgstr "Liitä päätteeseen"
 
-#: src/plugins/terminal/terminal-plugin.cpp:850
+#: src/plugins/terminal/terminal-plugin.cpp:875
 msgid "Paste the clipboard into the terminal pane"
 msgstr "Liitä leikepöytä päätepaneeliin"
 
-#: src/plugins/terminal/terminal-plugin.cpp:889
+#: src/plugins/terminal/terminal-plugin.cpp:914
 msgid "Terminal pane"
 msgstr "Päätepaneeli"
 
@@ -2949,56 +2953,61 @@ msgid "Context menu"
 msgstr "Kontekstivalikko"
 
 #. Translators: this is an action for output of a shell command, remove the part before and including |
-#: src/plugins/usertools/moocommand-exe.cpp:67
+#: src/plugins/usertools/moocommand-exe.cpp:68
 msgid "Output|None"
 msgstr "Ei mitään"
 
 #. Translators: this is an action for output of a shell command, remove the part before and including |
-#: src/plugins/usertools/moocommand-exe.cpp:69
+#: src/plugins/usertools/moocommand-exe.cpp:70
 msgid "Output|None, asynchronous"
 msgstr "Ei mitään, tahdistamaton"
 
 #. Translators: this is an action for output of a shell command, remove the part before and including |
-#: src/plugins/usertools/moocommand-exe.cpp:71
+#: src/plugins/usertools/moocommand-exe.cpp:72
 msgid "Output|Output pane"
 msgstr "Tulosteruutu"
 
 #. Translators: this is an action for output of a shell command, remove the part before and including |
-#: src/plugins/usertools/moocommand-exe.cpp:73
+#: src/plugins/usertools/moocommand-exe.cpp:74
 msgid "Output|Insert into the document"
 msgstr "Lisää asiakirjaan"
 
 #. Translators: this is an action for output of a shell command, remove the part before and including |
-#: src/plugins/usertools/moocommand-exe.cpp:75
+#: src/plugins/usertools/moocommand-exe.cpp:76
 msgid "Output|New document"
 msgstr "Uusi asiakirja"
 
-#: src/plugins/usertools/moocommand-exe.cpp:778
+#: src/plugins/usertools/moocommand-exe.cpp:546
+#: src/plugins/usertools/moocommand-exe.cpp:698
+msgid "Could not run the command"
+msgstr "Komentoa ei voitu suorittaa"
+
+#: src/plugins/usertools/moocommand-exe.cpp:809
 msgid "Shell command"
 msgstr "Päätekomento"
 
 #. Translators: this is a kind of input for a shell command, remove the part before and including |
-#: src/plugins/usertools/moocommand-exe.cpp:1019
+#: src/plugins/usertools/moocommand-exe.cpp:1050
 msgid "Input|None"
 msgstr "Ei mitään"
 
 #. Translators: this is a kind of input for a shell command, remove the part before and including |
-#: src/plugins/usertools/moocommand-exe.cpp:1021
+#: src/plugins/usertools/moocommand-exe.cpp:1052
 msgid "Input|Selected lines"
 msgstr "Valitut rivit"
 
 #. Translators: this is a kind of input for a shell command, remove the part before and including |
-#: src/plugins/usertools/moocommand-exe.cpp:1023
+#: src/plugins/usertools/moocommand-exe.cpp:1054
 msgid "Input|Selection"
 msgstr "Valinta"
 
 #. Translators: this is a kind of input for a shell command, remove the part before and including |
-#: src/plugins/usertools/moocommand-exe.cpp:1025
+#: src/plugins/usertools/moocommand-exe.cpp:1056
 msgid "Input|Whole document"
 msgstr "Koko asiakirja"
 
 #. Translators: this is a kind of input for a shell command, remove the part before and including |
-#: src/plugins/usertools/moocommand-exe.cpp:1027
+#: src/plugins/usertools/moocommand-exe.cpp:1058
 msgid "Input|Document copy"
 msgstr "Asiakirjan kopio"
 

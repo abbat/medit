@@ -19,6 +19,7 @@
 #include "../support/moocmdview.h"
 #include "../support/mooeditwindowoutput.h"
 #include "mooutils/mooi18n.h"
+#include "mooutils/moodialogs.h"
 #include "mooutils/mooutils-fs.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooutils-script.h"
@@ -467,6 +468,22 @@ create_environment (MooCommandExe     *cmd,
 }
 
 
+/*
+ * Where a tool that failed says so. A tool is a menu item, and the g_message()
+ * this replaced went to a standard error that a medit started from a desktop
+ * file does not have, so a tool which could not start was a menu item that did
+ * nothing and explained nothing.
+ */
+static void
+command_error_dialog (MooCommandContext *ctx,
+                      const char        *text,
+                      const char        *secondary)
+{
+    MooEditWindow *window = moo_command_context_get_window (ctx);
+    moo_error_dialog (text, secondary, window ? GTK_WIDGET (window) : NULL);
+}
+
+
 static gboolean
 run_sync (const char  *base_cmd_line,
           const char  *working_dir,
@@ -474,9 +491,9 @@ run_sync (const char  *base_cmd_line,
           const char  *input,
           int         *exit_status,
           char       **output,
-          char       **output_err)
+          char       **output_err,
+          GError     **error)
 {
-    GError *error = NULL;
     gboolean result = FALSE;
     GSpawnFlags flags = (GSpawnFlags) (RUN_CMD_FLAGS | G_SPAWN_DEFAULT);
     char **argv;
@@ -486,22 +503,15 @@ run_sync (const char  *base_cmd_line,
     g_return_val_if_fail (base_cmd_line != NULL, FALSE);
 
     cmd_line = make_cmd (base_cmd_line, input);
-    argv = make_argv (cmd_line, &error);
+    argv = make_argv (cmd_line, error);
 
     if (argv)
     {
         real_env = _moo_env_add (envp);
         result = g_spawn_sync (working_dir, argv, real_env, flags,
                                NULL, NULL, output, output_err, exit_status,
-                               &error);
+                               error);
         g_strfreev (real_env);
-    }
-
-    if (!result)
-    {
-        g_message ("%s: could not run command: %s (command line was '%s')",
-                   G_STRFUNC, error->message, cmd_line);
-        g_error_free (error);
     }
 
     g_strfreev (argv);
@@ -523,11 +533,31 @@ run_command (MooCommandExe     *cmd,
 {
     gboolean result;
     char *input;
+    char *output_err = NULL;
+    int status = 0;
+    GError *error = NULL;
 
     input = get_input (cmd, ctx, select_input);
     result = run_sync (cmd->priv->cmd_line, working_dir, envp,
-                       input, NULL, output, NULL);
+                       input, &status, output, &output_err, &error);
 
+    if (!result)
+    {
+        command_error_dialog (ctx, _("Could not run the command"),
+                              error ? error->message : NULL);
+        g_clear_error (&error);
+    }
+    else if (!WIFEXITED (status) || WEXITSTATUS (status))
+    {
+        /* What the command said before it gave up, if it said anything: its
+           standard error is the only account of itself it left. */
+        command_error_dialog (ctx, _("The command failed"),
+                              output_err && output_err[0] ?
+                                  g_strchomp (output_err) : NULL);
+        result = FALSE;
+    }
+
+    g_free (output_err);
     g_free (input);
     return result;
 }
@@ -585,9 +615,9 @@ static gboolean
 run_async (const char     *cmd_line,
            const char     *working_dir,
            char          **envp,
-           MooEditWindow  *window)
+           MooEditWindow  *window,
+           GError        **error)
 {
-    GError *error = NULL;
     gboolean result = FALSE;
     char **real_env;
     GdkScreen *screen = NULL;
@@ -600,7 +630,7 @@ run_async (const char     *cmd_line,
     if (window && gtk_widget_has_screen (GTK_WIDGET (window)))
         screen = gtk_widget_get_screen (GTK_WIDGET (window));
 
-    argv = make_argv (cmd_line, &error);
+    argv = make_argv (cmd_line, error);
 
     if (argv)
     {
@@ -620,28 +650,21 @@ run_async (const char     *cmd_line,
             char **display_env = env_with_display (real_env, screen);
 
             result = g_spawn_async (working_dir, (char**) argv, display_env,
-                                    flags, NULL, NULL, NULL, &error);
+                                    flags, NULL, NULL, NULL, error);
 
             g_strfreev (display_env);
 #else
             result = gdk_spawn_on_screen (screen, working_dir, (char**) argv, real_env,
-                                          flags, NULL, NULL, NULL, &error);
+                                          flags, NULL, NULL, NULL, error);
 #endif
         }
         else
         {
             result = g_spawn_async (working_dir, (char**) argv, real_env,
-                                    flags, NULL, NULL, NULL, &error);
+                                    flags, NULL, NULL, NULL, error);
         }
 
         g_strfreev (real_env);
-    }
-
-    if (!result)
-    {
-        g_message ("%s: could not run command: %s (command line was '%s')",
-                   G_STRFUNC, error->message, cmd_line);
-        g_error_free (error);
     }
 
     g_strfreev (argv);
@@ -660,6 +683,7 @@ run_command_async (MooCommandExe     *cmd,
     gboolean result;
     char *cmd_line;
     MooEditWindow *window;
+    GError *error = NULL;
 
     cmd_line = make_cmd_line (cmd, ctx, FALSE);
 
@@ -667,7 +691,14 @@ run_command_async (MooCommandExe     *cmd,
         return FALSE;
 
     window = moo_command_context_get_window (ctx);
-    result = run_async (cmd_line, working_dir, envp, window);
+    result = run_async (cmd_line, working_dir, envp, window, &error);
+
+    if (!result)
+    {
+        command_error_dialog (ctx, _("Could not run the command"),
+                              error ? error->message : NULL);
+        g_clear_error (&error);
+    }
 
     g_free (cmd_line);
     return result;
