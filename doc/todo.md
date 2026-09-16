@@ -57,7 +57,7 @@ that answer.
 
 ---
 
-*The next three are not leftovers of removed code. They are the places where the tree is
+*The next two are not leftovers of removed code. They are the places where the tree is
 going to stop building, or is building on something nobody looks at, and each one is
 cheaper to answer before it becomes a bug report.*
 
@@ -71,14 +71,6 @@ discovers a break that happened days earlier and gets blamed for it.
 
 A nightly `schedule:` on `ui.yml` alone would separate "my change broke it" from "the world
 moved", which is the only question that matters when a run goes red.
-
-## The session file is the half of the startup path still untested
-
-`tests/app/command_line` and `tests/app/second_instance` cover the command line and the
-single-instance handshake, which leaves what `src/medit-app` does with the session: the
-file it writes on exit, the documents it reopens from it on the next start, and the save
-it makes when the program is killed. `Test.medit()` starts a second copy, so a test can
-now stop one medit and start another over the same sandbox and read what came back.
 
 ## GTK+2 stays until something real needs it gone
 

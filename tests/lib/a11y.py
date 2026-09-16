@@ -154,14 +154,20 @@ def find(root, **kwargs):
 _name_of = name
 
 
-def application(name="medit", timeout=TIMEOUT):
-    def look():
-        for app in pyatspi.Registry.getDesktop(0):
-            if app is not None and _name_of(app) == name:
-                return app
-        return None
+def applications(name="medit"):
+    """Every application of that name on the bus, in the order the desktop lists them.
 
-    return wait(look, "the %s application to appear on the a11y bus" % name, timeout)
+    More than one when a test starts a copy of its own: a second medit is an
+    application in its own right here, and nothing in the tree of the first
+    one leads to it.
+    """
+    return [app for app in pyatspi.Registry.getDesktop(0)
+            if app is not None and _name_of(app) == name]
+
+
+def application(name="medit", timeout=TIMEOUT):
+    return wait(lambda: next(iter(applications(name)), None),
+                "the %s application to appear on the a11y bus" % name, timeout)
 
 
 def state(node, name):

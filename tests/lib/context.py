@@ -98,6 +98,21 @@ class Test(object):
         return [node for node in a11y.children(self.app)
                 if a11y.role_name(node) == "frame"]
 
+    def frames_titled(self, title):
+        """Every main window whose title says that, of any medit now running.
+
+        For what t.medit() started: a copy is an application of its own on the
+        accessibility bus, so self.app never leads to it and self.frames()
+        never lists its windows. A window titled "medit - /path/to/doc" names
+        the document in it, which is how a test tells the copy it means from
+        every other window on the bus. A list rather than the window, because
+        a test that waits for a copy to go away waits for this to be empty.
+        """
+        return [frame
+                for app in a11y.applications(a11y.name(self.app))
+                for frame in a11y.find_all(app, role="frame", depth=2)
+                if title in a11y.name(frame)]
+
     def window_of(self, frame):
         """The X window a frame is drawn in, for the things AT-SPI cannot do."""
         return ui.window_of(frame)
