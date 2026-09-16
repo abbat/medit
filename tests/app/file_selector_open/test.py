@@ -99,7 +99,7 @@ def not_offered_for_a_folder(t, view):
 
 
 def documents(t):
-    """What medit has open, named after their tabs by MooNotebookAccessible."""
+    """What medit has open, named after their tabs by the notebook accessible."""
     books = [n for n in t.find_all(t.frame, role="page tab list", depth=25)
              if ui.on_screen(n)]
 

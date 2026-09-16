@@ -6,7 +6,7 @@
 import os
 
 from app.file_selector_common import open_pane, path_entry, where
-from lib.notebook import spans, strip
+from lib.notebook import tab_icon
 
 FIRST_ROW = 12
 INTO_ROW = 20
@@ -26,8 +26,7 @@ def run(t):
 
     # The only row is target. Select it and drop the document tab on it.
     t.click_at(x + INTO_ROW, y + FIRST_ROW)
-    left, right = spans(t, 1)["source.txt"]
-    t.drag_to(left + 12, strip(t), x + INTO_ROW, y + FIRST_ROW)
+    t.drag_to(*tab_icon(t, "source.txt"), x1=x + INTO_ROW, y1=y + FIRST_ROW)
 
     menu = t.wait(lambda: drop_menu(t), "the file drop menu")
     t.choose(menu, "Move Here")

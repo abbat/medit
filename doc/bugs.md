@@ -122,15 +122,18 @@ answers 1 on every side, the same as GTK+2's `xthickness` — the difference is 
 entry has a CSS border of its own and a bare container does not. Measure the widget you
 are about to change, not one that looks like it.
 
-**What is left in `moonotebook.cpp` is one problem wearing three markers.** The current tab
-has a line along its bottom closing it off from its page, where `gtk_paint_extension()`
-left that side open. `gtk_render_extension()` with `GTK_POS_BOTTOM`,
-`GTK_STYLE_CLASS_NOTEBOOK` and the states the right way round — GTK+2 drew the current
-tab NORMAL and the rest ACTIVE, GTK+3's themes want the opposite — produces a
-**byte-identical screenshot**. Since 3.20 a theme styles notebook parts through CSS
-nodes, and a widget that is not a `GtkNotebook` has none of them whatever it passes to
-the render calls. That wants a CSS name and node structure of its own, which is the
-whole widget's drawing rather than a cleanup.
+**What was left in `moonotebook.cpp` was one problem wearing three markers**, and the
+widget is what it cost. The current tab had a line along its bottom closing it off from
+its page, where `gtk_paint_extension()` left that side open. `gtk_render_extension()`
+with `GTK_POS_BOTTOM`, `GTK_STYLE_CLASS_NOTEBOOK` and the states the right way round —
+GTK+2 drew the current tab NORMAL and the rest ACTIVE, GTK+3's themes want the opposite
+— produced a **byte-identical screenshot**. Since 3.20 a theme styles notebook parts
+through CSS nodes, and a widget that is not a `GtkNotebook` has none of them whatever it
+passes to the render calls. Drawing it right meant a CSS name and node structure of its
+own — the whole widget's drawing rather than a cleanup. `GtkNotebook` has all of that
+already, so the 4444 lines went and the editor uses it directly: the strip is themed
+like every other notebook on the desktop, its pages are in the accessibility tree
+without help, and `tests/editor/tab_*` asserts the behaviour from outside either way.
 
 Two `#if 0` blocks survive the dead-code cleanup on purpose, because each documents a
 feature that is disabled rather than abandoned: the tree view's drag source in

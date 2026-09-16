@@ -11,7 +11,7 @@ for another name.
 """
 
 from lib import input as ui
-from lib.notebook import spans, strip
+from lib.notebook import tab_icon
 
 INNER = "inner"
 CONTENT = "the document being dropped\n"
@@ -106,10 +106,8 @@ def enter_inner(t, view):
 
 
 def drop(t, view, name):
-    tabs = spans(t, len(NAMES))
-    left, _ = tabs[name]
     x, y, width, height = t.extents(view)
-    t.drag_to(left + 12, strip(t), x + width // 2, y + height // 2)
+    t.drag_to(*tab_icon(t, name), x1=x + width // 2, y1=y + height // 2)
 
 
 def dropped_menu(t):

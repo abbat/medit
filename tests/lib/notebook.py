@@ -1,27 +1,15 @@
 """Where the document tabs are, for the tests that click them.
 
-The tab strip is MooNotebook's own, drawn on a GdkWindow rather than built out
-of widgets, so nothing in the accessibility tree points at a tab. What is in the
-tree is the pages, named after their tabs by MooNotebookAccessible -- so which
-document is which is readable, and where its tab is drawn is not. It has to be
-found by clicking along the strip and asking which page came forward.
+The tabs are GtkNotebook's, and GtkNotebookAccessible puts every page in the
+tree as a page tab named after its label -- so a tab can be asked where it is
+drawn and whether it is the current one, and none of it has to be found by
+clicking along the strip and watching what comes forward.
 
-Shared because three tests need the same four answers out of it, and each of
-them would otherwise carry the same guesses about where a strip is.
+Shared because the answers are the same for every test that reads the strip,
+and each of them would otherwise carry its own guesses about where one is.
 """
 
 from . import input as ui
-
-
-# The strip runs from the top of the notebook to the top of the page. Sampled
-# at a fixed offset into it rather than at the middle of a tab: a tab that is
-# not the current one is drawn a couple of pixels lower, and this is inside
-# both.
-STRIP = 17
-
-# How finely to look along the strip for the edges of a tab. The step bounds how
-# well an edge is known, and a caller should stay well inside what it finds.
-STEP = 12
 
 
 def the_notebook(t, frame=None):
@@ -34,54 +22,81 @@ def the_notebook(t, frame=None):
             if ui.on_screen(n)][0]
 
 
+def tabs(t, frame=None):
+    """The tabs of that notebook, in the order the notebook holds them."""
+    return t.find_all(the_notebook(t, frame), role="page tab", depth=1)
+
+
+def drawn(t, frame=None):
+    """The tabs that are on screen, in order.
+
+    A strip too narrow for them all scrolls, and the tabs that are past either
+    end of it are in the tree like any other but are not drawn.
+    """
+    return [tab for tab in tabs(t, frame) if ui.on_screen(tab)]
+
+
 def strip(t, frame=None):
     """Where along the height of the window the tabs are drawn."""
-    return t.extents(the_notebook(t, frame))[1] + STRIP
+    _, y, _, height = t.extents(drawn(t, frame)[0])
+    return y + height // 2
 
 
 def order(t, frame=None):
-    """The documents as the notebook holds them, named after their tabs.
-
-    Only the named children: the notebook reports the two scroll arrows among
-    its children as well while the tabs do not fit, and they are not documents.
-    """
-    return [n.name for n in t.find_all(the_notebook(t, frame), depth=1) if n.name]
+    """The documents as the notebook holds them, named after their tabs."""
+    return [tab.name for tab in tabs(t, frame) if tab.name]
 
 
 def showing(t, frame=None):
-    """The one page of the notebook that is drawn: the current document."""
-    for page in t.find_all(the_notebook(t, frame), depth=1):
-        if page.name and ui.on_screen(page):
-            return page.name
+    """The current document: the one tab of the notebook that is selected."""
+    for tab in tabs(t, frame):
+        if tab.name and t.state(tab, "selected"):
+            return tab.name
 
     return None
 
 
-def spans(t, count):
-    """Click along the strip and note which page each x brings forward.
+def tab_icon(t, name):
+    """Where the document icon of a tab is drawn, as a point to drag from.
 
-    Stops as soon as that many tabs have answered, so the span of every tab but
-    the last one found is complete and nothing further along is clicked. How far
-    to look is not fixed: the scan runs to the width of the notebook, so a
-    machine whose font makes the tabs wider costs a few more clicks rather than
-    a failure.
+    Dragging a document out of the window starts at the icon -- the event box
+    it sits in is the drag source, tab_icon_start_drag() in mooeditwindow.cpp
+    -- while the rest of the tab drags the tab along the strip instead.
 
-    Read from the page that is showing rather than from the window title: the
-    title follows the document that has the focus, which after a run of clicks
-    on the strip is not reliably the one whose tab was last clicked.
+    The icon is not in the accessibility tree, and what a tab answers for its
+    own extents is the extents of its label alone: GtkNotebookPageAccessible
+    looks through the tab's box for the first label in it and reports that. So
+    the icon is where the label is not, ICON to the left of where it starts.
     """
-    x0, _, width, _ = t.extents(the_notebook(t))
+    for tab in drawn(t):
+        if tab.name == name:
+            x, y, _, height = t.extents(tab)
+            return x - ICON, y + height // 2
+
+    return t.fail("no tab named %s is drawn" % name)
+
+
+# From the left edge of a tab's label to the middle of the icon before it: half
+# a menu-size icon, and the spacing of the box the two are in.
+ICON = 11
+
+
+def spans(t, count):
+    """Where each tab that is drawn begins and ends along the strip.
+
+    count is how many are wanted, and the scan stops there. A notebook whose
+    tabs do not all fit answers with the ones that are on screen: a caller asks
+    for spans in order to click them, and a tab that is scrolled out of the
+    strip is not there to be clicked.
+    """
     found = {}
 
-    for x in range(x0 + 2, x0 + width, STEP):
-        t.click_at(x, strip(t))
-        name = showing(t)
-
-        if name is None:
+    for tab in drawn(t):
+        if not tab.name:
             continue
 
-        low, high = found.get(name, (x, x))
-        found[name] = (min(low, x), max(high, x))
+        x, _, width, _ = t.extents(tab)
+        found[tab.name] = (x, x + width - 1)
 
         if len(found) == count:
             break

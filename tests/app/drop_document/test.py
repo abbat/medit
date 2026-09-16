@@ -17,13 +17,10 @@ than being copied.
 import os
 
 from lib import input as ui
-from lib.notebook import order, spans, strip
+from lib.notebook import order, tab_icon
 
 FIRST_ROW = 8
 INTO_ROW = 20
-
-# How far into a tab its icon is drawn.
-ICON = 12
 
 NAME = "notes.txt"
 
@@ -50,15 +47,12 @@ def run(t):
     t.wait(lambda: INNER in where(t, view),
            "the pane to go into %s; it is in %s" % (INNER, where(t, view)))
 
-    tabs = spans(t, 1)
-    left, right = tabs[NAME]
     x, y, width, height = t.extents(view)
 
-    # From the icon at the left end of the tab rather than from the middle of it:
-    # the drag source is the event box the icon sits in -- tab_icon_start_drag()
-    # in mooeditwindow.cpp -- and the rest of the tab drags the tab along the
-    # strip instead, which is what tests/editor/tab_drag does.
-    t.drag_to(left + ICON, strip(t), x + width // 2, y + height // 2)
+    # From the icon of the tab rather than from the middle of it: the icon is the
+    # drag source for the document, and the rest of the tab drags the tab along
+    # the strip instead, which is what tests/editor/tab_drag does.
+    t.drag_to(*tab_icon(t, NAME), x1=x + width // 2, y1=y + height // 2)
 
     menu = t.wait(lambda: dropped_menu(t), "the menu the drop puts up")
     offered = [item.name for item in t.on_screen(t.find_all(menu, depth=1))

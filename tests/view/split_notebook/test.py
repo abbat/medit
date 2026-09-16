@@ -10,10 +10,10 @@ once. Focus Document is the way back to the text from wherever the keyboard has
 got to.
 
 What is asserted is which notebook each document is in, read from the pages
-rather than from the tabs: MooNotebookAccessible names each page after its tab,
-so the strips can be told apart by what they hold. And Focus Document is asserted
-by typing: the keyboard is left in a pane, and afterwards what is typed lands in
-the document.
+rather than from the strips: GtkNotebookAccessible names each page after its
+tab, so the notebooks can be told apart by what they hold. And Focus Document
+is asserted by typing: the keyboard is left in a pane, and afterwards what is
+typed lands in the document.
 """
 
 from lib import input as ui
@@ -95,10 +95,10 @@ def texts(t):
 
 
 def current(t):
-    """The document in front, which is the page that is drawn."""
+    """The document in front, which is the tab that is selected."""
     for notebook in notebooks(t):
         for page in t.find_all(notebook, depth=1):
-            if ui.on_screen(page):
+            if page.name and t.state(page, "selected"):
                 return page.name
 
     return None

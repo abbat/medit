@@ -7,14 +7,15 @@ The port was largely done by an AI and is buggy. It left 53 blocks marked
 `/* FIXME: This code was written by AI and requires review */`, a marker that said
 only who wrote the code, not what was wrong with it. All 53 have been read against
 their GTK+2 branch: 33 were faithful translations and lost the marker, 19 named a
-defect, and those defects are fixed — the story is in `doc/bugs.md`. **Grep for
-`FIXME:` in a file you are about to change and read the ones that are there**: what
-is left says what was tried and measured, not who to blame.
+defect, and those defects are fixed — the story is in `doc/bugs.md`.
 
-One remains, in `moonotebook.cpp`: the current tab's bottom line. A blanket marker
-at the top of `mootextview.cpp` warned about the whole file; all 26 of its GTK+3
-blocks have since been read against their GTK+2 branch, the two that still made a
-cairo context of their own are fixed, and the marker is gone.
+None of those markers is left in `src/`. The last one was in `moonotebook.cpp`, on
+the current tab's bottom line, and went with the widget when GTK+'s own
+`GtkNotebook` took its place. A blanket marker at the top of `mootextview.cpp`
+warned about the whole file; all 26 of its GTK+3 blocks have since been read against
+their GTK+2 branch, the two that still made a cairo context of their own are fixed,
+and that marker is gone too. The `FIXME:`s that remain are all in `src/vendor/` and
+in the language files, and are upstream's.
 
 **The GTK+2 branch of every `#if GTK_CHECK_VERSION(3,0,0)` is the specification.**
 When GTK+3 misbehaves, read the `#else` branch first and ask what it achieved, then find

@@ -405,12 +405,13 @@ colour, so it is not a test of the theme:
 **Some widgets are not in the tree at all.** `MooIconView` draws its own cells, so AT-SPI
 calls it `unknown` and it has no children — a test finds it as *the* on-screen node of that
 role and then asks which document a double-click at some coordinate opened, which says more
-than a name would: that those coordinates really were that file. `MooNotebook`'s tab strip
-is the same; what `MooNotebookAccessible` does expose is the pages, named after their tabs
-and in the order the notebook holds them, which is what reordering changes. Where a tab is
-is found by clicking along the strip and asking which page came forward — and read the page
-that is *showing*, not the window title, which follows the document that has the focus and
-after a run of clicks on the strip is not the one whose tab was last clicked.
+than a name would: that those coordinates really were that file. The tab strip was the
+same until `GtkNotebook` replaced the hand-written notebook; GTK+3's notebook accessible
+puts every page in the tree as a `page tab`, named after its label and in the order the
+notebook holds them, which is what reordering changes, and answering where it is drawn,
+which is what a test clicks. Read the page that is *showing*, not the window title, which
+follows the document that has the focus and after a run of clicks on the strip is not the
+one whose tab was last clicked.
 
 **The file selector is six tests and one idea**: nothing in that pane names a
 file. `MooIconView` draws its own cells, so the way to read a listing is to select
@@ -652,17 +653,16 @@ clicked and nothing in any log. `t.pin_pane()` presses the Sticky button in the 
 toolbar (which has no name, only a tooltip) and is what a test that wants to watch a pane
 while typing needs; without it, a pane is good for one click per opening.
 
-**The document reaches the bus the same way**, and for a related reason: `MooNotebook`
-inherits from `GtkNotebook` and uses none of it — it keeps its own pages and calls no
-`gtk_notebook_` function — so the accessible it inherited read GtkNotebook's empty page
-list while the child count came from the container. One child, and nothing returned for
-it. `MooNotebookAccessible` takes the container's children instead, and the document is a
-`text` node with the text in it. Each page is named after its tab, refreshed at every
-lookup, so an open document is `hello.txt` and becomes `*hello.txt` while it has unsaved
-changes. A page tab object of its own is what is still missing —
-`gtk_notebook_page_accessible_new()` asks `gtk_notebook_get_tab_label()` for the name,
-which is that same empty list, with a Gtk-CRITICAL to go with it. GTK+3 only, as above, so
-the status bar's `Chars: N` label is still how a GTK+2 test would count characters.
+**The document reaches the bus through the notebook**, and for a while it did not. The
+hand-written `MooNotebook` inherited from `GtkNotebook` and used none of it — it kept its
+own pages and called no `gtk_notebook_` function — so the accessible it inherited read
+GtkNotebook's empty page list while the child count came from the container: one child,
+and nothing returned for it. Deleting the widget is what fixed that. GtkNotebook puts
+every page in the tree with a `page tab` of its own, named after the tab's label and
+following it, so an open document is `hello.txt` and becomes `*hello.txt` while it has
+unsaved changes, and under the page the document is a `text` node with the text in it.
+GTK+3 only, as above, so the status bar's `Chars: N` label is still how a GTK+2 test would
+count characters.
 
 **A test that asserts a fix should be seen failing without it.** The cheapest way, and the
 one that costs no thinking: `git stash push -- src`, rebuild the test tree (incremental,

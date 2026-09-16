@@ -77,8 +77,6 @@ target_sources(medit PRIVATE
     moomenuaction.h
     moomenumgr.cpp
     moomenumgr.h
-    moonotebook.cpp
-    moonotebook.h
     mooonce.h
     moopane.cpp
     moopane.h

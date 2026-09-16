@@ -1,36 +1,29 @@
-"""When the tabs do not all fit, the wheel scrolls the strip.
+"""When the tabs do not all fit, the wheel over the strip moves through them.
 
 # requires: MOO_GTK3
 
-labels_scroll() in moonotebook.c, reached from moo_notebook_scroll_event(). The
-strip is medit's own, and so is this: GtkNotebook answers a wheel over its tabs
-by switching pages, and MooNotebook moves the strip instead, leaving the current
-page alone. It is also one of the two ways to reach a tab that is off the end of
-the strip; the other is the arrow buttons, which tests/editor/tab_arrows drives.
+The notebook is scrollable, which is what makes a strip that is too narrow
+scroll its tabs rather than shrink them, and a wheel over such a strip steps to
+the next document and scrolls the strip to keep its tab drawn. It is one of the
+two ways to reach a tab that is off the end of the strip; the other is the
+arrows at its ends, which tests/editor/tab_arrows clicks.
 
-Read by clicking one fixed point on the strip and asking which document came
-forward. The strip is scrolled to its left end first, where labels_scroll()
-clamps and the first tab has to be: from there, scrolling the other way has to
-bring a later document under the same point. Neither reading depends on where a
-tab is drawn or on what colour it is.
+Read from the tabs: each page is in the accessibility tree as a tab named after
+its document, so which document is current and which tabs are drawn are both
+readable, and neither reading depends on where a tab is drawn or on what colour
+it is.
 
-Starting from the left end is what makes it reliable, and finding that out cost a
-CI run. The strip does not start there: opening a document scrolls it to show
-that document's tab, and so does clicking one, so where the left of the strip is
-depends on how many tabs fit -- which depends on the font. On the machine this was
-written on there was room to scroll further right at the start; in CI the strip
-was already at its right end, where the wheel does nothing and rightly so.
+Nothing is assumed about where the strip starts. Opening a document scrolls it
+to show that document's tab, so where it comes to rest depends on how many tabs
+fit -- on the font, and so on the machine; that cost this test a CI run when it
+did assume. Each end is reached by turning the wheel until it gets there.
 
-For the same reason the reading is a direction rather than a distance: three
-notches move the tab under the fixed point by one name, not by three, because
-clicking to read it scrolls the strip too.
-
-labels_scroll() does nothing at all while the tabs fit, so a build where the
-strip stopped overflowing would fail here rather than pass quietly: the same
-click would answer with the same document.
+The strip has to overflow for any of this to mean anything, so that is asserted
+first: a build where it stopped overflowing would fail here rather than pass
+quietly.
 """
 
-from lib.notebook import order, showing, strip, the_notebook
+from lib.notebook import drawn, order, showing, strip, tabs
 
 # Long enough names, and enough of them, that the strip cannot hold them all in
 # any plausible window.
@@ -38,9 +31,8 @@ COUNT = 14
 
 NAMES = ["a-long-document-name-%02d.txt" % i for i in range(COUNT)]
 
-# How many wheel notches to send. One notch is about one tab, so going back has
-# to be able to cross the whole list from wherever opening the documents left
-# it -- COUNT and a few over, rather than a number that happens to work here.
+# How many notches to turn. One notch is one document, so crossing the whole
+# list from wherever opening them left the strip takes COUNT and a few over.
 FORWARD = 3
 BACK = COUNT + 4
 
@@ -54,45 +46,51 @@ def run(t):
     t.check(sorted(order(t)) == sorted(NAMES),
             "all %d documents are open" % COUNT)
 
-    x = t.extents(the_notebook(t))[0] + 6
+    t.check(len(drawn(t)) < COUNT,
+            "and the strip cannot hold them all: it draws %d of %d"
+            % (len(drawn(t)), COUNT))
 
-    # To the left end first, so that what follows starts from a known place.
-    # Where the strip sits to begin with is not knowable: opening a document
-    # scrolls it to show that document's tab, and how many tabs fit before it
-    # depends on the width of the font -- on one machine the left of the strip
-    # was the eleventh tab and there was room to scroll further right, on
-    # another it was the twelfth and the strip was already at its right end,
-    # where the wheel correctly does nothing.
-    scroll(t, x, BACK, down=False)
+    # To the near end first, so that what follows starts from a known place.
+    scroll(t, BACK, down=False)
 
-    first = document_at(t, x)
-    t.check(first == NAMES[0],
-            "scrolled as far left as it goes, the first tab is at the left end: %s"
-            % first)
+    t.check(showing(t) == NAMES[0],
+            "turned as far back as it goes, the first document is current: %s"
+            % showing(t))
+    t.check(names(drawn(t))[0] == NAMES[0],
+            "and the strip scrolled to its near end to draw that tab: %s"
+            % ", ".join(names(drawn(t))))
 
-    scroll(t, x, FORWARD, down=True)
+    off_the_end = names(tabs(t))[-1]
+    t.check(off_the_end not in names(drawn(t)),
+            "the last document's tab is off the far end of the strip")
 
-    later = document_at(t, x)
-    t.check(later != first,
-            "after scrolling, the same point on the strip is a different tab: %s "
-            "rather than %s -- so the strip moved" % (later, first))
+    scroll(t, FORWARD, down=True)
 
-    t.check(order(t).index(later) > order(t).index(first),
-            "and it moved towards the end of the strip: %s comes after %s"
-            % (later, first))
-
-
-def document_at(t, x):
-    """Click one point on the strip and say which document came forward."""
-    t.click_at(x, strip(t))
-    return t.wait(lambda: showing(t), "a document to be showing after the click")
+    t.check(showing(t) == NAMES[FORWARD],
+            "the wheel stepped forward %d documents, to %s"
+            % (FORWARD, showing(t)))
+    t.check(order(t).index(showing(t)) > order(t).index(NAMES[0]),
+            "which is further along the strip than where it started")
 
 
-def scroll(t, x, notches, down):
+def names(nodes):
+    return [node.name for node in nodes]
+
+
+def scroll(t, notches, down):
     """Turn the wheel over the strip. Buttons 4 and 5 are up and down.
 
     In one call rather than a loop: every notch is a scroll event either way,
     and a loop of eighteen clicks spends eighteen seconds waiting for a widget
     that has already answered.
     """
-    t.click_at(x, strip(t), button=5 if down else 4, times=notches)
+    t.click_at(middle(t), strip(t), button=5 if down else 4, times=notches)
+
+
+def middle(t):
+    """A point along the strip that is a tab whichever way it has scrolled."""
+    first, last = drawn(t)[0], drawn(t)[-1]
+    x0 = t.extents(first)[0]
+    x1 = t.extents(last)[0] + t.extents(last)[2]
+
+    return (x0 + x1) // 2

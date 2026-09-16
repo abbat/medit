@@ -203,7 +203,8 @@ which is true almost always, so the early return never fired and the cursor was 
 on every motion event. A third marker, the About dialog's Escape key, described an
 assertion that no longer reproduces and is now a UI test. The other eleven said who
 wrote the code rather than what was wrong with it, and now say what was measured.
-`moonotebook.cpp:2635` is the one kept on purpose. The vendored 18 are left alone, the
+`moonotebook.cpp:2635` was the one kept on purpose, and went with the widget when
+`GtkNotebook` replaced it. The vendored 18 are left alone, the
 way the rest of `src/vendor/` is.
 
 `.github/workflows/package.yml` builds the three packaging trees the way a distribution
@@ -284,7 +285,8 @@ are GitHub's own, and the compromises the rule cites were third-party.
 
 The disqualifying part is quieter. Semgrep has no preprocessor, and it **drops a file it
 cannot parse without failing** -- the scan prints "Parsed lines: ~99.9%" and exits green.
-Four files are dropped: `mootextview.cpp`, `mooiconview.cpp`, `moonotebook.cpp`, `moopaned.cpp`.
+Four files are dropped: `mootextview.cpp`, `mooiconview.cpp`, `moonotebook.cpp` (since
+deleted), `moopaned.cpp`.
 Those are exactly the top four by `GTK_CHECK_VERSION` count (58, 51, 34 and 25; the fifth
 has 14 and parses), because they put `#if` inside argument lists. The blind spot is
 precisely the code the GTK+3 port touched hardest. A custom rule written against the

@@ -32,7 +32,6 @@
 #include "mooedit/mooeditaction.h"
 #include "mooedit/mooeditbookmark.h"
 #include "mooedit/moolangmgr.h"
-#include "mooutils/moonotebook.h"
 #include "mooutils/moobuilder.h"
 #include "mooutils/moostock.h"
 #include "marshals.h"
@@ -82,7 +81,7 @@ typedef struct {
 static GHashTable *action_checks; /* char* -> ActionCheck* */
 static std::unordered_set<MooEditWindow*> windows;
 
-using MooNotebookPtr = ObjectPtr<MooNotebook>;
+using GtkNotebookPtr = ObjectPtr<GtkNotebook>;
 
 struct MooEditWindowPrivate {
     MooEditor *editor;
@@ -95,7 +94,7 @@ struct MooEditWindowPrivate {
     GtkWidget *info;
 
     GtkWidget *doc_paned;
-    std::vector<MooNotebookPtr> notebooks;
+    std::vector<GtkNotebookPtr> notebooks;
     MooEditTab *active_tab;
     guint save_params_idle;
 
@@ -153,19 +152,19 @@ static MooCloseResponse moo_edit_window_before_close    (MooEditWindow      *win
 static void          queue_save_window_config           (MooEditWindow      *window);
 
 static void          setup_notebook                     (MooEditWindow      *window,
-                                                         MooNotebook        *notebook);
+                                                         GtkNotebook        *notebook);
 static int           get_active_tab                     (MooEditWindow      *window);
-static MooNotebook  *get_notebook                       (MooEditWindow      *window,
+static GtkNotebook  *get_notebook                       (MooEditWindow      *window,
                                                          int                 i);
-static MooNotebook  *get_active_notebook                (MooEditWindow      *window);
+static GtkNotebook  *get_active_notebook                (MooEditWindow      *window);
 static int           get_view_page_num                  (MooEditWindow      *window,
                                                          MooEditView        *view,
-                                                         MooNotebook       **pnotebook);
-static MooEditView  *get_notebook_active_view           (MooNotebook        *notebook);
-static MooEdit      *get_notebook_active_doc            (MooNotebook        *notebook);
+                                                         GtkNotebook       **pnotebook);
+static MooEditView  *get_notebook_active_view           (GtkNotebook        *notebook);
+static MooEdit      *get_notebook_active_doc            (GtkNotebook        *notebook);
 static void          save_doc_paned_config              (MooEditWindow      *window);
 static void          show_notebook                      (MooEditWindow      *window,
-                                                         MooNotebook        *notebook);
+                                                         GtkNotebook        *notebook);
 static void          move_tab_to_split_view             (MooEditWindow      *window,
                                                          MooEditTab         *tab);
 static gboolean      can_move_to_split_notebook         (MooEditWindow      *window);
@@ -215,9 +214,9 @@ static void          update_split_view_actions          (MooEditWindow      *win
 
 static void          create_statusbar                   (MooEditWindow      *window);
 static void          update_statusbar                   (MooEditWindow      *window);
-static MooEditTab   *get_nth_tab                        (MooNotebook        &notebook,
+static MooEditTab   *get_nth_tab                        (GtkNotebook        &notebook,
                                                          guint               n);
-static MooEdit      *get_nth_doc                        (MooNotebook        *notebook,
+static MooEdit      *get_nth_doc                        (GtkNotebook        *notebook,
                                                          guint               n);
 
 static GtkAction    *create_lang_action                 (MooEditWindow      *window, gpointer);
@@ -1097,23 +1096,22 @@ moo_edit_window_constructor (GType                  type,
     for (i = 0; i < 2; ++i)
     {
         GtkWidget *notebook = GTK_WIDGET (
-            g_object_new (MOO_TYPE_NOTEBOOK,
+            g_object_new (GTK_TYPE_NOTEBOOK,
                           "show-tabs", TRUE,
-                          "enable-popup", TRUE,
-                          "enable-reordering", TRUE,
+                          "scrollable", TRUE,
                           (const char*) nullptr));
 
         if (i == 0)
             gtk_widget_show (notebook);
 
-        window->priv->notebooks.push_back(g::ref_obj(MOO_NOTEBOOK(notebook)));
+        window->priv->notebooks.push_back(g::ref_obj(GTK_NOTEBOOK(notebook)));
 
         if (i == 0)
             gtk_paned_pack1 (GTK_PANED (window->priv->doc_paned), notebook, TRUE, FALSE);
         else
             gtk_paned_pack2 (GTK_PANED (window->priv->doc_paned), notebook, TRUE, FALSE);
 
-        setup_notebook (window, MOO_NOTEBOOK (notebook));
+        setup_notebook (window, GTK_NOTEBOOK (notebook));
     }
 
     create_statusbar (window);
@@ -1602,8 +1600,8 @@ switch_to_tab (MooEditWindow *window,
 
     for (i = 0; i < 2; ++i)
     {
-        MooNotebook *notebook = get_notebook (window, i);
-        int n_pages = moo_notebook_get_n_pages (notebook);
+        GtkNotebook *notebook = get_notebook (window, i);
+        int n_pages = gtk_notebook_get_n_pages (notebook);
         if (n < n_pages)
         {
             MooEditTab *tab = get_nth_tab (*notebook, n);
@@ -1642,7 +1640,7 @@ action_next_tab (MooEditWindow *window)
 }
 
 static int
-get_first_tab_in_notebook (MooNotebook *notebook, MooEditWindow *window)
+get_first_tab_in_notebook (GtkNotebook *notebook, MooEditWindow *window)
 {
     int tab = 0;
 
@@ -1651,7 +1649,7 @@ get_first_tab_in_notebook (MooNotebook *notebook, MooEditWindow *window)
         if (nb == notebook)
             return tab;
 
-        tab += moo_notebook_get_n_pages (nb.get());
+        tab += gtk_notebook_get_n_pages (nb.get());
     }
 
     g_return_val_if_reached (-1);
@@ -1661,11 +1659,11 @@ static void
 action_previous_tab_in_view (MooEditWindow *window)
 {
     int n, tabs_in_notebook, first_tab;
-    MooNotebook *notebook;
+    GtkNotebook *notebook;
 
     n = get_active_tab (window);
     notebook = get_active_notebook (window);
-    tabs_in_notebook = moo_notebook_get_n_pages (notebook);
+    tabs_in_notebook = gtk_notebook_get_n_pages (notebook);
     first_tab = get_first_tab_in_notebook (notebook, window);
 
 
@@ -1679,11 +1677,11 @@ static void
 action_next_tab_in_view (MooEditWindow *window)
 {
     int n, tabs_in_notebook, first_tab;
-    MooNotebook *notebook;
+    GtkNotebook *notebook;
 
     n = get_active_tab (window);
     notebook = get_active_notebook (window);
-    tabs_in_notebook = moo_notebook_get_n_pages (notebook);
+    tabs_in_notebook = gtk_notebook_get_n_pages (notebook);
     first_tab = get_first_tab_in_notebook (notebook, window);
 
     if (n < (first_tab + tabs_in_notebook - 1))
@@ -1740,8 +1738,8 @@ action_focus_doc (MooEditWindow *window)
     }
     else if (both_notebooks_visible (window))
     {
-        MooNotebook *nb1 = get_notebook (window, 0);
-        MooNotebook *nb2 = get_notebook (window, 1);
+        GtkNotebook *nb1 = get_notebook (window, 0);
+        GtkNotebook *nb2 = get_notebook (window, 1);
         MooEditView *view1 = get_notebook_active_view (nb1);
         MooEditView *view2 = get_notebook_active_view (nb2);
         if (view1 == active_view)
@@ -1758,16 +1756,16 @@ action_focus_other_split_notebook (MooEditWindow *window)
 {
     if (both_notebooks_visible (window))
     {
-        MooNotebook *current = get_active_notebook (window);
-        MooNotebook *nb1 = get_notebook (window, 0);
-        MooNotebook *nb2 = get_notebook (window, 1);
+        GtkNotebook *current = get_active_notebook (window);
+        GtkNotebook *nb1 = get_notebook (window, 0);
+        GtkNotebook *nb2 = get_notebook (window, 1);
 
         if (current == nb1)
             moo_edit_window_set_active_tab (window,
-                get_nth_tab(*nb2, moo_notebook_get_current_page (nb2)));
+                get_nth_tab(*nb2, gtk_notebook_get_current_page (nb2)));
         else
             moo_edit_window_set_active_tab (window,
-                get_nth_tab(*nb1, moo_notebook_get_current_page (nb1)));
+                get_nth_tab(*nb1, gtk_notebook_get_current_page (nb1)));
     }
 }
 
@@ -2258,7 +2256,7 @@ copy_full_path_activated (GtkWidget     *item,
  */
 
 namespace {
-const ObjectDataAccessor<GtkWidget, MooNotebook*> data_notebook("moo-notebook");
+const ObjectDataAccessor<GtkWidget, GtkNotebook*> data_notebook("moo-notebook");
 const ObjectDataAccessor<MooEdit, GtkAction*> data_doc_list_action("moo-doc-list-action");
 } // namespace
 
@@ -2273,9 +2271,9 @@ static void
 move_tab_to_split_view (MooEditWindow *window,
                         MooEditTab    *tab)
 {
-    MooNotebook *nb1;
-    MooNotebook *nb2;
-    MooNotebook *old_nb, *new_nb;
+    GtkNotebook *nb1;
+    GtkNotebook *nb2;
+    GtkNotebook *old_nb, *new_nb;
     GtkWidget *label;
     MooEdit *doc;
     int n_pages1, n_pages2;
@@ -2284,8 +2282,8 @@ move_tab_to_split_view (MooEditWindow *window,
     g_return_if_fail (MOO_IS_EDIT_TAB (tab));
 
     doc = moo_edit_tab_get_doc (tab);
-    old_nb = MOO_NOTEBOOK (gtk_widget_get_parent (GTK_WIDGET (tab)));
-    g_assert (MOO_IS_NOTEBOOK (old_nb) &&
+    old_nb = GTK_NOTEBOOK (gtk_widget_get_parent (GTK_WIDGET (tab)));
+    g_assert (GTK_IS_NOTEBOOK (old_nb) &&
               gtk_widget_get_toplevel (GTK_WIDGET (old_nb)) == GTK_WIDGET (window));
 
     nb1 = get_notebook (window, 0);
@@ -2294,8 +2292,8 @@ move_tab_to_split_view (MooEditWindow *window,
 
     new_nb = old_nb == nb1 ? nb2 : nb1;
 
-    n_pages1 = moo_notebook_get_n_pages (nb1);
-    n_pages2 = moo_notebook_get_n_pages (nb2);
+    n_pages1 = gtk_notebook_get_n_pages (nb1);
+    n_pages2 = gtk_notebook_get_n_pages (nb2);
 
     if (new_nb == nb1)
     {
@@ -2324,8 +2322,9 @@ move_tab_to_split_view (MooEditWindow *window,
     gtk_container_remove (GTK_CONTAINER (old_nb), GTK_WIDGET (tab));
     label = create_tab_label (window, tab, doc);
     gtk_widget_show (label);
-    moo_notebook_insert_page (new_nb, GTK_WIDGET (tab), label,
-                              moo_notebook_get_current_page (new_nb) + 1);
+    gtk_notebook_insert_page (new_nb, GTK_WIDGET (tab), label,
+                              gtk_notebook_get_current_page (new_nb) + 1);
+    gtk_notebook_set_tab_reorderable (new_nb, GTK_WIDGET (tab), TRUE);
 
     moo_edit_window_set_active_view (window, moo_edit_tab_get_active_view (tab));
     edit_changed (window, doc);
@@ -2366,7 +2365,8 @@ _moo_edit_window_set_active_tab (MooEditWindow *window,
 }
 
 static void
-notebook_switch_page (MooNotebook   *notebook,
+notebook_switch_page (GtkNotebook   *notebook,
+                      G_GNUC_UNUSED GtkWidget *page,
                       guint          page_num,
                       MooEditWindow *window)
 {
@@ -2468,31 +2468,128 @@ notebook_populate_popup (MooEditWindow      *window,
 }
 
 
+/* Which tab the pointer is over, or -1. GtkNotebook does not tell, and both
+   the middle click and the tab menu are about the tab that was clicked rather
+   than about the current one. */
+static int
+notebook_event_tab (GtkNotebook    *notebook,
+                    GdkEventButton *event)
+{
+    int i, n_pages;
+
+    n_pages = gtk_notebook_get_n_pages (notebook);
+
+    for (i = 0; i < n_pages; ++i)
+    {
+        GtkWidget *label;
+        GtkAllocation alloc;
+        int x, y;
+
+        label = gtk_notebook_get_tab_label (notebook,
+                                            gtk_notebook_get_nth_page (notebook, i));
+
+        if (!label || !gtk_widget_get_mapped (label))
+            continue;
+
+        gdk_window_get_origin (gtk_widget_get_window (label), &x, &y);
+        gtk_widget_get_allocation (label, &alloc);
+
+        if (!gtk_widget_get_has_window (label))
+        {
+            x += alloc.x;
+            y += alloc.y;
+        }
+
+        if (event->x_root >= x && event->x_root < x + alloc.width &&
+            event->y_root >= y && event->y_root < y + alloc.height)
+            return i;
+    }
+
+    return -1;
+}
+
+
 static gboolean
-notebook_button_press (MooNotebook    *notebook,
+notebook_button_press (GtkNotebook    *notebook,
                        GdkEventButton *event,
                        MooEditWindow  *window)
 {
     int n;
+    GtkWidget *menu;
 
-    if (event->button != 2 || event->type != GDK_BUTTON_PRESS)
+    if (event->type != GDK_BUTTON_PRESS ||
+        (event->button != 2 && event->button != 3))
         return FALSE;
 
-    n = moo_notebook_get_event_tab (notebook, (GdkEvent*) event);
+    n = notebook_event_tab (notebook, event);
 
     if (n < 0)
         return FALSE;
 
-    moo_editor_close_doc (window->priv->editor,
-                          get_nth_doc (notebook, n));
+    if (event->button == 2)
+    {
+        moo_editor_close_doc (window->priv->editor,
+                              get_nth_doc (notebook, n));
+        return TRUE;
+    }
+
+    /* GtkNotebook's own popup lists the pages and nothing else, and it switches
+       to the clicked tab first; the menu here is built for the tab under the
+       pointer and leaves the current page alone. */
+    menu = gtk_menu_new ();
+    g_object_ref_sink (menu);
+
+    if (!notebook_populate_popup (window,
+                                  gtk_notebook_get_nth_page (notebook, n),
+                                  GTK_MENU (menu)))
+        gtk_menu_popup (GTK_MENU (menu), nullptr, nullptr, nullptr, nullptr,
+                        event->button, event->time);
+
+    g_object_unref (menu);
 
     return TRUE;
 }
 
 
+/* The wheel over the tab strip steps through the documents. GtkNotebook leaves
+   scroll events on its tabs alone, and a strip holding more tabs than it can
+   draw needs a way to the rest of them that is not the arrows at its ends. */
+static gboolean
+notebook_scroll (GtkNotebook              *notebook,
+                 GdkEventScroll           *event,
+                 G_GNUC_UNUSED MooEditWindow *window)
+{
+    GtkWidget *page;
+    GtkWidget *event_widget = gtk_get_event_widget ((GdkEvent*) event);
+
+    page = gtk_notebook_get_nth_page (notebook, gtk_notebook_get_current_page (notebook));
+
+    /* A wheel inside the document belongs to the document. */
+    if (!page || !event_widget || event_widget == page ||
+        gtk_widget_is_ancestor (event_widget, page))
+        return FALSE;
+
+    switch (event->direction)
+    {
+        case GDK_SCROLL_DOWN:
+        case GDK_SCROLL_RIGHT:
+            gtk_notebook_next_page (notebook);
+            return TRUE;
+
+        case GDK_SCROLL_UP:
+        case GDK_SCROLL_LEFT:
+            gtk_notebook_prev_page (notebook);
+            return TRUE;
+
+        default:
+            return FALSE;
+    }
+}
+
+
 static void
 set_use_tabs (MooEditWindow *window,
-              MooNotebook   *notebook)
+              GtkNotebook   *notebook)
 {
     g_return_if_fail (MOO_IS_EDIT_WINDOW (window));
     g_return_if_fail (notebook != nullptr);
@@ -2512,7 +2609,7 @@ _moo_edit_window_set_use_tabs (void)
 }
 
 
-static MooNotebook *
+static GtkNotebook *
 get_notebook (MooEditWindow *window,
               int            i)
 {
@@ -2521,33 +2618,33 @@ get_notebook (MooEditWindow *window,
 }
 
 static MooEditView *
-get_notebook_active_view (MooNotebook *notebook)
+get_notebook_active_view (GtkNotebook *notebook)
 {
     GtkWidget *tab;
     int page;
 
     g_return_val_if_fail (notebook != nullptr, nullptr);
 
-    page = moo_notebook_get_current_page (notebook);
+    page = gtk_notebook_get_current_page (notebook);
 
     if (page < 0)
         return nullptr;
 
-    tab = moo_notebook_get_nth_page (notebook, page);
+    tab = gtk_notebook_get_nth_page (notebook, page);
     return moo_edit_tab_get_active_view (MOO_EDIT_TAB (tab));
 }
 
 static MooEdit *
-get_notebook_active_doc (MooNotebook *notebook)
+get_notebook_active_doc (GtkNotebook *notebook)
 {
     MooEditView *view = get_notebook_active_view (notebook);
     return view ? moo_edit_view_get_doc (view) : nullptr;
 }
 
-static MooNotebook *
+static GtkNotebook *
 get_active_notebook (MooEditWindow *window)
 {
-    MooNotebook *nb1, *nb2;
+    GtkNotebook *nb1, *nb2;
 
     nb1 = get_notebook (window, 0);
     nb2 = get_notebook (window, 1);
@@ -2561,11 +2658,11 @@ get_active_notebook (MooEditWindow *window)
         return nb2;
 
     if (window->priv->active_tab)
-        return MOO_NOTEBOOK (gtk_widget_get_parent (GTK_WIDGET (window->priv->active_tab)));
+        return GTK_NOTEBOOK (gtk_widget_get_parent (GTK_WIDGET (window->priv->active_tab)));
 
-    if (moo_notebook_get_n_pages (nb1) > 0)
+    if (gtk_notebook_get_n_pages (nb1) > 0)
         return nb1;
-    else if (moo_notebook_get_n_pages (nb2) > 0)
+    else if (gtk_notebook_get_n_pages (nb2) > 0)
         return nb2;
     else
         return nb1;
@@ -2594,7 +2691,7 @@ save_doc_paned_config (MooEditWindow *window)
 
 static void
 show_notebook (MooEditWindow *window,
-               MooNotebook   *notebook)
+               GtkNotebook   *notebook)
 {
     if (!gtk_widget_get_visible (GTK_WIDGET (notebook)))
     {
@@ -2612,25 +2709,28 @@ static void
 notebook_close_button_clicked (GtkWidget     *button,
                                MooEditWindow *window)
 {
-    MooNotebook *notebook = data_notebook.get(button);
+    GtkNotebook *notebook = data_notebook.get(button);
     g_return_if_fail (notebook != nullptr);
     moo_editor_close_doc (window->priv->editor, get_notebook_active_doc (notebook));
 }
 
 static void
 setup_notebook (MooEditWindow *window,
-                MooNotebook   *notebook)
+                GtkNotebook   *notebook)
 {
     GtkWidget *button, *icon, *frame;
 
     set_use_tabs (window, notebook);
 
-    g_signal_connect_after (notebook, "moo-switch-page",
+    g_signal_connect_after (notebook, "switch-page",
                             G_CALLBACK (notebook_switch_page), window);
-    g_signal_connect_swapped (notebook, "populate-popup",
-                              G_CALLBACK (notebook_populate_popup), window);
     g_signal_connect (notebook, "button-press-event",
                       G_CALLBACK (notebook_button_press), window);
+    /* Before it is realized: the notebook builds the event window over its tabs
+       out of the widget's own mask, and asks for no scroll events of its own. */
+    gtk_widget_add_events (GTK_WIDGET (notebook), GDK_SCROLL_MASK);
+    g_signal_connect (notebook, "scroll-event",
+                      G_CALLBACK (notebook_scroll), window);
 
     frame = gtk_aspect_frame_new (nullptr, 0.5, 0.5, 1.0, FALSE);
     gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
@@ -2648,7 +2748,7 @@ setup_notebook (MooEditWindow *window,
     gtk_container_add (GTK_CONTAINER (button), icon);
     gtk_container_add (GTK_CONTAINER (frame), button);
     gtk_widget_show_all (frame);
-    moo_notebook_set_action_widget (notebook, frame, TRUE);
+    gtk_notebook_set_action_widget (notebook, frame, GTK_PACK_END);
 
     gtk_drag_dest_set (GTK_WIDGET (notebook), (GtkDestDefaults) 0,
                        dest_targets, G_N_ELEMENTS (dest_targets),
@@ -2859,16 +2959,16 @@ moo_edit_window_get_active_tab (MooEditWindow *window)
     {
         GtkWidget *tab;
         int page;
-        MooNotebook *notebook = get_active_notebook (window);
+        GtkNotebook *notebook = get_active_notebook (window);
 
         g_return_val_if_fail (notebook != nullptr, nullptr);
 
-        page = moo_notebook_get_current_page (notebook);
+        page = gtk_notebook_get_current_page (notebook);
 
         if (page < 0)
             return nullptr;
 
-        tab = moo_notebook_get_nth_page (notebook, page);
+        tab = gtk_notebook_get_nth_page (notebook, page);
 
         if (!MOO_IS_EDIT_TAB (tab))
             return nullptr;
@@ -2928,7 +3028,7 @@ moo_edit_window_set_active_view (MooEditWindow *window,
                                  MooEditView   *view)
 {
     int page;
-    MooNotebook *notebook = nullptr;
+    GtkNotebook *notebook = nullptr;
 
     g_return_if_fail (MOO_IS_EDIT_WINDOW (window));
     g_return_if_fail (MOO_IS_EDIT_VIEW (view));
@@ -2937,7 +3037,7 @@ moo_edit_window_set_active_view (MooEditWindow *window,
     g_return_if_fail (page >= 0);
 
     set_active_tab (window, moo_edit_view_get_tab (view));
-    moo_notebook_set_current_page (notebook, page);
+    gtk_notebook_set_current_page (notebook, page);
     gtk_widget_grab_focus (GTK_WIDGET (view));
 }
 
@@ -3001,8 +3101,8 @@ moo_edit_window_get_views (MooEditWindow *window)
     for (inb = 0; inb < 2; inb++)
     {
         int ipage;
-        MooNotebook *notebook = get_notebook (window, inb);
-        int n_pages = moo_notebook_get_n_pages (notebook);
+        GtkNotebook *notebook = get_notebook (window, inb);
+        int n_pages = gtk_notebook_get_n_pages (notebook);
         for (ipage = 0; ipage < n_pages; ipage++)
         {
             MooEditTab *tab = get_nth_tab (*notebook, ipage);
@@ -3033,8 +3133,8 @@ moo_edit_window_get_tabs (MooEditWindow *window)
     for (inb = 0; inb < 2; inb++)
     {
         int ipage;
-        MooNotebook *notebook = get_notebook (window, inb);
-        int n_pages = moo_notebook_get_n_pages (notebook);
+        GtkNotebook *notebook = get_notebook (window, inb);
+        int n_pages = gtk_notebook_get_n_pages (notebook);
         for (ipage = 0; ipage < n_pages; ipage++)
             tabs->append (get_nth_tab (*notebook, ipage));
     }
@@ -3054,14 +3154,14 @@ moo_edit_window_get_n_tabs (MooEditWindow *window)
     int n_docs = 0;
 
     for (const auto& notebook: window->priv->notebooks)
-        n_docs += moo_notebook_get_n_pages (notebook.get());
+        n_docs += gtk_notebook_get_n_pages (notebook.get());
 
     return n_docs;
 }
 
 
 static MooEdit *
-get_nth_doc (MooNotebook *notebook,
+get_nth_doc (GtkNotebook *notebook,
              guint        n)
 {
     MooEditTab *tab = get_nth_tab (*notebook, n);
@@ -3069,10 +3169,10 @@ get_nth_doc (MooNotebook *notebook,
 }
 
 static MooEditTab *
-get_nth_tab (MooNotebook &notebook,
+get_nth_tab (GtkNotebook &notebook,
              guint        n)
 {
-    GtkWidget *tab = moo_notebook_get_nth_page (&notebook, n);
+    GtkWidget *tab = gtk_notebook_get_nth_page (&notebook, n);
     return tab ? MOO_EDIT_TAB (tab) : nullptr;
 }
 
@@ -3080,7 +3180,7 @@ static int
 get_active_tab (MooEditWindow *window)
 {
     int tab = 0;
-    MooNotebook *notebook = get_active_notebook (window);
+    GtkNotebook *notebook = get_active_notebook (window);
 
     g_return_val_if_fail (notebook != nullptr, -1);
 
@@ -3088,11 +3188,11 @@ get_active_tab (MooEditWindow *window)
     {
         if (nb == notebook)
         {
-            tab += moo_notebook_get_current_page (notebook);
+            tab += gtk_notebook_get_current_page (notebook);
             return tab;
         }
 
-        tab += moo_notebook_get_n_pages (nb.get());
+        tab += gtk_notebook_get_n_pages (nb.get());
     }
 
     g_return_val_if_reached (-1);
@@ -3101,7 +3201,7 @@ get_active_tab (MooEditWindow *window)
 static int
 get_view_page_num (MooEditWindow  *window,
                    MooEditView    *view,
-                   MooNotebook   **pnotebook)
+                   GtkNotebook   **pnotebook)
 {
     int i;
     MooEditTab *tab;
@@ -3113,8 +3213,8 @@ get_view_page_num (MooEditWindow  *window,
 
     for (i = 0; i < 2; ++i)
     {
-        MooNotebook *notebook = get_notebook (window, i);
-        int page = moo_notebook_page_num (notebook, GTK_WIDGET (tab));
+        GtkNotebook *notebook = get_notebook (window, i);
+        int page = gtk_notebook_page_num (notebook, GTK_WIDGET (tab));
         if (page >= 0)
         {
             if (pnotebook)
@@ -3140,11 +3240,11 @@ get_tab_num (MooEditWindow *window,
 
     for (i = 0, pages = 0; i < 2; ++i)
     {
-        MooNotebook *notebook = get_notebook (window, i);
-        int page = moo_notebook_page_num (notebook, GTK_WIDGET (tab));
+        GtkNotebook *notebook = get_notebook (window, i);
+        int page = gtk_notebook_page_num (notebook, GTK_WIDGET (tab));
         if (page >= 0)
             return pages + page;
-        pages += moo_notebook_get_n_pages (notebook);
+        pages += gtk_notebook_get_n_pages (notebook);
     }
 
     return -1;
@@ -3209,7 +3309,7 @@ _moo_edit_window_insert_tab (MooEditWindow *window,
     GtkWidget *label;
     MooEdit *doc;
     MooEditViewArray *views;
-    MooNotebook *notebook = nullptr;
+    GtkNotebook *notebook = nullptr;
     int page = -1;
     guint i;
 
@@ -3234,11 +3334,12 @@ _moo_edit_window_insert_tab (MooEditWindow *window,
     if (page < 0)
     {
         notebook = get_active_notebook (window);
-        page = moo_notebook_get_current_page (notebook) + 1;
+        page = gtk_notebook_get_current_page (notebook) + 1;
     }
 
     show_notebook (window, notebook);
-    moo_notebook_insert_page (notebook, GTK_WIDGET (tab), label, page);
+    gtk_notebook_insert_page (notebook, GTK_WIDGET (tab), label, page);
+    gtk_notebook_set_tab_reorderable (notebook, GTK_WIDGET (tab), TRUE);
 
     g_signal_connect_swapped (doc, "doc_status_changed",
                               G_CALLBACK (edit_changed), window);
@@ -3285,7 +3386,7 @@ _moo_edit_window_remove_doc (MooEditWindow *window,
     MooEditViewArray *views;
     gboolean had_focus = FALSE;
     gboolean was_active;
-    MooNotebook *notebook = nullptr;
+    GtkNotebook *notebook = nullptr;
     MooEditTab *tab;
     guint i;
 
@@ -3343,9 +3444,9 @@ _moo_edit_window_remove_doc (MooEditWindow *window,
 
     moo_edit_window_update_doc_list (window);
 
-    moo_notebook_remove_page (notebook, page);
+    gtk_notebook_remove_page (notebook, page);
 
-    if (moo_notebook_get_n_pages (notebook) == 0)
+    if (gtk_notebook_get_n_pages (notebook) == 0)
         gtk_widget_hide (GTK_WIDGET (notebook));
 
     /*
@@ -3518,7 +3619,13 @@ tab_icon_button_press (GtkWidget        *evbox,
     g_signal_connect (evbox, "motion-notify-event", G_CALLBACK (tab_icon_motion_notify), window);
     g_signal_connect (evbox, "button-release-event", G_CALLBACK (tab_icon_button_release), window);
 
-    return FALSE;
+    /* The press stops here rather than reaching the notebook: a reorderable
+       notebook answers it by grabbing the pointer for a tab drag, and the
+       motion this drag waits for would go there instead. What the notebook
+       would have done with the press is done by hand. */
+    moo_edit_window_set_active_doc (window, widget_doc.get (evbox));
+
+    return TRUE;
 }
 
 
@@ -3702,7 +3809,7 @@ set_tab_icon (GtkWidget *image,
 
 static void
 update_tab_label (MooEditTab    *tab,
-                  MooNotebook   &notebook)
+                  GtkNotebook   &notebook)
 {
     GtkWidget *hbox, *icon, *label, *evbox;
     MooEditStatus status;
@@ -3714,7 +3821,7 @@ update_tab_label (MooEditTab    *tab,
     doc = moo_edit_tab_get_doc (tab);
     g_return_if_fail (doc != nullptr);
 
-    hbox = moo_notebook_get_tab_label (&notebook, GTK_WIDGET (tab));
+    hbox = gtk_notebook_get_tab_label (&notebook, GTK_WIDGET (tab));
     g_return_if_fail (GTK_IS_WIDGET (hbox));
 
     icon = data_moo_edit_icon.get(hbox);
@@ -3771,7 +3878,7 @@ update_tab_labels (MooEditWindow *window,
     for (const auto& notebook: window->priv->notebooks)
     {
         int i;
-        int n_pages = moo_notebook_get_n_pages (notebook.get());
+        int n_pages = gtk_notebook_get_n_pages (notebook.get());
         for (i = 0; i < n_pages; i++)
         {
             MooEditTab *tab = get_nth_tab (*notebook, i);
@@ -4959,6 +5066,12 @@ notebook_drag_data_recv (GtkWidget          *widget,
 {
     gboolean finished = FALSE;
 
+    /* GtkNotebook's own handler for this signal ends with gtk_drag_finish()
+       whatever the drag was, and notebook_drag_motion() asks for the data while
+       the button is still down: letting it run there calls the whole drag off,
+       and a document dragged from its tab never reaches what it was dropped on. */
+    g_signal_stop_emission_by_name (widget, "drag-data-received");
+
     if (data_window_drop.get(widget))
     {
         data_window_drop.set(widget, false);
@@ -4982,11 +5095,11 @@ notebook_drag_data_recv (GtkWidget          *widget,
             if (toplevel == GTK_WIDGET (window))
                 src_notebook = gtk_widget_get_parent (GTK_WIDGET (tab));
 
-            g_assert (!src_notebook || MOO_IS_NOTEBOOK (src_notebook));
+            g_assert (!src_notebook || GTK_IS_NOTEBOOK (src_notebook));
 
             if (toplevel != GTK_WIDGET (window))
                 _moo_editor_move_doc (window->priv->editor, doc, window,
-                                      get_notebook_active_view (MOO_NOTEBOOK (widget)),
+                                      get_notebook_active_view (GTK_NOTEBOOK (widget)),
                                       TRUE);
             else if (src_notebook != widget)
                 move_tab_to_split_view (window, tab);
@@ -5068,7 +5181,7 @@ notebook_drag_data_recv (GtkWidget          *widget,
             {
                 GtkWidget *src_notebook = nullptr;
                 src_notebook = gtk_widget_get_parent (GTK_WIDGET (tab));
-                g_assert (MOO_IS_NOTEBOOK (widget));
+                g_assert (GTK_IS_NOTEBOOK (widget));
                 can_move = src_notebook != widget;
             }
 

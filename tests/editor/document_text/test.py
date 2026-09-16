@@ -2,10 +2,9 @@
 
 # requires: MOO_GTK3
 
-The editor's notebook keeps its own pages and inherited GtkNotebook's
-accessible, which reads GtkNotebook's -- so until MooNotebookAccessible the
-document was not in the tree at all, and on GTK+2, where gail's classes cannot
-be subclassed by linking against them, it still is not.
+GTK+3's notebook accessible puts every page of the editor's notebook in the
+tree, so the document on screen is there to be read. On GTK+2, where gail
+reports the notebook as having no children, it is not.
 """
 
 CONTENT = "hello from the document\n"

@@ -2,18 +2,15 @@
 
 # requires: MOO_GTK3
 
-The tab strip is MooNotebook's own, drawn on a GdkWindow rather than built out
-of widgets, so nothing in the accessibility tree points at a tab. What is in
-the tree is the pages, named after their tabs by MooNotebookAccessible, in the
-order the notebook holds them -- which is what reordering changes and is
-therefore the evidence for the drop. Where the tabs are is found by clicking
-along the strip and asking which page came forward.
+Each page of the notebook is in the accessibility tree as a tab named after its
+document, in the order the notebook holds them -- which is what reordering
+changes and is therefore the evidence for the drop. Where each tab is drawn is
+read from the tree too, so nothing here has to hunt for one.
 
-While the tab is in the air it is a picture of itself: MooNotebook takes a
-copy of the tab when the drag begins and paints it under the pointer at
-LABEL_ALPHA. Nothing in the tree describes that, and it is the one thing here
-read as pixels -- a tab is mostly its own light background, and anything that
-is not a picture of the tab is not.
+While the tab is in the air it is a picture of itself: the notebook draws the
+tab it is carrying under the pointer. Nothing in the tree describes that, and
+it is the one thing here read as pixels -- a tab is mostly its own light
+background, and anything that is not a picture of the tab is not.
 """
 
 from lib.notebook import order, showing, spans, strip
