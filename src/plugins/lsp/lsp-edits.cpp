@@ -416,6 +416,51 @@ ask_for_name (MooEditWindow *window,
 }
 
 
+gboolean
+lsp_prepare_rename_parse (JsonNode         *result,
+                          LspPrepareRename *prepare)
+{
+    JsonObject *object;
+    JsonObject *range;
+
+    g_return_val_if_fail (prepare != NULL, FALSE);
+
+    memset (prepare, 0, sizeof *prepare);
+
+    /* null is the answer for a position that is not a name at all. */
+    if (!result || !JSON_NODE_HOLDS_OBJECT (result))
+        return FALSE;
+
+    object = json_node_get_object (result);
+
+    /*
+     * Three shapes say yes: a bare Range, a Range with the text to put in the
+     * dialog beside it, and defaultBehavior, which says the server has nothing
+     * to add and the client should do what it would have done unasked.
+     */
+    range = lsp_json_get_object (object, "range");
+
+    if (!range && lsp_json_has (object, "start"))
+        range = object;
+
+    if (range && lsp_json_get_range (range,
+                                     &prepare->start_line, &prepare->start_character,
+                                     &prepare->end_line, &prepare->end_character))
+    {
+        const char *placeholder = lsp_json_get_string (object, "placeholder");
+
+        prepare->has_range = TRUE;
+
+        if (placeholder && placeholder[0])
+            prepare->placeholder = g_strdup (placeholder);
+
+        return TRUE;
+    }
+
+    return lsp_json_get_bool (object, "defaultBehavior", FALSE);
+}
+
+
 /**********************************************************************/
 /* Asking the server
  */
@@ -481,14 +526,152 @@ rename_reply (JsonNode   *result,
 }
 
 
+/* The rename itself, once there is a name to ask for. */
+static void
+send_rename (MooEditWindow *window,
+             LspDoc        *ldoc,
+             int            line,
+             int            character,
+             const char    *new_name)
+{
+    LspServer *server = lsp_doc_get_server (ldoc);
+    LspRenameRequest *request;
+    JsonObject *params;
+
+    /*
+     * Last rather than first: the position was taken before the user was asked
+     * anything, so this is only about the server having the text that goes
+     * with it -- including anything typed while it was answering prepare.
+     */
+    lsp_doc_flush (ldoc);
+
+    params = lsp_position_params (ldoc, line, character);
+    lsp_json_set_string (params, "newName", new_name);
+
+    request = g_new0 (LspRenameRequest, 1);
+    request->window = window;
+    request->encoding = lsp_server_get_position_encoding (server);
+    g_object_add_weak_pointer (G_OBJECT (window), (gpointer*) &request->window);
+
+    lsp_server_call (server, "textDocument/rename", params,
+                     rename_reply, request, rename_request_free);
+}
+
+
+typedef struct {
+    MooEditWindow *window;      /* weak */
+    MooEdit       *doc;         /* weak -- the document the position is in */
+    int            line;
+    int            character;
+} LspPrepareRequest;
+
+
+static void
+prepare_request_free (gpointer data)
+{
+    LspPrepareRequest *request = (LspPrepareRequest*) data;
+
+    if (request->window)
+        g_object_remove_weak_pointer (G_OBJECT (request->window),
+                                      (gpointer*) &request->window);
+    if (request->doc)
+        g_object_remove_weak_pointer (G_OBJECT (request->doc),
+                                      (gpointer*) &request->doc);
+
+    g_free (request);
+}
+
+
+static void
+prepare_rename_reply (JsonNode   *result,
+                      JsonObject *error,
+                      gpointer    data)
+{
+    LspPrepareRequest *request = (LspPrepareRequest*) data;
+    MooEditWindow *window = request->window;
+    MooEdit *doc = request->doc;
+    LspPrepareRename prepare;
+    LspPositionEncoding encoding;
+    LspDoc *ldoc;
+    GtkTextBuffer *buffer;
+    GtkTextIter start, end;
+    char *old_name = NULL;
+    char *new_name;
+    int line = request->line;
+    int character = request->character;
+
+    if (!window || !MOO_IS_EDIT_WINDOW (window) || !doc || !MOO_IS_EDIT (doc))
+        return;
+
+    /* Closed and reopened, or the server restarted, while it was answering. */
+    ldoc = lsp_manager_lookup_doc (doc);
+
+    if (!ldoc)
+        return;
+
+    /*
+     * This is what the round trip was for. A position the server will not
+     * rename is refused here, before the user has typed a new name into a
+     * dialog and pressed a button, rather than afterwards.
+     */
+    if (error || !lsp_prepare_rename_parse (result, &prepare))
+    {
+        const char *message = error ? lsp_json_get_string (error, "message") : NULL;
+
+        moo_error_dialog (_("Rename failed"),
+                          message && message[0] ? message
+                                                : _("There is nothing to rename here."),
+                          GTK_WIDGET (window));
+        return;
+    }
+
+    encoding = lsp_server_get_position_encoding (lsp_doc_get_server (ldoc));
+    buffer = moo_edit_get_buffer (doc);
+
+    if (prepare.has_range &&
+        lsp_position_to_iter (buffer, prepare.start_line, prepare.start_character,
+                              encoding, &start) &&
+        lsp_position_to_iter (buffer, prepare.end_line, prepare.end_character,
+                              encoding, &end))
+    {
+        old_name = gtk_text_iter_get_text (&start, &end);
+
+        /* The name is where the server said it is, not where the click was. */
+        lsp_iter_to_position (&start, encoding, &line, &character);
+    }
+    else if (lsp_position_to_iter (buffer, line, character, encoding, &start))
+    {
+        /*
+         * defaultBehavior, or a range the document has moved out from under
+         * in the meantime: the word the buffer has there, which is what would
+         * have been offered had the server not been asked at all.
+         */
+        old_name = word_at (&start);
+    }
+
+    /* What the server calls it wins over what the range happens to cover. */
+    if (prepare.placeholder)
+    {
+        g_free (old_name);
+        old_name = prepare.placeholder;
+    }
+
+    new_name = ask_for_name (window, old_name);
+    g_free (old_name);
+
+    if (!new_name)
+        return;
+
+    send_rename (window, ldoc, line, character, new_name);
+    g_free (new_name);
+}
+
+
 void
 lsp_rename (MooEditWindow *window,
             MooEditView   *view)
 {
     LspDoc *ldoc = NULL;
-    LspServer *server;
-    LspRenameRequest *request;
-    JsonObject *params;
     GtkTextIter iter;
     char *old_name;
     char *new_name;
@@ -502,6 +685,35 @@ lsp_rename (MooEditWindow *window,
     if (!lsp_ask_position (window, view, &ldoc, &iter, &line, &character))
         return;
 
+    /*
+     * A server that announced prepareProvider is asked first: it knows whether
+     * the position can be renamed and what the name there is, and neither the
+     * refusal nor the name is worth guessing when it can be asked for. The
+     * dialog then belongs to the reply.
+     */
+    if (lsp_json_lookup_bool (lsp_server_get_capabilities (lsp_doc_get_server (ldoc)),
+                              "renameProvider/prepareProvider", FALSE))
+    {
+        LspPrepareRequest *request = g_new0 (LspPrepareRequest, 1);
+
+        lsp_doc_flush (ldoc);
+
+        request->window = window;
+        request->doc = lsp_doc_get_doc (ldoc);
+        request->line = line;
+        request->character = character;
+
+        g_object_add_weak_pointer (G_OBJECT (request->window),
+                                   (gpointer*) &request->window);
+        g_object_add_weak_pointer (G_OBJECT (request->doc),
+                                   (gpointer*) &request->doc);
+
+        lsp_server_call (lsp_doc_get_server (ldoc), "textDocument/prepareRename",
+                         lsp_position_params (ldoc, line, character),
+                         prepare_rename_reply, request, prepare_request_free);
+        return;
+    }
+
     old_name = word_at (&iter);
     new_name = ask_for_name (window, old_name);
     g_free (old_name);
@@ -509,26 +721,7 @@ lsp_rename (MooEditWindow *window,
     if (!new_name)
         return;
 
-    /*
-     * After the dialog rather than before it: the position was taken before
-     * the user was asked anything, and the document cannot have changed while
-     * a modal dialog was up, so this is only about the server having the text.
-     */
-    lsp_doc_flush (ldoc);
-
-    server = lsp_doc_get_server (ldoc);
-
-    params = lsp_position_params (ldoc, line, character);
-    lsp_json_set_string (params, "newName", new_name);
-
-    request = g_new0 (LspRenameRequest, 1);
-    request->window = window;
-    request->encoding = lsp_server_get_position_encoding (server);
-    g_object_add_weak_pointer (G_OBJECT (window), (gpointer*) &request->window);
-
-    lsp_server_call (server, "textDocument/rename", params,
-                     rename_reply, request, rename_request_free);
-
+    send_rename (window, ldoc, line, character, new_name);
     g_free (new_name);
 }
 

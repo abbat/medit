@@ -1086,13 +1086,19 @@ client_capabilities (void)
         lsp_json_set_object (text_document, "references", references);
 
         /*
-         * No prepareSupport: that is the second round trip which asks whether
-         * a position can be renamed at all and what the old name is, and medit
-         * takes the old name off the buffer instead. A server told otherwise
-         * may answer the rename itself with an error, which is said out loud.
+         * prepareSupport is the round trip before the dialog, which asks
+         * whether a position can be renamed at all and what the old name
+         * there is. Without it the refusal arrives after the user has filled
+         * the dialog in, and the old name is whatever the buffer looks like
+         * rather than what the server would rename.
+         *
+         * prepareSupportDefaultBehavior says what medit does when the server
+         * answers defaultBehavior instead of a range: 1 is Identifier, and
+         * the word off the buffer is that.
          */
         lsp_json_set_bool (rename, "dynamicRegistration", FALSE);
-        lsp_json_set_bool (rename, "prepareSupport", FALSE);
+        lsp_json_set_bool (rename, "prepareSupport", TRUE);
+        lsp_json_set_int (rename, "prepareSupportDefaultBehavior", 1);
         lsp_json_set_object (text_document, "rename", rename);
     }
 

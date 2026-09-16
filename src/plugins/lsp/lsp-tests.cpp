@@ -1950,6 +1950,77 @@ test_selection_range_malformed (void)
 
 
 static void
+test_prepare_rename_shapes (void)
+{
+    /*
+     * The three answers that say yes. A bare Range and a Range with a
+     * placeholder both carry the name's position; defaultBehavior carries
+     * nothing and leaves finding the name to the client.
+     */
+    GError *error = NULL;
+    LspPrepareRename prepare;
+    JsonNode *node;
+
+    node = lsp_json_parse ("{\"start\": {\"line\": 2, \"character\": 4},"
+                           " \"end\": {\"line\": 2, \"character\": 9}}", -1, &error);
+    g_assert_no_error (error);
+    g_assert_true (lsp_prepare_rename_parse (node, &prepare));
+    g_assert_true (prepare.has_range);
+    g_assert_cmpint (prepare.start_line, ==, 2);
+    g_assert_cmpint (prepare.start_character, ==, 4);
+    g_assert_cmpint (prepare.end_character, ==, 9);
+    g_assert_null (prepare.placeholder);
+    json_node_unref (node);
+
+    node = lsp_json_parse ("{\"range\": {\"start\": {\"line\": 1, \"character\": 0},"
+                           "            \"end\": {\"line\": 1, \"character\": 3}},"
+                           " \"placeholder\": \"foo\"}", -1, &error);
+    g_assert_no_error (error);
+    g_assert_true (lsp_prepare_rename_parse (node, &prepare));
+    g_assert_true (prepare.has_range);
+    g_assert_cmpint (prepare.end_character, ==, 3);
+    g_assert_cmpstr (prepare.placeholder, ==, "foo");
+    g_free (prepare.placeholder);
+    json_node_unref (node);
+
+    node = lsp_json_parse ("{\"defaultBehavior\": true}", -1, &error);
+    g_assert_no_error (error);
+    g_assert_true (lsp_prepare_rename_parse (node, &prepare));
+    g_assert_false (prepare.has_range);
+    g_assert_null (prepare.placeholder);
+    json_node_unref (node);
+}
+
+
+static void
+test_prepare_rename_refused (void)
+{
+    static const char *replies[] = {
+        "null",
+        "{\"defaultBehavior\": false}",
+        "{}",
+        /* A range without an end names nothing that could be renamed. */
+        "{\"range\": {\"start\": {\"line\": 0, \"character\": 0}}}",
+        "[]",
+    };
+
+    guint i;
+
+    for (i = 0; i < G_N_ELEMENTS (replies); ++i)
+    {
+        GError *error = NULL;
+        LspPrepareRename prepare;
+        JsonNode *node = lsp_json_parse (replies[i], -1, &error);
+
+        g_assert_no_error (error);
+        g_assert_false (lsp_prepare_rename_parse (node, &prepare));
+        g_assert_null (prepare.placeholder);
+        json_node_unref (node);
+    }
+}
+
+
+static void
 test_client_framing (void)
 {
     const char *first = "Content-Length: 7\r\nX-Test: yes\r\n\r\n{\"x\":1}";
@@ -2668,6 +2739,8 @@ _moo_lsp_add_unit_tests (void)
     g_test_add_func ("/lsp/selection-range/chain", test_selection_range_chain);
     g_test_add_func ("/lsp/selection-range/nothing", test_selection_range_nothing);
     g_test_add_func ("/lsp/selection-range/malformed", test_selection_range_malformed);
+    g_test_add_func ("/lsp/prepare-rename/shapes", test_prepare_rename_shapes);
+    g_test_add_func ("/lsp/prepare-rename/refused", test_prepare_rename_refused);
 
     g_test_add_func ("/lsp/client/framing", test_client_framing);
 

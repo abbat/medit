@@ -83,6 +83,32 @@ void        lsp_text_edit_free       (LspTextEdit       *edit);
 void        lsp_text_edits_free      (GSList            *edits);
 
 /*
+ * What textDocument/prepareRename answered: where the name the server is
+ * willing to rename begins and ends, and what to show in the dialog.
+ *
+ * has_range is FALSE when the server said defaultBehavior, which means it has
+ * nothing to add and the client should find the name the way it would have
+ * without asking. placeholder is NULL unless the server sent one, and belongs
+ * to the caller.
+ */
+typedef struct {
+    gboolean  has_range;
+    int       start_line;
+    int       start_character;
+    int       end_line;
+    int       end_character;
+    char     *placeholder;
+} LspPrepareRename;
+
+/*
+ * Reads that answer. Returns whether the position can be renamed at all: a
+ * null result, and an object that is neither a range nor defaultBehavior,
+ * both mean no.
+ */
+gboolean    lsp_prepare_rename_parse (JsonNode         *result,
+                                      LspPrepareRename *prepare);
+
+/*
  * Asks for a new name, asks the server what that means, and applies it. view
  * is the view a context menu belongs to, whose last right click is what is
  * being renamed; NULL renames what the cursor is in.

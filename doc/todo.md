@@ -141,11 +141,6 @@ than to the symbols pane, even though the results are the symbols pane's rows.
   the whole document. `textDocument/rangeFormatting` over the selection is the obvious
   companion; `textDocument/onTypeFormatting` would have to be driven from the view's
   key handling, the way completion triggers are.
-* **`textDocument/prepareRename`.** `rename` is announced with `prepareSupport: false`,
-  so the rename dialog in `lsp-edits.cpp` offers to rename whatever is under the cursor
-  and finds out from the server's error that it cannot be renamed. `prepareRename` asks
-  first, and also returns the range of the name, which is what the dialog should be
-  showing as the old name instead of the word the view guessed.
 * **`codeAction/resolve`.** `lsp-server.cpp` announces `dataSupport: false` and no
   `resolveSupport`, and `code_action_new()` in `lsp-actions.cpp` drops an action that
   carries neither an edit nor a command for exactly that reason. Servers that compute
