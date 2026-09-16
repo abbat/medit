@@ -19,6 +19,7 @@
 #include "mooutils/mooentry.h"
 #include "mooutils/mooutils-gobject.h"
 #include "mooutils/moodialogs.h"
+#include "mooutils/mooutils-misc.h"
 #include "mooutils/mooi18n.h"
 #include "mooutils/moocompat.h"
 #include "mooutils/moobuilder.h"
@@ -119,12 +120,70 @@ moo_file_props_dialog_response (GtkDialog  *dialog,
 }
 
 
+/*
+ * Renames the file the dialog is showing to @new_name. Both halves of this
+ * used to be a g_warning: rename(2) replaces a destination that exists without
+ * a word, so the file that was in the way was gone with nothing to undo it,
+ * and a rename that failed -- no permission, a read-only mount, a directory in
+ * the way -- closed the dialog as if it had worked.
+ */
+static void
+rename_file (MooFilePropsDialog *dialog,
+             const char         *new_name)
+{
+    const char *dirname = _moo_folder_get_path (dialog->folder);
+    const char *old_name = _moo_file_display_name (dialog->file);
+    GError *error = NULL;
+    char *old_path = _moo_file_system_make_path (dirname, old_name, NULL);
+    char *new_path = _moo_file_system_make_path (dirname, new_name, &error);
+    gboolean ok = FALSE;
+
+    if (old_path && new_path)
+    {
+        /* The same question the file view asks before a drop overwrites
+           something, and the symlink test is there because a dangling one
+           exists as a name while G_FILE_TEST_EXISTS says it does not. */
+        if (g_file_test (new_path, G_FILE_TEST_EXISTS) ||
+            g_file_test (new_path, G_FILE_TEST_IS_SYMLINK))
+        {
+            char *display_dir = g_filename_display_name (dirname);
+            gboolean replace = moo_overwrite_file_dialog (new_name, display_dir,
+                                                          GTK_WIDGET (dialog));
+
+            g_free (display_dir);
+
+            if (!replace)
+            {
+                g_free (old_path);
+                g_free (new_path);
+                return;
+            }
+        }
+
+        ok = _moo_file_system_move_file (old_path, new_path, &error);
+    }
+
+    if (!ok)
+    {
+        char *text = g_strdup_printf ("Could not rename \"%s\" to \"%s\"",
+                                      old_name, new_name);
+
+        moo_error_dialog (text, moo_error_message (error), GTK_WIDGET (dialog));
+        g_free (text);
+    }
+
+    if (error)
+        g_error_free (error);
+
+    g_free (old_path);
+    g_free (new_path);
+}
+
+
 static void
 moo_file_props_dialog_ok (MooFilePropsDialog *dialog)
 {
     const char *old_name, *new_name;
-    char *old_path, *new_path;
-    GError *error = NULL;
 
     if (!dialog->file)
         return;
@@ -132,37 +191,9 @@ moo_file_props_dialog_ok (MooFilePropsDialog *dialog)
     old_name = _moo_file_display_name (dialog->file);
     new_name = gtk_entry_get_text (GTK_ENTRY (dialog->entry));
 
-    if (!strcmp (old_name, new_name))
-        return;
+    if (strcmp (old_name, new_name))
+        rename_file (dialog, new_name);
 
-    old_path = _moo_file_system_make_path (_moo_folder_get_path (dialog->folder),
-                                           old_name, NULL);
-    new_path = _moo_file_system_make_path (_moo_folder_get_path (dialog->folder),
-                                           new_name, NULL);
-
-    if (!old_path || !new_path)
-    {
-        g_warning ("oops");
-        goto out;
-    }
-
-    if (!_moo_file_system_move_file (old_path, new_path, &error))
-    {
-        g_warning ("could not rename '%s' to '%s'",
-                   old_path, new_path);
-
-        if (error)
-        {
-            g_warning ("%s", error->message);
-            g_error_free (error);
-        }
-
-        goto out;
-    }
-
-out:
-    g_free (old_path);
-    g_free (new_path);
     _moo_file_props_dialog_set_file (dialog, NULL, NULL);
 }
 
