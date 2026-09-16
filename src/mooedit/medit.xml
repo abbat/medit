@@ -94,6 +94,7 @@
       <separator/>
       <item action="WrapText"/>
       <item action="LineNumbers"/>
+      <item action="ToggleFold"/>
       <separator/>
       <item action="FocusDoc"/>
       <item action="MoveToSplitView"/>

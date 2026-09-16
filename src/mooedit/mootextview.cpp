@@ -3839,8 +3839,11 @@ static void
 fold_added (MooTextView *view,
             MooFold     *fold)
 {
-    if (view->priv->enable_folding)
-        invalidate_line (view, _moo_fold_get_start (fold), TRUE, fold->collapsed);
+    /* The first fold of the document is what turns the margin on, rather than
+       a setting: there is nothing to draw there until a fold exists, and a
+       fold made in one view of a buffer must be clickable in all of them. */
+    set_enable_folding (view, TRUE);
+    invalidate_line (view, _moo_fold_get_start (fold), TRUE, fold->collapsed);
 }
 
 

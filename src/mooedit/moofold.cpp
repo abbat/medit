@@ -761,6 +761,53 @@ _moo_fold_tree_collapse_all (MooFoldTree *tree)
     return ret;
 }
 
+/*
+ * The line a fold starts or ends on has been deleted, so its mark no longer
+ * knows a line and the fold can be neither drawn nor toggled: drop it. The
+ * text it was hiding has to become visible again, and the invisible tag it was
+ * hidden under covers lines that other folds may hide too, so the tag is taken
+ * off the whole buffer and put back by the folds that are left.
+ */
+void
+_moo_fold_tree_mark_deleted (MooFoldTree *tree,
+                             MooLineMark *mark)
+{
+    MooFold *fold;
+    GtkTextIter start, end;
+    GtkTextBuffer *buffer;
+
+    g_return_if_fail (tree != NULL);
+    g_return_if_fail (MOO_IS_LINE_MARK (mark));
+
+    fold = _moo_line_mark_get_fold (mark);
+
+    if (!fold || fold->deleted)
+        return;
+
+    /* Not through _moo_fold_tree_expand(): expanding reads the lines of both
+       marks of the fold, and one of them is the dead one. */
+    fold->collapsed = FALSE;
+    _moo_fold_tree_remove (tree, fold);
+
+    buffer = GTK_TEXT_BUFFER (tree->buffer);
+
+    if (!gtk_text_tag_table_lookup (gtk_text_buffer_get_tag_table (buffer), MOO_FOLD_TAG))
+        return;
+
+    gtk_text_buffer_get_bounds (buffer, &start, &end);
+    gtk_text_buffer_remove_tag_by_name (buffer, MOO_FOLD_TAG, &start, &end);
+
+    MOO_FOLD_FOREACH_BEGIN (tree->folds, other)
+    {
+        if (!other->deleted && other->collapsed)
+        {
+            other->collapsed = FALSE;
+            _moo_fold_tree_collapse (tree, other);
+        }
+    }
+    MOO_FOLD_FOREACH_END (other);
+}
+
 gboolean
 _moo_fold_tree_toggle (MooFoldTree *tree)
 {

@@ -68,6 +68,8 @@ MooFold     *_moo_fold_tree_add     (MooFoldTree    *tree,
                                      int             last_line);
 void         _moo_fold_tree_remove  (MooFoldTree    *tree,
                                      MooFold        *fold);
+void         _moo_fold_tree_mark_deleted (MooFoldTree *tree,
+                                          MooLineMark *mark);
 
 void         _moo_fold_tree_expand          (MooFoldTree    *tree,
                                              MooFold        *fold);

@@ -1948,9 +1948,19 @@ static void
 line_mark_deleted (MooTextBuffer      *buffer,
                    MooLineMark        *mark)
 {
+    gboolean was_fold = _moo_line_mark_get_fold (mark) != NULL;
+
     _moo_line_mark_set_buffer (mark, NULL, NULL);
     _moo_line_mark_deleted (mark);
     g_signal_emit (buffer, signals[LINE_MARK_DELETED], 0, mark);
+
+    /* A fold that lost one of its two lines has to go, or it would keep text
+       invisible with no way left to expand it. */
+    if (was_fold)
+    {
+        _moo_fold_tree_mark_deleted (buffer->priv->fold_tree, mark);
+        g_signal_emit (buffer, signals[FOLD_DELETED], 0, NULL);
+    }
 }
 
 
@@ -2025,6 +2035,112 @@ moo_text_buffer_toggle_fold (MooTextBuffer *buffer,
     else
         _moo_fold_tree_collapse (buffer->priv->fold_tree, fold);
 
+    g_signal_emit (buffer, signals[FOLD_TOGGLED], 0, fold);
+}
+
+/*
+ * Where a fold starts and ends, guessed from the indentation: the lines under
+ * the one the cursor is on that are indented deeper than it. It is what a fold
+ * can be made of without knowing the language - a block of C keeps its closing
+ * brace outside the fold, Python folds exactly.
+ */
+
+/* The width of the leading whitespace of a line, tabs taken to the next
+   multiple of eight, and -1 for a line with nothing else on it: a blank line
+   belongs to the block around it rather than ending it. */
+static int
+line_indent (GtkTextBuffer *buffer,
+             int            line)
+{
+    GtkTextIter iter;
+    int indent = 0;
+
+    gtk_text_buffer_get_iter_at_line (buffer, &iter, line);
+
+    while (!gtk_text_iter_ends_line (&iter))
+    {
+        gunichar c = gtk_text_iter_get_char (&iter);
+
+        if (c == '\t')
+            indent += 8 - indent % 8;
+        else if (c == ' ')
+            indent += 1;
+        else
+            return indent;
+
+        gtk_text_iter_forward_char (&iter);
+    }
+
+    return -1;
+}
+
+/* The last line of the block <line> heads, or -1 when it heads none. */
+static int
+block_end (GtkTextBuffer *buffer,
+           int            line)
+{
+    int indent = line_indent (buffer, line);
+    int last = -1;
+    int i, n_lines;
+
+    if (indent < 0)
+        return -1;
+
+    n_lines = gtk_text_buffer_get_line_count (buffer);
+
+    for (i = line + 1; i < n_lines; ++i)
+    {
+        int this_indent = line_indent (buffer, i);
+
+        if (this_indent < 0)
+            continue;
+
+        if (this_indent <= indent)
+            break;
+
+        last = i;
+    }
+
+    return last;
+}
+
+void
+moo_text_buffer_toggle_fold_at_line (MooTextBuffer *buffer,
+                                     int            line)
+{
+    GtkTextBuffer *text_buffer;
+    MooFold *fold;
+    int end;
+
+    g_return_if_fail (MOO_IS_TEXT_BUFFER (buffer));
+    g_return_if_fail (line >= 0);
+
+    text_buffer = GTK_TEXT_BUFFER (buffer);
+    g_return_if_fail (line < gtk_text_buffer_get_line_count (text_buffer));
+
+    if ((fold = moo_text_buffer_get_fold_at_line (buffer, line)))
+    {
+        moo_text_buffer_toggle_fold (buffer, fold);
+        return;
+    }
+
+    end = block_end (text_buffer, line);
+
+    if (end < 0)
+        return;
+
+    /* The view creates this tag when it turns folding on, but the buffer is
+       the one collapsing, and it is also the one a test has without a view. */
+    if (!gtk_text_tag_table_lookup (gtk_text_buffer_get_tag_table (text_buffer), MOO_FOLD_TAG))
+        gtk_text_buffer_create_tag (text_buffer, MOO_FOLD_TAG, "invisible", TRUE, NULL);
+
+    /* NULL when the block overlaps a fold that is already there. */
+    if (!(fold = _moo_fold_tree_add (buffer->priv->fold_tree, line, end)))
+        return;
+
+    g_signal_emit (buffer, signals[FOLD_ADDED], 0, fold);
+
+    _moo_fold_tree_collapse (buffer->priv->fold_tree, fold);
     g_signal_emit (buffer, signals[FOLD_TOGGLED], 0, fold);
 }
 

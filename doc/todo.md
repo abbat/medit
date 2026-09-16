@@ -48,25 +48,16 @@ makes a document outside any window today, and `moo_notebook_insert_page()` call
 `gtk_widget_set_can_focus()` a few lines below where the disabled `GTK_WIDGET_SET_FLAGS`
 sat. `git log -S` on those names finds the removal and the original text.
 
-## Folding is drawn, toggled and never created
-
-`moofold.cpp` is 797 lines of fold tree, `MooTextBuffer` keeps one for every buffer,
-`mootextview.cpp` draws the expander in the line margin and paints the collapsed lines,
-and `mootextview-input.cpp` turns a click on the expander into a toggle. What no code
-does is make a fold: `_moo_fold_tree_add()` has no caller but `mooedit-tests.cpp`,
-`mootextbuffer.h` exports `get_fold_at_line`, `toggle_fold` and `toggle_folds` and no
-way to add one, and `enable-folding` is never set, so `MooTextView::enable_folding`
-stays `FALSE` for the life of the process and none of the drawing ever runs.
-
-The missing half is whatever decides where a fold starts and ends — the indentation is
-the version that needs no server, `textDocument/foldingRange` is the version that knows
-what a function is — plus an action to fold and unfold and the property set to `TRUE`
-when it is on. The other answer is to delete `moofold.cpp`, its test, the three signals
-and the margin drawing, and to start over the day someone wants folding.
+Folding was here too, as 797 lines of fold tree that nothing ever put a fold into. The
+View menu's *Toggle Fold* now makes one out of the lines indented deeper than the cursor
+line, the margin appears with the first fold of a document rather than by a setting, and
+a fold whose line is deleted takes itself out instead of leaving text invisible. What
+indentation cannot know is where a function ends: `textDocument/foldingRange`, below, is
+that answer.
 
 ---
 
-*The next four are not leftovers of removed code. They are the places where the tree is
+*The next three are not leftovers of removed code. They are the places where the tree is
 going to stop building, or is building on something nobody looks at, and each one is
 cheaper to answer before it becomes a bug report.*
 
@@ -146,8 +137,8 @@ also need to agree with `MooLangMgr` about which wins where, which is the hard h
 
 These ask the server about the shape of the code rather than about a name:
 
-* `textDocument/foldingRange` — the fold tree is there and nothing fills it, so this is
-  a source for the entry above rather than a feature of its own.
+* `textDocument/foldingRange` — the fold tree is filled by indentation today, which folds
+  a C block without its closing brace; this is what would replace that guess.
 * `textDocument/selectionRange` — grow and shrink the selection by syntax. This one needs
   nothing new in the view: it is a pair of actions over a stack of ranges.
 * `textDocument/prepareCallHierarchy` with `callHierarchy/incomingCalls` and

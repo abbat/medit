@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: moo\n"
 "Report-Msgid-Bugs-To: https://github.com/abbat/medit/issues\n"
-"POT-Creation-Date: 2026-09-16 13:27+0300\n"
+"POT-Creation-Date: 2026-09-16 16:13+0300\n"
 "PO-Revision-Date: 2007-12-06 04:32+0800\n"
 "Last-Translator: Chaosye <chao-7410@163.com>\n"
 "Language-Team: Chaosye <chao-7410@163.com>\n"
@@ -514,7 +514,7 @@ msgstr "替换(_R)"
 msgid "Replace _All"
 msgstr "替换全部(_A)"
 
-#: src/mooedit/ui/mootextfind-prompt.ui:50 src/mooedit/mooeditwindow.cpp:566
+#: src/mooedit/ui/mootextfind-prompt.ui:50 src/mooedit/mooeditwindow.cpp:568
 msgid "Find _Next"
 msgstr "查找下一个(_N)"
 
@@ -522,7 +522,7 @@ msgstr "查找下一个(_N)"
 msgid "Sto_p"
 msgstr "停止(_S)"
 
-#: src/mooedit/ui/mootextgotoline.ui:20 src/mooedit/mooeditwindow.cpp:616
+#: src/mooedit/ui/mootextgotoline.ui:20 src/mooedit/mooeditwindow.cpp:618
 msgid "Go to Line"
 msgstr "跳到行"
 
@@ -638,7 +638,7 @@ msgstr "丢弃对文档'%s'的修改?"
 msgid "If you reload the document, changes will be discarded"
 msgstr "如果你重新加载文档,修改将会对丢弃"
 
-#: src/mooedit/mooeditdialogs.cpp:653 src/mooedit/mooeditwindow.cpp:456
+#: src/mooedit/mooeditdialogs.cpp:653 src/mooedit/mooeditwindow.cpp:458
 msgid "_Reload"
 msgstr "重新加载(_R)"
 
@@ -754,7 +754,7 @@ msgstr ""
 #. Label in the Language combo box on Languages preferences page,
 #. remove the part before and including |
 #. Menu item in the Language menu
-#: src/mooedit/mooeditprefspage.cpp:543 src/mooedit/mooeditwindow.cpp:4317
+#: src/mooedit/mooeditprefspage.cpp:543 src/mooedit/mooeditwindow.cpp:4337
 msgid "Language|None"
 msgstr ""
 
@@ -775,440 +775,452 @@ msgstr ""
 #. Configure Shortcuts, beside one per plugin. The id beside it is not
 #. translated: it is what the accelerator paths and the preference keys
 #. under Shortcuts/ are made of.
-#: src/mooedit/mooeditwindow.cpp:434
+#: src/mooedit/mooeditwindow.cpp:436
 msgid "Editor"
 msgstr "编辑器"
 
-#: src/mooedit/mooeditwindow.cpp:439
+#: src/mooedit/mooeditwindow.cpp:441
 msgid "Create new document"
 msgstr "新建"
 
-#: src/mooedit/mooeditwindow.cpp:447
+#: src/mooedit/mooeditwindow.cpp:449
 msgid "_Open..."
 msgstr "打开(_O)"
 
-#: src/mooedit/mooeditwindow.cpp:448
+#: src/mooedit/mooeditwindow.cpp:450
 msgid "Open..."
 msgstr "打开"
 
-#: src/mooedit/mooeditwindow.cpp:455 src/moofileview/moofileview.cpp:1330
+#: src/mooedit/mooeditwindow.cpp:457 src/moofileview/moofileview.cpp:1330
 #: src/moofileview/moofileview.cpp:1331
 msgid "Reload"
 msgstr "重新加载"
 
-#: src/mooedit/mooeditwindow.cpp:457
+#: src/mooedit/mooeditwindow.cpp:459
 msgid "Reload document"
 msgstr "重新加载"
 
-#: src/mooedit/mooeditwindow.cpp:488
+#: src/mooedit/mooeditwindow.cpp:490
 msgid "Save _As..."
 msgstr "另存为(_A)"
 
-#: src/mooedit/mooeditwindow.cpp:489
+#: src/mooedit/mooeditwindow.cpp:491
 msgid "Save as..."
 msgstr "另存为"
 
-#: src/mooedit/mooeditwindow.cpp:499
+#: src/mooedit/mooeditwindow.cpp:501
 msgid "Close document"
 msgstr "关闭文档"
 
-#: src/mooedit/mooeditwindow.cpp:507
+#: src/mooedit/mooeditwindow.cpp:509
 msgid "Close All"
 msgstr "全部关闭"
 
-#: src/mooedit/mooeditwindow.cpp:508
+#: src/mooedit/mooeditwindow.cpp:510
 msgid "Close A_ll"
 msgstr "全部关闭(_l)"
 
-#: src/mooedit/mooeditwindow.cpp:509
+#: src/mooedit/mooeditwindow.cpp:511
 msgid "Close all documents"
 msgstr "全部关闭"
 
-#: src/mooedit/mooeditwindow.cpp:516
+#: src/mooedit/mooeditwindow.cpp:518
 msgid "Previous Tab"
 msgstr "上一个标签"
 
-#: src/mooedit/mooeditwindow.cpp:517
+#: src/mooedit/mooeditwindow.cpp:519
 msgid "_Previous Tab"
 msgstr "上一个标签(_P)"
 
-#: src/mooedit/mooeditwindow.cpp:518
+#: src/mooedit/mooeditwindow.cpp:520
 msgid "Previous tab"
 msgstr "上一个标签"
 
-#: src/mooedit/mooeditwindow.cpp:526
+#: src/mooedit/mooeditwindow.cpp:528
 msgid "Next Tab"
 msgstr "下一个标签"
 
-#: src/mooedit/mooeditwindow.cpp:527
+#: src/mooedit/mooeditwindow.cpp:529
 msgid "_Next Tab"
 msgstr "下一个标签(_N)"
 
-#: src/mooedit/mooeditwindow.cpp:528
+#: src/mooedit/mooeditwindow.cpp:530
 msgid "Next tab"
 msgstr "下一个标签"
 
-#: src/mooedit/mooeditwindow.cpp:536
+#: src/mooedit/mooeditwindow.cpp:538
 msgid "Previous Tab In View"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:537
+#: src/mooedit/mooeditwindow.cpp:539
 msgid "_Previous Tab In View"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:538
+#: src/mooedit/mooeditwindow.cpp:540
 msgid "Previous tab in view"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:545
+#: src/mooedit/mooeditwindow.cpp:547
 msgid "Next Tab In View"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:546
+#: src/mooedit/mooeditwindow.cpp:548
 msgid "_Next Tab In View"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:547
+#: src/mooedit/mooeditwindow.cpp:549
 msgid "Next tab in view"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:565
+#: src/mooedit/mooeditwindow.cpp:567
 msgid "Find Next"
 msgstr "查找下一个"
 
-#: src/mooedit/mooeditwindow.cpp:567
+#: src/mooedit/mooeditwindow.cpp:569
 msgid "Find next"
 msgstr "查找下一个"
 
-#: src/mooedit/mooeditwindow.cpp:576
+#: src/mooedit/mooeditwindow.cpp:578
 msgid "Find Previous"
 msgstr "查找上一个"
 
-#: src/mooedit/mooeditwindow.cpp:577
+#: src/mooedit/mooeditwindow.cpp:579
 msgid "Find _Previous"
 msgstr "查找上一个(_P)"
 
-#: src/mooedit/mooeditwindow.cpp:578
+#: src/mooedit/mooeditwindow.cpp:580
 msgid "Find previous"
 msgstr "查找上一个"
 
-#: src/mooedit/mooeditwindow.cpp:598
+#: src/mooedit/mooeditwindow.cpp:600
 msgid "Find Current Word"
 msgstr "向后查找当前单词"
 
-#: src/mooedit/mooeditwindow.cpp:599
+#: src/mooedit/mooeditwindow.cpp:601
 msgid "Find Current _Word"
 msgstr "向后查找当前单词(_F)"
 
-#: src/mooedit/mooeditwindow.cpp:607
+#: src/mooedit/mooeditwindow.cpp:609
 msgid "Find Current Word Backwards"
 msgstr "向前查找当前单词"
 
-#: src/mooedit/mooeditwindow.cpp:608
+#: src/mooedit/mooeditwindow.cpp:610
 msgid "Find Current Word _Backwards"
 msgstr "向前查找当前单词(_B)"
 
-#: src/mooedit/mooeditwindow.cpp:617
+#: src/mooedit/mooeditwindow.cpp:619
 msgid "_Go to Line..."
 msgstr "跳到行(_G)"
 
-#: src/mooedit/mooeditwindow.cpp:618
+#: src/mooedit/mooeditwindow.cpp:620
 msgid "Go to line..."
 msgstr "跳到行"
 
-#: src/mooedit/mooeditwindow.cpp:627
+#: src/mooedit/mooeditwindow.cpp:629
 msgid "Toggle Text Wrapping"
 msgstr "切换换行"
 
-#: src/mooedit/mooeditwindow.cpp:628
+#: src/mooedit/mooeditwindow.cpp:630
 msgid "_Wrap Text"
 msgstr "换行(_W)"
 
-#: src/mooedit/mooeditwindow.cpp:635
+#: src/mooedit/mooeditwindow.cpp:637
 msgid "Toggle Line Numbers Display"
 msgstr "切换行号显示"
 
-#: src/mooedit/mooeditwindow.cpp:636
+#: src/mooedit/mooeditwindow.cpp:638
 msgid "Show _Line Numbers"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:642
+#: src/mooedit/mooeditwindow.cpp:644
+msgid "Toggle Fold"
+msgstr "切换折叠"
+
+#: src/mooedit/mooeditwindow.cpp:645
+msgid "Toggle _Fold"
+msgstr "切换折叠(_F)"
+
+#: src/mooedit/mooeditwindow.cpp:646
+msgid "Fold or unfold the block at the cursor"
+msgstr "折叠或展开光标处的代码块"
+
+#: src/mooedit/mooeditwindow.cpp:652
 msgid "Focus Document"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:643
+#: src/mooedit/mooeditwindow.cpp:653
 msgid "_Focus Document"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:650 src/mooedit/mooeditwindow.cpp:651
+#: src/mooedit/mooeditwindow.cpp:660 src/mooedit/mooeditwindow.cpp:661
 msgid "Focus Other Split Notebook"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:658
+#: src/mooedit/mooeditwindow.cpp:668
 msgid "Move to Split Notebook"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:659
+#: src/mooedit/mooeditwindow.cpp:669
 msgid "_Move to Split Notebook"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:667 src/mooedit/mooeditwindow.cpp:668
+#: src/mooedit/mooeditwindow.cpp:677 src/mooedit/mooeditwindow.cpp:678
 msgid "Split View Horizontally"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:675 src/mooedit/mooeditwindow.cpp:676
+#: src/mooedit/mooeditwindow.cpp:685 src/mooedit/mooeditwindow.cpp:686
 msgid "Split View Vertically"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:682 src/mooedit/mooeditwindow.cpp:683
+#: src/mooedit/mooeditwindow.cpp:692 src/mooedit/mooeditwindow.cpp:693
 msgid "Focus Next Split View"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:727
+#: src/mooedit/mooeditwindow.cpp:737
 msgid "Toggle Bookmark"
 msgstr "书签切换"
 
-#: src/mooedit/mooeditwindow.cpp:728
+#: src/mooedit/mooeditwindow.cpp:738
 msgid "Toggle _Bookmark"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:736
+#: src/mooedit/mooeditwindow.cpp:746
 msgid "Next Bookmark"
 msgstr "下一个书签"
 
-#: src/mooedit/mooeditwindow.cpp:737
+#: src/mooedit/mooeditwindow.cpp:747
 msgid "_Next Bookmark"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:744
+#: src/mooedit/mooeditwindow.cpp:754
 msgid "Previous Bookmark"
 msgstr "上一个书签"
 
-#: src/mooedit/mooeditwindow.cpp:745
+#: src/mooedit/mooeditwindow.cpp:755
 msgid "_Previous Bookmark"
 msgstr ""
 
 #. action
-#: src/mooedit/mooeditwindow.cpp:753 src/mooedit/mooeditwindow.cpp:754
-#: src/mooedit/mooeditwindow.cpp:755
+#: src/mooedit/mooeditwindow.cpp:763 src/mooedit/mooeditwindow.cpp:764
+#: src/mooedit/mooeditwindow.cpp:765
 msgid "Comment"
 msgstr "备注"
 
 #. action
-#: src/mooedit/mooeditwindow.cpp:763 src/mooedit/mooeditwindow.cpp:764
-#: src/mooedit/mooeditwindow.cpp:765
+#: src/mooedit/mooeditwindow.cpp:773 src/mooedit/mooeditwindow.cpp:774
+#: src/mooedit/mooeditwindow.cpp:775
 msgid "Uncomment"
 msgstr "撤消备注"
 
-#: src/mooedit/mooeditwindow.cpp:792
+#: src/mooedit/mooeditwindow.cpp:802
 msgid "Duplicate Line"
 msgstr "复制行"
 
-#: src/mooedit/mooeditwindow.cpp:793
+#: src/mooedit/mooeditwindow.cpp:803
 msgid "_Duplicate Line"
 msgstr "复制行(_D)"
 
-#: src/mooedit/mooeditwindow.cpp:794
+#: src/mooedit/mooeditwindow.cpp:804
 msgid "Duplicate the line or the selection"
 msgstr "复制当前行或选中内容"
 
-#: src/mooedit/mooeditwindow.cpp:802
+#: src/mooedit/mooeditwindow.cpp:812
 msgid "Move Lines Up"
 msgstr "上移行"
 
-#: src/mooedit/mooeditwindow.cpp:803
+#: src/mooedit/mooeditwindow.cpp:813
 msgid "Move Lines _Up"
 msgstr "上移行(_U)"
 
-#: src/mooedit/mooeditwindow.cpp:804
+#: src/mooedit/mooeditwindow.cpp:814
 msgid "Move the selected lines up"
 msgstr "将选中的行上移"
 
-#: src/mooedit/mooeditwindow.cpp:813
+#: src/mooedit/mooeditwindow.cpp:823
 msgid "Move Lines Down"
 msgstr "下移行"
 
-#: src/mooedit/mooeditwindow.cpp:814
+#: src/mooedit/mooeditwindow.cpp:824
 msgid "Move Lines _Down"
 msgstr "下移行(_D)"
 
-#: src/mooedit/mooeditwindow.cpp:815
+#: src/mooedit/mooeditwindow.cpp:825
 msgid "Move the selected lines down"
 msgstr "将选中的行下移"
 
-#: src/mooedit/mooeditwindow.cpp:824
+#: src/mooedit/mooeditwindow.cpp:834
 msgid "Sort Lines"
 msgstr "行排序"
 
-#: src/mooedit/mooeditwindow.cpp:825
+#: src/mooedit/mooeditwindow.cpp:835
 msgid "_Sort Lines"
 msgstr "行排序(_S)"
 
-#: src/mooedit/mooeditwindow.cpp:826
+#: src/mooedit/mooeditwindow.cpp:836
 msgid "Sort the selected lines"
 msgstr "对选中的行排序"
 
-#: src/mooedit/mooeditwindow.cpp:833
+#: src/mooedit/mooeditwindow.cpp:843
 msgid "Go to Matching Bracket"
 msgstr "跳转到匹配括号"
 
-#: src/mooedit/mooeditwindow.cpp:834
+#: src/mooedit/mooeditwindow.cpp:844
 msgid "Go to _Matching Bracket"
 msgstr "跳转到匹配括号(_M)"
 
-#: src/mooedit/mooeditwindow.cpp:835
+#: src/mooedit/mooeditwindow.cpp:845
 msgid "Go to the bracket matching the one at the cursor"
 msgstr "跳转到与光标处括号匹配的括号"
 
 #. Insensitive menu item which appears in Window menu with no documents open
-#: src/mooedit/mooeditwindow.cpp:844
+#: src/mooedit/mooeditwindow.cpp:854
 msgid "No Documents"
 msgstr "没有文档"
 
-#: src/mooedit/mooeditwindow.cpp:852
+#: src/mooedit/mooeditwindow.cpp:862
 msgid "Page Setup"
 msgstr "页面设置"
 
-#: src/mooedit/mooeditwindow.cpp:853
+#: src/mooedit/mooeditwindow.cpp:863
 msgid "Page S_etup..."
 msgstr "页面设置(_E)"
 
-#: src/mooedit/mooeditwindow.cpp:854
+#: src/mooedit/mooeditwindow.cpp:864
 msgid "Page Setup..."
 msgstr "页面设置"
 
-#: src/mooedit/mooeditwindow.cpp:870 src/mooedit/mooeditwindow.cpp:871
+#: src/mooedit/mooeditwindow.cpp:880 src/mooedit/mooeditwindow.cpp:881
 msgid "Print..."
 msgstr "打印"
 
-#: src/mooedit/mooeditwindow.cpp:879 src/mooedit/mooeditwindow.cpp:2153
+#: src/mooedit/mooeditwindow.cpp:889 src/mooedit/mooeditwindow.cpp:2173
 msgid "Export as PDF"
 msgstr "导出为PDF文档"
 
-#: src/mooedit/mooeditwindow.cpp:880
+#: src/mooedit/mooeditwindow.cpp:890
 msgid "E_xport as PDF..."
 msgstr "导出为PDF文档(_X)"
 
-#: src/mooedit/mooeditwindow.cpp:881
+#: src/mooedit/mooeditwindow.cpp:891
 msgid "Export as PDF..."
 msgstr "导出为PDF文档"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [new file]"
-#: src/mooedit/mooeditwindow.cpp:1161
+#: src/mooedit/mooeditwindow.cpp:1171
 #, c-format
 msgid "%s [new file]"
 msgstr ""
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [modified on disk]"
-#: src/mooedit/mooeditwindow.cpp:1164
+#: src/mooedit/mooeditwindow.cpp:1174
 #, c-format
 msgid "%s [modified on disk]"
 msgstr ""
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [deleted]"
-#: src/mooedit/mooeditwindow.cpp:1167
+#: src/mooedit/mooeditwindow.cpp:1177
 #, c-format
 msgid "%s [deleted]"
 msgstr ""
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [new file] [modified]"
-#: src/mooedit/mooeditwindow.cpp:1175
+#: src/mooedit/mooeditwindow.cpp:1185
 #, c-format
 msgid "%s [new file] [modified]"
 msgstr ""
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [modified on disk] [modified]"
-#: src/mooedit/mooeditwindow.cpp:1178
+#: src/mooedit/mooeditwindow.cpp:1188
 #, c-format
 msgid "%s [modified on disk] [modified]"
 msgstr ""
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [deleted] [modified]"
-#: src/mooedit/mooeditwindow.cpp:1181
+#: src/mooedit/mooeditwindow.cpp:1191
 #, c-format
 msgid "%s [deleted] [modified]"
 msgstr ""
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [modified]"
-#: src/mooedit/mooeditwindow.cpp:1184
+#: src/mooedit/mooeditwindow.cpp:1194
 #, c-format
 msgid "%s [modified]"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:1424
+#: src/mooedit/mooeditwindow.cpp:1434
 msgid "Reopen Using Encoding"
 msgstr "用特定的编码重新打开"
 
-#: src/mooedit/mooeditwindow.cpp:1474
+#: src/mooedit/mooeditwindow.cpp:1484
 msgid "_Encoding"
 msgstr "编码(_E)"
 
-#: src/mooedit/mooeditwindow.cpp:1528
+#: src/mooedit/mooeditwindow.cpp:1538
 msgid "Line En_dings"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:1535
+#: src/mooedit/mooeditwindow.cpp:1545
 msgid "_Windows (CR+LF)"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:1540
+#: src/mooedit/mooeditwindow.cpp:1550
 msgid "_Unix (LF)"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:1544
+#: src/mooedit/mooeditwindow.cpp:1554
 msgid "_Mac (CR)"
 msgstr ""
 
 #. Item in document tab context menu
-#: src/mooedit/mooeditwindow.cpp:2428
+#: src/mooedit/mooeditwindow.cpp:2448
 msgctxt "tab-context-menu"
 msgid "Close"
 msgstr ""
 
 #. Item in document tab context menu
-#: src/mooedit/mooeditwindow.cpp:2436
+#: src/mooedit/mooeditwindow.cpp:2456
 msgctxt "tab-context-menu"
 msgid "Close All Others"
 msgstr ""
 
 #. Item in document tab context menu
-#: src/mooedit/mooeditwindow.cpp:2445
+#: src/mooedit/mooeditwindow.cpp:2465
 msgctxt "tab-context-menu"
 msgid "Copy Full Path"
 msgstr ""
 
 #. Item in document tab context menu
-#: src/mooedit/mooeditwindow.cpp:2455
+#: src/mooedit/mooeditwindow.cpp:2475
 msgctxt "tab-context-menu"
 msgid "Detach"
 msgstr ""
 
 #. Item in document tab context menu
-#: src/mooedit/mooeditwindow.cpp:2461
+#: src/mooedit/mooeditwindow.cpp:2481
 msgctxt "tab-context-menu"
 msgid "Move to Split Notebook"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:4159
+#: src/mooedit/mooeditwindow.cpp:4179
 #, c-format
 msgid "Line: %s Col: %s"
 msgstr "行: %s 列: %s"
 
-#: src/mooedit/mooeditwindow.cpp:4160
+#: src/mooedit/mooeditwindow.cpp:4180
 #, c-format
 msgid "Chars: %s"
 msgstr "字符: %s"
 
 #. Label in the editor window statusbar - Overwrite or Insert mode
-#: src/mooedit/mooeditwindow.cpp:4203
+#: src/mooedit/mooeditwindow.cpp:4223
 msgid "OVR"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:4203
+#: src/mooedit/mooeditwindow.cpp:4223
 msgid "INS"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:4312
+#: src/mooedit/mooeditwindow.cpp:4332
 msgid "_Language"
 msgstr "语言(_L)"
 

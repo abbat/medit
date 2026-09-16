@@ -273,6 +273,8 @@ static void action_next_tab_in_view             (MooEditWindow      *window);
 static void action_switch_to_tab                (MooEditWindow      *window,
                                                  guint               n);
 
+static void action_toggle_fold                  (MooEditWindow      *window);
+
 static void action_toggle_bookmark              (MooEditWindow      *window);
 static void action_next_bookmark                (MooEditWindow      *window);
 static void action_prev_bookmark                (MooEditWindow      *window);
@@ -635,6 +637,14 @@ moo_edit_window_class_init (MooEditWindowClass *klass)
                                  "display-name", _("Toggle Line Numbers Display"),
                                  "label", _("Show _Line Numbers"),
                                  "toggled-callback", line_numbers_toggled,
+                                 "condition::sensitive", "has-open-document",
+                                 nullptr);
+
+    moo_window_class_new_action (window_class, "ToggleFold", nullptr,
+                                 "display-name", _("Toggle Fold"),
+                                 "label", _("Toggle _Fold"),
+                                 "tooltip", _("Fold or unfold the block at the cursor"),
+                                 "closure-callback", action_toggle_fold,
                                  "condition::sensitive", "has-open-document",
                                  nullptr);
 
@@ -1781,6 +1791,16 @@ static void
 action_abort_jobs (MooEditWindow *window)
 {
     moo_edit_window_abort_jobs (window);
+}
+
+
+static void
+action_toggle_fold (MooEditWindow *window)
+{
+    MooEditView *view = ACTIVE_VIEW (window);
+    g_return_if_fail (view != nullptr);
+    moo_text_buffer_toggle_fold_at_line (MOO_TEXT_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (view))),
+                                         moo_text_view_get_cursor_line (GTK_TEXT_VIEW (view)));
 }
 
 

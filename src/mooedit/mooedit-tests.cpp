@@ -1050,6 +1050,58 @@ test_fold_tree_remove_promotes_children (void)
 
 
 static void
+test_fold_at_line (void)
+{
+    /* A blank line inside the block, and a line under it at the same
+       indentation as the head, which is where the block ends. */
+    MooTextBuffer *buffer = new_text_buffer ("head\n    a\n\n    b\ntail\nlast\n");
+
+    moo_text_buffer_toggle_fold_at_line (buffer, 0);
+    g_assert_nonnull (moo_text_buffer_get_fold_at_line (buffer, 0));
+    g_assert_false (line_has_fold_tag (buffer, 0));
+    g_assert_true (line_has_fold_tag (buffer, 1));
+    g_assert_true (line_has_fold_tag (buffer, 2));
+    g_assert_true (line_has_fold_tag (buffer, 3));
+    g_assert_false (line_has_fold_tag (buffer, 4));
+
+    /* Again on the same line expands it. */
+    moo_text_buffer_toggle_fold_at_line (buffer, 0);
+    g_assert_false (line_has_fold_tag (buffer, 1));
+    g_assert_false (line_has_fold_tag (buffer, 3));
+
+    /* A line with nothing indented under it heads no block. */
+    moo_text_buffer_toggle_fold_at_line (buffer, 4);
+    g_assert_null (moo_text_buffer_get_fold_at_line (buffer, 4));
+
+    g_object_unref (buffer);
+}
+
+
+static void
+test_fold_loses_its_line (void)
+{
+    MooTextBuffer *buffer = new_text_buffer ("head\n    a\n    b\ntail\n");
+    GtkTextIter start, end;
+
+    moo_text_buffer_toggle_fold_at_line (buffer, 0);
+    g_assert_true (line_has_fold_tag (buffer, 1));
+
+    /* Deleting the line the fold starts on must not leave the lines it was
+       hiding invisible with no fold left to expand. */
+    gtk_text_buffer_get_iter_at_line (GTK_TEXT_BUFFER (buffer), &start, 0);
+    end = start;
+    gtk_text_iter_forward_line (&end);
+    gtk_text_buffer_delete (GTK_TEXT_BUFFER (buffer), &start, &end);
+
+    g_assert_null (moo_text_buffer_get_fold_at_line (buffer, 0));
+    g_assert_false (line_has_fold_tag (buffer, 0));
+    g_assert_false (line_has_fold_tag (buffer, 1));
+
+    g_object_unref (buffer);
+}
+
+
+static void
 test_language_helpers (void)
 {
     GSList *list;
@@ -1423,6 +1475,8 @@ _moo_add_mooedit_unit_tests (void)
     g_test_add_func ("/mooedit/fold-tree/visibility", test_fold_tree_visibility);
     g_test_add_func ("/mooedit/fold-tree/remove-promotes-children",
                      test_fold_tree_remove_promotes_children);
+    g_test_add_func ("/mooedit/fold/at-line", test_fold_at_line);
+    g_test_add_func ("/mooedit/fold/loses-its-line", test_fold_loses_its_line);
     g_test_add_func ("/mooedit/language/helpers", test_language_helpers);
     g_test_add_func ("/mooedit/edit-action/filters", test_edit_action_filters);
     g_test_add_func ("/mooedit/edit-filter/parsing", test_edit_filter_parsing);
