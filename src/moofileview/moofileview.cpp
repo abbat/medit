@@ -3313,7 +3313,7 @@ file_view_do_delete_selected (MooFileView *fileview,
             if (trash)
                 flags = (MooDeleteFileFlags) (flags | MOO_DELETE_TO_TRASH);
 
-            if (!_moo_file_system_delete_file (fileview->priv->file_system, path, flags, &error))
+            if (!_moo_file_system_delete_file (path, flags, &error))
             {
                 char *text;
                 char *path_utf8;
@@ -3420,8 +3420,7 @@ file_view_create_folder (MooFileView *fileview)
         return;
     }
 
-    path = _moo_file_system_make_path (fileview->priv->file_system,
-                                       _moo_folder_get_path (fileview->priv->current_dir),
+    path = _moo_file_system_make_path (_moo_folder_get_path (fileview->priv->current_dir),
                                        name, &error);
 
     if (!path)
@@ -3430,7 +3429,7 @@ file_view_create_folder (MooFileView *fileview)
         goto out;
     }
 
-    if (!_moo_file_system_create_folder (fileview->priv->file_system, path, &error))
+    if (!_moo_file_system_create_folder (path, &error))
     {
         _moo_message ("could not create folder '%s': %s", name, moo_error_message (error));
         goto out;
@@ -4697,8 +4696,7 @@ file_view_activate_filename (MooFileView    *fileview,
     if (fileview->priv->current_dir)
         current_dir = _moo_folder_get_path (fileview->priv->current_dir);
 
-    path = _moo_file_system_get_absolute_path (fileview->priv->file_system,
-                                               display_name, current_dir);
+    path = _moo_file_system_get_absolute_path (display_name, current_dir);
 
     if (!path || !g_file_test (path, G_FILE_TEST_EXISTS))
     {

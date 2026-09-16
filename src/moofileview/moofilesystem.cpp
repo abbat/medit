@@ -47,50 +47,9 @@ static MooFileSystem *fs_instance = NULL;
 
 
 static void         moo_file_system_dispose (GObject        *object);
-static char        *_moo_file_system_normalize_path (MooFileSystem *fs,
-                                             const char     *path,
+static char        *normalize_path          (const char     *path,
                                              gboolean        is_folder,
                                              GError        **error);
-
-static MooFolder   *get_folder              (MooFileSystem  *fs,
-                                             const char     *path,
-                                             MooFileFlags    wanted,
-                                             GError        **error);
-static gboolean     create_folder           (MooFileSystem  *fs,
-                                             const char     *path,
-                                             GError        **error);
-static MooFolder   *get_parent_folder       (MooFileSystem  *fs,
-                                             MooFolder      *folder,
-                                             MooFileFlags    flags);
-static gboolean     delete_file             (MooFileSystem  *fs,
-                                             const char     *path,
-                                             MooDeleteFileFlags flags,
-                                             GError        **error);
-
-static gboolean     move_file_unix          (MooFileSystem  *fs,
-                                             const char     *old_path,
-                                             const char     *new_path,
-                                             GError        **error);
-
-static MooFolder   *get_root_folder_unix    (MooFileSystem  *fs,
-                                             MooFileFlags    wanted);
-static char        *normalize_path_unix     (MooFileSystem  *fs,
-                                             const char     *path,
-                                             gboolean        is_folder,
-                                             GError        **error);
-static char        *make_path_unix          (MooFileSystem  *fs,
-                                             const char     *base_path,
-                                             const char     *display_name,
-                                             GError        **error);
-static gboolean     parse_path_unix         (MooFileSystem  *fs,
-                                             const char     *path_utf8,
-                                             char          **dirname,
-                                             char          **display_dirname,
-                                             char          **display_basename,
-                                             GError        **error);
-static char        *get_absolute_path_unix  (MooFileSystem  *fs,
-                                             const char     *display_name,
-                                             const char     *current_dir);
 
 /* MOO_TYPE_FILE_SYSTEM */
 G_DEFINE_TYPE (MooFileSystem, _moo_file_system, G_TYPE_OBJECT)
@@ -102,18 +61,6 @@ _moo_file_system_class_init (MooFileSystemClass *klass)
     GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
 
     gobject_class->dispose = moo_file_system_dispose;
-
-    klass->get_folder = get_folder;
-    klass->create_folder = create_folder;
-    klass->get_parent_folder = get_parent_folder;
-    klass->delete_file = delete_file;
-
-    klass->get_root_folder = get_root_folder_unix;
-    klass->move_file = move_file_unix;
-    klass->normalize_path = normalize_path_unix;
-    klass->make_path = make_path_unix;
-    klass->parse_path = parse_path_unix;
-    klass->get_absolute_path = get_absolute_path_unix;
 }
 
 
@@ -220,123 +167,6 @@ _moo_file_system_create (void)
 }
 
 
-MooFolder *
-_moo_file_system_get_root_folder (MooFileSystem  *fs,
-                                  MooFileFlags    wanted)
-{
-    g_return_val_if_fail (MOO_IS_FILE_SYSTEM (fs), NULL);
-    return MOO_FILE_SYSTEM_GET_CLASS(fs)->get_root_folder (fs, wanted);
-}
-
-
-MooFolder *
-_moo_file_system_get_folder (MooFileSystem  *fs,
-                             const char     *path,
-                             MooFileFlags    wanted,
-                             GError        **error)
-{
-    g_return_val_if_fail (MOO_IS_FILE_SYSTEM (fs), NULL);
-    return MOO_FILE_SYSTEM_GET_CLASS(fs)->get_folder (fs, path, wanted, error);
-}
-
-
-MooFolder *
-_moo_file_system_get_parent_folder (MooFileSystem  *fs,
-                                    MooFolder      *folder,
-                                    MooFileFlags    wanted)
-{
-    g_return_val_if_fail (MOO_IS_FILE_SYSTEM (fs), NULL);
-    g_return_val_if_fail (MOO_IS_FOLDER (folder), NULL);
-    return MOO_FILE_SYSTEM_GET_CLASS(fs)->get_parent_folder (fs, folder, wanted);
-}
-
-
-gboolean
-_moo_file_system_create_folder (MooFileSystem  *fs,
-                                const char     *path,
-                                GError        **error)
-{
-    g_return_val_if_fail (MOO_IS_FILE_SYSTEM (fs), FALSE);
-    g_return_val_if_fail (path != NULL, FALSE);
-    return MOO_FILE_SYSTEM_GET_CLASS(fs)->create_folder (fs, path, error);
-}
-
-
-gboolean
-_moo_file_system_delete_file (MooFileSystem       *fs,
-                              const char          *path,
-                              MooDeleteFileFlags   flags,
-                              GError             **error)
-{
-    g_return_val_if_fail (MOO_IS_FILE_SYSTEM (fs), FALSE);
-    g_return_val_if_fail (path != NULL, FALSE);
-    return MOO_FILE_SYSTEM_GET_CLASS(fs)->delete_file (fs, path, flags, error);
-}
-
-
-gboolean
-_moo_file_system_move_file (MooFileSystem  *fs,
-                            const char     *old_path,
-                            const char     *new_path,
-                            GError        **error)
-{
-    g_return_val_if_fail (MOO_IS_FILE_SYSTEM (fs), FALSE);
-    g_return_val_if_fail (old_path && new_path, FALSE);
-    return MOO_FILE_SYSTEM_GET_CLASS(fs)->move_file (fs, old_path, new_path, error);
-}
-
-
-char *
-_moo_file_system_make_path (MooFileSystem  *fs,
-                            const char     *base_path,
-                            const char     *display_name,
-                            GError        **error)
-{
-    g_return_val_if_fail (MOO_IS_FILE_SYSTEM (fs), NULL);
-    g_return_val_if_fail (base_path != NULL && display_name != NULL, NULL);
-    return MOO_FILE_SYSTEM_GET_CLASS(fs)->make_path (fs, base_path, display_name, error);
-}
-
-
-static char *
-_moo_file_system_normalize_path (MooFileSystem  *fs,
-                                 const char     *path,
-                                 gboolean        is_folder,
-                                 GError        **error)
-{
-    g_return_val_if_fail (MOO_IS_FILE_SYSTEM (fs), NULL);
-    g_return_val_if_fail (path != NULL, NULL);
-    return MOO_FILE_SYSTEM_GET_CLASS(fs)->normalize_path (fs, path, is_folder, error);
-}
-
-
-gboolean
-_moo_file_system_parse_path (MooFileSystem  *fs,
-                             const char     *path_utf8,
-                             char          **dirname,
-                             char          **display_dirname,
-                             char          **display_basename,
-                             GError        **error)
-{
-    g_return_val_if_fail (MOO_IS_FILE_SYSTEM (fs), FALSE);
-    g_return_val_if_fail (path_utf8 != NULL, FALSE);
-    return MOO_FILE_SYSTEM_GET_CLASS(fs)->parse_path (fs, path_utf8, dirname,
-                                                      display_dirname, display_basename,
-                                                      error);
-}
-
-
-char *
-_moo_file_system_get_absolute_path (MooFileSystem  *fs,
-                                    const char     *display_name,
-                                    const char     *current_dir)
-{
-    g_return_val_if_fail (MOO_IS_FILE_SYSTEM (fs), NULL);
-    g_return_val_if_fail (display_name != NULL, NULL);
-    return MOO_FILE_SYSTEM_GET_CLASS(fs)->get_absolute_path (fs, display_name, current_dir);
-}
-
-
 MooFileWatch *
 _moo_file_system_get_file_watch (MooFileSystem *fs)
 {
@@ -377,16 +207,17 @@ _moo_file_system_folder_deleted (MooFileSystem *fs,
 }
 
 
-static MooFolder *
-get_folder (MooFileSystem  *fs,
-            const char     *path,
-            MooFileFlags    wanted,
-            GError        **error)
+MooFolder *
+_moo_file_system_get_folder (MooFileSystem  *fs,
+                             const char     *path,
+                             MooFileFlags    wanted,
+                             GError        **error)
 {
     MooFolder *folder;
     MooFolderImpl *impl;
     char *norm_path = NULL;
 
+    g_return_val_if_fail (MOO_IS_FILE_SYSTEM (fs), NULL);
     g_return_val_if_fail (path != NULL, NULL);
 
     /* XXX check the caller */
@@ -399,7 +230,7 @@ get_folder (MooFileSystem  *fs,
         return NULL;
     }
 
-    norm_path = _moo_file_system_normalize_path (fs, path, TRUE, error);
+    norm_path = normalize_path (path, TRUE, error);
 
     if (!norm_path)
         return NULL;
@@ -459,10 +290,9 @@ out:
 
 
 /* TODO */
-static gboolean
-create_folder (G_GNUC_UNUSED MooFileSystem *fs,
-               const char     *path,
-               GError        **error)
+gboolean
+_moo_file_system_create_folder (const char  *path,
+                                GError     **error)
 {
     mgw_errno_t err;
 
@@ -491,16 +321,12 @@ create_folder (G_GNUC_UNUSED MooFileSystem *fs,
 }
 
 
-/***************************************************************************/
-/* common methods
- */
-
 /* folder may be deleted, but this function returns parent
    folder anyway, if that exists */
-static MooFolder *
-get_parent_folder (MooFileSystem  *fs,
-                   MooFolder      *folder,
-                   MooFileFlags    wanted)
+MooFolder *
+_moo_file_system_get_parent_folder (MooFileSystem  *fs,
+                                    MooFolder      *folder,
+                                    MooFileFlags    wanted)
 {
     char *parent_path;
     MooFolder *parent;
@@ -519,8 +345,9 @@ get_parent_folder (MooFileSystem  *fs,
 }
 
 
+/* The path with its empty, "." and ".." components taken out. */
 static char *
-normalize_path (const char *path)
+collapse_dots (const char *path)
 {
     GPtrArray *comps;
     gboolean first_slash;
@@ -599,11 +426,10 @@ normalize_path (const char *path)
 }
 
 
-static gboolean
-delete_file (G_GNUC_UNUSED MooFileSystem *fs,
-             const char          *path,
-             MooDeleteFileFlags   flags,
-             GError             **error)
+gboolean
+_moo_file_system_delete_file (const char          *path,
+                              MooDeleteFileFlags   flags,
+                              GError             **error)
 {
     gboolean isdir;
     mgw_errno_t err;
@@ -644,14 +470,10 @@ delete_file (G_GNUC_UNUSED MooFileSystem *fs,
 }
 
 
-/***************************************************************************/
-/* UNIX methods
- */
-static gboolean
-move_file_unix (G_GNUC_UNUSED MooFileSystem *fs,
-                const char     *old_path,
-                const char     *new_path,
-                GError        **error)
+gboolean
+_moo_file_system_move_file (const char  *old_path,
+                            const char  *new_path,
+                            GError     **error)
 {
     mgw_errno_t err;
 
@@ -672,19 +494,18 @@ move_file_unix (G_GNUC_UNUSED MooFileSystem *fs,
 }
 
 
-static MooFolder *
-get_root_folder_unix (MooFileSystem  *fs,
-                      MooFileFlags    wanted)
+MooFolder *
+_moo_file_system_get_root_folder (MooFileSystem  *fs,
+                                  MooFileFlags    wanted)
 {
     return _moo_file_system_get_folder (fs, "/", wanted, NULL);
 }
 
 
-static char *
-make_path_unix (G_GNUC_UNUSED MooFileSystem *fs,
-                const char     *base_path,
-                const char     *display_name,
-                GError        **error)
+char *
+_moo_file_system_make_path (const char  *base_path,
+                            const char  *display_name,
+                            GError     **error)
 {
     GError *error_here = NULL;
     char *path, *name;
@@ -723,17 +544,16 @@ make_path_unix (G_GNUC_UNUSED MooFileSystem *fs,
 
 /* XXX make sure error is set TODO: error checking, etc. */
 static char *
-normalize_path_unix (G_GNUC_UNUSED MooFileSystem *fs,
-                     const char     *path,
-                     gboolean        is_folder,
-                     G_GNUC_UNUSED GError **error)
+normalize_path (const char     *path,
+                gboolean        is_folder,
+                G_GNUC_UNUSED GError **error)
 {
     guint len;
     char *normpath;
 
     g_return_val_if_fail (path != NULL, NULL);
 
-    normpath = normalize_path (path);
+    normpath = collapse_dots (path);
 
     if (!is_folder)
         return normpath;
@@ -753,13 +573,12 @@ normalize_path_unix (G_GNUC_UNUSED MooFileSystem *fs,
 
 
 /* XXX must set error */
-static gboolean
-parse_path_unix (MooFileSystem  *fs,
-                 const char     *path_utf8,
-                 char          **dirname_p,
-                 char          **display_dirname_p,
-                 char          **display_basename_p,
-                 GError        **error)
+gboolean
+_moo_file_system_parse_path (const char  *path_utf8,
+                             char       **dirname_p,
+                             char       **display_dirname_p,
+                             char       **display_basename_p,
+                             GError     **error)
 {
     const char *separator;
     char *dirname = NULL, *norm_dirname = NULL;
@@ -795,7 +614,7 @@ parse_path_unix (MooFileSystem  *fs,
     if (!dirname)
         goto error;
 
-    norm_dirname = _moo_file_system_normalize_path (fs, dirname, TRUE, error);
+    norm_dirname = normalize_path (dirname, TRUE, error);
 
     if (!norm_dirname)
         goto error;
@@ -823,10 +642,9 @@ success:
 
 
 /* XXX unicode */
-static char *
-get_absolute_path_unix (G_GNUC_UNUSED MooFileSystem *fs,
-                        const char     *short_name,
-                        const char     *current_dir)
+char *
+_moo_file_system_get_absolute_path (const char  *short_name,
+                                    const char  *current_dir)
 {
     g_return_val_if_fail (short_name && short_name[0], NULL);
 

@@ -123,30 +123,6 @@ those happens the double build is the price of a fork that still runs where the 
 ran, and this entry exists so that the next person to ask is told what the answer depends
 on rather than told no.
 
-## `MooFileSystem` is an interface with one implementation
-
-`moofilesystem.cpp` is a `GObject` whose class struct is a vtable, and its `class_init()`
-fills every slot of it with a function in the same file whose name ends in `_unix`. Nothing
-derives from the class, `_moo_file_system_create()` hands out a single instance and keeps a
-weak reference to it so that the next caller gets the same one, and the ten public functions
-are a `g_return_val_if_fail` followed by `MOO_FILE_SYSTEM_GET_CLASS(fs)->something (fs, ...)`.
-Half the implementations mark `fs` itself `G_GNUC_UNUSED`.
-
-It was the shape a Windows port would have needed, and there is no Windows port: the fork
-builds and is packaged for Linux only, and `/* TODO windows */` in `moofileview.cpp` is the
-only other trace of one.
-
-Collapsing it is a deletion rather than a rewrite — the `_unix` functions stay and become
-the functions, the vtable and the `GET_CLASS` hops go, and the `fs` argument comes off a
-dozen signatures. What is worth keeping is the singleton: the folder cache lives on the
-instance, and two file views must share it.
-
-The notes that accumulate around the indirection go with it. `/* XXX must set error */` and
-`/* XXX check the caller */` sit over `parse_path_unix()` and its neighbours, and they are
-accurate — several of those paths return `FALSE` with the `GError` untouched. Nothing
-crashes on it, because `moo_error_message()` answers "Unknown error" for a null error, which
-is also exactly what the user is told.
-
 ---
 
 *The rest of this file is about the language server plugin. Nothing here is a leftover of

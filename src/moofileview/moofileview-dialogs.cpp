@@ -135,11 +135,9 @@ moo_file_props_dialog_ok (MooFilePropsDialog *dialog)
     if (!strcmp (old_name, new_name))
         return;
 
-    old_path = _moo_file_system_make_path (_moo_folder_get_file_system (dialog->folder),
-                                           _moo_folder_get_path (dialog->folder),
+    old_path = _moo_file_system_make_path (_moo_folder_get_path (dialog->folder),
                                            old_name, NULL);
-    new_path = _moo_file_system_make_path (_moo_folder_get_file_system (dialog->folder),
-                                           _moo_folder_get_path (dialog->folder),
+    new_path = _moo_file_system_make_path (_moo_folder_get_path (dialog->folder),
                                            new_name, NULL);
 
     if (!old_path || !new_path)
@@ -148,8 +146,7 @@ moo_file_props_dialog_ok (MooFilePropsDialog *dialog)
         goto out;
     }
 
-    if (!_moo_file_system_move_file (_moo_folder_get_file_system (dialog->folder),
-                                     old_path, new_path, &error))
+    if (!_moo_file_system_move_file (old_path, new_path, &error))
     {
         g_warning ("could not rename '%s' to '%s'",
                    old_path, new_path);

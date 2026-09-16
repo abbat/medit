@@ -522,14 +522,12 @@ completion_parse_text (MooFileEntryCompletion *cmpl,
     if (!text || !text[0])
         return FALSE;
 
-    path = _moo_file_system_get_absolute_path (cmpl->priv->fs, text,
-                                               cmpl->priv->current_dir);
+    path = _moo_file_system_get_absolute_path (text, cmpl->priv->current_dir);
 
     if (!path)
         return FALSE;
 
-    if (!_moo_file_system_parse_path (cmpl->priv->fs,
-                                      path, &dirname, &display_dirname,
+    if (!_moo_file_system_parse_path (path, &dirname, &display_dirname,
                                       &display_basename, &error))
     {
         _moo_message ("could not parse path '%s'", path);
@@ -1574,8 +1572,7 @@ _moo_file_entry_completion_get_path (MooFileEntryCompletion *cmpl)
     g_return_val_if_fail (cmpl->priv->entry != NULL, NULL);
 
     text = gtk_entry_get_text (GTK_ENTRY (cmpl->priv->entry));
-    return _moo_file_system_get_absolute_path (cmpl->priv->fs, text,
-                                               cmpl->priv->current_dir);
+    return _moo_file_system_get_absolute_path (text, cmpl->priv->current_dir);
 }
 
 
