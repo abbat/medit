@@ -397,6 +397,26 @@ clear_drag_stuff (MooTextView *view)
     view->priv->dnd.button = GDK_BUTTON_RELEASE;
 }
 
+#if GTK_CHECK_VERSION(3,0,0)
+/* In GTK+2 GtkTextView hid the pointer through the same mouse_cursor_obscured
+   field we read, so whoever hid it, we knew. GTK+3 hides it with a flag of its
+   own when a key it handles changes the buffer, and puts its own "text" cursor
+   back on a state change; neither is visible to us. What the window has on it
+   is, so the cursor counts as ours only while it is the one we would set. */
+static gboolean
+text_window_shows (GtkTextView   *text_view,
+                   MooTextCursor  tcursor)
+{
+    GdkCursor *cursor = gdk_window_get_cursor (gtk_text_view_get_window (text_view, GTK_TEXT_WINDOW_TEXT));
+
+    if (tcursor == MOO_TEXT_CURSOR_ARROW)
+        return cursor == NULL;
+
+    const GdkCursorType want = tcursor == MOO_TEXT_CURSOR_LINK ? GDK_HAND2 : GDK_XTERM;
+    return cursor != NULL && gdk_cursor_get_cursor_type (cursor) == want;
+}
+#endif
+
 void
 _moo_text_view_update_text_cursor (MooTextView *view,
                                    int          x,
@@ -413,7 +433,8 @@ _moo_text_view_update_text_cursor (MooTextView *view,
     tcursor = MOO_TEXT_VIEW_GET_CLASS (view)->get_text_cursor (view, x, y);
 
 #if GTK_CHECK_VERSION(3,0,0)
-    if (tcursor == view->priv->text_cursor && !view->priv->mouse_cursor_obscured)
+    if (tcursor == view->priv->text_cursor && !view->priv->mouse_cursor_obscured &&
+        text_window_shows (text_view, tcursor))
         return;
 #else
     if (tcursor == view->priv->text_cursor && !text_view->mouse_cursor_obscured)
@@ -929,6 +950,13 @@ _moo_text_view_motion_event (GtkWidget          *widget,
     MooTextView *view = MOO_TEXT_VIEW (widget);
     int x, y;
     GtkTextIter iter;
+
+#if GTK_CHECK_VERSION(3,0,0)
+    /* GtkTextView's handler does one thing in GTK+3: it clears the flag it hid
+       the pointer with, so that the next key it handles can hide it again. The
+       cursor it leaves behind is replaced right below. */
+    GTK_WIDGET_CLASS (_moo_text_view_parent_class)->motion_notify_event (widget, event);
+#endif
 
     event_motion_to_buffer (text_view, event, &x, &y);
     _moo_text_view_update_text_cursor (view, x, y);
