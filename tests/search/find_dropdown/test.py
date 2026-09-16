@@ -153,7 +153,7 @@ def row_named(t, rows, name):
         if row.name == name:
             return row
 
-    t.fail("no %r in the list: %s" % (name, [row.name for row in rows]))
+    return t.fail("no %r in the list: %s" % (name, [row.name for row in rows]))
 
 
 def search(t, term):
