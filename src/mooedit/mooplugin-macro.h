@@ -19,15 +19,6 @@
 #include "mooedit/mooplugin.h"
 
 
-#define MOO_PLUGIN_INIT_FUNC_DECL   \
-G_MODULE_EXPORT gboolean            \
-MOO_PLUGIN_INIT_FUNC (GType *type)
-
-#define MOO_MODULE_INIT_FUNC_DECL   \
-G_MODULE_EXPORT gboolean            \
-MOO_MODULE_INIT_FUNC (void)
-
-
 #define MOO_PLUGIN_DEFINE_INFO(plugin_name__,name__,                        \
                                description__,author__,version__)            \
                                                                             \

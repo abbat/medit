@@ -69,8 +69,6 @@ char      **moo_get_data_dirs               (void);
 char      **moo_get_lib_dirs                (void);
 char      **moo_get_data_subdirs            (const char     *subdir);
 char      **moo_get_sys_data_subdirs        (const char     *subdir);
-char      **moo_get_lib_subdirs             (const char     *subdir);
-char      **moo_get_data_and_lib_subdirs    (const char     *subdir);
 
 #define moo_get_data_files moo_get_data_subdirs
 #define moo_get_sys_data_files moo_get_sys_data_subdirs

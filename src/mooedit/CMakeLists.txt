@@ -67,8 +67,6 @@ target_sources(medit PRIVATE
     moolinebuffer.h
     moolinemark.cpp
     moolinemark.h
-    mooplugin-loader.cpp
-    mooplugin-loader.h
     mooplugin-macro.h
     mooplugin.cpp
     mooplugin.h

@@ -21,12 +21,6 @@
 G_BEGIN_DECLS
 
 #define MOO_PLUGIN_PREFS_ROOT  "Plugins"
-#define MOO_PLUGIN_DIR_BASENAME "plugins"
-
-#define MOO_PLUGIN_INIT_FUNC            moo_plugin_module_init
-#define MOO_PLUGIN_INIT_FUNC_NAME       "moo_plugin_module_init"
-#define MOO_MODULE_INIT_FUNC            moo_module_init
-#define MOO_MODULE_INIT_FUNC_NAME       "moo_module_init"
 
 #define MOO_TYPE_PLUGIN                 (moo_plugin_get_type ())
 #define MOO_PLUGIN(object)              (G_TYPE_CHECK_INSTANCE_CAST ((object), MOO_TYPE_PLUGIN, MooPlugin))
@@ -195,11 +189,6 @@ GType       moo_doc_plugin_get_type     (void) G_GNUC_CONST;
 GType       moo_plugin_info_get_type    (void) G_GNUC_CONST;
 GType       moo_plugin_params_get_type  (void) G_GNUC_CONST;
 
-gboolean    moo_module_check_version    (guint           major,
-                                         guint           minor);
-void        _moo_module_version         (guint          *major,
-                                         guint          *minor);
-
 gboolean    moo_plugin_register         (const char     *id,
                                          GType           type,
                                          const MooPluginInfo *info,
@@ -226,8 +215,6 @@ const char *moo_plugin_description      (MooPlugin      *plugin);
 const char *moo_plugin_author           (MooPlugin      *plugin);
 const char *moo_plugin_version          (MooPlugin      *plugin);
 
-char      **moo_plugin_get_dirs         (void);
-void        moo_plugin_read_dirs        (void);
 void        moo_plugin_shutdown         (void);
 
 void        moo_plugin_set_info         (MooPlugin      *plugin,

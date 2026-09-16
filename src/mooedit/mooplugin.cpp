@@ -34,7 +34,7 @@
  **/
 
 
-#include "mooedit/mooplugin-loader.h"
+#include "mooedit/mooplugin.h"
 #include "mooutils/mooprefsdialog.h"
 #include "mooutils/moobuilder.h"
 #include "mooutils/mooi18n.h"
@@ -52,8 +52,6 @@ typedef struct {
     MooEditor *editor;
     GSList *list; /* MooPlugin* */
     GHashTable *names;
-    char **dirs;
-    gboolean dirs_read;
     GQuark plugin_quark;
     GQuark meths_quark;
 } PluginStore;
@@ -836,25 +834,6 @@ moo_plugin_unregister (GType type)
 }
 
 
-void
-_moo_module_version (guint *major,
-                     guint *minor)
-{
-    if (major)
-        *major = MOO_MODULE_MAJOR_VERSION;
-    if (minor)
-        *minor = MOO_MODULE_MINOR_VERSION;
-}
-
-gboolean
-moo_module_check_version (guint major,
-                          guint minor)
-{
-    return major == MOO_MODULE_MAJOR_VERSION &&
-            minor <= MOO_MODULE_MINOR_VERSION;
-}
-
-
 gpointer
 moo_plugin_lookup (const char *plugin_id)
 {
@@ -895,70 +874,12 @@ moo_plugin_id (MooPlugin *plugin)
 }
 
 
-static void
-moo_plugin_read_dir (const char *path)
-{
-    GDir *dir;
-    const char *name;
-
-    g_return_if_fail (path != NULL);
-
-    dir = g_dir_open (path, 0, NULL);
-
-    if (!dir)
-        return;
-
-    while ((name = g_dir_read_name (dir)))
-    {
-        if (g_str_has_suffix (name, ".ini"))
-        {
-            char *tmp = g_strdup (name);
-            _moo_plugin_load (path, tmp);
-            g_free (tmp);
-        }
-    }
-
-    g_dir_close (dir);
-}
-
-
-char **
-moo_plugin_get_dirs (void)
-{
-    plugin_store_init ();
-    return g_strdupv (plugin_store->dirs);
-}
-
-
-void
-moo_plugin_read_dirs (void)
-{
-    char **d, **dirs;
-
-    plugin_store_init ();
-
-    if (plugin_store->dirs_read)
-        return;
-
-    plugin_store->dirs_read = TRUE;
-
-    dirs = moo_get_data_and_lib_subdirs (MOO_PLUGIN_DIR_BASENAME);
-    g_strfreev (plugin_store->dirs);
-    plugin_store->dirs = _moo_strv_reverse (dirs);
-
-    for (d = plugin_store->dirs; d && *d; ++d)
-        moo_plugin_read_dir (*d);
-
-    _moo_plugin_finish_load ();
-}
-
-
 void
 moo_plugin_shutdown (void)
 {
     GSList *list;
 
-    if (!plugin_store || !plugin_store->dirs_read)
+    if (!plugin_store)
         return;
 
     list = g_slist_copy (plugin_store->list);
@@ -971,7 +892,6 @@ moo_plugin_shutdown (void)
         list = g_slist_delete_link (list, list);
     }
 
-    plugin_store->dirs_read = FALSE;
     plugin_store->editor = NULL;
 
     if (plugin_store->list)
@@ -983,9 +903,6 @@ moo_plugin_shutdown (void)
 
     g_hash_table_destroy (plugin_store->names);
     plugin_store->names = NULL;
-
-    g_strfreev (plugin_store->dirs);
-    plugin_store->dirs = NULL;
 
     plugin_store = NULL;
 }

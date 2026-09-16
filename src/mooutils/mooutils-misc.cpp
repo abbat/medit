@@ -1077,8 +1077,7 @@ moo_get_display_app_name (void)
 
 typedef enum {
     MOO_DATA_SHARE,
-    MOO_DATA_LIB,
-    MOO_DATA_BOTH
+    MOO_DATA_LIB
 } MooDataDirType;
 
 static gboolean
@@ -1110,13 +1109,6 @@ enumerate_data_dirs (MooDataDirType  type,
                      GPtrArray      *dirs)
 {
     const char *env[2];
-
-    if (type == MOO_DATA_BOTH)
-    {
-        enumerate_data_dirs (MOO_DATA_LIB, dirs);
-        enumerate_data_dirs (MOO_DATA_SHARE, dirs);
-        return;
-    }
 
     g_ptr_array_add (dirs, moo_get_user_data_dir ());
 
@@ -1400,32 +1392,6 @@ char **
 moo_get_sys_data_subdirs (const char *subdir)
 {
     return moo_get_stuff_subdirs (subdir, MOO_DATA_SHARE, FALSE);
-}
-
-/**
- * moo_get_lib_subdirs: (moo.private 1)
- *
- * @subdir: (type const-utf8)
- *
- * Returns: (type strv)
- */
-char **
-moo_get_lib_subdirs (const char *subdir)
-{
-    return moo_get_stuff_subdirs (subdir, MOO_DATA_LIB, TRUE);
-}
-
-/**
- * moo_get_data_and_lib_subdirs: (moo.private 1)
- *
- * @subdir: (type const-utf8)
- *
- * Returns: (type strv)
- */
-char **
-moo_get_data_and_lib_subdirs (const char *subdir)
-{
-    return moo_get_stuff_subdirs (subdir, MOO_DATA_BOTH, TRUE);
 }
 
 

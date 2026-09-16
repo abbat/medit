@@ -37,7 +37,5 @@ moo_plugin_init (void)
     moo_lsp_plugin_init ();
 #endif
 
-    moo_plugin_read_dirs ();
-
     _moo_user_tools_plugin_init ();
 }

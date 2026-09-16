@@ -48,9 +48,10 @@ be read before it means something is one fewer thing to track. Give every owned 
 owner that releases it: `g_autofree`, `g_autoptr(T)`, `gstr`, `ObjectPtr`, a `std::` container
 where the data is ours. Return on failure instead of jumping to a label, and hand ownership
 out with `g_steal_pointer`. Prefer `const`, prefer the narrowest scope, and let the type say
-what the C idiom used to say in a comment. `parse_ini_file` in `mooplugin-loader.cpp` is the
-worked example: nine `goto`s into a seventeen-line cleanup block became nine `return`s and
-no block at all. For a small edit inside a function that still looks like C, match what is
+what the C idiom used to say in a comment. `git show c3f37b7` is the worked example:
+nine `goto`s into a seventeen-line cleanup block became nine `return`s and no block at all.
+The function, `parse_ini_file`, has since gone with the loader of external plugins it
+served. For a small edit inside a function that still looks like C, match what is
 around it — the mixed file is worse than either style.
 
 **Leave the testable part testable.** Every test in this tree drives the real binary through
