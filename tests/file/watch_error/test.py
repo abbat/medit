@@ -1,4 +1,4 @@
-"""A file watch error when stat fails: medit marks the document changed so the user is asked before overwriting.
+"""A file watch error when stat fails: the document is marked, so a save asks first.
 
 # requires: MOO_GTK3
 
@@ -6,13 +6,14 @@ When file_watch_callback() receives a MOO_FILE_EVENT_ERROR (monitor->alive was s
 to FALSE by do_stat()), it sets modified_on_disk and clears file_monitor_id, so
 check_file_status() will prompt the user before a save overwrites.
 
-This test makes stat fail by removing read permission on the file's directory,
-so the next stat attempt gets EACCES and emits an ERROR event. The document is
-then marked with a "!" on the tab, same as when it was deleted.
+This test makes stat fail by putting a symlink to itself where the file's
+directory was, so the next stat gets ELOOP (not ENOENT, which is a deletion)
+and emits an ERROR event. Not a chmod: CI runs as root, which no permission
+stops. The document is then marked with a "!" on the tab, same as when it was
+deleted.
 """
 
 import os
-import stat
 
 from lib.notebook import order
 
@@ -29,10 +30,11 @@ def run(t):
 
     t.check(order(t) == [NAME], "the document is open and unmarked: %s" % order(t))
 
-    # Make the directory unreadable so stat will fail with EACCES (not ENOENT).
-    # The file watch polls every half second, so eventually stat will fail.
+    # The directory moved aside and a loop in its place: stat fails with ELOOP.
     workdir = t.sandbox.path("workdir")
-    os.chmod(workdir, 0o000)
+    moved = workdir + ".moved"
+    os.rename(workdir, moved)
+    os.symlink(os.path.basename(workdir), workdir)
 
     try:
         # medit looks every half second; wait for it to detect the stat error.
@@ -43,5 +45,6 @@ def run(t):
                 "the document still holds the original text: %r" % t.text(view))
 
     finally:
-        # Restore permissions so cleanup works.
-        os.chmod(workdir, 0o755)
+        # The directory back, so cleanup finds it.
+        os.remove(workdir)
+        os.rename(moved, workdir)
