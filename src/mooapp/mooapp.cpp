@@ -1039,7 +1039,16 @@ check_signal (G_GNUC_UNUSED gpointer data)
     {
       g_print ("%s\n", g_strsignal (signal_received));
       if (moo_app_data.instance)
-        moo_app_do_quit (moo_app_data.instance);
+        {
+          /* What the session is made of is collected in moo_app_try_quit(),
+             which a quit from the menu goes through and a signal does not.
+             Without this the windows are closed first and there is nothing
+             left to write, and moo_app_write_session() unlinks the file it
+             has nothing to put in: a medit killed with a signal used to take
+             the session of the run before it along. */
+          moo_app_save_session (moo_app_data.instance);
+          moo_app_do_quit (moo_app_data.instance);
+        }
 
       exit (EXIT_FAILURE);
     }
