@@ -264,6 +264,25 @@ terminal_map (G_GNUC_UNUSED GtkWidget *widget,
 }
 
 
+/*
+ * vte 0.78 turned the window title into a termprop and deprecated both
+ * vte_terminal_get_window_title() and ::window-title-changed. The two APIs
+ * answer the same question with one string, so the pane takes whichever the
+ * vte it was built against has; the connection below carries the termprop
+ * name as its detail, so this runs for the title alone.
+ */
+#if VTE_CHECK_VERSION (0, 78, 0)
+static void
+window_title_changed (VteTerminal              *terminal,
+                      G_GNUC_UNUSED const char *prop,
+                      WindowStuff              *stuff)
+{
+    const char *title = vte_terminal_get_termprop_string (terminal,
+                                                          VTE_TERMPROP_XTERM_TITLE,
+                                                          NULL);
+    moo_pane_set_frame_text (stuff->pane, title && title[0] ? title : _("Terminal"));
+}
+#else
 static void
 window_title_changed (VteTerminal *terminal,
                       WindowStuff *stuff)
@@ -271,6 +290,7 @@ window_title_changed (VteTerminal *terminal,
     const char *title = vte_terminal_get_window_title (terminal);
     moo_pane_set_frame_text (stuff->pane, title && title[0] ? title : _("Terminal"));
 }
+#endif
 
 
 /**********************************************************************/
@@ -757,8 +777,13 @@ terminal_window_plugin_create (WindowStuff *stuff)
                       G_CALLBACK (terminal_map), stuff);
     g_signal_connect (stuff->terminal, "child-exited",
                       G_CALLBACK (child_exited), stuff);
+#if VTE_CHECK_VERSION (0, 78, 0)
+    g_signal_connect (stuff->terminal, "termprop-changed::" VTE_TERMPROP_XTERM_TITLE,
+                      G_CALLBACK (window_title_changed), stuff);
+#else
     g_signal_connect (stuff->terminal, "window-title-changed",
                       G_CALLBACK (window_title_changed), stuff);
+#endif
     g_signal_connect (stuff->terminal, "button-press-event",
                       G_CALLBACK (terminal_button_press), stuff);
     g_signal_connect (stuff->terminal, "popup-menu",

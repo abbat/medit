@@ -82,24 +82,9 @@ and the margin drawing, and to start over the day someone wants folding.
 
 ---
 
-*The next five are not leftovers of removed code. They are the places where the tree is
+*The next four are not leftovers of removed code. They are the places where the tree is
 going to stop building, or is building on something nobody looks at, and each one is
 cheaper to answer before it becomes a bug report.*
-
-## vte is taking the window title away
-
-`terminal-plugin.cpp` names the terminal pane after whatever the shell puts in the window
-title: it connects to `window-title-changed` and reads `vte_terminal_get_window_title()`.
-vte deprecated both in 0.78, and the replacement is the termprop API —
-`vte_terminal_get_termprop_string (term, VTE_TERMPROP_XTERM_TITLE, NULL)` with the
-`termprop-changed` signal. The build asks pkg-config for `vte-2.91` with no version bound,
-so the day a distribution ships a vte that has dropped the old names the terminal pane
-stops compiling, and `-Wno-error=deprecated-declarations` means the strict build will not
-have warned about it first.
-
-The whole of the change is a `#if VTE_CHECK_VERSION (0, 78, 0)` around two lines: the pane
-wants one string and both APIs return one. Doing it now costs an hour; doing it after the
-release that breaks costs a hotfix.
 
 ## Nothing builds the tree unless somebody pushes
 
