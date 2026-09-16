@@ -377,7 +377,7 @@ def inner(args):
     try:
         app = a11y.application("medit", timeout=60)
         t = Test(app, args.gtk, os.environ["MUI_URL_LOG"], log_dir, sys.stdout,
-                 sandbox=prepared)
+                 sandbox=prepared, binary=args.binary)
 
         module.run(t)
 

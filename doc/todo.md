@@ -81,18 +81,13 @@ discovers a break that happened days earlier and gets blamed for it.
 A nightly `schedule:` on `ui.yml` alone would separate "my change broke it" from "the world
 moved", which is the only question that matters when a run goes red.
 
-## `src/medit-app` is the least covered thing in the tree
+## The session file is the half of the startup path still untested
 
-The table in `doc/testing-panes.md` puts `src/medit-app` at 47.6% of lines, the lowest
-module in a tree whose total is 74.9%. What lives there is the startup path: the command
-line, the single-instance handshake, the session file, the save on a crash. It is the code
-that runs before there is anything for a UI test to click on, and the part of the program
-where a mistake means the editor does not come up at all.
-
-The harness starts the real binary, so the missing tests are not hard to write — a run with
-two files named on the command line, a run with `--new-app`, a second instance handing its
-arguments to the first. They are tests nobody wrote because the harness was built to click
-on panes, not to start the program in more than one way.
+`tests/app/command_line` and `tests/app/second_instance` cover the command line and the
+single-instance handshake, which leaves what `src/medit-app` does with the session: the
+file it writes on exit, the documents it reopens from it on the next start, and the save
+it makes when the program is killed. `Test.medit()` starts a second copy, so a test can
+now stop one medit and start another over the same sandbox and read what came back.
 
 ## GTK+2 stays until something real needs it gone
 

@@ -14,6 +14,7 @@ plumbing.
 
 import json
 import os
+import subprocess
 import time
 
 from . import a11y
@@ -35,13 +36,14 @@ def _menu_role_consts():
 
 
 class Test(object):
-    def __init__(self, app, gtk, url_log, log_dir, out, sandbox=None):
+    def __init__(self, app, gtk, url_log, log_dir, out, sandbox=None, binary=None):
         self._started = time.time()
         self.app = app
         self.gtk = int(gtk)
         self.log_dir = log_dir
         # what the test's setup function put in place, see lib/setup.py
         self.sandbox = sandbox
+        self._binary = binary
         self._url_log = url_log
         self._out = out
 
@@ -742,6 +744,26 @@ class Test(object):
                 return f.read()
         except FileNotFoundError:
             return ""
+
+    def medit(self, *argv):
+        """Start another copy of the program, and hand the test the process.
+
+        medit is single instance: a second copy hands its arguments to the one
+        already running and exits, unless it is told --new-app. That is the
+        startup path, it happens before there is a window to click on, and this
+        is the only way a test can ask for it. The copy is started in the
+        sandbox and writes to the same log, so what it said is kept with the
+        rest of the run; the test waits for it or stops it.
+        """
+        argv = [str(arg) for arg in argv]
+
+        with open(os.path.join(self.log_dir, "medit.log"), "ab") as log:
+            proc = subprocess.Popen([self._binary] + argv, stdout=log,
+                                    stderr=subprocess.STDOUT,
+                                    cwd=self.sandbox.root)
+
+        self.log("started medit %s, pid %d" % (" ".join(argv), proc.pid))
+        return proc
 
     # -- the outside world -------------------------------------------------
 
