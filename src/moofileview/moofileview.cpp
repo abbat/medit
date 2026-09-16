@@ -32,7 +32,6 @@
 #include "mooutils/mooutils-treeview.h"
 #include "mooutils/moodialogs.h"
 #include "mooutils/moofiltermgr.h"
-#include "mooutils/moospawn.h"
 #include "mooutils/moostock.h"
 #include "mooutils/mooactionfactory.h"
 #include "mooutils/mooaction-private.h"
@@ -5794,17 +5793,340 @@ sync_dest_targets (MooFileView *fileview)
 /* Dropping stuff
  */
 
+/*
+ * What to do about a name the destination folder already has.
+ */
+typedef enum {
+    DROP_CONFLICT_REPLACE,
+    DROP_CONFLICT_SKIP,
+    DROP_CONFLICT_RENAME,
+    DROP_CONFLICT_CANCEL
+} DropConflictResponse;
+
+enum {
+    DROP_RESPONSE_REPLACE = 1,
+    DROP_RESPONSE_SKIP,
+    DROP_RESPONSE_RENAME
+};
+
+
+/*
+ * A name nothing in @destdir answers to, built from @basename the way a file
+ * manager builds it: "foo (copy).txt", then "foo (copy 2).txt". The suffix is
+ * not translated because it becomes part of a file name rather than of a
+ * message. A leading dot starts the name rather than an extension, so
+ * ".bashrc" becomes ".bashrc (copy)".
+ */
+static char *
+find_free_name (const char *destdir,
+                const char *basename)
+{
+    const char *dot;
+    char *stem, *ext, *fallback;
+    int i;
+
+    dot = strrchr (basename[0] == '.' ? basename + 1 : basename, '.');
+
+    if (dot)
+    {
+        stem = g_strndup (basename, dot - basename);
+        ext = g_strdup (dot);
+    }
+    else
+    {
+        stem = g_strdup (basename);
+        ext = g_strdup ("");
+    }
+
+    for (i = 1; i < 1000; ++i)
+    {
+        char *name, *fullname;
+        gboolean taken;
+
+        if (i == 1)
+            name = g_strdup_printf ("%s (copy)%s", stem, ext);
+        else
+            name = g_strdup_printf ("%s (copy %d)%s", stem, i, ext);
+
+        fullname = g_build_filename (destdir, name, NULL);
+        taken = g_file_test (fullname, G_FILE_TEST_EXISTS);
+        g_free (fullname);
+
+        if (!taken)
+        {
+            g_free (stem);
+            g_free (ext);
+            return name;
+        }
+
+        g_free (name);
+    }
+
+    fallback = g_strdup_printf ("%s (copy %08x)%s", stem, g_random_int (), ext);
+    g_free (stem);
+    g_free (ext);
+    return fallback;
+}
+
+
+/*
+ * Asks what to do about @basename already existing in @destdir. On
+ * %DROP_CONFLICT_RENAME the name to use instead is stored in @new_name, which
+ * the caller then owns. @can_replace is %FALSE when the file being dropped is
+ * the file which is in the way, where replacing it means losing it.
+ */
+static DropConflictResponse
+drop_conflict_dialog (MooFileView *fileview,
+                      const char  *destdir,
+                      const char  *basename,
+                      gboolean     can_replace,
+                      char       **new_name)
+{
+    GtkWidget *dialog, *entry;
+    char *display_name, *display_dir, *text, *suggestion, *display_suggestion;
+    DropConflictResponse retval = DROP_CONFLICT_CANCEL;
+
+    display_name = g_filename_display_name (basename);
+    display_dir = g_filename_display_name (destdir);
+    /* Translators: the first %s is a file name, the second one is a folder name */
+    text = g_strdup_printf (_("A file named \"%s\" already exists in \"%s\""),
+                            display_name, display_dir);
+
+    dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL,
+                                     GTK_MESSAGE_QUESTION, GTK_BUTTONS_NONE,
+                                     "%s", text);
+    gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog), "%s",
+                                              can_replace ?
+                                                  _("Replacing it overwrites its contents. "
+                                                    "The name below is used instead if you "
+                                                    "choose to rename.") :
+                                                  _("This is that file itself, so it can only "
+                                                    "be put there under the name below."));
+
+    gtk_dialog_add_button (GTK_DIALOG (dialog), GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL);
+    gtk_dialog_add_button (GTK_DIALOG (dialog), _("_Skip"), DROP_RESPONSE_SKIP);
+    if (can_replace)
+        gtk_dialog_add_button (GTK_DIALOG (dialog), _("_Replace"), DROP_RESPONSE_REPLACE);
+    gtk_dialog_add_button (GTK_DIALOG (dialog), _("Re_name"), DROP_RESPONSE_RENAME);
+    gtk_dialog_set_default_response (GTK_DIALOG (dialog), DROP_RESPONSE_RENAME);
+
+    suggestion = find_free_name (destdir, basename);
+    display_suggestion = g_filename_display_name (suggestion);
+
+    entry = gtk_entry_new ();
+    gtk_entry_set_text (GTK_ENTRY (entry), display_suggestion);
+    gtk_entry_set_activates_default (GTK_ENTRY (entry), TRUE);
+    gtk_box_pack_start (GTK_BOX (gtk_message_dialog_get_message_area (GTK_MESSAGE_DIALOG (dialog))),
+                        entry, FALSE, FALSE, 0);
+    gtk_widget_show (entry);
+
+    moo_window_set_parent (dialog, GTK_WIDGET (fileview));
+
+    while (TRUE)
+    {
+        int response = gtk_dialog_run (GTK_DIALOG (dialog));
+        char *name, *fullname;
+
+        if (response == DROP_RESPONSE_REPLACE)
+        {
+            retval = DROP_CONFLICT_REPLACE;
+            break;
+        }
+
+        if (response == DROP_RESPONSE_SKIP)
+        {
+            retval = DROP_CONFLICT_SKIP;
+            break;
+        }
+
+        if (response != DROP_RESPONSE_RENAME)
+            break;
+
+        name = g_filename_from_utf8 (gtk_entry_get_text (GTK_ENTRY (entry)), -1, NULL, NULL, NULL);
+
+        if (!name || !name[0] || strchr (name, G_DIR_SEPARATOR) ||
+            !strcmp (name, ".") || !strcmp (name, ".."))
+        {
+            moo_error_dialog (_("Invalid file name"),
+                              _("The name must not be empty and must not contain "
+                                "a path separator."),
+                              dialog);
+            g_free (name);
+            continue;
+        }
+
+        fullname = g_build_filename (destdir, name, NULL);
+
+        if (g_file_test (fullname, G_FILE_TEST_EXISTS))
+        {
+            char *display = g_filename_display_name (name);
+            /* Translators: %s stands for a file name */
+            char *err = g_strdup_printf (_("A file named \"%s\" already exists"), display);
+            moo_error_dialog (err, NULL, dialog);
+            g_free (err);
+            g_free (display);
+            g_free (fullname);
+            g_free (name);
+            continue;
+        }
+
+        g_free (fullname);
+        *new_name = name;
+        retval = DROP_CONFLICT_RENAME;
+        break;
+    }
+
+    gtk_widget_destroy (dialog);
+
+    g_free (display_suggestion);
+    g_free (suggestion);
+    g_free (text);
+    g_free (display_dir);
+    g_free (display_name);
+
+    return retval;
+}
+
+
+/*
+ * Runs cp, mv or ln over one file and waits for it, so that a command which
+ * fails says so: _moo_unix_spawn_async() kept neither the exit status nor the
+ * standard error, which is why a failed drop used to look like a drop that
+ * did nothing. Waiting is also why a large recursive copy holds the window
+ * until it is over; that wants a progress dialog, and there is none.
+ */
+static gboolean
+run_command_on_file (const char  *src,
+                     const char  *dest,
+                     const char **first_args,
+                     int          n_first_args,
+                     char       **error_text)
+{
+    char **argv;
+    char *child_err = NULL;
+    int status = 0, i;
+    GError *error = NULL;
+    gboolean ok = TRUE;
+
+    argv = g_new (char*, n_first_args + 3);
+
+    for (i = 0; i < n_first_args; ++i)
+        argv[i] = (char*) first_args[i];
+
+    argv[n_first_args] = (char*) src;
+    argv[n_first_args + 1] = (char*) dest;
+    argv[n_first_args + 2] = NULL;
+
+    if (!g_spawn_sync (NULL, argv, NULL,
+                       GSpawnFlags (G_SPAWN_SEARCH_PATH | G_SPAWN_STDOUT_TO_DEV_NULL),
+                       NULL, NULL, NULL, &child_err, &status, &error))
+    {
+        *error_text = g_strdup (moo_error_message (error));
+        g_error_free (error);
+        ok = FALSE;
+    }
+    else if (!WIFEXITED (status) || WEXITSTATUS (status))
+    {
+        *error_text = child_err && child_err[0] ?
+                          g_strchomp (g_strdup (child_err)) :
+                          /* Translators: %s stands for the name of a command, e.g. "cp" */
+                          g_strdup_printf (_("'%s' command failed"), first_args[0]);
+        ok = FALSE;
+    }
+
+    g_free (child_err);
+    g_free (argv);
+    return ok;
+}
+
+
+typedef enum {
+    DROP_FILE_DONE,
+    DROP_FILE_SKIPPED,
+    DROP_FILE_ABORT
+} DropFileResult;
+
+/*
+ * Puts one file into @destdir, asking first if the name is taken. On
+ * %DROP_FILE_DONE the name the file ended up with is stored in @final_name,
+ * which the caller then owns.
+ */
+static DropFileResult
+drop_one_file (MooFileView *fileview,
+               const char  *src,
+               const char  *destdir,
+               const char **first_args,
+               int          n_first_args,
+               const char  *error_format,
+               char       **final_name)
+{
+    char *basename = g_path_get_basename (src);
+    char *dest_path = g_build_filename (destdir, basename, NULL);
+    char *error_text = NULL;
+    /* The destination stays the folder unless the file goes there under a new
+       name: cp and mv given an existing folder as the destination put the file
+       into it, which is what replacing a folder of the same name has to do. */
+    const char *dest = destdir;
+
+    if (g_file_test (dest_path, G_FILE_TEST_EXISTS) ||
+        g_file_test (dest_path, G_FILE_TEST_IS_SYMLINK))
+    {
+        char *new_name = NULL;
+        /* A file dropped into the folder it is already in: there is nothing to
+           replace it with except itself, so replacing is not offered. */
+        DropConflictResponse answer =
+            drop_conflict_dialog (fileview, destdir, basename,
+                                  strcmp (src, dest_path) != 0, &new_name);
+
+        if (answer == DROP_CONFLICT_SKIP || answer == DROP_CONFLICT_CANCEL)
+        {
+            g_free (basename);
+            g_free (dest_path);
+            return answer == DROP_CONFLICT_SKIP ? DROP_FILE_SKIPPED : DROP_FILE_ABORT;
+        }
+
+        if (answer == DROP_CONFLICT_RENAME)
+        {
+            g_free (basename);
+            basename = new_name;
+            g_free (dest_path);
+            dest_path = g_build_filename (destdir, basename, NULL);
+            dest = dest_path;
+        }
+    }
+
+    if (!run_command_on_file (src, dest, first_args, n_first_args, &error_text))
+    {
+        char *display = g_filename_display_basename (src);
+        char *text = g_strdup_printf (error_format, display);
+
+        moo_error_dialog (text, error_text, GTK_WIDGET (fileview));
+
+        g_free (text);
+        g_free (display);
+        g_free (error_text);
+        g_free (basename);
+        g_free (dest_path);
+        return DROP_FILE_ABORT;
+    }
+
+    *final_name = basename;
+    g_free (dest_path);
+    return DROP_FILE_DONE;
+}
+
+
 static void
 run_command_on_files (MooFileView *fileview,
                       GList       *filenames,
                       const char  *destdir,
                       const char **first_args,
-                      int          n_first_args)
+                      int          n_first_args,
+                      const char  *error_format)
 {
-    GError *error = NULL;
-    char **argv;
-    int list_len, n_args, i;
     GList *l;
+    char *selected = NULL;
+    int list_len;
 
     g_return_if_fail (filenames != NULL);
     g_return_if_fail (destdir != NULL);
@@ -5812,43 +6134,31 @@ run_command_on_files (MooFileView *fileview,
 
     list_len = g_list_length (filenames);
 
-    n_args = list_len + n_first_args + 1;
-    argv = g_new (char*, n_args + 1);
-
-    for (i = 0; i < n_first_args; ++i)
+    for (l = filenames; l != NULL; l = l->next)
     {
-        g_assert (first_args[i] != NULL);
-        argv[i] = (char*) first_args[i];
-    }
+        char *name = NULL;
+        DropFileResult result = drop_one_file (fileview, (const char*) l->data, destdir,
+                                               first_args, n_first_args,
+                                               error_format, &name);
 
-    argv[n_args-1] = (char*) destdir;
-    argv[n_args] = NULL;
+        if (result == DROP_FILE_DONE && list_len == 1)
+        {
+            selected = name;
+            name = NULL;
+        }
 
-    for (i = 0, l = filenames; l != NULL; l = l->next, i++)
-        argv[n_first_args + i] = (char *) l->data;
+        g_free (name);
 
-    if (!_moo_unix_spawn_async (argv, G_SPAWN_SEARCH_PATH, &error))
-    {
-        g_critical ("could not spawn '%s': %s", first_args[0], moo_error_message (error));
-        g_error_free (error);
-        goto out;
+        if (result == DROP_FILE_ABORT)
+            break;
     }
 
     /* XXX strcmp */
-    if (fileview->priv->current_dir &&
-        !strcmp (destdir, _moo_folder_get_path (fileview->priv->current_dir)) &&
-        list_len == 1)
-    {
-        char *basename = g_path_get_basename ((const char *) filenames->data);
+    if (selected && fileview->priv->current_dir &&
+        !strcmp (destdir, _moo_folder_get_path (fileview->priv->current_dir)))
+        _moo_file_view_select_name (fileview, selected);
 
-        if (basename)
-            _moo_file_view_select_name (fileview, basename);
-
-        g_free (basename);
-    }
-
-out:
-    g_free (argv);
+    g_free (selected);
 }
 
 
@@ -5859,7 +6169,9 @@ copy_files (MooFileView *fileview,
 {
     const char *args[] = {"cp", "-R", "--"};
     run_command_on_files (fileview, filenames, destdir,
-                          args, G_N_ELEMENTS (args));
+                          args, G_N_ELEMENTS (args),
+                          /* Translators: %s stands for a file name */
+                          _("Could not copy \"%s\""));
 }
 
 
@@ -5870,7 +6182,9 @@ move_files (MooFileView *fileview,
 {
     const char *args[] = {"mv", "--"};
     run_command_on_files (fileview, filenames, destdir,
-                          args, G_N_ELEMENTS (args));
+                          args, G_N_ELEMENTS (args),
+                          /* Translators: %s stands for a file name */
+                          _("Could not move \"%s\""));
 }
 
 
@@ -5879,9 +6193,11 @@ link_files (MooFileView *fileview,
             GList       *filenames,
             const char  *destdir)
 {
-    const char *args[] = {"ln", "-s", "--"};
+    const char *args[] = {"ln", "-s", "-f", "--"};
     run_command_on_files (fileview, filenames, destdir,
-                          args, G_N_ELEMENTS (args));
+                          args, G_N_ELEMENTS (args),
+                          /* Translators: %s stands for a file name */
+                          _("Could not create a link to \"%s\""));
 }
 
 static void
