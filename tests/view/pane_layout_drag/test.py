@@ -7,9 +7,10 @@ notebook, and reordering tabs. This scenario combines those operations in the
 order a user reaches them: move two documents to the second notebook, reorder
 its tabs, then split the document that is showing in that notebook twice.
 
-The assertions use the accessibility tree for ownership and text, while the
-tab drag uses the notebook's painted strip. No document is modified, so the
-test needs no save dialog and creates no files outside its normal sandbox.
+The assertions use the accessibility tree for ownership and text, and so does
+the tab drag: GtkNotebookAccessible puts every page there as a page tab named
+after its label, so a tab says where it is drawn. No document is modified, so
+the test needs no save dialog and creates no files outside its normal sandbox.
 """
 
 from lib import a11y
@@ -21,9 +22,6 @@ CONTENTS = {name: name + "\n" for name in DOCUMENTS}
 MOVE = ("View", "Move to Split Notebook")
 HORIZONTAL = ("View", "Split View Horizontally")
 VERTICAL = ("View", "Split View Vertically")
-
-STRIP_OFFSET = 17
-STEP = 10
 
 
 def setup(s):
@@ -48,7 +46,7 @@ def run(t):
             "moving the current tab leaves %s and carries %s"
             % (pages(left), pages(right)))
 
-    click_tab(t, left, DOCUMENTS[1], 3)
+    click_tab(t, left, DOCUMENTS[1])
     t.wait(lambda: showing(t, left) == DOCUMENTS[1],
            "the document left behind to become current")
     t.menu(*MOVE)
@@ -61,7 +59,7 @@ def run(t):
             % pages(left))
 
     # Reorder the two tabs in the second notebook through its painted tab strip.
-    click_tab(t, right, DOCUMENTS[3], 2)
+    click_tab(t, right, DOCUMENTS[3])
     t.wait(lambda: showing(t, right) == DOCUMENTS[3],
            "the first tab in the split notebook to be selected")
     reorder_tab(t, right, DOCUMENTS[3], DOCUMENTS[1])
@@ -92,46 +90,34 @@ def pages(notebook):
 
 
 def showing(t, notebook):
+    """The current document of one notebook: its one tab that is selected."""
     for page in a11y.children(notebook):
-        if page.name and ui.on_screen(page):
+        if page.name and t.state(page, "selected"):
             return page.name
     return None
 
 
-def click_tab(t, notebook, name, count):
-    spans = tab_spans(t, notebook, count)
-    left, right = spans[name]
-    t.click_at((left + right) // 2, tab_y(t, notebook))
+def click_tab(t, notebook, name):
+    t.click_at(*tab_point(t, notebook, name))
 
 
 def reorder_tab(t, notebook, dragged, target):
-    spans = tab_spans(t, notebook, 2)
-    source = spans[dragged]
-    destination = spans[target]
-    t.drag_to((source[0] + source[1]) // 2, tab_y(t, notebook),
-              (destination[0] + destination[1]) // 2, tab_y(t, notebook))
+    t.drag_to(*(tab_point(t, notebook, dragged) + tab_point(t, notebook, target)))
 
 
-def tab_spans(t, notebook, count):
-    x0, _, width, _ = t.extents(notebook)
-    found = {}
-    y = tab_y(t, notebook)
+def tab_point(t, notebook, name):
+    """The middle of the tab named name, to click it or to drag it by.
 
-    for x in range(x0 + 2, x0 + width, STEP):
-        t.click_at(x, y)
-        current = showing(t, notebook)
-        if current is None:
-            continue
-        low, high = found.get(current, (x, x))
-        found[current] = (min(low, x), max(high, x))
-        if len(found) == count:
-            break
+    What a tab answers for its own extents is the extents of its label alone --
+    GtkNotebookPageAccessible looks through the tab's box for the first label in
+    it and reports that -- which is inside the tab either way.
+    """
+    for page in a11y.children(notebook):
+        if page.name == name:
+            x, y, width, height = t.extents(page)
+            return x + width // 2, y + height // 2
 
-    return found
-
-
-def tab_y(t, notebook):
-    return t.extents(notebook)[1] + STRIP_OFFSET
+    return t.fail("no tab named %s in this notebook" % name)
 
 
 def views(t, notebook):
