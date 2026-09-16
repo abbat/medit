@@ -865,7 +865,10 @@ file_watch_callback (G_GNUC_UNUSED MooFileWatch *watch,
             break;
 
         case MOO_FILE_EVENT_ERROR:
-            /* XXX and what to do now? */
+            /* The monitor died, and we can no longer trust the file status. Mark
+               the document changed so the user gets asked before we overwrite. */
+            edit->priv->modified_on_disk = TRUE;
+            edit->priv->file_monitor_id = 0;
             break;
 
         case MOO_FILE_EVENT_CREATED:
