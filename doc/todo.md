@@ -47,6 +47,64 @@ and the margin drawing, and to start over the day someone wants folding.
 
 ---
 
+*The next four are not leftovers of removed code. They are the places where the tree is
+going to stop building, or is building on something nobody looks at, and each one is
+cheaper to answer before it becomes a bug report.*
+
+## vte is taking the window title away
+
+`terminal-plugin.cpp` names the terminal pane after whatever the shell puts in the window
+title: it connects to `window-title-changed` and reads `vte_terminal_get_window_title()`.
+vte deprecated both in 0.78, and the replacement is the termprop API —
+`vte_terminal_get_termprop_string (term, VTE_TERMPROP_XTERM_TITLE, NULL)` with the
+`termprop-changed` signal. The build asks pkg-config for `vte-2.91` with no version bound,
+so the day a distribution ships a vte that has dropped the old names the terminal pane
+stops compiling, and `-Wno-error=deprecated-declarations` means the strict build will not
+have warned about it first.
+
+The whole of the change is a `#if VTE_CHECK_VERSION (0, 78, 0)` around two lines: the pane
+wants one string and both APIs return one. Doing it now costs an hour; doing it after the
+release that breaks costs a hotfix.
+
+## Nothing builds the tree unless somebody pushes
+
+`build.yml`, `ui.yml`, `codeql.yml` and `package.yml` all trigger on `push`,
+`pull_request` and `workflow_dispatch`, and none of them has a `schedule:`. Everything the
+tree builds against — GTK+, glib, vte, json-glib, the AT-SPI stack the UI tests drive, the
+base images themselves — moves without medit moving, so a quiet week means the next commit
+discovers a break that happened days earlier and gets blamed for it.
+
+A nightly `schedule:` on `ui.yml` alone would separate "my change broke it" from "the world
+moved", which is the only question that matters when a run goes red.
+
+## `src/medit-app` is the least covered thing in the tree
+
+The table in `doc/testing-panes.md` puts `src/medit-app` at 47.6% of lines, the lowest
+module in a tree whose total is 74.9%. What lives there is the startup path: the command
+line, the single-instance handshake, the session file, the save on a crash. It is the code
+that runs before there is anything for a UI test to click on, and the part of the program
+where a mistake means the editor does not come up at all.
+
+The harness starts the real binary, so the missing tests are not hard to write — a run with
+two files named on the command line, a run with `--new-app`, a second instance handing its
+arguments to the first. They are tests nobody wrote because the harness was built to click
+on panes, not to start the program in more than one way.
+
+## GTK+2 stays until something real needs it gone
+
+Both toolkits are built and tested on every push, which doubles every CI run, and GTK+2 is
+why the terminal pane exists in one build and not the other, why `MOO_GTK3` guards exist in
+the tests, and why a good deal of `mooutils` has two branches. GTK+2 has had no release
+since 2020 and Debian 13 still ships it.
+
+The condition for dropping it is not a date: it is the first distribution medit is packaged
+for dropping the runtime, or the first feature that cannot be written twice. Until one of
+those happens the double build is the price of a fork that still runs where the original
+ran, and this entry exists so that the next person to ask is told what the answer depends
+on rather than told no.
+
+---
+
 *The rest of this file is about the language server plugin. Nothing here is a leftover of
 removed code: these are the parts of the protocol the plugin knows about and has not asked
 for. Each entry says what is in the tree today, because in several cases the answer is
