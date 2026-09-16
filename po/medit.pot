@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: medit\n"
 "Report-Msgid-Bugs-To: https://github.com/abbat/medit/issues\n"
-"POT-Creation-Date: 2026-09-16 21:16+0300\n"
+"POT-Creation-Date: 2026-09-16 21:36+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -118,7 +118,7 @@ msgstr ""
 msgid "_License"
 msgstr ""
 
-#: src/mooapp/about.cpp:312 src/mooapp/credits.cpp:178
+#: src/mooapp/about.cpp:312 src/mooapp/credits.cpp:177
 msgid "_Close"
 msgstr ""
 
@@ -130,19 +130,23 @@ msgstr ""
 msgid "medit is a text editor"
 msgstr ""
 
-#: src/mooapp/credits.cpp:140
+#: src/mooapp/credits.cpp:117
+msgid "translator-credits"
+msgstr ""
+
+#: src/mooapp/credits.cpp:139
 msgid "Thanks"
 msgstr ""
 
-#: src/mooapp/credits.cpp:143
+#: src/mooapp/credits.cpp:142
 msgid "Written by"
 msgstr ""
 
-#: src/mooapp/credits.cpp:146
+#: src/mooapp/credits.cpp:145
 msgid "Translated by"
 msgstr ""
 
-#: src/mooapp/credits.cpp:233
+#: src/mooapp/credits.cpp:232
 msgid "Credits"
 msgstr ""
 
@@ -1214,17 +1218,17 @@ msgstr ""
 msgid "_Language"
 msgstr ""
 
-#: src/mooedit/mooplugin.cpp:1351
+#: src/mooedit/mooplugin.cpp:1332
 msgctxt "Prefs page label"
 msgid "Plugins"
 msgstr ""
 
-#: src/mooedit/mooplugin.cpp:1378
+#: src/mooedit/mooplugin.cpp:1359
 msgctxt "plugin-prefs-column"
 msgid "Enabled"
 msgstr ""
 
-#: src/mooedit/mooplugin.cpp:1384
+#: src/mooedit/mooplugin.cpp:1365
 msgctxt "plugin-prefs-column"
 msgid "Plugin"
 msgstr ""
@@ -1959,7 +1963,7 @@ msgid "Could not remove %s: %s"
 msgstr ""
 
 #. Translators: remove the part before and including |
-#: src/mooutils/mooutils-misc.cpp:1573
+#: src/mooutils/mooutils-misc.cpp:1540
 #, c-format
 msgid "console message|in file %s, line %d, function %s: %s"
 msgstr ""
@@ -1967,7 +1971,7 @@ msgstr ""
 #. "Unknown error" may be displayed if there is a bug in the program
 #. and proper error message has not been set. It doesn't provide any
 #. useful information obviously
-#: src/mooutils/mooutils-misc.cpp:1813
+#: src/mooutils/mooutils-misc.cpp:1780
 msgid "Unknown error"
 msgstr ""
 

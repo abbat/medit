@@ -1075,11 +1075,6 @@ moo_get_display_app_name (void)
 }
 
 
-typedef enum {
-    MOO_DATA_SHARE,
-    MOO_DATA_LIB
-} MooDataDirType;
-
 static gboolean
 cmp_dirs (const char *dir1,
           const char *dir2)
@@ -1105,15 +1100,14 @@ add_dir_list_from_env (GPtrArray  *list,
 }
 
 static void
-enumerate_data_dirs (MooDataDirType  type,
-                     GPtrArray      *dirs)
+enumerate_data_dirs (GPtrArray *dirs)
 {
     const char *env[2];
 
     g_ptr_array_add (dirs, moo_get_user_data_dir ());
 
     env[0] = g_getenv ("MOO_APP_DIRS");
-    env[1] = type == MOO_DATA_SHARE ? g_getenv ("MOO_DATA_DIRS") : g_getenv ("MOO_LIB_DIRS");
+    env[1] = g_getenv ("MOO_DATA_DIRS");
 
     /* environment variables override everything */
     if (env[0] || env[1])
@@ -1125,25 +1119,17 @@ enumerate_data_dirs (MooDataDirType  type,
     }
     else
     {
-        if (type == MOO_DATA_SHARE)
-        {
-            const char* const *p;
+        const char* const *p;
 
-            for (p = g_get_system_data_dirs (); p && *p; ++p)
-                g_ptr_array_add (dirs, g_build_filename (*p, MOO_PACKAGE_NAME, nullptr));
+        for (p = g_get_system_data_dirs (); p && *p; ++p)
+            g_ptr_array_add (dirs, g_build_filename (*p, MOO_PACKAGE_NAME, nullptr));
 
-            g_ptr_array_add (dirs, g_strdup (MOO_DATA_DIR));
-        }
-        else
-        {
-            g_ptr_array_add (dirs, g_strdup (MOO_LIB_DIR));
-        }
+        g_ptr_array_add (dirs, g_strdup (MOO_DATA_DIR));
     }
 }
 
 static char **
-do_get_data_dirs (MooDataDirType  type,
-                  guint          *n_dirs)
+do_get_data_dirs (guint *n_dirs)
 {
     GPtrArray *dirs;
     GPtrArray *all_dirs;
@@ -1151,7 +1137,7 @@ do_get_data_dirs (MooDataDirType  type,
     guint i;
 
     all_dirs = g_ptr_array_new ();
-    enumerate_data_dirs (type, all_dirs);
+    enumerate_data_dirs (all_dirs);
     g_ptr_array_add (all_dirs, NULL);
 
     dirs = g_ptr_array_new ();
@@ -1191,38 +1177,31 @@ do_get_data_dirs (MooDataDirType  type,
 }
 
 static char **
-moo_get_data_dirs_real (MooDataDirType   type_requested,
-                        gboolean         include_user,
-                        guint           *n_dirs)
+moo_get_data_dirs_real (gboolean  include_user,
+                        guint    *n_dirs)
 {
-    static char **moo_data_dirs[3];
-    static guint n_data_dirs[3];
+    static char **moo_data_dirs;
+    static guint n_data_dirs;
     G_LOCK_DEFINE_STATIC(moo_data_dirs);
-
-    g_return_val_if_fail (type_requested < 3, NULL);
 
     G_LOCK (moo_data_dirs);
 
-    if (!moo_data_dirs[0])
-    {
-        int type;
-        for (type = 0; type < 3; ++type)
-            moo_data_dirs[type] = do_get_data_dirs (MooDataDirType (type), &n_data_dirs[type]);
-    }
+    if (!moo_data_dirs)
+        moo_data_dirs = do_get_data_dirs (&n_data_dirs);
 
     G_UNLOCK (moo_data_dirs);
 
-    if (include_user || !n_data_dirs[type_requested])
+    if (include_user || !n_data_dirs)
     {
         if (n_dirs)
-            *n_dirs = n_data_dirs[type_requested];
-        return g_strdupv (moo_data_dirs[type_requested]);
+            *n_dirs = n_data_dirs;
+        return g_strdupv (moo_data_dirs);
     }
     else
     {
         if (n_dirs)
-            *n_dirs = n_data_dirs[type_requested] - 1;
-        return g_strdupv (moo_data_dirs[type_requested] + 1);
+            *n_dirs = n_data_dirs - 1;
+        return g_strdupv (moo_data_dirs + 1);
     }
 }
 
@@ -1234,18 +1213,7 @@ moo_get_data_dirs_real (MooDataDirType   type_requested,
 char **
 moo_get_data_dirs (void)
 {
-    return moo_get_data_dirs_real (MOO_DATA_SHARE, TRUE, NULL);
-}
-
-/**
- * moo_get_lib_dirs: (moo.private 1)
- *
- * Returns: (type strv)
- */
-char **
-moo_get_lib_dirs (void)
-{
-    return moo_get_data_dirs_real (MOO_DATA_LIB, TRUE, NULL);
+    return moo_get_data_dirs_real (TRUE, NULL);
 }
 
 
@@ -1347,16 +1315,15 @@ moo_get_locale_dir (void)
 
 
 static char **
-moo_get_stuff_subdirs (const char    *subdir,
-                       MooDataDirType type,
-                       gboolean       include_user)
+moo_get_stuff_subdirs (const char *subdir,
+                       gboolean    include_user)
 {
     char **data_dirs, **dirs;
     guint n_dirs, i;
 
     g_return_val_if_fail (subdir != NULL, NULL);
 
-    data_dirs = moo_get_data_dirs_real (type, include_user, &n_dirs);
+    data_dirs = moo_get_data_dirs_real (include_user, &n_dirs);
     g_return_val_if_fail (data_dirs != NULL, NULL);
 
     dirs = g_new0 (char*, n_dirs + 1);
@@ -1378,7 +1345,7 @@ moo_get_stuff_subdirs (const char    *subdir,
 char **
 moo_get_data_subdirs (const char *subdir)
 {
-    return moo_get_stuff_subdirs (subdir, MOO_DATA_SHARE, TRUE);
+    return moo_get_stuff_subdirs (subdir, TRUE);
 }
 
 /**
@@ -1391,7 +1358,7 @@ moo_get_data_subdirs (const char *subdir)
 char **
 moo_get_sys_data_subdirs (const char *subdir)
 {
-    return moo_get_stuff_subdirs (subdir, MOO_DATA_SHARE, FALSE);
+    return moo_get_stuff_subdirs (subdir, FALSE);
 }
 
 

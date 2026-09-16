@@ -66,7 +66,6 @@ gboolean    moo_save_config_file            (const char     *filename,
 
 /* user data comes first */
 char      **moo_get_data_dirs               (void);
-char      **moo_get_lib_dirs                (void);
 char      **moo_get_data_subdirs            (const char     *subdir);
 char      **moo_get_sys_data_subdirs        (const char     *subdir);
 

@@ -70,13 +70,15 @@ while `msgfmt --statistics` reported the catalog as fully translated. If a strin
 translated but shows in English, compare the msgid in the .po with the literal in the
 source before anything else.
 
-**The catalogs still carry the msgids of features that were removed.** ru.po kept
-everything the python plugins had translated, so reinstating a feature in C gets its
-translations back for free in every language — provided the literal matches the old one
-exactly, typographic quotes included (`"“cd” to current file directory"`). Grep the .po
-before inventing a wording; that is why the terminal's context menu came up in Russian
-with only nine new strings to write. For strings gtk itself carries, `D_(str, "gtk30")`
-borrows gtk's catalog the same way (`"Pick a Font"`); the python plugin used `"gtk20"`.
+**The catalogs carry no obsolete entries.** They used to keep the `#~` msgids of removed
+features, and reinstating a feature in C got its translations back for free — that is why
+the terminal's context menu came up in Russian with only nine new strings to write. The
+entries were dropped once that had been used; `git log -p -- po/ru.po` still has them, so
+search the history before inventing a wording for a feature that existed, and keep the
+literal exactly, typographic quotes included (`"“cd” to current file directory"`). After a
+merge, drop what went obsolete with `msgattrib --no-obsolete`. For strings gtk itself
+carries, `D_(str, "gtk30")` borrows gtk's catalog (`"Pick a Font"`); the python plugin used
+`"gtk20"`.
 
 Catalog state against the current template (623 strings): `ru` is complete and is the one
 to check first; `es` and `fr` are 12 short, `pl` 11 short with nine fuzzy entries, `de` 31,
@@ -85,14 +87,16 @@ Every string of the terminal and of the LSP client is translated in all ten, whi
 one part of the tree where the newer catalogs are not behind.
 
 **A string can be live, translated, and still English on screen.** Two ways, both found by
-auditing rather than by looking: a file that marks strings for translation and is not in
-`POTFILES.in` (its msgids go obsolete in every catalog, and the translations sit there
-behind `#~` while the program shows English — `moofontsel.cpp` and its "Show only fixed width
-fonts" spent years like that), and a literal that was never marked at all (the heading the
-editor's commands appear under in Configure Shortcuts was `"Editor"`, the window's display
-name, passed as a bare string). Both checks are worth repeating after adding a file:
-compare the set of files containing `_(`, `N_(`, `C_(` against `POTFILES.in`, and look for
-what the catalogs have obsolete that the source still contains.
+auditing rather than by looking: a string xgettext never sees, and a literal that was never
+marked at all (the heading the editor's commands appear under in Configure Shortcuts was
+`"Editor"`, the window's display name, passed as a bare string). xgettext misses a file
+that is not in `POTFILES.in` (`moofontsel.cpp` and its "Show only fixed width fonts" spent
+years like that) and a msgid passed to `_()` through a variable (`"translator-credits"`,
+so the Translated by tab was empty in every language). Either way the msgid goes obsolete
+at the next merge, and dropping obsolete entries then throws the translations away — so
+before dropping, look for what the merge made obsolete that the source still contains, and
+after adding a file compare the set of files containing `_(`, `N_(`, `C_(` against
+`POTFILES.in`.
 
 Note when translating a display name that the *id* beside it is not one: accelerator paths
 and the `Shortcuts/` preference keys are built from the id, so translating that would make
@@ -102,16 +106,15 @@ A label that introduces an entry, a combo box or a spin button carries no traili
 colon; the widget beside it says what it is. Colons are for a heading over a list and
 for a label:value pair, where they do separate something. A msgid that loses one can
 collide with a msgid that never had it — "Options:" and "Options" were two entries in
-every catalog — so merge, and watch for an obsolete `#~` entry of the same msgid,
-which msgfmt reports as a duplicate definition.
+every catalog — so merge rather than rename a msgid in the .po by hand.
 
 All ten catalogs pass `msgfmt --check --check-format`. `ja.po` and `pl.po` did not: their
 plural entries carried two forms each while the headers declare one and three, which is
 about the entry rather than the header — Japanese does not inflect for number, and Polish
 needs a third form for 2–4 (`%u zamiany`) apart from the one for 5 and up (`%u zamian`).
 
-`fi.po` had a Spanish string in one obsolete entry, which is what reviving one
-blindly can cost. Two things to keep true when adding to a catalog: a translated
+`fi.po` had a Spanish string in one obsolete entry, which is what reviving a translation
+from history blindly can cost. Two things to keep true when adding to a catalog: a translated
 string with a mnemonic keeps the underscore (on a letter of the translation, not of
 the English), and `msgctxt` entries have to be appended with their
 context or the lookup misses -- `C_("symbol kind", "class")` is not the same msgid as a

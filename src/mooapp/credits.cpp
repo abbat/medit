@@ -114,9 +114,8 @@ set_written_by_content (GtkTextView *view)
 static void
 set_translated_by_content (GtkTextView *view)
 {
-  const char *msgid = "translator-credits";
-  const char *credits = _ (msgid);
-  if (strcmp (credits, msgid) != 0)
+  const char *credits = _ ("translator-credits");
+  if (strcmp (credits, "translator-credits") != 0)
     {
       GtkTextBuffer *buffer = gtk_text_view_get_buffer (view);
       gtk_text_buffer_set_text (buffer, credits, -1);

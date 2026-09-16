@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: moo\n"
 "Report-Msgid-Bugs-To: https://github.com/abbat/medit/issues\n"
-"POT-Creation-Date: 2026-09-16 18:36+0300\n"
+"POT-Creation-Date: 2026-09-16 21:36+0300\n"
 "PO-Revision-Date: 2008-09-27\n"
 "Last-Translator: Kris Van Bruwaene <krvbr@yahoo.co.uk>\n"
 "Language-Team: Kris Van Bruwaene <krvbr@yahoo.co.uk>\n"
@@ -117,7 +117,7 @@ msgstr ""
 msgid "_License"
 msgstr ""
 
-#: src/mooapp/about.cpp:312 src/mooapp/credits.cpp:178
+#: src/mooapp/about.cpp:312 src/mooapp/credits.cpp:177
 msgid "_Close"
 msgstr ""
 
@@ -129,19 +129,23 @@ msgstr ""
 msgid "medit is a text editor"
 msgstr "medit is een teksteditor"
 
-#: src/mooapp/credits.cpp:140
+#: src/mooapp/credits.cpp:117
+msgid "translator-credits"
+msgstr "Kris Van Bruwaene <krvbr@yahoo.co.uk>"
+
+#: src/mooapp/credits.cpp:139
 msgid "Thanks"
 msgstr "Dank"
 
-#: src/mooapp/credits.cpp:143
+#: src/mooapp/credits.cpp:142
 msgid "Written by"
 msgstr "Geschreven door"
 
-#: src/mooapp/credits.cpp:146
+#: src/mooapp/credits.cpp:145
 msgid "Translated by"
 msgstr "Vertaald door"
 
-#: src/mooapp/credits.cpp:233
+#: src/mooapp/credits.cpp:232
 msgid "Credits"
 msgstr ""
 
@@ -684,11 +688,11 @@ msgstr ""
 msgid "Invalid regular expression"
 msgstr ""
 
-#: src/mooedit/mooedit-fileops.cpp:1107 src/plugins/moofileselector.cpp:512
+#: src/mooedit/mooedit-fileops.cpp:1110 src/plugins/moofileselector.cpp:512
 msgid "Untitled"
 msgstr "Naamloos"
 
-#: src/mooedit/mooedit-fileops.cpp:1109
+#: src/mooedit/mooedit-fileops.cpp:1112
 #, c-format
 msgid "Untitled %d"
 msgstr "Naamloos %d"
@@ -1230,33 +1234,19 @@ msgstr "INV"
 msgid "_Language"
 msgstr "_Taal"
 
-#: src/mooedit/mooplugin.cpp:1415
+#: src/mooedit/mooplugin.cpp:1332
 msgctxt "Prefs page label"
 msgid "Plugins"
 msgstr ""
 
-#: src/mooedit/mooplugin.cpp:1442
+#: src/mooedit/mooplugin.cpp:1359
 msgctxt "plugin-prefs-column"
 msgid "Enabled"
 msgstr ""
 
-#: src/mooedit/mooplugin.cpp:1448
+#: src/mooedit/mooplugin.cpp:1365
 msgctxt "plugin-prefs-column"
 msgid "Plugin"
-msgstr ""
-
-#. Translators: remove the part before and including |
-#: src/mooedit/mooplugin-loader.cpp:214
-#, c-format
-msgid ""
-"console message|ignoring file '%s', module version '%s' is not compatible "
-"with current version %u.%u"
-msgstr ""
-
-#. Translators: remove the part before and including |
-#: src/mooedit/mooplugin-loader.cpp:224
-#, c-format
-msgid "console message|invalid module version '%s' in file '%s'"
 msgstr ""
 
 #: src/mooedit/mootextfind.cpp:158
@@ -1997,7 +1987,7 @@ msgid "Could not remove %s: %s"
 msgstr "Kon %s niet verwijderen: %s"
 
 #. Translators: remove the part before and including |
-#: src/mooutils/mooutils-misc.cpp:1607
+#: src/mooutils/mooutils-misc.cpp:1540
 #, c-format
 msgid "console message|in file %s, line %d, function %s: %s"
 msgstr ""
@@ -2005,7 +1995,7 @@ msgstr ""
 #. "Unknown error" may be displayed if there is a bug in the program
 #. and proper error message has not been set. It doesn't provide any
 #. useful information obviously
-#: src/mooutils/mooutils-misc.cpp:1847
+#: src/mooutils/mooutils-misc.cpp:1780
 msgid "Unknown error"
 msgstr ""
 
@@ -2319,15 +2309,21 @@ msgstr "Nieuwe naam voor ‘%s’"
 msgid "New name"
 msgstr "Nieuwe naam"
 
-#: src/plugins/lsp/lsp-edits.cpp:463 src/plugins/lsp/lsp-edits.cpp:473
+#: src/plugins/lsp/lsp-edits.cpp:508 src/plugins/lsp/lsp-edits.cpp:518
+#: src/plugins/lsp/lsp-edits.cpp:621
 msgid "Rename failed"
 msgstr "Hernoemen mislukt"
 
-#: src/plugins/lsp/lsp-edits.cpp:474
+#: src/plugins/lsp/lsp-edits.cpp:519
 msgid "The server had nothing to change."
 msgstr "De server had niets te wijzigen."
 
-#: src/plugins/lsp/lsp-edits.cpp:577
+#: src/plugins/lsp/lsp-edits.cpp:623
+#, fuzzy
+msgid "There is nothing to rename here."
+msgstr "De server had niets te wijzigen."
+
+#: src/plugins/lsp/lsp-edits.cpp:770
 msgid "Formatting failed"
 msgstr "Opmaken mislukt"
 
@@ -2536,7 +2532,7 @@ msgstr "De symbolenboom tonen"
 msgid "%s failed to start: %s"
 msgstr "%s kon niet worden gestart: %s"
 
-#: src/plugins/lsp/lsp-server.cpp:920 src/plugins/lsp/lsp-server.cpp:1311
+#: src/plugins/lsp/lsp-server.cpp:920 src/plugins/lsp/lsp-server.cpp:1317
 msgid "unknown error"
 msgstr "onbekende fout"
 
@@ -2550,7 +2546,7 @@ msgstr "%s beantwoordde het initialisatieverzoek zonder mogelijkheden"
 msgid "%s did not answer the initialize request in %d seconds"
 msgstr "%s beantwoordde het initialisatieverzoek niet binnen %d seconden"
 
-#: src/plugins/lsp/lsp-server.cpp:1268
+#: src/plugins/lsp/lsp-server.cpp:1274
 #, c-format
 msgid ""
 "%s exited immediately %d times in a row; check the command in the LSP "
@@ -2559,7 +2555,7 @@ msgstr ""
 "%s stopte %d keer op rij onmiddellijk; controleer de opdracht in het LSP-"
 "configuratiebestand"
 
-#: src/plugins/lsp/lsp-server.cpp:1310
+#: src/plugins/lsp/lsp-server.cpp:1316
 #, c-format
 msgid "could not run %s: %s"
 msgstr "kon %s niet uitvoeren: %s"
@@ -3101,146 +3097,3 @@ msgstr ""
 msgctxt "Save-combo"
 msgid "All documents"
 msgstr ""
-
-#~ msgid "translator-credits"
-#~ msgstr "Kris Van Bruwaene <krvbr@yahoo.co.uk>"
-
-#~ msgid "Python Output"
-#~ msgstr "Pythonuitvoer"
-
-#~ msgid "Python Console"
-#~ msgstr "Pythonconsole"
-
-#~ msgid "Run File"
-#~ msgstr "Bestand Uitvoeren"
-
-#~ msgid "Help files not found"
-#~ msgstr "Hulpbestanden niet gevonden"
-
-#, c-format
-#~ msgid "File '%s' is missing in the directory '%s'"
-#~ msgstr "Bestand '%s' ontbreekt in map '%s'"
-
-#~ msgid "Could not find help file"
-#~ msgstr "Kon hulpbestand niet vinden"
-
-#, c-format
-#~ msgid "Could not rename file %s to %s: %s"
-#~ msgstr "Kon bestand %s niet hernoemen tot %s: %s"
-
-#~ msgid "Lua script"
-#~ msgstr "Luascript"
-
-#~ msgid "Python script"
-#~ msgstr "Pythonscript"
-
-#~ msgid "Could not save file"
-#~ msgstr "Kon bestand niet opslaan"
-
-#~ msgid ""
-#~ "Error saving file\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Fout bij opslaan van bestand\n"
-#~ "%s"
-
-#~ msgid "Error saving file"
-#~ msgstr "Fout bij opslaan bestand"
-
-#~ msgid "Command type:"
-#~ msgstr "Commandotype:"
-
-#~ msgid "Context menu"
-#~ msgstr "Contextmenu"
-
-#~ msgid "Tools menu"
-#~ msgstr "Hulpmiddelenmenu"
-
-#~ msgid "Case sensitive"
-#~ msgstr "Hoofdlettergevoelig"
-
-#~ msgid "<b>Default language</b>"
-#~ msgstr "<b>Standaardtaal</b>"
-
-#~ msgid "Python"
-#~ msgstr "Python"
-
-#~ msgid "Python support"
-#~ msgstr "Pythonondersteuning"
-
-#~ msgid "Execute python code in an existing instance"
-#~ msgstr "Voer pythoncode uit in bestaande instantie"
-
-#~ msgid "CODE"
-#~ msgstr "CODE"
-
-#~ msgid "Execute python file in an existing instance"
-#~ msgstr "Voer pythonbestand uit in bestaande instantie"
-
-#~ msgid "FILE"
-#~ msgstr "BESTAND"
-
-#~ msgid "Unrecognized desktop file Version '%s'"
-#~ msgstr "Onbekende Versie '%s' van bureaubladbestand"
-
-#~ msgid "Starting %s"
-#~ msgstr "%s aan het opstarten"
-
-#~ msgid "Application does not accept documents on command line"
-#~ msgstr "Toepassing aanvaardt geen documenten in opdrachtregel"
-
-#~ msgid "Unrecognized launch option: %d"
-#~ msgstr "Onbekende startoptie: %d"
-
-#~ msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
-#~ msgstr ""
-#~ "Kan geen documenten-URI's doorgeven aan een bureaublad-item met "
-#~ "'Type=Link'"
-
-#~ msgid "Not a launchable item"
-#~ msgstr "Geen startbaar item"
-
-#~ msgid "Disable connection to session manager"
-#~ msgstr "Belet verbinding met sessiebeheer"
-
-#~ msgid "Specify file containing saved configuration"
-#~ msgstr "Geef bestand met opgeslagen configuratie"
-
-#~ msgid "Specify session management ID"
-#~ msgstr "Geef ID voor sessiebeheer"
-
-#~ msgid "Session Management Options"
-#~ msgstr "Opties voor Sessiebeheer"
-
-#~ msgid "Show Session Management options"
-#~ msgstr "Toon Opties voor Sessiebeheer"
-
-#~ msgid "Terminal plugin"
-#~ msgstr "Consoleplugin"
-
-#~ msgid "Could not create temporary file %s: %s"
-#~ msgstr "Kon tijdelijk bestand %s niet aanmaken: %s"
-
-#~ msgid "medit"
-#~ msgstr "medit"
-
-#~ msgid "Dialog title|System Info"
-#~ msgstr "Systeeminfo"
-
-#~ msgid "System Info"
-#~ msgstr "Systeeminfo"
-
-#~ msgid "Use default theme font"
-#~ msgstr "Gebruik de normale themaletter"
-
-#~ msgid "Loading and saving"
-#~ msgstr "Laden en opslaan"
-
-#~ msgid "Languages and files"
-#~ msgstr "Talen en bestanden"
-
-#~ msgid "DPatch"
-#~ msgstr "DPatch"
-
-#~ msgid "GAP source file"
-#~ msgstr "GAP-bronbestand"

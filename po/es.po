@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: moo\n"
 "Report-Msgid-Bugs-To: https://github.com/abbat/medit/issues\n"
-"POT-Creation-Date: 2026-09-16 18:36+0300\n"
+"POT-Creation-Date: 2026-09-16 21:36+0300\n"
 "PO-Revision-Date: 2014-01-03 20:25+0100\n"
 "Last-Translator: Eulogio Serradilla <eserradi@gmail.com>\n"
 "Language-Team:  <es@li.org>\n"
@@ -119,7 +119,7 @@ msgstr "C_réditos"
 msgid "_License"
 msgstr "_Licencia"
 
-#: src/mooapp/about.cpp:312 src/mooapp/credits.cpp:178
+#: src/mooapp/about.cpp:312 src/mooapp/credits.cpp:177
 msgid "_Close"
 msgstr "_Cerrar"
 
@@ -131,19 +131,23 @@ msgstr "Acerca de"
 msgid "medit is a text editor"
 msgstr "medit es un editor de texto"
 
-#: src/mooapp/credits.cpp:140
+#: src/mooapp/credits.cpp:117
+msgid "translator-credits"
+msgstr "Arnau Sanchez <arnau@ehas.org>"
+
+#: src/mooapp/credits.cpp:139
 msgid "Thanks"
 msgstr "Agradecimientos"
 
-#: src/mooapp/credits.cpp:143
+#: src/mooapp/credits.cpp:142
 msgid "Written by"
 msgstr "Escrito por"
 
-#: src/mooapp/credits.cpp:146
+#: src/mooapp/credits.cpp:145
 msgid "Translated by"
 msgstr "Traducido por"
 
-#: src/mooapp/credits.cpp:233
+#: src/mooapp/credits.cpp:232
 msgid "Credits"
 msgstr "Créditos"
 
@@ -696,11 +700,11 @@ msgstr ""
 msgid "Invalid regular expression"
 msgstr "Expresión regular no válida"
 
-#: src/mooedit/mooedit-fileops.cpp:1107 src/plugins/moofileselector.cpp:512
+#: src/mooedit/mooedit-fileops.cpp:1110 src/plugins/moofileselector.cpp:512
 msgid "Untitled"
 msgstr "Sin título"
 
-#: src/mooedit/mooedit-fileops.cpp:1109
+#: src/mooedit/mooedit-fileops.cpp:1112
 #, c-format
 msgid "Untitled %d"
 msgstr "Sin título %d"
@@ -1243,36 +1247,20 @@ msgstr "INS"
 msgid "_Language"
 msgstr "_Resaltado"
 
-#: src/mooedit/mooplugin.cpp:1415
+#: src/mooedit/mooplugin.cpp:1332
 msgctxt "Prefs page label"
 msgid "Plugins"
 msgstr "Complementos"
 
-#: src/mooedit/mooplugin.cpp:1442
+#: src/mooedit/mooplugin.cpp:1359
 msgctxt "plugin-prefs-column"
 msgid "Enabled"
 msgstr "Activado"
 
-#: src/mooedit/mooplugin.cpp:1448
+#: src/mooedit/mooplugin.cpp:1365
 msgctxt "plugin-prefs-column"
 msgid "Plugin"
 msgstr "Complemento"
-
-#. Translators: remove the part before and including |
-#: src/mooedit/mooplugin-loader.cpp:214
-#, c-format
-msgid ""
-"console message|ignoring file '%s', module version '%s' is not compatible "
-"with current version %u.%u"
-msgstr ""
-"ignorando archivo '%s', la versión del módulo '%s' no es compatible con la "
-"versión actual %u.%u"
-
-#. Translators: remove the part before and including |
-#: src/mooedit/mooplugin-loader.cpp:224
-#, c-format
-msgid "console message|invalid module version '%s' in file '%s'"
-msgstr "versión del módulo '%s' no válida en archivo '%s'"
 
 #: src/mooedit/mootextfind.cpp:158
 msgctxt "Dialog title"
@@ -2015,7 +2003,7 @@ msgid "Could not remove %s: %s"
 msgstr "No se pudo eliminar %s: %s"
 
 #. Translators: remove the part before and including |
-#: src/mooutils/mooutils-misc.cpp:1607
+#: src/mooutils/mooutils-misc.cpp:1540
 #, c-format
 msgid "console message|in file %s, line %d, function %s: %s"
 msgstr "en archivo %s, línea %d, función %s: %s"
@@ -2023,7 +2011,7 @@ msgstr "en archivo %s, línea %d, función %s: %s"
 #. "Unknown error" may be displayed if there is a bug in the program
 #. and proper error message has not been set. It doesn't provide any
 #. useful information obviously
-#: src/mooutils/mooutils-misc.cpp:1847
+#: src/mooutils/mooutils-misc.cpp:1780
 msgid "Unknown error"
 msgstr "Error desconocido"
 
@@ -2334,15 +2322,21 @@ msgstr "Nuevo nombre para «%s»"
 msgid "New name"
 msgstr "Nuevo nombre"
 
-#: src/plugins/lsp/lsp-edits.cpp:463 src/plugins/lsp/lsp-edits.cpp:473
+#: src/plugins/lsp/lsp-edits.cpp:508 src/plugins/lsp/lsp-edits.cpp:518
+#: src/plugins/lsp/lsp-edits.cpp:621
 msgid "Rename failed"
 msgstr "No se pudo renombrar"
 
-#: src/plugins/lsp/lsp-edits.cpp:474
+#: src/plugins/lsp/lsp-edits.cpp:519
 msgid "The server had nothing to change."
 msgstr "El servidor no tenía nada que cambiar."
 
-#: src/plugins/lsp/lsp-edits.cpp:577
+#: src/plugins/lsp/lsp-edits.cpp:623
+#, fuzzy
+msgid "There is nothing to rename here."
+msgstr "El servidor no tenía nada que cambiar."
+
+#: src/plugins/lsp/lsp-edits.cpp:770
 msgid "Formatting failed"
 msgstr "No se pudo formatear"
 
@@ -2551,7 +2545,7 @@ msgstr "Mostrar el árbol de símbolos"
 msgid "%s failed to start: %s"
 msgstr "%s no pudo arrancar: %s"
 
-#: src/plugins/lsp/lsp-server.cpp:920 src/plugins/lsp/lsp-server.cpp:1311
+#: src/plugins/lsp/lsp-server.cpp:920 src/plugins/lsp/lsp-server.cpp:1317
 msgid "unknown error"
 msgstr "error desconocido"
 
@@ -2565,7 +2559,7 @@ msgstr "%s respondió a la petición de inicialización sin capacidades"
 msgid "%s did not answer the initialize request in %d seconds"
 msgstr "%s no respondió a la petición de inicialización en %d segundos"
 
-#: src/plugins/lsp/lsp-server.cpp:1268
+#: src/plugins/lsp/lsp-server.cpp:1274
 #, c-format
 msgid ""
 "%s exited immediately %d times in a row; check the command in the LSP "
@@ -2574,7 +2568,7 @@ msgstr ""
 "%s terminó de inmediato %d veces seguidas; revise la orden en el archivo de "
 "configuración de LSP"
 
-#: src/plugins/lsp/lsp-server.cpp:1310
+#: src/plugins/lsp/lsp-server.cpp:1316
 #, c-format
 msgid "could not run %s: %s"
 msgstr "no se pudo ejecutar %s: %s"
@@ -3117,53 +3111,3 @@ msgstr "Documento actual"
 msgctxt "Save-combo"
 msgid "All documents"
 msgstr "Todos los documentos"
-
-#~ msgid "translator-credits"
-#~ msgstr "Arnau Sanchez <arnau@ehas.org>"
-
-#~ msgid "Lua"
-#~ msgstr "Lua"
-
-#~ msgid "Lua support"
-#~ msgstr "Soporte de Lua"
-
-#~ msgid "Python Output"
-#~ msgstr "Salida de Python"
-
-#~ msgid "Python Console"
-#~ msgstr "Consola Python"
-
-#~ msgid "Run File"
-#~ msgstr "Ejecutar archivo"
-
-#~ msgid "Shortcut|None"
-#~ msgstr "Ninguno"
-
-#~ msgid "Shortcut|Default"
-#~ msgstr "Predeterminado"
-
-#~ msgid "Shortcut|Custom"
-#~ msgstr "Personalizado"
-
-#~ msgid "Help files not found"
-#~ msgstr "No se encontraron los archivos de ayuda"
-
-#, c-format
-#~ msgid "File '%s' is missing in the directory '%s'"
-#~ msgstr "El archivo '%s' no se encuentra en el directorio '%s'"
-
-#~ msgid "Could not find help file"
-#~ msgstr "No se encontró el archivo de ayuda"
-
-#, c-format
-#~ msgid "Could not rename file %s to %s: %s"
-#~ msgstr "No se pudo renombrar el archivo %s a %s: %s"
-
-#~ msgid "Output|Console"
-#~ msgstr "Consola"
-
-#~ msgid "Lua script"
-#~ msgstr "Script Lua"
-
-#~ msgid "Python script"
-#~ msgstr "Script Python"

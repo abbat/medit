@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: moo\n"
 "Report-Msgid-Bugs-To: https://github.com/abbat/medit/issues\n"
-"POT-Creation-Date: 2026-09-16 18:36+0300\n"
+"POT-Creation-Date: 2026-09-16 21:36+0300\n"
 "PO-Revision-Date: 2007-12-06 04:32+0800\n"
 "Last-Translator: Chaosye <chao-7410@163.com>\n"
 "Language-Team: Chaosye <chao-7410@163.com>\n"
@@ -118,7 +118,7 @@ msgstr ""
 msgid "_License"
 msgstr ""
 
-#: src/mooapp/about.cpp:312 src/mooapp/credits.cpp:178
+#: src/mooapp/about.cpp:312 src/mooapp/credits.cpp:177
 msgid "_Close"
 msgstr ""
 
@@ -130,19 +130,23 @@ msgstr ""
 msgid "medit is a text editor"
 msgstr "medit 是一个文本编辑器"
 
-#: src/mooapp/credits.cpp:140
+#: src/mooapp/credits.cpp:117
+msgid "translator-credits"
+msgstr "Chaosye <chao-7410@163.com>"
+
+#: src/mooapp/credits.cpp:139
 msgid "Thanks"
 msgstr "感谢"
 
-#: src/mooapp/credits.cpp:143
+#: src/mooapp/credits.cpp:142
 msgid "Written by"
 msgstr "作者"
 
-#: src/mooapp/credits.cpp:146
+#: src/mooapp/credits.cpp:145
 msgid "Translated by"
 msgstr "译者"
 
-#: src/mooapp/credits.cpp:233
+#: src/mooapp/credits.cpp:232
 msgid "Credits"
 msgstr ""
 
@@ -678,11 +682,11 @@ msgstr ""
 msgid "Invalid regular expression"
 msgstr ""
 
-#: src/mooedit/mooedit-fileops.cpp:1107 src/plugins/moofileselector.cpp:512
+#: src/mooedit/mooedit-fileops.cpp:1110 src/plugins/moofileselector.cpp:512
 msgid "Untitled"
 msgstr "未命名"
 
-#: src/mooedit/mooedit-fileops.cpp:1109
+#: src/mooedit/mooedit-fileops.cpp:1112
 #, c-format
 msgid "Untitled %d"
 msgstr "未命名 %d"
@@ -1224,33 +1228,19 @@ msgstr ""
 msgid "_Language"
 msgstr "语言(_L)"
 
-#: src/mooedit/mooplugin.cpp:1415
+#: src/mooedit/mooplugin.cpp:1332
 msgctxt "Prefs page label"
 msgid "Plugins"
 msgstr ""
 
-#: src/mooedit/mooplugin.cpp:1442
+#: src/mooedit/mooplugin.cpp:1359
 msgctxt "plugin-prefs-column"
 msgid "Enabled"
 msgstr ""
 
-#: src/mooedit/mooplugin.cpp:1448
+#: src/mooedit/mooplugin.cpp:1365
 msgctxt "plugin-prefs-column"
 msgid "Plugin"
-msgstr ""
-
-#. Translators: remove the part before and including |
-#: src/mooedit/mooplugin-loader.cpp:214
-#, c-format
-msgid ""
-"console message|ignoring file '%s', module version '%s' is not compatible "
-"with current version %u.%u"
-msgstr ""
-
-#. Translators: remove the part before and including |
-#: src/mooedit/mooplugin-loader.cpp:224
-#, c-format
-msgid "console message|invalid module version '%s' in file '%s'"
 msgstr ""
 
 #: src/mooedit/mootextfind.cpp:158
@@ -1988,7 +1978,7 @@ msgid "Could not remove %s: %s"
 msgstr ""
 
 #. Translators: remove the part before and including |
-#: src/mooutils/mooutils-misc.cpp:1607
+#: src/mooutils/mooutils-misc.cpp:1540
 #, c-format
 msgid "console message|in file %s, line %d, function %s: %s"
 msgstr ""
@@ -1996,7 +1986,7 @@ msgstr ""
 #. "Unknown error" may be displayed if there is a bug in the program
 #. and proper error message has not been set. It doesn't provide any
 #. useful information obviously
-#: src/mooutils/mooutils-misc.cpp:1847
+#: src/mooutils/mooutils-misc.cpp:1780
 msgid "Unknown error"
 msgstr ""
 
@@ -2300,15 +2290,21 @@ msgstr "“%s”的新名称"
 msgid "New name"
 msgstr "新名称"
 
-#: src/plugins/lsp/lsp-edits.cpp:463 src/plugins/lsp/lsp-edits.cpp:473
+#: src/plugins/lsp/lsp-edits.cpp:508 src/plugins/lsp/lsp-edits.cpp:518
+#: src/plugins/lsp/lsp-edits.cpp:621
 msgid "Rename failed"
 msgstr "重命名失败"
 
-#: src/plugins/lsp/lsp-edits.cpp:474
+#: src/plugins/lsp/lsp-edits.cpp:519
 msgid "The server had nothing to change."
 msgstr "服务器没有需要修改的内容。"
 
-#: src/plugins/lsp/lsp-edits.cpp:577
+#: src/plugins/lsp/lsp-edits.cpp:623
+#, fuzzy
+msgid "There is nothing to rename here."
+msgstr "服务器没有需要修改的内容。"
+
+#: src/plugins/lsp/lsp-edits.cpp:770
 msgid "Formatting failed"
 msgstr "格式化失败"
 
@@ -2517,7 +2513,7 @@ msgstr "显示符号树"
 msgid "%s failed to start: %s"
 msgstr "%s 启动失败：%s"
 
-#: src/plugins/lsp/lsp-server.cpp:920 src/plugins/lsp/lsp-server.cpp:1311
+#: src/plugins/lsp/lsp-server.cpp:920 src/plugins/lsp/lsp-server.cpp:1317
 msgid "unknown error"
 msgstr "未知错误"
 
@@ -2531,14 +2527,14 @@ msgstr "%s 回应初始化请求时未声明任何能力"
 msgid "%s did not answer the initialize request in %d seconds"
 msgstr "%s 在 %d 秒内未回应初始化请求"
 
-#: src/plugins/lsp/lsp-server.cpp:1268
+#: src/plugins/lsp/lsp-server.cpp:1274
 #, c-format
 msgid ""
 "%s exited immediately %d times in a row; check the command in the LSP "
 "configuration file"
 msgstr "%s 连续 %d 次立即退出；请检查 LSP 配置文件中的命令"
 
-#: src/plugins/lsp/lsp-server.cpp:1310
+#: src/plugins/lsp/lsp-server.cpp:1316
 #, c-format
 msgid "could not run %s: %s"
 msgstr "无法运行 %s：%s"
@@ -3071,233 +3067,3 @@ msgstr ""
 msgctxt "Save-combo"
 msgid "All documents"
 msgstr ""
-
-#~ msgid "translator-credits"
-#~ msgstr "Chaosye <chao-7410@163.com>"
-
-#~ msgid "Python Output"
-#~ msgstr "python输出"
-
-#~ msgid "Python Console"
-#~ msgstr "Python控制台"
-
-#~ msgid "Run File"
-#~ msgstr "运行文档"
-
-#~ msgid "Help files not found"
-#~ msgstr "无法找到帮助文件"
-
-#, c-format
-#~ msgid "File '%s' is missing in the directory '%s'"
-#~ msgstr "文件 '%s' 不在目录 '%s'中 "
-
-#~ msgid "Could not find help file"
-#~ msgstr "无法找到帮助文件"
-
-#~ msgid "Lua script"
-#~ msgstr "Lua 脚本"
-
-#~ msgid "Python script"
-#~ msgstr "Python脚本"
-
-#~ msgid "Could not save file"
-#~ msgstr "无法保存"
-
-#~ msgid ""
-#~ "Error saving file\n"
-#~ "%s"
-#~ msgstr ""
-#~ "保存时发生错误\n"
-#~ "%s"
-
-#~ msgid "Error saving file"
-#~ msgstr "保存时发生错误"
-
-#~ msgid "Command type:"
-#~ msgstr "命令类型:"
-
-#~ msgid "Context menu"
-#~ msgstr "语法菜单"
-
-#~ msgid "Tools menu"
-#~ msgstr "工具菜单"
-
-#~ msgid "Case sensitive"
-#~ msgstr "区分太小写"
-
-#~ msgid "<b>Default language</b>"
-#~ msgstr "<b>默认代码</b>"
-
-#~ msgid "Python"
-#~ msgstr "Python"
-
-#~ msgid "Python support"
-#~ msgstr "Python支持"
-
-#~ msgid "Terminal plugin"
-#~ msgstr "终端插件"
-
-#~ msgid "medit"
-#~ msgstr "medit"
-
-#~ msgid "Dialog title|System Info"
-#~ msgstr "系统信息"
-
-#~ msgid "System Info"
-#~ msgstr "系统信息"
-
-#~ msgid "Use default theme font"
-#~ msgstr "使用主题默认字体"
-
-#~ msgid "Loading and saving"
-#~ msgstr "载入与保存"
-
-#~ msgid "Languages and files"
-#~ msgstr "语言和文档"
-
-#~ msgid "GAP source file"
-#~ msgstr "GAP 源码文档"
-
-#~ msgid "Show file selector"
-#~ msgstr "显示文件选择器"
-
-#~ msgid "Show Terminal"
-#~ msgstr "显示终端"
-
-#~ msgid "Icons _and Labels"
-#~ msgstr "显示图标和标题(_A)"
-
-#~ msgid "Use spaces to indent"
-#~ msgstr "使用空格缩进"
-
-#~ msgid "Close _All"
-#~ msgstr "全部关闭(_A)"
-
-#~ msgid "MooScript"
-#~ msgstr "Mooscript"
-
-#~ msgid "Close _without Saving"
-#~ msgstr "不保存就关闭(_w)"
-
-#~ msgid "CVS and SVN dirs"
-#~ msgstr "CVS 和 SVN 目录"
-
-#~ msgid "Select _All"
-#~ msgstr "选中全部(_A)"
-
-#~ msgid "Next Placeholder"
-#~ msgstr "下一个占位符"
-
-#~ msgid "Go to next placeholder"
-#~ msgstr "回到下一个占位符"
-
-#~ msgid "Previous Placeholder"
-#~ msgstr "前一个占位符"
-
-#~ msgid "Go to previous placeholder"
-#~ msgstr "回到前一个占位符"
-
-#~ msgid "Edit Bookmarks..."
-#~ msgstr "编辑书签"
-
-#~ msgid "Indentation"
-#~ msgstr "缩进"
-
-#~ msgid "Indents text"
-#~ msgstr "缩进文本"
-
-#~ msgid "Moves cursor to next placeholder"
-#~ msgstr "移动光标到下一个占位符处"
-
-#~ msgid "Moves input focus"
-#~ msgstr "移动输入位置"
-
-#~ msgid "Current locale (%s)"
-#~ msgstr "当前设置(%s)"
-
-#~ msgid "Current locale"
-#~ msgstr "当前设置"
-
-#~ msgid "_Edit"
-#~ msgstr "编辑(_E)"
-
-#~ msgid "_Help"
-#~ msgstr "帮助(_H)"
-
-#~ msgid "bad option"
-#~ msgstr "非法选项"
-
-#~ msgid "out of memory"
-#~ msgstr "没有足够的内存"
-
-#~ msgid "backtracking limit reached"
-#~ msgstr "已到达回溯上限"
-
-#~ msgid "the pattern contains items not supported for partial matching"
-#~ msgstr "模式匹配包含不支持的匹配部分"
-
-#~ msgid "internal error"
-#~ msgstr "内部错误"
-
-#~ msgid "recursion limit reached"
-#~ msgstr "已到达递归上限"
-
-#~ msgid "PCRE library is compiled without UTF8 support"
-#~ msgstr "PCRE编译时没有加入对UTF8编码的支持"
-
-#~ msgid "PCRE library is compiled without UTF8 properties support"
-#~ msgstr "PCRE编译时没有加入对UTF8编码的支持"
-
-#~ msgid "Error while compiling regular expression %s at char %d: %s"
-#~ msgstr "编译正则表达式 %s 时发生错误: %s"
-
-#~ msgid "Error while optimizing regular expression %s: %s"
-#~ msgstr "优化正则表达式 %s 时发生错误: %s"
-
-#~ msgid "Error while matching regular expression %s: %s"
-#~ msgstr "匹配正则表达式 %s 时发生错误: %s"
-
-#~ msgid "Error while parsing replacement text \"%s\" at char %lu: %s"
-#~ msgstr "当粘贴文本\"%s\"到字符 %lu时发生错误: %s"
-
-#~ msgid "New document|New"
-#~ msgstr "新建"
-
-#~ msgid "Select All"
-#~ msgstr "选中全部"
-
-#~ msgid "Select all"
-#~ msgstr "选中全部"
-
-#~ msgid "New Folder..."
-#~ msgstr "创建目录"
-
-#~ msgid "Copy"
-#~ msgstr "复制"
-
-#~ msgid "Icons and I_mportant Labels"
-#~ msgstr "显示图标和重要标题(_S)"
-
-#~ msgid "Value"
-#~ msgstr "值"
-
-#~ msgid "Arguments"
-#~ msgstr "参数"
-
-#~ msgid "Arguments:"
-#~ msgstr "参数:"
-
-#~ msgid "Environment variables:"
-#~ msgstr "环境变量:"
-
-#~ msgid "Program:"
-#~ msgstr "程序:"
-
-#~ msgid "Execute Program"
-#~ msgstr "执行程序"
-
-#~ msgid "Execute File"
-#~ msgstr "执行"
-
-#~ msgid "Search:"
-#~ msgstr "查找:"

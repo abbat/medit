@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: moo\n"
 "Report-Msgid-Bugs-To: https://github.com/abbat/medit/issues\n"
-"POT-Creation-Date: 2026-09-16 18:36+0300\n"
+"POT-Creation-Date: 2026-09-16 21:36+0300\n"
 "PO-Revision-Date: 2012-01-31 14:17+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Tommi Nieminen <translator@legisign.org>\n"
@@ -117,7 +117,7 @@ msgstr "_Kiitokset"
 msgid "_License"
 msgstr "_Lisenssi"
 
-#: src/mooapp/about.cpp:312 src/mooapp/credits.cpp:178
+#: src/mooapp/about.cpp:312 src/mooapp/credits.cpp:177
 msgid "_Close"
 msgstr "_Sulje"
 
@@ -129,19 +129,23 @@ msgstr "Tietoja"
 msgid "medit is a text editor"
 msgstr "medit on tekstieditori"
 
-#: src/mooapp/credits.cpp:140
+#: src/mooapp/credits.cpp:117
+msgid "translator-credits"
+msgstr "Tommi Nieminen <translator@legisign.org>"
+
+#: src/mooapp/credits.cpp:139
 msgid "Thanks"
 msgstr "Kiitokset"
 
-#: src/mooapp/credits.cpp:143
+#: src/mooapp/credits.cpp:142
 msgid "Written by"
 msgstr "Tekijä(t)"
 
-#: src/mooapp/credits.cpp:146
+#: src/mooapp/credits.cpp:145
 msgid "Translated by"
 msgstr "Kääntäjä(t)"
 
-#: src/mooapp/credits.cpp:233
+#: src/mooapp/credits.cpp:232
 msgid "Credits"
 msgstr "Kiitokset"
 
@@ -696,11 +700,11 @@ msgstr ""
 msgid "Invalid regular expression"
 msgstr "Virheellinen säännöllinen lauseke"
 
-#: src/mooedit/mooedit-fileops.cpp:1107 src/plugins/moofileselector.cpp:512
+#: src/mooedit/mooedit-fileops.cpp:1110 src/plugins/moofileselector.cpp:512
 msgid "Untitled"
 msgstr "Nimetön"
 
-#: src/mooedit/mooedit-fileops.cpp:1109
+#: src/mooedit/mooedit-fileops.cpp:1112
 #, c-format
 msgid "Untitled %d"
 msgstr "Nimetön %d"
@@ -1243,36 +1247,20 @@ msgstr "LIS"
 msgid "_Language"
 msgstr "_Kieli"
 
-#: src/mooedit/mooplugin.cpp:1415
+#: src/mooedit/mooplugin.cpp:1332
 msgctxt "Prefs page label"
 msgid "Plugins"
 msgstr "Liitännäiset"
 
-#: src/mooedit/mooplugin.cpp:1442
+#: src/mooedit/mooplugin.cpp:1359
 msgctxt "plugin-prefs-column"
 msgid "Enabled"
 msgstr "Käytössä"
 
-#: src/mooedit/mooplugin.cpp:1448
+#: src/mooedit/mooplugin.cpp:1365
 msgctxt "plugin-prefs-column"
 msgid "Plugin"
 msgstr "Liitännäinen"
-
-#. Translators: remove the part before and including |
-#: src/mooedit/mooplugin-loader.cpp:214
-#, c-format
-msgid ""
-"console message|ignoring file '%s', module version '%s' is not compatible "
-"with current version %u.%u"
-msgstr ""
-"ohitetaan tiedosto \"%s\": moduulin version \"%s\" ei ole yhteensopivan "
-"nykyisen version %u.%u kanssa"
-
-#. Translators: remove the part before and including |
-#: src/mooedit/mooplugin-loader.cpp:224
-#, c-format
-msgid "console message|invalid module version '%s' in file '%s'"
-msgstr "kelvoton moduulin version \"%s\" tiedostossa \"%s\""
 
 #: src/mooedit/mootextfind.cpp:158
 msgctxt "Dialog title"
@@ -2013,7 +2001,7 @@ msgid "Could not remove %s: %s"
 msgstr "Ei voitu poistaa tiedostoa %s: %s"
 
 #. Translators: remove the part before and including |
-#: src/mooutils/mooutils-misc.cpp:1607
+#: src/mooutils/mooutils-misc.cpp:1540
 #, c-format
 msgid "console message|in file %s, line %d, function %s: %s"
 msgstr "tiedostossa %s, rivillä %d, funktiossa %s: %s"
@@ -2021,7 +2009,7 @@ msgstr "tiedostossa %s, rivillä %d, funktiossa %s: %s"
 #. "Unknown error" may be displayed if there is a bug in the program
 #. and proper error message has not been set. It doesn't provide any
 #. useful information obviously
-#: src/mooutils/mooutils-misc.cpp:1847
+#: src/mooutils/mooutils-misc.cpp:1780
 msgid "Unknown error"
 msgstr "Tuntematon virhe"
 
@@ -2335,15 +2323,21 @@ msgstr "Kohteen ”%s” uusi nimi"
 msgid "New name"
 msgstr "Uusi nimi"
 
-#: src/plugins/lsp/lsp-edits.cpp:463 src/plugins/lsp/lsp-edits.cpp:473
+#: src/plugins/lsp/lsp-edits.cpp:508 src/plugins/lsp/lsp-edits.cpp:518
+#: src/plugins/lsp/lsp-edits.cpp:621
 msgid "Rename failed"
 msgstr "Uudelleennimeäminen epäonnistui"
 
-#: src/plugins/lsp/lsp-edits.cpp:474
+#: src/plugins/lsp/lsp-edits.cpp:519
 msgid "The server had nothing to change."
 msgstr "Palvelimella ei ollut mitään muutettavaa."
 
-#: src/plugins/lsp/lsp-edits.cpp:577
+#: src/plugins/lsp/lsp-edits.cpp:623
+#, fuzzy
+msgid "There is nothing to rename here."
+msgstr "Palvelimella ei ollut mitään muutettavaa."
+
+#: src/plugins/lsp/lsp-edits.cpp:770
 msgid "Formatting failed"
 msgstr "Muotoilu epäonnistui"
 
@@ -2552,7 +2546,7 @@ msgstr "Näytä symbolipuu"
 msgid "%s failed to start: %s"
 msgstr "Palvelimen %s käynnistys epäonnistui: %s"
 
-#: src/plugins/lsp/lsp-server.cpp:920 src/plugins/lsp/lsp-server.cpp:1311
+#: src/plugins/lsp/lsp-server.cpp:920 src/plugins/lsp/lsp-server.cpp:1317
 msgid "unknown error"
 msgstr "tuntematon virhe"
 
@@ -2566,7 +2560,7 @@ msgstr "%s vastasi alustuspyyntöön ilman ominaisuuksia"
 msgid "%s did not answer the initialize request in %d seconds"
 msgstr "%s ei vastannut alustuspyyntöön %d sekunnissa"
 
-#: src/plugins/lsp/lsp-server.cpp:1268
+#: src/plugins/lsp/lsp-server.cpp:1274
 #, c-format
 msgid ""
 "%s exited immediately %d times in a row; check the command in the LSP "
@@ -2574,7 +2568,7 @@ msgid ""
 msgstr ""
 "%s päättyi heti %d kertaa peräkkäin; tarkista komento LSP-asetustiedostosta"
 
-#: src/plugins/lsp/lsp-server.cpp:1310
+#: src/plugins/lsp/lsp-server.cpp:1316
 #, c-format
 msgid "could not run %s: %s"
 msgstr "komentoa %s ei voitu suorittaa: %s"
@@ -3116,159 +3110,3 @@ msgstr "Nykyinen asiakirja"
 msgctxt "Save-combo"
 msgid "All documents"
 msgstr "Kaikki asiakirjat"
-
-#~ msgid "translator-credits"
-#~ msgstr "Tommi Nieminen <translator@legisign.org>"
-
-#~ msgid "Lua"
-#~ msgstr "Lua"
-
-#~ msgid "Lua support"
-#~ msgstr "Lua-tuki"
-
-#~ msgid "Python Output"
-#~ msgstr "Python-tuloste"
-
-#~ msgid "Python Console"
-#~ msgstr "Python-konsoli"
-
-#~ msgid "Run File"
-#~ msgstr "Suorita tiedosto"
-
-#~ msgid "Shortcut|None"
-#~ msgstr "Ei mitään"
-
-#~ msgid "Shortcut|Default"
-#~ msgstr "Oletus"
-
-#~ msgid "Shortcut|Custom"
-#~ msgstr "Oma"
-
-#~ msgid "Help files not found"
-#~ msgstr "Ohjetiedostoja ei löydy"
-
-#, c-format
-#~ msgid "File '%s' is missing in the directory '%s'"
-#~ msgstr "Tiedosto ”%s” puuttuu kansiosta ”%s”"
-
-#~ msgid "Could not find help file"
-#~ msgstr "Ohjetiedostoa ei löydy"
-
-#, c-format
-#~ msgid "Could not rename file %s to %s: %s"
-#~ msgstr "Ei voitu muuttaa tiedoston %s nimeksi %s: %s"
-
-#~ msgid "Output|Console"
-#~ msgstr "Tuloste"
-
-#~ msgid "Lua script"
-#~ msgstr "Lua-skripti"
-
-#~ msgid "Python script"
-#~ msgstr "Python-skripti"
-
-#~ msgid ""
-#~ "console message|in file %s, line %d, function %s:\n"
-#~ "%s"
-#~ msgstr ""
-#~ "tiedostossa %s, rivillä %d, funktiossa %s:\n"
-#~ "%s"
-
-#~ msgid "Could not save file"
-#~ msgstr "No se pudo guardar el archivo"
-
-#~ msgid ""
-#~ "Error saving file\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Error guardando el archivo\n"
-#~ "%s"
-
-#~ msgid "Error saving file"
-#~ msgstr "Error guardando el archivo"
-
-#~ msgid "Command type:"
-#~ msgstr "Tipo de comando:"
-
-#~ msgid "Context menu"
-#~ msgstr "Menú contextual"
-
-#~ msgid "Tools menu"
-#~ msgstr "Menú de herramientas"
-
-#~ msgid "Case sensitive"
-#~ msgstr "Coincidir capitalización"
-
-#~ msgid "<b>Default language</b>"
-#~ msgstr "<b>Resaltado por omisión</b>"
-
-#~ msgid "Python"
-#~ msgstr "Python"
-
-#~ msgid "Python support"
-#~ msgstr "Soporte Python"
-
-#~ msgid "Terminal plugin"
-#~ msgstr "Plugin de terminal"
-
-#~ msgid "medit"
-#~ msgstr "medit"
-
-#~ msgid "Dialog title|System Info"
-#~ msgstr "Información de sistema"
-
-#~ msgid "System Info"
-#~ msgstr "Información de sistema"
-
-#~ msgid "Use default theme font"
-#~ msgstr "Usar la tipografía por defecto del tema"
-
-#~ msgid "Loading and saving"
-#~ msgstr "Cargar y salvar"
-
-#~ msgid "Languages and files"
-#~ msgstr "Tipos de archivos"
-
-#~ msgid "DPatch"
-#~ msgstr "DPatch"
-
-#~ msgid "GAP source file"
-#~ msgstr "Fichero de fuente GAP"
-
-#~ msgid "Show file selector"
-#~ msgstr "AMostrar selector de archivos"
-
-#~ msgid "Show Terminal"
-#~ msgstr "Mostrar terminal"
-
-#~ msgid "Icons _and Labels"
-#~ msgstr "Iconos _y etiquetas"
-
-#~ msgid "Use spaces to indent"
-#~ msgstr "Usa espacios al indentar"
-
-#~ msgid "Close _All"
-#~ msgstr "Cerrar _todos"
-
-#~ msgid "Item in the notebook popup menu|Encoding"
-#~ msgstr "Codificación"
-
-#~ msgid "Chars: "
-#~ msgstr "Caracteres: "
-
-#~ msgid "Could not find help files, most likely it means broken installation"
-#~ msgstr ""
-#~ "No se encontraron archivos de ayuda, lo que probablemente significa una "
-#~ "instalación rota"
-
-#~ msgid "MooScript"
-#~ msgstr "Mooscript"
-
-#~ msgid "Close _without Saving"
-#~ msgstr "Cerrar _sin guardar"
-
-#~ msgid "CVS and SVN dirs"
-#~ msgstr "Directorios CVS y SVN"
-
-#~ msgid "Select _All"
-#~ msgstr "Seleccionar _todo"

@@ -1618,13 +1618,6 @@ moo_app_get_system_info (MooApp *app)
   g_string_append (text, "\n");
   g_strfreev (dirs);
 
-  g_string_append (text, "Lib dirs: ");
-  dirs = moo_get_lib_dirs ();
-  for (p = dirs; p && *p; ++p)
-    g_string_append_printf (text, "%s'%s'", p == dirs ? "" : ", ", *p);
-  g_string_append (text, "\n");
-  g_strfreev (dirs);
-
 #ifdef MOO_BROKEN_GTK_THEME
   g_string_append (text, "Broken gtk theme: yes\n");
 #endif

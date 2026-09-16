@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: moo\n"
 "Report-Msgid-Bugs-To: https://github.com/abbat/medit/issues\n"
-"POT-Creation-Date: 2026-09-16 18:36+0300\n"
+"POT-Creation-Date: 2026-09-16 21:36+0300\n"
 "PO-Revision-Date: 2019-10-28 16:46MSK\n"
 "Last-Translator: Olesya Gerasimenko <gammaray@basealt.ru>\n"
 "Language-Team: Basealt Translation Team\n"
@@ -124,7 +124,7 @@ msgstr "_Благодарности"
 msgid "_License"
 msgstr "_Лицензия"
 
-#: src/mooapp/about.cpp:312 src/mooapp/credits.cpp:178
+#: src/mooapp/about.cpp:312 src/mooapp/credits.cpp:177
 msgid "_Close"
 msgstr "_Закрыть"
 
@@ -136,19 +136,26 @@ msgstr "О программе"
 msgid "medit is a text editor"
 msgstr "medit — текстовый редактор"
 
-#: src/mooapp/credits.cpp:140
+#: src/mooapp/credits.cpp:117
+msgid "translator-credits"
+msgstr ""
+"Андрей Федосеев <andrey.fedoseev@gmail.com>\n"
+"Denis Koryavov <dkoryavov@yandex.ru>\n"
+"Олеся Герасименко <gammaray@basealt.ru>"
+
+#: src/mooapp/credits.cpp:139
 msgid "Thanks"
 msgstr "Спасибо"
 
-#: src/mooapp/credits.cpp:143
+#: src/mooapp/credits.cpp:142
 msgid "Written by"
 msgstr "Авторы"
 
-#: src/mooapp/credits.cpp:146
+#: src/mooapp/credits.cpp:145
 msgid "Translated by"
 msgstr "Перевод"
 
-#: src/mooapp/credits.cpp:233
+#: src/mooapp/credits.cpp:232
 msgid "Credits"
 msgstr "Благодарности"
 
@@ -703,11 +710,11 @@ msgstr ""
 msgid "Invalid regular expression"
 msgstr "Неверное регулярное выражение"
 
-#: src/mooedit/mooedit-fileops.cpp:1107 src/plugins/moofileselector.cpp:512
+#: src/mooedit/mooedit-fileops.cpp:1110 src/plugins/moofileselector.cpp:512
 msgid "Untitled"
 msgstr "Без имени"
 
-#: src/mooedit/mooedit-fileops.cpp:1109
+#: src/mooedit/mooedit-fileops.cpp:1112
 #, c-format
 msgid "Untitled %d"
 msgstr "Без имени %d"
@@ -1249,36 +1256,20 @@ msgstr "ВСТАВКА"
 msgid "_Language"
 msgstr "_Язык"
 
-#: src/mooedit/mooplugin.cpp:1415
+#: src/mooedit/mooplugin.cpp:1332
 msgctxt "Prefs page label"
 msgid "Plugins"
 msgstr "Модули"
 
-#: src/mooedit/mooplugin.cpp:1442
+#: src/mooedit/mooplugin.cpp:1359
 msgctxt "plugin-prefs-column"
 msgid "Enabled"
 msgstr "Включён"
 
-#: src/mooedit/mooplugin.cpp:1448
+#: src/mooedit/mooplugin.cpp:1365
 msgctxt "plugin-prefs-column"
 msgid "Plugin"
 msgstr "Модуль"
-
-#. Translators: remove the part before and including |
-#: src/mooedit/mooplugin-loader.cpp:214
-#, c-format
-msgid ""
-"console message|ignoring file '%s', module version '%s' is not compatible "
-"with current version %u.%u"
-msgstr ""
-"файл «%s» был пропущен, версия модуля «%s» несовместима с текущей версией %u."
-"%u"
-
-#. Translators: remove the part before and including |
-#: src/mooedit/mooplugin-loader.cpp:224
-#, c-format
-msgid "console message|invalid module version '%s' in file '%s'"
-msgstr "неверная версия модуля «%s» в файле «%s»"
 
 #: src/mooedit/mootextfind.cpp:158
 msgctxt "Dialog title"
@@ -2015,7 +2006,7 @@ msgid "Could not remove %s: %s"
 msgstr "Не удалось удалить файл %s: %s"
 
 #. Translators: remove the part before and including |
-#: src/mooutils/mooutils-misc.cpp:1607
+#: src/mooutils/mooutils-misc.cpp:1540
 #, c-format
 msgid "console message|in file %s, line %d, function %s: %s"
 msgstr "в файле %s, на строке %d, в функции %s: %s"
@@ -2023,7 +2014,7 @@ msgstr "в файле %s, на строке %d, в функции %s: %s"
 #. "Unknown error" may be displayed if there is a bug in the program
 #. and proper error message has not been set. It doesn't provide any
 #. useful information obviously
-#: src/mooutils/mooutils-misc.cpp:1847
+#: src/mooutils/mooutils-misc.cpp:1780
 msgid "Unknown error"
 msgstr "Неизвестная ошибка"
 
@@ -2339,15 +2330,21 @@ msgstr "Новое имя для «%s»"
 msgid "New name"
 msgstr "Новое имя"
 
-#: src/plugins/lsp/lsp-edits.cpp:463 src/plugins/lsp/lsp-edits.cpp:473
+#: src/plugins/lsp/lsp-edits.cpp:508 src/plugins/lsp/lsp-edits.cpp:518
+#: src/plugins/lsp/lsp-edits.cpp:621
 msgid "Rename failed"
 msgstr "Не удалось переименовать"
 
-#: src/plugins/lsp/lsp-edits.cpp:474
+#: src/plugins/lsp/lsp-edits.cpp:519
 msgid "The server had nothing to change."
 msgstr "Серверу нечего менять."
 
-#: src/plugins/lsp/lsp-edits.cpp:577
+#: src/plugins/lsp/lsp-edits.cpp:623
+#, fuzzy
+msgid "There is nothing to rename here."
+msgstr "Серверу нечего менять."
+
+#: src/plugins/lsp/lsp-edits.cpp:770
 msgid "Formatting failed"
 msgstr "Не удалось отформатировать"
 
@@ -2551,7 +2548,7 @@ msgstr "Показать дерево символов"
 msgid "%s failed to start: %s"
 msgstr "%s не удалось запустить: %s"
 
-#: src/plugins/lsp/lsp-server.cpp:920 src/plugins/lsp/lsp-server.cpp:1311
+#: src/plugins/lsp/lsp-server.cpp:920 src/plugins/lsp/lsp-server.cpp:1317
 msgid "unknown error"
 msgstr "неизвестная ошибка"
 
@@ -2565,7 +2562,7 @@ msgstr "%s ответил на запрос initialize без списка во�
 msgid "%s did not answer the initialize request in %d seconds"
 msgstr "%s не ответил на запрос initialize за %d с"
 
-#: src/plugins/lsp/lsp-server.cpp:1268
+#: src/plugins/lsp/lsp-server.cpp:1274
 #, c-format
 msgid ""
 "%s exited immediately %d times in a row; check the command in the LSP "
@@ -2574,7 +2571,7 @@ msgstr ""
 "%s завершился сразу же %d раза подряд; проверьте команду в файле настройки "
 "LSP"
 
-#: src/plugins/lsp/lsp-server.cpp:1310
+#: src/plugins/lsp/lsp-server.cpp:1316
 #, c-format
 msgid "could not run %s: %s"
 msgstr "не удалось запустить %s: %s"
@@ -3114,294 +3111,3 @@ msgstr "Текущий документ"
 msgctxt "Save-combo"
 msgid "All documents"
 msgstr "Все документы"
-
-#~ msgid "translator-credits"
-#~ msgstr ""
-#~ "Андрей Федосеев <andrey.fedoseev@gmail.com>\n"
-#~ "Denis Koryavov <dkoryavov@yandex.ru>\n"
-#~ "Олеся Герасименко <gammaray@basealt.ru>"
-
-#~ msgctxt "tab-context-menu"
-#~ msgid "Open Containing Folder"
-#~ msgstr "Открыть содержащую объект папку"
-
-#~ msgid "Lua"
-#~ msgstr "Lua"
-
-#~ msgid "Lua support"
-#~ msgstr "Поддержка Lua"
-
-#~ msgid "Python Output"
-#~ msgstr "Вывод Python"
-
-#~ msgid "Python Console"
-#~ msgstr "Консоль Python"
-
-#~ msgid "Run File"
-#~ msgstr "Исполнить файл"
-
-#~ msgid "Help files not found"
-#~ msgstr "Файлы справки не найдены"
-
-#, c-format
-#~ msgid "File '%s' is missing in the directory '%s'"
-#~ msgstr "Файл «%s» не найден в папке «%s»"
-
-#~ msgid "Could not find help file"
-#~ msgstr "Файл справки не найден"
-
-#, c-format
-#~ msgid "Could not rename file %s to %s: %s"
-#~ msgstr "Не удалось переименовать файл %s в %s: %s"
-
-#~ msgid "Output|Console"
-#~ msgstr "На консоль"
-
-#~ msgid "Lua script"
-#~ msgstr "Сценарий Lua"
-
-#~ msgid "Python script"
-#~ msgstr "Сценарий Python"
-
-#~ msgid "_Enable language server support"
-#~ msgstr "_Включить поддержку языковых серверов"
-
-#~ msgid ""
-#~ "Servers are started for documents the configuration file matches. Takes "
-#~ "effect at once."
-#~ msgstr ""
-#~ "Серверы запускаются для документов, подходящих под файл настройки. "
-#~ "Применяется сразу."
-
-#~ msgid ""
-#~ "console message|in file %s, line %d, function %s:\n"
-#~ "%s"
-#~ msgstr ""
-#~ "в файле %s, на строке %d, в функции %s:\n"
-#~ "%s"
-
-#~ msgid "Could not save file"
-#~ msgstr "Не удалось сохранить файл"
-
-#~ msgid ""
-#~ "Error saving file\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Ошибка при сохранении файла\n"
-#~ "%s"
-
-#~ msgid "Error saving file"
-#~ msgstr "Ошибка при сохранении файла"
-
-#~ msgid "Command type:"
-#~ msgstr "Тип команды:"
-
-#~ msgid "Context menu"
-#~ msgstr "Контекстное меню"
-
-#~ msgid "Tools menu"
-#~ msgstr "Меню Инструментов"
-
-#~ msgid "Case sensitive"
-#~ msgstr "С учетом регистра"
-
-#~ msgid "<b>Default language</b>"
-#~ msgstr "<b>Язык по умолчанию</b>"
-
-#~ msgid "Python"
-#~ msgstr "Питон"
-
-#~ msgid "Python support"
-#~ msgstr "Поддержка языка Питон"
-
-#~ msgid "Terminal plugin"
-#~ msgstr "Модуль терминала"
-
-#~ msgid "medit"
-#~ msgstr "medit"
-
-#~ msgid "Dialog title|System Info"
-#~ msgstr "Информация о системе"
-
-#~ msgid "System Info"
-#~ msgstr "Информация о системе"
-
-#~ msgid "Use default theme font"
-#~ msgstr "Использовать шрифт из системной темы"
-
-#~ msgid "Loading and saving"
-#~ msgstr "Открытие и сохранение"
-
-#~ msgid "Languages and files"
-#~ msgstr "Языки и файлы"
-
-#~ msgid "Show Terminal"
-#~ msgstr "Показать терминал"
-
-#~ msgid "Icons _and Labels"
-#~ msgstr "Текст и пиктограммы"
-
-#~ msgid "Use spaces to indent"
-#~ msgstr "Использовать пробелы для отступов"
-
-#~ msgid "Close _All"
-#~ msgstr "Закрыть _Все"
-
-#~ msgid "MooScript"
-#~ msgstr "MooScript"
-
-#~ msgid "Close _without Saving"
-#~ msgstr "Закрыть _без сохранения"
-
-#~ msgid "CVS and SVN dirs"
-#~ msgstr "Каталоги SVN и CVS"
-
-#~ msgid "Select _All"
-#~ msgstr "Выделить Всё"
-
-#~ msgid "Indentation"
-#~ msgstr "Отступы"
-
-#~ msgid "Indents text"
-#~ msgstr "Добавляет отступ"
-
-#~ msgid "Moves input focus"
-#~ msgstr "Перемещает фокус ввода"
-
-#~ msgid "Tab key:"
-#~ msgstr "Клавиша табуляции:"
-
-#~ msgid "Current locale (%s)"
-#~ msgstr "Текущая локаль (%s)"
-
-#~ msgid "Current locale"
-#~ msgstr "Текущая локаль"
-
-#~ msgid "Execute python code in an existing instance"
-#~ msgstr "Запустить код на языке Python в запущенной копии приложения"
-
-#~ msgid "CODE"
-#~ msgstr "CODE"
-
-#~ msgid "Execute python file in an existing instance"
-#~ msgstr "Запустить скрипт на языке Python в запущенной копии приложения"
-
-#~ msgid "FILE"
-#~ msgstr "FILE"
-
-#~ msgid "File is not a valid .desktop file"
-#~ msgstr "Выбранный файл не является .desktop файлом"
-
-#~ msgid "Unrecognized desktop file Version '%s'"
-#~ msgstr "Неверная версия файла .desktop '%s'"
-
-#~ msgid "Starting %s"
-#~ msgstr "Запускается %s"
-
-#~ msgid "Application does not accept documents on command line"
-#~ msgstr "Приложени не принимает документы как аргументы коммандной строки"
-
-#~ msgid "Unrecognized launch option: %d"
-#~ msgstr "Неверная опция запуска: %d"
-
-#~ msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
-#~ msgstr "Сделать ссылку"
-
-#~ msgid "Not a launchable item"
-#~ msgstr "Невозможно запустить элемент"
-
-#~ msgid "Disable connection to session manager"
-#~ msgstr "Отключиться от менеджера сессий"
-
-#~ msgid "Specify file containing saved configuration"
-#~ msgstr "Укажите файл, содержащий сохраненные настройки"
-
-#~ msgid "Specify session management ID"
-#~ msgstr "ID"
-
-#~ msgid "ID"
-#~ msgstr "ID"
-
-#~ msgid "Session Management Options"
-#~ msgstr "Настройки менеджера сессий"
-
-#~ msgid "Show Session Management options"
-#~ msgstr "Показать настройки менеджера сессий"
-
-#~ msgid "Dialogs"
-#~ msgstr "Диалоги"
-
-#~ msgid "Loading"
-#~ msgstr "Открытие"
-
-#~ msgid "Saving"
-#~ msgstr "Сохранение"
-
-#~ msgid "Sessions"
-#~ msgstr "Сессии"
-
-#~ msgid "Default language:"
-#~ msgstr "Язык по умолчанию:"
-
-#~ msgid "Indent width, spaces:"
-#~ msgstr "Ширина отступа, в пробелах:"
-
-#~ msgid "Keyboard"
-#~ msgstr "Клавиатура"
-
-#~ msgid "Misc"
-#~ msgstr "Прочее"
-
-#~ msgid "File filters"
-#~ msgstr "Фильтры файлов"
-
-#~ msgid "Language-specific options"
-#~ msgstr "Языковые настройки"
-
-#~ msgid "Font and colors"
-#~ msgstr "Шрифт и цвета"
-
-#~ msgid "Highlighting"
-#~ msgstr "Подсветка"
-
-#~ msgid "Text wrapping"
-#~ msgstr "Перенос текста"
-
-#~ msgid "Files:"
-#~ msgstr "Файлы:"
-
-#~ msgid "Plugins"
-#~ msgstr "Модули"
-
-#~ msgid "Don't prompt on replace"
-#~ msgstr "Не спрашивать при замене"
-
-#~ msgid "Find backwards"
-#~ msgstr "Снизу вверх"
-
-#~ msgid "From cursor"
-#~ msgstr "От курсора"
-
-#~ msgid "Literal replacement"
-#~ msgstr "Литеральная замена"
-
-#~ msgid "Replacement text:"
-#~ msgstr "Текст для замены:"
-
-#~ msgid "Selected text"
-#~ msgstr "В выделенном тексте"
-
-#~ msgid "Text to find:"
-#~ msgstr "Текст для поиска:"
-
-#~ msgid "Whole words only"
-#~ msgstr "Только целые слова"
-
-#~ msgid "None"
-#~ msgstr "Нет"
-
-#~ msgid "%u replacements made"
-#~ msgstr "Произведено замен: %u"
-
-#~ msgid "Open With"
-#~ msgstr "Открыть с помощью"
