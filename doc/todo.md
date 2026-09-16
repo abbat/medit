@@ -3,31 +3,35 @@
 *For agents working in this tree. Nothing here is a promise; each entry is something the
 code once meant to do, with what is in the tree today and what it would take.*
 
-The first entry came out of commented-out code that CodeQL's `cpp/commented-out-code`
-reported. The blocks themselves are gone — each named functions, flags or dialogs that
-do not exist, so none of them would have compiled and none could have been switched back
-on — but one of them described something the program still does not do. `git log -S` on
-the names below finds the removal and the original text. The rest turned out to describe
-work that has since been done: `moo_editor_create_doc()` makes a document outside any
-window today, and `moo_notebook_insert_page()` calls `gtk_widget_set_can_focus()` a few
-lines below where the disabled `GTK_WIDGET_SET_FLAGS` sat.
+This file used to open with the file view overwriting a dropped file without asking. That
+entry is gone because the code is: `run_command_on_files()` in `moofileview.cpp` asks once
+for every name already taken in the destination, and reads what the command it spawned did.
+It came out of commented-out code that CodeQL's `cpp/commented-out-code` reported, and the
+rest of those blocks described work that has since been done — `moo_editor_create_doc()`
+makes a document outside any window today, and `moo_notebook_insert_page()` calls
+`gtk_widget_set_can_focus()` a few lines below where the disabled `GTK_WIDGET_SET_FLAGS`
+sat. `git log -S` on those names finds the removal and the original text.
 
-## The file view overwrites without asking
+## A user tool that cannot start says so to nobody
 
-`copy_files()` in `moofileview.cpp` spawns `cp -R --` and returns; `_moo_unix_spawn_async()`
-keeps neither the exit status nor the standard error. Dropping a file onto a folder that
-already holds a file of that name replaces it with no prompt and no undo, and dropping a
-file onto the folder it is already in makes `cp` refuse with "are the same file" where
-nobody sees it, so the drop reads as having done nothing.
+`moocommand-exe.cpp` runs a tool three ways, and two of them lose the failure. `run_sync()`
+and the async launch both end in the same line — `g_message ("%s: could not run command: %s
+(command line was '%s')")` — which is stderr, and a medit started from a desktop file has no
+terminal for anyone to read it in. A tool whose command line has an unpaired quote, or which
+names a program that is not installed, is a menu item that does nothing and explains nothing.
+`moo_error_dialog()` does not appear anywhere in `src/plugins/usertools`.
 
-Upstream had a disabled answer to the second half: a single-file drop whose destination
-was the file's own directory opened a "copy file" dialog and ran `cp -R --` with the name
-it returned. The dialog it called, `_moo_file_view_copy_file_dialog()`, was never written.
+The third way is not affected: a tool that runs in the output pane says what it said on
+screen, because that is what the pane is for.
 
-What this wants is one prompt shared by both cases — the destination already has this
-name; replace, skip, or copy under a new name — rather than a special case for the
-same-directory drop. Reporting what the spawned command did is the other half: a `cp`
-that fails for any reason is silent today.
+There is a second half, and it is the one the file view had. `run_command()` calls
+`run_sync()` with `NULL` for both `exit_status` and `output_err`, so a tool that starts and
+then fails is silent too — the exit status is not asked for and the standard error is thrown
+away. What this wants is the dialog the rest of the program puts an error in, and the
+`WIFEXITED`/`WEXITSTATUS` pair that `rm_fr()` in `mooutils-fs.cpp` has always had.
+
+A tool whose command does not exist is the test, and there is room for it:
+`src/plugins/usertools` is at 64.8%, the second lowest module in the tree.
 
 ## Folding is drawn, toggled and never created
 
@@ -47,7 +51,7 @@ and the margin drawing, and to start over the day someone wants folding.
 
 ---
 
-*The next four are not leftovers of removed code. They are the places where the tree is
+*The next five are not leftovers of removed code. They are the places where the tree is
 going to stop building, or is building on something nobody looks at, and each one is
 cheaper to answer before it becomes a bug report.*
 
@@ -102,6 +106,30 @@ for dropping the runtime, or the first feature that cannot be written twice. Unt
 those happens the double build is the price of a fork that still runs where the original
 ran, and this entry exists so that the next person to ask is told what the answer depends
 on rather than told no.
+
+## `MooFileSystem` is an interface with one implementation
+
+`moofilesystem.cpp` is a `GObject` whose class struct is a vtable, and its `class_init()`
+fills every slot of it with a function in the same file whose name ends in `_unix`. Nothing
+derives from the class, `_moo_file_system_create()` hands out a single instance and keeps a
+weak reference to it so that the next caller gets the same one, and the ten public functions
+are a `g_return_val_if_fail` followed by `MOO_FILE_SYSTEM_GET_CLASS(fs)->something (fs, ...)`.
+Half the implementations mark `fs` itself `G_GNUC_UNUSED`.
+
+It was the shape a Windows port would have needed, and there is no Windows port: the fork
+builds and is packaged for Linux only, and `/* TODO windows */` in `moofileview.cpp` is the
+only other trace of one.
+
+Collapsing it is a deletion rather than a rewrite — the `_unix` functions stay and become
+the functions, the vtable and the `GET_CLASS` hops go, and the `fs` argument comes off a
+dozen signatures. What is worth keeping is the singleton: the folder cache lives on the
+instance, and two file views must share it.
+
+The notes that accumulate around the indirection go with it. `/* XXX must set error */` and
+`/* XXX check the caller */` sit over `parse_path_unix()` and its neighbours, and they are
+accurate — several of those paths return `FALSE` with the `GError` untouched. Nothing
+crashes on it, because `moo_error_message()` answers "Unknown error" for a null error, which
+is also exactly what the user is told.
 
 ---
 
