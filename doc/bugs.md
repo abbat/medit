@@ -94,6 +94,13 @@ Reading these first will usually identify the next one:
   about it at any level, which is why the UI job compiles with clang.
   → *When a port adds a guard, check that everything depending on the guarded call moved
   inside it.*
+- **`7a9881c`** The pointer vanished over the text after typing (seen after Ctrl+S) until
+  the window lost focus. GTK+2's `GtkTextView` hid it through the public
+  `mouse_cursor_obscured` field moo shared; GTK+3 hides it with a private flag that only
+  its own `motion_notify_event` clears, and moo's override did not chain up. moo's own
+  copy of the flag said the cursor was up, so it never set it again.
+  → *A private field that replaced a public one is state you can no longer see: chain up,
+  and check what the window actually has rather than what you last set.*
 
 ## What the marker sweep found, and what it cost to fix
 
