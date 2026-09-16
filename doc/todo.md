@@ -92,20 +92,6 @@ removed code: these are the parts of the protocol the plugin knows about and has
 for. Each entry says what is in the tree today, because in several cases the answer is
 "the capability is announced and the request is never sent".*
 
-## `textDocument/declaration` is announced and never asked
-
-`client_capabilities()` in `lsp-server.cpp` announces `linkSupport` for `definition`,
-`typeDefinition`, `implementation` **and** `declaration`, but `declaration` is the one of
-the four with no action behind it: `lsp-plugin.cpp` registers Go to Definition, Go to Type
-Definition and Go to Implementation, and nothing sends `textDocument/declaration`. The
-machinery is already general — `lsp_goto_location (window, view, method)` in
-`lsp-navigate.cpp` takes the method name, and `lsp_can_ask()` derives the provider name
-from it — so this is an action, a menu item and a UI test, not new plumbing.
-
-The alternative is to drop `declaration` from `link_methods[]`, so that nothing is claimed
-that cannot be used. For C and C++ the distinction between a declaration and a definition
-is the one that matters most, which argues for adding it rather than removing it.
-
 ## Nothing is read-only: no code lens, inlay hints or semantic tokens
 
 The three features that decorate a document without being asked are all missing, and all

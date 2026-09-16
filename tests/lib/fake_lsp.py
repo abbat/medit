@@ -50,6 +50,7 @@ import time
 DEFAULT_CAPABILITIES = {
     "textDocumentSync": {"openClose": True, "change": 1, "save": True},
     "definitionProvider": True,
+    "declarationProvider": True,
     "typeDefinitionProvider": True,
     "implementationProvider": True,
     "documentSymbolProvider": True,

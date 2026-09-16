@@ -1038,6 +1038,13 @@ goto_definition_cb (MooEditWindow *window)
 
 
 static void
+goto_declaration_cb (MooEditWindow *window)
+{
+    lsp_goto_definition (window, "textDocument/declaration");
+}
+
+
+static void
 goto_type_definition_cb (MooEditWindow *window)
 {
     lsp_goto_definition (window, "textDocument/typeDefinition");
@@ -1354,6 +1361,13 @@ lsp_plugin_init (LspPlugin *plugin)
                                  "closure-callback", code_actions_cb,
                                  nullptr);
 
+    moo_window_class_new_action (klass, "GoToDeclaration", MOO_LSP_PLUGIN_ID,
+                                 "display-name", _("Go to Declaration"),
+                                 "label", _("Go to Dec_laration"),
+                                 "tooltip", _("Go to the declaration of what is under the cursor"),
+                                 "closure-callback", goto_declaration_cb,
+                                 nullptr);
+
     moo_window_class_new_action (klass, "GoToTypeDefinition", MOO_LSP_PLUGIN_ID,
                                  "display-name", _("Go to Type Definition"),
                                  "label", _("Go to _Type Definition"),
@@ -1518,6 +1532,9 @@ lsp_plugin_init (LspPlugin *plugin)
                              "GoToDefinition", "GoToDefinition", -1);
         moo_ui_xml_add_item (xml, plugin->ui_merge_id,
                              "Editor/Menubar/Document",
+                             "GoToDeclaration", "GoToDeclaration", -1);
+        moo_ui_xml_add_item (xml, plugin->ui_merge_id,
+                             "Editor/Menubar/Document",
                              "GoToTypeDefinition", "GoToTypeDefinition", -1);
         moo_ui_xml_add_item (xml, plugin->ui_merge_id,
                              "Editor/Menubar/Document",
@@ -1561,6 +1578,7 @@ lsp_plugin_deinit (LspPlugin *plugin)
     moo_window_class_remove_action (klass, "ShowLspReferences");
     moo_window_class_remove_action (klass, "ShowLspSymbols");
     moo_window_class_remove_action (klass, "GoToDefinition");
+    moo_window_class_remove_action (klass, "GoToDeclaration");
     moo_window_class_remove_action (klass, "GoToTypeDefinition");
     moo_window_class_remove_action (klass, "GoToImplementation");
     moo_window_class_remove_action (klass, "ExpandSelection");
