@@ -3,6 +3,37 @@
 *For agents working in this tree. Nothing here is a promise; each entry is something the
 code once meant to do, with what is in the tree today and what it would take.*
 
+## What to suggest first
+
+Asked what could be improved, or what to do next, answer in this order. A rung is only
+reached when there is nothing left worth doing above it.
+
+0. **Losing or corrupting what the user wrote.** Anything that can do that — a crash with
+   unsaved documents, a save that writes the wrong bytes, a broken undo, an overwrite
+   nobody was asked about — comes before everything else on this list, whatever else is
+   open.
+1. **Stability.** The program must not crash, and what it does must be predictable. In
+   order — tests, UI and unit, both for coverage and for the edge cases; less code,
+   because less of it is easier to test and to keep; less legacy, because that is what the
+   next toolkit will cost; and safer practice where the code is being touched anyway —
+   smart pointers, ownership that releases itself, guards. The build and CI belong here
+   too: they are what keeps the rest of it true.
+2. **Speed.** Lightness is what this editor is liked for. The hot paths of working with
+   text first; then the user's own speed — fewer actions and less to think about for
+   writing, editing, searching and replacing; then the extremes, a 100 MB json, a 100 MB
+   single line, an expression that takes exponential time. Always with a measurement where
+   one can be taken, and never by making the code harder to keep: stability outranks speed,
+   so an optimisation that costs three hundred lines needs numbers before it is written,
+   not after.
+3. **New features.** Last, and only what the rungs above do not already argue against. New
+   ones go into the GTK+3 build; GTK+2 is kept working, not extended, and a feature that
+   would need a second implementation there simply does not get one.
+
+Translations and documentation are not a rung: they are part of the change that made them
+wrong, and are updated in the same commit. Packaging is last of all — CI builds the
+packages on every push, and a broken one really matters only at a release, where there is
+time to fix it.
+
 This file used to open with the file view overwriting a dropped file without asking. That
 entry is gone because the code is: `run_command_on_files()` in `moofileview.cpp` asks once
 for every name already taken in the destination, and reads what the command it spawned did.
