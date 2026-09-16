@@ -93,5 +93,11 @@
  * a newline in for it all the same, so the plugin matches it by hand.
  */
 #define MOO_EDIT_ACCEL_CODE_ACTION "<Alt>Return"
+/*
+ * What VS Code uses, and free here: Alt+Shift with the arrows across is
+ * nothing, while up and down move lines about.
+ */
+#define MOO_EDIT_ACCEL_EXPAND_SELECTION "<Alt><Shift>Right"
+#define MOO_EDIT_ACCEL_SHRINK_SELECTION "<Alt><Shift>Left"
 
 #endif /* MOO_EDIT_ACCELS_H */

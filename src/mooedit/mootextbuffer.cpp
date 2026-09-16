@@ -386,7 +386,6 @@ moo_text_buffer_dispose (GObject *object)
 
     if (buffer->priv->fold_tree)
     {
-        /* XXX leak if folds are not deleted */
         _moo_fold_tree_free (buffer->priv->fold_tree);
         buffer->priv->fold_tree = NULL;
     }

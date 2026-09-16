@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: moo\n"
 "Report-Msgid-Bugs-To: https://github.com/abbat/medit/issues\n"
-"POT-Creation-Date: 2026-09-16 16:13+0300\n"
+"POT-Creation-Date: 2026-09-16 17:53+0300\n"
 "PO-Revision-Date: 2007-11-10 22:45+0100\n"
 "Last-Translator: Vlastimil Ott <vlastimil@e-ott.info>\n"
 "Language-Team:  <cs@li.org>\n"
@@ -168,7 +168,7 @@ msgstr ""
 msgid "Report a Bug..."
 msgstr ""
 
-#: src/mooapp/mooapp.cpp:1130
+#: src/mooapp/mooapp.cpp:1139
 msgid "Checking for unsaved documents"
 msgstr ""
 
@@ -2299,8 +2299,8 @@ msgctxt "diagnostic severity"
 msgid "error"
 msgstr "chyba"
 
-#: src/plugins/lsp/lsp-edits.cpp:363 src/plugins/lsp/lsp-plugin.cpp:1328
-#: src/plugins/lsp/lsp-plugin.cpp:1381
+#: src/plugins/lsp/lsp-edits.cpp:363 src/plugins/lsp/lsp-plugin.cpp:1342
+#: src/plugins/lsp/lsp-plugin.cpp:1411
 msgid "Rename"
 msgstr "Přejmenovat"
 
@@ -2329,7 +2329,7 @@ msgstr "Server neměl co změnit."
 msgid "Formatting failed"
 msgstr "Formátování se nezdařilo"
 
-#: src/plugins/lsp/lsp-plugin.cpp:104 src/plugins/lsp/lsp-plugin.cpp:1293
+#: src/plugins/lsp/lsp-plugin.cpp:104 src/plugins/lsp/lsp-plugin.cpp:1307
 msgid "LSP"
 msgstr "LSP"
 
@@ -2337,154 +2337,183 @@ msgstr "LSP"
 msgid "Language server protocol client"
 msgstr "Klient protokolu jazykového serveru"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1191 src/plugins/lsp/lsp-plugin.cpp:1296
-#: src/plugins/lsp/lsp-plugin.cpp:1297
+#: src/plugins/lsp/lsp-plugin.cpp:1205 src/plugins/lsp/lsp-plugin.cpp:1310
+#: src/plugins/lsp/lsp-plugin.cpp:1311
 msgid "Diagnostics"
 msgstr "Diagnostika"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1205 src/plugins/lsp/lsp-plugin.cpp:1447
-#: src/plugins/lsp/lsp-plugin.cpp:1448
+#: src/plugins/lsp/lsp-plugin.cpp:1219 src/plugins/lsp/lsp-plugin.cpp:1477
+#: src/plugins/lsp/lsp-plugin.cpp:1478
 msgid "References"
 msgstr "Použití"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1213 src/plugins/lsp/lsp-plugin.cpp:1455
-#: src/plugins/lsp/lsp-plugin.cpp:1456
+#: src/plugins/lsp/lsp-plugin.cpp:1227 src/plugins/lsp/lsp-plugin.cpp:1485
+#: src/plugins/lsp/lsp-plugin.cpp:1486
 msgid "Symbols"
 msgstr "Symboly"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1298
+#: src/plugins/lsp/lsp-plugin.cpp:1312
 msgid "Show the diagnostics pane"
 msgstr "Zobrazit panel diagnostiky"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1304 src/plugins/lsp/lsp-plugin.cpp:1367
+#: src/plugins/lsp/lsp-plugin.cpp:1318 src/plugins/lsp/lsp-plugin.cpp:1397
 msgid "Go to Definition"
 msgstr "Přejít na definici"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1305 src/plugins/lsp/lsp-plugin.cpp:1368
+#: src/plugins/lsp/lsp-plugin.cpp:1319 src/plugins/lsp/lsp-plugin.cpp:1398
 msgid "Go to _Definition"
 msgstr "Přejít na _definici"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1306 src/plugins/lsp/lsp-plugin.cpp:1369
+#: src/plugins/lsp/lsp-plugin.cpp:1320 src/plugins/lsp/lsp-plugin.cpp:1399
 msgid "Go to the definition of what is under the cursor"
 msgstr "Přejít na definici toho, co je pod kurzorem"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1312 src/plugins/lsp/lsp-plugin.cpp:1374
+#: src/plugins/lsp/lsp-plugin.cpp:1326 src/plugins/lsp/lsp-plugin.cpp:1404
 msgid "Find References"
 msgstr "Najít použití"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1313 src/plugins/lsp/lsp-plugin.cpp:1375
+#: src/plugins/lsp/lsp-plugin.cpp:1327 src/plugins/lsp/lsp-plugin.cpp:1405
 msgid "Find _References"
 msgstr "Najít _použití"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1314 src/plugins/lsp/lsp-plugin.cpp:1376
+#: src/plugins/lsp/lsp-plugin.cpp:1328 src/plugins/lsp/lsp-plugin.cpp:1406
 msgid "List every use of what is under the cursor"
 msgstr "Vypsat všechna použití toho, co je pod kurzorem"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1321
+#: src/plugins/lsp/lsp-plugin.cpp:1335
 msgid "Format Document"
 msgstr "Naformátovat dokument"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1322
+#: src/plugins/lsp/lsp-plugin.cpp:1336
 msgid "_Format Document"
 msgstr "_Naformátovat dokument"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1323
+#: src/plugins/lsp/lsp-plugin.cpp:1337
 msgid "Let the language server lay the document out"
 msgstr "Nechat dokument naformátovat jazykovým serverem"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1329 src/plugins/lsp/lsp-plugin.cpp:1382
+#: src/plugins/lsp/lsp-plugin.cpp:1343 src/plugins/lsp/lsp-plugin.cpp:1412
 msgid "_Rename..."
 msgstr "Pře_jmenovat…"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1330 src/plugins/lsp/lsp-plugin.cpp:1383
+#: src/plugins/lsp/lsp-plugin.cpp:1344 src/plugins/lsp/lsp-plugin.cpp:1413
 msgid "Rename what is under the cursor everywhere"
 msgstr "Přejmenovat všude to, co je pod kurzorem"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1336 src/plugins/lsp/lsp-plugin.cpp:1388
+#: src/plugins/lsp/lsp-plugin.cpp:1350 src/plugins/lsp/lsp-plugin.cpp:1418
 msgid "Code Actions"
 msgstr "Akce kódu"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1337 src/plugins/lsp/lsp-plugin.cpp:1389
+#: src/plugins/lsp/lsp-plugin.cpp:1351 src/plugins/lsp/lsp-plugin.cpp:1419
 msgid "Code _Actions..."
 msgstr "A_kce kódu…"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1338 src/plugins/lsp/lsp-plugin.cpp:1390
+#: src/plugins/lsp/lsp-plugin.cpp:1352 src/plugins/lsp/lsp-plugin.cpp:1420
 msgid "Offer what the language server can do here"
 msgstr "Nabídne, co zde jazykový server umí"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1344
+#: src/plugins/lsp/lsp-plugin.cpp:1358
 msgid "Go to Type Definition"
 msgstr "Přejít na definici typu"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1345
+#: src/plugins/lsp/lsp-plugin.cpp:1359
 msgid "Go to _Type Definition"
 msgstr "Přejít na definici _typu"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1346
+#: src/plugins/lsp/lsp-plugin.cpp:1360
 msgid "Go to the definition of the type of what is under the cursor"
 msgstr "Přejít na definici typu toho, co je pod kurzorem"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1351
+#: src/plugins/lsp/lsp-plugin.cpp:1365
 msgid "Go to Implementation"
 msgstr "Přejít na implementaci"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1352
+#: src/plugins/lsp/lsp-plugin.cpp:1366
 msgid "Go to _Implementation"
 msgstr "Přejít na _implementaci"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1353
+#: src/plugins/lsp/lsp-plugin.cpp:1367
 msgid "Go to the implementation of what is under the cursor"
 msgstr "Přejít na implementaci toho, co je pod kurzorem"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1415
+#: src/plugins/lsp/lsp-plugin.cpp:1372
+#, fuzzy
+msgid "Expand Selection"
+msgstr "Výběr"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1373
+#, fuzzy
+msgid "E_xpand Selection"
+msgstr "Výběr"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1374
+#, fuzzy
+msgid "Select what contains the selection"
+msgstr "Zdvojit řádek nebo výběr"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1380
+#, fuzzy
+msgid "Shrink Selection"
+msgstr "Zobrazit výběr souborů"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1381
+#, fuzzy
+msgid "S_hrink Selection"
+msgstr "Zobrazit výběr souborů"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1382
+msgid "Select what the selection contains"
+msgstr ""
+
+#: src/plugins/lsp/lsp-plugin.cpp:1445
 msgid "LSP Servers"
 msgstr "Servery LSP"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1416
+#: src/plugins/lsp/lsp-plugin.cpp:1446
 msgid "LSP _Servers..."
 msgstr "_Servery LSP…"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1417
+#: src/plugins/lsp/lsp-plugin.cpp:1447
 msgid "Edit the list of language servers"
 msgstr "Upravit seznam jazykových serverů"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1423 src/plugins/lsp/lsp-plugin.cpp:1424
+#: src/plugins/lsp/lsp-plugin.cpp:1453 src/plugins/lsp/lsp-plugin.cpp:1454
 msgid "Restart Language Servers"
 msgstr "Restartovat jazykové servery"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1425
+#: src/plugins/lsp/lsp-plugin.cpp:1455
 msgid "Re-read the configuration and start every server again"
 msgstr "Znovu načíst nastavení a spustit každý server znovu"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1431
+#: src/plugins/lsp/lsp-plugin.cpp:1461
 msgid "Complete Word"
 msgstr "Doplnit slovo"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1432
+#: src/plugins/lsp/lsp-plugin.cpp:1462
 msgid "_Complete Word"
 msgstr "_Doplnit slovo"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1433
+#: src/plugins/lsp/lsp-plugin.cpp:1463
 msgid "Ask the language server what could go here"
 msgstr "Zeptat se jazykového serveru, co sem může patřit"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1439
+#: src/plugins/lsp/lsp-plugin.cpp:1469
 msgid "Parameter Hints"
 msgstr "Nápověda k parametrům"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1440
+#: src/plugins/lsp/lsp-plugin.cpp:1470
 msgid "_Parameter Hints"
 msgstr "Nápověda k _parametrům"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1441
+#: src/plugins/lsp/lsp-plugin.cpp:1471
 msgid "Show what the call being typed takes"
 msgstr "Zobrazit, co přijímá právě psané volání"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1449
+#: src/plugins/lsp/lsp-plugin.cpp:1479
 msgid "Show the references pane"
 msgstr "Zobrazit panel použití"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1457
+#: src/plugins/lsp/lsp-plugin.cpp:1487
 msgid "Show the symbol tree"
 msgstr "Zobrazit strom symbolů"
 
@@ -2493,7 +2522,7 @@ msgstr "Zobrazit strom symbolů"
 msgid "%s failed to start: %s"
 msgstr "%s se nepodařilo spustit: %s"
 
-#: src/plugins/lsp/lsp-server.cpp:920 src/plugins/lsp/lsp-server.cpp:1304
+#: src/plugins/lsp/lsp-server.cpp:920 src/plugins/lsp/lsp-server.cpp:1311
 msgid "unknown error"
 msgstr "neznámá chyba"
 
@@ -2507,7 +2536,7 @@ msgstr "%s odpověděl na inicializační požadavek bez jakýchkoli schopností
 msgid "%s did not answer the initialize request in %d seconds"
 msgstr "%s neodpověděl na inicializační požadavek do %d sekund"
 
-#: src/plugins/lsp/lsp-server.cpp:1261
+#: src/plugins/lsp/lsp-server.cpp:1268
 #, c-format
 msgid ""
 "%s exited immediately %d times in a row; check the command in the LSP "
@@ -2516,7 +2545,7 @@ msgstr ""
 "%s se %d× po sobě okamžitě ukončil; zkontrolujte příkaz v konfiguračním "
 "souboru LSP"
 
-#: src/plugins/lsp/lsp-server.cpp:1303
+#: src/plugins/lsp/lsp-server.cpp:1310
 #, c-format
 msgid "could not run %s: %s"
 msgstr "nepodařilo se spustit %s: %s"
@@ -3135,9 +3164,6 @@ msgstr ""
 
 #~ msgid "GAP source file"
 #~ msgstr "Zdrojové soubory GAP"
-
-#~ msgid "Show File Selector"
-#~ msgstr "Zobrazit výběr souborů"
 
 #~ msgid "Show file selector"
 #~ msgstr "Zobrazit výběr souborů"

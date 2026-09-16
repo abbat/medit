@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.1.x-trunk\n"
 "Report-Msgid-Bugs-To: https://github.com/abbat/medit/issues\n"
-"POT-Creation-Date: 2026-09-16 16:13+0300\n"
+"POT-Creation-Date: 2026-09-16 17:53+0300\n"
 "PO-Revision-Date: 2012-08-18 11:07+0900\n"
 "Last-Translator: Toshiharu Kudoh <toshi.kd2@gmail.com>\n"
 "Language-Team: Japanese\n"
@@ -170,7 +170,7 @@ msgstr "設定"
 msgid "Report a Bug..."
 msgstr "バグを報告..."
 
-#: src/mooapp/mooapp.cpp:1130
+#: src/mooapp/mooapp.cpp:1139
 msgid "Checking for unsaved documents"
 msgstr ""
 
@@ -2301,8 +2301,8 @@ msgctxt "diagnostic severity"
 msgid "error"
 msgstr "エラー"
 
-#: src/plugins/lsp/lsp-edits.cpp:363 src/plugins/lsp/lsp-plugin.cpp:1328
-#: src/plugins/lsp/lsp-plugin.cpp:1381
+#: src/plugins/lsp/lsp-edits.cpp:363 src/plugins/lsp/lsp-plugin.cpp:1342
+#: src/plugins/lsp/lsp-plugin.cpp:1411
 msgid "Rename"
 msgstr "名前を変更"
 
@@ -2331,7 +2331,7 @@ msgstr "サーバーに変更するものはありませんでした。"
 msgid "Formatting failed"
 msgstr "整形に失敗しました"
 
-#: src/plugins/lsp/lsp-plugin.cpp:104 src/plugins/lsp/lsp-plugin.cpp:1293
+#: src/plugins/lsp/lsp-plugin.cpp:104 src/plugins/lsp/lsp-plugin.cpp:1307
 msgid "LSP"
 msgstr "LSP"
 
@@ -2339,154 +2339,183 @@ msgstr "LSP"
 msgid "Language server protocol client"
 msgstr "Language Server Protocol クライアント"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1191 src/plugins/lsp/lsp-plugin.cpp:1296
-#: src/plugins/lsp/lsp-plugin.cpp:1297
+#: src/plugins/lsp/lsp-plugin.cpp:1205 src/plugins/lsp/lsp-plugin.cpp:1310
+#: src/plugins/lsp/lsp-plugin.cpp:1311
 msgid "Diagnostics"
 msgstr "診断"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1205 src/plugins/lsp/lsp-plugin.cpp:1447
-#: src/plugins/lsp/lsp-plugin.cpp:1448
+#: src/plugins/lsp/lsp-plugin.cpp:1219 src/plugins/lsp/lsp-plugin.cpp:1477
+#: src/plugins/lsp/lsp-plugin.cpp:1478
 msgid "References"
 msgstr "参照"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1213 src/plugins/lsp/lsp-plugin.cpp:1455
-#: src/plugins/lsp/lsp-plugin.cpp:1456
+#: src/plugins/lsp/lsp-plugin.cpp:1227 src/plugins/lsp/lsp-plugin.cpp:1485
+#: src/plugins/lsp/lsp-plugin.cpp:1486
 msgid "Symbols"
 msgstr "シンボル"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1298
+#: src/plugins/lsp/lsp-plugin.cpp:1312
 msgid "Show the diagnostics pane"
 msgstr "診断ペインを表示します"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1304 src/plugins/lsp/lsp-plugin.cpp:1367
+#: src/plugins/lsp/lsp-plugin.cpp:1318 src/plugins/lsp/lsp-plugin.cpp:1397
 msgid "Go to Definition"
 msgstr "定義へ移動"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1305 src/plugins/lsp/lsp-plugin.cpp:1368
+#: src/plugins/lsp/lsp-plugin.cpp:1319 src/plugins/lsp/lsp-plugin.cpp:1398
 msgid "Go to _Definition"
 msgstr "定義へ移動(_D)"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1306 src/plugins/lsp/lsp-plugin.cpp:1369
+#: src/plugins/lsp/lsp-plugin.cpp:1320 src/plugins/lsp/lsp-plugin.cpp:1399
 msgid "Go to the definition of what is under the cursor"
 msgstr "カーソル位置にあるものの定義へ移動します"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1312 src/plugins/lsp/lsp-plugin.cpp:1374
+#: src/plugins/lsp/lsp-plugin.cpp:1326 src/plugins/lsp/lsp-plugin.cpp:1404
 msgid "Find References"
 msgstr "参照を検索"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1313 src/plugins/lsp/lsp-plugin.cpp:1375
+#: src/plugins/lsp/lsp-plugin.cpp:1327 src/plugins/lsp/lsp-plugin.cpp:1405
 msgid "Find _References"
 msgstr "参照を検索(_R)"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1314 src/plugins/lsp/lsp-plugin.cpp:1376
+#: src/plugins/lsp/lsp-plugin.cpp:1328 src/plugins/lsp/lsp-plugin.cpp:1406
 msgid "List every use of what is under the cursor"
 msgstr "カーソル位置にあるものの使用箇所をすべて一覧表示します"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1321
+#: src/plugins/lsp/lsp-plugin.cpp:1335
 msgid "Format Document"
 msgstr "文書を整形"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1322
+#: src/plugins/lsp/lsp-plugin.cpp:1336
 msgid "_Format Document"
 msgstr "文書を整形(_F)"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1323
+#: src/plugins/lsp/lsp-plugin.cpp:1337
 msgid "Let the language server lay the document out"
 msgstr "言語サーバーに文書を整形させます"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1329 src/plugins/lsp/lsp-plugin.cpp:1382
+#: src/plugins/lsp/lsp-plugin.cpp:1343 src/plugins/lsp/lsp-plugin.cpp:1412
 msgid "_Rename..."
 msgstr "名前を変更(_R)..."
 
-#: src/plugins/lsp/lsp-plugin.cpp:1330 src/plugins/lsp/lsp-plugin.cpp:1383
+#: src/plugins/lsp/lsp-plugin.cpp:1344 src/plugins/lsp/lsp-plugin.cpp:1413
 msgid "Rename what is under the cursor everywhere"
 msgstr "カーソル位置にあるものの名前をすべての箇所で変更します"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1336 src/plugins/lsp/lsp-plugin.cpp:1388
+#: src/plugins/lsp/lsp-plugin.cpp:1350 src/plugins/lsp/lsp-plugin.cpp:1418
 msgid "Code Actions"
 msgstr "コードアクション"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1337 src/plugins/lsp/lsp-plugin.cpp:1389
+#: src/plugins/lsp/lsp-plugin.cpp:1351 src/plugins/lsp/lsp-plugin.cpp:1419
 msgid "Code _Actions..."
 msgstr "コードアクション(_A)..."
 
-#: src/plugins/lsp/lsp-plugin.cpp:1338 src/plugins/lsp/lsp-plugin.cpp:1390
+#: src/plugins/lsp/lsp-plugin.cpp:1352 src/plugins/lsp/lsp-plugin.cpp:1420
 msgid "Offer what the language server can do here"
 msgstr "この位置で言語サーバーができることを提示します"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1344
+#: src/plugins/lsp/lsp-plugin.cpp:1358
 msgid "Go to Type Definition"
 msgstr "型定義へ移動"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1345
+#: src/plugins/lsp/lsp-plugin.cpp:1359
 msgid "Go to _Type Definition"
 msgstr "型定義へ移動(_T)"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1346
+#: src/plugins/lsp/lsp-plugin.cpp:1360
 msgid "Go to the definition of the type of what is under the cursor"
 msgstr "カーソル位置にあるものの型の定義へ移動します"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1351
+#: src/plugins/lsp/lsp-plugin.cpp:1365
 msgid "Go to Implementation"
 msgstr "実装へ移動"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1352
+#: src/plugins/lsp/lsp-plugin.cpp:1366
 msgid "Go to _Implementation"
 msgstr "実装へ移動(_I)"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1353
+#: src/plugins/lsp/lsp-plugin.cpp:1367
 msgid "Go to the implementation of what is under the cursor"
 msgstr "カーソル位置にあるものの実装へ移動します"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1415
+#: src/plugins/lsp/lsp-plugin.cpp:1372
+#, fuzzy
+msgid "Expand Selection"
+msgstr "選択箇所"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1373
+#, fuzzy
+msgid "E_xpand Selection"
+msgstr "選択箇所"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1374
+#, fuzzy
+msgid "Select what contains the selection"
+msgstr "行または選択範囲を複製します"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1380
+#, fuzzy
+msgid "Shrink Selection"
+msgstr "選択箇所"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1381
+#, fuzzy
+msgid "S_hrink Selection"
+msgstr "選択箇所"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1382
+msgid "Select what the selection contains"
+msgstr ""
+
+#: src/plugins/lsp/lsp-plugin.cpp:1445
 msgid "LSP Servers"
 msgstr "LSP サーバー"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1416
+#: src/plugins/lsp/lsp-plugin.cpp:1446
 msgid "LSP _Servers..."
 msgstr "LSP サーバー(_S)..."
 
-#: src/plugins/lsp/lsp-plugin.cpp:1417
+#: src/plugins/lsp/lsp-plugin.cpp:1447
 msgid "Edit the list of language servers"
 msgstr "言語サーバーの一覧を編集します"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1423 src/plugins/lsp/lsp-plugin.cpp:1424
+#: src/plugins/lsp/lsp-plugin.cpp:1453 src/plugins/lsp/lsp-plugin.cpp:1454
 msgid "Restart Language Servers"
 msgstr "言語サーバーを再起動"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1425
+#: src/plugins/lsp/lsp-plugin.cpp:1455
 msgid "Re-read the configuration and start every server again"
 msgstr "設定を読み直し、すべてのサーバーを起動し直します"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1431
+#: src/plugins/lsp/lsp-plugin.cpp:1461
 msgid "Complete Word"
 msgstr "単語を補完"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1432
+#: src/plugins/lsp/lsp-plugin.cpp:1462
 msgid "_Complete Word"
 msgstr "単語を補完(_C)"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1433
+#: src/plugins/lsp/lsp-plugin.cpp:1463
 msgid "Ask the language server what could go here"
 msgstr "ここに何が入りうるかを言語サーバーに問い合わせます"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1439
+#: src/plugins/lsp/lsp-plugin.cpp:1469
 msgid "Parameter Hints"
 msgstr "パラメータヒント"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1440
+#: src/plugins/lsp/lsp-plugin.cpp:1470
 msgid "_Parameter Hints"
 msgstr "パラメータヒント(_P)"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1441
+#: src/plugins/lsp/lsp-plugin.cpp:1471
 msgid "Show what the call being typed takes"
 msgstr "入力中の呼び出しが受け取る引数を表示します"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1449
+#: src/plugins/lsp/lsp-plugin.cpp:1479
 msgid "Show the references pane"
 msgstr "参照ペインを表示します"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1457
+#: src/plugins/lsp/lsp-plugin.cpp:1487
 msgid "Show the symbol tree"
 msgstr "シンボルツリーを表示します"
 
@@ -2495,7 +2524,7 @@ msgstr "シンボルツリーを表示します"
 msgid "%s failed to start: %s"
 msgstr "%s を起動できませんでした: %s"
 
-#: src/plugins/lsp/lsp-server.cpp:920 src/plugins/lsp/lsp-server.cpp:1304
+#: src/plugins/lsp/lsp-server.cpp:920 src/plugins/lsp/lsp-server.cpp:1311
 msgid "unknown error"
 msgstr "不明なエラー"
 
@@ -2509,7 +2538,7 @@ msgstr "%s は初期化要求に機能を示さずに応答しました"
 msgid "%s did not answer the initialize request in %d seconds"
 msgstr "%s は初期化要求に %d 秒以内に応答しませんでした"
 
-#: src/plugins/lsp/lsp-server.cpp:1261
+#: src/plugins/lsp/lsp-server.cpp:1268
 #, c-format
 msgid ""
 "%s exited immediately %d times in a row; check the command in the LSP "
@@ -2518,7 +2547,7 @@ msgstr ""
 "%s が %d 回続けてすぐに終了しました。LSP 設定ファイルのコマンドを確認してくだ"
 "さい"
 
-#: src/plugins/lsp/lsp-server.cpp:1303
+#: src/plugins/lsp/lsp-server.cpp:1310
 #, c-format
 msgid "could not run %s: %s"
 msgstr "%s を実行できませんでした: %s"

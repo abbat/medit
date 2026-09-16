@@ -54,6 +54,7 @@ DEFAULT_CAPABILITIES = {
     "implementationProvider": True,
     "documentSymbolProvider": True,
     "documentHighlightProvider": True,
+    "selectionRangeProvider": True,
     "documentFormattingProvider": True,
     "referencesProvider": True,
     "renameProvider": True,

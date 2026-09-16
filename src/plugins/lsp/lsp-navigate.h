@@ -110,6 +110,30 @@ gboolean    lsp_hover_query_tooltip (MooEditView    *view,
 
 char       *lsp_hover_text          (JsonNode       *result);
 
+/* One range a server named around the position it was asked about. */
+typedef struct {
+    int start_line;
+    int start_character;
+    int end_line;
+    int end_character;
+} LspSelectionRange;
+
+/*
+ * A SelectionRange carries the range containing it in "parent", so a reply is
+ * a chain from the innermost outwards, and the list keeps that order. Only the
+ * first answer is read: one position is ever asked about.
+ */
+GSList     *lsp_selection_ranges_parse (JsonNode    *result);
+
+/*
+ * Grows the selection to the next range around it, or shrinks it to the
+ * largest range inside it. Each is one request about where the selection
+ * starts: a chain kept between the two would go stale the moment the document
+ * is edited anywhere above it, and the server has the answer either way.
+ */
+void        lsp_selection_range     (MooEditWindow  *window,
+                                     gboolean        grow);
+
 /* Drops the cached hover and forgets any request still in flight. */
 void        lsp_navigate_reset      (void);
 

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: moo\n"
 "Report-Msgid-Bugs-To: https://github.com/abbat/medit/issues\n"
-"POT-Creation-Date: 2026-09-16 16:13+0300\n"
+"POT-Creation-Date: 2026-09-16 17:53+0300\n"
 "PO-Revision-Date: 2013-12-06 20:51+0200\n"
 "Last-Translator: Piotr Orzechowski <dev@porzechowski.com>\n"
 "Language-Team: Piotr Orzechowski <dev@porzechowski.com>\n"
@@ -170,7 +170,7 @@ msgstr "Preferencje"
 msgid "Report a Bug..."
 msgstr "Zgłoś błąd..."
 
-#: src/mooapp/mooapp.cpp:1130
+#: src/mooapp/mooapp.cpp:1139
 msgid "Checking for unsaved documents"
 msgstr ""
 
@@ -2331,8 +2331,8 @@ msgctxt "diagnostic severity"
 msgid "error"
 msgstr "błąd"
 
-#: src/plugins/lsp/lsp-edits.cpp:363 src/plugins/lsp/lsp-plugin.cpp:1328
-#: src/plugins/lsp/lsp-plugin.cpp:1381
+#: src/plugins/lsp/lsp-edits.cpp:363 src/plugins/lsp/lsp-plugin.cpp:1342
+#: src/plugins/lsp/lsp-plugin.cpp:1411
 msgid "Rename"
 msgstr "Zmień nazwę"
 
@@ -2361,7 +2361,7 @@ msgstr "Serwer nie miał nic do zmiany."
 msgid "Formatting failed"
 msgstr "Nie udało się sformatować"
 
-#: src/plugins/lsp/lsp-plugin.cpp:104 src/plugins/lsp/lsp-plugin.cpp:1293
+#: src/plugins/lsp/lsp-plugin.cpp:104 src/plugins/lsp/lsp-plugin.cpp:1307
 msgid "LSP"
 msgstr "LSP"
 
@@ -2369,154 +2369,183 @@ msgstr "LSP"
 msgid "Language server protocol client"
 msgstr "Klient protokołu serwera języka"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1191 src/plugins/lsp/lsp-plugin.cpp:1296
-#: src/plugins/lsp/lsp-plugin.cpp:1297
+#: src/plugins/lsp/lsp-plugin.cpp:1205 src/plugins/lsp/lsp-plugin.cpp:1310
+#: src/plugins/lsp/lsp-plugin.cpp:1311
 msgid "Diagnostics"
 msgstr "Diagnostyka"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1205 src/plugins/lsp/lsp-plugin.cpp:1447
-#: src/plugins/lsp/lsp-plugin.cpp:1448
+#: src/plugins/lsp/lsp-plugin.cpp:1219 src/plugins/lsp/lsp-plugin.cpp:1477
+#: src/plugins/lsp/lsp-plugin.cpp:1478
 msgid "References"
 msgstr "Użycia"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1213 src/plugins/lsp/lsp-plugin.cpp:1455
-#: src/plugins/lsp/lsp-plugin.cpp:1456
+#: src/plugins/lsp/lsp-plugin.cpp:1227 src/plugins/lsp/lsp-plugin.cpp:1485
+#: src/plugins/lsp/lsp-plugin.cpp:1486
 msgid "Symbols"
 msgstr "Symbole"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1298
+#: src/plugins/lsp/lsp-plugin.cpp:1312
 msgid "Show the diagnostics pane"
 msgstr "Pokaż panel diagnostyki"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1304 src/plugins/lsp/lsp-plugin.cpp:1367
+#: src/plugins/lsp/lsp-plugin.cpp:1318 src/plugins/lsp/lsp-plugin.cpp:1397
 msgid "Go to Definition"
 msgstr "Przejdź do definicji"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1305 src/plugins/lsp/lsp-plugin.cpp:1368
+#: src/plugins/lsp/lsp-plugin.cpp:1319 src/plugins/lsp/lsp-plugin.cpp:1398
 msgid "Go to _Definition"
 msgstr "Przejdź do _definicji"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1306 src/plugins/lsp/lsp-plugin.cpp:1369
+#: src/plugins/lsp/lsp-plugin.cpp:1320 src/plugins/lsp/lsp-plugin.cpp:1399
 msgid "Go to the definition of what is under the cursor"
 msgstr "Przejdź do definicji tego, co jest pod kursorem"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1312 src/plugins/lsp/lsp-plugin.cpp:1374
+#: src/plugins/lsp/lsp-plugin.cpp:1326 src/plugins/lsp/lsp-plugin.cpp:1404
 msgid "Find References"
 msgstr "Znajdź użycia"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1313 src/plugins/lsp/lsp-plugin.cpp:1375
+#: src/plugins/lsp/lsp-plugin.cpp:1327 src/plugins/lsp/lsp-plugin.cpp:1405
 msgid "Find _References"
 msgstr "Znajdź _użycia"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1314 src/plugins/lsp/lsp-plugin.cpp:1376
+#: src/plugins/lsp/lsp-plugin.cpp:1328 src/plugins/lsp/lsp-plugin.cpp:1406
 msgid "List every use of what is under the cursor"
 msgstr "Wypisz wszystkie użycia tego, co jest pod kursorem"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1321
+#: src/plugins/lsp/lsp-plugin.cpp:1335
 msgid "Format Document"
 msgstr "Sformatuj dokument"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1322
+#: src/plugins/lsp/lsp-plugin.cpp:1336
 msgid "_Format Document"
 msgstr "S_formatuj dokument"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1323
+#: src/plugins/lsp/lsp-plugin.cpp:1337
 msgid "Let the language server lay the document out"
 msgstr "Pozwól serwerowi języka sformatować dokument"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1329 src/plugins/lsp/lsp-plugin.cpp:1382
+#: src/plugins/lsp/lsp-plugin.cpp:1343 src/plugins/lsp/lsp-plugin.cpp:1412
 msgid "_Rename..."
 msgstr "Zmień _nazwę…"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1330 src/plugins/lsp/lsp-plugin.cpp:1383
+#: src/plugins/lsp/lsp-plugin.cpp:1344 src/plugins/lsp/lsp-plugin.cpp:1413
 msgid "Rename what is under the cursor everywhere"
 msgstr "Zmień wszędzie nazwę tego, co jest pod kursorem"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1336 src/plugins/lsp/lsp-plugin.cpp:1388
+#: src/plugins/lsp/lsp-plugin.cpp:1350 src/plugins/lsp/lsp-plugin.cpp:1418
 msgid "Code Actions"
 msgstr "Działania na kodzie"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1337 src/plugins/lsp/lsp-plugin.cpp:1389
+#: src/plugins/lsp/lsp-plugin.cpp:1351 src/plugins/lsp/lsp-plugin.cpp:1419
 msgid "Code _Actions..."
 msgstr "_Działania na kodzie…"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1338 src/plugins/lsp/lsp-plugin.cpp:1390
+#: src/plugins/lsp/lsp-plugin.cpp:1352 src/plugins/lsp/lsp-plugin.cpp:1420
 msgid "Offer what the language server can do here"
 msgstr "Zaproponuj to, co serwer języka może tu zrobić"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1344
+#: src/plugins/lsp/lsp-plugin.cpp:1358
 msgid "Go to Type Definition"
 msgstr "Przejdź do definicji typu"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1345
+#: src/plugins/lsp/lsp-plugin.cpp:1359
 msgid "Go to _Type Definition"
 msgstr "Przejdź do definicji _typu"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1346
+#: src/plugins/lsp/lsp-plugin.cpp:1360
 msgid "Go to the definition of the type of what is under the cursor"
 msgstr "Przejdź do definicji typu tego, co jest pod kursorem"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1351
+#: src/plugins/lsp/lsp-plugin.cpp:1365
 msgid "Go to Implementation"
 msgstr "Przejdź do implementacji"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1352
+#: src/plugins/lsp/lsp-plugin.cpp:1366
 msgid "Go to _Implementation"
 msgstr "Przejdź do _implementacji"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1353
+#: src/plugins/lsp/lsp-plugin.cpp:1367
 msgid "Go to the implementation of what is under the cursor"
 msgstr "Przejdź do implementacji tego, co jest pod kursorem"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1415
+#: src/plugins/lsp/lsp-plugin.cpp:1372
+#, fuzzy
+msgid "Expand Selection"
+msgstr "Zaznaczenie"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1373
+#, fuzzy
+msgid "E_xpand Selection"
+msgstr "Zaznaczenie"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1374
+#, fuzzy
+msgid "Select what contains the selection"
+msgstr "Powiel wiersz lub zaznaczenie"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1380
+#, fuzzy
+msgid "Shrink Selection"
+msgstr "Zaznaczenie"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1381
+#, fuzzy
+msgid "S_hrink Selection"
+msgstr "Zaznaczenie"
+
+#: src/plugins/lsp/lsp-plugin.cpp:1382
+msgid "Select what the selection contains"
+msgstr ""
+
+#: src/plugins/lsp/lsp-plugin.cpp:1445
 msgid "LSP Servers"
 msgstr "Serwery LSP"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1416
+#: src/plugins/lsp/lsp-plugin.cpp:1446
 msgid "LSP _Servers..."
 msgstr "_Serwery LSP…"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1417
+#: src/plugins/lsp/lsp-plugin.cpp:1447
 msgid "Edit the list of language servers"
 msgstr "Edytuj listę serwerów języka"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1423 src/plugins/lsp/lsp-plugin.cpp:1424
+#: src/plugins/lsp/lsp-plugin.cpp:1453 src/plugins/lsp/lsp-plugin.cpp:1454
 msgid "Restart Language Servers"
 msgstr "Uruchom ponownie serwery języka"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1425
+#: src/plugins/lsp/lsp-plugin.cpp:1455
 msgid "Re-read the configuration and start every server again"
 msgstr "Wczytaj konfigurację ponownie i uruchom każdy serwer od nowa"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1431
+#: src/plugins/lsp/lsp-plugin.cpp:1461
 msgid "Complete Word"
 msgstr "Uzupełnij słowo"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1432
+#: src/plugins/lsp/lsp-plugin.cpp:1462
 msgid "_Complete Word"
 msgstr "_Uzupełnij słowo"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1433
+#: src/plugins/lsp/lsp-plugin.cpp:1463
 msgid "Ask the language server what could go here"
 msgstr "Zapytaj serwer języka, co mogłoby tu być"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1439
+#: src/plugins/lsp/lsp-plugin.cpp:1469
 msgid "Parameter Hints"
 msgstr "Podpowiedzi parametrów"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1440
+#: src/plugins/lsp/lsp-plugin.cpp:1470
 msgid "_Parameter Hints"
 msgstr "Podpowiedzi _parametrów"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1441
+#: src/plugins/lsp/lsp-plugin.cpp:1471
 msgid "Show what the call being typed takes"
 msgstr "Pokaż, co przyjmuje wpisywane wywołanie"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1449
+#: src/plugins/lsp/lsp-plugin.cpp:1479
 msgid "Show the references pane"
 msgstr "Pokaż panel użyć"
 
-#: src/plugins/lsp/lsp-plugin.cpp:1457
+#: src/plugins/lsp/lsp-plugin.cpp:1487
 msgid "Show the symbol tree"
 msgstr "Pokaż drzewo symboli"
 
@@ -2525,7 +2554,7 @@ msgstr "Pokaż drzewo symboli"
 msgid "%s failed to start: %s"
 msgstr "Nie udało się uruchomić %s: %s"
 
-#: src/plugins/lsp/lsp-server.cpp:920 src/plugins/lsp/lsp-server.cpp:1304
+#: src/plugins/lsp/lsp-server.cpp:920 src/plugins/lsp/lsp-server.cpp:1311
 msgid "unknown error"
 msgstr "nieznany błąd"
 
@@ -2539,7 +2568,7 @@ msgstr "%s odpowiedział na żądanie inicjalizacji bez żadnych możliwości"
 msgid "%s did not answer the initialize request in %d seconds"
 msgstr "%s nie odpowiedział na żądanie inicjalizacji w ciągu %d sekund"
 
-#: src/plugins/lsp/lsp-server.cpp:1261
+#: src/plugins/lsp/lsp-server.cpp:1268
 #, c-format
 msgid ""
 "%s exited immediately %d times in a row; check the command in the LSP "
@@ -2548,7 +2577,7 @@ msgstr ""
 "%s zakończył się natychmiast %d razy z rzędu; sprawdź polecenie w pliku "
 "konfiguracyjnym LSP"
 
-#: src/plugins/lsp/lsp-server.cpp:1303
+#: src/plugins/lsp/lsp-server.cpp:1310
 #, c-format
 msgid "could not run %s: %s"
 msgstr "nie udało się uruchomić %s: %s"

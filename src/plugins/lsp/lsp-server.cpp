@@ -1046,6 +1046,13 @@ client_capabilities (void)
     }
 
     {
+        JsonObject *selection_range = json_object_new ();
+
+        lsp_json_set_bool (selection_range, "dynamicRegistration", FALSE);
+        lsp_json_set_object (text_document, "selectionRange", selection_range);
+    }
+
+    {
         JsonObject *signature = json_object_new ();
         JsonObject *information = json_object_new ();
         JsonObject *parameter = json_object_new ();

@@ -1865,6 +1865,91 @@ test_highlight_nothing (void)
 
 
 static void
+test_selection_range_chain (void)
+{
+    /*
+     * A reply is one answer per position asked about, and each answer nests
+     * outwards through "parent". Only the first is read, because only one
+     * position is ever asked about, and the list has to come out innermost
+     * first: that is the order the growing and the shrinking walk it in.
+     */
+    static const char *reply =
+        "[{\"range\": {\"start\": {\"line\": 0, \"character\": 0},"
+        "             \"end\": {\"line\": 0, \"character\": 5}},"
+        "  \"parent\": {\"range\": {\"start\": {\"line\": 0, \"character\": 0},"
+        "                          \"end\": {\"line\": 0, \"character\": 10}},"
+        "              \"parent\": {\"range\": {\"start\": {\"line\": 0, \"character\": 0},"
+        "                                      \"end\": {\"line\": 1, \"character\": 11}}}}},"
+        " {\"range\": {\"start\": {\"line\": 9, \"character\": 0},"
+        "             \"end\": {\"line\": 9, \"character\": 1}}}]";
+
+    GError *error = NULL;
+    JsonNode *node = lsp_json_parse (reply, -1, &error);
+    GSList *chain;
+
+    g_assert_no_error (error);
+    chain = lsp_selection_ranges_parse (node);
+
+    g_assert_cmpuint (g_slist_length (chain), ==, 3);
+    g_assert_cmpint (((LspSelectionRange*) chain->data)->end_character, ==, 5);
+    g_assert_cmpint (((LspSelectionRange*) chain->next->data)->end_character, ==, 10);
+    g_assert_cmpint (((LspSelectionRange*) chain->next->next->data)->end_line, ==, 1);
+    g_assert_cmpint (((LspSelectionRange*) chain->next->next->data)->end_character, ==, 11);
+
+    g_slist_free_full (chain, g_free);
+    json_node_unref (node);
+}
+
+
+static void
+test_selection_range_nothing (void)
+{
+    GError *error = NULL;
+    JsonNode *node = lsp_json_parse ("null", -1, &error);
+
+    g_assert_no_error (error);
+    g_assert_null (lsp_selection_ranges_parse (node));
+    json_node_unref (node);
+
+    node = lsp_json_parse ("[]", -1, &error);
+    g_assert_no_error (error);
+    g_assert_null (lsp_selection_ranges_parse (node));
+    json_node_unref (node);
+}
+
+
+static void
+test_selection_range_malformed (void)
+{
+    GError *error = NULL;
+    /* An answer without a range of its own names nothing to select. */
+    JsonNode *node = lsp_json_parse ("[{\"parent\": {}}]", -1, &error);
+    GSList *chain;
+
+    g_assert_no_error (error);
+    g_assert_null (lsp_selection_ranges_parse (node));
+    json_node_unref (node);
+
+    /*
+     * A parent that is broken ends the chain rather than throwing away the
+     * ranges below it, which are usable on their own.
+     */
+    node = lsp_json_parse ("[{\"range\": {\"start\": {\"line\": 0, \"character\": 0},"
+                           "            \"end\": {\"line\": 0, \"character\": 5}},"
+                           "  \"parent\": {\"range\": {\"start\": {\"line\": 0}}}}]",
+                           -1, &error);
+    g_assert_no_error (error);
+    chain = lsp_selection_ranges_parse (node);
+
+    g_assert_cmpuint (g_slist_length (chain), ==, 1);
+    g_assert_cmpint (((LspSelectionRange*) chain->data)->end_character, ==, 5);
+
+    g_slist_free_full (chain, g_free);
+    json_node_unref (node);
+}
+
+
+static void
 test_client_framing (void)
 {
     const char *first = "Content-Length: 7\r\nX-Test: yes\r\n\r\n{\"x\":1}";
@@ -2580,6 +2665,10 @@ _moo_lsp_add_unit_tests (void)
     g_test_add_func ("/lsp/highlight/tags", test_highlight_tags);
     g_test_add_func ("/lsp/highlight/nothing", test_highlight_nothing);
     g_test_add_func ("/lsp/highlight/malformed", test_highlight_malformed);
+    g_test_add_func ("/lsp/selection-range/chain", test_selection_range_chain);
+    g_test_add_func ("/lsp/selection-range/nothing", test_selection_range_nothing);
+    g_test_add_func ("/lsp/selection-range/malformed", test_selection_range_malformed);
+
     g_test_add_func ("/lsp/client/framing", test_client_framing);
 
     g_test_add_func ("/lsp/progress/format", test_progress_format);

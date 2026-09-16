@@ -131,8 +131,6 @@ These ask the server about the shape of the code rather than about a name:
 
 * `textDocument/foldingRange` — the fold tree is filled by indentation today, which folds
   a C block without its closing brace; this is what would replace that guess.
-* `textDocument/selectionRange` — grow and shrink the selection by syntax. This one needs
-  nothing new in the view: it is a pair of actions over a stack of ranges.
 * `textDocument/prepareCallHierarchy` with `callHierarchy/incomingCalls` and
   `outgoingCalls`, and the same three for the type hierarchy. The references pane in
   `lsp-references.cpp` already shows a list of locations grouped by file; a hierarchy is
@@ -140,7 +138,8 @@ These ask the server about the shape of the code rather than about a name:
 * `textDocument/documentLink` — turn what the server says is a link into one. The hover
   and the diagnostics tooltip already render text; nothing currently follows a URI.
 
-`selectionRange` is the cheapest of these and the one with no prerequisites.
+`selectionRange` was the cheapest of these and is done: Expand and Shrink Selection in
+`lsp-navigate.cpp`. `documentLink` is what is left that needs no new pane.
 
 ## `workspace/symbol` — the symbols pane stops at the file
 

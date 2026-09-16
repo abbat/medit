@@ -1052,6 +1052,20 @@ goto_implementation_cb (MooEditWindow *window)
 
 
 static void
+expand_selection_cb (MooEditWindow *window)
+{
+    lsp_selection_range (window, TRUE);
+}
+
+
+static void
+shrink_selection_cb (MooEditWindow *window)
+{
+    lsp_selection_range (window, FALSE);
+}
+
+
+static void
 find_references_cb (MooEditWindow *window)
 {
     lsp_find_references (window, NULL);
@@ -1354,6 +1368,22 @@ lsp_plugin_init (LspPlugin *plugin)
                                  "closure-callback", goto_implementation_cb,
                                  nullptr);
 
+    moo_window_class_new_action (klass, "ExpandSelection", MOO_LSP_PLUGIN_ID,
+                                 "display-name", _("Expand Selection"),
+                                 "label", _("E_xpand Selection"),
+                                 "tooltip", _("Select what contains the selection"),
+                                 "default-accel", MOO_EDIT_ACCEL_EXPAND_SELECTION,
+                                 "closure-callback", expand_selection_cb,
+                                 nullptr);
+
+    moo_window_class_new_action (klass, "ShrinkSelection", MOO_LSP_PLUGIN_ID,
+                                 "display-name", _("Shrink Selection"),
+                                 "label", _("S_hrink Selection"),
+                                 "tooltip", _("Select what the selection contains"),
+                                 "default-accel", MOO_EDIT_ACCEL_SHRINK_SELECTION,
+                                 "closure-callback", shrink_selection_cb,
+                                 nullptr);
+
     {
         /*
          * The document context menu is built from the document ui xml with
@@ -1494,6 +1524,12 @@ lsp_plugin_init (LspPlugin *plugin)
                              "GoToImplementation", "GoToImplementation", -1);
         moo_ui_xml_add_item (xml, plugin->ui_merge_id,
                              "Editor/Menubar/Document",
+                             "ExpandSelection", "ExpandSelection", -1);
+        moo_ui_xml_add_item (xml, plugin->ui_merge_id,
+                             "Editor/Menubar/Document",
+                             "ShrinkSelection", "ShrinkSelection", -1);
+        moo_ui_xml_add_item (xml, plugin->ui_merge_id,
+                             "Editor/Menubar/Document",
                              "FindReferences", "FindReferences", -1);
         moo_ui_xml_add_item (xml, plugin->ui_merge_id,
                              "Editor/Menubar/Document",
@@ -1527,6 +1563,8 @@ lsp_plugin_deinit (LspPlugin *plugin)
     moo_window_class_remove_action (klass, "GoToDefinition");
     moo_window_class_remove_action (klass, "GoToTypeDefinition");
     moo_window_class_remove_action (klass, "GoToImplementation");
+    moo_window_class_remove_action (klass, "ExpandSelection");
+    moo_window_class_remove_action (klass, "ShrinkSelection");
     moo_window_class_remove_action (klass, "FindReferences");
     moo_window_class_remove_action (klass, "RenameSymbol");
     moo_window_class_remove_action (klass, "LspFormat");

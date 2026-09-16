@@ -675,3 +675,207 @@ lsp_hover_query_tooltip (MooEditView *view,
 
     return FALSE;
 }
+
+
+/**********************************************************************/
+/* Growing and shrinking the selection by syntax
+ */
+
+#define LSP_SELECTION_RANGE_METHOD "textDocument/selectionRange"
+
+typedef struct {
+    MooEditView        *view;       /* weak */
+    LspPositionEncoding encoding;   /* of the server that was asked */
+    gboolean            grow;
+} LspSelectionRequest;
+
+
+GSList *
+lsp_selection_ranges_parse (JsonNode *result)
+{
+    JsonArray *array;
+    JsonNode *node;
+    JsonObject *object;
+    GSList *chain = NULL;
+
+    if (!result || !JSON_NODE_HOLDS_ARRAY (result))
+        return NULL;
+
+    array = json_node_get_array (result);
+
+    if (json_array_get_length (array) == 0)
+        return NULL;
+
+    node = json_array_get_element (array, 0);
+
+    if (!node || !JSON_NODE_HOLDS_OBJECT (node))
+        return NULL;
+
+    object = json_node_get_object (node);
+
+    while (object)
+    {
+        LspSelectionRange *range = g_new0 (LspSelectionRange, 1);
+
+        if (!lsp_json_get_range (lsp_json_get_object (object, "range"),
+                                 &range->start_line, &range->start_character,
+                                 &range->end_line, &range->end_character))
+        {
+            g_free (range);
+            break;
+        }
+
+        chain = g_slist_prepend (chain, range);
+        object = lsp_json_get_object (object, "parent");
+    }
+
+    return g_slist_reverse (chain);
+}
+
+
+static void
+selection_request_free (gpointer data)
+{
+    LspSelectionRequest *request = (LspSelectionRequest*) data;
+
+    if (request->view)
+        g_object_remove_weak_pointer (G_OBJECT (request->view),
+                                      (gpointer*) &request->view);
+
+    g_free (request);
+}
+
+
+static void
+selection_range_reply (JsonNode   *result,
+                       JsonObject *error,
+                       gpointer    data)
+{
+    LspSelectionRequest *request = (LspSelectionRequest*) data;
+    MooEditView *view = request->view;
+    GtkTextBuffer *buffer;
+    GtkTextIter sel_start, sel_end, best_start, best_end;
+    GSList *chain, *l;
+    gboolean found = FALSE;
+
+    if (error || !view || !MOO_IS_EDIT_VIEW (view))
+        return;
+
+    buffer = moo_edit_get_buffer (moo_edit_view_get_doc (view));
+    gtk_text_buffer_get_selection_bounds (buffer, &sel_start, &sel_end);
+
+    chain = lsp_selection_ranges_parse (result);
+
+    for (l = chain; l != NULL; l = l->next)
+    {
+        LspSelectionRange *range = (LspSelectionRange*) l->data;
+        GtkTextIter start, end;
+        int at_start, at_end;
+
+        if (!lsp_position_to_iter (buffer, range->start_line, range->start_character,
+                                   request->encoding, &start) ||
+            !lsp_position_to_iter (buffer, range->end_line, range->end_character,
+                                   request->encoding, &end))
+            continue;
+
+        at_start = gtk_text_iter_compare (&start, &sel_start);
+        at_end = gtk_text_iter_compare (&end, &sel_end);
+
+        /* A range equal to the selection is neither larger nor smaller. */
+        if (at_start == 0 && at_end == 0)
+            continue;
+
+        if (request->grow)
+        {
+            /* The chain grows outwards, so the first one that fits is the
+               smallest range that contains the selection. */
+            if (at_start <= 0 && at_end >= 0)
+            {
+                best_start = start;
+                best_end = end;
+                found = TRUE;
+                break;
+            }
+        }
+        else
+        {
+            /* And the last one that fits inside is the largest such. */
+            if (at_start >= 0 && at_end <= 0)
+            {
+                best_start = start;
+                best_end = end;
+                found = TRUE;
+            }
+        }
+    }
+
+    if (found)
+    {
+        /* The cursor ends up at the far end, which is where the next key
+           stroke that is not one of these two would carry on from. */
+        gtk_text_buffer_select_range (buffer, &best_end, &best_start);
+        gtk_text_view_scroll_mark_onscreen (GTK_TEXT_VIEW (view),
+                                            gtk_text_buffer_get_insert (buffer));
+    }
+
+    g_slist_free_full (chain, g_free);
+}
+
+
+void
+lsp_selection_range (MooEditWindow *window,
+                     gboolean       grow)
+{
+    MooEdit *doc;
+    MooEditView *view;
+    LspDoc *ldoc;
+    GtkTextBuffer *buffer;
+    GtkTextIter start, end;
+    LspSelectionRequest *request;
+    JsonObject *params;
+    JsonArray *positions;
+    int line = 0, character = 0;
+
+    g_return_if_fail (MOO_IS_EDIT_WINDOW (window));
+
+    if (!lsp_can_ask (window, LSP_SELECTION_RANGE_METHOD))
+        return;
+
+    doc = moo_edit_window_get_active_doc (window);
+    view = moo_edit_window_get_active_view (window);
+    ldoc = doc ? lsp_manager_lookup_doc (doc) : NULL;
+
+    if (!ldoc || !view)
+        return;
+
+    /*
+     * Where the selection starts, not where the cursor is: after a growth the
+     * cursor sits at the end of the selection, which is one past the last
+     * character of whatever was selected and so belongs to what comes next.
+     */
+    buffer = moo_edit_get_buffer (doc);
+    gtk_text_buffer_get_selection_bounds (buffer, &start, &end);
+
+    /* The server has to have the text the position refers to. */
+    lsp_doc_flush (ldoc);
+
+    lsp_iter_to_position (&start,
+                          lsp_server_get_position_encoding (lsp_doc_get_server (ldoc)),
+                          &line, &character);
+
+    params = json_object_new ();
+    positions = json_array_new ();
+    json_array_add_object_element (positions, lsp_json_position (line, character));
+    lsp_json_set_object (params, "textDocument",
+                         lsp_json_text_document (lsp_doc_get_uri (ldoc)));
+    lsp_json_set_array (params, "positions", positions);
+
+    request = g_new0 (LspSelectionRequest, 1);
+    request->view = view;
+    request->grow = grow;
+    request->encoding = lsp_server_get_position_encoding (lsp_doc_get_server (ldoc));
+    g_object_add_weak_pointer (G_OBJECT (view), (gpointer*) &request->view);
+
+    lsp_server_call (lsp_doc_get_server (ldoc), LSP_SELECTION_RANGE_METHOD, params,
+                     selection_range_reply, request, selection_request_free);
+}
