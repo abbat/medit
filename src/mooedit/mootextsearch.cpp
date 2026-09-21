@@ -573,6 +573,89 @@ _moo_text_expand_replacement (const char  *replacement,
 }
 
 
+/* A pattern that can match nothing -- "x*" say -- matches again at the same
+   place forever unless we step past it. Stepping on the first empty match
+   would skip a character the pattern is entitled to match, so the step is
+   taken only on the second empty match in a row at the same position: TRUE
+   then, FALSE otherwise. */
+static gboolean
+is_repeated_empty_match (int                  match_len,
+                         const GtkTextIter   *match_start,
+                         const GtkTextIter   *start,
+                         gboolean            *was_zero_match)
+{
+    if (match_len)
+    {
+        *was_zero_match = FALSE;
+        return FALSE;
+    }
+
+    if (*was_zero_match && gtk_text_iter_equal (match_start, start))
+    {
+        *was_zero_match = FALSE;
+        return TRUE;
+    }
+
+    *was_zero_match = TRUE;
+    return FALSE;
+}
+
+/* The replacement for this match: the one expanded up front, or, when it has
+   references in it, the expansion against match_info, to be g_free()d through
+   freeme. NULL, after a warning, when the expansion fails. */
+static const char *
+expand_match_replacement (const char  *const_replacement,
+                          const char  *replacement,
+                          GMatchInfo  *match_info,
+                          char       **freeme)
+{
+    GError *error = NULL;
+
+    if (const_replacement)
+        return const_replacement;
+
+    *freeme = g_match_info_expand_references (match_info, replacement, &error);
+
+    if (!*freeme)
+    {
+        g_warning ("%s", moo_error_message (error));
+        g_error_free (error);
+    }
+
+    return *freeme;
+}
+
+/* Puts the replacement in place of the match. A replace-all response is
+   inside the one user action begun for all of them, which is begun here the
+   first time it is needed; any other is an undo step of its own. */
+static void
+replace_match (GtkTextBuffer           *buffer,
+               GtkTextIter             *match_start,
+               GtkTextIter             *match_end,
+               const char              *replacement,
+               MooTextReplaceResponse   response,
+               gboolean                *need_end_user_action)
+{
+    if (response == MOO_TEXT_REPLACE_ALL)
+    {
+        if (!*need_end_user_action)
+        {
+            gtk_text_buffer_begin_user_action (buffer);
+            *need_end_user_action = TRUE;
+        }
+    }
+    else
+    {
+        gtk_text_buffer_begin_user_action (buffer);
+    }
+
+    gtk_text_buffer_delete (buffer, match_start, match_end);
+    gtk_text_buffer_insert (buffer, match_end, replacement, -1);
+
+    if (response != MOO_TEXT_REPLACE_ALL)
+        gtk_text_buffer_end_user_action (buffer);
+}
+
 static int
 moo_text_replace_regex_all_real (GtkTextIter            *start,
                                  GtkTextIter            *end,
@@ -655,51 +738,26 @@ moo_text_replace_regex_all_real (GtkTextIter            *start,
                                              &string, NULL, &match_len, &match_info))
             goto out;
 
-        /* A pattern that can match nothing -- "x*" say -- matches again at the
-           same place forever unless we step past it. Stepping on the first
-           empty match would skip a character the pattern is entitled to match,
-           so the step is taken only on the second empty match in a row at the
-           same position. */
-        if (!match_len)
+        if (is_repeated_empty_match (match_len, &match_start, start, &was_zero_match))
         {
-            if (was_zero_match && gtk_text_iter_equal (&match_start, start))
-            {
-                was_zero_match = FALSE;
-                g_free (string);
-                g_match_info_free (match_info);
-
-                if (!gtk_text_iter_forward_char (start))
-                    goto out;
-
-                continue;
-            }
-
-            was_zero_match = TRUE;
-        }
-        else
-        {
-            was_zero_match = FALSE;
-        }
-
-        if (const_replacement)
-        {
-            real_replacement = const_replacement;
             g_free (string);
-        }
-        else
-        {
-            freeme_here = g_match_info_expand_references (match_info, replacement, &error);
-            g_free (string);
+            g_match_info_free (match_info);
 
-            if (!freeme_here)
-            {
-                g_warning ("%s", moo_error_message (error));
-                g_error_free (error);
-                g_match_info_free (match_info);
+            if (!gtk_text_iter_forward_char (start))
                 goto out;
-            }
 
-            real_replacement = freeme_here;
+            continue;
+        }
+
+        /* match_info points into string, so it lives until the expansion is done. */
+        real_replacement = expand_match_replacement (const_replacement, replacement,
+                                                     match_info, &freeme_here);
+        g_free (string);
+
+        if (!real_replacement)
+        {
+            g_match_info_free (match_info);
+            goto out;
         }
 
         if (response != MOO_TEXT_REPLACE_ALL)
@@ -719,25 +777,8 @@ moo_text_replace_regex_all_real (GtkTextIter            *start,
         if (response != MOO_TEXT_REPLACE_SKIP && (match_len || *real_replacement))
         {
             count++;
-
-            if (response == MOO_TEXT_REPLACE_ALL)
-            {
-                if (!need_end_user_action)
-                {
-                    gtk_text_buffer_begin_user_action (buffer);
-                    need_end_user_action = TRUE;
-                }
-            }
-            else
-            {
-                gtk_text_buffer_begin_user_action (buffer);
-            }
-
-            gtk_text_buffer_delete (buffer, &match_start, &match_end);
-            gtk_text_buffer_insert (buffer, &match_end, real_replacement, -1);
-
-            if (response != MOO_TEXT_REPLACE_ALL)
-                gtk_text_buffer_end_user_action (buffer);
+            replace_match (buffer, &match_start, &match_end, real_replacement,
+                           response, &need_end_user_action);
         }
 
         *start = match_end;
