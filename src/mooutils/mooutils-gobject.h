@@ -72,7 +72,6 @@ gboolean        _moo_value_equal             (const GValue   *a,
 gboolean        _moo_value_change_type       (GValue         *val,
                                              GType           new_type);
 
-double          _moo_value_convert_to_double (const GValue   *val);
 const char     *_moo_value_convert_to_string (const GValue   *val);
 gboolean        _moo_value_convert_from_string (const char   *string,
                                                GValue       *val);

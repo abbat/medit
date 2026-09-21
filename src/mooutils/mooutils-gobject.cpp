@@ -735,16 +735,6 @@ _moo_value_convert_to_uint (const GValue *val,
     return FALSE;
 }
 
-double
-_moo_value_convert_to_double (const GValue *val)
-{
-    GValue result = {0};
-    g_value_init (&result, G_TYPE_DOUBLE);
-    if (!_moo_value_convert (val, &result))
-        g_warning ("%s: could not convert value to double", G_STRFUNC);
-    return g_value_get_double (&result);
-}
-
 
 
 
