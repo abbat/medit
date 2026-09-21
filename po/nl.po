@@ -2779,73 +2779,73 @@ msgstr ""
 #: src/plugins/spell/spell-plugin.cpp:66 src/plugins/spell/spell-plugin.cpp:883
 #: src/plugins/spell/spell-prefs.cpp:37
 msgid "Spell Checking"
-msgstr ""
+msgstr "Spellingcontrole"
 
 #: src/plugins/spell/spell-plugin.cpp:66
 msgid "Underlines misspelled words"
-msgstr ""
+msgstr "Onderstreept verkeerd gespelde woorden"
 
 #: src/plugins/spell/spell-plugin.cpp:853
 msgid "Spelling"
-msgstr ""
+msgstr "Spelling"
 
 #: src/plugins/spell/spell-plugin.cpp:886
 msgid "Next Spelling Error"
-msgstr ""
+msgstr "Volgende spelfout"
 
 #: src/plugins/spell/spell-plugin.cpp:887
 msgid "Next _Spelling Error"
-msgstr ""
+msgstr "Volgende _spelfout"
 
 #: src/plugins/spell/spell-plugin.cpp:888
 msgid "Go to the next misspelled word"
-msgstr ""
+msgstr "Ga naar het volgende verkeerd gespelde woord"
 
 #: src/plugins/spell/spell-plugin.cpp:894
 msgid "Suggestion"
-msgstr ""
+msgstr "Suggestie"
 
 #: src/plugins/spell/spell-plugin.cpp:895
 msgid "Add to Dictionary"
-msgstr ""
+msgstr "Aan woordenboek toevoegen"
 
 #: src/plugins/spell/spell-plugin.cpp:896
 msgid "Ignore All"
-msgstr ""
+msgstr "Alles negeren"
 
 #: src/plugins/spell/spell-plugin.cpp:897
 msgid "Ignore in This Document"
-msgstr ""
+msgstr "Negeren in dit document"
 
 #: src/plugins/spell/ui/spell-prefs.ui:18
 msgid "_Languages:"
-msgstr ""
+msgstr "_Talen:"
 
 #: src/plugins/spell/ui/spell-prefs.ui:30
 msgid ""
 "Comma-separated, such as en_US,ru_RU. A word is looked up in the language of "
 "its own alphabet: the first Cyrillic one for Cyrillic words, the first other "
 "one for the rest."
-msgstr ""
+msgstr "Gescheiden door komma's, bijvoorbeeld en_US,ru_RU. Een woord wordt opgezocht in de taal van zijn eigen alfabet: voor Cyrillische woorden de eerste Cyrillische taal, voor de rest de eerste andere."
 
 #: src/plugins/spell/ui/spell-prefs.ui:46
 msgid "Check _files with extensions:"
-msgstr ""
+msgstr "_Bestanden met deze extensies controleren:"
 
 #: src/plugins/spell/ui/spell-prefs.ui:58
 msgid ""
 "Comma-separated, such as txt,md,rst,tex. The whole text of these is checked."
-msgstr ""
+msgstr "Gescheiden door komma's, bijvoorbeeld txt,md,rst,tex. Deze bestanden worden helemaal gecontroleerd."
 
 #: src/plugins/spell/ui/spell-prefs.ui:70
 msgid "Check _comments and strings in source code"
-msgstr ""
+msgstr "_Commentaar en tekenreeksen in broncode controleren"
 
 #: src/plugins/spell/ui/spell-prefs.ui:73
 msgid ""
 "In any file whose syntax highlighting tells comments and strings from the "
 "code."
-msgstr ""
+msgstr "In elk bestand waarvan de syntaxiskleuring commentaar en tekenreeksen van code onderscheidt."
 
 #: src/plugins/terminal/terminal-colors.cpp:26
 msgid "Default"

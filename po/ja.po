@@ -2777,73 +2777,73 @@ msgstr "設定ファイルを読み直し、すべてのサーバーをやり直
 #: src/plugins/spell/spell-plugin.cpp:66 src/plugins/spell/spell-plugin.cpp:883
 #: src/plugins/spell/spell-prefs.cpp:37
 msgid "Spell Checking"
-msgstr ""
+msgstr "スペルチェック"
 
 #: src/plugins/spell/spell-plugin.cpp:66
 msgid "Underlines misspelled words"
-msgstr ""
+msgstr "綴りの誤った単語に下線を引きます"
 
 #: src/plugins/spell/spell-plugin.cpp:853
 msgid "Spelling"
-msgstr ""
+msgstr "スペル"
 
 #: src/plugins/spell/spell-plugin.cpp:886
 msgid "Next Spelling Error"
-msgstr ""
+msgstr "次のスペルミス"
 
 #: src/plugins/spell/spell-plugin.cpp:887
 msgid "Next _Spelling Error"
-msgstr ""
+msgstr "次のスペルミス(_S)"
 
 #: src/plugins/spell/spell-plugin.cpp:888
 msgid "Go to the next misspelled word"
-msgstr ""
+msgstr "次の綴りの誤った単語へ移動します"
 
 #: src/plugins/spell/spell-plugin.cpp:894
 msgid "Suggestion"
-msgstr ""
+msgstr "候補"
 
 #: src/plugins/spell/spell-plugin.cpp:895
 msgid "Add to Dictionary"
-msgstr ""
+msgstr "辞書に追加"
 
 #: src/plugins/spell/spell-plugin.cpp:896
 msgid "Ignore All"
-msgstr ""
+msgstr "すべて無視"
 
 #: src/plugins/spell/spell-plugin.cpp:897
 msgid "Ignore in This Document"
-msgstr ""
+msgstr "この文書では無視"
 
 #: src/plugins/spell/ui/spell-prefs.ui:18
 msgid "_Languages:"
-msgstr ""
+msgstr "言語(_L):"
 
 #: src/plugins/spell/ui/spell-prefs.ui:30
 msgid ""
 "Comma-separated, such as en_US,ru_RU. A word is looked up in the language of "
 "its own alphabet: the first Cyrillic one for Cyrillic words, the first other "
 "one for the rest."
-msgstr ""
+msgstr "コンマ区切り。例: en_US,ru_RU。単語は自身の文字体系の言語で調べます。キリル文字の単語には最初のキリル文字系の言語、それ以外には最初のその他の言語を使います。"
 
 #: src/plugins/spell/ui/spell-prefs.ui:46
 msgid "Check _files with extensions:"
-msgstr ""
+msgstr "次の拡張子のファイルをチェック(_F):"
 
 #: src/plugins/spell/ui/spell-prefs.ui:58
 msgid ""
 "Comma-separated, such as txt,md,rst,tex. The whole text of these is checked."
-msgstr ""
+msgstr "コンマ区切り。例: txt,md,rst,tex。これらのファイルは全体をチェックします。"
 
 #: src/plugins/spell/ui/spell-prefs.ui:70
 msgid "Check _comments and strings in source code"
-msgstr ""
+msgstr "ソースコード内のコメントと文字列をチェック(_C)"
 
 #: src/plugins/spell/ui/spell-prefs.ui:73
 msgid ""
 "In any file whose syntax highlighting tells comments and strings from the "
 "code."
-msgstr ""
+msgstr "構文ハイライトがコメントや文字列をコードと区別できるすべてのファイル。"
 
 #: src/plugins/terminal/terminal-colors.cpp:26
 msgid "Default"
