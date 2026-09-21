@@ -2917,7 +2917,7 @@ _moo_text_view_get_line_height (MooTextView *view)
 
 #define MARK_ICON_LPAD      0
 #define MARK_ICON_RPAD      0
-#define LINE_NUMBER_LPAD    0
+#define LINE_NUMBER_LPAD    3
 #define LINE_NUMBER_RPAD    3
 
 static PangoLayout *
