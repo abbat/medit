@@ -912,6 +912,7 @@ spell_plugin_init (SpellPlugin *plugin)
                                  "display-name", _("Next Spelling Error"),
                                  "label", _("Next _Spelling Error"),
                                  "tooltip", _("Go to the next misspelled word"),
+                                 "stock-id", GTK_STOCK_SPELL_CHECK,
                                  "default-accel", "F7",
                                  "closure-callback", next_error_cb,
                                  nullptr);
