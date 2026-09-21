@@ -19,6 +19,8 @@ static gboolean moo_edit_view_focus_in              (GtkWidget          *widget,
 static gboolean moo_edit_view_popup_menu            (GtkWidget          *widget);
 static gboolean moo_edit_view_scroll_event          (GtkWidget          *widget,
                                                      GdkEventScroll     *event);
+static gboolean moo_edit_view_key_press_event       (GtkWidget          *widget,
+                                                     GdkEventKey        *event);
 static gboolean moo_edit_view_drag_motion           (GtkWidget          *widget,
                                                      GdkDragContext     *context,
                                                      gint                x,
@@ -47,6 +49,7 @@ moo_edit_view_class_init (MooEditViewClass *klass)
 
     widget_class->popup_menu = moo_edit_view_popup_menu;
     widget_class->scroll_event = moo_edit_view_scroll_event;
+    widget_class->key_press_event = moo_edit_view_key_press_event;
     widget_class->drag_motion = moo_edit_view_drag_motion;
     widget_class->drag_drop = moo_edit_view_drag_drop;
     widget_class->focus_in_event = moo_edit_view_focus_in;
@@ -95,6 +98,28 @@ moo_edit_view_scroll_event (GtkWidget      *widget,
         _moo_edit_zoom (step);
 
     return TRUE;
+}
+
+/* The zoom accelerators name the keys of the main block; the ones of the numeric
+   keypad are different keys, and an action takes one accelerator only. */
+static gboolean
+moo_edit_view_key_press_event (GtkWidget   *widget,
+                               GdkEventKey *event)
+{
+    if ((event->state & gtk_accelerator_get_default_mod_mask ()) == GDK_CONTROL_MASK)
+    {
+        switch (event->keyval)
+        {
+            case GDK_KEY_KP_Add:
+                _moo_edit_zoom (1);
+                return TRUE;
+            case GDK_KEY_KP_Subtract:
+                _moo_edit_zoom (-1);
+                return TRUE;
+        }
+    }
+
+    return GTK_WIDGET_CLASS (moo_edit_view_parent_class)->key_press_event (widget, event);
 }
 
 static void

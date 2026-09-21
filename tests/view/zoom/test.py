@@ -80,6 +80,34 @@ def run(t):
            % (height(t), base))
     t.log("ok: Reset Zoom puts the size back")
 
+    # -- the keys ----------------------------------------------------------
+    t.key("ctrl+plus")
+    t.wait(lambda: height(t) > base,
+           "Ctrl+plus to make the text larger; it is %d high against %d" % (height(t), base))
+    t.log("ok: Ctrl+plus zooms in")
+
+    t.key("ctrl+minus")
+    t.wait(lambda: height(t) == base,
+           "Ctrl+minus to bring it back; it is %d high against %d" % (height(t), base))
+    t.key("ctrl+minus")
+    t.wait(lambda: height(t) < base,
+           "Ctrl+minus to make the text smaller; it is %d high against %d" % (height(t), base))
+    t.log("ok: Ctrl+minus zooms out")
+
+    t.key("ctrl+0")
+    t.wait(lambda: height(t) == base,
+           "Ctrl+0 to reset; it is %d high against %d" % (height(t), base))
+    t.log("ok: Ctrl+0 resets")
+
+    # The numeric keypad has keys of its own.
+    t.key("ctrl+KP_Add")
+    t.wait(lambda: height(t) > base,
+           "Ctrl+keypad plus to make the text larger; it is %d high against %d" % (height(t), base))
+    t.key("ctrl+KP_Subtract")
+    t.wait(lambda: height(t) == base,
+           "Ctrl+keypad minus to bring it back; it is %d high against %d" % (height(t), base))
+    t.log("ok: Ctrl and the keypad plus and minus zoom")
+
 
 def height(t):
     """How tall the first line is drawn, in pixels."""
