@@ -285,7 +285,6 @@ _moo_text_search_regex_backward (const GtkTextIter      *search_start,
             *match_start = slice_start;
             gtk_text_iter_forward_chars (match_start, g_utf8_pointer_to_offset (text, text + start_pos));
 
-            /* XXX how about not last match? */
             if (search_end && gtk_text_iter_compare (match_start, search_end) < 0)
             {
                 if (match_info && *match_info)

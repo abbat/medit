@@ -220,7 +220,6 @@ _moo_file_system_get_folder (MooFileSystem  *fs,
     g_return_val_if_fail (MOO_IS_FILE_SYSTEM (fs), NULL);
     g_return_val_if_fail (path != NULL, NULL);
 
-    /* XXX check the caller */
     if (!_moo_path_is_absolute (path))
     {
         g_set_error (error, MOO_FILE_ERROR,
@@ -298,7 +297,6 @@ _moo_file_system_create_folder (const char  *path,
 
     g_return_val_if_fail (path != NULL, FALSE);
 
-    /* XXX check the caller */
     if (!_moo_path_is_absolute (path))
     {
         g_set_error (error, MOO_FILE_ERROR,
@@ -513,7 +511,6 @@ _moo_file_system_make_path (const char  *base_path,
     g_return_val_if_fail (base_path != NULL, NULL);
     g_return_val_if_fail (display_name != NULL, NULL);
 
-    /* XXX check the caller */
     if (!_moo_path_is_absolute (base_path))
     {
         g_set_error (error, MOO_FILE_ERROR,
@@ -542,7 +539,7 @@ _moo_file_system_make_path (const char  *base_path,
 }
 
 
-/* XXX make sure error is set TODO: error checking, etc. */
+/* Never fails: error is only there to match the callers' signature. */
 static char *
 normalize_path (const char     *path,
                 gboolean        is_folder,
@@ -572,7 +569,6 @@ normalize_path (const char     *path,
 }
 
 
-/* XXX must set error */
 gboolean
 _moo_file_system_parse_path (const char  *path_utf8,
                              char       **dirname_p,
@@ -586,7 +582,6 @@ _moo_file_system_parse_path (const char  *path_utf8,
 
     g_return_val_if_fail (path_utf8 && path_utf8[0], FALSE);
 
-    /* XXX check the caller */
     if (!_moo_path_is_absolute (path_utf8))
     {
         g_set_error (error, MOO_FILE_ERROR,

@@ -504,6 +504,7 @@ _moo_file_view_save_drop_dialog (GtkWidget  *parent,
     {
         const char *text;
         char *name, *err_text, *sec_text;
+        GError *error = NULL;
 
         if (gtk_dialog_run (GTK_DIALOG (dialog)) != GTK_RESPONSE_OK)
             goto out;
@@ -516,18 +517,19 @@ _moo_file_view_save_drop_dialog (GtkWidget  *parent,
             goto out;
         }
 
-        /* XXX error checking, you know */
-        name = g_filename_from_utf8 (text, -1, NULL, NULL, NULL);
+        name = g_filename_from_utf8 (text, -1, NULL, NULL, &error);
 
         if (!name)
         {
             err_text = g_strdup_printf ("Can not save file as '%s'", text);
-            sec_text = g_strdup_printf ("Could not convert '%s' to filename encoding.\n"
+            sec_text = g_strdup_printf ("Could not convert '%s' to filename encoding: %s\n"
                                         "Please consider simpler name, such as foo.blah "
-                                        "or blah.foo", text);
+                                        "or blah.foo", text, error->message);
             moo_error_dialog (err_text, sec_text, dialog);
             g_free (err_text);
             g_free (sec_text);
+            g_error_free (error);
+            error = NULL;
             continue;
         }
 
