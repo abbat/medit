@@ -2026,7 +2026,11 @@ gtk_source_context_engine_update_highlight (GtkSourceEngine   *engine,
 	{
 		/* analyze whole region */
 		update_syntax (ce, end, 0);
-		ensure_highlighted (ce, start, end);
+
+		/* Analysis may have disabled highlighting, which detaches the
+		 * buffer and takes the refresh region with it. */
+		if (!ce->priv->disabled)
+			ensure_highlighted (ce, start, end);
 	}
 	else
 	{
