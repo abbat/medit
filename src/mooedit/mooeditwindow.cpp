@@ -2381,7 +2381,19 @@ _moo_edit_window_set_active_tab (MooEditWindow *window,
     g_return_if_fail (MOO_IS_EDIT_WINDOW (window));
     g_return_if_fail (MOO_IS_EDIT_TAB (tab));
     g_return_if_fail (moo_edit_tab_get_window (tab) == window);
+
+    if (window->priv->active_tab == tab)
+        return;
+
     set_active_tab (window, tab);
+
+    /* Focus moved to a document in the other notebook: no page was switched,
+       so notebook_switch_page did not refresh what the window shows for the
+       active document (menu toggles, title, statusbar). */
+    edit_changed (window, moo_edit_tab_get_doc (tab));
+    moo_edit_window_check_actions (window);
+    moo_edit_window_update_doc_list (window);
+    g_object_notify (G_OBJECT (window), "active-doc");
 }
 
 static void
