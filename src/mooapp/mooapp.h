@@ -147,14 +147,6 @@ gboolean moo_app_send_files (MooOpenInfoArray *files, guint32 stamp, const char 
 void moo_app_open_files (MooApp *app, MooOpenInfoArray *files, guint32 stamp);
 #endif
 
-/*!
- * \brief Gets system information including application version, OS details, and library versions
- * \param app a MooApp
- * \return (transfer full): a newly allocated string containing system information
- */
-char *
-moo_app_get_system_info (MooApp *app);
-
 G_END_DECLS
 
 #endif /* _mooapp_mooapp_h_ */

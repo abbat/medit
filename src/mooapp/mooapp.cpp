@@ -131,26 +131,6 @@ static void moo_app_activate (GApplication *application);
 #endif
 
 /*!
- * \brief Gets the system name and version information
- * \return (transfer full): a newly allocated string containing system name, release, version and machine type
- * \return Example: "Linux 5.15.0 (#1 SMP), x86_64"
- */
-static char *
-get_system_name ()
-{
-  struct utsname name;
-
-  if (uname (&name) != 0)
-    {
-      g_critical ("%s", g_strerror (errno));
-      return g_strdup ("unknown");
-    }
-
-  return g_strdup_printf ("%s %s (%s), %s", name.sysname,
-                          name.release, name.version, name.machine);
-}
-
-/*!
  * \brief Opens help for the focused widget or the window if no widget has focus.
  * \param window the parent window
  */
@@ -1575,52 +1555,4 @@ moo_app_open_files (MooApp *app, MooOpenInfoArray *files, guint32 stamp)
     }
 
   moo_editor_present (app->priv->editor, stamp);
-}
-
-/*!
- * \brief Gets system information including application version, OS details, and library versions
- * \param app a MooApp
- * \return (transfer full): a newly allocated string containing system information
- */
-char *
-moo_app_get_system_info (MooApp *app)
-{
-  char **p;
-  char **dirs;
-  char *string;
-  GString *text;
-
-  g_return_val_if_fail (MOO_IS_APP (app), NULL);
-
-  text = g_string_new (NULL);
-
-  g_string_append_printf (text, "%s-%s\n", MOO_APP_FULL_NAME, MOO_DISPLAY_VERSION);
-
-  string = get_system_name ();
-  g_string_append_printf (text, "OS: %s\n", string);
-  g_free (string);
-
-  g_string_append_printf (text, "GTK version: %u.%u.%u\n",
-                          gtk_major_version,
-                          gtk_minor_version,
-                          gtk_micro_version);
-  g_string_append_printf (text, "Built with GTK %d.%d.%d\n",
-                          GTK_MAJOR_VERSION,
-                          GTK_MINOR_VERSION,
-                          GTK_MICRO_VERSION);
-
-  g_string_append_printf (text, "libxml2: %s\n", LIBXML_DOTTED_VERSION);
-
-  g_string_append (text, "Data dirs: ");
-  dirs = moo_get_data_dirs ();
-  for (p = dirs; p && *p; ++p)
-    g_string_append_printf (text, "%s'%s'", p == dirs ? "" : ", ", *p);
-  g_string_append (text, "\n");
-  g_strfreev (dirs);
-
-#ifdef MOO_BROKEN_GTK_THEME
-  g_string_append (text, "Broken gtk theme: yes\n");
-#endif
-
-  return g_string_free (text, FALSE);
 }
