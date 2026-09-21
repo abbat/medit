@@ -22,8 +22,6 @@ G_BEGIN_DECLS
 
 typedef struct _MooFileReader MooFileReader;
 
-MooFileReader  *moo_file_reader_new             (const char     *filename,
-                                                 GError        **error);
 MooFileReader  *moo_text_reader_new             (const char     *filename,
                                                  GError        **error);
 gboolean        moo_file_reader_read            (MooFileReader  *reader,

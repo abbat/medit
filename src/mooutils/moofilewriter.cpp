@@ -100,13 +100,6 @@ moo_file_reader_new_real (const char  *filename,
 }
 
 MooFileReader *
-moo_file_reader_new (const char  *filename,
-                     GError     **error)
-{
-    return moo_file_reader_new_real (filename, TRUE, error);
-}
-
-MooFileReader *
 moo_text_reader_new (const char  *filename,
                      GError     **error)
 {
