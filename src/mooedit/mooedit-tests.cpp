@@ -503,7 +503,16 @@ static const ReplaceCase replace_cases[] = {
     /* An empty match replaced with nothing is not an edit and is not counted. */
     {"zero-empty-replacement", "яя", "(?=я)", "", MOO_TEXT_SEARCH_REGEX, 0, -1, 0, "яя"},
     {"zero-at-eof", "one", "$", "", MOO_TEXT_SEARCH_REGEX, 0, -1, 0, "one"},
-    {"empty-buffer", "", "cat", "dog", MooTextSearchFlags (0), 0, -1, 0, ""}
+    {"empty-buffer", "", "cat", "dog", MooTextSearchFlags (0), 0, -1, 0, ""},
+    {"whole-words", "cat scatter cat", "cat", "X", MOO_TEXT_SEARCH_WHOLE_WORDS,
+     0, -1, 2, "X scatter X"},
+    {"whole-words-underscore", "cat_ cat", "cat", "X", MOO_TEXT_SEARCH_WHOLE_WORDS,
+     0, -1, 1, "cat_ X"},
+    {"caseless", "Cat cAT", "cat", "x", MOO_TEXT_SEARCH_CASELESS, 0, -1, 2, "x x"},
+    {"caseless-lines", "Cat\ncAt", "cat", "x", MOO_TEXT_SEARCH_CASELESS, 0, -1, 2, "x\nx"},
+    {"literal-lines", "a\nb a\nb", "a\nb", "X", MooTextSearchFlags (0), 0, -1, 2, "X X"},
+    {"regex-lines", "a\nb a\nb", "a\\nb", "X", MOO_TEXT_SEARCH_REGEX, 0, -1, 2, "X X"},
+    {"zero-star", "abxab", "x*", "-", MOO_TEXT_SEARCH_REGEX, 0, -1, 5, "-a-b--a-b"}
 };
 
 

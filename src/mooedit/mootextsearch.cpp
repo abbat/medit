@@ -372,10 +372,15 @@ get_regex (const char            *pattern,
 
 
 inline static gboolean
+is_word_unichar (gunichar c)
+{
+    return c == '_' || g_unichar_isalnum (c);
+}
+
+inline static gboolean
 is_word_char (const GtkTextIter *iter)
 {
-    gunichar c = gtk_text_iter_get_char (iter);
-    return c == '_' || g_unichar_isalnum (c);
+    return is_word_unichar (gtk_text_iter_get_char (iter));
 }
 
 
@@ -580,8 +585,7 @@ _moo_text_expand_replacement (const char  *replacement,
    then, FALSE otherwise. */
 static gboolean
 is_repeated_empty_match (int                  match_len,
-                         const GtkTextIter   *match_start,
-                         const GtkTextIter   *start,
+                         gboolean             match_at_start,
                          gboolean            *was_zero_match)
 {
     if (match_len)
@@ -590,7 +594,7 @@ is_repeated_empty_match (int                  match_len,
         return FALSE;
     }
 
-    if (*was_zero_match && gtk_text_iter_equal (match_start, start))
+    if (*was_zero_match && match_at_start)
     {
         *was_zero_match = FALSE;
         return TRUE;
@@ -637,9 +641,11 @@ expand_match_replacement (const char  *const_replacement,
  */
 struct BatchMatch
 {
-    GtkTextIter start;
-    GtkTextIter end;
+    int start;
+    int end;
     char *text;
+    char *gap;      /* the text kept since the previous match if that is on the
+                       same line, which makes this match join its group; else NULL */
 };
 
 struct BatchGroup
@@ -651,7 +657,6 @@ struct BatchGroup
 
 struct BatchCursor
 {
-    GtkTextIter iter;
     int old_offset;
     int offset;
 };
@@ -662,14 +667,37 @@ batch_new (void)
     return g_array_new (FALSE, FALSE, sizeof (BatchMatch));
 }
 
+/* Takes gap. Positions are offsets rather than iters, and the kept text is cut
+   out of the text that was searched: an iter in a huge line costs time in
+   proportion to the line every time it is used, which is what made this
+   quadratic. */
 static void
-batch_add (GArray            *matches,
-           const GtkTextIter *start,
-           const GtkTextIter *end,
-           const char        *text)
+batch_add (GArray     *matches,
+           int         start,
+           int         end,
+           const char *text,
+           char       *gap)
 {
-    BatchMatch m = { *start, *end, g_strdup (text) };
+    BatchMatch m = { start, end, g_strdup (text), gap };
     g_array_append_val (matches, m);
+}
+
+/* The same for matches found through iters (case-insensitive search), where
+   there is no text to cut the kept text out of. prev_end is NULL for the first. */
+static void
+batch_add_iters (GArray            *matches,
+                 GtkTextBuffer     *buffer,
+                 const GtkTextIter *prev_end,
+                 const GtkTextIter *start,
+                 const GtkTextIter *end,
+                 const char        *text)
+{
+    char *gap = NULL;
+
+    if (prev_end && gtk_text_iter_get_line (prev_end) == gtk_text_iter_get_line (start))
+        gap = gtk_text_buffer_get_slice (buffer, prev_end, start, TRUE);
+
+    batch_add (matches, gtk_text_iter_get_offset (start), gtk_text_iter_get_offset (end), text, gap);
 }
 
 /* Where a cursor that was inside the group [matches[first], matches[last]] goes:
@@ -684,13 +712,11 @@ batch_cursor_in_group (const BatchCursor *cursor,
     for (guint k = first; k <= last; ++k)
     {
         if (k > first &&
-            gtk_text_iter_compare (&cursor->iter, &matches[k - 1].end) >= 0 &&
-            gtk_text_iter_compare (&cursor->iter, &matches[k].start) <= 0)
-            return out_chars[k - first] - (gtk_text_iter_get_offset (&matches[k].start) -
-                                           gtk_text_iter_get_offset (&cursor->iter));
+            cursor->old_offset >= matches[k - 1].end &&
+            cursor->old_offset <= matches[k].start)
+            return out_chars[k - first] - (matches[k].start - cursor->old_offset);
 
-        if (gtk_text_iter_compare (&cursor->iter, &matches[k].start) > 0 &&
-            gtk_text_iter_compare (&cursor->iter, &matches[k].end) < 0)
+        if (cursor->old_offset > matches[k].start && cursor->old_offset < matches[k].end)
             return out_chars[k - first];
     }
 
@@ -711,11 +737,10 @@ batch_apply (GtkTextBuffer *buffer,
     if (n == 0)
         goto out;
 
-    gtk_text_buffer_get_iter_at_mark (buffer, &cursors[0].iter, gtk_text_buffer_get_insert (buffer));
-    gtk_text_buffer_get_iter_at_mark (buffer, &cursors[1].iter, gtk_text_buffer_get_selection_bound (buffer));
-
-    for (int c = 0; c < 2; ++c)
-        cursors[c].old_offset = cursors[c].offset = gtk_text_iter_get_offset (&cursors[c].iter);
+    gtk_text_buffer_get_iter_at_mark (buffer, &i0, gtk_text_buffer_get_insert (buffer));
+    gtk_text_buffer_get_iter_at_mark (buffer, &i1, gtk_text_buffer_get_selection_bound (buffer));
+    cursors[0].old_offset = cursors[0].offset = gtk_text_iter_get_offset (&i0);
+    cursors[1].old_offset = cursors[1].offset = gtk_text_iter_get_offset (&i1);
 
     for (guint first = 0, last; first < n; first = last + 1)
     {
@@ -724,14 +749,11 @@ batch_apply (GtkTextBuffer *buffer,
         int *out_chars;
         int delta;
 
-        for (last = first;
-             last + 1 < n &&
-             gtk_text_iter_get_line (&matches[last].end) == gtk_text_iter_get_line (&matches[last + 1].start);
-             ++last)
+        for (last = first; last + 1 < n && matches[last + 1].gap; ++last)
             ;
 
-        group.start = gtk_text_iter_get_offset (&matches[first].start);
-        group.end = gtk_text_iter_get_offset (&matches[last].end);
+        group.start = matches[first].start;
+        group.end = matches[last].end;
 
         /* out_chars[i]: characters of the new text before match first + i's replacement */
         out_chars = g_new (int, last - first + 1);
@@ -742,10 +764,8 @@ batch_apply (GtkTextBuffer *buffer,
         {
             if (k > first)
             {
-                char *kept = gtk_text_buffer_get_slice (buffer, &matches[k - 1].end, &matches[k].start, TRUE);
-                g_string_append (text, kept);
-                chars += (int) g_utf8_strlen (kept, -1);
-                g_free (kept);
+                g_string_append (text, matches[k].gap);
+                chars += matches[k].start - matches[k - 1].end;
             }
 
             out_chars[k - first] = chars;
@@ -794,8 +814,281 @@ out:
     g_array_free (groups, TRUE);
 
     for (guint k = 0; k < n; ++k)
+    {
         g_free (matches[k].text);
+        g_free (matches[k].gap);
+    }
     g_array_free (matches_array, TRUE);
+}
+
+static gboolean
+text_is_whole_word (const char *text,
+                    const char *from,
+                    const char *to,
+                    gboolean    word_before,
+                    gboolean    word_after)
+{
+    if (from > text ? is_word_unichar (g_utf8_get_char (g_utf8_prev_char (from))) : word_before)
+        return FALSE;
+
+    return !(*to ? is_word_unichar (g_utf8_get_char (to)) : word_after);
+}
+
+/* Finds the matches of a case-sensitive plain pattern in [start, end) -- which is
+   what moo_text_search_forward would find one by one, its end being one more
+   character -- in a single copy of the text, and adds them. */
+static int
+batch_collect_plain (GArray            *matches,
+                     const GtkTextIter *start,
+                     const GtkTextIter *end,
+                     const char        *pattern,
+                     const char        *replacement,
+                     gboolean           whole_words)
+{
+    GtkTextBuffer *buffer = gtk_text_iter_get_buffer (start);
+    GtkTextIter limit, before;
+    char *text;
+    const char *pos, *cursor, *prev_end = NULL;
+    int start_offset = gtk_text_iter_get_offset (start);
+    int cursor_offset = 0;
+    int pattern_chars = (int) g_utf8_strlen (pattern, -1);
+    gsize pattern_len = strlen (pattern);
+    gboolean word_before = FALSE, word_after = FALSE;
+    int count = 0;
+
+    if (end && !gtk_text_iter_is_end (end))
+    {
+        limit = *end;
+        gtk_text_iter_forward_char (&limit);
+    }
+    else
+    {
+        gtk_text_buffer_get_end_iter (buffer, &limit);
+    }
+
+    if (whole_words)
+    {
+        before = *start;
+        if (!gtk_text_iter_starts_line (&before) && gtk_text_iter_backward_char (&before))
+            word_before = is_word_char (&before);
+        word_after = !gtk_text_iter_ends_line (&limit) && is_word_char (&limit);
+    }
+
+    text = gtk_text_buffer_get_slice (buffer, start, &limit, TRUE);
+    pos = cursor = text;
+
+    while ((pos = strstr (pos, pattern)) != NULL)
+    {
+        const char *match_end = pos + pattern_len;
+        int match_start;
+        char *gap = NULL;
+
+        if (whole_words && !text_is_whole_word (text, pos, match_end, word_before, word_after))
+        {
+            pos = match_end;
+            continue;
+        }
+
+        cursor_offset += (int) g_utf8_pointer_to_offset (cursor, pos);
+        cursor = pos;
+        match_start = start_offset + cursor_offset;
+
+        if (prev_end && !memchr (prev_end, '\n', pos - prev_end))
+            gap = g_strndup (prev_end, pos - prev_end);
+
+        batch_add (matches, match_start, match_start + pattern_chars, replacement, gap);
+        count++;
+        prev_end = pos = match_end;
+    }
+
+    g_free (text);
+    return count;
+}
+
+/* What _moo_text_search_regex_forward looks at, kept from one match to the next:
+   the lines that search would copy out for a start on this line, and how far
+   into them we have counted characters. Both only ever move forward. */
+struct RegexWindow
+{
+    char *text;
+    int offset;             /* of text in the buffer, in characters */
+    int first_line_chars;   /* a start on the first line is served by this window */
+    GtkTextIter end;
+    const char *cursor;
+    int cursor_offset;      /* characters before cursor */
+};
+
+static void
+regex_window_load (RegexWindow       *w,
+                   GtkTextBuffer     *buffer,
+                   const GtkTextIter *line,
+                   MooRegex          *regex)
+{
+    GtkTextIter s = *line;
+    const char *nl;
+
+    gtk_text_iter_set_line_offset (&s, 0);
+    w->end = s;
+    gtk_text_iter_forward_lines (&w->end, regex->n_lines - 1);
+    if (!gtk_text_iter_ends_line (&w->end))
+        gtk_text_iter_forward_to_line_end (&w->end);
+
+    g_free (w->text);
+    w->text = gtk_text_buffer_get_slice (buffer, &s, &w->end, TRUE);
+    w->offset = gtk_text_iter_get_offset (&s);
+    nl = strchr (w->text, '\n');
+    w->first_line_chars = (int) g_utf8_strlen (w->text, nl ? nl - w->text : -1);
+    w->cursor = w->text;
+    w->cursor_offset = 0;
+}
+
+/* The place in the window text of buffer offset pos, moving the cursor there. */
+static const char *
+regex_window_seek (RegexWindow *w,
+                   int          pos)
+{
+    w->cursor = g_utf8_offset_to_pointer (w->cursor, pos - w->offset - w->cursor_offset);
+    w->cursor_offset = pos - w->offset;
+    return w->cursor;
+}
+
+/* Finds the matches of a regex in [start, end) -- end is NULL for no limit --
+   the way the loop over _moo_text_search_regex_forward does, but off the window
+   text with offsets instead of iters, which is linear in the length of a line
+   where that is quadratic. */
+static int
+batch_collect_regex (GArray            *matches,
+                     const GtkTextIter *start_iter,
+                     const GtkTextIter *end_iter,
+                     MooRegex          *regex,
+                     const char        *replacement,
+                     const char        *const_replacement)
+{
+    GtkTextBuffer *buffer = gtk_text_iter_get_buffer (start_iter);
+    RegexWindow w = {};
+    int start = gtk_text_iter_get_offset (start_iter);
+    int limit = end_iter ? gtk_text_iter_get_offset (end_iter) : -1;
+    int n_chars = gtk_text_buffer_get_char_count (buffer);
+    int prev_end = -1;
+    const char *prev_end_ptr = NULL;
+    gboolean was_zero_match = FALSE;
+    int count = 0;
+
+    regex_window_load (&w, buffer, start_iter, regex);
+
+    while (TRUE)
+    {
+        GMatchInfo *match_info = NULL;
+        char *freeme = NULL;
+        const char *real_replacement, *search_from;
+        int search = start, match_start, match_end, start_pos, end_pos;
+        char *gap = NULL;
+
+        /* The search: from start in the window of its line, then in the ones after. */
+        while (TRUE)
+        {
+            if (search > w.offset + w.first_line_chars)
+            {
+                GtkTextIter it;
+                gtk_text_buffer_get_iter_at_offset (buffer, &it, search);
+                regex_window_load (&w, buffer, &it, regex);
+                prev_end_ptr = NULL;
+            }
+
+            search_from = regex_window_seek (&w, search);
+
+            if (g_regex_match_full (regex->re, w.text, -1, search_from - w.text,
+                                    (GRegexMatchFlags) 0, &match_info, NULL))
+                break;
+
+            g_match_info_free (match_info);
+            match_info = NULL;
+
+            GtkTextIter it = w.end;
+
+            if (!gtk_text_iter_forward_line (&it) ||
+                (limit >= 0 && gtk_text_iter_get_offset (&it) > limit))
+                goto out;
+
+            regex_window_load (&w, buffer, &it, regex);
+            prev_end_ptr = NULL;
+            search = w.offset;
+        }
+
+        g_match_info_fetch_pos (match_info, 0, &start_pos, &end_pos);
+        regex_window_seek (&w, w.offset + w.cursor_offset +
+                               (int) g_utf8_pointer_to_offset (w.cursor, w.text + start_pos));
+        match_start = w.offset + w.cursor_offset;
+
+        if (limit >= 0 && match_start > limit)
+        {
+            g_match_info_free (match_info);
+            goto out;
+        }
+
+        match_end = match_start + (int) g_utf8_pointer_to_offset (w.text + start_pos, w.text + end_pos);
+
+        if (is_repeated_empty_match (end_pos - start_pos, match_start == start, &was_zero_match))
+        {
+            g_match_info_free (match_info);
+
+            if (start + 1 >= n_chars)
+                goto out;
+
+            start++;
+            continue;
+        }
+
+        real_replacement = expand_match_replacement (const_replacement, replacement,
+                                                     match_info, &freeme);
+
+        if (!real_replacement)
+        {
+            g_match_info_free (match_info);
+            goto out;
+        }
+
+        /* An empty match replaced by an empty string changes nothing, so it is
+           not a replacement and is not counted. */
+        if (end_pos > start_pos || *real_replacement)
+        {
+            const char *match_ptr = w.text + start_pos;
+
+            if (prev_end_ptr == NULL && prev_end >= w.offset)
+                prev_end_ptr = g_utf8_offset_to_pointer (w.text, prev_end - w.offset);
+
+            if (prev_end_ptr && !memchr (prev_end_ptr, '\n', match_ptr - prev_end_ptr))
+                gap = g_strndup (prev_end_ptr, match_ptr - prev_end_ptr);
+
+            batch_add (matches, match_start, match_end, real_replacement, gap);
+            count++;
+            prev_end = match_end;
+            prev_end_ptr = w.text + end_pos;
+        }
+
+        start = match_end;
+
+        g_match_info_free (match_info);
+
+        if (was_zero_match && !*real_replacement)
+        {
+            g_free (freeme);
+
+            if (start >= n_chars)
+                goto out;
+
+            start++;
+            was_zero_match = FALSE;
+        }
+        else
+        {
+            g_free (freeme);
+        }
+    }
+
+out:
+    g_free (w.text);
+    return count;
 }
 
 /* Puts the replacement in place of the match. A replace-all response is
@@ -847,7 +1140,7 @@ moo_text_replace_regex_all_real (GtkTextIter            *start,
     const char *const_replacement = NULL;
     GError *error = NULL;
     gboolean was_zero_match = FALSE;
-    GArray *matches = NULL;
+    GArray *batch_matches;
 
     g_return_val_if_fail (start != NULL, 0);
     g_return_val_if_fail (regex != NULL, 0);
@@ -867,6 +1160,18 @@ moo_text_replace_regex_all_real (GtkTextIter            *start,
 
     buffer = gtk_text_iter_get_buffer (start);
 
+    /* With no callback there is nobody to ask, so it is a replace-all and the
+       whole thing is one undo step. */
+    if (!func)
+    {
+        count = batch_collect_regex (batch_matches = batch_new (), start,
+                                     end && !gtk_text_iter_is_end (end) ? end : NULL,
+                                     regex, replacement, const_replacement);
+        batch_apply (buffer, batch_matches);
+        g_free (freeme);
+        return count;
+    }
+
     /* A mark rather than the iter, because the replacements below invalidate
        iters and the end of the range has to survive them. Right gravity would
        make the range grow by whatever is inserted at its end, hence FALSE.
@@ -882,20 +1187,10 @@ moo_text_replace_regex_all_real (GtkTextIter            *start,
         end_mark = NULL;
     }
 
-    /* With no callback there is nobody to ask, so it is a replace-all and the
-       whole thing is one undo step, begun here. Interactively the user may
-       still answer "all" later, and then the remaining replacements are
+    /* The user may answer "all" later, and then the remaining replacements are
        grouped from that point on -- before it, each one undoes separately,
        which is what the user who stepped through them expects. */
-    if (func)
-    {
-        response = MOO_TEXT_REPLACE_DO_REPLACE;
-    }
-    else
-    {
-        matches = batch_new ();
-        response = MOO_TEXT_REPLACE_ALL;
-    }
+    response = MOO_TEXT_REPLACE_DO_REPLACE;
 
     while (TRUE)
     {
@@ -911,7 +1206,7 @@ moo_text_replace_regex_all_real (GtkTextIter            *start,
                                              &string, NULL, &match_len, &match_info))
             goto out;
 
-        if (is_repeated_empty_match (match_len, &match_start, start, &was_zero_match))
+        if (is_repeated_empty_match (match_len, gtk_text_iter_equal (&match_start, start), &was_zero_match))
         {
             g_free (string);
             g_match_info_free (match_info);
@@ -950,12 +1245,8 @@ moo_text_replace_regex_all_real (GtkTextIter            *start,
         if (response != MOO_TEXT_REPLACE_SKIP && (match_len || *real_replacement))
         {
             count++;
-
-            if (matches)
-                batch_add (matches, &match_start, &match_end, real_replacement);
-            else
-                replace_match (buffer, &match_start, &match_end, real_replacement,
-                               response, &need_end_user_action);
+            replace_match (buffer, &match_start, &match_end, real_replacement,
+                           response, &need_end_user_action);
         }
 
         *start = match_end;
@@ -986,8 +1277,6 @@ out:
         gtk_text_buffer_delete_mark (buffer, end_mark);
     if (need_end_user_action)
         gtk_text_buffer_end_user_action (buffer);
-    if (matches)
-        batch_apply (buffer, matches);
     g_free (freeme);
     return count;
 }
@@ -1068,16 +1357,30 @@ moo_text_replace_all (GtkTextIter            *start,
     else
         gtk_text_iter_forward_char (end);
 
-    while (TRUE)
+    if (!(flags & MOO_TEXT_SEARCH_CASELESS))
     {
-        GtkTextIter match_start, match_end;
+        count = batch_collect_plain (matches, start, end, text, replacement,
+                                     flags & MOO_TEXT_SEARCH_WHOLE_WORDS);
+    }
+    else
+    {
+        /* The case folding of the search is not something to redo on a copy. */
+        GtkTextIter prev_end;
+        gboolean have_prev = FALSE;
 
-        if (!moo_text_search_forward (start, text, flags, &match_start, &match_end, end))
-            break;
+        while (TRUE)
+        {
+            GtkTextIter match_start, match_end;
 
-        count++;
-        batch_add (matches, &match_start, &match_end, replacement);
-        *start = match_end;
+            if (!moo_text_search_forward (start, text, flags, &match_start, &match_end, end))
+                break;
+
+            count++;
+            batch_add_iters (matches, buffer, have_prev ? &prev_end : NULL,
+                             &match_start, &match_end, replacement);
+            prev_end = *start = match_end;
+            have_prev = TRUE;
+        }
     }
 
     batch_apply (buffer, matches);
