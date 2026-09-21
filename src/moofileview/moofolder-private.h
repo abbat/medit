@@ -93,8 +93,6 @@ void         _moo_file_system_folder_finalized  (MooFileSystem  *fs,
 void         _moo_file_system_folder_deleted    (MooFileSystem  *fs,
                                                  MooFolderImpl  *folder);
 
-gsize        _moo_folder_mem_usage              (MooFolder      *folder);
-
 
 G_END_DECLS
 

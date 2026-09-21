@@ -218,31 +218,6 @@ moo_folder_dispose (GObject *object)
 }
 
 
-static void
-add_file_size (G_GNUC_UNUSED const char *filename,
-               MooFile *file,
-               gsize *mem)
-{
-    *mem += sizeof *file;
-#define STRING_SIZE(s) ((s) ? (strlen (s) + 1) : 0)
-    *mem += STRING_SIZE (file->name);
-    *mem += STRING_SIZE (file->link_target);
-    *mem += STRING_SIZE (file->display_name);
-    *mem += STRING_SIZE (file->case_display_name);
-    *mem += _moo_collation_key_size (file->collation_key);
-#undef STRING_SIZE
-}
-
-gsize
-_moo_folder_mem_usage (MooFolder *folder)
-{
-    gsize mem = 0;
-    mem += sizeof (MooFolderImpl);
-    g_hash_table_foreach (folder->impl->files, (GHFunc) add_file_size, &mem);
-    return mem;
-}
-
-
 MooFolder *
 _moo_folder_new_with_impl (MooFolderImpl *impl)
 {

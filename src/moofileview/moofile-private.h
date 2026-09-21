@@ -65,7 +65,6 @@ GdkPixbuf   *_moo_file_get_icon         (const MooFile  *file,
                                          GtkWidget      *widget,
                                          GtkIconSize     size);
 
-gsize        _moo_collation_key_size    (MooCollationKey *key);
 int          _moo_collation_key_cmp     (const MooCollationKey *key1,
                                          const MooCollationKey *key2);
 const MooCollationKey *_moo_file_collation_key (const MooFile *file);

@@ -77,12 +77,6 @@ _moo_collation_key_cmp (const MooCollationKey *key1,
   return strcmp ((const char*) key1, (const char*) key2);
 }
 
-gsize
-_moo_collation_key_size (MooCollationKey *key)
-{
-    return key ? strlen ((char*) key) + 1 : 0;
-}
-
 
 
 /********************************************************************/
