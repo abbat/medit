@@ -22,9 +22,6 @@ G_BEGIN_DECLS
 
 
 gboolean    moo_open_url                    (const char *url);
-gboolean    moo_open_email                  (const char *address,
-                                             const char *subject,
-                                             const char *body);
 gboolean    moo_open_file                   (const char *path);
 
 void        moo_window_present              (GtkWindow  *window,
@@ -110,9 +107,6 @@ gboolean    moo_find_line_end               (const char     *string,
                                              gssize          len,
                                              gsize          *le_start,
                                              gsize          *le_len);
-char      **moo_strnsplit_lines             (const char     *string,
-                                             gssize          len,
-                                             guint          *n_tokens);
 char      **moo_splitlines                  (const char     *string);
 
 char     **_moo_strv_reverse                (char          **str_array);

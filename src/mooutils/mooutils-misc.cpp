@@ -75,30 +75,6 @@ open_uri (const char *uri,
 }
 
 gboolean
-moo_open_email (const char *address,
-                const char *subject,
-                const char *body)
-{
-    GString *uri;
-    gboolean res;
-
-    g_return_val_if_fail (address != NULL, FALSE);
-    uri = g_string_new ("mailto:");
-    g_string_append_printf (uri, "%s%s", address,
-                            subject || body ? "?" : "");
-    if (subject)
-        g_string_append_printf (uri, "subject=%s%s", subject,
-                                body ? "&" : "");
-    if (body)
-        g_string_append_printf (uri, "body=%s", body);
-
-    res = open_uri (uri->str, TRUE);
-    g_string_free (uri, TRUE);
-    return res;
-}
-
-
-gboolean
 moo_open_url (const char *url)
 {
     g_return_val_if_fail (url != NULL, FALSE);
@@ -1558,39 +1534,6 @@ void MOO_NORETURN _moo_errorv (MooCodeLoc loc, const char *format, va_list args)
     moo_abort ();
 }
 
-
-char **
-moo_strnsplit_lines (const char *string,
-                     gssize      len,
-                     guint      *n_lines)
-{
-    MooLineReader lr;
-    GPtrArray *array = NULL;
-    const char *line;
-    gsize line_len;
-
-    for (moo_line_reader_init (&lr, string, len);
-         (line = moo_line_reader_get_line (&lr, &line_len, NULL)); )
-    {
-        if (!array)
-            array = g_ptr_array_new ();
-        g_ptr_array_add (array, g_strndup (line, line_len));
-    }
-
-    if (array)
-    {
-        if (n_lines)
-            *n_lines = array->len;
-        g_ptr_array_add (array, NULL);
-        return (char**) g_ptr_array_free (array, FALSE);
-    }
-    else
-    {
-        if (n_lines)
-            *n_lines = 0;
-        return NULL;
-    }
-}
 
 char **
 moo_splitlines (const char *string)
