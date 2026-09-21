@@ -62,30 +62,8 @@ struct _MooToggleActionClass {
 };
 
 
-#define MOO_TYPE_RADIO_ACTION                     (moo_radio_action_get_type ())
-#define MOO_RADIO_ACTION(object)                  (G_TYPE_CHECK_INSTANCE_CAST ((object), MOO_TYPE_RADIO_ACTION, MooRadioAction))
-#define MOO_RADIO_ACTION_CLASS(klass)             (G_TYPE_CHECK_CLASS_CAST ((klass), MOO_TYPE_RADIO_ACTION, MooRadioActionClass))
-#define MOO_IS_RADIO_ACTION(object)               (G_TYPE_CHECK_INSTANCE_TYPE ((object), MOO_TYPE_RADIO_ACTION))
-#define MOO_IS_RADIO_ACTION_CLASS(klass)          (G_TYPE_CHECK_CLASS_TYPE ((klass), MOO_TYPE_RADIO_ACTION))
-#define MOO_RADIO_ACTION_GET_CLASS(obj)           (G_TYPE_INSTANCE_GET_CLASS ((obj), MOO_TYPE_RADIO_ACTION, MooRadioActionClass))
-
-typedef struct _MooRadioAction        MooRadioAction;
-typedef struct _MooRadioActionPrivate MooRadioActionPrivate;
-typedef struct _MooRadioActionClass   MooRadioActionClass;
-
-struct _MooRadioAction {
-    GtkRadioAction base;
-    MooRadioActionPrivate *priv;
-};
-
-struct _MooRadioActionClass {
-    GtkRadioActionClass base_class;
-};
-
-
 GType           moo_action_get_type         (void) G_GNUC_CONST;
 GType           moo_toggle_action_get_type  (void) G_GNUC_CONST;
-GType           moo_radio_action_get_type   (void) G_GNUC_CONST;
 
 gpointer       _moo_action_get_window       (gpointer   action);
 

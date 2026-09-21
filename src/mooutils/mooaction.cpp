@@ -502,74 +502,6 @@ moo_toggle_action_get_property (GObject    *object,
 }
 
 
-/*****************************************************************************/
-/* MooRadioAction
- */
-
-struct _MooRadioActionPrivate {
-};
-
-
-DEFINE_ACTION_TYPE (MooRadioAction, moo_radio_action, GTK_TYPE_RADIO_ACTION)
-
-
-enum {
-    MOO_ACTION_BASE_PROPS(RADIO_ACTION)
-};
-
-
-static void
-moo_radio_action_init (MooRadioAction *action)
-{
-    action->priv = (MooRadioActionPrivate*) moo_radio_action_get_instance_private (action);
-
-    _moo_action_base_init_instance (action);
-}
-
-
-static void
-moo_radio_action_class_init (MooRadioActionClass *klass)
-{
-    moo_radio_action_base_class_init (klass);
-
-    GtkActionClass *action_class = GTK_ACTION_CLASS (klass);
-    action_class->connect_proxy = connect_proxy;
-    action_class->disconnect_proxy = disconnect_proxy;
-}
-
-
-static void
-moo_radio_action_set_property (GObject            *object,
-                               guint               property_id,
-                               const GValue       *value,
-                               GParamSpec         *pspec)
-{
-    switch (property_id)
-    {
-        MOO_ACTION_BASE_SET_PROPERTY (RADIO_ACTION);
-
-        default:
-            G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
-    }
-}
-
-
-static void
-moo_radio_action_get_property (GObject    *object,
-                               guint       property_id,
-                               GValue     *value,
-                               GParamSpec *pspec)
-{
-    switch (property_id)
-    {
-        MOO_ACTION_BASE_GET_PROPERTY (RADIO_ACTION);
-
-        default:
-            G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
-    }
-}
-
-
 /**************************************************************************/
 /* _moo_sync_toggle_action
  */
@@ -727,10 +659,8 @@ connect_proxy (GtkAction *action,
 
     if (MOO_IS_ACTION (action))
         parent_class = GTK_ACTION_CLASS (moo_action_parent_class);
-    else if (MOO_IS_TOGGLE_ACTION (action))
-        parent_class = GTK_ACTION_CLASS (moo_toggle_action_parent_class);
     else
-        parent_class = GTK_ACTION_CLASS (moo_radio_action_parent_class);
+        parent_class = GTK_ACTION_CLASS (moo_toggle_action_parent_class);
 
     parent_class->connect_proxy (action, widget);
     g_signal_emit_by_name (action, "connect-proxy", widget);
@@ -746,10 +676,8 @@ disconnect_proxy (GtkAction *action,
 
     if (MOO_IS_ACTION (action))
         parent = GTK_ACTION_CLASS (moo_action_parent_class);
-    else if (MOO_IS_TOGGLE_ACTION (action))
-        parent = GTK_ACTION_CLASS (moo_toggle_action_parent_class);
     else
-        parent = GTK_ACTION_CLASS (moo_radio_action_parent_class);
+        parent = GTK_ACTION_CLASS (moo_toggle_action_parent_class);
 
     g_signal_emit_by_name (action, "disconnect-proxy", widget);
     parent->disconnect_proxy (action, widget);
