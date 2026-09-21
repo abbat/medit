@@ -9,7 +9,6 @@ G_BEGIN_DECLS
 typedef struct mgw_errno_t mgw_errno_t;
 typedef struct MGW_FILE MGW_FILE;
 typedef struct MgwFd MgwFd;
-typedef struct mgw_access_mode_t mgw_access_mode_t;
 
 typedef int mgw_errno_value_t;
 
@@ -72,20 +71,5 @@ mgw_spawn_async_with_pipes (const gchar *working_directory,
                             MgwFd *standard_error,
                             GError **error);
 GIOChannel *mgw_io_channel_unix_new (MgwFd fd);
-
-enum mgw_access_mode_value_t
-{
-    MGW_F_OK = 0,
-    MGW_R_OK = 1,
-    MGW_W_OK = 2,
-    MGW_X_OK = 4,
-};
-
-struct mgw_access_mode_t
-{
-    enum mgw_access_mode_value_t value;
-};
-
-int mgw_access (const char *path, mgw_access_mode_t mode);
 
 G_END_DECLS

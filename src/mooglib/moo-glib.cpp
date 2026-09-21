@@ -234,19 +234,6 @@ mgw_mkdir_with_parents (const gchar *pathname, gint mode, mgw_errno_t *err)
     return result;
 }
 
-int
-mgw_access (const char *path, mgw_access_mode_t mode)
-{
-    int gmode = F_OK;
-    if (mode.value & MGW_R_OK)
-        gmode |= R_OK;
-    if (mode.value & MGW_W_OK)
-        gmode |= W_OK;
-    if (mode.value & MGW_X_OK)
-        gmode |= X_OK;
-    return g_access (path, gmode);
-}
-
 
 gboolean
 mgw_spawn_async_with_pipes (const gchar *working_directory,
