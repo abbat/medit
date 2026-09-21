@@ -102,10 +102,12 @@ def run(t):
     # The numeric keypad has keys of its own.
     t.key("ctrl+KP_Add")
     t.wait(lambda: height(t) > base,
-           "Ctrl+keypad plus to make the text larger; it is %d high against %d" % (height(t), base))
+           "Ctrl+keypad plus to make the text larger; it is %d high against %d"
+           % (height(t), base))
     t.key("ctrl+KP_Subtract")
     t.wait(lambda: height(t) == base,
-           "Ctrl+keypad minus to bring it back; it is %d high against %d" % (height(t), base))
+           "Ctrl+keypad minus to bring it back; it is %d high against %d"
+           % (height(t), base))
     t.log("ok: Ctrl and the keypad plus and minus zoom")
 
 
