@@ -97,6 +97,14 @@ add_custom_target(perf
     USES_TERMINAL
     COMMENT "Measuring highlighting")
 
+add_custom_target(perf-replace
+    COMMAND ${CMAKE_COMMAND} -E env MOO_PERF=1
+            "MOO_PERF_OUT=${CMAKE_BINARY_DIR}/perf.txt"
+            $<TARGET_FILE:medit> --unit-test /perf/replace
+    DEPENDS medit
+    USES_TERMINAL
+    COMMENT "Measuring replace-all")
+
 # The ui-test target runs ctest over everything, unit tests included, and is
 # built by name rather than as part of ALL -- so without this it could run
 # against a list left by an older build.

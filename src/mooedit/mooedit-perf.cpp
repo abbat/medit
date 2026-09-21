@@ -24,7 +24,9 @@
  * A build with sanitizers is two to three times slower and unevenly so; measure
  * in one without. The inputs are generated, MOO_PERF_MB of text each (default 8).
  *
- * Every case prints "insert" (set_text) and "highlight" (attaching the engine
+ * Also replace-all (target perf-replace) over the same kind of inputs.
+ *
+ * Every highlighting case prints "insert" (set_text) and "highlight" (attaching the engine
  * and highlighting the whole buffer synchronously), the median of a few runs. With
  * MOO_PERF_OUT=<file> the lines are also written there, and with
  * MOO_PERF_BASELINE=<file from an earlier run> each line says how it compares.
@@ -38,6 +40,7 @@
 
 #include "mooedit/moolang-private.h"
 #include "mooedit/mootext-private.h"
+#include "mooedit/mootextsearch.h"
 #include "vendor/gtksourceview/gtksourceengine.h"
 
 #define PERF_RUNS 3
@@ -212,6 +215,17 @@ report (const char *name,
 }
 
 
+/* GtkTextTag's class needs gdk's colour types registered; see
+   mooedit-tests.cpp. The value has to be used or the call is dropped. */
+static void
+register_gdk_types (void)
+{
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+    g_assert (gdk_color_get_type () != G_TYPE_INVALID);
+G_GNUC_END_IGNORE_DEPRECATIONS
+}
+
+
 static void
 test_perf_highlight (gconstpointer data)
 {
@@ -233,11 +247,7 @@ test_perf_highlight (gconstpointer data)
     lang = gtk_source_language_manager_get_language (manager, c->lang);
     g_assert_nonnull (lang);
 
-    /* GtkTextTag's class needs gdk's colour types registered; see
-       mooedit-tests.cpp. The value has to be used or the call is dropped. */
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-    g_assert (gdk_color_get_type () != G_TYPE_INVALID);
-G_GNUC_END_IGNORE_DEPRECATIONS
+    register_gdk_types ();
 
     c->generate (text, size);
     g_print ("# perf %s: %.1f MB, %s\n", c->name, text->len / 1048576.0, c->lang);
@@ -285,11 +295,82 @@ G_GNUC_END_IGNORE_DEPRECATIONS
 }
 
 
+struct ReplaceCase
+{
+    const char *name;
+    const PerfCase *input;
+    double max_mb;
+    const char *pattern;
+    const char *replacement;
+    MooTextSearchFlags flags;
+};
+
+
+/* replace-all over the whole buffer, one user action: what Find and Replace's
+   "Replace All" does. The one-line input is capped at a quarter of a megabyte
+   because the time is quadratic there (1 MB took minutes: GTK splits and counts
+   the one huge segment of the line on every replacement). MOO_PERF_MB may be
+   fractional. */
+static void
+test_perf_replace (gconstpointer data)
+{
+    const ReplaceCase *c = (const ReplaceCase*) data;
+    const char *mb = g_getenv ("MOO_PERF_MB");
+    double mbytes = mb != nullptr ? g_ascii_strtod (mb, nullptr) : 8;
+    gsize size = (gsize) (MIN (mbytes, c->max_mb) * 1048576);
+    GString *text;
+    double replace[PERF_RUNS];
+    int count = 0;
+
+    register_gdk_types ();
+    text = g_string_sized_new (size + 4096);
+    c->input->generate (text, size);
+    g_print ("# perf %s: %.1f MB\n", c->name, text->len / 1048576.0);
+
+    for (int run = 0; run < PERF_RUNS; ++run)
+    {
+        MooTextBuffer *buffer = MOO_TEXT_BUFFER (g_object_new (MOO_TYPE_TEXT_BUFFER, nullptr));
+        GtkTextIter start;
+        double t0;
+
+        gtk_text_buffer_set_text (GTK_TEXT_BUFFER (buffer), text->str, text->len);
+        gtk_text_buffer_get_start_iter (GTK_TEXT_BUFFER (buffer), &start);
+
+        t0 = now_ms ();
+        count = moo_text_replace_all (&start, nullptr, c->pattern, c->replacement, c->flags);
+        replace[run] = now_ms () - t0;
+
+        g_object_unref (buffer);
+    }
+
+    qsort (replace, PERF_RUNS, sizeof (double), cmp_double);
+    g_print ("# perf %s: %d replacements\n", c->name, count);
+    report (c->name, "replace", replace[PERF_RUNS / 2]);
+
+    g_string_free (text, TRUE);
+}
+
+
+static const ReplaceCase replace_cases[] = {
+    { "replace-plain-lines",  &perf_cases[1], 8, "null", "nil", (MooTextSearchFlags) 0 },
+    { "replace-regex-lines",  &perf_cases[1], 8, "\"id\":\\s*(\\d+)", "\"ID\": \\1", MOO_TEXT_SEARCH_REGEX },
+    { "replace-plain-oneline", &perf_cases[0], 0.25, "null", "nil", (MooTextSearchFlags) 0 },
+    { "replace-regex-oneline", &perf_cases[0], 0.25, "\"id\":(\\d+)", "\"ID\":\\1", MOO_TEXT_SEARCH_REGEX },
+};
+
+
 void
 _moo_add_mooedit_perf_tests (void)
 {
     if (g_getenv ("MOO_PERF") == nullptr)
         return;
+
+    for (guint i = 0; i < G_N_ELEMENTS (replace_cases); ++i)
+    {
+        char *path = g_strconcat ("/perf/replace/", replace_cases[i].name, nullptr);
+        g_test_add_data_func (path, &replace_cases[i], test_perf_replace);
+        g_free (path);
+    }
 
     for (guint i = 0; i < G_N_ELEMENTS (perf_cases); ++i)
     {
