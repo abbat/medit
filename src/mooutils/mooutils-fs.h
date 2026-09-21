@@ -52,7 +52,6 @@ gboolean        _moo_remove_dir             (const char *path,
 int             _moo_mkdir_with_parents     (const char *path,
                                              mgw_errno_t* err); /* S_IRWXU on unix */
 
-char           **moo_filenames_from_locale  (char      **files);
 char            *moo_filename_from_locale   (const char *file);
 char           *_moo_filename_to_uri        (const char *file,
                                              GError    **error);

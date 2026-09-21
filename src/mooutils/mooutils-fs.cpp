@@ -198,30 +198,6 @@ _moo_file_error_from_errno (mgw_errno_t code)
 }
 
 
-char **
-moo_filenames_from_locale (char **files)
-{
-    guint i;
-    char **conv;
-
-    if (!files)
-        return NULL;
-
-    conv = g_new0 (char*, g_strv_length (files) + 1);
-
-    for (i = 0; files && *files; ++files)
-    {
-        conv[i] = moo_filename_from_locale (*files);
-
-        if (!conv[i])
-            g_warning ("could not convert '%s' to UTF8", *files);
-        else
-            ++i;
-    }
-
-    return conv;
-}
-
 char *
 moo_filename_from_locale (const char *file)
 {
