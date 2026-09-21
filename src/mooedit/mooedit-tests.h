@@ -24,6 +24,10 @@ G_BEGIN_DECLS
    directory. */
 void        _moo_add_mooedit_unit_tests     (void);
 
+/* The performance measurements of mooedit-perf.cpp; nothing unless MOO_PERF is
+   set in the environment. */
+void        _moo_add_mooedit_perf_tests     (void);
+
 G_END_DECLS
 
 #endif /* MOO_ENABLE_UNIT_TESTS */

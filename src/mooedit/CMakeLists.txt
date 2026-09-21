@@ -9,6 +9,7 @@ target_sources(medit PRIVATE
     mooedit-impl.h
     mooedit-private.h
     mooedit-script.cpp
+    mooedit-perf.cpp
     mooedit-script.h
     mooedit-tests.cpp
     mooedit-tests.h

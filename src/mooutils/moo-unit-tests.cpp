@@ -38,6 +38,7 @@ add_all_tests (void)
     _moo_add_moocpp_unit_tests ();
     _moo_add_mooutils_unit_tests ();
     _moo_add_mooedit_unit_tests ();
+    _moo_add_mooedit_perf_tests ();
     _moo_add_moofileview_unit_tests ();
     _moo_add_ctags_unit_tests ();
 

@@ -86,6 +86,17 @@ add_custom_target(unit-tests-list ALL
 
 add_dependencies(unit-tests-list medit)
 
+# Performance measurements, run by hand in an unsanitized release build: they are
+# not in the list above (MOO_PERF hides them from discovery), so ctest and CI
+# never see them. See src/mooedit/mooedit-perf.cpp.
+add_custom_target(perf
+    COMMAND ${CMAKE_COMMAND} -E env MOO_PERF=1
+            "MOO_PERF_OUT=${CMAKE_BINARY_DIR}/perf.txt"
+            $<TARGET_FILE:medit> --unit-test /perf/highlight
+    DEPENDS medit
+    USES_TERMINAL
+    COMMENT "Measuring highlighting")
+
 # The ui-test target runs ctest over everything, unit tests included, and is
 # built by name rather than as part of ALL -- so without this it could run
 # against a list left by an older build.
