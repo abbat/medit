@@ -53,8 +53,6 @@ GtkActionGroup      *moo_action_collection_add_group        (MooActionCollection
                                                              const char             *display_name);
 GtkActionGroup      *moo_action_collection_get_group        (MooActionCollection    *coll,
                                                              const char             *name);
-void                 moo_action_collection_remove_group     (MooActionCollection    *coll,
-                                                             GtkActionGroup         *group);
 const GSList        *moo_action_collection_get_groups       (MooActionCollection    *coll);
 
 GtkAction           *moo_action_collection_get_action       (MooActionCollection    *coll,

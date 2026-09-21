@@ -204,25 +204,6 @@ moo_action_collection_add_group (MooActionCollection *coll,
 }
 
 
-void
-moo_action_collection_remove_group (MooActionCollection *coll,
-                                    GtkActionGroup      *group)
-{
-    const char *name;
-
-    g_return_if_fail (MOO_IS_ACTION_COLLECTION (coll));
-    g_return_if_fail (MOO_IS_ACTION_GROUP (group));
-
-    name = gtk_action_group_get_name (group);
-    g_return_if_fail (name != NULL);
-    g_return_if_fail (group == get_group (coll, name));
-
-    _moo_action_group_set_collection (MOO_ACTION_GROUP (group), NULL);
-    g_hash_table_remove (coll->priv->groups, name);
-    coll->priv->groups_list = g_slist_remove (coll->priv->groups_list, group);
-}
-
-
 GtkActionGroup *
 moo_action_collection_get_group (MooActionCollection *coll,
                                  const char          *name)
