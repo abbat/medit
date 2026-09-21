@@ -1,3 +1,30 @@
+2026-09-21  Anton Batenev  <antonbatenev@yandex.ru>
+
+    * === Released 1.3.8 ===
+
+    The language server plugin asks for what it said it could: Go to
+    Declaration is in the menu beside the definition it was announced with,
+    Expand Selection and Shrink Selection grow and shrink the selection by
+    the ranges the server knows the syntax by, and a rename asks the server
+    what it renames before it asks for a name, so the dialog offers the
+    right text and a symbol that cannot be renamed says so first.
+    The document tabs are GTK's own notebook now, in place of 4444 lines
+    that reimplemented it. The loader of external plugins went, since
+    nothing it could load can be built; every plugin is built in.
+    The defects, all of them ones that lose something: a file dropped onto
+    the file selector, or renamed in the properties dialog, replaced the one
+    that already had the name without a word, and a copy or rename that
+    failed failed silently -- both ask now and say what went wrong; a file
+    watch that died left its document marked unchanged, so the next save
+    overwrote whatever had happened on disk; a medit killed with a signal
+    rather than quit took the saved session along with it; a user tool that
+    could not run said so nowhere, and one that ran and failed put its empty
+    output over the text; the pointer stayed hidden over the text after
+    typing until the window lost focus. The Translated by tab of the About
+    dialog, empty in every language since its string was never extracted,
+    lists the translators again, and the terminal pane takes its title from
+    where vte 0.78 moved it.
+
 2026-09-16  Anton Batenev  <antonbatenev@yandex.ru>
 
     * === Released 1.3.7 ===

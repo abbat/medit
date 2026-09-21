@@ -1,3 +1,17 @@
+medit (1.3.8) unstable; urgency=low
+
+  * Add Go to Declaration, Expand and Shrink Selection and prepared rename to
+    the language server plugin.
+  * Use GtkNotebook for the document tabs, and drop the loader of external
+    plugins.
+  * Ask before a dropped or renamed file overwrites another, and report a
+    copy, move or rename that failed.
+  * Fix a dead file watch leaving its document unchanged, the session lost
+    when medit was killed, a user tool failing silently, the pointer hidden
+    after typing and the empty Translated by tab.
+
+ -- Anton Batenev <antonbatenev@yandex.ru>  Mon, 21 Sep 2026 08:07:12 +0300
+
 medit (1.3.7) unstable; urgency=low
 
   * Compile the whole tree as C++, move the code carried in from elsewhere
