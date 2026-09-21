@@ -96,6 +96,10 @@
       <item action="LineNumbers"/>
       <item action="ToggleFold"/>
       <separator/>
+      <item action="ZoomIn"/>
+      <item action="ZoomOut"/>
+      <item action="ZoomReset"/>
+      <separator/>
       <item action="FocusDoc"/>
       <item action="MoveToSplitView"/>
       <separator/>

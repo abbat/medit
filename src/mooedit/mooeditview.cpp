@@ -17,6 +17,8 @@ static void     moo_edit_view_dispose               (GObject            *object)
 static gboolean moo_edit_view_focus_in              (GtkWidget          *widget,
                                                      GdkEventFocus      *event);
 static gboolean moo_edit_view_popup_menu            (GtkWidget          *widget);
+static gboolean moo_edit_view_scroll_event          (GtkWidget          *widget,
+                                                     GdkEventScroll     *event);
 static gboolean moo_edit_view_drag_motion           (GtkWidget          *widget,
                                                      GdkDragContext     *context,
                                                      gint                x,
@@ -44,6 +46,7 @@ moo_edit_view_class_init (MooEditViewClass *klass)
     gobject_class->dispose = moo_edit_view_dispose;
 
     widget_class->popup_menu = moo_edit_view_popup_menu;
+    widget_class->scroll_event = moo_edit_view_scroll_event;
     widget_class->drag_motion = moo_edit_view_drag_motion;
     widget_class->drag_drop = moo_edit_view_drag_drop;
     widget_class->focus_in_event = moo_edit_view_focus_in;
@@ -52,6 +55,47 @@ moo_edit_view_class_init (MooEditViewClass *klass)
     textview_class->apply_style_scheme = moo_edit_view_apply_style_scheme;
 }
 
+
+/* Ctrl and the wheel zoom instead of scrolling. A smooth wheel reports fractions
+   of a step, which add up until they make one. */
+static gboolean
+moo_edit_view_scroll_event (GtkWidget      *widget,
+                            GdkEventScroll *event)
+{
+    int step = 0;
+
+    if ((event->state & gtk_accelerator_get_default_mod_mask ()) != GDK_CONTROL_MASK)
+        return GTK_WIDGET_CLASS (moo_edit_view_parent_class)->scroll_event
+                   ? GTK_WIDGET_CLASS (moo_edit_view_parent_class)->scroll_event (widget, event)
+                   : FALSE;
+
+    switch (event->direction)
+    {
+        case GDK_SCROLL_UP:
+            step = 1;
+            break;
+        case GDK_SCROLL_DOWN:
+            step = -1;
+            break;
+#if GTK_CHECK_VERSION(3,0,0)
+        case GDK_SCROLL_SMOOTH:
+        {
+            static double smooth;
+            smooth -= event->delta_y;
+            step = (int) smooth;
+            smooth -= step;
+            break;
+        }
+#endif
+        default:
+            break;
+    }
+
+    if (step)
+        _moo_edit_zoom (step);
+
+    return TRUE;
+}
 
 static void
 moo_edit_view_init (MooEditView *view)

@@ -345,6 +345,23 @@ def key(*keys, settle=SETTLE):
     time.sleep(settle)
 
 
+def wheel(clicks, mods=(), settle=SETTLE):
+    """Turn the wheel where the pointer is: up for a positive count, down for a
+    negative one, with the modifiers held."""
+    button = 4 if clicks > 0 else 5
+
+    for m in mods:
+        _xdotool("keydown", m)
+    try:
+        for _ in range(abs(clicks)):
+            _xdotool("click", button)
+    finally:
+        for m in mods:
+            _xdotool("keyup", m)
+
+    time.sleep(settle)
+
+
 def type_text(text, delay=25, settle=SETTLE):
     _xdotool("type", "--delay", delay, text)
     time.sleep(settle)

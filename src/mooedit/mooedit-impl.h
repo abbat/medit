@@ -88,6 +88,10 @@ extern guint *_moo_edit_settings;
 void        _moo_edit_update_global_config      (void);
 void        _moo_edit_init_config               (void);
 
+void        _moo_edit_view_apply_font           (MooEditView    *view);
+void        _moo_edit_apply_font_all            (void);
+void        _moo_edit_zoom                      (int             delta);
+
 void        _moo_edit_queue_recheck_config_all  (void);
 void        _moo_edit_queue_recheck_config      (MooEdit        *edit);
 

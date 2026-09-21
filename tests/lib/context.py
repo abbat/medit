@@ -485,6 +485,10 @@ class Test(object):
     def key(self, *keys):
         ui.key(*keys)
 
+    def wheel(self, clicks, *mods):
+        """Turn the wheel over the pointer, up for a positive count."""
+        ui.wheel(clicks, mods)
+
     def type_text(self, text):
         ui.type_text(text)
 

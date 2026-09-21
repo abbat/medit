@@ -1284,6 +1284,18 @@ moo_edit_apply_config_all_in_idle (gpointer)
 }
 
 void
+_moo_edit_apply_font_all (void)
+{
+    for (MooEditList *l = _moo_edit_instances; l != NULL; l = l->next)
+    {
+        MooEdit *doc = l->data;
+
+        for (guint i = 0; i < doc->priv->views->n_elms; ++i)
+            _moo_edit_view_apply_font (doc->priv->views->elms[i]);
+    }
+}
+
+void
 _moo_edit_queue_recheck_config_all (void)
 {
     if (!moo_edit_apply_config_all_idle)

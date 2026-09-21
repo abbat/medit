@@ -274,6 +274,9 @@ static void action_switch_to_tab                (MooEditWindow      *window,
                                                  guint               n);
 
 static void action_toggle_fold                  (MooEditWindow      *window);
+static void action_zoom_in                      (MooEditWindow      *window);
+static void action_zoom_out                     (MooEditWindow      *window);
+static void action_zoom_reset                   (MooEditWindow      *window);
 
 static void action_toggle_bookmark              (MooEditWindow      *window);
 static void action_next_bookmark                (MooEditWindow      *window);
@@ -645,6 +648,36 @@ moo_edit_window_class_init (MooEditWindowClass *klass)
                                  "label", _("Toggle _Fold"),
                                  "tooltip", _("Fold or unfold the block at the cursor"),
                                  "closure-callback", action_toggle_fold,
+                                 "condition::sensitive", "has-open-document",
+                                 nullptr);
+
+    moo_window_class_new_action (window_class, "ZoomIn", nullptr,
+                                 "display-name", _("Zoom In"),
+                                 "label", _("Zoom _In"),
+                                 "tooltip", _("Make the text larger, in all documents"),
+                                 "stock-id", GTK_STOCK_ZOOM_IN,
+                                 "default-accel", MOO_EDIT_ACCEL_ZOOM_IN,
+                                 "closure-callback", action_zoom_in,
+                                 "condition::sensitive", "has-open-document",
+                                 nullptr);
+
+    moo_window_class_new_action (window_class, "ZoomOut", nullptr,
+                                 "display-name", _("Zoom Out"),
+                                 "label", _("Zoom _Out"),
+                                 "tooltip", _("Make the text smaller, in all documents"),
+                                 "stock-id", GTK_STOCK_ZOOM_OUT,
+                                 "default-accel", MOO_EDIT_ACCEL_ZOOM_OUT,
+                                 "closure-callback", action_zoom_out,
+                                 "condition::sensitive", "has-open-document",
+                                 nullptr);
+
+    moo_window_class_new_action (window_class, "ZoomReset", nullptr,
+                                 "display-name", _("Reset Zoom"),
+                                 "label", _("_Reset Zoom"),
+                                 "tooltip", _("Return the text to the size of the preferences"),
+                                 "stock-id", GTK_STOCK_ZOOM_100,
+                                 "default-accel", MOO_EDIT_ACCEL_ZOOM_RESET,
+                                 "closure-callback", action_zoom_reset,
                                  "condition::sensitive", "has-open-document",
                                  nullptr);
 
@@ -1801,6 +1834,25 @@ action_toggle_fold (MooEditWindow *window)
     g_return_if_fail (view != nullptr);
     moo_text_buffer_toggle_fold_at_line (MOO_TEXT_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (view))),
                                          moo_text_view_get_cursor_line (GTK_TEXT_VIEW (view)));
+}
+
+
+static void
+action_zoom_in (MooEditWindow *)
+{
+    _moo_edit_zoom (1);
+}
+
+static void
+action_zoom_out (MooEditWindow *)
+{
+    _moo_edit_zoom (-1);
+}
+
+static void
+action_zoom_reset (MooEditWindow *)
+{
+    _moo_edit_zoom (0);
 }
 
 

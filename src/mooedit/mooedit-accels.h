@@ -54,6 +54,10 @@
 /* The key name is case sensitive here too: "]" does not parse. */
 #define MOO_EDIT_ACCEL_MATCHING_BRACKET MOO_ACCEL_CTRL "bracketright"
 
+#define MOO_EDIT_ACCEL_ZOOM_IN "<Ctrl>plus"
+#define MOO_EDIT_ACCEL_ZOOM_OUT "<Ctrl>minus"
+#define MOO_EDIT_ACCEL_ZOOM_RESET "<Ctrl>0"
+
 #define MOO_EDIT_ACCEL_BOOKMARK MOO_ACCEL_CTRL "B"
 #define MOO_EDIT_ACCEL_NEXT_BOOKMARK "<Alt>Down" /* XXX */
 #define MOO_EDIT_ACCEL_PREV_BOOKMARK "<Alt>Up" /* XXX */

@@ -208,6 +208,89 @@ _moo_edit_update_global_config (void)
 }
 
 
+/* Zoom is one for all the views and lasts until the editor quits: the font in
+   the preferences stays as the user set it, and the zoom is added to it. */
+#define MIN_FONT_POINTS 4
+#define MAX_FONT_POINTS 96
+
+static int zoom_points;
+
+/* A font of the preferences may have no size ("Monospace"): then the view takes
+   the one of the interface font, and so does the zoom. */
+static int
+font_size (PangoFontDescription *desc)
+{
+    int size = pango_font_description_get_size (desc);
+
+    if (!size)
+    {
+        char *ui_font = NULL;
+        PangoFontDescription *ui_desc;
+
+        g_object_get (gtk_settings_get_default (), "gtk-font-name", &ui_font, nullptr);
+        ui_desc = pango_font_description_from_string (ui_font ? ui_font : "");
+        size = pango_font_description_get_size (ui_desc);
+        pango_font_description_free (ui_desc);
+        g_free (ui_font);
+    }
+
+    return size ? size : 10 * PANGO_SCALE;
+}
+
+static char *
+zoomed_font (const char *name, int zoom)
+{
+    PangoFontDescription *desc = pango_font_description_from_string (name ? name : DEFAULT_FONT);
+    int size = font_size (desc) + zoom * PANGO_SCALE;
+    char *result;
+
+    if (pango_font_description_get_size_is_absolute (desc))
+        pango_font_description_set_absolute_size (desc, size);
+    else
+        pango_font_description_set_size (desc, size);
+
+    result = pango_font_description_to_string (desc);
+    pango_font_description_free (desc);
+    return result;
+}
+
+void
+_moo_edit_view_apply_font (MooEditView *view)
+{
+    char *font = zoom_points ? zoomed_font (get_string (MOO_EDIT_PREFS_FONT), zoom_points) : NULL;
+
+    moo_text_view_set_font_from_string (MOO_TEXT_VIEW (view),
+                                        font ? font : get_string (MOO_EDIT_PREFS_FONT));
+    g_free (font);
+}
+
+/* Zero puts the size back. A step that would leave the font unreadable or absurd
+   is not taken, so that the step back is not lost in the steps beyond. */
+void
+_moo_edit_zoom (int delta)
+{
+    if (delta)
+    {
+        const char *name = get_string (MOO_EDIT_PREFS_FONT);
+        PangoFontDescription *desc = pango_font_description_from_string (name ? name : DEFAULT_FONT);
+        int size = font_size (desc) + (zoom_points + delta) * PANGO_SCALE;
+
+        pango_font_description_free (desc);
+
+        if (size < MIN_FONT_POINTS * PANGO_SCALE || size > MAX_FONT_POINTS * PANGO_SCALE)
+            return;
+
+        zoom_points += delta;
+    }
+    else
+    {
+        zoom_points = 0;
+    }
+
+    _moo_edit_apply_font_all ();
+}
+
+
 void
 _moo_edit_view_apply_prefs (MooEditView *view)
 {
@@ -245,8 +328,7 @@ _moo_edit_view_apply_prefs (MooEditView *view)
 
     g_object_set (view, "draw-whitespace", ws_flags, nullptr);
 
-    moo_text_view_set_font_from_string (MOO_TEXT_VIEW (view),
-                                        get_string (MOO_EDIT_PREFS_FONT));
+    _moo_edit_view_apply_font (view);
     _moo_text_view_set_line_numbers_font (MOO_TEXT_VIEW (view),
                                           get_string (MOO_EDIT_PREFS_LINE_NUMBERS_FONT));
 

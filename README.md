@@ -76,6 +76,10 @@ Everything that kept medit out of the distributions is gone:
   in the packages (they only suggest it), and no Enchant means no checking, not
   a broken editor. **It is off until you switch it on** in `Preferences →
   Plugins`. Linux only.
+* **Zoom.** `Ctrl` with the mouse wheel, or `View → Zoom In`, `Zoom Out` and
+  `Reset Zoom` (`Ctrl++`, `Ctrl+-`, `Ctrl+0`), changes the size of the text in
+  all documents at once. It is not saved: the next run starts from the font of
+  the preferences again.
 * **The terminal pane is back.** It used to be a python plugin on top of the
   GTK+2 vte; it is a builtin C++ plugin on top of vte-2.91 now, with the same
   shell, color schemes and context menu, plus an entry in the Tools menu bound
