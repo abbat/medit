@@ -81,6 +81,10 @@ const gchar	*_gtk_source_context_engine_get_tag_style
 							(GtkSourceContextEngine	*ce,
 							 GtkTextTag		*tag);
 
+gboolean	 _gtk_source_context_engine_tag_is_prose
+							(GtkSourceContextEngine	*ce,
+							 GtkTextTag		*tag);
+
 gboolean	 _gtk_source_context_data_define_context
 							(GtkSourceContextData	 *data,
 							 const gchar		 *id,

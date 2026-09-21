@@ -20,6 +20,7 @@
 #include "mooedit/mootextiter.h"
 #include "mooedit/mootext-private.h"
 #include "mooedit/moolang-private.h"
+#include "vendor/gtksourceview/gtksourcecontextengine.h"
 #include "marshals.h"
 #include "mooutils/mooundo.h"
 #include "mooutils/mooutils-gobject.h"
@@ -958,6 +959,30 @@ _moo_text_buffer_update_highlight (MooTextBuffer      *buffer,
 }
 
 
+
+
+/* Whether the text at the iterator is highlighted as a comment or a string.
+   Highlighting is lazy: text not yet reached is not, and the caller looks
+   again on ::highlight-updated. */
+gboolean
+_moo_text_buffer_iter_in_prose (MooTextBuffer      *buffer,
+                                const GtkTextIter  *iter)
+{
+    g_return_val_if_fail (MOO_IS_TEXT_BUFFER (buffer), FALSE);
+
+    if (!buffer->priv->engine || !GTK_IS_SOURCE_CONTEXT_ENGINE (buffer->priv->engine))
+        return FALSE;
+
+    GSList *tags = gtk_text_iter_get_tags (iter);
+    gboolean prose = FALSE;
+
+    for (GSList *l = tags; l && !prose; l = l->next)
+        prose = _gtk_source_context_engine_tag_is_prose (GTK_SOURCE_CONTEXT_ENGINE (buffer->priv->engine),
+                                                         GTK_TEXT_TAG (l->data));
+
+    g_slist_free (tags);
+    return prose;
+}
 
 
 void

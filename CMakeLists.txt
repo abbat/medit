@@ -230,6 +230,11 @@ else()
     endif()
 endif()
 
+# Spell checking loads Enchant with dlopen and needs none of it to build.
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    set(MOO_BUILD_SPELL 1)
+endif()
+
 configure_file(cmake/config.h.in config.h @ONLY)
 
 # ---------------------------------------------------------------------------

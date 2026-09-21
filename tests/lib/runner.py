@@ -100,6 +100,11 @@ def outer(args):
         env["MUI_ROOT"] = root
         env["MUI_URL_LOG"] = url_log
 
+        # The spell checker's dictionary is a stub of a dozen words instead of
+        # whatever Enchant finds on the machine, so the same text is misspelled
+        # on every host. Nothing else reads it.
+        env["MOO_SPELL_STUB"] = "1"
+
         # GTK+2 has no accessibility of its own: the tree comes from libgail,
         # and the bridge to the at-spi bus from atk-bridge. Naming both is
         # harmless on GTK+3, which loads what it needs itself.

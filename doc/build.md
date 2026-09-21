@@ -533,3 +533,17 @@ so **it is compiled by the gtk2 build too**. Keep types the other toolkit lacks
 (`GtkFontChooser`, `VteTerminal`, …) out of it — declare a `GtkWidget*` and cast inside
 the `.cpp`. A green gtk3 build proves nothing here; only building gtk2 does, which is
 how this one was caught, in a container, after the local gtk2 build had gone stale.
+
+## The spell checker loads Enchant at run time
+
+`src/plugins/spell` does not link libenchant and needs no headers of it: `spell-dict.cpp`
+declares the half dozen prototypes it uses and `dlopen`s `libenchant-2.so.2` when the plugin
+is first switched on. Without the library the plugin says so in its preferences and checks
+nothing. There is no `ENABLE_` switch for that reason: the module is
+built on Linux and skipped elsewhere (`MOO_BUILD_SPELL`). Debian lists Enchant and the
+dictionaries under Suggests, never Depends.
+
+In source code only comments and strings are checked. The buffer does not know which they
+are, so `_moo_text_buffer_iter_in_prose()` asks the highlighting engine: a tag's style is
+followed through `map_to` to `def:comment` or `def:string`. Local style names are no use,
+as `regex` maps to a string and `shebang` to a comment. A language with neither is not checked.

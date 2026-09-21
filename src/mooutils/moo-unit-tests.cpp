@@ -27,6 +27,10 @@
 #include "plugins/lsp/lsp-tests.h"
 #endif
 
+#ifdef MOO_BUILD_SPELL
+#include "plugins/spell/spell-tests.h"
+#endif
+
 /*
  * Every suite in one place, so that what is compiled in is a list somebody can
  * read rather than a set of constructors running in whatever order the linker
@@ -44,6 +48,10 @@ add_all_tests (void)
 
 #ifdef MOO_BUILD_LSP
     _moo_lsp_add_unit_tests ();
+#endif
+
+#ifdef MOO_BUILD_SPELL
+    _moo_spell_add_unit_tests ();
 #endif
 }
 

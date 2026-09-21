@@ -672,6 +672,41 @@ _gtk_source_context_engine_get_tag_style (GtkSourceContextEngine *ce,
 	return NULL;
 }
 
+/**
+ * _gtk_source_context_engine_tag_is_prose:
+ *
+ * @ce: #GtkSourceContextEngine.
+ * @tag: a tag.
+ *
+ * Whether @tag was made for a comment or a string, as far as the lang file
+ * says: the style id, or one it is mapped to, is def:comment or def:string.
+ * Names alone do not tell (a "regex" style maps to def:string, "shebang" to
+ * def:comment), so the map_to chain is followed as set_tag_style() does.
+ * Changes nothing.
+ *
+ * Returns: %TRUE for a comment or a string.
+ */
+gboolean
+_gtk_source_context_engine_tag_is_prose (GtkSourceContextEngine *ce,
+					 GtkTextTag             *tag)
+{
+	const gchar *id = _gtk_source_context_engine_get_tag_style (ce, tag);
+	int guard;
+
+	for (guard = 0; id != NULL && guard <= MAX_STYLE_DEPENDENCY_DEPTH; ++guard)
+	{
+		GtkSourceStyleInfo *info;
+
+		if (strcmp (id, "def:comment") == 0 || strcmp (id, "def:string") == 0)
+			return TRUE;
+
+		info = g_hash_table_lookup (ENGINE_STYLES_MAP(ce), id);
+		id = info != NULL ? info->map_to : NULL;
+	}
+
+	return FALSE;
+}
+
 /* Find tag which has to be overridden. */
 static GtkTextTag *
 get_parent_tag (Context    *context,

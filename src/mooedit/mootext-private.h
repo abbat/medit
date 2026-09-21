@@ -52,7 +52,9 @@ void        _moo_text_buffer_update_highlight       (MooTextBuffer      *buffer,
                                                      const GtkTextIter  *start,
                                                      const GtkTextIter  *end,
                                                      gboolean            synchronous);
-gpointer    _moo_text_buffer_get_undo_stack         (MooTextBuffer      *buffer);
+gboolean    _moo_text_buffer_iter_in_prose          (MooTextBuffer      *buffer,
+                                                     const GtkTextIter  *iter);
+gpointer    _moo_text_buffer_get_undo_stack        (MooTextBuffer      *buffer);
 gboolean    _moo_text_buffer_is_bracket_tag         (MooTextBuffer      *buffer,
                                                      GtkTextTag         *tag);
 void        _moo_text_buffer_set_style_scheme       (MooTextBuffer      *buffer,

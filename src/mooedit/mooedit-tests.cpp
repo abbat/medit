@@ -581,6 +581,53 @@ text_buffer_text (MooTextBuffer *buffer)
 }
 
 
+/* Which text the spell checker treats as prose in source code: comments and
+   strings, by what the lang file says they map to. */
+static void
+test_text_buffer_prose (void)
+{
+    static const char *const text = "x = foo # remark\ny = \"quoted\" + bar\n";
+    char *langs_dir = g_build_filename (MOO_UNIT_TEST_SOURCE_ROOT, "src", "mooedit", "langs", nullptr);
+    char *dirs[] = { langs_dir, nullptr };
+    GtkSourceLanguageManager *manager = gtk_source_language_manager_new ();
+
+    g_object_set (manager, "search-path", dirs, nullptr);
+
+    GtkSourceLanguage *lang = gtk_source_language_manager_get_language (manager, "python");
+    g_assert_nonnull (lang);
+
+    MooTextBuffer *buffer = new_text_buffer (text);
+    GtkTextBuffer *tb = GTK_TEXT_BUFFER (buffer);
+    GtkTextIter start, end, iter;
+
+    gtk_text_buffer_get_bounds (tb, &start, &end);
+    g_assert_false (_moo_text_buffer_iter_in_prose (buffer, &start));   /* no language */
+
+    moo_text_buffer_set_lang (buffer, MOO_LANG (lang));
+    _moo_text_buffer_update_highlight (buffer, &start, &end, TRUE);
+
+    static const struct { int offset; gboolean prose; } expected[] = {
+        { 4, FALSE },                   /* foo */
+        { 8, TRUE },                    /* # remark */
+        { 12, TRUE },                   /* remark */
+        { 22, TRUE },                   /* "quoted" */
+        { 34, FALSE },                  /* bar */
+    };
+
+    for (guint i = 0; i < G_N_ELEMENTS (expected); ++i)
+    {
+        gtk_text_buffer_get_iter_at_offset (tb, &iter, expected[i].offset);
+        g_assert_cmpint (_moo_text_buffer_iter_in_prose (buffer, &iter), ==, expected[i].prose);
+    }
+
+    g_object_unref (buffer);
+    g_object_unref (manager);
+    g_free (langs_dir);
+}
+
+
+
+
 /* Replace-all is applied as a few large edits, so the cursor is carried over by
    arithmetic instead of by marks: a position after a match moves with it, one
    inside a match goes to the start of its replacement, one between matches
@@ -1585,6 +1632,7 @@ _moo_add_mooedit_unit_tests (void)
     g_test_add_func ("/mooedit/line-buffer/tree-boundaries",
                      test_line_buffer_tree_boundaries);
     g_test_add_func ("/mooedit/indenter/helpers", test_indenter_helpers);
+    g_test_add_func ("/mooedit/text-buffer/prose", test_text_buffer_prose);
     g_test_add_func ("/mooedit/text-buffer/undo-redo", test_text_buffer_undo_redo);
     g_test_add_func ("/mooedit/text-buffer/undo-group", test_text_buffer_undo_group);
     g_test_add_func ("/mooedit/text-buffer/undo-freeze", test_text_buffer_undo_freeze);

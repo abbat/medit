@@ -4,8 +4,8 @@
 
 A maintained fork of **medit** (also known as **mooedit**) — a light, fast GTK
 text editor with tabs, syntax highlighting, a file selector, find in files,
-ctags navigation, a terminal pane, language server support and user defined
-tools.
+ctags navigation, a terminal pane, language server support, spell checking and
+user defined tools.
 
 Upstream stopped at 1.2.92 in 2017. Its author called the editor "rather dead
 than alive" [\[1\]](https://sourceforge.net/p/mooedit/discussion/571682/thread/87dbc94e/#2e8e),
@@ -65,6 +65,17 @@ Everything that kept medit out of the distributions is gone:
   out). **It is off until you switch it on** in `Preferences → Plugins`, the
   same as the ctags module: it runs other people's programs, one per project,
   and that is not something to start behind your back.
+* **Spell checking.** Misspelled words are underlined in `.txt`, `.md`, `.rst`
+  and `.tex` files (the list is in the module's page of `Preferences`), and a
+  right click offers up to five corrections, adding the word to your dictionary,
+  and ignoring it for good or for the document; `F7` jumps to the next one.
+  A word is judged by its own alphabet, so a text in English and Russian is
+  checked against both dictionaries, and CamelCase and snake_case words are
+  left alone. In source code it can check only what is a comment or a string.
+  It uses Enchant, loaded at run time: nothing to build against, no dependency
+  in the packages (they only suggest it), and no Enchant means no checking, not
+  a broken editor. **It is off until you switch it on** in `Preferences →
+  Plugins`. Linux only.
 * **The terminal pane is back.** It used to be a python plugin on top of the
   GTK+2 vte; it is a builtin C++ plugin on top of vte-2.91 now, with the same
   shell, color schemes and context menu, plus an entry in the Tools menu bound

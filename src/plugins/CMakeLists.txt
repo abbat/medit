@@ -19,3 +19,7 @@ endif()
 if(MOO_BUILD_LSP)
     add_subdirectory(lsp)
 endif()
+
+if(MOO_BUILD_SPELL)
+    add_subdirectory(spell)
+endif()

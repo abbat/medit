@@ -75,6 +75,9 @@ src/plugins/lsp/lsp-prefs.cpp
 src/plugins/lsp/lsp-references.cpp
 src/plugins/lsp/lsp-symbols.cpp
 [type: gettext/glade]src/plugins/lsp/ui/lsp-prefs.ui
+src/plugins/spell/spell-plugin.cpp
+src/plugins/spell/spell-prefs.cpp
+[type: gettext/glade]src/plugins/spell/ui/spell-prefs.ui
 src/plugins/terminal/terminal-colors.cpp
 src/plugins/terminal/terminal-plugin.cpp
 src/plugins/terminal/terminal-prefs.cpp

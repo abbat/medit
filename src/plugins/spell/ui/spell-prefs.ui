@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<interface>
+  <object class="GtkWindow" id="window1">
+    <property name="title">window1</property>
+    <child>
+      <object class="GtkVBox" id="PrefsPage">
+        <property name="visible">True</property>
+        <property name="border_width">12</property>
+        <property name="spacing">6</property>
+        <child>
+          <object class="GtkHBox" id="languages_box">
+            <property name="visible">True</property>
+            <property name="spacing">6</property>
+            <child>
+              <object class="GtkLabel" id="languages_label">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">_Languages:</property>
+                <property name="use_underline">True</property>
+                <property name="mnemonic_widget">languages</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkEntry" id="languages">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="tooltip_text" translatable="yes">Comma-separated, such as en_US,ru_RU. A word is looked up in the language of its own alphabet: the first Cyrillic one for Cyrillic words, the first other one for the rest.</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkHBox" id="extensions_box">
+            <property name="visible">True</property>
+            <property name="spacing">6</property>
+            <child>
+              <object class="GtkLabel" id="extensions_label">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">Check _files with extensions:</property>
+                <property name="use_underline">True</property>
+                <property name="mnemonic_widget">extensions</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkEntry" id="extensions">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="tooltip_text" translatable="yes">Comma-separated, such as txt,md,rst,tex. The whole text of these is checked.</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="check_code">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="label" translatable="yes">Check _comments and strings in source code</property>
+            <property name="use_underline">True</property>
+            <property name="draw_indicator">True</property>
+            <property name="tooltip_text" translatable="yes">In any file whose syntax highlighting tells comments and strings from the code.</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

@@ -20,6 +20,7 @@
 #include "plugins/ctags/ctags-plugin.h"
 #include "plugins/terminal/terminal-plugin.h"
 #include "plugins/lsp/lsp-plugin.h"
+#include "plugins/spell/spell-plugin.h"
 
 void
 moo_plugin_init (void)
@@ -35,6 +36,9 @@ moo_plugin_init (void)
 #endif
 #ifdef MOO_BUILD_LSP
     moo_lsp_plugin_init ();
+#endif
+#ifdef MOO_BUILD_SPELL
+    moo_spell_plugin_init ();
 #endif
 
     _moo_user_tools_plugin_init ();

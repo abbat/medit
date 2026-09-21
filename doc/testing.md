@@ -790,3 +790,8 @@ desktop window manager. `pkill -f "src/medit --new-app"` matches the agent's own
 command line and kills the shell (exit 144). `pkill -x medit` is safe.
 
 ---
+
+The runner sets `MOO_SPELL_STUB=1` for every test: the spell checker then uses a built-in
+dictionary of a dozen words (`src/plugins/spell/spell-dict.cpp`) instead of loading Enchant,
+so a text is misspelled the same way on every host and CI needs no libenchant. Its unit
+tests are `/spell/...`; give `--unit-test` the full path, a group prefix selects nothing.

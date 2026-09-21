@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: moo\n"
 "Report-Msgid-Bugs-To: https://github.com/abbat/medit/issues\n"
-"POT-Creation-Date: 2026-09-16 21:36+0300\n"
+"POT-Creation-Date: 2026-09-21 19:43+0300\n"
 "PO-Revision-Date: 2019-10-28 16:46MSK\n"
 "Last-Translator: Olesya Gerasimenko <gammaray@basealt.ru>\n"
 "Language-Team: Basealt Translation Team\n"
@@ -159,7 +159,7 @@ msgstr "Перевод"
 msgid "Credits"
 msgstr "Благодарности"
 
-#: src/mooapp/mooapp.cpp:178
+#: src/mooapp/mooapp.cpp:158
 #, c-format
 msgid ""
 "The following URL will be opened:\n"
@@ -170,20 +170,20 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/mooapp/mooapp.cpp:183
+#: src/mooapp/mooapp.cpp:163
 msgid "Open URL?"
 msgstr "Открыть интернет-адрес?"
 
 #. Prefs dialog title
-#: src/mooapp/mooapp.cpp:232
+#: src/mooapp/mooapp.cpp:212
 msgid "Preferences"
 msgstr "Настройки"
 
-#: src/mooapp/mooapp.cpp:293
+#: src/mooapp/mooapp.cpp:273
 msgid "Report a Bug..."
 msgstr "Сообщить о проблеме..."
 
-#: src/mooapp/mooapp.cpp:1139
+#: src/mooapp/mooapp.cpp:1119
 msgid "Checking for unsaved documents"
 msgstr "Проверка несохранённых документов"
 
@@ -738,12 +738,12 @@ msgstr "Открыть новое окно"
 #. the two are translated once.
 #. the label the search history's own button carries, so that the two are
 #. translated once
-#: src/mooedit/mooeditor.cpp:784 src/mooutils/moohistorycombo.cpp:345
-#: src/mooutils/moohistorymgr.cpp:1630
+#: src/mooedit/mooeditor.cpp:777 src/mooutils/moohistorycombo.cpp:345
+#: src/mooutils/moohistorymgr.cpp:1623
 msgid "Clear History"
 msgstr "Очистить историю"
 
-#: src/mooedit/mooeditor.cpp:801
+#: src/mooedit/mooeditor.cpp:794
 msgid "Open Recent"
 msgstr "Последние файлы"
 
@@ -786,7 +786,7 @@ msgstr "Языки"
 #. Label in the Language combo box on Languages preferences page,
 #. remove the part before and including |
 #. Menu item in the Language menu
-#: src/mooedit/mooeditprefspage.cpp:543 src/mooedit/mooeditwindow.cpp:4337
+#: src/mooedit/mooeditprefspage.cpp:543 src/mooedit/mooeditwindow.cpp:4349
 msgid "Language|None"
 msgstr "Ничего"
 
@@ -1204,69 +1204,69 @@ msgid "_Mac (CR)"
 msgstr "_Mac (CR)"
 
 #. Item in document tab context menu
-#: src/mooedit/mooeditwindow.cpp:2448
+#: src/mooedit/mooeditwindow.cpp:2460
 msgctxt "tab-context-menu"
 msgid "Close"
 msgstr "Закрыть"
 
 #. Item in document tab context menu
-#: src/mooedit/mooeditwindow.cpp:2456
+#: src/mooedit/mooeditwindow.cpp:2468
 msgctxt "tab-context-menu"
 msgid "Close All Others"
 msgstr "Закрыть все остальные"
 
 #. Item in document tab context menu
-#: src/mooedit/mooeditwindow.cpp:2465
+#: src/mooedit/mooeditwindow.cpp:2477
 msgctxt "tab-context-menu"
 msgid "Copy Full Path"
 msgstr "Копировать полный путь"
 
 #. Item in document tab context menu
-#: src/mooedit/mooeditwindow.cpp:2475
+#: src/mooedit/mooeditwindow.cpp:2487
 msgctxt "tab-context-menu"
 msgid "Detach"
 msgstr "Отделить"
 
 #. Item in document tab context menu
-#: src/mooedit/mooeditwindow.cpp:2481
+#: src/mooedit/mooeditwindow.cpp:2493
 msgctxt "tab-context-menu"
 msgid "Move to Split Notebook"
 msgstr "Переместить в разделённый блокнот"
 
-#: src/mooedit/mooeditwindow.cpp:4179
+#: src/mooedit/mooeditwindow.cpp:4191
 #, c-format
 msgid "Line: %s Col: %s"
 msgstr "Строка: %s Столбец: %s"
 
-#: src/mooedit/mooeditwindow.cpp:4180
+#: src/mooedit/mooeditwindow.cpp:4192
 #, c-format
 msgid "Chars: %s"
 msgstr "Символов: %s"
 
 #. Label in the editor window statusbar - Overwrite or Insert mode
-#: src/mooedit/mooeditwindow.cpp:4223
+#: src/mooedit/mooeditwindow.cpp:4235
 msgid "OVR"
 msgstr "ЗАМЕНА"
 
-#: src/mooedit/mooeditwindow.cpp:4223
+#: src/mooedit/mooeditwindow.cpp:4235
 msgid "INS"
 msgstr "ВСТАВКА"
 
-#: src/mooedit/mooeditwindow.cpp:4332
+#: src/mooedit/mooeditwindow.cpp:4344
 msgid "_Language"
 msgstr "_Язык"
 
-#: src/mooedit/mooplugin.cpp:1332
+#: src/mooedit/mooplugin.cpp:1324
 msgctxt "Prefs page label"
 msgid "Plugins"
 msgstr "Модули"
 
-#: src/mooedit/mooplugin.cpp:1359
+#: src/mooedit/mooplugin.cpp:1351
 msgctxt "plugin-prefs-column"
 msgid "Enabled"
 msgstr "Включён"
 
-#: src/mooedit/mooplugin.cpp:1365
+#: src/mooedit/mooplugin.cpp:1357
 msgctxt "plugin-prefs-column"
 msgid "Plugin"
 msgstr "Модуль"
@@ -1913,7 +1913,7 @@ msgstr "Выделенный файл не является обычным фа�
 msgid "Could not open %s: %s"
 msgstr "Не удалось открыть файл %s: %s"
 
-#: src/mooutils/moofilewriter.cpp:280
+#: src/mooutils/moofilewriter.cpp:273
 #, c-format
 msgid "Could not create folder %s: %s"
 msgstr "Не удалось создать папку %s: %s"
@@ -1930,7 +1930,7 @@ msgstr "Показывать только моноширинные шрифты"
 msgid "Could not open the medit web site"
 msgstr "Не удалось открыть сайт medit"
 
-#: src/mooutils/moohistorymgr.cpp:1652
+#: src/mooutils/moohistorymgr.cpp:1645
 msgid "Recent Files"
 msgstr "Последние файлы"
 
@@ -2006,7 +2006,7 @@ msgid "Could not remove %s: %s"
 msgstr "Не удалось удалить файл %s: %s"
 
 #. Translators: remove the part before and including |
-#: src/mooutils/mooutils-misc.cpp:1540
+#: src/mooutils/mooutils-misc.cpp:1516
 #, c-format
 msgid "console message|in file %s, line %d, function %s: %s"
 msgstr "в файле %s, на строке %d, в функции %s: %s"
@@ -2014,7 +2014,7 @@ msgstr "в файле %s, на строке %d, в функции %s: %s"
 #. "Unknown error" may be displayed if there is a bug in the program
 #. and proper error message has not been set. It doesn't provide any
 #. useful information obviously
-#: src/mooutils/mooutils-misc.cpp:1780
+#: src/mooutils/mooutils-misc.cpp:1723
 msgid "Unknown error"
 msgstr "Неизвестная ошибка"
 
@@ -2789,6 +2789,77 @@ msgstr "_Перезапустить серверы"
 #: src/plugins/lsp/ui/lsp-prefs.ui:156
 msgid "Re-reads the configuration file and starts over with every server."
 msgstr "Перечитывает файл настройки и запускает все серверы заново."
+
+#: src/plugins/spell/spell-plugin.cpp:66 src/plugins/spell/spell-plugin.cpp:883
+#: src/plugins/spell/spell-prefs.cpp:37
+msgid "Spell Checking"
+msgstr "Проверка правописания"
+
+#: src/plugins/spell/spell-plugin.cpp:66
+msgid "Underlines misspelled words"
+msgstr "Подчёркивает слова с ошибками"
+
+#: src/plugins/spell/spell-plugin.cpp:853
+msgid "Spelling"
+msgstr "Правописание"
+
+#: src/plugins/spell/spell-plugin.cpp:886
+msgid "Next Spelling Error"
+msgstr "Следующая орфографическая ошибка"
+
+#: src/plugins/spell/spell-plugin.cpp:887
+msgid "Next _Spelling Error"
+msgstr "Следующая _орфографическая ошибка"
+
+#: src/plugins/spell/spell-plugin.cpp:888
+msgid "Go to the next misspelled word"
+msgstr "Перейти к следующему слову с ошибкой"
+
+#: src/plugins/spell/spell-plugin.cpp:894
+msgid "Suggestion"
+msgstr "Вариант"
+
+#: src/plugins/spell/spell-plugin.cpp:895
+msgid "Add to Dictionary"
+msgstr "Добавить в словарь"
+
+#: src/plugins/spell/spell-plugin.cpp:896
+msgid "Ignore All"
+msgstr "Игнорировать всегда"
+
+#: src/plugins/spell/spell-plugin.cpp:897
+msgid "Ignore in This Document"
+msgstr "Игнорировать в этом документе"
+
+#: src/plugins/spell/ui/spell-prefs.ui:18
+msgid "_Languages:"
+msgstr "_Языки:"
+
+#: src/plugins/spell/ui/spell-prefs.ui:30
+msgid ""
+"Comma-separated, such as en_US,ru_RU. A word is looked up in the language of "
+"its own alphabet: the first Cyrillic one for Cyrillic words, the first other "
+"one for the rest."
+msgstr "Через запятую, например en_US,ru_RU. Слово ищется в языке своего алфавита: для кириллических слов берётся первый кириллический язык, для остальных первый другой."
+
+#: src/plugins/spell/ui/spell-prefs.ui:46
+msgid "Check _files with extensions:"
+msgstr "Проверять _файлы с расширениями:"
+
+#: src/plugins/spell/ui/spell-prefs.ui:58
+msgid ""
+"Comma-separated, such as txt,md,rst,tex. The whole text of these is checked."
+msgstr "Через запятую, например txt,md,rst,tex. Такие файлы проверяются целиком."
+
+#: src/plugins/spell/ui/spell-prefs.ui:70
+msgid "Check _comments and strings in source code"
+msgstr "Проверять _комментарии и строки в исходном коде"
+
+#: src/plugins/spell/ui/spell-prefs.ui:73
+msgid ""
+"In any file whose syntax highlighting tells comments and strings from the "
+"code."
+msgstr "В любом файле, подсветка синтаксиса которого отличает комментарии и строки от кода."
 
 #: src/plugins/terminal/terminal-colors.cpp:26
 msgid "Default"
