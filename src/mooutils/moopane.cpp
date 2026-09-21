@@ -1943,33 +1943,3 @@ _moo_create_small_icon (MooSmallIcon icon)
     return GTK_WIDGET (icon_widget);
 }
 
-GtkWidget *
-_moo_create_arrow_icon (GtkArrowType arrow_type)
-{
-    MooIconWidget *icon_widget;
-    IconType icon_type;
-
-    switch (arrow_type)
-    {
-        case GTK_ARROW_UP:
-            icon_type = ICON_ARROW_UP;
-            break;
-        case GTK_ARROW_DOWN:
-            icon_type = ICON_ARROW_DOWN;
-            break;
-        case GTK_ARROW_LEFT:
-            icon_type = ICON_ARROW_LEFT;
-            break;
-        case GTK_ARROW_RIGHT:
-            icon_type = ICON_ARROW_RIGHT;
-            break;
-        default:
-            g_return_val_if_reached (NULL);
-    }
-
-    icon_widget = (MooIconWidget *) g_object_new (_moo_icon_widget_get_type (),
-                                                  (const char*) NULL);
-    icon_widget->type = icon_type;
-
-    return GTK_WIDGET (icon_widget);
-}

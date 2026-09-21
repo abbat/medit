@@ -145,7 +145,6 @@ typedef enum {
 } MooSmallIcon;
 
 GtkWidget      *_moo_create_small_icon      (MooSmallIcon    icon);
-GtkWidget      *_moo_create_arrow_icon      (GtkArrowType    arrow_type);
 
 
 G_END_DECLS
