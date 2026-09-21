@@ -104,12 +104,20 @@
       The settings inside <initialization-options> are the server's own, not
       medit's: what goes in there is whatever that particular server documents.
       The ones below are pylsp's.
+
+      An <env> replaces the variable outright, it does not extend it, and ~ and
+      $VAR are not expanded. A server started from a desktop menu often gets a
+      short PATH without ~/.local/bin or the Go and Rust directories, and the
+      tools the server itself runs (go, cargo) are not found. Give such a
+      server the whole PATH, as in the last <env> below. The server program
+      itself is still looked up in medit's own PATH.
   -->
   <server id="example" enabled="false">
     <filter>langs:python,python3</filter>
     <command>pylsp --check-parent-process</command>
     <root>pyproject.toml;setup.py;.git</root>
     <env>PYTHONPATH=/opt/mylib/python</env>
+    <env>PATH=/opt/mylib/bin:/usr/local/bin:/usr/bin:/bin</env>
     <env>PYLSP_LOG_LEVEL=WARNING</env>
     <initialization-options>
       {
