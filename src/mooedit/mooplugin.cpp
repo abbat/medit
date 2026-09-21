@@ -737,14 +737,6 @@ make_id_quark (MooPlugin      *plugin)
 
 
 gboolean
-moo_plugin_initialized (MooPlugin *plugin)
-{
-    g_return_val_if_fail (MOO_IS_PLUGIN (plugin), FALSE);
-    return plugin->initialized;
-}
-
-
-gboolean
 moo_plugin_enabled (MooPlugin *plugin)
 {
     g_return_val_if_fail (MOO_IS_PLUGIN (plugin), FALSE);
@@ -1411,32 +1403,6 @@ moo_plugin_lookup_method (gpointer    plugin,
     m = (MooPluginMeth *) g_hash_table_lookup (meths, norm_name);
     g_free (norm_name);
     return m;
-}
-
-
-static void
-prepend_meth_name (const char *name,
-                   G_GNUC_UNUSED gpointer meth,
-                   GSList **list)
-{
-    *list = g_slist_prepend (*list, g_strdup (name));
-}
-
-GSList *
-moo_plugin_list_methods (gpointer plugin)
-{
-    GHashTable *meths;
-    GSList *list = NULL;
-
-    g_return_val_if_fail (MOO_IS_PLUGIN (plugin), NULL);
-
-    meths = (GHashTable *) g_type_get_qdata (G_OBJECT_TYPE (plugin), MOO_PLUGIN_METHS_QUARK);
-
-    if (!meths)
-        return NULL;
-
-    g_hash_table_foreach (meths, (GHFunc) prepend_meth_name, &list);
-    return list;
 }
 
 

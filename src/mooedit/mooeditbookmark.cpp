@@ -96,14 +96,6 @@ moo_edit_set_enable_bookmarks (MooEdit  *edit,
 }
 
 
-gboolean
-moo_edit_get_enable_bookmarks (MooEdit *edit)
-{
-    g_return_val_if_fail (MOO_IS_EDIT (edit), FALSE);
-    return edit->priv->enable_bookmarks;
-}
-
-
 static int
 cmp_bookmarks (MooLineMark *a,
                MooLineMark *b)

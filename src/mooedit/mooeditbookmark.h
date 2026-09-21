@@ -48,7 +48,6 @@ GType            moo_edit_bookmark_get_type     (void) G_GNUC_CONST;
 
 void             moo_edit_set_enable_bookmarks  (MooEdit        *edit,
                                                  gboolean        enable);
-gboolean         moo_edit_get_enable_bookmarks  (MooEdit        *edit);
 /* list must not be modified */
 const GSList    *moo_edit_list_bookmarks        (MooEdit        *edit);
 void             moo_edit_toggle_bookmark       (MooEdit        *edit,

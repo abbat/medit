@@ -7,8 +7,6 @@
 
 G_BEGIN_DECLS
 
-MooHistoryMgr   *_moo_editor_get_history_mgr    (MooEditor      *editor);
-
 void             _moo_editor_move_doc           (MooEditor      *editor,
                                                  MooEdit        *doc,
                                                  MooEditWindow  *dest,

@@ -26,9 +26,6 @@ void    moo_edit_class_new_action           (MooEditClass       *klass,
                                              const char         *id,
                                              const char         *first_prop_name,
                                              ...) G_GNUC_NULL_TERMINATED;
-void    moo_edit_class_new_action_type      (MooEditClass       *klass,
-                                             const char         *id,
-                                             GType               type);
 
 void    moo_edit_class_remove_action        (MooEditClass       *klass,
                                              const char         *id);

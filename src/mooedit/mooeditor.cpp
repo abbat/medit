@@ -702,13 +702,6 @@ moo_editor_set_ui_xml (MooEditor      *editor,
 }
 
 
-MooHistoryMgr *
-_moo_editor_get_history_mgr (MooEditor *editor)
-{
-    g_return_val_if_fail (MOO_IS_EDITOR (editor), NULL);
-    return editor->priv->history;
-}
-
 static void
 recent_item_activated (GSList   *items,
                        gpointer  data)

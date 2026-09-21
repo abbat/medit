@@ -79,8 +79,6 @@ guint           moo_edit_config_install_setting (GParamSpec     *pspec);
 void            moo_edit_config_install_alias   (const char     *name,
                                                  const char     *alias);
 
-guint           moo_edit_config_get_setting_id  (GParamSpec     *pspec);
-GParamSpec     *moo_edit_config_get_spec        (guint           id);
 GParamSpec     *moo_edit_config_lookup_spec     (const char     *name,
                                                  guint          *id,
                                                  gboolean        try_alias);

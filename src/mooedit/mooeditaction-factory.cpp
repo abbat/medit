@@ -23,9 +23,6 @@
 #include "mooutils/mooutils-mem.h"
 
 
-typedef GtkAction *(*MooEditActionFunc)     (MooEdit            *edit,
-                                             gpointer            data);
-
 static void moo_edit_add_action                 (MooEdit            *edit,
                                                  GtkAction          *action);
 static void moo_edit_remove_action              (MooEdit            *edit,
@@ -35,11 +32,6 @@ static void moo_edit_class_new_actionv          (MooEditClass       *klass,
                                                  const char         *id,
                                                  const char         *first_prop_name,
                                                  va_list             props);
-static void moo_edit_class_new_action_custom    (MooEditClass       *klass,
-                                                 const char         *id,
-                                                 MooEditActionFunc   func,
-                                                 gpointer            data,
-                                                 GDestroyNotify      notify);
 
 static void append_special_char_menuitems       (GtkMenuShell       *menu,
                                                  MooEditView        *view);
@@ -457,85 +449,6 @@ error:
 
     if (action_class)
         g_type_class_unref (action_class);
-}
-
-
-static GtkAction *
-custom_action_factory_func (MooEdit          *edit,
-                            MooActionFactory *factory)
-{
-    const char *action_id;
-    MooEditActionFunc func;
-    gpointer func_data;
-
-    g_return_val_if_fail (MOO_IS_EDIT (edit), NULL);
-
-    action_id = (const char *) g_object_get_data (G_OBJECT (factory), "moo-edit-class-action-id");
-    func = (MooEditActionFunc) g_object_get_data (G_OBJECT (factory), "moo-edit-class-action-func");
-    func_data = g_object_get_data (G_OBJECT (factory), "moo-edit-class-action-func-data");
-
-    g_return_val_if_fail (action_id != NULL, NULL);
-    g_return_val_if_fail (func != NULL, NULL);
-
-    return func (edit, func_data);
-}
-
-
-static void
-moo_edit_class_new_action_custom (MooEditClass       *klass,
-                                  const char         *action_id,
-                                  MooEditActionFunc   func,
-                                  gpointer            data,
-                                  GDestroyNotify      notify)
-{
-    MooActionFactory *action_factory;
-
-    g_return_if_fail (MOO_IS_EDIT_CLASS (klass));
-    g_return_if_fail (action_id && action_id[0]);
-    g_return_if_fail (func != NULL);
-
-    action_factory = moo_action_factory_new_func ((MooActionFactoryFunc) custom_action_factory_func, NULL);
-    g_object_set_data (G_OBJECT (action_factory), "moo-edit-class", klass);
-    g_object_set_data_full (G_OBJECT (action_factory), "moo-edit-class-action-id",
-                            g_strdup (action_id), g_free);
-    g_object_set_data (G_OBJECT (action_factory), "moo-edit-class-action-func", (gpointer) func);
-    g_object_set_data_full (G_OBJECT (action_factory), "moo-edit-class-action-func-data",
-                            data, notify);
-
-    moo_edit_class_install_action (klass, action_id, action_factory, NULL, NULL);
-    g_object_unref (action_factory);
-}
-
-
-static GtkAction *
-type_action_func (MooEdit  *edit,
-                  gpointer  klass)
-{
-    GQuark quark = g_quark_from_static_string ("moo-edit-class-action-id");
-    const char *id = (const char*) g_type_get_qdata (G_TYPE_FROM_CLASS (klass), quark);
-    return GTK_ACTION (g_object_new (G_TYPE_FROM_CLASS (klass),
-                                     "doc", edit, "name", id, (char*) 0));
-}
-
-
-void
-moo_edit_class_new_action_type (MooEditClass *edit_klass,
-                                const char   *id,
-                                GType         type)
-{
-    gpointer klass;
-    GQuark quark;
-
-    g_return_if_fail (g_type_is_a (type, MOO_TYPE_EDIT_ACTION));
-
-    klass = g_type_class_ref (type);
-    g_return_if_fail (klass != NULL);
-
-    quark = g_quark_from_static_string ("moo-edit-class-action-id");
-    g_free (g_type_get_qdata (type, quark));
-    g_type_set_qdata (type, quark, g_strdup (id));
-    moo_edit_class_new_action_custom (edit_klass, id, type_action_func,
-                                      klass, g_type_class_unref);
 }
 
 

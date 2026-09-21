@@ -1,0 +1,6 @@
+extra_ignore_patterns = [
+    "build2/**",
+    "build3/**",
+    "builda/**",
+    "buildu3/**",
+]

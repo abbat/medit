@@ -307,14 +307,6 @@ moo_edit_config_install_setting (GParamSpec *pspec)
 
 
 GParamSpec *
-moo_edit_config_get_spec (guint id)
-{
-    g_return_val_if_fail (id > 0 && id < vars->len, NULL);
-    return vars->data[id].pspec;
-}
-
-
-GParamSpec *
 moo_edit_config_lookup_spec (const char     *name,
                              guint          *id,
                              gboolean        try_alias)
@@ -582,14 +574,6 @@ moo_edit_config_unset_by_source (MooEditConfig  *config,
 }
 
 
-
-
-guint
-moo_edit_config_get_setting_id (GParamSpec *pspec)
-{
-    g_return_val_if_fail (G_IS_PARAM_SPEC (pspec), 0);
-    return GPOINTER_TO_UINT (g_param_spec_get_qdata (pspec, prop_id_quark));
-}
 
 
 gboolean

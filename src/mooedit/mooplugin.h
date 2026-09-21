@@ -194,7 +194,6 @@ gboolean    moo_plugin_register         (const char     *id,
                                          const MooPluginInfo *info,
                                          const MooPluginParams *params);
 
-gboolean    moo_plugin_initialized      (MooPlugin      *plugin);
 gboolean    moo_plugin_enabled          (MooPlugin      *plugin);
 gboolean    moo_plugin_set_enabled      (MooPlugin      *plugin,
                                          gboolean        enabled);
@@ -247,7 +246,6 @@ void         moo_plugin_attach_prefs    (GtkWidget      *prefs_dialog);
 
 MooPluginMeth *moo_plugin_lookup_method (gpointer        plugin,
                                          const char     *name);
-GSList     *moo_plugin_list_methods     (gpointer        plugin);
 
 void        moo_plugin_call_method      (gpointer        plugin,
                                          const char     *name,
