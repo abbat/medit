@@ -71,15 +71,6 @@ struct _MooLocalFileWriterClass {
 };
 
 
-#define MOO_TYPE_STRING_WRITER (moo_string_writer_get_type ())
-
-typedef struct _MooStringWriter MooStringWriter;
-typedef struct _MooStringWriterClass MooStringWriterClass;
-
-struct _MooStringWriterClass {
-    MooFileWriterClass base_class;
-};
-
 G_END_DECLS
 
 #endif /* MOO_FILE_WRITER_PRIVATE_H */
