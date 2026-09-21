@@ -88,8 +88,6 @@ const char     *moo_history_item_get            (MooHistoryItem *item,
                                                  const char     *key);
 const char     *moo_history_item_get_uri        (MooHistoryItem *item);
 
-char          *_moo_history_mgr_get_filename    (MooHistoryMgr  *mgr);
-
 G_END_DECLS
 
 #endif /* MOO_HISTORY_MGR_H */

@@ -319,13 +319,6 @@ get_filename (MooHistoryMgr *mgr)
     return mgr->priv->filename;
 }
 
-char *
-_moo_history_mgr_get_filename (MooHistoryMgr *mgr)
-{
-    g_return_val_if_fail (MOO_IS_HISTORY_MGR (mgr), NULL);
-    return g_strdup (get_filename (mgr));
-}
-
 
 /*****************************************************************/
 /* Loading and saving
