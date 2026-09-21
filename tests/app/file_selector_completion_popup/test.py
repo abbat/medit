@@ -9,10 +9,7 @@ matches and put each in the entry; Escape closes the popup and keeps the entry
 as it was walked to; Return on a match takes the pane there.
 """
 
-import sys, os
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-
-from file_selector_common import open_pane, path_entry, where
+from app.file_selector_common import open_pane, path_entry, where
 
 ONE = "inner"
 TWO = "island"
