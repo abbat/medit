@@ -567,6 +567,106 @@ text_buffer_text (MooTextBuffer *buffer)
 }
 
 
+/* Replace-all is applied as a few large edits, so the cursor is carried over by
+   arithmetic instead of by marks: a position after a match moves with it, one
+   inside a match goes to the start of its replacement, one between matches
+   stays next to the same text. */
+static int
+replace_all_cursor (const char *text, const char *pattern, const char *replacement,
+                    int insert, int bound, MooTextSearchFlags flags,
+                    const char *expected, int *new_bound)
+{
+    MooTextBuffer *buffer = new_text_buffer (text);
+    GtkTextBuffer *tb = GTK_TEXT_BUFFER (buffer);
+    MooUndoStack *stack = MOO_UNDO_STACK (_moo_text_buffer_get_undo_stack (buffer));
+    GtkTextIter start, ins, sel;
+    char *result;
+    int offset;
+
+    gtk_text_buffer_get_iter_at_offset (tb, &ins, insert);
+    gtk_text_buffer_get_iter_at_offset (tb, &sel, bound);
+    gtk_text_buffer_select_range (tb, &ins, &sel);
+    gtk_text_buffer_get_start_iter (tb, &start);
+    moo_text_replace_all (&start, nullptr, pattern, replacement, flags);
+
+    result = text_buffer_text (buffer);
+    g_assert_cmpstr (result, ==, expected);
+    g_free (result);
+
+    gtk_text_buffer_get_iter_at_mark (tb, &ins, gtk_text_buffer_get_insert (tb));
+    gtk_text_buffer_get_iter_at_mark (tb, &sel, gtk_text_buffer_get_selection_bound (tb));
+    offset = gtk_text_iter_get_offset (&ins);
+    *new_bound = gtk_text_iter_get_offset (&sel);
+
+    /* One undo step brings the whole text back. */
+    moo_undo_stack_undo (stack);
+    result = text_buffer_text (buffer);
+    g_assert_cmpstr (result, ==, text);
+    g_free (result);
+    g_assert_false (moo_text_buffer_can_undo (buffer));
+
+    g_object_unref (buffer);
+    return offset;
+}
+
+
+static void
+test_replace_all_cursor (void)
+{
+    /* "aXbXXc" -> "ayybyyyyc" */
+    static const int expected[] = {0, 1, 3, 4, 6, 8, 9};
+    int bound;
+
+    for (int i = 0; i < 7; ++i)
+    {
+        int at = replace_all_cursor ("aXbXXc", "X", "yy", i, i, MooTextSearchFlags (0),
+                                     "ayybyyyyc", &bound);
+        g_assert_cmpint (at, ==, expected[i]);
+        g_assert_cmpint (bound, ==, expected[i]);
+    }
+
+    /* Inside a match: the start of the replacement.  "foo foo" -> "x x" */
+    g_assert_cmpint (replace_all_cursor ("foo foo", "foo", "x", 5, 5, MooTextSearchFlags (0),
+                                         "x x", &bound), ==, 2);
+    g_assert_cmpint (replace_all_cursor ("foo foo", "foo", "x", 1, 1, MooTextSearchFlags (0),
+                                         "x x", &bound), ==, 0);
+
+    /* A selection keeps both ends, in either direction. */
+    g_assert_cmpint (replace_all_cursor ("aXbXXc", "X", "yy", 6, 2, MooTextSearchFlags (0),
+                                         "ayybyyyyc", &bound), ==, 9);
+    g_assert_cmpint (bound, ==, 3);
+
+    /* Several lines: matches on different lines are separate edits, and the
+       regex path takes the same road.  "1a\n2a\n3a" -> "1b\n2b\n3b" */
+    g_assert_cmpint (replace_all_cursor ("1a\n2a\n3a", "a", "b", 5, 5, MooTextSearchFlags (0),
+                                         "1b\n2b\n3b", &bound), ==, 5);
+    g_assert_cmpint (replace_all_cursor ("1a\n2a\n3a", "a$", "bb", 8, 8, MOO_TEXT_SEARCH_REGEX,
+                                         "1bb\n2bb\n3bb", &bound), ==, 11);
+    g_assert_cmpint (replace_all_cursor ("я😀я", "я", "ab", 3, 3, MooTextSearchFlags (0),
+                                         "ab😀ab", &bound), ==, 5);
+}
+
+
+static void
+test_replace_all_line_marks (void)
+{
+    MooTextBuffer *buffer = new_text_buffer ("a\nb\nc");
+    MooLineMark *mark = MOO_LINE_MARK (g_object_new (MOO_TYPE_LINE_MARK, nullptr));
+    GtkTextIter start;
+
+    moo_text_buffer_add_line_mark (buffer, mark, 1);
+    gtk_text_buffer_get_start_iter (GTK_TEXT_BUFFER (buffer), &start);
+    g_assert_cmpint (moo_text_replace_all (&start, nullptr, "[abc]", "xyz",
+                                           MOO_TEXT_SEARCH_REGEX), ==, 3);
+    g_assert_cmpint (moo_line_mark_get_line (mark), ==, 1);
+    g_assert_false (moo_line_mark_get_deleted (mark));
+
+    moo_text_buffer_delete_line_mark (buffer, mark);
+    g_object_unref (mark);
+    g_object_unref (buffer);
+}
+
+
 static void
 test_text_buffer_line_marks (void)
 {
@@ -1458,6 +1558,8 @@ _moo_add_mooedit_unit_tests (void)
         g_free (path);
     }
 
+    g_test_add_func ("/mooedit/replace/cursor", test_replace_all_cursor);
+    g_test_add_func ("/mooedit/replace/line-marks", test_replace_all_line_marks);
     g_test_add_func ("/mooedit/text-buffer/line-marks", test_text_buffer_line_marks);
     g_test_add_func ("/mooedit/text-buffer/moved-line-mark", test_text_buffer_moved_line_mark);
     g_test_add_func ("/mooedit/text-buffer/deleted-line-mark", test_text_buffer_deleted_line_mark);

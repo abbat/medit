@@ -625,6 +625,179 @@ expand_match_replacement (const char  *const_replacement,
     return *freeme;
 }
 
+/*
+ * Replace-all that changes the buffer once per line of matches instead of once
+ * per match. A change costs time in proportion to the length of its line, so on
+ * one huge line (a minified JSON) doing it per match is quadratic: a megabyte
+ * took minutes. The matches are collected first, with the buffer untouched, so
+ * their iters stay valid; then each run of matches on one line is replaced by a
+ * single delete and insert, last to first so that the offsets computed up front
+ * hold. Line ends are left alone, which keeps the line marks (bookmarks, ...);
+ * the cursor and the selection, which the delete would collapse, are put back.
+ */
+struct BatchMatch
+{
+    GtkTextIter start;
+    GtkTextIter end;
+    char *text;
+};
+
+struct BatchGroup
+{
+    int start;
+    int end;
+    char *text;
+};
+
+struct BatchCursor
+{
+    GtkTextIter iter;
+    int old_offset;
+    int offset;
+};
+
+static GArray *
+batch_new (void)
+{
+    return g_array_new (FALSE, FALSE, sizeof (BatchMatch));
+}
+
+static void
+batch_add (GArray            *matches,
+           const GtkTextIter *start,
+           const GtkTextIter *end,
+           const char        *text)
+{
+    BatchMatch m = { *start, *end, g_strdup (text) };
+    g_array_append_val (matches, m);
+}
+
+/* Where a cursor that was inside the group [matches[first], matches[last]] goes:
+   offset in the new text of the group, counted from its start. */
+static int
+batch_cursor_in_group (const BatchCursor *cursor,
+                       const BatchMatch  *matches,
+                       guint              first,
+                       guint              last,
+                       const int         *out_chars)
+{
+    for (guint k = first; k <= last; ++k)
+    {
+        if (k > first &&
+            gtk_text_iter_compare (&cursor->iter, &matches[k - 1].end) >= 0 &&
+            gtk_text_iter_compare (&cursor->iter, &matches[k].start) <= 0)
+            return out_chars[k - first] - (gtk_text_iter_get_offset (&matches[k].start) -
+                                           gtk_text_iter_get_offset (&cursor->iter));
+
+        if (gtk_text_iter_compare (&cursor->iter, &matches[k].start) > 0 &&
+            gtk_text_iter_compare (&cursor->iter, &matches[k].end) < 0)
+            return out_chars[k - first];
+    }
+
+    return 0;
+}
+
+static void
+batch_apply (GtkTextBuffer *buffer,
+             GArray        *matches_array)
+{
+    const BatchMatch *matches = (const BatchMatch*) matches_array->data;
+    guint n = matches_array->len;
+    GArray *groups = g_array_new (FALSE, FALSE, sizeof (BatchGroup));
+    BatchCursor cursors[2];
+    GtkTextIter i0, i1;
+    int shift = 0;
+
+    if (n == 0)
+        goto out;
+
+    gtk_text_buffer_get_iter_at_mark (buffer, &cursors[0].iter, gtk_text_buffer_get_insert (buffer));
+    gtk_text_buffer_get_iter_at_mark (buffer, &cursors[1].iter, gtk_text_buffer_get_selection_bound (buffer));
+
+    for (int c = 0; c < 2; ++c)
+        cursors[c].old_offset = cursors[c].offset = gtk_text_iter_get_offset (&cursors[c].iter);
+
+    for (guint first = 0, last; first < n; first = last + 1)
+    {
+        BatchGroup group;
+        GString *text = g_string_new (NULL);
+        int *out_chars;
+        int delta;
+
+        for (last = first;
+             last + 1 < n &&
+             gtk_text_iter_get_line (&matches[last].end) == gtk_text_iter_get_line (&matches[last + 1].start);
+             ++last)
+            ;
+
+        group.start = gtk_text_iter_get_offset (&matches[first].start);
+        group.end = gtk_text_iter_get_offset (&matches[last].end);
+
+        /* out_chars[i]: characters of the new text before match first + i's replacement */
+        out_chars = g_new (int, last - first + 1);
+
+        int chars = 0;
+
+        for (guint k = first; k <= last; ++k)
+        {
+            if (k > first)
+            {
+                char *kept = gtk_text_buffer_get_slice (buffer, &matches[k - 1].end, &matches[k].start, TRUE);
+                g_string_append (text, kept);
+                chars += (int) g_utf8_strlen (kept, -1);
+                g_free (kept);
+            }
+
+            out_chars[k - first] = chars;
+            g_string_append (text, matches[k].text);
+            chars += (int) g_utf8_strlen (matches[k].text, -1);
+        }
+
+        group.text = g_string_free (text, FALSE);
+        delta = chars - (group.end - group.start);
+
+        for (int c = 0; c < 2; ++c)
+        {
+            if (cursors[c].old_offset >= group.end)
+                cursors[c].offset += delta;
+            else if (cursors[c].old_offset > group.start)
+                cursors[c].offset = group.start + shift +
+                    batch_cursor_in_group (&cursors[c], matches, first, last, out_chars);
+        }
+
+        shift += delta;
+        g_free (out_chars);
+        g_array_append_val (groups, group);
+    }
+
+    gtk_text_buffer_begin_user_action (buffer);
+
+    for (guint g = groups->len; g > 0; --g)
+    {
+        const BatchGroup *group = &g_array_index (groups, BatchGroup, g - 1);
+
+        gtk_text_buffer_get_iter_at_offset (buffer, &i0, group->start);
+        gtk_text_buffer_get_iter_at_offset (buffer, &i1, group->end);
+        gtk_text_buffer_delete (buffer, &i0, &i1);
+        gtk_text_buffer_insert (buffer, &i0, group->text, -1);
+    }
+
+    gtk_text_buffer_get_iter_at_offset (buffer, &i0, cursors[0].offset);
+    gtk_text_buffer_get_iter_at_offset (buffer, &i1, cursors[1].offset);
+    gtk_text_buffer_select_range (buffer, &i0, &i1);
+
+    gtk_text_buffer_end_user_action (buffer);
+
+out:
+    for (guint g = 0; g < groups->len; ++g)
+        g_free (g_array_index (groups, BatchGroup, g).text);
+    g_array_free (groups, TRUE);
+
+    for (guint k = 0; k < n; ++k)
+        g_free (matches[k].text);
+    g_array_free (matches_array, TRUE);
+}
+
 /* Puts the replacement in place of the match. A replace-all response is
    inside the one user action begun for all of them, which is begun here the
    first time it is needed; any other is an undo step of its own. */
@@ -674,6 +847,7 @@ moo_text_replace_regex_all_real (GtkTextIter            *start,
     const char *const_replacement = NULL;
     GError *error = NULL;
     gboolean was_zero_match = FALSE;
+    GArray *matches = NULL;
 
     g_return_val_if_fail (start != NULL, 0);
     g_return_val_if_fail (regex != NULL, 0);
@@ -719,8 +893,7 @@ moo_text_replace_regex_all_real (GtkTextIter            *start,
     }
     else
     {
-        gtk_text_buffer_begin_user_action (buffer);
-        need_end_user_action = TRUE;
+        matches = batch_new ();
         response = MOO_TEXT_REPLACE_ALL;
     }
 
@@ -777,8 +950,12 @@ moo_text_replace_regex_all_real (GtkTextIter            *start,
         if (response != MOO_TEXT_REPLACE_SKIP && (match_len || *real_replacement))
         {
             count++;
-            replace_match (buffer, &match_start, &match_end, real_replacement,
-                           response, &need_end_user_action);
+
+            if (matches)
+                batch_add (matches, &match_start, &match_end, real_replacement);
+            else
+                replace_match (buffer, &match_start, &match_end, real_replacement,
+                               response, &need_end_user_action);
         }
 
         *start = match_end;
@@ -809,6 +986,8 @@ out:
         gtk_text_buffer_delete_mark (buffer, end_mark);
     if (need_end_user_action)
         gtk_text_buffer_end_user_action (buffer);
+    if (matches)
+        batch_apply (buffer, matches);
     g_free (freeme);
     return count;
 }
@@ -858,8 +1037,8 @@ moo_text_replace_all (GtkTextIter            *start,
                       MooTextSearchFlags      flags)
 {
     int count = 0;
-    GtkTextMark *end_mark;
     GtkTextBuffer *buffer;
+    GArray *matches;
 
     g_return_val_if_fail (start != NULL, 0);
     g_return_val_if_fail (text != NULL, 0);
@@ -882,40 +1061,26 @@ moo_text_replace_all (GtkTextIter            *start,
     }
 
     buffer = gtk_text_iter_get_buffer (start);
-    gtk_text_buffer_begin_user_action (buffer);
+    matches = batch_new ();
 
     if (!end || gtk_text_iter_is_end (end))
         end = NULL;
     else
         gtk_text_iter_forward_char (end);
 
-    if (end)
-        end_mark = gtk_text_buffer_create_mark (buffer, NULL, end, TRUE);
-    else
-        end_mark = NULL;
-
     while (TRUE)
     {
         GtkTextIter match_start, match_end;
 
         if (!moo_text_search_forward (start, text, flags, &match_start, &match_end, end))
-            goto out;
+            break;
 
         count++;
-        gtk_text_buffer_delete (buffer, &match_start, &match_end);
-        gtk_text_buffer_insert (buffer, &match_end, replacement, -1);
-
+        batch_add (matches, &match_start, &match_end, replacement);
         *start = match_end;
-
-        if (end)
-            gtk_text_buffer_get_iter_at_mark (buffer, end, end_mark);
     }
 
-out:
-    if (end_mark)
-        gtk_text_buffer_delete_mark (buffer, end_mark);
-
-    gtk_text_buffer_end_user_action (buffer);
+    batch_apply (buffer, matches);
     return count;
 }
 
