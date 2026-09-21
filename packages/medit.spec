@@ -6,7 +6,7 @@
 # have to carry the same version.
 
 Name:           medit
-Version:        1.3.8
+Version:        1.3.9
 Release:        1%{?dist}
 Summary:        Useful programming and around-programming text editor
 Group:          Productivity/Text/Editors
@@ -82,6 +82,11 @@ rm -rf %{buildroot}
 %{_mandir}/man1/%{name}.1*
 
 %changelog
+* Mon Sep 21 2026 Anton Batenev <antonbatenev@yandex.ru> - 1.3.9-1
+- Spell checking plugin, zoom with Ctrl and the wheel or the plus and minus
+  keys, faster Replace All
+
+
 * Mon Sep 21 2026 Anton Batenev <antonbatenev@yandex.ru> - 1.3.8-1
 - Selection by syntax, declaration and prepared rename in the language server
   plugin, GTK's own notebook for the tabs, overwrites asked about, six

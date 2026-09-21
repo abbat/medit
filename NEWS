@@ -1,5 +1,30 @@
 2026-09-21  Anton Batenev  <antonbatenev@yandex.ru>
 
+    * === Released 1.3.9 ===
+
+    A spell checking plugin: misspelled words are underlined in text
+    documents and in the comments and strings of source code, the context
+    menu offers the suggestions, Add to Dictionary and Ignore, and F7 goes
+    to the next mistake. A word is checked by its own alphabet, so a text
+    in two languages is checked against both dictionaries, and the file
+    types checked are in the preferences. Enchant is loaded at run time
+    and is not a dependency.
+    The text is zoomed with Ctrl and the mouse wheel, with Ctrl and the plus
+    and minus keys, the numeric keypad's ones included, and from the View
+    menu; Ctrl+0 brings the size of the preferences back. The zoom is one
+    for every document and is not saved.
+    Replace All makes one edit per line of matches and keeps the cursor, and
+    collects the matches on a copy of the text. The line numbers are padded
+    from the edge of the margin, the window state follows the focus into the
+    other notebook, and the clipboard save dialog shows the conversion error
+    it used to swallow.
+    The functions and classes nothing called or instantiated are gone, the
+    long functions of the tab drop, the replace and the test runner are
+    split, and the highlighting and replace-all timings can be measured
+    with MOO_PERF.
+
+2026-09-21  Anton Batenev  <antonbatenev@yandex.ru>
+
     * === Released 1.3.8 ===
 
     The language server plugin asks for what it said it could: Go to
