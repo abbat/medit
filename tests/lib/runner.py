@@ -336,39 +336,14 @@ def prepare(module, log_dir):
     return sandbox
 
 
-def inner(args):
+def drive(module, args, prepared, proc, wm):
+    """Run the test against the started medit and stop everything afterwards.
+
+    Returns (failure, clean_exit, code, alive_at_failure)."""
     from lib import a11y
     from lib.context import Test
 
     log_dir = args.log_dir
-
-    # The display, from in here, before anything is started on it. The outer
-    # phase checked it too, but in its own environment; if the two disagree the
-    # answer is that environment, and that is worth one xdotool call to know.
-    if not sandbox.display_answers(os.environ.get("DISPLAY", ""), timeout=10):
-        print("FAIL: the display %s does not answer inside the test's environment"
-              % os.environ.get("DISPLAY"))
-        return 1
-
-    # Loaded before medit starts, not after: a test may have a setup function,
-    # and what it puts in place has to be there when medit reads its settings.
-    module = load_test(args.test)
-    prepared = prepare(module, log_dir)
-
-    # Before medit, so that its first window is managed like every other: a
-    # window manager that arrives second adopts what is already mapped, but
-    # only after having missed the map, and where a window ends up is then a
-    # race. A test says NEEDS_WM = True when it needs one; see sandbox.start_wm
-    # for why the other thirty do not get one.
-    wm = None
-
-    if getattr(module, "NEEDS_WM", False):
-        wm = sandbox.start_wm(os.environ["DISPLAY"],
-                              os.path.join(log_dir, "wm.log"))
-        print("    %s has the screen" % sandbox.WM)
-
-    proc = start_medit(args.binary, log_dir, prepared.files, cwd=prepared.root)
-
     failure = None
     clean_exit = False
     code = None
@@ -410,25 +385,35 @@ def inner(args):
         # that came out of it would be about that rather than about the test.
         sandbox.stop(wm)
 
-    ok = failure is None
+    return failure, clean_exit, code, alive_at_failure
 
+
+def judge(failure, clean_exit, code, alive_at_failure, proc, log_dir):
+    """Print why the run failed, if it did. True when it did not."""
     if failure is not None:
         print("FAIL: %s" % failure)
         if not isinstance(failure, AssertionError):
             traceback.print_exc()
         print(last_words(log_dir, alive_at_failure, proc.returncode))
+        return False
 
-    elif not clean_exit:
+    if not clean_exit:
         print("FAIL: medit did not quit when asked")
-        ok = False
+        return False
 
     # Not sanitizer.EXIT_CODE, which only says the runtime wrote something --
-    # what it wrote is read below, and library leaks are not this test's fault.
-    elif code not in (0, sanitizer.EXIT_CODE):
+    # what it wrote is read in report_logs, and library leaks are not this
+    # test's fault.
+    if code not in (0, sanitizer.EXIT_CODE):
         print("FAIL: medit exited with %d" % code)
-        ok = False
+        return False
 
-    summary, sanitizers_ok = sanitizer.report(log_dir, args.sanitizers)
+    return True
+
+
+def report_logs(log_dir, sanitizers):
+    """Print the sanitizer and glib summaries. True when the sanitizers are clean."""
+    summary, sanitizers_ok = sanitizer.report(log_dir, sanitizers)
     print(sanitizer.format_summary(summary))
 
     counts = scan_log(log_dir)
@@ -443,7 +428,45 @@ def inner(args):
 
     if not sanitizers_ok:
         print("FAIL: the sanitizers reported findings, see %s" % log_dir)
-        ok = False
+
+    return sanitizers_ok
+
+
+def inner(args):
+    log_dir = args.log_dir
+
+    # The display, from in here, before anything is started on it. The outer
+    # phase checked it too, but in its own environment; if the two disagree the
+    # answer is that environment, and that is worth one xdotool call to know.
+    if not sandbox.display_answers(os.environ.get("DISPLAY", ""), timeout=10):
+        print("FAIL: the display %s does not answer inside the test's environment"
+              % os.environ.get("DISPLAY"))
+        return 1
+
+    # Loaded before medit starts, not after: a test may have a setup function,
+    # and what it puts in place has to be there when medit reads its settings.
+    module = load_test(args.test)
+    prepared = prepare(module, log_dir)
+
+    # Before medit, so that its first window is managed like every other: a
+    # window manager that arrives second adopts what is already mapped, but
+    # only after having missed the map, and where a window ends up is then a
+    # race. A test says NEEDS_WM = True when it needs one; see sandbox.start_wm
+    # for why the other thirty do not get one.
+    wm = None
+
+    if getattr(module, "NEEDS_WM", False):
+        wm = sandbox.start_wm(os.environ["DISPLAY"],
+                              os.path.join(log_dir, "wm.log"))
+        print("    %s has the screen" % sandbox.WM)
+
+    proc = start_medit(args.binary, log_dir, prepared.files, cwd=prepared.root)
+
+    failure, clean_exit, code, alive_at_failure = drive(
+        module, args, prepared, proc, wm)
+
+    ok = judge(failure, clean_exit, code, alive_at_failure, proc, log_dir)
+    ok = report_logs(log_dir, args.sanitizers) and ok
 
     return 0 if ok else 1
 
