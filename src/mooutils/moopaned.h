@@ -87,8 +87,6 @@ gboolean        moo_paned_remove_pane       (MooPaned       *paned,
                                              GtkWidget      *pane_widget);
 
 guint           moo_paned_n_panes           (MooPaned       *paned);
-MooPane        *moo_paned_get_nth_pane      (MooPaned       *paned,
-                                             guint           n);
 int             moo_paned_get_pane_num      (MooPaned       *paned,
                                              GtkWidget      *widget);
 MooPane        *moo_paned_get_pane          (MooPaned       *paned,

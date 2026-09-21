@@ -2176,15 +2176,6 @@ moo_paned_set_sticky_pane (MooPaned   *paned,
 
 
 MooPane *
-moo_paned_get_nth_pane (MooPaned *paned,
-                        guint     n)
-{
-    g_return_val_if_fail (MOO_IS_PANED (paned), NULL);
-    return get_nth_pane (paned, n);
-}
-
-
-MooPane *
 moo_paned_get_pane (MooPaned  *paned,
                     GtkWidget *widget)
 {
