@@ -5074,6 +5074,145 @@ notebook_drag_drop (GtkWidget          *widget,
 }
 
 
+/* A document dragged by its tab: into another window it moves there, into
+   another notebook of this window it moves to that split view. */
+static void
+notebook_drop_tab (GtkWidget     *widget,
+                   GtkSelectionData *data,
+                   MooEditWindow *window)
+{
+    GtkWidget *toplevel;
+    GtkWidget *src_notebook = nullptr;
+    MooEdit *doc;
+    MooEditTab *tab;
+
+    tab = (MooEditTab*) moo_selection_data_get_pointer (data, MOO_EDIT_TAB_ATOM);
+    doc = tab ? moo_edit_tab_get_doc (tab) : nullptr;
+
+    if (!doc)
+        return;
+
+    toplevel = gtk_widget_get_toplevel (GTK_WIDGET (tab));
+
+    if (toplevel == GTK_WIDGET (window))
+        src_notebook = gtk_widget_get_parent (GTK_WIDGET (tab));
+
+    g_assert (!src_notebook || GTK_IS_NOTEBOOK (src_notebook));
+
+    if (toplevel != GTK_WIDGET (window))
+        _moo_editor_move_doc (window->priv->editor, doc, window,
+                              get_notebook_active_view (GTK_NOTEBOOK (widget)),
+                              TRUE);
+    else if (src_notebook != widget)
+        move_tab_to_split_view (window, tab);
+}
+
+/* Opens the dropped files. TRUE if the drag was finished here. */
+static gboolean
+notebook_drop_uri_list (GtkSelectionData *data,
+                        GdkDragContext   *context,
+                        guint             time,
+                        MooEditWindow    *window)
+{
+    char **uris;
+    char **u;
+
+    /* XXX this is wrong but works. gtk_selection_data_get_uris()
+     * does not work on windows */
+    uris = g_uri_list_extract_uris ((char*) gtk_selection_data_get_data (data));
+
+    if (!uris)
+        return FALSE;
+
+    for (u = uris; *u; ++u)
+    {
+        char *filename = g_filename_from_uri (*u, nullptr, nullptr);
+        if (!filename || !g_file_test (filename, G_FILE_TEST_IS_DIR))
+            moo_editor_open_uri (window->priv->editor, *u, nullptr, -1, window);
+        g_free (filename);
+    }
+
+    g_strfreev (uris);
+    gtk_drag_finish (context, TRUE, FALSE, time);
+    return TRUE;
+}
+
+/* Puts the dropped text in a new document. TRUE if the drag was finished here. */
+static gboolean
+notebook_drop_text (GtkSelectionData *data,
+                    GdkDragContext   *context,
+                    guint             time,
+                    MooEditWindow    *window)
+{
+    MooEdit *doc;
+    char *text = (char *) gtk_selection_data_get_text (data);
+
+    if (!text)
+        return FALSE;
+
+    doc = moo_editor_new_doc (window->priv->editor, window);
+
+    if (!doc)
+    {
+        g_free (text);
+        return FALSE;
+    }
+
+    /* XXX */
+    gtk_text_buffer_set_text (moo_edit_get_buffer (doc), text, -1);
+
+    g_free (text);
+    gtk_drag_finish (context, TRUE,
+                     gdk_drag_context_get_suggested_action (context) == GDK_ACTION_MOVE,
+                     time);
+    return TRUE;
+}
+
+/* The data asked for by notebook_drag_motion() while the button is still down:
+   only says whether a drop of it would be accepted. */
+static void
+notebook_drag_probe (GtkWidget        *widget,
+                     GdkDragContext   *context,
+                     GtkSelectionData *data,
+                     guint             info,
+                     guint             time,
+                     MooEditWindow    *window)
+{
+    GtkWidget *toplevel;
+    MooEditTab *tab;
+
+    if (info != TARGET_MOO_EDIT_TAB)
+    {
+        gdk_drag_status (context, (GdkDragAction) 0, time);
+        return;
+    }
+
+    tab = (MooEditTab*) moo_selection_data_get_pointer (data, MOO_EDIT_TAB_ATOM);
+
+    if (!tab)
+    {
+        g_critical ("oops");
+        gdk_drag_status (context, (GdkDragAction) 0, time);
+        return;
+    }
+
+    toplevel = gtk_widget_get_toplevel (GTK_WIDGET (tab));
+
+    if (toplevel == GTK_WIDGET (window))
+    {
+        g_assert (GTK_IS_NOTEBOOK (widget));
+
+        /* dropping a tab on the notebook it came from moves nothing */
+        if (gtk_widget_get_parent (GTK_WIDGET (tab)) == widget)
+        {
+            gdk_drag_status (context, (GdkDragAction) 0, time);
+            return;
+        }
+    }
+
+    gdk_drag_status (context, GDK_ACTION_MOVE, time);
+}
+
 static void
 notebook_drag_data_recv (GtkWidget          *widget,
                          GdkDragContext     *context,
@@ -5092,136 +5231,23 @@ notebook_drag_data_recv (GtkWidget          *widget,
        and a document dragged from its tab never reaches what it was dropped on. */
     g_signal_stop_emission_by_name (widget, "drag-data-received");
 
-    if (data_window_drop.get(widget))
+    if (!data_window_drop.get(widget))
     {
-        data_window_drop.set(widget, false);
-
-        GdkAtom target = gtk_selection_data_get_target (data);
-        if (target == MOO_EDIT_TAB_ATOM)
-        {
-            GtkWidget *toplevel;
-            GtkWidget *src_notebook = nullptr;
-            MooEdit *doc;
-            MooEditTab *tab;
-
-            tab = (MooEditTab*) moo_selection_data_get_pointer (data, MOO_EDIT_TAB_ATOM);
-            doc = tab ? moo_edit_tab_get_doc (tab) : nullptr;
-
-            if (!doc)
-                goto out;
-
-            toplevel = gtk_widget_get_toplevel (GTK_WIDGET (tab));
-
-            if (toplevel == GTK_WIDGET (window))
-                src_notebook = gtk_widget_get_parent (GTK_WIDGET (tab));
-
-            g_assert (!src_notebook || GTK_IS_NOTEBOOK (src_notebook));
-
-            if (toplevel != GTK_WIDGET (window))
-                _moo_editor_move_doc (window->priv->editor, doc, window,
-                                      get_notebook_active_view (GTK_NOTEBOOK (widget)),
-                                      TRUE);
-            else if (src_notebook != widget)
-                move_tab_to_split_view (window, tab);
-
-            goto out;
-        }
-        else if (target == moo_atom_uri_list ())
-        {
-            char **uris;
-            char **u;
-
-            /* XXX this is wrong but works. gtk_selection_data_get_uris()
-             * does not work on windows */
-            uris = g_uri_list_extract_uris ((char*) gtk_selection_data_get_data (data));
-
-            if (!uris)
-                goto out;
-
-            for (u = uris; *u; ++u)
-            {
-                char *filename = g_filename_from_uri (*u, nullptr, nullptr);
-                if (!filename || !g_file_test (filename, G_FILE_TEST_IS_DIR))
-                    moo_editor_open_uri (window->priv->editor, *u, nullptr, -1, window);
-                g_free (filename);
-            }
-
-            g_strfreev (uris);
-            gtk_drag_finish (context, TRUE, FALSE, time);
-            finished = TRUE;
-        }
-        else
-        {
-            MooEdit *doc;
-            GtkTextBuffer *buf;
-            char *text = (char *) gtk_selection_data_get_text (data);
-
-            if (!text)
-                goto out;
-
-            doc = moo_editor_new_doc (window->priv->editor, window);
-
-            if (!doc)
-            {
-                g_free (text);
-                goto out;
-            }
-
-            /* XXX */
-            buf = moo_edit_get_buffer (doc);
-            gtk_text_buffer_set_text (buf, text, -1);
-
-            g_free (text);
-            gtk_drag_finish (context, TRUE,
-                             gdk_drag_context_get_suggested_action (context) == GDK_ACTION_MOVE,
-                             time);
-            finished = TRUE;
-        }
-    }
-    else
-    {
-        if (info == TARGET_MOO_EDIT_TAB)
-        {
-            GtkWidget *toplevel;
-            MooEditTab *tab;
-            gboolean can_move = TRUE;
-
-            tab = (MooEditTab*) moo_selection_data_get_pointer (data, MOO_EDIT_TAB_ATOM);
-
-            if (!tab)
-            {
-                g_critical ("oops");
-                gdk_drag_status (context, (GdkDragAction) 0, time);
-                return;
-            }
-
-            toplevel = gtk_widget_get_toplevel (GTK_WIDGET (tab));
-
-            if (toplevel == GTK_WIDGET (window))
-            {
-                GtkWidget *src_notebook = nullptr;
-                src_notebook = gtk_widget_get_parent (GTK_WIDGET (tab));
-                g_assert (GTK_IS_NOTEBOOK (widget));
-                can_move = src_notebook != widget;
-            }
-
-            if (!can_move)
-            {
-                gdk_drag_status (context, (GdkDragAction) 0, time);
-                return;
-            }
-
-            gdk_drag_status (context, GDK_ACTION_MOVE, time);
-        }
-        else
-        {
-            gdk_drag_status (context, (GdkDragAction) 0, time);
-        }
-
+        notebook_drag_probe (widget, context, data, info, time, window);
         return;
     }
 
-out:
+    data_window_drop.set(widget, false);
+
+    GdkAtom target = gtk_selection_data_get_target (data);
+
+    if (target == MOO_EDIT_TAB_ATOM)
+        notebook_drop_tab (widget, data, window);
+    else if (target == moo_atom_uri_list ())
+        finished = notebook_drop_uri_list (data, context, time, window);
+    else
+        finished = notebook_drop_text (data, context, time, window);
+
     if (!finished)
         gtk_drag_finish (context, FALSE, FALSE, time);
 }
