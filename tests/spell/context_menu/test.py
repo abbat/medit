@@ -37,7 +37,8 @@ def run(t):
 
     names = t.wait(offered, "the misspelled word to be offered for adding")
 
-    t.check("world" in names, "the stub's word is offered as a correction: %s" % ", ".join(names))
+    t.check("world" in names,
+            "the stub's word is offered as a correction: %s" % ", ".join(names))
     t.check("Ignore All" in names and "Ignore in This Document" in names,
             "with both ways of ignoring it: %s" % ", ".join(names))
 
@@ -52,6 +53,7 @@ def run(t):
     t.menu("Window", "notes.log")
 
     names = menu_of(t)
+    t.escape()
     t.check("Add to Dictionary" not in names,
             "a file with an extension nobody asked for is not checked: %s" % ", ".join(names))
 
