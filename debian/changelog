@@ -1,3 +1,18 @@
+medit (1.3.10) unstable; urgency=low
+
+  * Open every text file found recursively when a directory is dropped on
+    the notebook, skipping VCS metadata directories such as .git and .svn,
+    and ask for confirmation past twenty files.
+  * Add a Cancel All button to the encoding-detection dialog, to skip a
+    whole batch of files that fail encoding detection at once.
+  * Surface external file changes, deletions and failed file watches in
+    a per-tab notice bar with a Reload button, and track modified status
+    correctly while auto_sync is on, including when its own reload or close
+    dialog is declined.
+  * Silence a harmless upstream GTK3 accessibility assertion on tab close.
+
+ -- Anton Batenev <antonbatenev@yandex.ru>  Fri, 25 Sep 2026 01:31:28 +0300
+
 medit (1.3.9) unstable; urgency=low
 
   * Add a spell checking plugin: underlined mistakes in text and in the

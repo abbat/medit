@@ -6,7 +6,7 @@
 # have to carry the same version.
 
 Name:           medit
-Version:        1.3.9
+Version:        1.3.10
 Release:        1%{?dist}
 Summary:        Useful programming and around-programming text editor
 Group:          Productivity/Text/Editors
@@ -82,6 +82,11 @@ rm -rf %{buildroot}
 %{_mandir}/man1/%{name}.1*
 
 %changelog
+* Fri Sep 25 2026 Anton Batenev <antonbatenev@yandex.ru> - 1.3.10-1
+- Recursive directory drop with a notice bar for external file changes,
+  deletions and failed file watches, and a silenced GTK3 a11y assertion
+
+
 * Mon Sep 21 2026 Anton Batenev <antonbatenev@yandex.ru> - 1.3.9-1
 - Spell checking plugin, zoom with Ctrl and the wheel or the plus and minus
   keys, faster Replace All
