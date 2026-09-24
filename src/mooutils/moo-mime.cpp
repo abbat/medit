@@ -136,3 +136,28 @@ moo_mime_type_is_subclass (const char *mime_type,
           g_content_type_is_a (mime_type, base);
     return ret;
 }
+
+gboolean
+moo_path_is_text_file (const char *path,
+                       MgwStatBuf *statbuf)
+{
+    const char *mime_type = moo_get_mime_type_for_file (path, statbuf);
+
+    if (!strcmp (mime_type, "application/x-trash"))
+    {
+        guint i;
+        const char *bak_suffixes[] = {"~", "%", ".bak", ".old", ".sik"};
+
+        for (i = 0; i < G_N_ELEMENTS (bak_suffixes); ++i)
+            if (g_str_has_suffix (path, bak_suffixes[i]))
+            {
+                char *tmp = g_strndup (path, strlen (path) - strlen (bak_suffixes[i]));
+                mime_type = moo_get_mime_type_for_filename (tmp);
+                g_free (tmp);
+                break;
+            }
+    }
+
+    return !strcmp (mime_type, "application/octet-stream") ||
+            moo_mime_type_is_subclass (mime_type, "text/plain");
+}

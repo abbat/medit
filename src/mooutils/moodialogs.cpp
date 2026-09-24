@@ -56,6 +56,8 @@ create_message_dialog (GtkWindow  *parent,
         gtk_dialog_set_default_response (GTK_DIALOG (dialog),
                                          default_response);
 
+    gtk_window_set_title (GTK_WINDOW (dialog), MOO_PACKAGE_NAME);
+
     if (parent && gtk_window_get_group (parent))
         gtk_window_group_add_window (gtk_window_get_group (parent), GTK_WINDOW (dialog));
 

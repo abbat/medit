@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: moo\n"
 "Report-Msgid-Bugs-To: https://github.com/abbat/medit/issues\n"
-"POT-Creation-Date: 2026-09-21 20:45+0300\n"
+"POT-Creation-Date: 2026-09-24 15:52+0300\n"
 "PO-Revision-Date: 2007-11-10 22:45+0100\n"
 "Last-Translator: Vlastimil Ott <vlastimil@e-ott.info>\n"
 "Language-Team:  <cs@li.org>\n"
@@ -521,7 +521,7 @@ msgstr "_Nahradit"
 msgid "Replace _All"
 msgstr "Nahradit vše"
 
-#: src/mooedit/ui/mootextfind-prompt.ui:50 src/mooedit/mooeditwindow.cpp:571
+#: src/mooedit/ui/mootextfind-prompt.ui:50 src/mooedit/mooeditwindow.cpp:572
 msgid "Find _Next"
 msgstr "Najít další"
 
@@ -529,7 +529,7 @@ msgstr "Najít další"
 msgid "Sto_p"
 msgstr "Sto_p"
 
-#: src/mooedit/ui/mootextgotoline.ui:20 src/mooedit/mooeditwindow.cpp:621
+#: src/mooedit/ui/mootextgotoline.ui:20 src/mooedit/mooeditwindow.cpp:622
 msgid "Go to Line"
 msgstr "Přejít na řádek"
 
@@ -647,7 +647,7 @@ msgstr "Zahodit změny v souboru '%s'?"
 msgid "If you reload the document, changes will be discarded"
 msgstr "Pokud dokument znovu načtete, přijdete o všechny změny"
 
-#: src/mooedit/mooeditdialogs.cpp:653 src/mooedit/mooeditwindow.cpp:461
+#: src/mooedit/mooeditdialogs.cpp:653 src/mooedit/mooeditwindow.cpp:462
 msgid "_Reload"
 msgstr "Z_novu načíst"
 
@@ -689,7 +689,7 @@ msgstr ""
 msgid "Invalid regular expression"
 msgstr ""
 
-#: src/mooedit/mooedit-fileops.cpp:1110 src/plugins/moofileselector.cpp:512
+#: src/mooedit/mooedit-fileops.cpp:1110 src/plugins/moofileselector.cpp:496
 msgid "Untitled"
 msgstr "Nepojmenovaný"
 
@@ -765,7 +765,7 @@ msgstr ""
 #. Label in the Language combo box on Languages preferences page,
 #. remove the part before and including |
 #. Menu item in the Language menu
-#: src/mooedit/mooeditprefspage.cpp:543 src/mooedit/mooeditwindow.cpp:4401
+#: src/mooedit/mooeditprefspage.cpp:543 src/mooedit/mooeditwindow.cpp:4402
 msgid "Language|None"
 msgstr ""
 
@@ -786,490 +786,497 @@ msgstr "Volby"
 #. Configure Shortcuts, beside one per plugin. The id beside it is not
 #. translated: it is what the accelerator paths and the preference keys
 #. under Shortcuts/ are made of.
-#: src/mooedit/mooeditwindow.cpp:439
+#: src/mooedit/mooeditwindow.cpp:440
 msgid "Editor"
 msgstr "Editor"
 
-#: src/mooedit/mooeditwindow.cpp:444
+#: src/mooedit/mooeditwindow.cpp:445
 msgid "Create new document"
 msgstr "Vytvořit nový dokument"
 
-#: src/mooedit/mooeditwindow.cpp:452
+#: src/mooedit/mooeditwindow.cpp:453
 msgid "_Open..."
 msgstr "_Otevřít"
 
-#: src/mooedit/mooeditwindow.cpp:453
+#: src/mooedit/mooeditwindow.cpp:454
 msgid "Open..."
 msgstr "Otevřít..."
 
-#: src/mooedit/mooeditwindow.cpp:460 src/moofileview/moofileview.cpp:1330
+#: src/mooedit/mooeditwindow.cpp:461 src/moofileview/moofileview.cpp:1330
 #: src/moofileview/moofileview.cpp:1331
 msgid "Reload"
 msgstr "Znovu načíst"
 
-#: src/mooedit/mooeditwindow.cpp:462
+#: src/mooedit/mooeditwindow.cpp:463
 msgid "Reload document"
 msgstr "Znovu načíst dokument"
 
-#: src/mooedit/mooeditwindow.cpp:493
+#: src/mooedit/mooeditwindow.cpp:494
 msgid "Save _As..."
 msgstr "Uložit j_ako..."
 
-#: src/mooedit/mooeditwindow.cpp:494
+#: src/mooedit/mooeditwindow.cpp:495
 msgid "Save as..."
 msgstr "Uložit jako..."
 
-#: src/mooedit/mooeditwindow.cpp:504
+#: src/mooedit/mooeditwindow.cpp:505
 msgid "Close document"
 msgstr "Zavřít dokument"
 
-#: src/mooedit/mooeditwindow.cpp:512
+#: src/mooedit/mooeditwindow.cpp:513
 msgid "Close All"
 msgstr "Zavřít vše"
 
-#: src/mooedit/mooeditwindow.cpp:513
+#: src/mooedit/mooeditwindow.cpp:514
 msgid "Close A_ll"
 msgstr "Zavřít vše"
 
-#: src/mooedit/mooeditwindow.cpp:514
+#: src/mooedit/mooeditwindow.cpp:515
 msgid "Close all documents"
 msgstr "Zavřít všechny dokumenty"
 
-#: src/mooedit/mooeditwindow.cpp:521
+#: src/mooedit/mooeditwindow.cpp:522
 msgid "Previous Tab"
 msgstr "Předchozí karta"
 
-#: src/mooedit/mooeditwindow.cpp:522
+#: src/mooedit/mooeditwindow.cpp:523
 msgid "_Previous Tab"
 msgstr "_Předchozí karta"
 
-#: src/mooedit/mooeditwindow.cpp:523
+#: src/mooedit/mooeditwindow.cpp:524
 msgid "Previous tab"
 msgstr "Předchozí karta"
 
-#: src/mooedit/mooeditwindow.cpp:531
+#: src/mooedit/mooeditwindow.cpp:532
 msgid "Next Tab"
 msgstr "Další karta"
 
-#: src/mooedit/mooeditwindow.cpp:532
+#: src/mooedit/mooeditwindow.cpp:533
 msgid "_Next Tab"
 msgstr "_Další karta"
 
-#: src/mooedit/mooeditwindow.cpp:533
+#: src/mooedit/mooeditwindow.cpp:534
 msgid "Next tab"
 msgstr "Další karta"
 
-#: src/mooedit/mooeditwindow.cpp:541
+#: src/mooedit/mooeditwindow.cpp:542
 msgid "Previous Tab In View"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:542
+#: src/mooedit/mooeditwindow.cpp:543
 msgid "_Previous Tab In View"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:543
+#: src/mooedit/mooeditwindow.cpp:544
 msgid "Previous tab in view"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:550
+#: src/mooedit/mooeditwindow.cpp:551
 msgid "Next Tab In View"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:551
+#: src/mooedit/mooeditwindow.cpp:552
 msgid "_Next Tab In View"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:552
+#: src/mooedit/mooeditwindow.cpp:553
 msgid "Next tab in view"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:570
+#: src/mooedit/mooeditwindow.cpp:571
 msgid "Find Next"
 msgstr "Najít další"
 
-#: src/mooedit/mooeditwindow.cpp:572
+#: src/mooedit/mooeditwindow.cpp:573
 msgid "Find next"
 msgstr "Najít další"
 
-#: src/mooedit/mooeditwindow.cpp:581
+#: src/mooedit/mooeditwindow.cpp:582
 msgid "Find Previous"
 msgstr "Najít předchozí"
 
-#: src/mooedit/mooeditwindow.cpp:582
+#: src/mooedit/mooeditwindow.cpp:583
 msgid "Find _Previous"
 msgstr "Najít _předchozí"
 
-#: src/mooedit/mooeditwindow.cpp:583
+#: src/mooedit/mooeditwindow.cpp:584
 msgid "Find previous"
 msgstr "Najít předchozí"
 
-#: src/mooedit/mooeditwindow.cpp:603
+#: src/mooedit/mooeditwindow.cpp:604
 msgid "Find Current Word"
 msgstr "Najít aktuální slovo"
 
-#: src/mooedit/mooeditwindow.cpp:604
+#: src/mooedit/mooeditwindow.cpp:605
 msgid "Find Current _Word"
 msgstr "Najít aktuální s_lovo"
 
-#: src/mooedit/mooeditwindow.cpp:612
+#: src/mooedit/mooeditwindow.cpp:613
 msgid "Find Current Word Backwards"
 msgstr "Najít aktuální slovo zpětně"
 
-#: src/mooedit/mooeditwindow.cpp:613
+#: src/mooedit/mooeditwindow.cpp:614
 msgid "Find Current Word _Backwards"
 msgstr "Najít aktuální slovo z_pětně"
 
-#: src/mooedit/mooeditwindow.cpp:622
+#: src/mooedit/mooeditwindow.cpp:623
 msgid "_Go to Line..."
 msgstr "Přejít na řáde_k..."
 
-#: src/mooedit/mooeditwindow.cpp:623
+#: src/mooedit/mooeditwindow.cpp:624
 msgid "Go to line..."
 msgstr "Přejít na řádek..."
 
-#: src/mooedit/mooeditwindow.cpp:632
+#: src/mooedit/mooeditwindow.cpp:633
 msgid "Toggle Text Wrapping"
 msgstr "Přepnout zalamování textu"
 
-#: src/mooedit/mooeditwindow.cpp:633
+#: src/mooedit/mooeditwindow.cpp:634
 msgid "_Wrap Text"
 msgstr "_Zalamovat text"
 
-#: src/mooedit/mooeditwindow.cpp:640
+#: src/mooedit/mooeditwindow.cpp:641
 msgid "Toggle Line Numbers Display"
 msgstr "Přepnout zobrazení čísel řádků"
 
-#: src/mooedit/mooeditwindow.cpp:641
+#: src/mooedit/mooeditwindow.cpp:642
 msgid "Show _Line Numbers"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:647
+#: src/mooedit/mooeditwindow.cpp:648
 msgid "Toggle Fold"
 msgstr "Sbalit nebo rozbalit blok"
 
-#: src/mooedit/mooeditwindow.cpp:648
+#: src/mooedit/mooeditwindow.cpp:649
 msgid "Toggle _Fold"
 msgstr "S_balit nebo rozbalit blok"
 
-#: src/mooedit/mooeditwindow.cpp:649
+#: src/mooedit/mooeditwindow.cpp:650
 msgid "Fold or unfold the block at the cursor"
 msgstr "Sbalí nebo rozbalí blok pod kurzorem"
 
-#: src/mooedit/mooeditwindow.cpp:655
+#: src/mooedit/mooeditwindow.cpp:656
 msgid "Zoom In"
 msgstr "Přiblížit"
 
-#: src/mooedit/mooeditwindow.cpp:656
+#: src/mooedit/mooeditwindow.cpp:657
 msgid "Zoom _In"
 msgstr "_Přiblížit"
 
-#: src/mooedit/mooeditwindow.cpp:657
+#: src/mooedit/mooeditwindow.cpp:658
 msgid "Make the text larger, in all documents"
 msgstr "Zvětší text ve všech dokumentech"
 
-#: src/mooedit/mooeditwindow.cpp:665
+#: src/mooedit/mooeditwindow.cpp:666
 msgid "Zoom Out"
 msgstr "Oddálit"
 
-#: src/mooedit/mooeditwindow.cpp:666
+#: src/mooedit/mooeditwindow.cpp:667
 msgid "Zoom _Out"
 msgstr "_Oddálit"
 
-#: src/mooedit/mooeditwindow.cpp:667
+#: src/mooedit/mooeditwindow.cpp:668
 msgid "Make the text smaller, in all documents"
 msgstr "Zmenší text ve všech dokumentech"
 
-#: src/mooedit/mooeditwindow.cpp:675
+#: src/mooedit/mooeditwindow.cpp:676
 msgid "Reset Zoom"
 msgstr "Obnovit velikost"
 
-#: src/mooedit/mooeditwindow.cpp:676
+#: src/mooedit/mooeditwindow.cpp:677
 msgid "_Reset Zoom"
 msgstr "_Obnovit velikost"
 
-#: src/mooedit/mooeditwindow.cpp:677
+#: src/mooedit/mooeditwindow.cpp:678
 msgid "Return the text to the size of the preferences"
 msgstr "Vrátí text na velikost z nastavení"
 
-#: src/mooedit/mooeditwindow.cpp:685
+#: src/mooedit/mooeditwindow.cpp:686
 msgid "Focus Document"
 msgstr "Zaměřit dokument"
 
-#: src/mooedit/mooeditwindow.cpp:686
+#: src/mooedit/mooeditwindow.cpp:687
 msgid "_Focus Document"
 msgstr "Zaměři_t dokument"
 
-#: src/mooedit/mooeditwindow.cpp:693 src/mooedit/mooeditwindow.cpp:694
+#: src/mooedit/mooeditwindow.cpp:694 src/mooedit/mooeditwindow.cpp:695
 msgid "Focus Other Split Notebook"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:701
+#: src/mooedit/mooeditwindow.cpp:702
 msgid "Move to Split Notebook"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:702
+#: src/mooedit/mooeditwindow.cpp:703
 msgid "_Move to Split Notebook"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:710 src/mooedit/mooeditwindow.cpp:711
+#: src/mooedit/mooeditwindow.cpp:711 src/mooedit/mooeditwindow.cpp:712
 msgid "Split View Horizontally"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:718 src/mooedit/mooeditwindow.cpp:719
+#: src/mooedit/mooeditwindow.cpp:719 src/mooedit/mooeditwindow.cpp:720
 msgid "Split View Vertically"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:725 src/mooedit/mooeditwindow.cpp:726
+#: src/mooedit/mooeditwindow.cpp:726 src/mooedit/mooeditwindow.cpp:727
 msgid "Focus Next Split View"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:770
+#: src/mooedit/mooeditwindow.cpp:771
 msgid "Toggle Bookmark"
 msgstr "Přepnout záložku"
 
-#: src/mooedit/mooeditwindow.cpp:771
+#: src/mooedit/mooeditwindow.cpp:772
 msgid "Toggle _Bookmark"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:779
+#: src/mooedit/mooeditwindow.cpp:780
 msgid "Next Bookmark"
 msgstr "Další záložka"
 
-#: src/mooedit/mooeditwindow.cpp:780
+#: src/mooedit/mooeditwindow.cpp:781
 msgid "_Next Bookmark"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:787
+#: src/mooedit/mooeditwindow.cpp:788
 msgid "Previous Bookmark"
 msgstr "Předchozí záložka"
 
-#: src/mooedit/mooeditwindow.cpp:788
+#: src/mooedit/mooeditwindow.cpp:789
 msgid "_Previous Bookmark"
 msgstr ""
 
 #. action
-#: src/mooedit/mooeditwindow.cpp:796 src/mooedit/mooeditwindow.cpp:797
-#: src/mooedit/mooeditwindow.cpp:798
+#: src/mooedit/mooeditwindow.cpp:797 src/mooedit/mooeditwindow.cpp:798
+#: src/mooedit/mooeditwindow.cpp:799
 msgid "Comment"
 msgstr "Zakomentovat"
 
 #. action
-#: src/mooedit/mooeditwindow.cpp:806 src/mooedit/mooeditwindow.cpp:807
-#: src/mooedit/mooeditwindow.cpp:808
+#: src/mooedit/mooeditwindow.cpp:807 src/mooedit/mooeditwindow.cpp:808
+#: src/mooedit/mooeditwindow.cpp:809
 msgid "Uncomment"
 msgstr "Odkomentovat"
 
-#: src/mooedit/mooeditwindow.cpp:835
+#: src/mooedit/mooeditwindow.cpp:836
 msgid "Duplicate Line"
 msgstr "Zdvojit řádek"
 
-#: src/mooedit/mooeditwindow.cpp:836
+#: src/mooedit/mooeditwindow.cpp:837
 msgid "_Duplicate Line"
 msgstr "Z_dvojit řádek"
 
-#: src/mooedit/mooeditwindow.cpp:837
+#: src/mooedit/mooeditwindow.cpp:838
 msgid "Duplicate the line or the selection"
 msgstr "Zdvojit řádek nebo výběr"
 
-#: src/mooedit/mooeditwindow.cpp:845
+#: src/mooedit/mooeditwindow.cpp:846
 msgid "Move Lines Up"
 msgstr "Posunout řádky nahoru"
 
-#: src/mooedit/mooeditwindow.cpp:846
+#: src/mooedit/mooeditwindow.cpp:847
 msgid "Move Lines _Up"
 msgstr "Posunout řádky na_horu"
 
-#: src/mooedit/mooeditwindow.cpp:847
+#: src/mooedit/mooeditwindow.cpp:848
 msgid "Move the selected lines up"
 msgstr "Posunout vybrané řádky nahoru"
 
-#: src/mooedit/mooeditwindow.cpp:856
+#: src/mooedit/mooeditwindow.cpp:857
 msgid "Move Lines Down"
 msgstr "Posunout řádky dolů"
 
-#: src/mooedit/mooeditwindow.cpp:857
+#: src/mooedit/mooeditwindow.cpp:858
 msgid "Move Lines _Down"
 msgstr "Posunout řádky _dolů"
 
-#: src/mooedit/mooeditwindow.cpp:858
+#: src/mooedit/mooeditwindow.cpp:859
 msgid "Move the selected lines down"
 msgstr "Posunout vybrané řádky dolů"
 
-#: src/mooedit/mooeditwindow.cpp:867
+#: src/mooedit/mooeditwindow.cpp:868
 msgid "Sort Lines"
 msgstr "Seřadit řádky"
 
-#: src/mooedit/mooeditwindow.cpp:868
+#: src/mooedit/mooeditwindow.cpp:869
 msgid "_Sort Lines"
 msgstr "_Seřadit řádky"
 
-#: src/mooedit/mooeditwindow.cpp:869
+#: src/mooedit/mooeditwindow.cpp:870
 msgid "Sort the selected lines"
 msgstr "Seřadit vybrané řádky"
 
-#: src/mooedit/mooeditwindow.cpp:876
+#: src/mooedit/mooeditwindow.cpp:877
 msgid "Go to Matching Bracket"
 msgstr "Přejít na odpovídající závorku"
 
-#: src/mooedit/mooeditwindow.cpp:877
+#: src/mooedit/mooeditwindow.cpp:878
 msgid "Go to _Matching Bracket"
 msgstr "Přejít na odpovídající _závorku"
 
-#: src/mooedit/mooeditwindow.cpp:878
+#: src/mooedit/mooeditwindow.cpp:879
 msgid "Go to the bracket matching the one at the cursor"
 msgstr "Přejít na závorku odpovídající té pod kurzorem"
 
 #. Insensitive menu item which appears in Window menu with no documents open
-#: src/mooedit/mooeditwindow.cpp:887
+#: src/mooedit/mooeditwindow.cpp:888
 msgid "No Documents"
 msgstr "Žádné dokumenty"
 
-#: src/mooedit/mooeditwindow.cpp:895
+#: src/mooedit/mooeditwindow.cpp:896
 msgid "Page Setup"
 msgstr "Nastavení strany"
 
-#: src/mooedit/mooeditwindow.cpp:896
+#: src/mooedit/mooeditwindow.cpp:897
 msgid "Page S_etup..."
 msgstr "Nastavení strany..."
 
-#: src/mooedit/mooeditwindow.cpp:897
+#: src/mooedit/mooeditwindow.cpp:898
 msgid "Page Setup..."
 msgstr "_Nastavení strany..."
 
-#: src/mooedit/mooeditwindow.cpp:913 src/mooedit/mooeditwindow.cpp:914
+#: src/mooedit/mooeditwindow.cpp:914 src/mooedit/mooeditwindow.cpp:915
 msgid "Print..."
 msgstr "Tisk..."
 
-#: src/mooedit/mooeditwindow.cpp:922 src/mooedit/mooeditwindow.cpp:2225
+#: src/mooedit/mooeditwindow.cpp:923 src/mooedit/mooeditwindow.cpp:2226
 msgid "Export as PDF"
 msgstr "Exportovat do PDF"
 
-#: src/mooedit/mooeditwindow.cpp:923
+#: src/mooedit/mooeditwindow.cpp:924
 msgid "E_xport as PDF..."
 msgstr "Exportovat do PDF..."
 
-#: src/mooedit/mooeditwindow.cpp:924
+#: src/mooedit/mooeditwindow.cpp:925
 msgid "Export as PDF..."
 msgstr "Exportovat do PDF..."
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [new file]"
-#: src/mooedit/mooeditwindow.cpp:1204
+#: src/mooedit/mooeditwindow.cpp:1205
 #, c-format
 msgid "%s [new file]"
 msgstr "%s [nový soubor]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [modified on disk]"
-#: src/mooedit/mooeditwindow.cpp:1207
+#: src/mooedit/mooeditwindow.cpp:1208
 #, c-format
 msgid "%s [modified on disk]"
 msgstr "%s [změněn na disku]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [deleted]"
-#: src/mooedit/mooeditwindow.cpp:1210
+#: src/mooedit/mooeditwindow.cpp:1211
 #, c-format
 msgid "%s [deleted]"
 msgstr "%s [smazán]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [new file] [modified]"
-#: src/mooedit/mooeditwindow.cpp:1218
+#: src/mooedit/mooeditwindow.cpp:1219
 #, c-format
 msgid "%s [new file] [modified]"
 msgstr "%s [nový soubor][změněn]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [modified on disk] [modified]"
-#: src/mooedit/mooeditwindow.cpp:1221
+#: src/mooedit/mooeditwindow.cpp:1222
 #, c-format
 msgid "%s [modified on disk] [modified]"
 msgstr "%s [změněn na disku][změněn]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [deleted] [modified]"
-#: src/mooedit/mooeditwindow.cpp:1224
+#: src/mooedit/mooeditwindow.cpp:1225
 #, c-format
 msgid "%s [deleted] [modified]"
 msgstr "%s [smazán][změněn]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [modified]"
-#: src/mooedit/mooeditwindow.cpp:1227
+#: src/mooedit/mooeditwindow.cpp:1228
 #, c-format
 msgid "%s [modified]"
 msgstr "%s [změněn]"
 
-#: src/mooedit/mooeditwindow.cpp:1467
+#: src/mooedit/mooeditwindow.cpp:1468
 msgid "Reopen Using Encoding"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:1517
+#: src/mooedit/mooeditwindow.cpp:1518
 msgid "_Encoding"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:1571
+#: src/mooedit/mooeditwindow.cpp:1572
 msgid "Line En_dings"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:1578
+#: src/mooedit/mooeditwindow.cpp:1579
 msgid "_Windows (CR+LF)"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:1583
+#: src/mooedit/mooeditwindow.cpp:1584
 msgid "_Unix (LF)"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:1587
+#: src/mooedit/mooeditwindow.cpp:1588
 msgid "_Mac (CR)"
 msgstr ""
 
 #. Item in document tab context menu
-#: src/mooedit/mooeditwindow.cpp:2512
+#: src/mooedit/mooeditwindow.cpp:2513
 msgctxt "tab-context-menu"
 msgid "Close"
 msgstr ""
 
 #. Item in document tab context menu
-#: src/mooedit/mooeditwindow.cpp:2520
+#: src/mooedit/mooeditwindow.cpp:2521
 msgctxt "tab-context-menu"
 msgid "Close All Others"
 msgstr ""
 
 #. Item in document tab context menu
-#: src/mooedit/mooeditwindow.cpp:2529
+#: src/mooedit/mooeditwindow.cpp:2530
 msgctxt "tab-context-menu"
 msgid "Copy Full Path"
 msgstr ""
 
 #. Item in document tab context menu
-#: src/mooedit/mooeditwindow.cpp:2539
+#: src/mooedit/mooeditwindow.cpp:2540
 msgctxt "tab-context-menu"
 msgid "Detach"
 msgstr "Odpojit"
 
 #. Item in document tab context menu
-#: src/mooedit/mooeditwindow.cpp:2545
+#: src/mooedit/mooeditwindow.cpp:2546
 msgctxt "tab-context-menu"
 msgid "Move to Split Notebook"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:4243
+#: src/mooedit/mooeditwindow.cpp:4244
 #, c-format
 msgid "Line: %s Col: %s"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:4244
+#: src/mooedit/mooeditwindow.cpp:4245
 #, c-format
 msgid "Chars: %s"
 msgstr ""
 
 #. Label in the editor window statusbar - Overwrite or Insert mode
-#: src/mooedit/mooeditwindow.cpp:4287
+#: src/mooedit/mooeditwindow.cpp:4288
 msgid "OVR"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:4287
+#: src/mooedit/mooeditwindow.cpp:4288
 msgid "INS"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:4396
+#: src/mooedit/mooeditwindow.cpp:4397
 msgid "_Language"
 msgstr "_Jazyk"
+
+#: src/mooedit/mooeditwindow.cpp:5264
+#, c-format
+msgid ""
+"The dropped folder(s) contain more than %u files (including subfolders). "
+"Open them all?"
+msgstr "Přetažené složky obsahují více než %u souborů (včetně podsložek). Otevřít vše?"
 
 #: src/mooedit/mooplugin.cpp:1324
 msgctxt "Prefs page label"
@@ -1381,7 +1388,7 @@ msgid "General"
 msgstr "Obecné"
 
 #: src/moofileview/ui/moofileview-drop.ui:5 src/plugins/ui/moofileselector.ui:4
-#: src/plugins/moofileselector.cpp:913 src/plugins/moofileselector.cpp:938
+#: src/plugins/moofileselector.cpp:897 src/plugins/moofileselector.cpp:922
 msgid "Save As"
 msgstr "Uložit jako"
 
@@ -1403,8 +1410,8 @@ msgctxt "fileview-bookmark-editor"
 msgid "Path"
 msgstr "Cesta"
 
-#: src/moofileview/moofileview.cpp:1149 src/plugins/moofileselector.cpp:648
-#: src/plugins/moofileselector.cpp:649 src/plugins/moofileselector.cpp:1297
+#: src/moofileview/moofileview.cpp:1149 src/plugins/moofileselector.cpp:632
+#: src/plugins/moofileselector.cpp:633 src/plugins/moofileselector.cpp:1281
 #: src/plugins/moofileselector-prefs.cpp:70
 msgid "File Selector"
 msgstr "Výběr souborů"
@@ -1627,16 +1634,16 @@ msgstr ""
 msgid "Configure Shortcuts"
 msgstr "Nastavit klávesové zkratky"
 
-#: src/mooutils/moodialogs.cpp:402
+#: src/mooutils/moodialogs.cpp:404
 #, c-format
 msgid "Save changes to document \"%s\" before closing?"
 msgstr "Uložit změny v dokumentu \"%s\" před jeho uzavřením?"
 
-#: src/mooutils/moodialogs.cpp:403
+#: src/mooutils/moodialogs.cpp:405
 msgid "Save changes to the document before closing?"
 msgstr "Uložit změny v dokumentu před jeho uzavřením?"
 
-#: src/mooutils/moodialogs.cpp:408
+#: src/mooutils/moodialogs.cpp:410
 msgid "If you don't save, changes will be discarded"
 msgstr "Pokud jej neuložíte, změny budou ztraceny"
 
@@ -1990,7 +1997,7 @@ msgstr "Přesunout"
 msgid "Link"
 msgstr "Odkaz"
 
-#: src/mooutils/moostock.cpp:33 src/plugins/moofileselector.cpp:1142
+#: src/mooutils/moostock.cpp:33 src/plugins/moofileselector.cpp:1126
 msgid "Save Copy"
 msgstr "Uložit kopii"
 
@@ -2174,17 +2181,17 @@ msgstr ""
 msgid "List of files"
 msgstr ""
 
-#: src/plugins/moofileselector.cpp:386
+#: src/plugins/moofileselector.cpp:370
 #, c-format
 msgid "Create file in folder '%s'"
 msgstr "Vytvořit soubor v adresáři '%s'"
 
-#: src/plugins/moofileselector.cpp:442
+#: src/plugins/moofileselector.cpp:426
 #, c-format
 msgid "Could not create file '%s'"
 msgstr "Nelze vytvořit soubor '%s'"
 
-#: src/plugins/moofileselector.cpp:443 src/plugins/moofileselector.cpp:824
+#: src/plugins/moofileselector.cpp:427 src/plugins/moofileselector.cpp:808
 #, c-format
 msgid ""
 "Could not convert '%s' to filename encoding. Please consider simpler name, "
@@ -2193,53 +2200,53 @@ msgstr ""
 "Nelze zkonvertovat '%s' do kódování jména souboru. Použijte prosím "
 "jednodušší jméno, třeba soubor.bla nebo podobné"
 
-#: src/plugins/moofileselector.cpp:458
+#: src/plugins/moofileselector.cpp:442
 #, c-format
 msgid "File '%s' already exists"
 msgstr "Soubor '%s' už existuje"
 
-#: src/plugins/moofileselector.cpp:613
+#: src/plugins/moofileselector.cpp:597
 msgid "Go to current document directory"
 msgstr "Přejít do adresáře dokumentu"
 
-#: src/plugins/moofileselector.cpp:625 src/plugins/moofileselector.cpp:626
+#: src/plugins/moofileselector.cpp:609 src/plugins/moofileselector.cpp:610
 msgid "New File..."
 msgstr "Nový soubor..."
 
-#: src/plugins/moofileselector.cpp:823
+#: src/plugins/moofileselector.cpp:807
 #, c-format
 msgid "Could not save file as '%s'"
 msgstr "Soubor nelze uložit jako '%s'"
 
-#: src/plugins/moofileselector.cpp:958
+#: src/plugins/moofileselector.cpp:942
 msgid "Save Copy As"
 msgstr "Uložit kopii jako"
 
-#: src/plugins/moofileselector.cpp:984
+#: src/plugins/moofileselector.cpp:968
 msgid "Rename To"
 msgstr "Přejmenovat na"
 
-#: src/plugins/moofileselector.cpp:1124
+#: src/plugins/moofileselector.cpp:1108
 msgid "Move Here"
 msgstr "Přesunout sem"
 
-#: src/plugins/moofileselector.cpp:1125
+#: src/plugins/moofileselector.cpp:1109
 msgid "Move/Rename..."
 msgstr "Přesunout/Přejmenovat..."
 
-#: src/plugins/moofileselector.cpp:1133
+#: src/plugins/moofileselector.cpp:1117
 msgid "Save Here"
 msgstr "Uložit zde"
 
-#: src/plugins/moofileselector.cpp:1134
+#: src/plugins/moofileselector.cpp:1118
 msgid "Save As..."
 msgstr "Uložit jako..."
 
-#: src/plugins/moofileselector.cpp:1143
+#: src/plugins/moofileselector.cpp:1127
 msgid "Save Copy As..."
 msgstr "Uložit kopii jako..."
 
-#: src/plugins/moofileselector.cpp:1298
+#: src/plugins/moofileselector.cpp:1282
 msgid "File selector pane for editor window"
 msgstr "Panel výběru souborů pro okno editoru"
 

@@ -33,6 +33,8 @@ const char  *moo_get_mime_type_for_file         (const char     *filename,
 const char  *moo_get_mime_type_for_filename     (const char     *filename);
 gboolean     moo_mime_type_is_subclass          (const char     *mime_type,
                                                  const char     *base);
+gboolean     moo_path_is_text_file              (const char     *path,
+                                                 MgwStatBuf     *statbuf);
 
 
 G_END_DECLS

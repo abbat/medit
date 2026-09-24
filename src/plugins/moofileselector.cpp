@@ -245,7 +245,7 @@ moo_file_selector_activate (MooFileView    *fileview,
 {
     MgwStatBuf statbuf;
     MooFileSelector *filesel = MOO_FILE_SELECTOR (fileview);
-    gboolean is_text = TRUE, is_exe = FALSE;
+    gboolean is_exe;
     mgw_errno_t err;
 
     g_return_if_fail (path != nullptr);
@@ -256,34 +256,18 @@ moo_file_selector_activate (MooFileView    *fileview,
         return;
     }
 
+    if (moo_path_is_text_file (path, &statbuf))
     {
-        const char *mime_type = moo_get_mime_type_for_file (path, &statbuf);
-
-        if (!strcmp (mime_type, "application/x-trash"))
-        {
-            guint i;
-            const char *bak_suffixes[] = {"~", "%", ".bak", ".old", ".sik"};
-
-            for (i = 0; i < G_N_ELEMENTS (bak_suffixes); ++i)
-                if (g_str_has_suffix (path, bak_suffixes[i]))
-                {
-                    char *tmp = g_strndup (path, strlen (path) - strlen (bak_suffixes[i]));
-                    mime_type = moo_get_mime_type_for_filename (tmp);
-                    g_free (tmp);
-                    break;
-                }
-        }
-
-        is_text = !strcmp (mime_type, "application/octet-stream") ||
-                   moo_mime_type_is_subclass (mime_type, "text/plain");
-        is_exe = !strcmp (mime_type, "application/x-executable");
-    }
-
-    if (is_text)
         moo_editor_open_path (moo_edit_window_get_editor (filesel->window),
                               path, nullptr, -1, filesel->window);
-    else if (!is_exe)
-        moo_open_file (path);
+    }
+    else
+    {
+        is_exe = !strcmp (moo_get_mime_type_for_file (path, &statbuf), "application/x-executable");
+
+        if (!is_exe)
+            moo_open_file (path);
+    }
 }
 
 

@@ -44,6 +44,7 @@
 #include "mooutils/moocompat.h"
 #include "mooutils/mooutils-enums.h"
 #include "moocpp/gobjptr.h"
+#include "mooutils/moo-mime.h"
 
 
 #define ENABLE_PRINTING
@@ -3905,6 +3906,9 @@ update_tab_label (MooEditTab    *tab,
     doc = moo_edit_tab_get_doc (tab);
     g_return_if_fail (doc != nullptr);
 
+    if (gtk_notebook_page_num (&notebook, GTK_WIDGET (tab)) < 0)
+        return;
+
     hbox = gtk_notebook_get_tab_label (&notebook, GTK_WIDGET (tab));
     g_return_if_fail (GTK_IS_WIDGET (hbox));
 
@@ -5171,7 +5175,50 @@ notebook_drop_tab (GtkWidget     *widget,
         move_tab_to_split_view (window, tab);
 }
 
-/* Opens the dropped files. TRUE if the drag was finished here. */
+static const guint MOO_NOTEBOOK_DROP_CONFIRM_THRESHOLD = 20;
+
+/* Recursively collects text files under dir_path into files. Stops as soon
+   as files->len exceeds cap, so a large tree doesn't get fully scanned just
+   to find out it needs confirmation. */
+static void
+collect_text_files_recursive (const char *dir_path,
+                              GPtrArray  *files,
+                              guint       cap)
+{
+    GDir *dir;
+    const char *name;
+
+    if (files->len > cap)
+        return;
+
+    dir = g_dir_open (dir_path, 0, nullptr);
+    if (!dir)
+        return;
+
+    while ((name = g_dir_read_name (dir)))
+    {
+        char *child;
+
+        if (files->len > cap)
+            break;
+
+        child = g_build_filename (dir_path, name, nullptr);
+
+        if (g_file_test (child, G_FILE_TEST_IS_DIR))
+            collect_text_files_recursive (child, files, cap);  /* ponytail: no symlink-cycle guard */
+        else if (moo_path_is_text_file (child, nullptr))
+            g_ptr_array_add (files, child);
+        else
+            g_free (child);
+    }
+
+    g_dir_close (dir);
+}
+
+/* Opens the dropped files. Dropped directories are scanned recursively for
+   text files, which are opened the same way; if that would open more than
+   MOO_NOTEBOOK_DROP_CONFIRM_THRESHOLD files, the user is asked first.
+   TRUE if the drag was finished here. */
 static gboolean
 notebook_drop_uri_list (GtkSelectionData *data,
                         GdkDragContext   *context,
@@ -5180,6 +5227,9 @@ notebook_drop_uri_list (GtkSelectionData *data,
 {
     char **uris;
     char **u;
+    GPtrArray *files;
+    GPtrArray *dropped_dirs;
+    guint i;
 
     /* XXX this is wrong but works. gtk_selection_data_get_uris()
      * does not work on windows */
@@ -5188,13 +5238,54 @@ notebook_drop_uri_list (GtkSelectionData *data,
     if (!uris)
         return FALSE;
 
+    files = g_ptr_array_new_with_free_func (g_free);
+    dropped_dirs = g_ptr_array_new_with_free_func (g_free);
+
     for (u = uris; *u; ++u)
     {
         char *filename = g_filename_from_uri (*u, nullptr, nullptr);
-        if (!filename || !g_file_test (filename, G_FILE_TEST_IS_DIR))
+
+        if (filename && g_file_test (filename, G_FILE_TEST_IS_DIR))
+        {
+            collect_text_files_recursive (filename, files, MOO_NOTEBOOK_DROP_CONFIRM_THRESHOLD);
+            g_ptr_array_add (dropped_dirs, filename);
+        }
+        else
+        {
             moo_editor_open_uri (window->priv->editor, *u, nullptr, -1, window);
-        g_free (filename);
+            g_free (filename);
+        }
     }
+
+    if (dropped_dirs->len > 0)
+    {
+        gboolean proceed = TRUE;
+
+        if (files->len > MOO_NOTEBOOK_DROP_CONFIRM_THRESHOLD)
+        {
+            char *text = g_strdup_printf (
+                _("The dropped folder(s) contain more than %u files (including subfolders). Open them all?"),
+                MOO_NOTEBOOK_DROP_CONFIRM_THRESHOLD);
+
+            proceed = moo_question_dialog (text, nullptr, GTK_WIDGET (window), GTK_RESPONSE_OK);
+            g_free (text);
+
+            if (proceed)
+            {
+                g_ptr_array_set_size (files, 0);
+
+                for (i = 0; i < dropped_dirs->len; ++i)
+                    collect_text_files_recursive ((char*) dropped_dirs->pdata[i], files, G_MAXUINT);
+            }
+        }
+
+        if (proceed)
+            for (i = 0; i < files->len; ++i)
+                moo_editor_open_path (window->priv->editor, (char*) files->pdata[i], nullptr, -1, window);
+    }
+
+    g_ptr_array_free (files, TRUE);
+    g_ptr_array_free (dropped_dirs, TRUE);
 
     g_strfreev (uris);
     gtk_drag_finish (context, TRUE, FALSE, time);
