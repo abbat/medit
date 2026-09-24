@@ -383,7 +383,12 @@ def drive(module, args, prepared, proc, wm):
             sandbox.stop(proc)
             code = proc.returncode
         else:
+            # Already gone by itself, e.g. a test that quits medit as part of
+            # its own run(): nothing to force-stop, so this is clean by
+            # definition. A crash sets failure too, and judge() fails on that
+            # before ever looking at clean_exit.
             code = proc.returncode
+            clean_exit = failure is None
 
         # After medit and not before: taking the window manager away from a
         # running application is a thing no user does, and the sanitizer report

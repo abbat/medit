@@ -765,6 +765,7 @@ medit_app_main (int argc, char *argv[])
 
   gtk_init (NULL, NULL);
 
+  moo_install_gtk_a11y_bug_filter ();
   install_log_handlers ();
 
   app = MOO_APP (g_object_new (medit_app_get_type (),

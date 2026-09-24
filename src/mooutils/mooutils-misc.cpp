@@ -504,6 +504,68 @@ moo_log_window_insert (MooLogWindow *log,
 
 
 /******************************************************************************/
+/* Filter out a known-harmless upstream GTK3 accessibility bug
+ */
+
+#if GLIB_CHECK_VERSION(2,50,0)
+
+/* GTK3 (built with G_LOG_USE_STRUCTURED) reports its own criticals through
+   the structured logging API, which bypasses g_log_set_handler() entirely --
+   so this can't be filtered from set_print_funcs() below. Its own AT-SPI
+   notebook-accessibility code (a11y/gtknotebookaccessible.c) queries a page's
+   tab label right after gtk_notebook_remove_page() has already removed it:
+   a known upstream bug (the "page is gone" case is otherwise already handled
+   correctly, no application-side removal order or timing avoids it, and ATK
+   support was dropped entirely in GTK4), harmless but noisy. Drop just this
+   one message; everything else goes through the normal default writer. */
+static GLogWriterOutput
+gtk_a11y_bug_filter (GLogLevelFlags    log_level,
+                     const GLogField  *fields,
+                     gsize             n_fields,
+                     gpointer          user_data)
+{
+    if (log_level & G_LOG_LEVEL_CRITICAL)
+    {
+        const char *domain = NULL;
+        const char *message = NULL;
+        gsize i;
+
+        for (i = 0; i < n_fields; i++)
+        {
+            if (fields[i].length >= 0)
+                continue;
+
+            if (!strcmp (fields[i].key, "GLIB_DOMAIN"))
+                domain = (const char *) fields[i].value;
+            else if (!strcmp (fields[i].key, "MESSAGE"))
+                message = (const char *) fields[i].value;
+        }
+
+        if (domain && message && !strcmp (domain, "Gtk") &&
+            strstr (message, "gtk_notebook_get_tab_label: assertion 'list != NULL' failed"))
+            return G_LOG_WRITER_HANDLED;
+    }
+
+    return g_log_writer_default (log_level, fields, n_fields, user_data);
+}
+
+void
+moo_install_gtk_a11y_bug_filter (void)
+{
+    g_log_set_writer_func (gtk_a11y_bug_filter, NULL, NULL);
+}
+
+#else /* !GLIB_CHECK_VERSION(2,50,0) */
+
+void
+moo_install_gtk_a11y_bug_filter (void)
+{
+}
+
+#endif /* !GLIB_CHECK_VERSION(2,50,0) */
+
+
+/******************************************************************************/
 /* Custom g_log and g_print handlers
  */
 

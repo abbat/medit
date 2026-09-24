@@ -33,6 +33,7 @@ void        _moo_window_set_icon_from_stock (GtkWindow  *window,
 
 void        moo_set_log_func_window         (gboolean        show_now);
 void        moo_set_log_func_file           (const char     *log_file);
+void        moo_install_gtk_a11y_bug_filter (void);
 
 void MOO_NORETURN moo_abort                 (void);
 
