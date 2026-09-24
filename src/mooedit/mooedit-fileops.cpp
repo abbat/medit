@@ -88,6 +88,19 @@ _moo_is_file_error_cancelled (GError *error)
 }
 
 
+/* Set once "Cancel All" is picked in the try-encoding dialog, so the rest of
+   the batch that triggered it (e.g. files opened from a dropped directory)
+   fails encoding silently instead of prompting again for every file. Scoped
+   to one batch by the caller resetting it once the batch is done. */
+static gboolean skip_encoding_prompts = FALSE;
+
+void
+_moo_edit_reset_skip_encoding_prompts (void)
+{
+    skip_encoding_prompts = FALSE;
+}
+
+
 static const char *
 normalize_encoding (const char *encoding,
                     gboolean    for_save)
@@ -162,11 +175,17 @@ convert_file_data_to_utf8_with_prompt (const char *data,
         g_free (new_encoding);
         new_encoding = NULL;
 
-        response = _moo_edit_try_encoding_dialog (file, encoding, &new_encoding);
+        response = skip_encoding_prompts
+            ? MOO_EDIT_TRY_ENCODING_RESPONSE_CANCEL
+            : _moo_edit_try_encoding_dialog (file, encoding, &new_encoding);
+
+        if (response == MOO_EDIT_TRY_ENCODING_RESPONSE_CANCEL_ALL)
+            skip_encoding_prompts = TRUE;
 
         switch (response)
         {
             case MOO_EDIT_TRY_ENCODING_RESPONSE_CANCEL:
+            case MOO_EDIT_TRY_ENCODING_RESPONSE_CANCEL_ALL:
                 g_free (new_encoding);
                 new_encoding = NULL;
                 break;

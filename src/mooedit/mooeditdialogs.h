@@ -23,7 +23,8 @@ G_BEGIN_DECLS
 
 typedef enum {
     MOO_EDIT_TRY_ENCODING_RESPONSE_TRY_ANOTHER,
-    MOO_EDIT_TRY_ENCODING_RESPONSE_CANCEL
+    MOO_EDIT_TRY_ENCODING_RESPONSE_CANCEL,
+    MOO_EDIT_TRY_ENCODING_RESPONSE_CANCEL_ALL
 } MooEditTryEncodingResponse;
 
 MooSaveInfo                    *_moo_edit_save_as_dialog                (MooEdit        *doc,

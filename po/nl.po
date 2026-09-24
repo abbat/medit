@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: moo\n"
 "Report-Msgid-Bugs-To: https://github.com/abbat/medit/issues\n"
-"POT-Creation-Date: 2026-09-24 15:52+0300\n"
+"POT-Creation-Date: 2026-09-24 17:17+0300\n"
 "PO-Revision-Date: 2008-09-27\n"
 "Last-Translator: Kris Van Bruwaene <krvbr@yahoo.co.uk>\n"
 "Language-Team: Kris Van Bruwaene <krvbr@yahoo.co.uk>\n"
@@ -519,7 +519,7 @@ msgstr "_Vervangen"
 msgid "Replace _All"
 msgstr "_Alle vervangen"
 
-#: src/mooedit/ui/mootextfind-prompt.ui:50 src/mooedit/mooeditwindow.cpp:572
+#: src/mooedit/ui/mootextfind-prompt.ui:50 src/mooedit/mooeditwindow.cpp:573
 msgid "Find _Next"
 msgstr "Zoek vo_lgende"
 
@@ -527,7 +527,7 @@ msgstr "Zoek vo_lgende"
 msgid "Sto_p"
 msgstr "Sto_p"
 
-#: src/mooedit/ui/mootextgotoline.ui:20 src/mooedit/mooeditwindow.cpp:622
+#: src/mooedit/ui/mootextgotoline.ui:20 src/mooedit/mooeditwindow.cpp:623
 msgid "Go to Line"
 msgstr "Ga naar regel"
 
@@ -602,7 +602,7 @@ msgid "Save file in UTF-8 encoding?"
 msgstr ""
 
 #. Could not open file foo.txt
-#: src/mooedit/mooeditdialogs.cpp:523 src/mooedit/mooeditdialogs.cpp:590
+#: src/mooedit/mooeditdialogs.cpp:527 src/mooedit/mooeditdialogs.cpp:602
 #, c-format
 msgid ""
 "Could not open file\n"
@@ -611,24 +611,28 @@ msgstr ""
 "Kon bestand\n"
 "%s niet openen"
 
-#: src/mooedit/mooeditdialogs.cpp:530 src/mooedit/mooeditdialogs.cpp:592
+#: src/mooedit/mooeditdialogs.cpp:534 src/mooedit/mooeditdialogs.cpp:604
 msgid "Could not open file"
 msgstr "Kon bestand niet openen"
 
-#: src/mooedit/mooeditdialogs.cpp:535
+#: src/mooedit/mooeditdialogs.cpp:539
 #, c-format
 msgid ""
 "Could not open file using character encoding %s. Try to select another "
 "encoding below."
 msgstr ""
 
-#: src/mooedit/mooeditdialogs.cpp:538
+#: src/mooedit/mooeditdialogs.cpp:542
 msgid ""
 "Could not detect file character encoding. Try to select an encoding below."
 msgstr ""
 
+#: src/mooedit/mooeditdialogs.cpp:558
+msgid "Cancel _All"
+msgstr "_Alles annuleren"
+
 #. Could not reload file foo.txt
-#: src/mooedit/mooeditdialogs.cpp:622
+#: src/mooedit/mooeditdialogs.cpp:634
 #, c-format
 msgid ""
 "Could not reload file\n"
@@ -637,25 +641,25 @@ msgstr ""
 "Kon bestand\n"
 "%s niet herladen."
 
-#: src/mooedit/mooeditdialogs.cpp:650
+#: src/mooedit/mooeditdialogs.cpp:662
 #, c-format
 msgid "Discard changes in file '%s'?"
 msgstr "Veranderingen aan bestand '%s' wegwerpen?"
 
-#: src/mooedit/mooeditdialogs.cpp:652
+#: src/mooedit/mooeditdialogs.cpp:664
 msgid "If you reload the document, changes will be discarded"
 msgstr "Als u het document opnieuw inlaadt gaan alle veranderingen verloren"
 
-#: src/mooedit/mooeditdialogs.cpp:653 src/mooedit/mooeditwindow.cpp:462
+#: src/mooedit/mooeditdialogs.cpp:665 src/mooedit/mooeditwindow.cpp:463
 msgid "_Reload"
 msgstr "Opnieuw _laden"
 
-#: src/mooedit/mooeditdialogs.cpp:675
+#: src/mooedit/mooeditdialogs.cpp:687
 #, c-format
 msgid "Overwrite modified file '%s'?"
 msgstr "Veranderd bestand '%s' overschrijven?"
 
-#: src/mooedit/mooeditdialogs.cpp:676
+#: src/mooedit/mooeditdialogs.cpp:688
 #, c-format
 msgid ""
 "File '%s' was modified on disk by another process. If you save it, changes "
@@ -664,11 +668,11 @@ msgstr ""
 "De inhoud van bestand '%s' op de drager is door een ander proces veranderd."
 "Bij het opslaan gaan die veranderingen verloren."
 
-#: src/mooedit/mooeditdialogs.cpp:678
+#: src/mooedit/mooeditdialogs.cpp:690
 msgid "Over_write"
 msgstr "O_verschrijven"
 
-#: src/mooedit/mooeditdialogs.cpp:699
+#: src/mooedit/mooeditdialogs.cpp:711
 msgid ""
 "Beginning of document reached.\n"
 "Continue from the end?"
@@ -676,7 +680,7 @@ msgstr ""
 "Begin document bereikt.\n"
 "Doorgaan vanaf einde?"
 
-#: src/mooedit/mooeditdialogs.cpp:702
+#: src/mooedit/mooeditdialogs.cpp:714
 msgid ""
 "End of document reached.\n"
 "Continue from the beginning?"
@@ -684,15 +688,15 @@ msgstr ""
 "Einde document bereikt.\n"
 "Doorgaan vanaf begin?"
 
-#: src/mooedit/mooeditdialogs.cpp:742
+#: src/mooedit/mooeditdialogs.cpp:754
 msgid "Invalid regular expression"
 msgstr ""
 
-#: src/mooedit/mooedit-fileops.cpp:1110 src/plugins/moofileselector.cpp:496
+#: src/mooedit/mooedit-fileops.cpp:1129 src/plugins/moofileselector.cpp:496
 msgid "Untitled"
 msgstr "Naamloos"
 
-#: src/mooedit/mooedit-fileops.cpp:1112
+#: src/mooedit/mooedit-fileops.cpp:1131
 #, c-format
 msgid "Untitled %d"
 msgstr "Naamloos %d"
@@ -764,7 +768,7 @@ msgstr ""
 #. Label in the Language combo box on Languages preferences page,
 #. remove the part before and including |
 #. Menu item in the Language menu
-#: src/mooedit/mooeditprefspage.cpp:543 src/mooedit/mooeditwindow.cpp:4402
+#: src/mooedit/mooeditprefspage.cpp:543 src/mooedit/mooeditwindow.cpp:4406
 msgid "Language|None"
 msgstr "Geen"
 
@@ -785,497 +789,499 @@ msgstr "Opties"
 #. Configure Shortcuts, beside one per plugin. The id beside it is not
 #. translated: it is what the accelerator paths and the preference keys
 #. under Shortcuts/ are made of.
-#: src/mooedit/mooeditwindow.cpp:440
+#: src/mooedit/mooeditwindow.cpp:441
 msgid "Editor"
 msgstr "Editor"
 
-#: src/mooedit/mooeditwindow.cpp:445
+#: src/mooedit/mooeditwindow.cpp:446
 msgid "Create new document"
 msgstr "Nieuw Document aanmaken"
 
-#: src/mooedit/mooeditwindow.cpp:453
+#: src/mooedit/mooeditwindow.cpp:454
 msgid "_Open..."
 msgstr "_Openen..."
 
-#: src/mooedit/mooeditwindow.cpp:454
+#: src/mooedit/mooeditwindow.cpp:455
 msgid "Open..."
 msgstr "Openen..."
 
-#: src/mooedit/mooeditwindow.cpp:461 src/moofileview/moofileview.cpp:1330
+#: src/mooedit/mooeditwindow.cpp:462 src/moofileview/moofileview.cpp:1330
 #: src/moofileview/moofileview.cpp:1331
 msgid "Reload"
 msgstr "Herladen"
 
-#: src/mooedit/mooeditwindow.cpp:463
+#: src/mooedit/mooeditwindow.cpp:464
 msgid "Reload document"
 msgstr "Document herladen"
 
-#: src/mooedit/mooeditwindow.cpp:494
+#: src/mooedit/mooeditwindow.cpp:495
 msgid "Save _As..."
 msgstr "Opslaan _als..."
 
-#: src/mooedit/mooeditwindow.cpp:495
+#: src/mooedit/mooeditwindow.cpp:496
 msgid "Save as..."
 msgstr "Opslaan als..."
 
-#: src/mooedit/mooeditwindow.cpp:505
+#: src/mooedit/mooeditwindow.cpp:506
 msgid "Close document"
 msgstr "Document sluiten"
 
-#: src/mooedit/mooeditwindow.cpp:513
+#: src/mooedit/mooeditwindow.cpp:514
 msgid "Close All"
 msgstr "Alle Sluiten"
 
-#: src/mooedit/mooeditwindow.cpp:514
+#: src/mooedit/mooeditwindow.cpp:515
 msgid "Close A_ll"
 msgstr "A_lle sluiten"
 
-#: src/mooedit/mooeditwindow.cpp:515
+#: src/mooedit/mooeditwindow.cpp:516
 msgid "Close all documents"
 msgstr "Alle documenten sluiten"
 
-#: src/mooedit/mooeditwindow.cpp:522
+#: src/mooedit/mooeditwindow.cpp:523
 msgid "Previous Tab"
 msgstr "Vorig Tabblad"
 
-#: src/mooedit/mooeditwindow.cpp:523
+#: src/mooedit/mooeditwindow.cpp:524
 msgid "_Previous Tab"
 msgstr "_Volgend Tabblad"
 
-#: src/mooedit/mooeditwindow.cpp:524
+#: src/mooedit/mooeditwindow.cpp:525
 msgid "Previous tab"
 msgstr "Vorig tabblad"
 
-#: src/mooedit/mooeditwindow.cpp:532
+#: src/mooedit/mooeditwindow.cpp:533
 msgid "Next Tab"
 msgstr "Volgend Tabblad"
 
-#: src/mooedit/mooeditwindow.cpp:533
+#: src/mooedit/mooeditwindow.cpp:534
 msgid "_Next Tab"
 msgstr "Volge_nd Tabblad"
 
-#: src/mooedit/mooeditwindow.cpp:534
+#: src/mooedit/mooeditwindow.cpp:535
 msgid "Next tab"
 msgstr "Volgend tabblad"
 
-#: src/mooedit/mooeditwindow.cpp:542
+#: src/mooedit/mooeditwindow.cpp:543
 msgid "Previous Tab In View"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:543
+#: src/mooedit/mooeditwindow.cpp:544
 msgid "_Previous Tab In View"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:544
+#: src/mooedit/mooeditwindow.cpp:545
 msgid "Previous tab in view"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:551
+#: src/mooedit/mooeditwindow.cpp:552
 msgid "Next Tab In View"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:552
+#: src/mooedit/mooeditwindow.cpp:553
 msgid "_Next Tab In View"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:553
+#: src/mooedit/mooeditwindow.cpp:554
 msgid "Next tab in view"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:571
+#: src/mooedit/mooeditwindow.cpp:572
 msgid "Find Next"
 msgstr "Zoek Volgende"
 
-#: src/mooedit/mooeditwindow.cpp:573
+#: src/mooedit/mooeditwindow.cpp:574
 msgid "Find next"
 msgstr "Zoek volgende"
 
-#: src/mooedit/mooeditwindow.cpp:582
+#: src/mooedit/mooeditwindow.cpp:583
 msgid "Find Previous"
 msgstr "Zoek Vorige"
 
-#: src/mooedit/mooeditwindow.cpp:583
+#: src/mooedit/mooeditwindow.cpp:584
 msgid "Find _Previous"
 msgstr "Zoek Vo_rige"
 
-#: src/mooedit/mooeditwindow.cpp:584
+#: src/mooedit/mooeditwindow.cpp:585
 msgid "Find previous"
 msgstr "Zoek vorige"
 
-#: src/mooedit/mooeditwindow.cpp:604
+#: src/mooedit/mooeditwindow.cpp:605
 msgid "Find Current Word"
 msgstr "Zoek huidig woord"
 
-#: src/mooedit/mooeditwindow.cpp:605
+#: src/mooedit/mooeditwindow.cpp:606
 msgid "Find Current _Word"
 msgstr "Zoek Huidig _Woord"
 
-#: src/mooedit/mooeditwindow.cpp:613
+#: src/mooedit/mooeditwindow.cpp:614
 msgid "Find Current Word Backwards"
 msgstr "Zoek Huidig Woord Achterwaarts"
 
-#: src/mooedit/mooeditwindow.cpp:614
+#: src/mooedit/mooeditwindow.cpp:615
 msgid "Find Current Word _Backwards"
 msgstr "Zoek huidig Woord _Achterwaarts"
 
-#: src/mooedit/mooeditwindow.cpp:623
+#: src/mooedit/mooeditwindow.cpp:624
 msgid "_Go to Line..."
 msgstr "_Ga naar Regel..."
 
-#: src/mooedit/mooeditwindow.cpp:624
+#: src/mooedit/mooeditwindow.cpp:625
 msgid "Go to line..."
 msgstr "Ga naar regel..."
 
-#: src/mooedit/mooeditwindow.cpp:633
+#: src/mooedit/mooeditwindow.cpp:634
 msgid "Toggle Text Wrapping"
 msgstr "Tekstomloop Omschakelen"
 
-#: src/mooedit/mooeditwindow.cpp:634
+#: src/mooedit/mooeditwindow.cpp:635
 msgid "_Wrap Text"
 msgstr "_Tekstomloop"
 
-#: src/mooedit/mooeditwindow.cpp:641
+#: src/mooedit/mooeditwindow.cpp:642
 msgid "Toggle Line Numbers Display"
 msgstr "Regelnummering Omschakelen"
 
-#: src/mooedit/mooeditwindow.cpp:642
+#: src/mooedit/mooeditwindow.cpp:643
 msgid "Show _Line Numbers"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:648
+#: src/mooedit/mooeditwindow.cpp:649
 msgid "Toggle Fold"
 msgstr "Vouwen in- of uitklappen"
 
-#: src/mooedit/mooeditwindow.cpp:649
+#: src/mooedit/mooeditwindow.cpp:650
 msgid "Toggle _Fold"
 msgstr "_Vouwen in- of uitklappen"
 
-#: src/mooedit/mooeditwindow.cpp:650
+#: src/mooedit/mooeditwindow.cpp:651
 msgid "Fold or unfold the block at the cursor"
 msgstr "Het blok bij de cursor in- of uitklappen"
 
-#: src/mooedit/mooeditwindow.cpp:656
+#: src/mooedit/mooeditwindow.cpp:657
 msgid "Zoom In"
 msgstr "Inzoomen"
 
-#: src/mooedit/mooeditwindow.cpp:657
+#: src/mooedit/mooeditwindow.cpp:658
 msgid "Zoom _In"
 msgstr "_Inzoomen"
 
-#: src/mooedit/mooeditwindow.cpp:658
+#: src/mooedit/mooeditwindow.cpp:659
 msgid "Make the text larger, in all documents"
 msgstr "Maakt de tekst groter in alle documenten"
 
-#: src/mooedit/mooeditwindow.cpp:666
+#: src/mooedit/mooeditwindow.cpp:667
 msgid "Zoom Out"
 msgstr "Uitzoomen"
 
-#: src/mooedit/mooeditwindow.cpp:667
+#: src/mooedit/mooeditwindow.cpp:668
 msgid "Zoom _Out"
 msgstr "_Uitzoomen"
 
-#: src/mooedit/mooeditwindow.cpp:668
+#: src/mooedit/mooeditwindow.cpp:669
 msgid "Make the text smaller, in all documents"
 msgstr "Maakt de tekst kleiner in alle documenten"
 
-#: src/mooedit/mooeditwindow.cpp:676
+#: src/mooedit/mooeditwindow.cpp:677
 msgid "Reset Zoom"
 msgstr "Zoom herstellen"
 
-#: src/mooedit/mooeditwindow.cpp:677
+#: src/mooedit/mooeditwindow.cpp:678
 msgid "_Reset Zoom"
 msgstr "Zoom _herstellen"
 
-#: src/mooedit/mooeditwindow.cpp:678
+#: src/mooedit/mooeditwindow.cpp:679
 msgid "Return the text to the size of the preferences"
 msgstr "Zet de tekst terug op de grootte uit de voorkeuren"
 
-#: src/mooedit/mooeditwindow.cpp:686
+#: src/mooedit/mooeditwindow.cpp:687
 msgid "Focus Document"
 msgstr "Document Focusseren"
 
-#: src/mooedit/mooeditwindow.cpp:687
+#: src/mooedit/mooeditwindow.cpp:688
 msgid "_Focus Document"
 msgstr "Document _Focusseren"
 
-#: src/mooedit/mooeditwindow.cpp:694 src/mooedit/mooeditwindow.cpp:695
+#: src/mooedit/mooeditwindow.cpp:695 src/mooedit/mooeditwindow.cpp:696
 msgid "Focus Other Split Notebook"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:702
+#: src/mooedit/mooeditwindow.cpp:703
 msgid "Move to Split Notebook"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:703
+#: src/mooedit/mooeditwindow.cpp:704
 msgid "_Move to Split Notebook"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:711 src/mooedit/mooeditwindow.cpp:712
+#: src/mooedit/mooeditwindow.cpp:712 src/mooedit/mooeditwindow.cpp:713
 msgid "Split View Horizontally"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:719 src/mooedit/mooeditwindow.cpp:720
+#: src/mooedit/mooeditwindow.cpp:720 src/mooedit/mooeditwindow.cpp:721
 msgid "Split View Vertically"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:726 src/mooedit/mooeditwindow.cpp:727
+#: src/mooedit/mooeditwindow.cpp:727 src/mooedit/mooeditwindow.cpp:728
 msgid "Focus Next Split View"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:771
+#: src/mooedit/mooeditwindow.cpp:772
 msgid "Toggle Bookmark"
 msgstr "Bladwijzer omschakelen"
 
-#: src/mooedit/mooeditwindow.cpp:772
+#: src/mooedit/mooeditwindow.cpp:773
 msgid "Toggle _Bookmark"
 msgstr "Bladwijzer _Omschakelen"
 
-#: src/mooedit/mooeditwindow.cpp:780
+#: src/mooedit/mooeditwindow.cpp:781
 msgid "Next Bookmark"
 msgstr "Volgende Bladwijzer"
 
-#: src/mooedit/mooeditwindow.cpp:781
+#: src/mooedit/mooeditwindow.cpp:782
 msgid "_Next Bookmark"
 msgstr "Vo_lgende Bladwijzer"
 
-#: src/mooedit/mooeditwindow.cpp:788
+#: src/mooedit/mooeditwindow.cpp:789
 msgid "Previous Bookmark"
 msgstr "Vorige Bladwijzer"
 
-#: src/mooedit/mooeditwindow.cpp:789
+#: src/mooedit/mooeditwindow.cpp:790
 msgid "_Previous Bookmark"
 msgstr "Vo_rige Bladwijzer"
 
 #. action
-#: src/mooedit/mooeditwindow.cpp:797 src/mooedit/mooeditwindow.cpp:798
-#: src/mooedit/mooeditwindow.cpp:799
+#: src/mooedit/mooeditwindow.cpp:798 src/mooedit/mooeditwindow.cpp:799
+#: src/mooedit/mooeditwindow.cpp:800
 msgid "Comment"
 msgstr "Commentaar"
 
 #. action
-#: src/mooedit/mooeditwindow.cpp:807 src/mooedit/mooeditwindow.cpp:808
-#: src/mooedit/mooeditwindow.cpp:809
+#: src/mooedit/mooeditwindow.cpp:808 src/mooedit/mooeditwindow.cpp:809
+#: src/mooedit/mooeditwindow.cpp:810
 msgid "Uncomment"
 msgstr "Verwijder commentaar"
 
-#: src/mooedit/mooeditwindow.cpp:836
+#: src/mooedit/mooeditwindow.cpp:837
 msgid "Duplicate Line"
 msgstr "Regel dupliceren"
 
-#: src/mooedit/mooeditwindow.cpp:837
+#: src/mooedit/mooeditwindow.cpp:838
 msgid "_Duplicate Line"
 msgstr "Regel _dupliceren"
 
-#: src/mooedit/mooeditwindow.cpp:838
+#: src/mooedit/mooeditwindow.cpp:839
 msgid "Duplicate the line or the selection"
 msgstr "De regel of de selectie dupliceren"
 
-#: src/mooedit/mooeditwindow.cpp:846
+#: src/mooedit/mooeditwindow.cpp:847
 msgid "Move Lines Up"
 msgstr "Regels omhoog verplaatsen"
 
-#: src/mooedit/mooeditwindow.cpp:847
+#: src/mooedit/mooeditwindow.cpp:848
 msgid "Move Lines _Up"
 msgstr "Regels om_hoog verplaatsen"
 
-#: src/mooedit/mooeditwindow.cpp:848
+#: src/mooedit/mooeditwindow.cpp:849
 msgid "Move the selected lines up"
 msgstr "De geselecteerde regels omhoog verplaatsen"
 
-#: src/mooedit/mooeditwindow.cpp:857
+#: src/mooedit/mooeditwindow.cpp:858
 msgid "Move Lines Down"
 msgstr "Regels omlaag verplaatsen"
 
-#: src/mooedit/mooeditwindow.cpp:858
+#: src/mooedit/mooeditwindow.cpp:859
 msgid "Move Lines _Down"
 msgstr "Regels om_laag verplaatsen"
 
-#: src/mooedit/mooeditwindow.cpp:859
+#: src/mooedit/mooeditwindow.cpp:860
 msgid "Move the selected lines down"
 msgstr "De geselecteerde regels omlaag verplaatsen"
 
-#: src/mooedit/mooeditwindow.cpp:868
+#: src/mooedit/mooeditwindow.cpp:869
 msgid "Sort Lines"
 msgstr "Regels sorteren"
 
-#: src/mooedit/mooeditwindow.cpp:869
+#: src/mooedit/mooeditwindow.cpp:870
 msgid "_Sort Lines"
 msgstr "Regels _sorteren"
 
-#: src/mooedit/mooeditwindow.cpp:870
+#: src/mooedit/mooeditwindow.cpp:871
 msgid "Sort the selected lines"
 msgstr "De geselecteerde regels sorteren"
 
-#: src/mooedit/mooeditwindow.cpp:877
+#: src/mooedit/mooeditwindow.cpp:878
 msgid "Go to Matching Bracket"
 msgstr "Naar bijbehorend haakje gaan"
 
-#: src/mooedit/mooeditwindow.cpp:878
+#: src/mooedit/mooeditwindow.cpp:879
 msgid "Go to _Matching Bracket"
 msgstr "Naar bijbehorend _haakje gaan"
 
-#: src/mooedit/mooeditwindow.cpp:879
+#: src/mooedit/mooeditwindow.cpp:880
 msgid "Go to the bracket matching the one at the cursor"
 msgstr "Naar het haakje gaan dat hoort bij dat onder de cursor"
 
 #. Insensitive menu item which appears in Window menu with no documents open
-#: src/mooedit/mooeditwindow.cpp:888
+#: src/mooedit/mooeditwindow.cpp:889
 msgid "No Documents"
 msgstr "Geen Documenten"
 
-#: src/mooedit/mooeditwindow.cpp:896
+#: src/mooedit/mooeditwindow.cpp:897
 msgid "Page Setup"
 msgstr "Paginaopmaak"
 
-#: src/mooedit/mooeditwindow.cpp:897
+#: src/mooedit/mooeditwindow.cpp:898
 msgid "Page S_etup..."
 msgstr "Pagina-_instellingen..."
 
-#: src/mooedit/mooeditwindow.cpp:898
+#: src/mooedit/mooeditwindow.cpp:899
 msgid "Page Setup..."
 msgstr "Pagina-instellingen..."
 
-#: src/mooedit/mooeditwindow.cpp:914 src/mooedit/mooeditwindow.cpp:915
+#: src/mooedit/mooeditwindow.cpp:915 src/mooedit/mooeditwindow.cpp:916
 msgid "Print..."
 msgstr "Afdrukken..."
 
-#: src/mooedit/mooeditwindow.cpp:923 src/mooedit/mooeditwindow.cpp:2226
+#: src/mooedit/mooeditwindow.cpp:924 src/mooedit/mooeditwindow.cpp:2227
 msgid "Export as PDF"
 msgstr "Als PDF exporteren"
 
-#: src/mooedit/mooeditwindow.cpp:924
+#: src/mooedit/mooeditwindow.cpp:925
 msgid "E_xport as PDF..."
 msgstr "Als PDF e_xporteren..."
 
-#: src/mooedit/mooeditwindow.cpp:925
+#: src/mooedit/mooeditwindow.cpp:926
 msgid "Export as PDF..."
 msgstr "Als PDF exporteren..."
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [new file]"
-#: src/mooedit/mooeditwindow.cpp:1205
+#: src/mooedit/mooeditwindow.cpp:1206
 #, c-format
 msgid "%s [new file]"
 msgstr "%s [nieuw bestand]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [modified on disk]"
-#: src/mooedit/mooeditwindow.cpp:1208
+#: src/mooedit/mooeditwindow.cpp:1209
 #, c-format
 msgid "%s [modified on disk]"
 msgstr "%s [veranderd op drager]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [deleted]"
-#: src/mooedit/mooeditwindow.cpp:1211
+#: src/mooedit/mooeditwindow.cpp:1212
 #, c-format
 msgid "%s [deleted]"
 msgstr "%s [gewist]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [new file] [modified]"
-#: src/mooedit/mooeditwindow.cpp:1219
+#: src/mooedit/mooeditwindow.cpp:1220
 #, c-format
 msgid "%s [new file] [modified]"
 msgstr "%s [nieuw bestand] [veranderd]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [modified on disk] [modified]"
-#: src/mooedit/mooeditwindow.cpp:1222
+#: src/mooedit/mooeditwindow.cpp:1223
 #, c-format
 msgid "%s [modified on disk] [modified]"
 msgstr "%s [veranderd op drager] [veranderd]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [deleted] [modified]"
-#: src/mooedit/mooeditwindow.cpp:1225
+#: src/mooedit/mooeditwindow.cpp:1226
 #, c-format
 msgid "%s [deleted] [modified]"
 msgstr "%s [gewist] [veranderd]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [modified]"
-#: src/mooedit/mooeditwindow.cpp:1228
+#: src/mooedit/mooeditwindow.cpp:1229
 #, c-format
 msgid "%s [modified]"
 msgstr "%s [veranderd]"
 
-#: src/mooedit/mooeditwindow.cpp:1468
+#: src/mooedit/mooeditwindow.cpp:1469
 msgid "Reopen Using Encoding"
 msgstr "Heropen Met Codering"
 
-#: src/mooedit/mooeditwindow.cpp:1518
+#: src/mooedit/mooeditwindow.cpp:1519
 msgid "_Encoding"
 msgstr "_Codering"
 
-#: src/mooedit/mooeditwindow.cpp:1572
+#: src/mooedit/mooeditwindow.cpp:1573
 msgid "Line En_dings"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:1579
+#: src/mooedit/mooeditwindow.cpp:1580
 msgid "_Windows (CR+LF)"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:1584
+#: src/mooedit/mooeditwindow.cpp:1585
 msgid "_Unix (LF)"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:1588
+#: src/mooedit/mooeditwindow.cpp:1589
 msgid "_Mac (CR)"
 msgstr ""
 
 #. Item in document tab context menu
-#: src/mooedit/mooeditwindow.cpp:2513
+#: src/mooedit/mooeditwindow.cpp:2514
 msgctxt "tab-context-menu"
 msgid "Close"
 msgstr ""
 
 #. Item in document tab context menu
-#: src/mooedit/mooeditwindow.cpp:2521
+#: src/mooedit/mooeditwindow.cpp:2522
 msgctxt "tab-context-menu"
 msgid "Close All Others"
 msgstr ""
 
 #. Item in document tab context menu
-#: src/mooedit/mooeditwindow.cpp:2530
+#: src/mooedit/mooeditwindow.cpp:2531
 msgctxt "tab-context-menu"
 msgid "Copy Full Path"
 msgstr ""
 
 #. Item in document tab context menu
-#: src/mooedit/mooeditwindow.cpp:2540
+#: src/mooedit/mooeditwindow.cpp:2541
 msgctxt "tab-context-menu"
 msgid "Detach"
 msgstr ""
 
 #. Item in document tab context menu
-#: src/mooedit/mooeditwindow.cpp:2546
+#: src/mooedit/mooeditwindow.cpp:2547
 msgctxt "tab-context-menu"
 msgid "Move to Split Notebook"
 msgstr ""
 
-#: src/mooedit/mooeditwindow.cpp:4244
+#: src/mooedit/mooeditwindow.cpp:4248
 #, c-format
 msgid "Line: %s Col: %s"
 msgstr "Regel: %s Kolom: %s"
 
-#: src/mooedit/mooeditwindow.cpp:4245
+#: src/mooedit/mooeditwindow.cpp:4249
 #, c-format
 msgid "Chars: %s"
 msgstr "Tekens: %s"
 
 #. Label in the editor window statusbar - Overwrite or Insert mode
-#: src/mooedit/mooeditwindow.cpp:4288
+#: src/mooedit/mooeditwindow.cpp:4292
 msgid "OVR"
 msgstr "OVR"
 
-#: src/mooedit/mooeditwindow.cpp:4288
+#: src/mooedit/mooeditwindow.cpp:4292
 msgid "INS"
 msgstr "INV"
 
-#: src/mooedit/mooeditwindow.cpp:4397
+#: src/mooedit/mooeditwindow.cpp:4401
 msgid "_Language"
 msgstr "_Taal"
 
-#: src/mooedit/mooeditwindow.cpp:5264
+#: src/mooedit/mooeditwindow.cpp:5268
 #, c-format
 msgid ""
 "The dropped folder(s) contain more than %u files (including subfolders). "
 "Open them all?"
-msgstr "De gesleepte mappen bevatten meer dan %u bestanden (inclusief submappen). Alles openen?"
+msgstr ""
+"De gesleepte mappen bevatten meer dan %u bestanden (inclusief submappen). "
+"Alles openen?"
 
 #: src/mooedit/mooplugin.cpp:1324
 msgctxt "Prefs page label"
@@ -2030,7 +2036,7 @@ msgid "Could not remove %s: %s"
 msgstr "Kon %s niet verwijderen: %s"
 
 #. Translators: remove the part before and including |
-#: src/mooutils/mooutils-misc.cpp:1516
+#: src/mooutils/mooutils-misc.cpp:1578
 #, c-format
 msgid "console message|in file %s, line %d, function %s: %s"
 msgstr ""
@@ -2038,7 +2044,7 @@ msgstr ""
 #. "Unknown error" may be displayed if there is a bug in the program
 #. and proper error message has not been set. It doesn't provide any
 #. useful information obviously
-#: src/mooutils/mooutils-misc.cpp:1723
+#: src/mooutils/mooutils-misc.cpp:1785
 msgid "Unknown error"
 msgstr ""
 

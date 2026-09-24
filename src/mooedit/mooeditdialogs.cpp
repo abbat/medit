@@ -500,6 +500,10 @@ _moo_edit_save_error_enc_dialog (MooEdit    *doc,
 }
 
 
+/* Positive response ids are free for custom buttons; GTK's own
+   GTK_RESPONSE_* constants are all <= 0. */
+enum { MOO_RESPONSE_CANCEL_ALL = 1 };
+
 MooEditTryEncodingResponse
 _moo_edit_try_encoding_dialog (GFile       *file,
                                const char  *encoding,
@@ -551,6 +555,7 @@ _moo_edit_try_encoding_dialog (GFile       *file,
         moo_window_set_parent (dialog, GTK_WIDGET (window));
 
     gtk_dialog_add_buttons (GTK_DIALOG (dialog),
+                            _("Cancel _All"), MOO_RESPONSE_CANCEL_ALL,
                             GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                             GTK_STOCK_OK, GTK_RESPONSE_OK,
                             nullptr);
@@ -558,6 +563,7 @@ _moo_edit_try_encoding_dialog (GFile       *file,
     gtk_dialog_set_alternative_button_order (GTK_DIALOG (dialog),
                                              GTK_RESPONSE_OK,
                                              GTK_RESPONSE_CANCEL,
+                                             MOO_RESPONSE_CANCEL_ALL,
                                              -1);
 
     dialog_response = gtk_dialog_run (GTK_DIALOG (dialog));
@@ -569,9 +575,15 @@ _moo_edit_try_encoding_dialog (GFile       *file,
     g_free (secondary);
     g_free (msg);
 
-    return dialog_response == GTK_RESPONSE_OK ?
-        MOO_EDIT_TRY_ENCODING_RESPONSE_TRY_ANOTHER :
-        MOO_EDIT_TRY_ENCODING_RESPONSE_CANCEL;
+    switch (dialog_response)
+    {
+        case GTK_RESPONSE_OK:
+            return MOO_EDIT_TRY_ENCODING_RESPONSE_TRY_ANOTHER;
+        case MOO_RESPONSE_CANCEL_ALL:
+            return MOO_EDIT_TRY_ENCODING_RESPONSE_CANCEL_ALL;
+        default:
+            return MOO_EDIT_TRY_ENCODING_RESPONSE_CANCEL;
+    }
 }
 
 

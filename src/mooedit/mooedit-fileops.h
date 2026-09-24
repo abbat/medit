@@ -42,6 +42,8 @@ GQuark           _moo_edit_file_error_quark     (void) G_GNUC_CONST;
 
 gboolean         _moo_is_file_error_cancelled   (GError         *error);
 
+void             _moo_edit_reset_skip_encoding_prompts (void);
+
 gboolean         _moo_edit_file_is_new          (GFile          *file);
 gboolean         _moo_edit_load_file            (MooEdit        *edit,
                                                  GFile          *file,

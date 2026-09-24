@@ -45,6 +45,7 @@
 #include "mooutils/mooutils-enums.h"
 #include "moocpp/gobjptr.h"
 #include "mooutils/moo-mime.h"
+#include "mooedit/mooedit-fileops.h"
 
 
 #define ENABLE_PRINTING
@@ -5286,6 +5287,8 @@ notebook_drop_uri_list (GtkSelectionData *data,
 
     g_ptr_array_free (files, TRUE);
     g_ptr_array_free (dropped_dirs, TRUE);
+
+    _moo_edit_reset_skip_encoding_prompts ();
 
     g_strfreev (uris);
     gtk_drag_finish (context, TRUE, FALSE, time);
