@@ -7,12 +7,14 @@
 #include "mooeditwindow-impl.h"
 #include "mooedit-impl.h"
 #include "mooutils/moocompat.h"
+#include "mooutils/mooi18n.h"
 
 struct MooEditTab
 {
     GtkVBox base;
 
     MooEditProgress *progress;
+    GtkInfoBar *notice;
 
     GtkWidget *hpaned;
     GtkWidget *vpaned1;
@@ -453,4 +455,57 @@ _moo_edit_tab_destroy_progress (MooEditTab *tab)
     g_return_if_fail (tab->progress != NULL);
     gtk_widget_destroy (GTK_WIDGET (tab->progress));
     tab->progress = NULL;
+}
+
+void
+_moo_edit_tab_hide_notice (MooEditTab *tab)
+{
+    g_return_if_fail (MOO_IS_EDIT_TAB (tab));
+
+    if (tab->notice)
+    {
+        gtk_widget_destroy (GTK_WIDGET (tab->notice));
+        tab->notice = NULL;
+    }
+}
+
+static void
+notice_response (G_GNUC_UNUSED GtkInfoBar *bar,
+                 int                       response_id,
+                 MooEditTab               *tab)
+{
+    if (response_id == GTK_RESPONSE_OK)
+        moo_edit_reload (tab->doc, NULL, NULL);
+    _moo_edit_tab_hide_notice (tab);
+}
+
+void
+_moo_edit_tab_set_notice (MooEditTab     *tab,
+                          GtkMessageType  type,
+                          const char     *text,
+                          gboolean        show_reload)
+{
+    GtkWidget *label;
+
+    g_return_if_fail (MOO_IS_EDIT_TAB (tab));
+
+    _moo_edit_tab_hide_notice (tab);
+
+    tab->notice = GTK_INFO_BAR (gtk_info_bar_new ());
+    gtk_info_bar_set_message_type (tab->notice, type);
+
+    if (show_reload)
+        gtk_info_bar_add_button (tab->notice, _("Reload"), GTK_RESPONSE_OK);
+    gtk_info_bar_add_button (tab->notice, GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE);
+
+    label = gtk_label_new (text);
+    gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
+    gtk_widget_show (label);
+    gtk_container_add (GTK_CONTAINER (gtk_info_bar_get_content_area (tab->notice)), label);
+
+    g_signal_connect (tab->notice, "response", G_CALLBACK (notice_response), tab);
+
+    gtk_box_pack_start (GTK_BOX (tab), GTK_WIDGET (tab->notice), FALSE, FALSE, 0);
+    gtk_box_reorder_child (GTK_BOX (tab), GTK_WIDGET (tab->notice), tab->progress ? 1 : 0);
+    gtk_widget_show (GTK_WIDGET (tab->notice));
 }

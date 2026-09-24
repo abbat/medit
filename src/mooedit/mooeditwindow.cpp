@@ -207,6 +207,7 @@ static GtkWidget    *create_tab_label                   (MooEditWindow      *win
                                                          MooEdit            *doc);
 static void          update_tab_labels                  (MooEditWindow      *window,
                                                          MooEdit            *doc);
+static void          update_tab_notice                  (MooEdit            *doc);
 static void          view_cursor_moved                  (MooEditWindow      *window,
                                                          GtkTextIter        *iter,
                                                          MooEditView        *view);
@@ -2872,7 +2873,10 @@ edit_changed (MooEditWindow *window,
     }
 
     if (doc)
+    {
         update_tab_labels (window, doc);
+        update_tab_notice (doc);
+    }
 }
 
 static void
@@ -3975,6 +3979,32 @@ update_tab_labels (MooEditWindow *window,
                 update_tab_label (tab, *notebook);
         }
     }
+}
+
+static void
+update_tab_notice (MooEdit *doc)
+{
+    MooEditTab *tab;
+    MooEditStatus status;
+
+    tab = moo_edit_get_tab (doc);
+    if (!tab)
+        return;
+
+    status = moo_edit_get_status (doc);
+
+    if (status & MOO_EDIT_STATUS_DELETED)
+        _moo_edit_tab_set_notice (tab, GTK_MESSAGE_WARNING,
+                                  _("File was deleted from disk."), FALSE);
+    else if (status & MOO_EDIT_STATUS_MODIFIED_ON_DISK)
+        _moo_edit_tab_set_notice (tab, GTK_MESSAGE_WARNING,
+                                  _("File was changed on disk."), TRUE);
+    else if (status & MOO_EDIT_STATUS_WATCH_FAILED)
+        _moo_edit_tab_set_notice (tab, GTK_MESSAGE_INFO,
+                                  _("Change tracking could not be started for this file; "
+                                    "external changes will not be detected."), FALSE);
+    else
+        _moo_edit_tab_hide_notice (tab);
 }
 
 

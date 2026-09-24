@@ -11,6 +11,12 @@ MooEditTab      *_moo_edit_tab_new                  (MooEdit        *doc);
 MooEditProgress *_moo_edit_tab_create_progress      (MooEditTab     *tab);
 void             _moo_edit_tab_destroy_progress     (MooEditTab     *tab);
 
+void             _moo_edit_tab_set_notice           (MooEditTab     *tab,
+                                                     GtkMessageType  type,
+                                                     const char     *text,
+                                                     gboolean        show_reload);
+void             _moo_edit_tab_hide_notice          (MooEditTab     *tab);
+
 void             _moo_edit_tab_focus_next_view      (MooEditTab     *tab);
 void             _moo_edit_tab_set_focused_view     (MooEditTab     *tab,
                                                      MooEditView    *view);

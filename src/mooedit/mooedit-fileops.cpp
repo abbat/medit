@@ -925,8 +925,12 @@ _moo_edit_start_file_watch (MooEdit *edit)
         g_warning ("could not start watch for '%s': %s",
                    edit->priv->filename, moo_error_message (error));
         g_error_free (error);
+        _moo_edit_set_status (edit, (MooEditStatus) (edit->priv->status | MOO_EDIT_STATUS_WATCH_FAILED));
         return;
     }
+
+    if (edit->priv->status & MOO_EDIT_STATUS_WATCH_FAILED)
+        _moo_edit_set_status (edit, (MooEditStatus) (edit->priv->status & ~MOO_EDIT_STATUS_WATCH_FAILED));
 }
 
 
