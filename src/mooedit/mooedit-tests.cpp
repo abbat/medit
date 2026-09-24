@@ -626,6 +626,39 @@ test_text_buffer_prose (void)
 }
 
 
+/* moo_text_buffer_dispose() must release its own reference on priv->lang and
+   clear the field, the same as it does for engine, style_scheme and the rest --
+   dispose() is expected to be idempotent, and a field left non-NULL after its
+   owned object was unref()'d is not just stale, it is unref()'d again if
+   dispose ever runs a second time. */
+static void
+test_text_buffer_dispose_lang (void)
+{
+    char *langs_dir = g_build_filename (MOO_UNIT_TEST_SOURCE_ROOT, "src", "mooedit", "langs", nullptr);
+    char *dirs[] = { langs_dir, nullptr };
+    GtkSourceLanguageManager *manager = gtk_source_language_manager_new ();
+
+    g_object_set (manager, "search-path", dirs, nullptr);
+
+    GtkSourceLanguage *lang = gtk_source_language_manager_get_language (manager, "python");
+    g_assert_nonnull (lang);
+
+    MooTextBuffer *buffer = new_text_buffer ("");
+    moo_text_buffer_set_lang (buffer, MOO_LANG (lang));
+    g_assert_nonnull (moo_text_buffer_get_lang (buffer));
+
+    g_object_run_dispose (G_OBJECT (buffer));
+    g_assert_null (moo_text_buffer_get_lang (buffer));
+
+    /* Must not double-unref what the first dispose() already released. */
+    g_object_run_dispose (G_OBJECT (buffer));
+
+    g_object_unref (buffer);
+    g_object_unref (manager);
+    g_free (langs_dir);
+}
+
+
 
 
 /* Replace-all is applied as a few large edits, so the cursor is carried over by
@@ -1633,6 +1666,7 @@ _moo_add_mooedit_unit_tests (void)
                      test_line_buffer_tree_boundaries);
     g_test_add_func ("/mooedit/indenter/helpers", test_indenter_helpers);
     g_test_add_func ("/mooedit/text-buffer/prose", test_text_buffer_prose);
+    g_test_add_func ("/mooedit/text-buffer/dispose-lang", test_text_buffer_dispose_lang);
     g_test_add_func ("/mooedit/text-buffer/undo-redo", test_text_buffer_undo_redo);
     g_test_add_func ("/mooedit/text-buffer/undo-group", test_text_buffer_undo_group);
     g_test_add_func ("/mooedit/text-buffer/undo-freeze", test_text_buffer_undo_freeze);

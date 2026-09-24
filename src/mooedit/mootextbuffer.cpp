@@ -407,7 +407,7 @@ moo_text_buffer_dispose (GObject *object)
     if (buffer->priv->lang)
     {
         g_object_unref (buffer->priv->lang);
-        buffer->priv->engine = NULL;
+        buffer->priv->lang = NULL;
     }
 
     if (buffer->priv->line_buf)
