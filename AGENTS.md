@@ -124,15 +124,25 @@ times that on re-reading what it already had.
    and in `doc/`, not in the transcript. A session that has drifted to 400k tokens pays
    ten times per call what a fresh one does, for the same work. `--autocompact 200k`
    puts a ceiling on the drift when the work really is one long task.
-2. **Never let raw output into the transcript.** `ctest ... | grep -E "ok:|FAIL"`, never
-   a whole `-V` run; anything long goes to the scratchpad and is grepped there. A 30k
-   dump costs 30k on every later call, not once.
+2. **Never let raw output into the transcript — this includes the build.** `make ... >log
+   2>&1; echo "exit=$?"`, then grep the log only if the exit isn't 0 or you're specifically
+   checking for warnings — with `-DENABLE_STRICT=ON` a clean exit already means no warnings,
+   since strict turns them into errors. Same for tests: `ctest ... | grep -E "ok:|FAIL"`,
+   never a whole `-V` run. Anything long goes to the scratchpad and is grepped there — a
+   `lean-ctx-optimize` pass found the shell the single costliest tool by $ (33% of spend)
+   precisely because raw dumps compress worst (~11%, against ~83% for reads). A 30k dump
+   costs 30k on every later call, not once.
 3. **Wait for CI in one background loop**, then read one filtered summary. Polling
    `gh run view` by hand is a full-price request that buys no information.
 4. **Mechanical sweeps** — a whole-suite run, log triage, a batch experiment — belong in
    a fresh subagent or a cheaper model, and come back as counts rather than as logs.
    `.claude/agents/` has two for that: `suite-run` runs ctest here and `ci-triage`
    waits on a GitHub Actions run, both reporting names and numbers only.
+5. **Read the shape before the body.** `mode=signatures`/`map` gets the API surface at a
+   fraction of a `full`/`raw` read's cost, and is enough for orientation — most reads in
+   this tree pull files in whole even when only their shape was needed (a large file read
+   in full runs several thousand tokens for one look). Drop to `full` only for the function
+   you are about to touch.
 
 ---
 
