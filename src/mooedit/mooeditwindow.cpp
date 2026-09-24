@@ -5178,6 +5178,23 @@ notebook_drop_tab (GtkWidget     *widget,
 
 static const guint MOO_NOTEBOOK_DROP_CONFIRM_THRESHOLD = 20;
 
+/* Version-control metadata directories: mostly non-text (packfiles, blob
+   stores) and can be huge, so skip them rather than churn through them
+   looking for text files. */
+static const char *MOO_VCS_DIR_NAMES[] = { ".git", ".svn", ".hg", ".bzr", "CVS", "_darcs" };
+
+static gboolean
+is_vcs_dir_name (const char *name)
+{
+    guint i;
+
+    for (i = 0; i < G_N_ELEMENTS (MOO_VCS_DIR_NAMES); ++i)
+        if (!g_strcmp0 (name, MOO_VCS_DIR_NAMES[i]))
+            return TRUE;
+
+    return FALSE;
+}
+
 /* Recursively collects text files under dir_path into files. Stops as soon
    as files->len exceeds cap, so a large tree doesn't get fully scanned just
    to find out it needs confirmation. */
@@ -5202,6 +5219,9 @@ collect_text_files_recursive (const char *dir_path,
 
         if (files->len > cap)
             break;
+
+        if (is_vcs_dir_name (name))
+            continue;
 
         child = g_build_filename (dir_path, name, nullptr);
 
