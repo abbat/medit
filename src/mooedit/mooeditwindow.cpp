@@ -2925,18 +2925,6 @@ view_cursor_moved (MooEditWindow *window,
 
 
 static void
-sync_proxies (GtkAction *action)
-{
-    GSList *l = gtk_action_get_proxies (action);
-    while (l)
-    {
-        gtk_activatable_sync_action_properties ((GtkActivatable*) l->data, action);
-        l = l->next;
-    }
-}
-
-
-static void
 view_wrap_mode_changed (MooEditWindow *window,
                         G_GNUC_UNUSED GParamSpec *pspec,
                         MooEditView   *view)
@@ -2952,9 +2940,6 @@ view_wrap_mode_changed (MooEditWindow *window,
 
     g_object_get (view, "wrap-mode", &mode, nullptr);
     gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), mode != GTK_WRAP_NONE);
-
-    /* XXX menu item and action go out of sync for some reason */
-    sync_proxies (action);
 }
 
 
@@ -2974,9 +2959,6 @@ view_show_line_numbers_changed (MooEditWindow *window,
 
     g_object_get (view, "show-line-numbers", &show, nullptr);
     gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), show);
-
-    /* XXX menu item and action go out of sync for some reason */
-    sync_proxies (action);
 }
 
 
@@ -5522,9 +5504,4 @@ update_split_view_actions (MooEditWindow *window)
     gtk_action_set_sensitive (action_cycle, has_split_horizontal || has_split_vertical);
     gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action_split_horizontal), has_split_horizontal);
     gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action_split_vertical), has_split_vertical);
-
-    /* XXX menu item and action go out of sync for some reason */
-    sync_proxies (action_cycle);
-    sync_proxies (action_split_horizontal);
-    sync_proxies (action_split_vertical);
 }
