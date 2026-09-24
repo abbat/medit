@@ -82,3 +82,13 @@ void    _moo_edit_remove_untitled   (MooEdit    *doc);
 /* Emits MooEdit::bookmarks-changed. Called from every path in
    mooeditbookmark.cpp that adds, removes or moves a bookmark. */
 void    _moo_edit_bookmarks_changed (MooEdit    *doc);
+
+/* Disconnects every handler moo_edit_constructor() connected on the buffer --
+   "changed", "modified-changed" and the two swapped line-mark signals all
+   store doc as their closure data, so one G_SIGNAL_MATCH_DATA call reaches
+   all four. Called from _moo_edit_closed(); split out so mooedit-tests.cpp
+   can exercise it on a bare buffer, since the unit-test harness runs before
+   gtk_init() and cannot construct a real MooEdit (moo_edit_constructor()
+   builds a MooEditView, a GtkTextView subclass, which crashes without a
+   display). */
+void    _moo_edit_disconnect_buffer_signals (GtkTextBuffer *buffer, gpointer doc);

@@ -392,6 +392,14 @@ moo_edit_finalize (GObject *object)
 }
 
 void
+_moo_edit_disconnect_buffer_signals (GtkTextBuffer *buffer,
+                                     gpointer       doc)
+{
+    g_signal_handlers_disconnect_matched (buffer, G_SIGNAL_MATCH_DATA,
+                                          0, 0, nullptr, nullptr, doc);
+}
+
+void
 _moo_edit_closed (MooEdit *doc)
 {
     g_return_if_fail (MOO_IS_EDIT (doc));
@@ -403,6 +411,8 @@ _moo_edit_closed (MooEdit *doc)
 
     while (!doc->priv->views->empty ())
         gtk_widget_destroy (GTK_WIDGET (doc->priv->views->elms[0]));
+
+    _moo_edit_disconnect_buffer_signals (doc->priv->buffer, doc);
 
     if (doc->config)
     {

@@ -42,6 +42,7 @@
 #ifdef MOO_ENABLE_UNIT_TESTS
 
 #include "mooedit/moolang-private.h"
+#include "mooedit/mooedit-private.h"
 #include "mooedit/mooeditaction.h"
 #include "mooedit/mootext-private.h"
 #include "mooedit/mootextview-private.h"
@@ -659,6 +660,49 @@ test_text_buffer_dispose_lang (void)
 }
 
 
+/* moo_edit_constructor() connects "changed", "modified-changed" and the two
+   line-mark signals on the buffer to callbacks that take doc as their
+   closure data -- the two plain connections directly, the two swapped ones
+   by way of g_signal_connect_swapped()'s own argument, which is still the
+   closure's data. _moo_edit_disconnect_buffer_signals() must reach all four
+   with one G_SIGNAL_MATCH_DATA call. Exercised on a bare buffer and a
+   stand-in key rather than a real MooEdit: constructing one crashes outside
+   a display, since moo_edit_constructor() builds a MooEditView, a
+   GtkTextView subclass, and the unit-test harness runs before gtk_init(). */
+static void
+dummy_buffer_signal_handler (void)
+{
+}
+
+static void
+test_disconnect_buffer_signals (void)
+{
+    MooTextBuffer *buffer = new_text_buffer ("");
+    int key;
+    guint n;
+
+    g_signal_connect (buffer, "changed", G_CALLBACK (dummy_buffer_signal_handler), &key);
+    g_signal_connect (buffer, "modified-changed", G_CALLBACK (dummy_buffer_signal_handler), &key);
+    g_signal_connect_swapped (buffer, "line-mark-moved", G_CALLBACK (dummy_buffer_signal_handler), &key);
+    g_signal_connect_swapped (buffer, "line-mark-deleted", G_CALLBACK (dummy_buffer_signal_handler), &key);
+
+    n = g_signal_handlers_disconnect_matched (buffer, G_SIGNAL_MATCH_DATA,
+                                              0, 0, nullptr, nullptr, &key);
+    g_assert_cmpuint (n, ==, 4);
+
+    g_signal_connect (buffer, "changed", G_CALLBACK (dummy_buffer_signal_handler), &key);
+    g_signal_connect (buffer, "modified-changed", G_CALLBACK (dummy_buffer_signal_handler), &key);
+    g_signal_connect_swapped (buffer, "line-mark-moved", G_CALLBACK (dummy_buffer_signal_handler), &key);
+    g_signal_connect_swapped (buffer, "line-mark-deleted", G_CALLBACK (dummy_buffer_signal_handler), &key);
+
+    _moo_edit_disconnect_buffer_signals (GTK_TEXT_BUFFER (buffer), &key);
+
+    n = g_signal_handlers_disconnect_matched (buffer, G_SIGNAL_MATCH_DATA,
+                                              0, 0, nullptr, nullptr, &key);
+    g_assert_cmpuint (n, ==, 0);
+
+    g_object_unref (buffer);
+}
 
 
 /* Replace-all is applied as a few large edits, so the cursor is carried over by
@@ -1667,6 +1711,8 @@ _moo_add_mooedit_unit_tests (void)
     g_test_add_func ("/mooedit/indenter/helpers", test_indenter_helpers);
     g_test_add_func ("/mooedit/text-buffer/prose", test_text_buffer_prose);
     g_test_add_func ("/mooedit/text-buffer/dispose-lang", test_text_buffer_dispose_lang);
+    g_test_add_func ("/mooedit/edit/disconnect-buffer-signals",
+                     test_disconnect_buffer_signals);
     g_test_add_func ("/mooedit/text-buffer/undo-redo", test_text_buffer_undo_redo);
     g_test_add_func ("/mooedit/text-buffer/undo-group", test_text_buffer_undo_group);
     g_test_add_func ("/mooedit/text-buffer/undo-freeze", test_text_buffer_undo_freeze);
