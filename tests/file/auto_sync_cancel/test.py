@@ -20,6 +20,7 @@ mark the tab, since nothing else will.
 """
 
 import os
+import time
 
 from lib.notebook import order
 
@@ -34,7 +35,6 @@ TYPED = "typed "
 
 
 def setup(s):
-    s.pref("Editor/auto_sync", True)
     for name in (CHANGED, DELETED):
         s.open(s.write("workdir/" + name, BODIES[name]))
 
@@ -46,11 +46,32 @@ def run(t):
     t.menu("Window", "Previous Tab")
     type_into(t, CHANGED)
 
+    # auto_sync is off until here, so neither of the two edits above armed its
+    # 500ms save timer -- that timer otherwise beats the file watch's own half-
+    # second poll to the punch, saves the buffer, and clears "modified" before
+    # the dialog below ever gets to see it as changed on disk.
+    dialog = t.preferences("File")
+    tick(t, dialog, "Automatically sync files with disk", True)
+    t.click(t.button(dialog, "OK"))
+    t.no_toplevel("Preferences")
+
     # Changed on disk while modified: the reload dialog comes up on its own.
     t.sandbox.write("workdir/" + CHANGED, ON_DISK)
+
+    # medit looks every half second and compares modification times, which are
+    # whole seconds here: a file written within the same second as the last look
+    # has the same time and the change is missed -- see file/overwrite_modified.
+    # So the time is pushed forward, and the test waits for a look to have happened.
+    path = t.sandbox.path("workdir", CHANGED)
+    later = time.time() + 2
+    os.utime(path, (later, later))
+    t.settle(2)
+
     t.click(t.button(ask(t, CHANGED), "Cancel"))
 
-    t.wait(lambda: "!" + CHANGED in order(t),
+    # Both flags are set at once here -- modified on disk, and still modified in
+    # the buffer from the typing above -- so the tab shows both marks: "!*name".
+    t.wait(lambda: "!*" + CHANGED in order(t),
            "Cancel to mark the tab; the strip holds %s" % order(t))
     t.check(t.text(t.document()) == TYPED + BODIES[CHANGED],
             "and the buffer still holds what was typed, not what is on disk")
@@ -62,13 +83,22 @@ def run(t):
     os.remove(t.sandbox.path("workdir", DELETED))
     t.click(t.button(ask(t, DELETED), "Cancel"))
 
-    t.wait(lambda: "!" + DELETED in order(t),
+    t.wait(lambda: "!*" + DELETED in order(t),
            "Cancel to mark the tab; the strip holds %s" % order(t))
     t.check(t.text(t.document()) == TYPED + BODIES[DELETED],
             "and the buffer still holds what was typed -- it is the only copy now")
     t.check("[deleted] [modified]" in (t.frame.name or ""),
             "and the title says both: %r" % t.frame.name)
     t.log("ok: cancelling an auto_sync reload or close still marks the tab")
+
+    # Leave nothing modified behind: the harness quits through the menu after
+    # run() returns and does not handle a save-changes dialog of its own.
+    t.menu("File", "Close")
+    t.click(t.button(ask(t, DELETED), "Discard"))
+    t.wait(lambda: t.document() is not None, "the other document to still be there")
+
+    t.menu("File", "Close")
+    t.click(t.button(ask(t, CHANGED), "Discard"))
 
 
 def type_into(t, name):
@@ -83,6 +113,15 @@ def type_into(t, name):
 
     t.wait(lambda: t.text(t.document()) == TYPED + BODIES[name],
            "the typing to reach %s" % name)
+
+
+def tick(t, dialog, name, on):
+    box = t.need(dialog, role="check box", name=name, what="the %r check box" % name)
+
+    if t.state(box, "checked") != on:
+        t.click(box)
+        t.wait(lambda: t.state(box, "checked") == on,
+               "the %r box to be %s" % (name, "ticked" if on else "clear"))
 
 
 def ask(t, name):

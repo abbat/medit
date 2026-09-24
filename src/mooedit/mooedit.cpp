@@ -587,10 +587,11 @@ static void
 modified_changed_cb (GtkTextBuffer      *buffer,
                      MooEdit            *edit)
 {
-    // nothing to do when auto-syncing
-    if (moo_prefs_get_bool (moo_edit_setting (MOO_EDIT_PREFS_AUTO_SYNC)))
-        return;
-
+    // Auto-syncing writes the buffer back to disk shortly after every edit, but
+    // MOO_EDIT_STATUS_MODIFIED must still track the buffer: it is what gates the
+    // reload/close confirmation dialogs (moo_editor_reload(), find_modified() in
+    // mooeditor.cpp), and those need to fire on a genuinely edited document even
+    // while auto_sync is on.
     moo_edit_set_modified (edit, gtk_text_buffer_get_modified (buffer));
 }
 
