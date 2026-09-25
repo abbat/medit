@@ -31,6 +31,7 @@
 
 #include "mooutils/mooaccel.h"
 #include "mooutils/moobigpaned.h"
+#include "mooutils/moofuzzy.h"
 #include "mooutils/moo-mime.h"
 #include "mooutils/mooprefs.h"
 #include "mooutils/mooutils-enums.h"
@@ -1590,6 +1591,144 @@ test_region_polygon_memory (void)
 }
 
 
+/* -------------------------------------------------------------------------
+ * moo_fuzzy_match() -- FuzzyMatchV2 scoring
+ */
+
+static void
+test_fuzzy_no_match (void)
+{
+    MooFuzzyMatch match;
+
+    g_assert_false (moo_fuzzy_match ("xyz", "abc", FALSE, &match));
+    g_assert_cmpint (match.score, ==, 0);
+
+    /* The letters are all there, just not in order. */
+    g_assert_false (moo_fuzzy_match ("ba", "ab", FALSE, &match));
+}
+
+static void
+test_fuzzy_pattern_longer_than_text (void)
+{
+    MooFuzzyMatch match;
+
+    g_assert_false (moo_fuzzy_match ("abcd", "abc", FALSE, &match));
+}
+
+static void
+test_fuzzy_empty_pattern (void)
+{
+    MooFuzzyMatch match;
+
+    g_assert_true (moo_fuzzy_match ("", "anything", TRUE, &match));
+    g_assert_cmpint (match.score, ==, 0);
+    g_assert_cmpuint (match.n_positions, ==, 0);
+}
+
+static void
+test_fuzzy_exact_match (void)
+{
+    MooFuzzyMatch match;
+
+    g_assert_true (moo_fuzzy_match ("abc", "abc", TRUE, &match));
+    g_assert_cmpuint (match.n_positions, ==, 3);
+    g_assert_cmpuint (match.positions[0], ==, 0);
+    g_assert_cmpuint (match.positions[1], ==, 1);
+    g_assert_cmpuint (match.positions[2], ==, 2);
+}
+
+static void
+test_fuzzy_positions (void)
+{
+    MooFuzzyMatch match;
+    guint i;
+
+    g_assert_true (moo_fuzzy_match ("mev", "moo-environ.h", TRUE, &match));
+    g_assert_cmpuint (match.n_positions, ==, 3);
+    g_assert_cmpuint (match.positions[0], ==, 0);  /* m */
+    g_assert_cmpuint (match.positions[1], ==, 4);  /* e, in "environ" */
+    g_assert_cmpuint (match.positions[2], ==, 6);  /* v, the only one */
+    g_assert_cmpint (match.score, >, 0);
+
+    for (i = 1; i < match.n_positions; ++i)
+        g_assert_cmpuint (match.positions[i], >, match.positions[i - 1]);
+}
+
+static void
+test_fuzzy_no_positions_when_not_wanted (void)
+{
+    MooFuzzyMatch match;
+
+    match.n_positions = 99; /* poison: prove it is set to 0, not left alone */
+    g_assert_true (moo_fuzzy_match ("abc", "abc", FALSE, &match));
+    g_assert_cmpint (match.score, >, 0);
+    g_assert_cmpuint (match.n_positions, ==, 0);
+}
+
+static void
+test_fuzzy_word_boundary_bonus (void)
+{
+    MooFuzzyMatch boundary, middle;
+
+    g_assert_true (moo_fuzzy_match ("bar", "foo/bar.c", FALSE, &boundary));
+    g_assert_true (moo_fuzzy_match ("bar", "foobar.c", FALSE, &middle));
+
+    /* Starting right after a path separator outscores the same three
+       letters glued onto the end of another word. */
+    g_assert_cmpint (boundary.score, >, middle.score);
+}
+
+static void
+test_fuzzy_consecutive_bonus (void)
+{
+    MooFuzzyMatch consecutive, scattered;
+
+    g_assert_true (moo_fuzzy_match ("abc", "abcxyz", FALSE, &consecutive));
+    g_assert_true (moo_fuzzy_match ("abc", "axbxcx", FALSE, &scattered));
+
+    g_assert_cmpint (consecutive.score, >, scattered.score);
+}
+
+static void
+test_fuzzy_smart_case (void)
+{
+    MooFuzzyMatch match;
+
+    /* All-lowercase pattern: case-insensitive. */
+    g_assert_true (moo_fuzzy_match ("moo", "MooEdit.cpp", FALSE, &match));
+
+    /* An uppercase letter in the pattern switches to case-sensitive. */
+    g_assert_false (moo_fuzzy_match ("Moo", "moo-edit.cpp", FALSE, &match));
+    g_assert_true (moo_fuzzy_match ("Moo", "MooEdit.cpp", FALSE, &match));
+}
+
+static void
+test_fuzzy_utf8 (void)
+{
+    MooFuzzyMatch match;
+
+    /* Positions are character offsets, not byte offsets -- every character
+       here is two bytes in UTF-8. */
+    g_assert_true (moo_fuzzy_match ("\xd0\xbf\xd1\x80\xd0\xb8\xd0\xb2" /* прив */,
+                                    "\xd0\xbf\xd1\x80\xd0\xb8\xd0\xb2\xd0\xb5\xd1\x82.txt" /* привет.txt */,
+                                    TRUE, &match));
+    g_assert_cmpuint (match.n_positions, ==, 4);
+    g_assert_cmpuint (match.positions[0], ==, 0);
+    g_assert_cmpuint (match.positions[3], ==, 3);
+}
+
+static void
+test_fuzzy_overflow_protection (void)
+{
+    g_autofree char *long_pattern = g_strnfill (300, 'a');
+    g_autofree char *long_text = g_strnfill (5000, 'a');
+    MooFuzzyMatch match;
+
+    g_assert_false (moo_fuzzy_match (long_pattern, "abc", FALSE, &match));
+    g_assert_false (moo_fuzzy_match ("a", long_text, FALSE, &match));
+}
+
+
 #if GTK_CHECK_VERSION(3,0,0)
 static void
 test_terminal_color_schemes_memory (void)
@@ -1652,6 +1791,17 @@ _moo_add_mooutils_unit_tests (void)
     g_test_add_func ("/mooutils/strv/reverse", test_strv_reverse);
     g_test_add_func ("/mooutils/value-and-data/memory", test_value_and_data_memory);
     g_test_add_func ("/mooutils/region/polygon", test_region_polygon_memory);
+    g_test_add_func ("/mooutils/fuzzy/no-match", test_fuzzy_no_match);
+    g_test_add_func ("/mooutils/fuzzy/pattern-longer-than-text", test_fuzzy_pattern_longer_than_text);
+    g_test_add_func ("/mooutils/fuzzy/empty-pattern", test_fuzzy_empty_pattern);
+    g_test_add_func ("/mooutils/fuzzy/exact-match", test_fuzzy_exact_match);
+    g_test_add_func ("/mooutils/fuzzy/positions", test_fuzzy_positions);
+    g_test_add_func ("/mooutils/fuzzy/no-positions-when-not-wanted", test_fuzzy_no_positions_when_not_wanted);
+    g_test_add_func ("/mooutils/fuzzy/word-boundary-bonus", test_fuzzy_word_boundary_bonus);
+    g_test_add_func ("/mooutils/fuzzy/consecutive-bonus", test_fuzzy_consecutive_bonus);
+    g_test_add_func ("/mooutils/fuzzy/smart-case", test_fuzzy_smart_case);
+    g_test_add_func ("/mooutils/fuzzy/utf8", test_fuzzy_utf8);
+    g_test_add_func ("/mooutils/fuzzy/overflow-protection", test_fuzzy_overflow_protection);
 #if GTK_CHECK_VERSION(3,0,0)
     g_test_add_func ("/mooutils/terminal/colors", test_terminal_color_schemes_memory);
     g_test_add_func ("/mooutils/paned/drop-mask", test_drop_mask);

@@ -58,6 +58,8 @@ target_sources(medit PRIVATE
     moofiltermgr.h
     moofontsel.cpp
     moofontsel.h
+    moofuzzy.cpp
+    moofuzzy.h
     moohelp.cpp
     moohelp.h
     moohistorycombo.cpp
