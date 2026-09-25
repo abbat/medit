@@ -34,6 +34,13 @@ G_BEGIN_DECLS;
 int
 medit_app_main (int argc, char *argv[]);
 
+#ifdef MOO_ENABLE_UNIT_TESTS
+/* Registers the medit-app tests (parse_options_from_uri); called from
+   moo_unit_tests_run(). */
+void
+_moo_add_main_unit_tests (void);
+#endif
+
 G_END_DECLS;
 
 #endif /* _medit_app_main_h_ */

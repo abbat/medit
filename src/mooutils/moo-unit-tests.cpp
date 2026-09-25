@@ -15,6 +15,8 @@
 
 #include "mooutils/moo-unit-tests.h"
 
+#include "medit-app/main.h"
+
 #ifdef MOO_ENABLE_UNIT_TESTS
 
 #include "mooedit/mooedit-tests.h"
@@ -50,6 +52,7 @@ add_all_tests (void)
     _moo_add_moofoldermodel_perf_tests ();
     _moo_add_moomarkup_perf_tests ();
     _moo_add_ctags_unit_tests ();
+    _moo_add_main_unit_tests ();
 
 #ifdef MOO_BUILD_LSP
     _moo_lsp_add_unit_tests ();

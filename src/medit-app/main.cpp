@@ -538,6 +538,38 @@ parse_options_from_uri (const char *optstring, MooOpenInfo *info)
   g_strfreev (comps);
 }
 
+#ifdef MOO_ENABLE_UNIT_TESTS
+static void
+test_parse_options_from_uri (void)
+{
+  MooOpenInfo *info;
+
+  info = moo_open_info_new_uri ("file:///tmp/x", NULL, -1, MOO_OPEN_FLAGS_NONE);
+  parse_options_from_uri ("line=10", info);
+  g_assert_cmpint (moo_open_info_get_line (info), ==, 9);
+  g_assert_cmpint (moo_open_info_get_flags (info), ==, MOO_OPEN_FLAGS_NONE);
+  g_object_unref (info);
+
+  info = moo_open_info_new_uri ("file:///tmp/x", NULL, -1, MOO_OPEN_FLAGS_NONE);
+  parse_options_from_uri ("options=new-window,new-tab", info);
+  g_assert_cmpint (moo_open_info_get_flags (info), ==,
+                    MOO_OPEN_FLAG_NEW_WINDOW | MOO_OPEN_FLAG_NEW_TAB);
+  g_object_unref (info);
+
+  info = moo_open_info_new_uri ("file:///tmp/x", NULL, -1, MOO_OPEN_FLAGS_NONE);
+  parse_options_from_uri ("line=1;options=new-tab;bogus=oops", info);
+  g_assert_cmpint (moo_open_info_get_line (info), ==, 0);
+  g_assert_cmpint (moo_open_info_get_flags (info), ==, MOO_OPEN_FLAG_NEW_TAB);
+  g_object_unref (info);
+}
+
+void
+_moo_add_main_unit_tests (void)
+{
+  g_test_add_func ("/medit-app/parse-options-from-uri", test_parse_options_from_uri);
+}
+#endif
+
 /*!
  * \brief Parse URI and create opening information
  *
