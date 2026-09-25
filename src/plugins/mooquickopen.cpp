@@ -363,7 +363,14 @@ quick_open_activate (MooEditWindow *window)
 
     gstr dir = gstr::take (dlg.active_path.empty () ? g_get_current_dir ()
                                                     : g_path_get_dirname (dlg.active_path.c_str ()));
-    dlg.root = gstr::take (_moo_find_project_root (dir.get (), NULL)).get ();
+
+    /* Matches moofileindex's own notion of a project: the git work tree.
+       Without this, root is dir verbatim (_moo_find_project_root with no
+       markers never climbs), so a file open two levels into a repo -- or no
+       file open at all, cwd wherever the desktop launcher put it -- indexes
+       that one directory instead of the project. */
+    char *markers[] = { (char *) ".git", NULL };
+    dlg.root = gstr::take (_moo_find_project_root (dir.get (), markers)).get ();
 
     dlg.window = gtk_dialog_new ();
     gtk_window_set_title (GTK_WINDOW (dlg.window), _("Quick Open"));
@@ -393,6 +400,7 @@ quick_open_activate (MooEditWindow *window)
     GtkCellRenderer *renderer = gtk_cell_renderer_text_new ();
     GtkTreeViewColumn *column = gtk_tree_view_column_new_with_attributes (
         "", renderer, "markup", COLUMN_MARKUP, NULL);
+    gtk_tree_view_column_set_expand (column, TRUE);
     gtk_tree_view_append_column (dlg.view, column);
     gtk_container_add (GTK_CONTAINER (scroll), GTK_WIDGET (dlg.view));
 
