@@ -36,6 +36,7 @@
 
 #define QUICK_OPEN_MAX_VISIBLE 50
 #define QUICK_OPEN_HISTORY_ITEMS 200
+#define QUICK_OPEN_TYPING_DELAY_MS 150
 
 enum {
     COLUMN_MARKUP,
@@ -54,6 +55,7 @@ struct QuickOpenDialog {
     std::string   active_path;
     int           target_line; /* 0-based; -1 if the query names no line */
     bool          result_opened;
+    guint         changed_timeout_id; /* 0 if none pending */
 };
 
 struct QuickOpenIndexRequest {
@@ -327,12 +329,34 @@ quick_open_entry_key_press (GtkWidget   *widget,
     return FALSE;
 }
 
+static gboolean
+quick_open_changed_timeout (gpointer data)
+{
+    QuickOpenDialog *dlg = static_cast<QuickOpenDialog *> (data);
+
+    dlg->changed_timeout_id = 0;
+    quick_open_run_query (dlg);
+
+    return G_SOURCE_REMOVE;
+}
+
+/* Ranking the full file index is a synchronous, O(files) scan, and on a large
+   enough tree it takes over 1 second (measured with synthetic, deeply-nested
+   trees at 200000 files). Running it on every keystroke turns typing a
+   two- or three-character query into several back-to-back multi-second UI
+   freezes; wait for a short pause in typing instead of ranking after each
+   character. */
 static void
 quick_open_entry_changed (GtkEditable     *editable,
                           QuickOpenDialog *dlg)
 {
     (void) editable;
-    quick_open_run_query (dlg);
+
+    if (dlg->changed_timeout_id)
+        g_source_remove (dlg->changed_timeout_id);
+
+    dlg->changed_timeout_id = g_timeout_add (QUICK_OPEN_TYPING_DELAY_MS,
+                                             quick_open_changed_timeout, dlg);
 }
 
 static void
@@ -357,6 +381,7 @@ quick_open_activate (MooEditWindow *window)
     dlg.edit_window = window;
     dlg.target_line = -1;
     dlg.result_opened = false;
+    dlg.changed_timeout_id = 0;
 
     gstr active_filename = gstr::take (active_doc ? moo_edit_get_filename (active_doc) : NULL);
     dlg.active_path = active_filename.empty () ? std::string () : active_filename.get ();
@@ -431,6 +456,9 @@ quick_open_activate (MooEditWindow *window)
     gtk_widget_grab_focus (GTK_WIDGET (dlg.entry));
 
     gtk_main ();
+
+    if (dlg.changed_timeout_id)
+        g_source_remove (dlg.changed_timeout_id);
 }
 
 gboolean
