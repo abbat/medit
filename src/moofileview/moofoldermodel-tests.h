@@ -22,6 +22,10 @@ G_BEGIN_DECLS
 /* Registers the moofoldermodel tests; called from moo_unit_tests_run(). */
 void        _moo_add_moofoldermodel_unit_tests (void);
 
+/* The performance measurements of moofoldermodel-perf.cpp; nothing unless
+   MOO_PERF is set in the environment. */
+void        _moo_add_moofoldermodel_perf_tests (void);
+
 G_END_DECLS
 
 #endif /* MOO_ENABLE_UNIT_TESTS */

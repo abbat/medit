@@ -24,12 +24,21 @@ typedef struct _FileList FileList;
 
 typedef int (*MooFileCmp) (MooFile *file1, MooFile *file2);
 
+/*
+ * Backed by a GSequence (a balanced tree) instead of a GList: file_list_add(),
+ * file_list_remove(), file_list_nth() and file_list_position() used to walk
+ * or splice a GList by hand (g_list_nth(), g_list_position(),
+ * g_list_delete_link()), each O(n) -- O(n^2) total over a folder with n
+ * entries loaded one file at a time. GSequence gives every one of those an
+ * O(log n) primitive, and file_to_iter maps a MooFile* straight to its
+ * GSequenceIter* the same way file_to_link used to map it to a GList*.
+ */
 struct _FileList {
-    GList       *list;                  /* MooFile*, sorted by name */
+    GSequence   *seq;                   /* MooFile*, sorted by name */
     int          size;
     GHashTable  *name_to_file;          /* char* -> MooFile* */
     GHashTable  *display_name_to_file;  /* char* -> MooFile* */
-    GHashTable  *file_to_link;          /* MooFile* -> GList* */
+    GHashTable  *file_to_iter;          /* MooFile* -> GSequenceIter* */
     MooFileCmp   cmp_func;
 };
 
@@ -63,25 +72,16 @@ static MooFile  *file_list_next         (FileList   *flist,
 
 static GSList   *file_list_get_slist    (FileList   *flist);
 
-static void      _list_sort             (GList         **list,
-                                         guint           list_len,
-                                         MooFileCmp      cmp_func,
-                                         int           **new_order);
-static GList    *_list_insert_sorted    (GList         **list,
-                                         int            *list_len,
-                                         MooFileCmp      cmp_func,
-                                         MooFile        *file,
-                                         int            *position);
-static void      _list_delete_link      (GList         **list,
-                                         GList          *link,
-                                         int            *list_len);
-static GList    *_list_find             (FileList       *flist,
-                                         MooFile        *file,
-                                         int            *index_);
+static int       _cmp_func_wrapper      (gconstpointer   a,
+                                         gconstpointer   b,
+                                         gpointer        user_data);
+static int       _compare_file_indices  (int            *a,
+                                         int            *b,
+                                         gpointer        user_data);
 
 static void      _hash_table_insert     (FileList       *flist,
                                          MooFile        *file,
-                                         GList          *link);
+                                         GSequenceIter  *iter);
 static void      _hash_table_remove     (FileList       *flist,
                                          MooFile        *file);
 
@@ -98,11 +98,12 @@ static FileList *file_list_new          (MooFileCmp cmp_func)
 {
     FileList *flist = g_new0 (FileList, 1);
 
+    flist->seq = g_sequence_new (NULL);
     flist->name_to_file =
             g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
     flist->display_name_to_file =
             g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
-    flist->file_to_link = g_hash_table_new (g_direct_hash, g_direct_equal);
+    flist->file_to_iter = g_hash_table_new (g_direct_hash, g_direct_equal);
     flist->cmp_func = cmp_func;
 
     CHECK_FILE_LIST_INTEGRITY (flist);
@@ -113,14 +114,20 @@ static FileList *file_list_new          (MooFileCmp cmp_func)
 
 static void      file_list_destroy      (FileList   *flist)
 {
+    GSequenceIter *iter;
+
     g_return_if_fail (flist != NULL);
 
     g_hash_table_destroy (flist->display_name_to_file);
     g_hash_table_destroy (flist->name_to_file);
-    g_hash_table_destroy (flist->file_to_link);
+    g_hash_table_destroy (flist->file_to_iter);
 
-    g_list_foreach (flist->list, (GFunc) _moo_file_unref_data, NULL);
-    g_list_free (flist->list);
+    for (iter = g_sequence_get_begin_iter (flist->seq);
+         !g_sequence_iter_is_end (iter);
+         iter = g_sequence_iter_next (iter))
+        _moo_file_unref ((MooFile *) g_sequence_get (iter));
+
+    g_sequence_free (flist->seq);
 
     g_free (flist);
 }
@@ -129,15 +136,16 @@ static void      file_list_destroy      (FileList   *flist)
 static int       file_list_add          (FileList   *flist,
                                          MooFile    *file)
 {
+    MooFile *f = _moo_file_ref (file);
+    GSequenceIter *iter;
     int index_;
-    GList *link;
 
-    link = _list_insert_sorted (&flist->list,
-                                &flist->size,
-                                flist->cmp_func,
-                                _moo_file_ref (file),
-                                &index_);
-    _hash_table_insert (flist, file, link);
+    iter = g_sequence_insert_sorted (flist->seq, f, _cmp_func_wrapper,
+                                     (gpointer) flist->cmp_func);
+    index_ = g_sequence_iter_get_position (iter);
+
+    _hash_table_insert (flist, f, iter);
+    flist->size++;
 
     CHECK_FILE_LIST_INTEGRITY (flist);
 
@@ -148,14 +156,16 @@ static int       file_list_add          (FileList   *flist,
 static int       file_list_remove       (FileList   *flist,
                                          MooFile    *file)
 {
-    int index_ = 0;
-    GList *link;
+    GSequenceIter *iter;
+    int index_;
 
-    link = _list_find (flist, file, &index_);
-    g_assert (link != NULL);
+    iter = (GSequenceIter *) g_hash_table_lookup (flist->file_to_iter, file);
+    g_assert (iter != NULL);
+    index_ = g_sequence_iter_get_position (iter);
 
     _hash_table_remove (flist, file);
-    _list_delete_link (&flist->list, link, &flist->size);
+    g_sequence_remove (iter);
+    flist->size--;
 
     CHECK_FILE_LIST_INTEGRITY (flist);
 
@@ -167,9 +177,11 @@ static int       file_list_remove       (FileList   *flist,
 static MooFile  *file_list_nth          (FileList   *flist,
                                          int         index_)
 {
+    GSequenceIter *iter;
     MooFile *file;
     g_assert (0 <= index_ && index_ < flist->size);
-    file = (MooFile *) g_list_nth_data (flist->list, index_);
+    iter = g_sequence_get_iter_at_pos (flist->seq, index_);
+    file = (MooFile *) g_sequence_get (iter);
     g_assert (file != NULL);
     return file;
 }
@@ -185,20 +197,19 @@ G_GNUC_UNUSED static gboolean
                  file_list_contains     (FileList   *flist,
                                          MooFile    *file)
 {
-    return g_hash_table_lookup (flist->file_to_link, file) != NULL;
+    return g_hash_table_lookup (flist->file_to_iter, file) != NULL;
 }
 
 
-/* TODO */
 static int       file_list_position     (FileList   *flist,
                                          MooFile    *file)
 {
-    GList *link;
+    GSequenceIter *iter;
     int position;
     g_assert (file != NULL);
-    link = (GList *) g_hash_table_lookup (flist->file_to_link, file);
-    g_assert (link != NULL);
-    position = g_list_position (flist->list, link);
+    iter = (GSequenceIter *) g_hash_table_lookup (flist->file_to_iter, file);
+    g_assert (iter != NULL);
+    position = g_sequence_iter_get_position (iter);
     g_assert (position >= 0);
     return position;
 }
@@ -222,37 +233,54 @@ static MooFile  *file_list_find_display_name
 
 static MooFile  *file_list_first        (FileList   *flist)
 {
-    if (flist->list)
-        return (MooFile *) flist->list->data;
-    else
+    GSequenceIter *iter = g_sequence_get_begin_iter (flist->seq);
+
+    if (g_sequence_iter_is_end (iter))
         return NULL;
+
+    return (MooFile *) g_sequence_get (iter);
 }
 
 
 static MooFile  *file_list_next         (FileList   *flist,
                                          MooFile    *file)
 {
-    GList *link = (GList *) g_hash_table_lookup (flist->file_to_link, file);
-    g_assert (link != NULL);
-    if (link->next)
-        return (MooFile *) link->next->data;
-    else
+    GSequenceIter *iter = (GSequenceIter *) g_hash_table_lookup (flist->file_to_iter, file);
+    GSequenceIter *next;
+
+    g_assert (iter != NULL);
+    next = g_sequence_iter_next (iter);
+
+    if (g_sequence_iter_is_end (next))
         return NULL;
+
+    return (MooFile *) g_sequence_get (next);
 }
 
 
 static GSList   *file_list_get_slist    (FileList   *flist)
 {
-    GList *l;
+    GSequenceIter *iter;
     GSList *slist = NULL;
 
-    for (l = flist->list; l != NULL; l = l->next)
-        slist = g_slist_prepend (slist, _moo_file_ref ((MooFile *) l->data));
+    for (iter = g_sequence_get_begin_iter (flist->seq);
+         !g_sequence_iter_is_end (iter);
+         iter = g_sequence_iter_next (iter))
+        slist = g_slist_prepend (slist, _moo_file_ref ((MooFile *) g_sequence_get (iter)));
 
     return g_slist_reverse (slist);
 }
 
 
+/*
+ * The permutation moofoldermodel.cpp hands to GtkTreeModel's
+ * "rows-reordered": new_order[k] is the ORIGINAL position of the file that
+ * ends up at position k. The sequence itself is emptied and rebuilt in the
+ * new order rather than resorted in place, which needs nothing beyond one
+ * pass to collect the current files, one qsort over their indices, and one
+ * pass to reinsert -- no per-element O(log n) insert-sorted, since the target
+ * order is already known.
+ */
 static void      file_list_set_cmp_func (FileList   *flist,
                                          MooFileCmp  cmp_func,
                                          int       **new_order)
@@ -261,7 +289,47 @@ static void      file_list_set_cmp_func (FileList   *flist,
 
     if (flist->size)
     {
-        _list_sort (&flist->list, flist->size, cmp_func, new_order);
+        MooFile **files;
+        int *order;
+        GSequenceIter *iter;
+        int i;
+        struct {
+            MooFileCmp cmp_func;
+            MooFile  **files;
+        } data;
+
+        files = g_new (MooFile *, flist->size);
+        order = g_new (int, flist->size);
+
+        i = 0;
+        for (iter = g_sequence_get_begin_iter (flist->seq);
+             !g_sequence_iter_is_end (iter);
+             iter = g_sequence_iter_next (iter))
+        {
+            files[i] = (MooFile *) g_sequence_get (iter);
+            order[i] = i;
+            ++i;
+        }
+        g_assert (i == flist->size);
+
+        data.cmp_func = cmp_func;
+        data.files = files;
+        g_qsort_with_data (order, flist->size, sizeof (int),
+                           (GCompareDataFunc) _compare_file_indices, &data);
+
+        g_sequence_remove_range (g_sequence_get_begin_iter (flist->seq),
+                                 g_sequence_get_end_iter (flist->seq));
+
+        for (i = 0; i < flist->size; ++i)
+        {
+            MooFile *file = files[order[i]];
+            GSequenceIter *new_iter = g_sequence_append (flist->seq, file);
+            g_hash_table_replace (flist->file_to_iter, file, new_iter);
+        }
+
+        g_free (files);
+        *new_order = order;
+
         CHECK_FILE_LIST_INTEGRITY (flist);
     }
 }
@@ -269,9 +337,9 @@ static void      file_list_set_cmp_func (FileList   *flist,
 
 static void      _hash_table_insert     (FileList       *flist,
                                          MooFile        *file,
-                                         GList          *link)
+                                         GSequenceIter  *iter)
 {
-    g_hash_table_insert (flist->file_to_link, file, link);
+    g_hash_table_insert (flist->file_to_iter, file, iter);
     g_hash_table_insert (flist->name_to_file,
                          g_strdup (_moo_file_name (file)),
                          file);
@@ -284,35 +352,11 @@ static void      _hash_table_insert     (FileList       *flist,
 static void      _hash_table_remove     (FileList       *flist,
                                          MooFile        *file)
 {
-    g_hash_table_remove (flist->file_to_link, file);
+    g_hash_table_remove (flist->file_to_iter, file);
     g_hash_table_remove (flist->name_to_file,
                          _moo_file_name (file));
     g_hash_table_remove (flist->display_name_to_file,
                          _moo_file_display_name (file));
-}
-
-
-static void      _list_delete_link      (GList         **list,
-                                         GList          *link,
-                                         int            *list_len)
-{
-    g_assert (*list_len == (int)g_list_length (*list));
-    *list = g_list_delete_link (*list, link);
-    (*list_len)--;
-    g_assert (*list_len == (int)g_list_length (*list));
-}
-
-
-/* TODO */
-static GList    *_list_find             (FileList       *flist,
-                                         MooFile        *file,
-                                         int            *index_)
-{
-    GList *link = (GList *) g_hash_table_lookup (flist->file_to_link, file);
-    g_return_val_if_fail (link != NULL, NULL);
-    *index_ = g_list_position (flist->list, link);
-    g_return_val_if_fail (*index_ >= 0, NULL);
-    return link;
 }
 
 
@@ -377,210 +421,28 @@ moo_file_cmp_fi (MooFile *f1,
 }
 
 
-/* TODO XXX cmp_func may return 0. what then? */
-static void     _find_insert_position   (GList          *list,
-                                         int             list_len,
-                                         MooFileCmp      cmp_func,
-                                         MooFile        *file,
-                                         GList         **prev,
-                                         GList         **next,
-                                         int            *position)
+/* Adapts a MooFileCmp (no user_data) to the GCompareDataFunc g_sequence_*
+   wants, so the same comparators used everywhere else in this file can be
+   passed straight to g_sequence_insert_sorted(). */
+static int       _cmp_func_wrapper      (gconstpointer   a,
+                                         gconstpointer   b,
+                                         gpointer        user_data)
 {
-    GList *left = NULL, *right = NULL;
-    int pos = -1;
-
-    while (list_len)
-    {
-        int cmp;
-
-        if (!left)
-        {
-            left = list;
-            pos = 0;
-        }
-
-        cmp = cmp_func (file, (MooFile *) left->data);
-        g_assert (cmp != 0);
-
-        if (cmp < 0)
-        {
-            right = left;
-            left = left->prev;
-            pos--;
-            break;
-        }
-        else
-        {
-            if (list_len == 1)
-            {
-                right = left->next;
-                break;
-            }
-            else if (list_len == 2)
-            {
-                g_assert (left->next != NULL);
-                cmp = cmp_func (file, (MooFile *) left->next->data);
-                g_assert (cmp != 0);
-
-                if (cmp < 0)
-                {
-                    right = left->next;
-                }
-                else
-                {
-                    right = left->next->next;
-                    left = left->next;
-                    pos++;
-                }
-
-                break;
-            }
-            else if (list_len % 2)
-            {
-                right = g_list_nth (left, list_len / 2);
-                g_assert (right != NULL);
-
-                cmp = cmp_func (file, (MooFile *) right->data);
-                g_assert (cmp != 0);
-
-                if (cmp > 0)
-                {
-                    left = right;
-                    pos += list_len / 2;
-                }
-
-                list_len = list_len / 2 + 1;
-            }
-            else
-            {
-                right = g_list_nth (left, list_len / 2);
-                g_assert (right != NULL);
-
-                cmp = cmp_func (file, (MooFile *) right->data);
-                g_assert (cmp != 0);
-
-                if (cmp < 0)
-                {
-                    list_len = list_len / 2 + 1;
-                }
-                else
-                {
-                    left = right;
-                    pos += list_len / 2;
-                    list_len = list_len / 2;
-                }
-            }
-        }
-    }
-
-    *next = right;
-    *prev = left;
-    *position = pos + 1;
-}
-
-/* TODO */
-static GList    *_list_insert_sorted    (GList         **list,
-                                         int            *list_len,
-                                         MooFileCmp      cmp_func,
-                                         MooFile        *file,
-                                         int            *position)
-{
-    GList *link;
-    GList *prev, *next;
-
-    g_assert (*list_len == (int)g_list_length (*list));
-    g_assert (g_list_find (*list, file) == NULL);
-
-    _find_insert_position (*list, *list_len, cmp_func, file, &prev, &next, position);
-    g_assert (*position >= 0);
-
-    link = g_list_alloc ();
-    link->data = file;
-    link->prev = prev;
-    link->next = next;
-
-    if (prev)
-        prev->next = link;
-    else
-        *list = link;
-
-    if (next)
-        next->prev = link;
-
-    (*list_len)++;
-    g_assert (g_list_nth (*list, *position) == link);
-    g_assert (*list_len == (int)g_list_length (*list));
-    return link;
+    MooFileCmp cmp_func = (MooFileCmp) user_data;
+    return cmp_func ((MooFile *) a, (MooFile *) b);
 }
 
 
-static int       _compare_links         (int            *a,
+static int       _compare_file_indices  (int            *a,
                                          int            *b,
                                          gpointer        user_data)
 {
     struct {
         MooFileCmp cmp_func;
-        GList **links;
+        MooFile  **files;
     } *data = (decltype(data)) user_data;
 
-    return data->cmp_func ((MooFile *) data->links[*a]->data,
-                           (MooFile *) data->links[*b]->data);
-}
-
-
-static void      _list_sort             (GList         **list,
-                                         guint           list_len,
-                                         MooFileCmp      cmp_func,
-                                         int           **new_order_p)
-{
-    guint i;
-    GList **links;
-    int *order;
-    GList *l;
-    struct {
-        MooFileCmp cmp_func;
-        GList **links;
-    } data;
-
-    g_return_if_fail (list_len != 0);
-
-    links = g_new (GList*, list_len);
-    order = g_new (int, list_len);
-
-    for (i = 0, l = *list; i < list_len; ++i, l = l->next)
-    {
-        g_assert (i > 0 || l->prev == NULL);
-        g_assert (i < list_len - 1 || l->next == NULL);
-        g_assert (i == 0 || i == list_len - 1 || (l->next != NULL && l->prev != NULL));
-
-        order[i] = i;
-        links[i] = l;
-    }
-
-    data.cmp_func = cmp_func;
-    data.links = links;
-    g_qsort_with_data (order, list_len, sizeof (int),
-                       (GCompareDataFunc) _compare_links, &data);
-
-    /* order[] is the sort permutation over the ORIGINAL links[]; the physical
-       chain has to be relinked through it too, or the list stays in its old
-       order while new_order_p claims otherwise. */
-    for (i = 0; i < list_len; ++i)
-    {
-        if (i == 0)
-            links[order[i]]->prev = NULL;
-        else
-            links[order[i]]->prev = links[order[i-1]];
-        if (i == list_len - 1)
-            links[order[i]]->next = NULL;
-        else
-            links[order[i]]->next = links[order[i+1]];
-    }
-
-    *list = links[order[0]];
-    *new_order_p = order;
-
-    g_free (links);
+    return data->cmp_func (data->files[*a], data->files[*b]);
 }
 
 

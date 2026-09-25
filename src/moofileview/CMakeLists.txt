@@ -25,6 +25,7 @@ target_sources(medit PRIVATE
     moofolder-private.h
     moofolder.cpp
     moofolder.h
+    moofoldermodel-perf.cpp
     moofoldermodel-private.h
     moofoldermodel-tests.cpp
     moofoldermodel-tests.h
