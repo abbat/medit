@@ -14,6 +14,7 @@
  */
 
 #include "plugins/mooplugin-builtin.h"
+#include "plugins/mooquickopen-ranker.h"
 #include "mooedit/mooeditor.h"
 #include "mooedit/mooeditwindow.h"
 #include "mooedit/mooedit.h"
@@ -30,18 +31,9 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
-#include <algorithm>
-#include <cmath>
 
 #define QUICK_OPEN_ACTION_ID "QuickOpen"
 
-#define QUICK_OPEN_BASENAME_BONUS 16
-#define QUICK_OPEN_FRECENCY_WEIGHT 8.0
-#define QUICK_OPEN_FRECENCY_CAP 24.0
-#define QUICK_OPEN_OPEN_BONUS 12
-#define QUICK_OPEN_PROXIMITY_BONUS 6
-#define QUICK_OPEN_CURRENT_PENALTY 1000
-#define QUICK_OPEN_MAX_RESULTS 200
 #define QUICK_OPEN_MAX_VISIBLE 50
 #define QUICK_OPEN_HISTORY_ITEMS 200
 
@@ -50,133 +42,6 @@ enum {
     COLUMN_PATH,
     N_COLUMNS
 };
-
-struct QuickOpenCandidate {
-    std::string path;      /* absolute */
-    bool        is_open;
-    bool        is_current;
-    double      frecency;
-
-    QuickOpenCandidate (const std::string &p)
-        : path (p), is_open (false), is_current (false), frecency (0.0)
-    {
-    }
-};
-
-struct QuickOpenResult {
-    const QuickOpenCandidate *candidate;
-    int                       score;
-};
-
-static bool
-same_directory (const std::string &path, const std::string &dir)
-{
-    if (dir.empty ())
-        return false;
-
-    gstr path_dir = gstr::take (g_path_get_dirname (path.c_str ()));
-    return dir == path_dir.get ();
-}
-
-/* Pure, testable: one candidate's score against a query. 0 means "no match". */
-static int
-quick_open_score_one (const QuickOpenCandidate &c,
-                      const char               *query,
-                      const std::string        &active_dir,
-                      gint64                    now)
-{
-    MooFuzzyMatch match;
-
-    if (!moo_fuzzy_match (query, c.path.c_str (), FALSE, &match))
-        return 0;
-
-    int score = match.score;
-
-    if (query[0])
-    {
-        gstr base = gstr::take (g_path_get_basename (c.path.c_str ()));
-        MooFuzzyMatch base_match;
-        if (moo_fuzzy_match (query, base.get (), FALSE, &base_match))
-            score += QUICK_OPEN_BASENAME_BONUS;
-    }
-
-    double f = std::min (c.frecency, exp2 (QUICK_OPEN_FRECENCY_CAP / QUICK_OPEN_FRECENCY_WEIGHT) - 1.0);
-    score += (int) (QUICK_OPEN_FRECENCY_WEIGHT * log2 (1.0 + f));
-
-    if (c.is_open)
-        score += QUICK_OPEN_OPEN_BONUS;
-
-    if (same_directory (c.path, active_dir))
-        score += QUICK_OPEN_PROXIMITY_BONUS;
-
-    if (c.is_current)
-        score -= QUICK_OPEN_CURRENT_PENALTY;
-
-    (void) now;
-    return score;
-}
-
-static bool
-quick_open_result_less (const QuickOpenResult &a, const QuickOpenResult &b)
-{
-    if (a.score != b.score)
-        return a.score > b.score;
-    if (a.candidate->path.size () != b.candidate->path.size ())
-        return a.candidate->path.size () < b.candidate->path.size ();
-    return a.candidate->path < b.candidate->path;
-}
-
-/* Pure, testable: rank & truncate candidates for a query. */
-static std::vector<QuickOpenResult>
-quick_open_rank (const std::vector<QuickOpenCandidate> &candidates,
-                 const char                             *query,
-                 const std::string                      &active_dir,
-                 gint64                                  now)
-{
-    std::vector<QuickOpenResult> results;
-    results.reserve (candidates.size ());
-
-    for (const QuickOpenCandidate &c : candidates)
-    {
-        MooFuzzyMatch match;
-        if (query[0] && !moo_fuzzy_match (query, c.path.c_str (), FALSE, &match))
-            continue;
-
-        results.push_back ({ &c, quick_open_score_one (c, query, active_dir, now) });
-    }
-
-    std::sort (results.begin (), results.end (), quick_open_result_less);
-
-    if (results.size () > QUICK_OPEN_MAX_RESULTS)
-        results.resize (QUICK_OPEN_MAX_RESULTS);
-
-    return results;
-}
-
-static void
-add_candidate (std::vector<QuickOpenCandidate>        &candidates,
-               std::unordered_map<std::string, size_t> &index,
-               const std::string                       &path,
-               bool                                      is_open,
-               bool                                      is_current,
-               double                                    frecency)
-{
-    if (path.empty ())
-        return;
-
-    auto it = index.find (path);
-    if (it == index.end ())
-    {
-        index[path] = candidates.size ();
-        candidates.push_back (QuickOpenCandidate (path));
-        it = index.find (path);
-    }
-
-    QuickOpenCandidate &c = candidates[it->second];
-    c.is_open |= is_open;
-    c.is_current |= is_current;
-    c.frecency = std::max (c.frecency, frecency);
-}
 
 struct QuickOpenDialog {
     GtkWidget    *window;
@@ -220,29 +85,6 @@ quick_open_index_ready (GPtrArray *files,
     }
 
     delete req;
-}
-
-/*
- * Splits a trailing ":N" or "(N)" off the query, the way medit's command line
- * does (_moo_parse_file_line), so typing "foo.cpp:42" both searches for
- * "foo.cpp" and remembers line 42 for quick_open_open_selected(). Same
- * 1-based-to-0-based conversion as main.cpp; a query with no line, or one
- * ending in a bare separator, yields -1 ("no line").
- */
-static gstr
-quick_open_split_line (const char *query, int *out_line)
-{
-    char *parsed_path = NULL;
-    int   parsed_line = 0;
-
-    if (query[0] && _moo_parse_file_line (query, &parsed_path, &parsed_line))
-    {
-        *out_line = parsed_line - 1;
-        return gstr::take (parsed_path);
-    }
-
-    *out_line = -1;
-    return gstr (query);
 }
 
 static std::string
