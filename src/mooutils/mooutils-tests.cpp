@@ -1729,6 +1729,69 @@ test_fuzzy_overflow_protection (void)
 }
 
 
+/* -------------------------------------------------------------------------
+ * _moo_find_project_root() -- moved here from the LSP plugin, which was its
+ * only caller, when the file-index work needed it too.
+ *
+ * The markers here are made up rather than the ".git" and "go.mod" a real
+ * lsp.xml names, and that is the whole point: the walk goes up from a directory
+ * under the temp directory, through it and to the root, so a marker with a real
+ * name anywhere above -- a stray /tmp/.git, which is a thing that happens --
+ * would be found and the last case here would report that directory instead.
+ * The names below cannot be up there.
+ */
+static void
+test_find_project_root (void)
+{
+    char *dir = temp_dir ();
+    char *sub = g_build_filename (dir, "a", "b", nullptr);
+    char *marker_path;
+    char *markers[] = { (char*) ".medit-unit-root", (char*) "medit-unit-root.mod", NULL };
+    char *none[] = { NULL };
+    char *root;
+
+    g_assert_cmpint (g_mkdir_with_parents (sub, 0700), ==, 0);
+    marker_path = g_build_filename (dir, ".medit-unit-root", nullptr);
+    g_assert_true (g_file_set_contents (marker_path, "", 0, NULL));
+
+    /* Two directories down, and the marker at the top: the top is the root. */
+    root = _moo_find_project_root (sub, markers);
+    g_assert_cmpstr (root, ==, dir);
+    g_free (root);
+
+    /* The directory holding the marker is its own root. */
+    root = _moo_find_project_root (dir, markers);
+    g_assert_cmpstr (root, ==, dir);
+    g_free (root);
+
+    /* No markers at all: the file's own directory, without a walk. */
+    root = _moo_find_project_root (sub, none);
+    g_assert_cmpstr (root, ==, sub);
+    g_free (root);
+
+    root = _moo_find_project_root (sub, NULL);
+    g_assert_cmpstr (root, ==, sub);
+    g_free (root);
+
+    /* Nothing matches anywhere above, and the walk stops at / rather than
+       going round for ever. */
+    g_remove (marker_path);
+    root = _moo_find_project_root (sub, markers);
+    g_assert_cmpstr (root, ==, sub);
+    g_free (root);
+
+    g_rmdir (sub);
+    g_free (sub);
+    sub = g_build_filename (dir, "a", nullptr);
+    g_rmdir (sub);
+    g_rmdir (dir);
+
+    g_free (marker_path);
+    g_free (sub);
+    g_free (dir);
+}
+
+
 #if GTK_CHECK_VERSION(3,0,0)
 static void
 test_terminal_color_schemes_memory (void)
@@ -1802,6 +1865,7 @@ _moo_add_mooutils_unit_tests (void)
     g_test_add_func ("/mooutils/fuzzy/smart-case", test_fuzzy_smart_case);
     g_test_add_func ("/mooutils/fuzzy/utf8", test_fuzzy_utf8);
     g_test_add_func ("/mooutils/fuzzy/overflow-protection", test_fuzzy_overflow_protection);
+    g_test_add_func ("/mooutils/find-project-root", test_find_project_root);
 #if GTK_CHECK_VERSION(3,0,0)
     g_test_add_func ("/mooutils/terminal/colors", test_terminal_color_schemes_memory);
     g_test_add_func ("/mooutils/paned/drop-mask", test_drop_mask);

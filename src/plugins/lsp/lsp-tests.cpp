@@ -1035,65 +1035,6 @@ test_config_skips_invalid_servers (void)
 }
 
 
-/*
- * The markers here are made up rather than the ".git" and "go.mod" a real
- * lsp.xml names, and that is the whole point: the walk goes up from a directory
- * under the temp directory, through it and to the root, so a marker with a real
- * name anywhere above -- a stray /tmp/.git, which is a thing that happens --
- * would be found and the last case here would report that directory instead.
- * The names below cannot be up there.
- */
-static void
-test_config_root (void)
-{
-    char *dir = g_dir_make_tmp ("medit-unit-XXXXXX", NULL);
-    char *sub = g_build_filename (dir, "a", "b", nullptr);
-    char *marker;
-    char *markers[] = { (char*) ".medit-unit-root", (char*) "medit-unit-root.mod", NULL };
-    char *none[] = { NULL };
-    char *root;
-
-    g_assert_cmpint (g_mkdir_with_parents (sub, 0700), ==, 0);
-    marker = write_temp (dir, ".medit-unit-root", "whatever a marker holds\n");
-
-    /* Two directories down, and the marker at the top: the top is the root. */
-    root = lsp_config_find_root (sub, markers);
-    g_assert_cmpstr (root, ==, dir);
-    g_free (root);
-
-    /* The directory holding the marker is its own root. */
-    root = lsp_config_find_root (dir, markers);
-    g_assert_cmpstr (root, ==, dir);
-    g_free (root);
-
-    /* No markers at all: the file's own directory, without a walk. */
-    root = lsp_config_find_root (sub, none);
-    g_assert_cmpstr (root, ==, sub);
-    g_free (root);
-
-    root = lsp_config_find_root (sub, NULL);
-    g_assert_cmpstr (root, ==, sub);
-    g_free (root);
-
-    /* Nothing matches anywhere above, and the walk stops at / rather than
-       going round for ever. */
-    g_remove (marker);
-    root = lsp_config_find_root (sub, markers);
-    g_assert_cmpstr (root, ==, sub);
-    g_free (root);
-
-    g_rmdir (sub);
-    g_free (sub);
-    sub = g_build_filename (dir, "a", nullptr);
-    g_rmdir (sub);
-    g_rmdir (dir);
-
-    g_free (marker);
-    g_free (sub);
-    g_free (dir);
-}
-
-
 /* -------------------------------------------------------------------------
  * The bracketed detail the pane puts after a message
  */
@@ -2672,7 +2613,6 @@ _moo_lsp_add_unit_tests (void)
     g_test_add_func ("/lsp/config/malformed", test_config_parse_bad);
     g_test_add_func ("/lsp/config/invalid-comment", test_markup_rejects_invalid_comment);
     g_test_add_func ("/lsp/config/invalid-servers", test_config_skips_invalid_servers);
-    g_test_add_func ("/lsp/config/root", test_config_root);
 
     g_test_add_func ("/lsp/position/utf16", test_position_utf16);
     g_test_add_func ("/lsp/position/utf8", test_position_utf8);

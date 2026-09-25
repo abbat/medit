@@ -428,6 +428,52 @@ _moo_parse_file_line (const char *filename,
     return found;
 }
 
+char *
+_moo_find_project_root (const char  *file_dir,
+                        char       **markers)
+{
+    char *current;
+
+    g_return_val_if_fail (file_dir != NULL, NULL);
+
+    if (!markers || !markers[0])
+        return g_strdup (file_dir);
+
+    current = g_strdup (file_dir);
+
+    while (TRUE)
+    {
+        char *parent;
+        guint i;
+
+        for (i = 0; markers[i]; ++i)
+        {
+            char *candidate = g_build_filename (current, markers[i], nullptr);
+            gboolean found = g_file_test (candidate, G_FILE_TEST_EXISTS);
+
+            g_free (candidate);
+
+            if (found)
+                return current;
+        }
+
+        parent = g_path_get_dirname (current);
+
+        if (strcmp (parent, current) == 0)
+        {
+            g_free (parent);
+            break;
+        }
+
+        g_free (current);
+        current = parent;
+    }
+
+    g_free (current);
+
+    return g_strdup (file_dir);
+}
+
 gboolean
 _moo_path_is_absolute (const char *path)
 {

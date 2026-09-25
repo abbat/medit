@@ -75,6 +75,15 @@ gboolean        _moo_parse_file_line        (const char *filename,
                                              int        *line);
 gboolean        _moo_path_is_absolute       (const char *path);
 
+/*
+ * The root of the project a file belongs to: the nearest directory at or
+ * above file_dir holding one of the markers (a file or directory name such as
+ * ".git"). Without markers, and when nothing matches all the way up,
+ * file_dir itself is the root.
+ */
+char           *_moo_find_project_root      (const char *file_dir,
+                                             char      **markers);
+
 gboolean        _moo_copy_files_ui          (GList      *filenames,
                                              const char *destdir,
                                              GtkWidget  *parent);

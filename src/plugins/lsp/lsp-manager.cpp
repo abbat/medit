@@ -18,6 +18,7 @@
 #include "plugins/lsp/lsp-plugin.h"
 
 #include "mooedit/mooeditfiltersettings.h"
+#include "mooutils/mooutils-fs.h"
 
 
 /*
@@ -457,7 +458,7 @@ lsp_manager_add_doc (MooEdit *doc)
     }
 
     dir = g_path_get_dirname (path);
-    root = lsp_config_find_root (dir, config->root_markers);
+    root = _moo_find_project_root (dir, config->root_markers);
 
     entry = get_server (config, root);
 

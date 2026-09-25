@@ -134,11 +134,13 @@ looks**: that whole class is clang's, and the ui job is where it lands. And `g_r
 not `g_assert` — the checks are compiled in every build, so only what an assertion guards
 is at risk of having rotted.
 
-**Nothing that walks up out of a temp directory may look for a real name.** The LSP
-client finds a project root by walking up until a directory holds one of the markers, and
-a test of that walk starts under the temp directory — so the walk goes through `/tmp` and
-on to `/`, and a stray `/tmp/.git` on the machine running it becomes the answer. It cost a
-run here: `unit.lsp.config.root` and `lsp.root_markers` both failed, both correctly, on a
+**Nothing that walks up out of a temp directory may look for a real name.** `_moo_find_project_root()`
+(in `mooutils-fs.cpp`; it moved there from the LSP plugin, its only caller at the time, once
+the file index needed the same walk) finds a project root by walking up until a directory
+holds one of the markers, and a test of that walk starts under the temp directory — so the
+walk goes through `/tmp` and on to `/`, and a stray `/tmp/.git` on the machine running it
+becomes the answer. It cost a run here: `unit.lsp.config.root` (now
+`unit.mooutils.find-project-root`) and `lsp.root_markers` both failed, both correctly, on a
 machine that had one. Both use a made-up marker name now, and the reason is written at
 each. The rule generalises to anything the code searches for by name above the directory a
 test made.
@@ -156,7 +158,8 @@ compiling that job with assertions live, which stops it being the build a distri
 does, and the point of `build.yml` is that it is exactly that build.
 
 What is in them, besides the highlighting goldens below and the LSP client after them:
-`_moo_parse_file_line()`, `moo_splitlines()`, `_moo_accel_parse()` and `MooFileWriter`. The last three are the suites this fork used to
+`_moo_parse_file_line()`, `moo_splitlines()`, `_moo_accel_parse()`, `MooFileWriter` and
+`_moo_find_project_root()`. The middle three of those are the suites this fork used to
 have — `moo_test_mooaccel`, `moo_test_mooutils_misc` and `moo_test_moo_file_writer` went
 with the lua interpreter that ran them, while the functions they were about stayed exactly
 where they were. The first is new, and is why the file exists: see `doc/build.md` on `file.c:42`.
@@ -167,12 +170,11 @@ python's `splitlines()`. `moocmdview` writes every element it gets into the outp
 which is why a chunk of output ending in a newline draws a blank line. The test pins the
 behaviour rather than changing it.
 
-For the LSP client there are three more, each of which needed a few lines moved somewhere
+For the LSP client there are two more, each of which needed a few lines moved somewhere
 a test could reach them: `lsp_config_parse_file()` (an `lsp.xml` written into a temp
 directory: the command split the way a shell would, semicolon-separated markers, `<env>`,
 `initialization-options` as ordinary text, `enabled="false"`, and a malformed file, which
-must be a warning and an empty list rather than half a server), `lsp_config_find_root()`
-(the walk up to a marker, which used to be `find_root_dir()` in the manager), and
+must be a warning and an empty list rather than half a server), and
 `lsp_completion_word_start()` (what counts as the word being completed — the rule that
 makes `obj.` offer everything and `obj.fi` offer what starts with `fi`, and that a cursor
 just after a space has no prefix at all, which is what a UI test asserting the narrowing
