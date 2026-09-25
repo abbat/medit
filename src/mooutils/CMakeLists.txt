@@ -49,6 +49,8 @@ target_sources(medit PRIVATE
     moofiledialog.h
     moofileicon.cpp
     moofileicon.h
+    moofileindex.cpp
+    moofileindex.h
     moofilewatch.cpp
     moofilewatch.h
     moofilewriter-private.h

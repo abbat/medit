@@ -29,8 +29,11 @@
 
 #ifdef MOO_ENABLE_UNIT_TESTS
 
+#include <string.h>
+
 #include "mooutils/mooaccel.h"
 #include "mooutils/moobigpaned.h"
+#include "mooutils/moofileindex.h"
 #include "mooutils/moofuzzy.h"
 #include "mooutils/moo-mime.h"
 #include "mooutils/mooprefs.h"
@@ -1792,6 +1795,241 @@ test_find_project_root (void)
 }
 
 
+/* -------------------------------------------------------------------------
+ * MooFileIndex
+ */
+
+static gboolean
+run_git (const char *cwd, ...)
+{
+    g_autoptr(GPtrArray) argv = g_ptr_array_new ();
+    va_list args;
+    const char *arg;
+    gboolean ok;
+    gint status = 0;
+    g_autoptr(GError) error = NULL;
+
+    g_ptr_array_add (argv, (gpointer) "git");
+
+    va_start (args, cwd);
+    while ((arg = va_arg (args, const char *)) != NULL)
+        g_ptr_array_add (argv, (gpointer) arg);
+    va_end (args);
+
+    g_ptr_array_add (argv, NULL);
+
+    ok = g_spawn_sync (cwd, (char **) argv->pdata, NULL,
+                       (GSpawnFlags) (G_SPAWN_SEARCH_PATH | G_SPAWN_STDOUT_TO_DEV_NULL | G_SPAWN_STDERR_TO_DEV_NULL),
+                       NULL, NULL, NULL, NULL, &status, &error);
+
+    return ok && g_spawn_check_wait_status (status, NULL);
+}
+
+static gboolean
+ptr_array_has_string (GPtrArray *array, const char *str)
+{
+    guint i;
+
+    for (i = 0; i < array->len; ++i)
+        if (strcmp ((const char *) g_ptr_array_index (array, i), str) == 0)
+            return TRUE;
+
+    return FALSE;
+}
+
+static void
+test_file_index_git_tracked_and_ignored (void)
+{
+    g_autofree char *dir = NULL;
+    g_autofree char *tracked_path = NULL;
+    g_autofree char *untracked_path = NULL;
+    g_autofree char *ignored_path = NULL;
+    g_autofree char *gitignore_path = NULL;
+    g_autoptr(GPtrArray) files = NULL;
+
+    if (!g_find_program_in_path ("git"))
+    {
+        g_test_skip ("git not installed");
+        return;
+    }
+
+    dir = temp_dir ();
+
+    g_assert_true (run_git (dir, "init", "-q", NULL));
+    g_assert_true (run_git (dir, "config", "user.email", "unit@test", NULL));
+    g_assert_true (run_git (dir, "config", "user.name", "unit", NULL));
+
+    tracked_path   = g_build_filename (dir, "tracked.txt", NULL);
+    untracked_path = g_build_filename (dir, "untracked.txt", NULL);
+    ignored_path   = g_build_filename (dir, "ignored.txt", NULL);
+    gitignore_path = g_build_filename (dir, ".gitignore", NULL);
+
+    g_assert_true (g_file_set_contents (tracked_path, "x", 1, NULL));
+    g_assert_true (g_file_set_contents (untracked_path, "x", 1, NULL));
+    g_assert_true (g_file_set_contents (ignored_path, "x", 1, NULL));
+    g_assert_true (g_file_set_contents (gitignore_path, "ignored.txt\n", -1, NULL));
+
+    g_assert_true (run_git (dir, "add", "tracked.txt", ".gitignore", NULL));
+
+    files = _moo_file_index_build (dir, 0);
+    g_assert_nonnull (files);
+    g_assert_true (ptr_array_has_string (files, "tracked.txt"));
+    g_assert_true (ptr_array_has_string (files, "untracked.txt"));
+    g_assert_false (ptr_array_has_string (files, "ignored.txt"));
+
+    _moo_remove_dir (dir, TRUE, NULL);
+}
+
+static void
+test_file_index_no_git_fallback (void)
+{
+    g_autofree char *dir = temp_dir ();
+    g_autofree char *subdir = g_build_filename (dir, "sub", NULL);
+    g_autofree char *top_file = g_build_filename (dir, "top.txt", NULL);
+    g_autofree char *sub_file = g_build_filename (subdir, "sub.txt", NULL);
+    g_autoptr(GPtrArray) files = NULL;
+
+    g_assert_cmpint (g_mkdir_with_parents (subdir, 0700), ==, 0);
+    g_assert_true (g_file_set_contents (top_file, "x", 1, NULL));
+    g_assert_true (g_file_set_contents (sub_file, "x", 1, NULL));
+
+    files = _moo_file_index_build (dir, 0);
+    g_assert_nonnull (files);
+    g_assert_cmpuint (files->len, ==, 2);
+    g_assert_true (ptr_array_has_string (files, "top.txt"));
+    g_assert_true (ptr_array_has_string (files, G_DIR_SEPARATOR_S "sub" G_DIR_SEPARATOR_S "sub.txt" + 1));
+
+    _moo_remove_dir (dir, TRUE, NULL);
+}
+
+static void
+test_file_index_skip_vcs_dirs (void)
+{
+    g_autofree char *dir = temp_dir ();
+    g_autofree char *git_dir = g_build_filename (dir, ".git", NULL);
+    g_autofree char *node_modules_dir = g_build_filename (dir, "node_modules", NULL);
+    g_autofree char *own_file = g_build_filename (dir, "own.txt", NULL);
+    g_autofree char *git_file = g_build_filename (git_dir, "config", NULL);
+    g_autofree char *dep_file = g_build_filename (node_modules_dir, "dep.txt", NULL);
+    g_autoptr(GPtrArray) files = NULL;
+
+    /* An empty ".git" is not a working repository, so git ls-files fails
+       here and this exercises the fallback walker same as the test above --
+       what is new here is that the walker must not descend into it. */
+    g_assert_cmpint (g_mkdir_with_parents (git_dir, 0700), ==, 0);
+    g_assert_cmpint (g_mkdir_with_parents (node_modules_dir, 0700), ==, 0);
+    g_assert_true (g_file_set_contents (own_file, "x", 1, NULL));
+    g_assert_true (g_file_set_contents (git_file, "x", 1, NULL));
+    g_assert_true (g_file_set_contents (dep_file, "x", 1, NULL));
+
+    files = _moo_file_index_build (dir, 0);
+    g_assert_nonnull (files);
+    g_assert_cmpuint (files->len, ==, 1);
+    g_assert_true (ptr_array_has_string (files, "own.txt"));
+
+    _moo_remove_dir (dir, TRUE, NULL);
+}
+
+static void
+test_file_index_symlink_not_followed (void)
+{
+    g_autofree char *dir = temp_dir ();
+    g_autofree char *target_dir = g_build_filename (dir, "target", NULL);
+    g_autofree char *target_file = g_build_filename (target_dir, "inner.txt", NULL);
+    g_autofree char *real_file = g_build_filename (dir, "real.txt", NULL);
+    g_autofree char *link_to_dir = g_build_filename (dir, "link-to-target", NULL);
+    g_autofree char *link_to_file = g_build_filename (dir, "link-to-real.txt", NULL);
+    g_autoptr(GFile) link_to_dir_file = g_file_new_for_path (link_to_dir);
+    g_autoptr(GFile) link_to_file_file = g_file_new_for_path (link_to_file);
+    g_autoptr(GPtrArray) files = NULL;
+
+    g_assert_cmpint (g_mkdir_with_parents (target_dir, 0700), ==, 0);
+    g_assert_true (g_file_set_contents (target_file, "x", 1, NULL));
+    g_assert_true (g_file_set_contents (real_file, "x", 1, NULL));
+    g_assert_true (g_file_make_symbolic_link (link_to_dir_file, "target", NULL, NULL));
+    g_assert_true (g_file_make_symbolic_link (link_to_file_file, "real.txt", NULL, NULL));
+
+    files = _moo_file_index_build (dir, 0);
+    g_assert_nonnull (files);
+    g_assert_cmpuint (files->len, ==, 2);
+    g_assert_true (ptr_array_has_string (files, "real.txt"));
+    g_assert_true (ptr_array_has_string (files, G_DIR_SEPARATOR_S "target" G_DIR_SEPARATOR_S "inner.txt" + 1));
+
+    _moo_remove_dir (dir, TRUE, NULL);
+}
+
+static void
+test_file_index_max_files_limit (void)
+{
+    g_autofree char *dir = temp_dir ();
+    g_autoptr(GPtrArray) files = NULL;
+    guint i;
+
+    for (i = 0; i < 5; ++i)
+    {
+        g_autofree char *name = g_strdup_printf ("file-%u.txt", i);
+        g_autofree char *path = g_build_filename (dir, name, NULL);
+        g_assert_true (g_file_set_contents (path, "x", 1, NULL));
+    }
+
+    files = _moo_file_index_build (dir, 3);
+    g_assert_nonnull (files);
+    g_assert_cmpuint (files->len, ==, 3);
+
+    _moo_remove_dir (dir, TRUE, NULL);
+}
+
+typedef struct {
+    GMainLoop *loop;
+    GPtrArray *files;
+} FileIndexWait;
+
+static void
+on_file_index_ready (GPtrArray *files, gpointer user_data)
+{
+    FileIndexWait *wait = (FileIndexWait *) user_data;
+    wait->files = files;
+    g_main_loop_quit (wait->loop);
+}
+
+static gboolean
+on_file_index_wait_timeout (gpointer user_data)
+{
+    g_main_loop_quit ((GMainLoop *) user_data);
+    return G_SOURCE_REMOVE;
+}
+
+static void
+test_file_index_cache_stale_while_revalidate (void)
+{
+    g_autofree char *dir = temp_dir ();
+    g_autofree char *file_path = g_build_filename (dir, "a.txt", NULL);
+    g_autoptr(GMainLoop) loop = g_main_loop_new (NULL, FALSE);
+    FileIndexWait wait = { loop, NULL };
+    guint timeout_id;
+
+    g_assert_true (g_file_set_contents (file_path, "x", 1, NULL));
+
+    /* Nothing cached yet: NULL right away, the build happens in the background. */
+    g_assert_null (_moo_file_index_get (dir, on_file_index_ready, &wait));
+
+    timeout_id = g_timeout_add_seconds (10, on_file_index_wait_timeout, loop);
+    g_main_loop_run (loop);
+    g_source_remove (timeout_id);
+
+    g_assert_nonnull (wait.files);
+    g_assert_cmpuint (wait.files->len, ==, 1);
+
+    /* Fresh in the cache now: the same array comes back with no callback. */
+    g_assert_true (_moo_file_index_get (dir, NULL, NULL) == wait.files);
+
+    _moo_file_index_forget (dir);
+    g_assert_null (_moo_file_index_get (dir, NULL, NULL));
+
+    _moo_remove_dir (dir, TRUE, NULL);
+}
+
+
 #if GTK_CHECK_VERSION(3,0,0)
 static void
 test_terminal_color_schemes_memory (void)
@@ -1866,6 +2104,12 @@ _moo_add_mooutils_unit_tests (void)
     g_test_add_func ("/mooutils/fuzzy/utf8", test_fuzzy_utf8);
     g_test_add_func ("/mooutils/fuzzy/overflow-protection", test_fuzzy_overflow_protection);
     g_test_add_func ("/mooutils/find-project-root", test_find_project_root);
+    g_test_add_func ("/mooutils/file-index/git-tracked-and-ignored", test_file_index_git_tracked_and_ignored);
+    g_test_add_func ("/mooutils/file-index/no-git-fallback", test_file_index_no_git_fallback);
+    g_test_add_func ("/mooutils/file-index/skip-vcs-dirs", test_file_index_skip_vcs_dirs);
+    g_test_add_func ("/mooutils/file-index/symlink-not-followed", test_file_index_symlink_not_followed);
+    g_test_add_func ("/mooutils/file-index/max-files-limit", test_file_index_max_files_limit);
+    g_test_add_func ("/mooutils/file-index/cache-stale-while-revalidate", test_file_index_cache_stale_while_revalidate);
 #if GTK_CHECK_VERSION(3,0,0)
     g_test_add_func ("/mooutils/terminal/colors", test_terminal_color_schemes_memory);
     g_test_add_func ("/mooutils/paned/drop-mask", test_drop_mask);
