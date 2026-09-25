@@ -1195,6 +1195,109 @@ test_text_buffer_undo_freeze (void)
 }
 
 
+/*
+ * insert_action_merge()/delete_action_merge() stopped using g_strconcat() per
+ * merge (O(n^2) over a run of N keystrokes) in favour of a geometrically
+ * grown buffer -- memcpy for the append direction (typing, the Delete key),
+ * memmove+memcpy for the prepend direction (Backspace). This types and
+ * deletes a run long enough to cross several doublings, with multi-byte
+ * UTF-8 characters mixed in so a byte/char-count mixup would show up in the
+ * result, and checks the merged action still undoes/redoes to the exact
+ * text -- a wrong offset or a missing +1 for the nul in the rewritten
+ * memcpy/memmove would corrupt this.
+ */
+static void
+test_text_buffer_undo_merge (void)
+{
+    static const char *chars[] = {
+        "a", "b", "c", "d", "e", "f", "g", "h", "i", "j",
+        "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
+        "\xce\xa9" /* Ω */, "\xd0\x96" /* Ж */, "u", "v", "w", "x",
+        "y", "z", "0", "1", "2", "3", "4", "5", "6", "7",
+        "8", "9", "\xd0\xb8" /* и */, "\xd0\xab" /* Ы */,
+    };
+    MooTextBuffer *buffer = new_text_buffer ("");
+    MooUndoStack *stack = MOO_UNDO_STACK (_moo_text_buffer_get_undo_stack (buffer));
+    GString *typed = g_string_new (nullptr);
+    char *text;
+    guint i;
+
+    for (i = 0; i < G_N_ELEMENTS (chars); ++i)
+    {
+        GtkTextIter iter;
+        gtk_text_buffer_begin_user_action (GTK_TEXT_BUFFER (buffer));
+        gtk_text_buffer_get_end_iter (GTK_TEXT_BUFFER (buffer), &iter);
+        gtk_text_buffer_insert (GTK_TEXT_BUFFER (buffer), &iter, chars[i], -1);
+        gtk_text_buffer_end_user_action (GTK_TEXT_BUFFER (buffer));
+        g_string_append (typed, chars[i]);
+    }
+
+    text = text_buffer_text (buffer);
+    g_assert_cmpstr (text, ==, typed->str);
+    g_free (text);
+
+    moo_undo_stack_undo (stack);
+    text = text_buffer_text (buffer);
+    g_assert_cmpstr (text, ==, "");
+    g_free (text);
+
+    moo_undo_stack_redo (stack);
+    text = text_buffer_text (buffer);
+    g_assert_cmpstr (text, ==, typed->str);
+    g_free (text);
+
+    /* Delete key held at the same spot: the append branch of
+       delete_action_merge(). */
+    for (i = 0; i < G_N_ELEMENTS (chars); ++i)
+    {
+        GtkTextIter start, end;
+        gtk_text_buffer_get_iter_at_offset (GTK_TEXT_BUFFER (buffer), &start, 0);
+        gtk_text_buffer_place_cursor (GTK_TEXT_BUFFER (buffer), &start);
+        end = start;
+        gtk_text_iter_forward_char (&end);
+        gtk_text_buffer_begin_user_action (GTK_TEXT_BUFFER (buffer));
+        gtk_text_buffer_delete (GTK_TEXT_BUFFER (buffer), &start, &end);
+        gtk_text_buffer_end_user_action (GTK_TEXT_BUFFER (buffer));
+    }
+
+    text = text_buffer_text (buffer);
+    g_assert_cmpstr (text, ==, "");
+    g_free (text);
+
+    moo_undo_stack_undo (stack);
+    text = text_buffer_text (buffer);
+    g_assert_cmpstr (text, ==, typed->str);
+    g_free (text);
+
+    /* Backspace held at the end: the prepend branch of
+       delete_action_merge(). */
+    for (i = 0; i < G_N_ELEMENTS (chars); ++i)
+    {
+        GtkTextIter start, end;
+        gtk_text_buffer_get_end_iter (GTK_TEXT_BUFFER (buffer), &end);
+        gtk_text_buffer_place_cursor (GTK_TEXT_BUFFER (buffer), &end);
+        start = end;
+        gtk_text_iter_backward_char (&start);
+        gtk_text_buffer_begin_user_action (GTK_TEXT_BUFFER (buffer));
+        gtk_text_buffer_delete (GTK_TEXT_BUFFER (buffer), &start, &end);
+        gtk_text_buffer_end_user_action (GTK_TEXT_BUFFER (buffer));
+    }
+
+    text = text_buffer_text (buffer);
+    g_assert_cmpstr (text, ==, "");
+    g_free (text);
+
+    moo_undo_stack_undo (stack);
+    text = text_buffer_text (buffer);
+    g_assert_cmpstr (text, ==, typed->str);
+    g_free (text);
+
+    g_string_free (typed, TRUE);
+    g_object_unref (buffer);
+}
+
+
+
 static gboolean
 line_has_fold_tag (MooTextBuffer *buffer,
                    int            line)
@@ -1716,6 +1819,7 @@ _moo_add_mooedit_unit_tests (void)
     g_test_add_func ("/mooedit/text-buffer/undo-redo", test_text_buffer_undo_redo);
     g_test_add_func ("/mooedit/text-buffer/undo-group", test_text_buffer_undo_group);
     g_test_add_func ("/mooedit/text-buffer/undo-freeze", test_text_buffer_undo_freeze);
+    g_test_add_func ("/mooedit/text-buffer/undo-merge", test_text_buffer_undo_merge);
     g_test_add_func ("/mooedit/fold-tree/visibility", test_fold_tree_visibility);
     g_test_add_func ("/mooedit/fold-tree/remove-promotes-children",
                      test_fold_tree_remove_promotes_children);

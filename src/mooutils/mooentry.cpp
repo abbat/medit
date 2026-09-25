@@ -735,6 +735,7 @@ typedef struct {
     char *text;
     int   length;
     int   chars;
+    gsize alloc;
 } InsertAction;
 
 typedef struct {
@@ -742,6 +743,8 @@ typedef struct {
     int   end;
     char *text;
     gboolean forward;
+    gsize len;
+    gsize alloc;
 } DeleteAction;
 
 static void     insert_action_undo      (InsertAction   *action,
@@ -802,6 +805,7 @@ insert_action_new (G_GNUC_UNUSED GtkEditable *editable,
     action->pos = *position;
     action->text = g_strndup (text, length);
     action->length = (int) length;
+    action->alloc = (gsize) action->length + 1;
     action->chars = g_utf8_strlen (text, length);
 
     return (MooUndoAction*) action;
@@ -823,6 +827,8 @@ delete_action_new (GtkEditable        *editable,
     action->end = end_pos;
 
     action->text = gtk_editable_get_chars (editable, start_pos, end_pos);
+    action->len = strlen (action->text);
+    action->alloc = action->len + 1;
 
     /* figure out if the user used the Delete or the Backspace key */
     if (gtk_editable_get_position (editable) <= action->start)
@@ -899,11 +905,26 @@ delete_action_destroy (DeleteAction *action, gpointer)
 }
 
 
+static void
+undo_text_grow (char **text, gsize *alloc, gsize new_len)
+{
+    if (new_len + 1 > *alloc)
+    {
+        gsize new_alloc = *alloc ? *alloc * 2 : new_len + 1;
+
+        if (new_alloc < new_len + 1)
+            new_alloc = new_len + 1;
+
+        *text = g_renew (char, *text, new_alloc);
+        *alloc = new_alloc;
+    }
+}
+
 static gboolean
 insert_action_merge (InsertAction   *last_action,
                      InsertAction   *action, gpointer)
 {
-    char *tmp;
+    gsize new_len;
 
     if (action->pos != (last_action->pos + last_action->chars) ||
         (action->text[0] != ' ' && action->text[0] != '\t' &&
@@ -913,22 +934,19 @@ insert_action_merge (InsertAction   *last_action,
         return FALSE;
     }
 
-    tmp = g_strconcat (last_action->text, action->text, nullptr);
-    g_free (last_action->text);
-    last_action->length += action->length;
-    last_action->text = tmp;
+    new_len = (gsize) last_action->length + (gsize) action->length;
+    undo_text_grow (&last_action->text, &last_action->alloc, new_len);
+    memcpy (last_action->text + last_action->length, action->text, (gsize) action->length + 1);
+    last_action->length = (int) new_len;
     last_action->chars += action->chars;
 
     return TRUE;
 }
 
-
 static gboolean
 delete_action_merge (DeleteAction   *last_action,
                      DeleteAction   *action, gpointer)
 {
-    char *tmp;
-
     if (last_action->forward != action->forward ||
         (last_action->start != action->start &&
         last_action->start != action->end))
@@ -948,10 +966,10 @@ delete_action_merge (DeleteAction   *last_action,
             return FALSE;
         }
 
-        tmp = g_strconcat (last_action->text, action->text, nullptr);
-        g_free (last_action->text);
+        undo_text_grow (&last_action->text, &last_action->alloc, last_action->len + action->len);
+        memcpy (last_action->text + last_action->len, action->text, action->len + 1);
+        last_action->len += action->len;
         last_action->end += (action->end - action->start);
-        last_action->text = tmp;
     }
     else
     {
@@ -962,10 +980,13 @@ delete_action_merge (DeleteAction   *last_action,
             return FALSE;
         }
 
-        tmp = g_strconcat (action->text, last_action->text, nullptr);
-        g_free (last_action->text);
+        /* ponytail: still O(current length) per merge -- see the same
+         * branch in mootextbuffer.cpp's delete_action_merge. */
+        undo_text_grow (&last_action->text, &last_action->alloc, last_action->len + action->len);
+        memmove (last_action->text + action->len, last_action->text, last_action->len + 1);
+        memcpy (last_action->text, action->text, action->len);
+        last_action->len += action->len;
         last_action->start = action->start;
-        last_action->text = tmp;
     }
 
     return TRUE;

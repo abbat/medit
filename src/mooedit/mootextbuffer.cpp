@@ -1528,6 +1528,8 @@ typedef enum {
 
 typedef struct {
     char *text;
+    gsize len;
+    gsize alloc;
     guint interactive : 1;
     guint mergeable   : 1;
 } EditAction;
@@ -1640,6 +1642,8 @@ insert_action_new (GtkTextBuffer    *buffer,
     action->pos = gtk_text_iter_get_offset (pos);
     action->edit.text = g_strndup (text, length);
     action->length = length;
+    action->edit.len = (gsize) length;
+    action->edit.alloc = (gsize) length + 1;
     action->chars = g_utf8_strlen (text, length);
 
     if (action->chars > 1 || text[0] == '\n')
@@ -1672,6 +1676,8 @@ delete_action_new (GtkTextBuffer      *buffer,
     action->start = start_offset;
     action->end = end_offset;
     action->edit.text = gtk_text_buffer_get_slice (buffer, start, end, TRUE);
+    action->edit.len = strlen (action->edit.text);
+    action->edit.alloc = action->edit.len + 1;
 
     if (edit_action->interactive)
     {
@@ -1834,13 +1840,27 @@ action_merge (EditAction     *last_action,
 
 #define IS_SPACE_OR_TAB(c__) ((c__) == ' ' || (c__) == '\t')
 
+static void
+edit_action_grow (EditAction *action,
+                  gsize       new_len)
+{
+    if (new_len + 1 > action->alloc)
+    {
+        gsize new_alloc = action->alloc ? action->alloc * 2 : new_len + 1;
+
+        if (new_alloc < new_len + 1)
+            new_alloc = new_len + 1;
+
+        action->text = g_renew (char, action->text, new_alloc);
+        action->alloc = new_alloc;
+    }
+}
+
 static gboolean
 insert_action_merge (InsertAction   *last_action,
                      InsertAction   *action,
                      MooTextBuffer  *buffer)
 {
-    char *tmp;
-
     if (!action_merge (EDIT_ACTION (last_action), EDIT_ACTION (action), buffer))
         return FALSE;
 
@@ -1852,23 +1872,20 @@ insert_action_merge (InsertAction   *last_action,
         return FALSE;
     }
 
-    tmp = g_strconcat (last_action->edit.text, action->edit.text, nullptr);
-    g_free (last_action->edit.text);
+    edit_action_grow (EDIT_ACTION (last_action), last_action->edit.len + action->edit.len);
+    memcpy (last_action->edit.text + last_action->edit.len, action->edit.text, action->edit.len + 1);
+    last_action->edit.len += action->edit.len;
     last_action->length += action->length;
-    last_action->edit.text = tmp;
     last_action->chars += action->chars;
 
     return TRUE;
 }
-
 
 static gboolean
 delete_action_merge (DeleteAction   *last_action,
                      DeleteAction   *action,
                      MooTextBuffer  *buffer)
 {
-    char *tmp;
-
     if (!action_merge (EDIT_ACTION (last_action), EDIT_ACTION (action), buffer))
         return FALSE;
 
@@ -1883,7 +1900,7 @@ delete_action_merge (DeleteAction   *last_action,
     if (last_action->start == action->start)
     {
         char *text_end = g_utf8_offset_to_pointer (last_action->edit.text,
-                                                   last_action->end - last_action->start - 1);
+                                                    last_action->end - last_action->start - 1);
 
         /* Deleted with the delete key */
         if (!IS_SPACE_OR_TAB (action->edit.text[0]) && IS_SPACE_OR_TAB (*text_end))
@@ -1892,10 +1909,10 @@ delete_action_merge (DeleteAction   *last_action,
             return FALSE;
         }
 
-        tmp = g_strconcat (last_action->edit.text, action->edit.text, nullptr);
-        g_free (last_action->edit.text);
+        edit_action_grow (EDIT_ACTION (last_action), last_action->edit.len + action->edit.len);
+        memcpy (last_action->edit.text + last_action->edit.len, action->edit.text, action->edit.len + 1);
+        last_action->edit.len += action->edit.len;
         last_action->end += (action->end - action->start);
-        last_action->edit.text = tmp;
     }
     else
     {
@@ -1907,10 +1924,16 @@ delete_action_merge (DeleteAction   *last_action,
             return FALSE;
         }
 
-        tmp = g_strconcat (action->edit.text, last_action->edit.text, nullptr);
-        g_free (last_action->edit.text);
+        /* ponytail: still O(current length) per merge -- prepending needs
+         * the existing bytes shifted right every time a key repeats. Bounded
+         * in practice by how fast backspace autorepeats; a two-ended
+         * (deque-style) buffer would make this branch O(1) amortized too,
+         * same as the append branch above. */
+        edit_action_grow (EDIT_ACTION (last_action), last_action->edit.len + action->edit.len);
+        memmove (last_action->edit.text + action->edit.len, last_action->edit.text, last_action->edit.len + 1);
+        memcpy (last_action->edit.text, action->edit.text, action->edit.len);
+        last_action->edit.len += action->edit.len;
         last_action->start = action->start;
-        last_action->edit.text = tmp;
     }
 
     return TRUE;
