@@ -1646,8 +1646,10 @@ load_print_settings (void)
     if (!key_file)
         goto out;
 
-#define IGNORABLE_ERROR(err) ((err) && (err)->domain == GTK_PRINT_ERROR \
-                                && (err)->code == GTK_PRINT_ERROR_INVALID_FILE)
+#define IGNORABLE_ERROR(err) ((err) && ((((err)->domain == GTK_PRINT_ERROR \
+                                && (err)->code == GTK_PRINT_ERROR_INVALID_FILE)) \
+                                || ((err)->domain == G_KEY_FILE_ERROR \
+                                && (err)->code == G_KEY_FILE_ERROR_GROUP_NOT_FOUND)))
 
     _global_page_setup = gtk_page_setup_new_from_key_file (key_file, NULL, &error);
     if (!_global_page_setup)
