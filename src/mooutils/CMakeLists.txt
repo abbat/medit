@@ -71,6 +71,7 @@ target_sources(medit PRIVATE
     moolist.h
     moomarkup.cpp
     moomarkup.h
+    moomarkup-tests.h
     moomenu.cpp
     moomenu.h
     moomenuaction.cpp

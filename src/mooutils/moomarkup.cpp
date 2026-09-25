@@ -416,18 +416,39 @@ add_node (MooMarkupDoc     *doc,
 }
 
 
+/* GMarkup may split the text of one element, or the body of one comment,
+   over several calls to text()/passthrough() -- "the text of an element may
+   be spread over multiple calls of this function" per its own docs, which is
+   exactly what moo_parse_markup_file()'s 1024-byte chunked reads do to any
+   run longer than that. A realloc sized to fit exactly, every call, made
+   accumulating such a run O(n^2). Doubling the allocation instead makes it
+   amortized O(1) per call, O(n) total. */
 static void
 moo_markup_text_node_add_text (MooMarkupText  *node,
                                const char     *text,
                                gssize          text_len)
 {
+    gsize needed;
+
     if (text_len < 0)
         text_len = strlen (text);
 
     if (text_len == 0)
         return;
 
-    node->text = g_renew (char, node->text, node->size + text_len + 1);
+    needed = node->size + text_len + 1;
+
+    if (needed > node->alloc)
+    {
+        gsize new_alloc = node->alloc ? node->alloc * 2 : needed;
+
+        if (new_alloc < needed)
+            new_alloc = needed;
+
+        node->text = g_renew (char, node->text, new_alloc);
+        node->alloc = new_alloc;
+    }
+
     memcpy (node->text + node->size, text, text_len);
     node->size += text_len;
     node->text[node->size] = 0;
@@ -1209,3 +1230,109 @@ moo_parse_markup_file (const char         *filename,
 
     return !seen_error;
 }
+
+
+/*
+ * How moo_markup_text_node_add_text() scales when a node is grown by many
+ * small appends -- what text()/passthrough() do to a node that GMarkup's
+ * text callback splits across calls ("the text of an element may be spread
+ * over multiple calls of this function", per GMarkupParser's own docs).
+ * Developer's tool, not a test: nothing here asserts a time, and it is not
+ * registered unless MOO_PERF is set, so it never reaches ctest or CI. Shape
+ * follows moofoldermodel-perf.cpp; the function under test is file-static,
+ * so the test lives here instead of in a file of its own.
+ *
+ *     cmake -S . -B buildp -DCMAKE_BUILD_TYPE=Release -DENABLE_UNIT_TESTS=ON
+ *     cmake --build buildp --target perf-markup
+ *
+ * MOO_PERF_N sets the number of appends (default 20000), each 256 bytes.
+ */
+#ifdef MOO_ENABLE_UNIT_TESTS
+
+#include "mooutils/moomarkup-tests.h"
+
+#define MARKUP_PERF_RUNS  3
+#define MARKUP_CHUNK_SIZE 256
+
+static double
+markup_perf_now_ms (void)
+{
+    return g_get_monotonic_time () / 1000.0;
+}
+
+static int
+markup_perf_cmp_double (const void *a,
+                        const void *b)
+{
+    double x = *(const double*) a;
+    double y = *(const double*) b;
+
+    return (x > y) - (x < y);
+}
+
+static guint
+markup_perf_n (void)
+{
+    const char *n = g_getenv ("MOO_PERF_N");
+    return n != nullptr ? (guint) g_ascii_strtoull (n, nullptr, 10) : 20000;
+}
+
+static void
+test_perf_markup_add_text (gconstpointer data)
+{
+    guint n = markup_perf_n ();
+    char chunk[MARKUP_CHUNK_SIZE];
+    double runs[MARKUP_PERF_RUNS];
+    const char *out = g_getenv ("MOO_PERF_OUT");
+
+    (void) data;
+
+    memset (chunk, 'x', sizeof chunk);
+
+    g_print ("# perf markup: %u appends of %u bytes\n", n, (guint) sizeof chunk);
+
+    for (int run = 0; run < MARKUP_PERF_RUNS; ++run)
+    {
+        MooMarkupDoc *doc = moo_markup_doc_new ("perf");
+        MooMarkupNode *root = moo_markup_create_root_element (doc, "root");
+        MooMarkupNode *text_node = moo_markup_text_node_new (MOO_MARKUP_TEXT_NODE,
+                                                             doc, root, "", 0);
+        double t0 = markup_perf_now_ms ();
+        guint i;
+
+        for (i = 0; i < n; ++i)
+            moo_markup_text_node_add_text (MOO_MARKUP_TEXT (text_node),
+                                           chunk, sizeof chunk);
+
+        runs[run] = markup_perf_now_ms () - t0;
+
+        moo_markup_doc_unref (doc);
+    }
+
+    qsort (runs, MARKUP_PERF_RUNS, sizeof (double), markup_perf_cmp_double);
+
+    g_print ("# perf %-16s %-10s %9.1f ms\n", "markup", "add_text",
+             runs[MARKUP_PERF_RUNS / 2]);
+
+    if (out != nullptr)
+    {
+        FILE *f = fopen (out, "a");
+
+        if (f != nullptr)
+        {
+            fprintf (f, "markup add_text %.1f\n", runs[MARKUP_PERF_RUNS / 2]);
+            fclose (f);
+        }
+    }
+}
+
+void
+_moo_add_moomarkup_perf_tests (void)
+{
+    if (g_getenv ("MOO_PERF") == nullptr)
+        return;
+
+    g_test_add_data_func ("/perf/markup/add_text", nullptr, test_perf_markup_add_text);
+}
+
+#endif /* MOO_ENABLE_UNIT_TESTS */

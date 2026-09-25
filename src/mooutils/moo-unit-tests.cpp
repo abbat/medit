@@ -23,6 +23,7 @@
 #include "moofileview/moofileview-tests.h"
 #include "plugins/ctags/ctags-tests.h"
 #include "mooutils/mooutils-tests.h"
+#include "mooutils/moomarkup-tests.h"
 
 #ifdef MOO_BUILD_LSP
 #include "plugins/lsp/lsp-tests.h"
@@ -47,6 +48,7 @@ add_all_tests (void)
     _moo_add_moofileview_unit_tests ();
     _moo_add_moofoldermodel_unit_tests ();
     _moo_add_moofoldermodel_perf_tests ();
+    _moo_add_moomarkup_perf_tests ();
     _moo_add_ctags_unit_tests ();
 
 #ifdef MOO_BUILD_LSP

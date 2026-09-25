@@ -123,6 +123,9 @@ struct MooMarkupText {
 
     char                    *text;      /* 0-terminated content of the node */
     gsize                    size;      /* strlen (text) */
+    gsize                    alloc;     /* allocated size of text, >= size + 1;
+                                            0 until the node has been grown by
+                                            moo_markup_text_node_add_text() */
 };
 
 
