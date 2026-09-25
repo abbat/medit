@@ -268,7 +268,15 @@ moo_fuzzy_match (const char    *pattern,
         tmp = C_prev; C_prev = C_cur; C_cur = tmp;
     }
 
+    /* Every g_autofree local above -- H_prev/H_cur, C_prev/C_cur, pos_bonus,
+       pos_cur, match_pos -- is freed by the compiler-inserted cleanup on this
+       return, same as on the one below. The analyzer loses track of it here
+       because of the double-buffer swap two lines up (`tmp = H_prev; H_prev =
+       H_cur;`): it sees the pre-swap block as overwritten without a free,
+       missing that the swap only renamed which variable's cleanup owns it. */
+    /* NOLINTNEXTLINE(clang-analyzer-unix.Malloc) */
     if (best_score <= NEG_INF / 2)
+        /* NOLINTNEXTLINE(clang-analyzer-unix.Malloc) */
         return FALSE; /* unreachable: is_subsequence already guarantees a path */
 
     match->score = best_score;
@@ -278,6 +286,10 @@ moo_fuzzy_match (const char    *pattern,
         guint col = best_j;
         for (guint i = plen; i >= 1; --i)
         {
+            /* match_pos is non-NULL exactly when want_positions is TRUE (see
+               its allocation above), which is where this loop runs; the
+               analyzer cannot correlate the two separate variables. */
+            /* NOLINTNEXTLINE(clang-analyzer-core.NullDereference) */
             int p_pos = match_pos[i * cols + col];
             guint idx = i - 1;
             if (idx < MOO_FUZZY_MAX_POSITIONS)
