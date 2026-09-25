@@ -48,6 +48,7 @@
 #include "mooedit/mootextview-private.h"
 #include "mooedit/mooeditfiltersettings.h"
 #include "mooedit/mootextsearch-private.h"
+#include "mooedit/mooedithistoryitem.h"
 #include "vendor/gtksourceview/gtksourcecontextengine.h"
 #include "vendor/gtksourceview/gtksourceengine.h"
 #include "mooutils/mooundo.h"
@@ -1777,6 +1778,64 @@ test_text_btree_ranges (void)
 }
 
 
+static void
+test_history_item_frecency (void)
+{
+    MooHistoryItem *item = moo_history_item_new ("file:///a", nullptr);
+    gint64 now;
+
+    g_assert_cmpfloat (_moo_edit_history_item_get_frecency (item, g_get_real_time () / G_USEC_PER_SEC), ==, 0.0);
+
+    _moo_edit_history_item_visit (item);
+    now = g_get_real_time () / G_USEC_PER_SEC;
+    g_assert_cmpfloat (fabs (_moo_edit_history_item_get_frecency (item, now) - 1.0), <, 0.01);
+
+    /* One half-life later, a single visit should have decayed to half. */
+    g_assert_cmpfloat (fabs (_moo_edit_history_item_get_frecency (item, now + 3 * 24 * 3600) - 0.5), <, 0.01);
+
+    /* A second visit right away adds on top of the (barely decayed) first. */
+    _moo_edit_history_item_visit (item);
+    now = g_get_real_time () / G_USEC_PER_SEC;
+    g_assert_cmpfloat (_moo_edit_history_item_get_frecency (item, now), >, 1.9);
+
+    moo_history_item_free (item);
+}
+
+/* moo_history_mgr_add_file() replaces a URI's stored item wholesale rather
+   than merging keys (moo_history_mgr_add_file_real() in moohistorymgr.cpp),
+   so reopening a file must carry the old item's frecency onto the fresh one
+   before visiting it -- exactly what update_history_item_for_doc() does in
+   mooeditor.cpp. Without that carry, frecency would reset to 1.0 on every
+   open no matter how many times the file was visited before. */
+static void
+test_history_item_frecency_survives_replace (void)
+{
+    MooHistoryMgr *mgr = MOO_HISTORY_MGR (
+        g_object_new (MOO_TYPE_HISTORY_MGR, "name", "unit-test-frecency", (const char*) nullptr));
+    MooHistoryItem *item;
+    MooHistoryItem *old;
+
+    item = moo_history_item_new ("file:///a", nullptr);
+    _moo_edit_history_item_visit (item);
+    moo_history_mgr_add_file (mgr, item);
+    moo_history_item_free (item);
+
+    old = moo_history_mgr_find_uri (mgr, "file:///a");
+    g_assert_cmpfloat (_moo_edit_history_item_get_frecency (old, g_get_real_time () / G_USEC_PER_SEC), >, 0.9);
+
+    item = moo_history_item_new ("file:///a", nullptr);
+    _moo_edit_history_item_carry_frecency (item, old);
+    _moo_edit_history_item_visit (item);
+    moo_history_mgr_add_file (mgr, item);
+    moo_history_item_free (item);
+
+    old = moo_history_mgr_find_uri (mgr, "file:///a");
+    g_assert_cmpfloat (_moo_edit_history_item_get_frecency (old, g_get_real_time () / G_USEC_PER_SEC), >, 1.9);
+
+    g_object_unref (mgr);
+}
+
+
 void
 _moo_add_mooedit_unit_tests (void)
 {
@@ -1834,6 +1893,9 @@ _moo_add_mooedit_unit_tests (void)
                      test_text_view_word_selection_after_closing_bracket);
     g_test_add_func ("/mooedit/text-buffer/line-operations",
                      test_text_buffer_line_operations);
+    g_test_add_func ("/mooedit/history/frecency", test_history_item_frecency);
+    g_test_add_func ("/mooedit/history/frecency-survives-replace",
+                     test_history_item_frecency_survives_replace);
 
     if (entries == nullptr)
     {

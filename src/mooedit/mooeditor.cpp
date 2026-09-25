@@ -993,9 +993,15 @@ update_history_item_for_doc (MooEditor *editor,
         _moo_edit_history_item_set_encoding (item, enc);
 
     if (add)
+    {
+        _moo_edit_history_item_carry_frecency (item, moo_history_mgr_find_uri (editor->priv->history, uri.get()));
+        _moo_edit_history_item_visit (item);
         moo_history_mgr_add_file (editor->priv->history, item);
+    }
     else
+    {
         moo_history_mgr_update_file (editor->priv->history, item);
+    }
 
     moo_history_item_free (item);
 }
