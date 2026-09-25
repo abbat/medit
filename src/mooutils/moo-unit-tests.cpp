@@ -54,6 +54,7 @@ add_all_tests (void)
     _moo_add_moomarkup_perf_tests ();
     _moo_add_ctags_unit_tests ();
     _moo_quick_open_add_unit_tests ();
+    _moo_quick_open_add_perf_tests ();
     _moo_add_main_unit_tests ();
 
 #ifdef MOO_BUILD_LSP

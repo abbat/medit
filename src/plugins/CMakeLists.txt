@@ -7,6 +7,7 @@ target_sources(medit PRIVATE
     mooplugin-builtin.cpp
     mooplugin-builtin.h
     mooquickopen.cpp
+    mooquickopen-perf.cpp
     mooquickopen-ranker.cpp
     mooquickopen-ranker.h
     mooquickopen-tests.cpp

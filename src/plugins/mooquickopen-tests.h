@@ -22,6 +22,10 @@ G_BEGIN_DECLS
 /* Registers Quick Open's ranker unit tests; called from moo_unit_tests_run(). */
 void        _moo_quick_open_add_unit_tests (void);
 
+/* The performance measurement of mooquickopen-perf.cpp; nothing unless
+   MOO_PERF is set in the environment. */
+void        _moo_quick_open_add_perf_tests (void);
+
 G_END_DECLS
 
 #endif /* MOO_ENABLE_UNIT_TESTS */
