@@ -430,9 +430,11 @@ _moo_parse_file_line (const char *filename,
 
 char *
 _moo_find_project_root (const char  *file_dir,
-                        char       **markers)
+                        char       **markers,
+                        gboolean     outermost)
 {
     char *current;
+    char *best = NULL;
 
     g_return_val_if_fail (file_dir != NULL, NULL);
 
@@ -445,16 +447,25 @@ _moo_find_project_root (const char  *file_dir,
     {
         char *parent;
         guint i;
+        gboolean found = FALSE;
 
         for (i = 0; markers[i]; ++i)
         {
             char *candidate = g_build_filename (current, markers[i], nullptr);
-            gboolean found = g_file_test (candidate, G_FILE_TEST_EXISTS);
-
+            found = g_file_test (candidate, G_FILE_TEST_EXISTS);
             g_free (candidate);
 
             if (found)
+                break;
+        }
+
+        if (found)
+        {
+            if (!outermost)
                 return current;
+
+            g_free (best);
+            best = g_strdup (current);
         }
 
         parent = g_path_get_dirname (current);
@@ -471,7 +482,7 @@ _moo_find_project_root (const char  *file_dir,
 
     g_free (current);
 
-    return g_strdup (file_dir);
+    return best ? best : g_strdup (file_dir);
 }
 
 gboolean

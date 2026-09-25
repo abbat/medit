@@ -76,13 +76,18 @@ gboolean        _moo_parse_file_line        (const char *filename,
 gboolean        _moo_path_is_absolute       (const char *path);
 
 /*
- * The root of the project a file belongs to: the nearest directory at or
- * above file_dir holding one of the markers (a file or directory name such as
- * ".git"). Without markers, and when nothing matches all the way up,
- * file_dir itself is the root.
+ * The root of the project a file belongs to: a directory at or above
+ * file_dir holding one of the markers (a file or directory name such as
+ * ".git"). With outermost FALSE, the nearest such directory going up from
+ * file_dir is the root; with outermost TRUE, the walk continues to the
+ * filesystem root and the topmost match wins, so a marker nested inside
+ * another -- a submodule's ".git" inside a monorepo's -- does not shadow the
+ * project as a whole. Without markers, and when nothing matches all the way
+ * up, file_dir itself is the root.
  */
 char           *_moo_find_project_root      (const char *file_dir,
-                                             char      **markers);
+                                             char      **markers,
+                                             gboolean    outermost);
 
 gboolean        _moo_copy_files_ui          (GList      *filenames,
                                              const char *destdir,

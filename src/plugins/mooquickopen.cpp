@@ -364,13 +364,21 @@ quick_open_activate (MooEditWindow *window)
     gstr dir = gstr::take (dlg.active_path.empty () ? g_get_current_dir ()
                                                     : g_path_get_dirname (dlg.active_path.c_str ()));
 
-    /* Matches moofileindex's own notion of a project: the git work tree.
-       Without this, root is dir verbatim (_moo_find_project_root with no
-       markers never climbs), so a file open two levels into a repo -- or no
-       file open at all, cwd wherever the desktop launcher put it -- indexes
-       that one directory instead of the project. */
-    char *markers[] = { (char *) ".git", NULL };
-    dlg.root = gstr::take (_moo_find_project_root (dir.get (), markers)).get ();
+    /* Not just ".git": any marker a project layout tends to have, and the
+       outermost one going up rather than the nearest -- so a submodule's own
+       ".git" two levels into a monorepo does not shadow the monorepo as a
+       whole. Without this, root is dir verbatim (_moo_find_project_root with
+       no markers never climbs), so a file open two levels into a repo -- or
+       no file open at all, cwd wherever the desktop launcher put it --
+       indexes that one directory instead of the project. */
+    char *markers[] = {
+        (char *) ".git", (char *) "Cargo.toml", (char *) "package.json",
+        (char *) "go.work", (char *) "pnpm-workspace.yaml", (char *) "lerna.json",
+        (char *) "nx.json", (char *) "turbo.json", (char *) ".projectile",
+        (char *) "pyproject.toml", (char *) "setup.py", (char *) "Makefile",
+        (char *) "CMakeLists.txt", (char *) "BUILD.bazel", NULL
+    };
+    dlg.root = gstr::take (_moo_find_project_root (dir.get (), markers, TRUE)).get ();
 
     dlg.window = gtk_dialog_new ();
     gtk_window_set_title (GTK_WINDOW (dlg.window), _("Quick Open"));

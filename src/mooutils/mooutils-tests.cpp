@@ -1758,30 +1758,53 @@ test_find_project_root (void)
     g_assert_true (g_file_set_contents (marker_path, "", 0, NULL));
 
     /* Two directories down, and the marker at the top: the top is the root. */
-    root = _moo_find_project_root (sub, markers);
+    root = _moo_find_project_root (sub, markers, TRUE);
     g_assert_cmpstr (root, ==, dir);
     g_free (root);
 
     /* The directory holding the marker is its own root. */
-    root = _moo_find_project_root (dir, markers);
+    root = _moo_find_project_root (dir, markers, TRUE);
     g_assert_cmpstr (root, ==, dir);
     g_free (root);
 
     /* No markers at all: the file's own directory, without a walk. */
-    root = _moo_find_project_root (sub, none);
+    root = _moo_find_project_root (sub, none, TRUE);
     g_assert_cmpstr (root, ==, sub);
     g_free (root);
 
-    root = _moo_find_project_root (sub, NULL);
+    root = _moo_find_project_root (sub, NULL, TRUE);
     g_assert_cmpstr (root, ==, sub);
     g_free (root);
 
     /* Nothing matches anywhere above, and the walk stops at / rather than
        going round for ever. */
     g_remove (marker_path);
-    root = _moo_find_project_root (sub, markers);
+    root = _moo_find_project_root (sub, markers, TRUE);
     g_assert_cmpstr (root, ==, sub);
     g_free (root);
+
+    /* A marker at two levels: outermost keeps climbing and returns the
+       higher one -- the case that matters for a submodule's own ".git"
+       nested inside a monorepo's -- while outermost=FALSE stops at the
+       nearer one, which is what LSP root lookup did before it started
+       asking for the outermost too. */
+    g_assert_true (g_file_set_contents (marker_path, "", 0, NULL));
+    char *mid = g_build_filename (dir, "a", nullptr);
+    char *mid_marker_path = g_build_filename (mid, ".medit-unit-root", nullptr);
+    g_assert_true (g_file_set_contents (mid_marker_path, "", 0, NULL));
+
+    root = _moo_find_project_root (sub, markers, TRUE);
+    g_assert_cmpstr (root, ==, dir);
+    g_free (root);
+
+    root = _moo_find_project_root (sub, markers, FALSE);
+    g_assert_cmpstr (root, ==, mid);
+    g_free (root);
+
+    g_remove (mid_marker_path);
+    g_remove (marker_path);
+    g_free (mid_marker_path);
+    g_free (mid);
 
     g_rmdir (sub);
     g_free (sub);

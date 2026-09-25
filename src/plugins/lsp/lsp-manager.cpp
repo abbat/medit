@@ -458,7 +458,7 @@ lsp_manager_add_doc (MooEdit *doc)
     }
 
     dir = g_path_get_dirname (path);
-    root = _moo_find_project_root (dir, config->root_markers);
+    root = _moo_find_project_root (dir, config->root_markers, TRUE);
 
     entry = get_server (config, root);
 
