@@ -378,6 +378,7 @@ quick_open_activate (MooEditWindow *window)
     gtk_window_set_modal (GTK_WINDOW (dlg.window), TRUE);
     gtk_window_set_position (GTK_WINDOW (dlg.window), GTK_WIN_POS_CENTER_ON_PARENT);
     gtk_window_set_decorated (GTK_WINDOW (dlg.window), TRUE);
+    gtk_window_set_resizable (GTK_WINDOW (dlg.window), TRUE);
     gtk_window_set_default_size (GTK_WINDOW (dlg.window), 500, 400);
 
     GtkWidget *vbox = gtk_vbox_new (FALSE, 6);
@@ -390,6 +391,9 @@ quick_open_activate (MooEditWindow *window)
     GtkWidget *scroll = gtk_scrolled_window_new (NULL, NULL);
     gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll),
                                     GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_vexpand (scroll, TRUE);
+#endif
     gtk_box_pack_start (GTK_BOX (vbox), scroll, TRUE, TRUE, 0);
 
     dlg.store = gtk_list_store_new (N_COLUMNS, G_TYPE_STRING, G_TYPE_STRING);
