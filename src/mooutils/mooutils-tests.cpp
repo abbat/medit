@@ -1897,7 +1897,7 @@ test_file_index_no_git_fallback (void)
     g_assert_nonnull (files);
     g_assert_cmpuint (files->len, ==, 2);
     g_assert_true (ptr_array_has_string (files, "top.txt"));
-    g_assert_true (ptr_array_has_string (files, G_DIR_SEPARATOR_S "sub" G_DIR_SEPARATOR_S "sub.txt" + 1));
+    g_assert_true (ptr_array_has_string (files, "sub" G_DIR_SEPARATOR_S "sub.txt"));
 
     _moo_remove_dir (dir, TRUE, NULL);
 }
@@ -1953,7 +1953,7 @@ test_file_index_symlink_not_followed (void)
     g_assert_nonnull (files);
     g_assert_cmpuint (files->len, ==, 2);
     g_assert_true (ptr_array_has_string (files, "real.txt"));
-    g_assert_true (ptr_array_has_string (files, G_DIR_SEPARATOR_S "target" G_DIR_SEPARATOR_S "inner.txt" + 1));
+    g_assert_true (ptr_array_has_string (files, "target" G_DIR_SEPARATOR_S "inner.txt"));
 
     _moo_remove_dir (dir, TRUE, NULL);
 }
