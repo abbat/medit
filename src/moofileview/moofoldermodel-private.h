@@ -562,19 +562,22 @@ static void      _list_sort             (GList         **list,
     g_qsort_with_data (order, list_len, sizeof (int),
                        (GCompareDataFunc) _compare_links, &data);
 
+    /* order[] is the sort permutation over the ORIGINAL links[]; the physical
+       chain has to be relinked through it too, or the list stays in its old
+       order while new_order_p claims otherwise. */
     for (i = 0; i < list_len; ++i)
     {
         if (i == 0)
-            links[i]->prev = NULL;
+            links[order[i]]->prev = NULL;
         else
-            links[i]->prev = links[i-1];
+            links[order[i]]->prev = links[order[i-1]];
         if (i == list_len - 1)
-            links[i]->next = NULL;
+            links[order[i]]->next = NULL;
         else
-            links[i]->next = links[i+1];
+            links[order[i]]->next = links[order[i+1]];
     }
 
-    *list = links[0];
+    *list = links[order[0]];
     *new_order_p = order;
 
     g_free (links);
