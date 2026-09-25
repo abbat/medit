@@ -1695,6 +1695,14 @@ find_modified (MooEditArray *docs)
 }
 
 
+MooHistoryMgr *
+_moo_editor_get_file_history (MooEditor *editor)
+{
+    g_return_val_if_fail (MOO_IS_EDITOR (editor), NULL);
+    return editor->priv->history;
+}
+
+
 gboolean
 _moo_editor_close_all (MooEditor *editor)
 {

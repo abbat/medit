@@ -66,6 +66,11 @@ void        moo_history_mgr_shutdown            (MooHistoryMgr  *mgr);
 
 guint       moo_history_mgr_get_n_items         (MooHistoryMgr  *mgr);
 
+/* Borrowed MooHistoryItem*, most-recently-used first, capped at max_items
+   (0 for no cap). Free the returned list with g_slist_free(), not its items. */
+GSList     *moo_history_mgr_list_items          (MooHistoryMgr  *mgr,
+                                                 guint           max_items);
+
 GtkWidget  *moo_history_mgr_create_menu         (MooHistoryMgr  *mgr,
                                                  MooHistoryCallback callback,
                                                  gpointer        data,

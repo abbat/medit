@@ -6,6 +6,7 @@ target_sources(medit PRIVATE
     moofind.cpp
     mooplugin-builtin.cpp
     mooplugin-builtin.h
+    mooquickopen.cpp
 )
 
 add_subdirectory(ctags)

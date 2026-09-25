@@ -28,6 +28,7 @@ moo_plugin_init (void)
     _moo_file_selector_plugin_init ();
     _moo_file_list_plugin_init ();
     _moo_find_plugin_init ();
+    _moo_quick_open_plugin_init ();
 #ifdef MOO_BUILD_CTAGS
     moo_ctags_plugin_init ();
 #endif

@@ -892,6 +892,27 @@ moo_history_mgr_get_n_items (MooHistoryMgr *mgr)
 }
 
 
+GSList *
+moo_history_mgr_list_items (MooHistoryMgr *mgr,
+                            guint          max_items)
+{
+    MooHistoryItemList *l;
+    GSList *list = NULL;
+    guint n;
+
+    g_return_val_if_fail (MOO_IS_HISTORY_MGR (mgr), NULL);
+
+    ensure_files (mgr);
+
+    for (l = mgr->priv->files->head, n = 0;
+         l != NULL && (!max_items || n < max_items);
+         l = l->next, ++n)
+        list = g_slist_prepend (list, l->data);
+
+    return g_slist_reverse (list);
+}
+
+
 static void
 moo_history_mgr_add_file_real (MooHistoryMgr  *mgr,
                               MooHistoryItem *item,

@@ -63,6 +63,7 @@ src/plugins/moofilelist.cpp
 src/plugins/moofileselector.cpp
 src/plugins/moofileselector-prefs.cpp
 src/plugins/moofind.cpp
+src/plugins/mooquickopen.cpp
 src/plugins/support/mooeditwindowoutput.cpp
 src/plugins/lsp/lsp-actions.cpp
 src/plugins/lsp/lsp-completion.cpp

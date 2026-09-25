@@ -20,6 +20,7 @@
 
 #include "mooedit/mooeditview.h"
 #include "mooedit/mooeditwindow.h"
+#include "mooutils/moohistorymgr.h"
 
 G_BEGIN_DECLS
 
@@ -169,6 +170,7 @@ gboolean             moo_editor_close_docs          (MooEditor              *edi
                                                      MooEditArray           *docs);
 #endif
 gboolean            _moo_editor_close_all           (MooEditor              *editor);
+MooHistoryMgr       *_moo_editor_get_file_history   (MooEditor              *editor);
 
 MooUiXml            *moo_editor_get_doc_ui_xml      (MooEditor              *editor);
 MooUiXml            *moo_editor_get_ui_xml          (MooEditor              *editor);

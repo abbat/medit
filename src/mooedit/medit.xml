@@ -12,6 +12,7 @@
       <separator/>
       <item action="Open"/>
       <item action="OpenRecent"/>
+      <item action="QuickOpen"/>
       <item action="ReopenWithEncoding"/>
       <item action="Save"/>
       <item action="SaveAs"/>
