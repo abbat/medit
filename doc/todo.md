@@ -55,6 +55,25 @@ a fold whose line is deleted takes itself out instead of leaving text invisible.
 indentation cannot know is where a function ends: `textDocument/foldingRange`, below, is
 that answer.
 
+## A crash takes the unsaved text with it
+
+Rung 0. `mooeditprefs.cpp` registers `MOO_EDIT_PREFS_AUTO_SAVE` (`FALSE`) and
+`MOO_EDIT_PREFS_AUTO_SAVE_INTERVAL` (5), and nothing reads either: no timer, no page in
+the preferences dialog, no mention in `doc/`. The keys promise a feature the tree does not
+have. What medit does have is `make_backups`, which keeps the previous version of a file
+at save time — it protects against a bad save, not against losing what was never saved.
+So a crash, a killed session or a power cut loses every modified document.
+
+The cheap shape: a timer that writes each modified document to a file of its own under
+`$XDG_CACHE_HOME/medit/`, never over the original, deletes it on save or close, and at
+the next start offers to restore whatever is left. It is toolkit-independent, so it is
+one implementation for both builds. The part that decides what to restore — the list of
+leftover files against the documents being opened — is the part to lift out and unit
+test.
+
+If that is not going to be done, delete the two keys instead, so that the code stops
+promising it.
+
 ---
 
 *The next two are not leftovers of removed code. They are the places where the tree is
