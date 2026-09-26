@@ -26,7 +26,12 @@
 G_BEGIN_DECLS
 
 
-#define MOO_FILE_INDEX_MAX_FILES ((guint) 200000)
+/* A cap, not a target: a normal project never gets near it, and the fuzzy
+   ranker has been measured comfortable well past 400000 candidates (see
+   moofuzzy.cpp). 200000 was cutting into a real tree and silently dropping
+   whatever the directory walk happened to reach last -- invisible to Quick
+   Open no matter the query, since the file never became a candidate at all. */
+#define MOO_FILE_INDEX_MAX_FILES ((guint) 2000000)
 
 /*
  * Every file under root, as paths relative to root: git ls-files (tracked and
