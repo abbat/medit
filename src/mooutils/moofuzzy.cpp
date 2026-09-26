@@ -388,7 +388,10 @@ moo_fuzzy_match (const char    *pattern,
     }
 
     /* match_pos, the one g_autofree local left, is freed by the
-       compiler-inserted cleanup on this return, same as on the one below. */
+       compiler-inserted cleanup on this return, same as on the one below;
+       the analyzer does not follow the cleanup attribute through an early
+       return, the same gap as the NullDereference suppression below. */
+    /* NOLINTNEXTLINE(clang-analyzer-unix.Malloc) */
     if (best_score <= NEG_INF / 2)
         return FALSE; /* unreachable: fuzzy_bounds already guarantees a path */
 
