@@ -6,7 +6,7 @@
 # doc/packaging.md has the rest.
 Format: 3.0 (quilt)
 Source: medit
-Version: 1.3.10
+Version: 1.3.11
 Binary: medit, medit-gtk2, medit-gtk3
 Architecture: any all
 Maintainer: Anton Batenev <antonbatenev@yandex.ru>

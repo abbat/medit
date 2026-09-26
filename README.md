@@ -21,7 +21,7 @@ ships packages for the distributions that lost it.
 
 * original website: <https://mooedit.sourceforge.net> (old site, no longer updated)
 * last upstream release: 1.2.92 (2017-11-12)
-* current release of this fork: 1.3.10
+* current release of this fork: 1.3.11
 
 ## download
 
@@ -76,6 +76,10 @@ Everything that kept medit out of the distributions is gone:
   in the packages (they only suggest it), and no Enchant means no checking, not
   a broken editor. **It is off until you switch it on** in `Preferences →
   Plugins`. Linux only.
+* **Quick Open.** `Ctrl+E` opens a dialog that finds a file by typing any
+  subsequence of its path, ranked by match quality and by how recently and
+  often the file was opened. Indexing and ranking run on a background
+  thread with a progress indicator, so it stays responsive on a large tree.
 * **Zoom.** `Ctrl` with the mouse wheel, or `View → Zoom In`, `Zoom Out` and
   `Reset Zoom` (`Ctrl++`, `Ctrl+-`, `Ctrl+0`), changes the size of the text in
   all documents at once. It is not saved: the next run starts from the font of
@@ -114,8 +118,8 @@ cmake --build build -j$(nproc)
 The binary is `build/src/medit` and runs straight from the build directory.
 [INSTALL](INSTALL) has the dependencies, the build options and the details.
 
-`main` carries the current state and every release is tagged (`v1.3.10`,
-`v1.3.9`, ...), so `git checkout v1.3.10` gets the sources of a given release.
+`main` carries the current state and every release is tagged (`v1.3.11`,
+`v1.3.10`, ...), so `git checkout v1.3.11` gets the sources of a given release.
 The original sources up to 1.2.92, which this fork started from, are at
 <https://sourceforge.net/projects/mooedit/files/medit/>.
 

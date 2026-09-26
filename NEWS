@@ -1,3 +1,23 @@
+2026-09-26  Anton Batenev  <antonbatenev@yandex.ru>
+
+    * === Released 1.3.11 ===
+
+    Quick Open (Ctrl+E) finds a file by typing any subsequence of its path:
+    results are ranked by match quality and by how recently and often the
+    file was opened, indexing and ranking run on a background thread with
+    a progress indicator, and the search itself is debounced so a large
+    tree does not block typing. The matcher scores a bounded window the
+    way fzf does instead of the whole path, project root detection tries a
+    wider list of markers and picks the outermost match, and the file
+    index no longer silently caps out on a real project's tree size.
+    Translated into all supported languages.
+    Undo merging and the internal markup parser no longer rebuild a whole
+    string one character at a time, which made long typing sessions and
+    parsing a print-settings file quadratic; the file selector's file list
+    is a GSequence now instead of a GList, fixing its sort order. A closed
+    document's language pointer is no longer left dangling, and its buffer
+    signals are disconnected on close.
+
 2026-09-25  Anton Batenev  <antonbatenev@yandex.ru>
 
     * === Released 1.3.10 ===
