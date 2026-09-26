@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: moo\n"
 "Report-Msgid-Bugs-To: https://github.com/abbat/medit/issues\n"
-"POT-Creation-Date: 2026-09-26 00:12+0300\n"
+"POT-Creation-Date: 2026-09-26 04:02+0300\n"
 "PO-Revision-Date: 2007-12-06 04:32+0800\n"
 "Last-Translator: Chaosye <chao-7410@163.com>\n"
 "Language-Team: Chaosye <chao-7410@163.com>\n"
@@ -2287,19 +2287,19 @@ msgstr[0] "*** 找到 %u 个文档 ***"
 msgid "Finds everything"
 msgstr "全部查找"
 
-#: src/plugins/mooquickopen.cpp:234
-msgid "Searching..."
-msgstr "正在搜索..."
+#: src/plugins/mooquickopen.cpp:225
+msgid "Searching"
+msgstr "正在搜索"
 
-#: src/plugins/mooquickopen.cpp:369 src/plugins/mooquickopen.cpp:422
+#: src/plugins/mooquickopen.cpp:652 src/plugins/mooquickopen.cpp:715
 msgid "Quick Open"
 msgstr "快速打开"
 
-#: src/plugins/mooquickopen.cpp:423
+#: src/plugins/mooquickopen.cpp:716
 msgid "_Quick Open..."
 msgstr "快速打开(_Q)"
 
-#: src/plugins/mooquickopen.cpp:424
+#: src/plugins/mooquickopen.cpp:717
 msgid "Open a file by typing part of its name"
 msgstr "输入文件名的一部分以打开文件"
 

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: moo\n"
 "Report-Msgid-Bugs-To: https://github.com/abbat/medit/issues\n"
-"POT-Creation-Date: 2026-09-26 00:12+0300\n"
+"POT-Creation-Date: 2026-09-26 04:02+0300\n"
 "PO-Revision-Date: 2014-08-05 02:59+0200\n"
 "Last-Translator: Yannick Duchêne <yannick_duchene@yahoo.fr>\n"
 "Language-Team: Yannick Duchêne <yannick_duchene@yahoo.fr>\n"
@@ -2330,19 +2330,19 @@ msgstr[1] "*** %u fichiers trouvés ***"
 msgid "Finds everything"
 msgstr "Rechercher tout"
 
-#: src/plugins/mooquickopen.cpp:234
-msgid "Searching..."
-msgstr "Recherche…"
+#: src/plugins/mooquickopen.cpp:225
+msgid "Searching"
+msgstr "Recherche"
 
-#: src/plugins/mooquickopen.cpp:369 src/plugins/mooquickopen.cpp:422
+#: src/plugins/mooquickopen.cpp:652 src/plugins/mooquickopen.cpp:715
 msgid "Quick Open"
 msgstr "Ouverture rapide"
 
-#: src/plugins/mooquickopen.cpp:423
+#: src/plugins/mooquickopen.cpp:716
 msgid "_Quick Open..."
 msgstr "Ouverture _rapide…"
 
-#: src/plugins/mooquickopen.cpp:424
+#: src/plugins/mooquickopen.cpp:717
 msgid "Open a file by typing part of its name"
 msgstr "Ouvre un fichier en tapant une partie de son nom"
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.1.x-trunk\n"
 "Report-Msgid-Bugs-To: https://github.com/abbat/medit/issues\n"
-"POT-Creation-Date: 2026-09-26 00:12+0300\n"
+"POT-Creation-Date: 2026-09-26 04:02+0300\n"
 "PO-Revision-Date: 2012-08-18 11:07+0900\n"
 "Last-Translator: Toshiharu Kudoh <toshi.kd2@gmail.com>\n"
 "Language-Team: Japanese\n"
@@ -2309,19 +2309,19 @@ msgstr[0] "*** %u ファイル見つかりました ***"
 msgid "Finds everything"
 msgstr "全てを検索"
 
-#: src/plugins/mooquickopen.cpp:234
-msgid "Searching..."
-msgstr "検索中..."
+#: src/plugins/mooquickopen.cpp:225
+msgid "Searching"
+msgstr "検索中"
 
-#: src/plugins/mooquickopen.cpp:369 src/plugins/mooquickopen.cpp:422
+#: src/plugins/mooquickopen.cpp:652 src/plugins/mooquickopen.cpp:715
 msgid "Quick Open"
 msgstr "クイックオープン"
 
-#: src/plugins/mooquickopen.cpp:423
+#: src/plugins/mooquickopen.cpp:716
 msgid "_Quick Open..."
 msgstr "クイックオープン(_Q)..."
 
-#: src/plugins/mooquickopen.cpp:424
+#: src/plugins/mooquickopen.cpp:717
 msgid "Open a file by typing part of its name"
 msgstr "ファイル名の一部を入力してファイルを開きます"
 

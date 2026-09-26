@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: moo\n"
 "Report-Msgid-Bugs-To: https://github.com/abbat/medit/issues\n"
-"POT-Creation-Date: 2026-09-26 00:12+0300\n"
+"POT-Creation-Date: 2026-09-26 04:02+0300\n"
 "PO-Revision-Date: 2007-11-10 22:45+0100\n"
 "Last-Translator: Vlastimil Ott <vlastimil@e-ott.info>\n"
 "Language-Team:  <cs@li.org>\n"
@@ -2306,19 +2306,19 @@ msgstr[2] "*** Nalezeno %u souborů ***"
 msgid "Finds everything"
 msgstr "Najde vše"
 
-#: src/plugins/mooquickopen.cpp:234
-msgid "Searching..."
-msgstr "Hledá se..."
+#: src/plugins/mooquickopen.cpp:225
+msgid "Searching"
+msgstr "Hledá se"
 
-#: src/plugins/mooquickopen.cpp:369 src/plugins/mooquickopen.cpp:422
+#: src/plugins/mooquickopen.cpp:652 src/plugins/mooquickopen.cpp:715
 msgid "Quick Open"
 msgstr "Rychlé otevření"
 
-#: src/plugins/mooquickopen.cpp:423
+#: src/plugins/mooquickopen.cpp:716
 msgid "_Quick Open..."
 msgstr "_Rychlé otevření..."
 
-#: src/plugins/mooquickopen.cpp:424
+#: src/plugins/mooquickopen.cpp:717
 msgid "Open a file by typing part of its name"
 msgstr "Otevře soubor po zadání části jeho názvu"
 
