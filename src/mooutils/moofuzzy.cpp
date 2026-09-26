@@ -391,8 +391,8 @@ moo_fuzzy_match (const char    *pattern,
        compiler-inserted cleanup on this return, same as on the one below;
        the analyzer does not follow the cleanup attribute through an early
        return, the same gap as the NullDereference suppression below. */
-    /* NOLINTNEXTLINE(clang-analyzer-unix.Malloc) */
     if (best_score <= NEG_INF / 2)
+        /* NOLINTNEXTLINE(clang-analyzer-unix.Malloc) */
         return FALSE; /* unreachable: fuzzy_bounds already guarantees a path */
 
     match->score = best_score;
