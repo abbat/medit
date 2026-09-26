@@ -22,6 +22,7 @@
 
 #include "mooutils/moofuzzy.h"
 #include <limits.h>
+#include <string.h>
 
 /* Nothing real is this long; refusing outsized input is simpler than
    growing an O(pattern*text) matrix without bound. */
@@ -107,26 +108,119 @@ chars_equal (gunichar a, gunichar b, gboolean case_sensitive)
     return g_unichar_tolower (a) == g_unichar_tolower (b);
 }
 
-/* Cheap O(n) rejection: pattern must occur as an in-order subsequence at
-   all, or a Smith-Waterman pass over a hopeless candidate is wasted work.
-   This is what rejects the overwhelming majority of files as the user
-   types, before the DP below ever runs. */
+/* The narrowest span of text that could possibly hold a matching
+   subsequence -- found the way fzf's own FuzzyMatchV2 finds it (algo.go),
+   not just as a speedup layered on top of it: a forward greedy pass finds
+   the earliest position completing the match (*hi), then a backward pass
+   over exactly that span finds the latest position the first pattern
+   character can still start at (*lo). The DP below scores only [*lo, *hi),
+   same as upstream -- which matters when a short, common-letter query
+   matches deep inside a long path: the path can run into the hundreds of
+   characters while the span actually worth scoring is a handful. Doubles
+   as the existence check the DP needs: returns FALSE, *lo and *hi untouched,
+   when no subsequence exists at all. */
 static gboolean
-is_subsequence (const gunichar *pattern, guint plen,
-                const gunichar *text,    guint tlen,
-                gboolean        case_sensitive)
+fuzzy_bounds (const gunichar *pattern, guint plen,
+              const gunichar *text,    guint tlen,
+              gboolean        case_sensitive,
+              guint          *lo,
+              guint          *hi)
+{
+    guint pidx = 0;
+    gint first_idx = -1;
+    gint last_idx = -1;
+
+    for (guint ti = 0; ti < tlen; ++ti)
+    {
+        if (chars_equal (pattern[pidx], text[ti], case_sensitive))
+        {
+            if (first_idx < 0)
+                first_idx = (gint) ti;
+            if (++pidx == plen)
+            {
+                last_idx = (gint) ti + 1;
+                break;
+            }
+        }
+    }
+
+    if (last_idx < 0)
+        return FALSE;
+
+    gint start = last_idx - 1;
+    gint pi = (gint) plen - 1;
+    while (TRUE)
+    {
+        while (!chars_equal (pattern[pi], text[start], case_sensitive))
+            start -= 1;
+        if (pi == 0)
+            break;
+        pi -= 1;
+        start -= 1;
+    }
+
+    *lo = (guint) start;
+    *hi = (guint) last_idx;
+    return TRUE;
+}
+
+/* True when every byte of s is ASCII, with *len set to the byte count
+   (== character count, for ASCII). A single non-ASCII byte anywhere makes
+   the fast path below unsafe -- a multi-byte UTF-8 sequence never compares
+   byte-for-byte against a single-byte pattern character -- so callers must
+   fall back to the real UTF-8 decode whenever this returns FALSE. */
+static gboolean
+str_is_ascii (const char *s, guint *len)
+{
+    const guchar *p = (const guchar *) s;
+    guint n = 0;
+
+    for (; p[n]; ++n)
+        if (p[n] >= 0x80)
+            return FALSE;
+
+    *len = n;
+    return TRUE;
+}
+
+/* Byte-level in-order subsequence check, valid exactly when both strings are
+   pure ASCII (byte value == codepoint, so g_ascii_tolower() agrees with
+   g_unichar_tolower()). Lets the common case -- a candidate that does not
+   match this keystroke at all -- be rejected without ever decoding its
+   path to UCS4, which is what g_utf8_to_ucs4_fast() below actually costs
+   when scoring a large, mostly-non-matching candidate list. */
+static gboolean
+is_ascii_subsequence (const char *pattern, guint plen,
+                      const char *text,    guint tlen,
+                      gboolean    case_sensitive)
 {
     guint pi = 0, ti = 0;
 
     while (pi < plen && ti < tlen)
     {
-        if (chars_equal (pattern[pi], text[ti], case_sensitive))
+        char pc = case_sensitive ? pattern[pi] : g_ascii_tolower (pattern[pi]);
+        char tc = case_sensitive ? text[ti]    : g_ascii_tolower (text[ti]);
+        if (pc == tc)
             pi += 1;
         ti += 1;
     }
 
     return pi == plen;
 }
+
+/* Every call rescores a large fraction of a project's files, tens of
+   thousands of times a keystroke, and each one drove six g_new/g_new0
+   allocations plus their frees. thread_local makes them one-time per
+   worker thread instead of one-time per call; the DP body only ever
+   touches indices below cols/tlen, which the MAX_*_LEN checks below
+   guarantee fit. Safe across the background ranking thread and the main
+   thread, since each gets its own copy. */
+static thread_local int tls_pos_bonus[MAX_TEXT_LEN];
+static thread_local int tls_H_prev[MAX_TEXT_LEN + 1];
+static thread_local int tls_H_cur[MAX_TEXT_LEN + 1];
+static thread_local int tls_C_prev[MAX_TEXT_LEN + 1];
+static thread_local int tls_C_cur[MAX_TEXT_LEN + 1];
+static thread_local int tls_pos_cur[MAX_TEXT_LEN + 1];
 
 gboolean
 moo_fuzzy_match (const char    *pattern,
@@ -143,6 +237,24 @@ moo_fuzzy_match (const char    *pattern,
 
     if (!*pattern)
         return TRUE;
+
+    guint p_ascii_len, t_ascii_len;
+    if (str_is_ascii (pattern, &p_ascii_len) && str_is_ascii (text, &t_ascii_len))
+    {
+        if (p_ascii_len > MAX_PATTERN_LEN || t_ascii_len > MAX_TEXT_LEN || p_ascii_len > t_ascii_len)
+            return FALSE;
+
+        gboolean ascii_case_sensitive = FALSE;
+        for (guint i = 0; i < p_ascii_len; ++i)
+            if (g_ascii_isupper (pattern[i]))
+            {
+                ascii_case_sensitive = TRUE;
+                break;
+            }
+
+        if (!is_ascii_subsequence (pattern, p_ascii_len, text, t_ascii_len, ascii_case_sensitive))
+            return FALSE;
+    }
 
     glong p_len_signed, t_len_signed;
     g_autofree gunichar *p = g_utf8_to_ucs4_fast (pattern, -1, &p_len_signed);
@@ -161,22 +273,26 @@ moo_fuzzy_match (const char    *pattern,
             break;
         }
 
-    if (!is_subsequence (p, plen, t, tlen, case_sensitive))
+    guint lo, hi;
+    if (!fuzzy_bounds (p, plen, t, tlen, case_sensitive, &lo, &hi))
         return FALSE;
+    guint wlen = hi - lo;
 
-    /* Per-position bonus for text[j], independent of the pattern: what a
-       match is worth there, given the character before it. */
-    g_autofree int *pos_bonus = g_new (int, tlen);
-    CharClass prev_class = CLASS_WHITE; /* start of string is a boundary too */
-    for (guint j = 0; j < tlen; ++j)
+    /* Per-position bonus for text[lo+j], independent of the pattern: what a
+       match is worth there, given the character before it -- which can lie
+       outside the window, so it is classified from the real text, not
+       assumed to be a boundary. */
+    int *pos_bonus = tls_pos_bonus;
+    CharClass prev_class = (lo == 0) ? CLASS_WHITE : classify (t[lo - 1]);
+    for (guint j = 0; j < wlen; ++j)
     {
-        CharClass cur_class = classify (t[j]);
+        CharClass cur_class = classify (t[lo + j]);
         pos_bonus[j] = bonus_for (prev_class, cur_class);
         prev_class = cur_class;
     }
 
     guint rows = plen + 1;
-    guint cols = tlen + 1;
+    guint cols = wlen + 1;
 
     /* H[i][j]: best score matching pattern[0..i) somewhere within text[0..j),
        keeping only the current and previous row -- neither the diagonal
@@ -186,12 +302,15 @@ moo_fuzzy_match (const char    *pattern,
        in full, not just two rows) remembers the text position where the
        i-th pattern character actually landed, for the caller's highlight
        positions; it is skipped when want_positions is FALSE. */
-    g_autofree int *H_prev = g_new0 (int, cols);
-    g_autofree int *H_cur  = g_new (int, cols);
-    g_autofree int *C_prev = g_new0 (int, cols);
-    g_autofree int *C_cur  = g_new (int, cols);
-    g_autofree int *pos_cur = g_new (int, cols);
+    int *H_prev = tls_H_prev;
+    int *H_cur  = tls_H_cur;
+    int *C_prev = tls_C_prev;
+    int *C_cur  = tls_C_cur;
+    int *pos_cur = tls_pos_cur;
     g_autofree int *match_pos = want_positions ? g_new (int, rows * cols) : NULL;
+
+    memset (H_prev, 0, cols * sizeof (int));
+    memset (C_prev, 0, cols * sizeof (int));
 
     int best_score = NEG_INF;
     guint best_j = 0;
@@ -211,7 +330,7 @@ moo_fuzzy_match (const char    *pattern,
             int d_consec = 0;
             int d_pos = -1;
 
-            if (H_prev[j - 1] > NEG_INF / 2 && chars_equal (p[i - 1], t[tj], case_sensitive))
+            if (H_prev[j - 1] > NEG_INF / 2 && chars_equal (p[i - 1], t[lo + tj], case_sensitive))
             {
                 int bonus = pos_bonus[tj];
                 if (i == 1)
@@ -268,16 +387,10 @@ moo_fuzzy_match (const char    *pattern,
         tmp = C_prev; C_prev = C_cur; C_cur = tmp;
     }
 
-    /* Every g_autofree local above -- H_prev/H_cur, C_prev/C_cur, pos_bonus,
-       pos_cur, match_pos -- is freed by the compiler-inserted cleanup on this
-       return, same as on the one below. The analyzer loses track of it here
-       because of the double-buffer swap two lines up (`tmp = H_prev; H_prev =
-       H_cur;`): it sees the pre-swap block as overwritten without a free,
-       missing that the swap only renamed which variable's cleanup owns it. */
-    /* NOLINTNEXTLINE(clang-analyzer-unix.Malloc) */
+    /* match_pos, the one g_autofree local left, is freed by the
+       compiler-inserted cleanup on this return, same as on the one below. */
     if (best_score <= NEG_INF / 2)
-        /* NOLINTNEXTLINE(clang-analyzer-unix.Malloc) */
-        return FALSE; /* unreachable: is_subsequence already guarantees a path */
+        return FALSE; /* unreachable: fuzzy_bounds already guarantees a path */
 
     match->score = best_score;
 
@@ -293,7 +406,7 @@ moo_fuzzy_match (const char    *pattern,
             int p_pos = match_pos[i * cols + col];
             guint idx = i - 1;
             if (idx < MOO_FUZZY_MAX_POSITIONS)
-                match->positions[idx] = (guint) p_pos;
+                match->positions[idx] = (guint) (p_pos + (gint) lo);
             col = (guint) p_pos + 1;
         }
         match->n_positions = MIN (plen, (guint) MOO_FUZZY_MAX_POSITIONS);
