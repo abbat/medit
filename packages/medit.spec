@@ -6,7 +6,7 @@
 # have to carry the same version.
 
 Name:           medit
-Version:        1.3.11
+Version:        1.3.12
 Release:        1%{?dist}
 Summary:        Useful programming and around-programming text editor
 Group:          Productivity/Text/Editors
@@ -82,6 +82,10 @@ rm -rf %{buildroot}
 %{_mandir}/man1/%{name}.1*
 
 %changelog
+* Tue Sep 29 2026 Anton Batenev <antonbatenev@yandex.ru> - 1.3.12-1
+- Translations filled in for all languages; file selector tree view
+  and icon view teardown fixes; desktop file Keywords fix
+
 * Sat Sep 26 2026 Anton Batenev <antonbatenev@yandex.ru> - 1.3.11-1
 - Quick Open (Ctrl+E): fuzzy file search ranked by frecency, background
   indexing and ranking, quadratic-growth and file-selector sort fixes
