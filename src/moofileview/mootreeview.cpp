@@ -310,7 +310,7 @@ child_new (MooTreeView  *view,
     {
         child->type = MOO_TREE_VIEW_TREE;
         child->u.tree.view = GTK_TREE_VIEW (widget);
-        child->u.tree.selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
+        child->u.tree.selection = (GtkTreeSelection *) g_object_ref (gtk_tree_view_get_selection (GTK_TREE_VIEW (widget)));
 
         g_signal_connect_swapped (child->u.tree.selection, "changed",
                                   G_CALLBACK (child_selection_changed), child);
@@ -363,6 +363,8 @@ child_free (Child *child, G_GNUC_UNUSED gpointer data)
         g_signal_handlers_disconnect_by_func (child->widget,
                                               (gpointer) child_button_press,
                                               child);
+        if (child->type == MOO_TREE_VIEW_TREE)
+            g_object_unref (child->u.tree.selection);
         g_object_unref (child->widget);
     }
 
