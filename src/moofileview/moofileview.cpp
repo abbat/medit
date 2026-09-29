@@ -960,6 +960,7 @@ moo_file_view_finalize (GObject *object)
         g_source_remove (fileview->priv->select_file_idle);
     g_free (fileview->priv->select_file);
 
+    g_object_unref (fileview->priv->view);
     g_object_unref (fileview->priv->model);
     g_object_unref (fileview->priv->filter_model);
     history_free (fileview);
