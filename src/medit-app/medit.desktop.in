@@ -8,4 +8,4 @@ StartupNotify=true
 MimeType=text/plain;
 Icon=medit
 Categories=Utility;TextEditor;
-_Keywords=editor;texteditor;text
+_Keywords=editor;texteditor;text;
