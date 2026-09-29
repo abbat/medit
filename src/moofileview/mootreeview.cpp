@@ -350,7 +350,11 @@ child_free (Child *child, G_GNUC_UNUSED gpointer data)
         g_signal_handlers_disconnect_by_func (child->widget,
                                               (gpointer) child_row_activated,
                                               child);
-        g_signal_handlers_disconnect_by_func (child->widget,
+        /* a tree view's "changed" comes from its GtkTreeSelection, which is a
+           different object from child->widget and outlives the child */
+        g_signal_handlers_disconnect_by_func (child->type == MOO_TREE_VIEW_TREE
+                                                  ? (gpointer) child->u.tree.selection
+                                                  : (gpointer) child->widget,
                                               (gpointer) child_selection_changed,
                                               child);
         g_signal_handlers_disconnect_by_func (child->widget,
