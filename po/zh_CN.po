@@ -21,110 +21,109 @@ msgstr ""
 #: src/medit-app/main.cpp:157
 #, c-format
 msgid "Invalid value '%s' for option %s"
-msgstr ""
+msgstr "无效值“%s”(选项 %s)"
 
 #. error message for wrong commmand line
 #: src/medit-app/main.cpp:283
 #, c-format
 msgid "%s and %s options may not be used simultaneously\n"
-msgstr ""
+msgstr "不能同时使用 %s 和 %s 选项\n"
 
 #: src/medit-app/main.cpp:315
 msgid "Run new instance of application"
-msgstr ""
+msgstr "运行应用程序的新实例"
 
 #: src/medit-app/main.cpp:316
 msgid "Load and save session"
-msgstr ""
+msgstr "加载并保存会话"
 
 #: src/medit-app/main.cpp:317
 msgid "Use existing instance with process id PID"
-msgstr ""
+msgstr "使用进程 ID 为 PID 的现有实例"
 
 #: src/medit-app/main.cpp:317
 msgid "PID"
-msgstr ""
+msgstr "PID"
 
 #: src/medit-app/main.cpp:318
 msgid "Set instance name to NAME if it's not already running"
-msgstr ""
+msgstr "如果尚未运行,则将实例名称设置为 NAME"
 
 #: src/medit-app/main.cpp:318
 msgid "NAME"
-msgstr ""
+msgstr "NAME"
 
 #: src/medit-app/main.cpp:319
 msgid "Open file(s) in a new window"
-msgstr ""
+msgstr "在新窗口中打开文件"
 
 #: src/medit-app/main.cpp:320
 msgid "Open file(s) in a new tab"
-msgstr ""
+msgstr "在新标签页中打开文件"
 
 #: src/medit-app/main.cpp:321
 msgid "Open file and position cursor on line LINE"
-msgstr ""
+msgstr "打开文件并将光标定位到 LINE 行"
 
 #: src/medit-app/main.cpp:321
 msgid "LINE"
-msgstr ""
+msgstr "LINE"
 
 #: src/medit-app/main.cpp:322
 msgid "Use character encoding ENCODING"
-msgstr ""
+msgstr "使用字符编码 ENCODING"
 
 #: src/medit-app/main.cpp:322
 msgid "ENCODING"
-msgstr ""
+msgstr "ENCODING"
 
 #: src/medit-app/main.cpp:323
 msgid "Automatically reload file if it was modified on disk"
-msgstr ""
+msgstr "如果文件在磁盘上被修改则自动重新加载"
 
 #: src/medit-app/main.cpp:327
 msgid "Default window size and position"
-msgstr ""
+msgstr "默认窗口大小和位置"
 
 #: src/medit-app/main.cpp:327
 msgid "WIDTHxHEIGHT[+X+Y]"
-msgstr ""
+msgstr "WIDTHxHEIGHT[+X+Y]"
 
 #: src/medit-app/main.cpp:328
 msgid "Show version information and exit"
-msgstr ""
+msgstr "显示版本信息并退出"
 
 #: src/medit-app/main.cpp:333
 msgid "FILES"
-msgstr ""
+msgstr "FILES"
 
 #: src/medit-app/medit.desktop.in.h:1
 msgid "Text editor"
 msgstr "文本编辑器"
 
 #: src/medit-app/medit.desktop.in.h:2
-#, fuzzy
 msgid "editor;texteditor;text"
-msgstr "medit 是一个文本编辑器"
+msgstr "编辑器;文本编辑器;文本;"
 
 #: src/mooapp/about.cpp:174
 msgid "old site"
-msgstr ""
+msgstr "旧网站"
 
 #: src/mooapp/about.cpp:220
 msgid "C_redits"
-msgstr ""
+msgstr "鸣谢(_R)"
 
 #: src/mooapp/about.cpp:280
 msgid "_License"
-msgstr ""
+msgstr "许可证(_L)"
 
 #: src/mooapp/about.cpp:312 src/mooapp/credits.cpp:177
 msgid "_Close"
-msgstr ""
+msgstr "关闭(_C)"
 
 #: src/mooapp/about.cpp:369
 msgid "About"
-msgstr ""
+msgstr "关于"
 
 #: src/mooapp/mooapp-info.h:21
 msgid "medit is a text editor"
@@ -148,7 +147,7 @@ msgstr "译者"
 
 #: src/mooapp/credits.cpp:232
 msgid "Credits"
-msgstr ""
+msgstr "鸣谢"
 
 #: src/mooapp/mooapp.cpp:158
 #, c-format
@@ -157,23 +156,26 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"将打开以下 URL:\n"
+"\n"
+"%s"
 
 #: src/mooapp/mooapp.cpp:163
 msgid "Open URL?"
-msgstr ""
+msgstr "打开 URL?"
 
 #. Prefs dialog title
 #: src/mooapp/mooapp.cpp:212
 msgid "Preferences"
-msgstr ""
+msgstr "首选项"
 
 #: src/mooapp/mooapp.cpp:273
 msgid "Report a Bug..."
-msgstr ""
+msgstr "报告错误..."
 
 #: src/mooapp/mooapp.cpp:1119
 msgid "Checking for unsaved documents"
-msgstr ""
+msgstr "正在检查未保存的文档"
 
 #: src/mooedit/ui/mooeditprefs-file.ui:19
 msgid "<b>Loading</b>"
@@ -181,7 +183,7 @@ msgstr "<b>加载中</b>"
 
 #: src/mooedit/ui/mooeditprefs-file.ui:44
 msgid "Encodings to _autodetect"
-msgstr ""
+msgstr "自动检测的编码(_A)"
 
 #: src/mooedit/ui/mooeditprefs-file.ui:57
 msgid ""
@@ -195,19 +197,19 @@ msgstr "<b>保存</b>"
 
 #: src/mooedit/ui/mooeditprefs-file.ui:117
 msgid "Encoding for _new files"
-msgstr ""
+msgstr "新文件的编码(_N)"
 
 #: src/mooedit/ui/mooeditprefs-file.ui:145
 msgid "Remove trailing _spaces"
-msgstr ""
+msgstr "删除行尾空格(_S)"
 
 #: src/mooedit/ui/mooeditprefs-file.ui:161
 msgid "Ensure trailing new_line"
-msgstr ""
+msgstr "确保末尾有换行符(_L)"
 
 #: src/mooedit/ui/mooeditprefs-file.ui:177
 msgid "Make _backups"
-msgstr ""
+msgstr "创建备份(_B)"
 
 #: src/mooedit/ui/mooeditprefs-file.ui:215
 msgid "<b>Sessions</b>"
@@ -215,7 +217,7 @@ msgstr "<b>会话</b>"
 
 #: src/mooedit/ui/mooeditprefs-file.ui:234
 msgid "Enable _session support"
-msgstr ""
+msgstr "启用会话支持(_S)"
 
 #: src/mooedit/ui/mooeditprefs-file.ui:272
 msgid "<b>Dialogs</b>"
@@ -223,16 +225,15 @@ msgstr "<b>对话</b>"
 
 #: src/mooedit/ui/mooeditprefs-file.ui:291
 msgid "Open and Save As dialogs show current document _folder"
-msgstr ""
+msgstr "“打开”和“另存为”对话框显示当前文档所在文件夹(_F)"
 
 #: src/mooedit/ui/mooeditprefs-file.ui:329
-#, fuzzy
 msgid "<b>Autosync</b>"
-msgstr "<b>作者:</b>"
+msgstr "<b>自动同步</b>"
 
 #: src/mooedit/ui/mooeditprefs-file.ui:348
 msgid "Automatically sync files with disk"
-msgstr ""
+msgstr "自动与磁盘同步文件"
 
 #: src/mooedit/ui/mooeditprefs-filters.ui:19
 msgid "<b>File filters</b>"
@@ -252,23 +253,23 @@ msgstr "启用自动缩进"
 
 #: src/mooedit/ui/mooeditprefs-general.ui:89
 msgid "Do not use tabs for indentation"
-msgstr ""
+msgstr "缩进时不使用制表符"
 
 #: src/mooedit/ui/mooeditprefs-general.ui:112
 msgid "Backspace key unindents"
-msgstr ""
+msgstr "退格键减少缩进"
 
 #: src/mooedit/ui/mooeditprefs-general.ui:129
 msgid "Tab key indents"
-msgstr ""
+msgstr "Tab 键增加缩进"
 
 #: src/mooedit/ui/mooeditprefs-general.ui:163
 msgid "Indent width"
-msgstr ""
+msgstr "缩进宽度"
 
 #: src/mooedit/ui/mooeditprefs-general.ui:190
 msgid "Tab width"
-msgstr ""
+msgstr "制表符宽度"
 
 #: src/mooedit/ui/mooeditprefs-general.ui:226
 msgid "<b>Font and colors</b>"
@@ -350,7 +351,7 @@ msgstr "显示制表符"
 
 #: src/mooedit/ui/mooeditprefs-view.ui:248
 msgid "Show spaces"
-msgstr ""
+msgstr "显示空格"
 
 #: src/mooedit/ui/mooeditprefs-view.ui:263
 msgid "Show trailing spaces"
@@ -372,7 +373,7 @@ msgstr "请选择你要保存的文档:"
 
 #: src/mooedit/ui/moopluginprefs.ui:16
 msgid "<b>Plugins</b>"
-msgstr ""
+msgstr "<b>插件</b>"
 
 #: src/mooedit/ui/moopluginprefs.ui:61
 msgid "<b>Version:</b>"
@@ -400,7 +401,7 @@ msgstr "换行"
 
 #: src/mooedit/ui/mooprint.ui:89
 msgid "Ellipsize long lines"
-msgstr ""
+msgstr "省略过长的行"
 
 #. Part of the phrase "Print line numbers" "every" "1" "lines"
 #: src/mooedit/ui/mooprint.ui:105
@@ -459,11 +460,11 @@ msgstr "正则表达式(_R)"
 
 #: src/mooedit/ui/mootextfind.ui:37
 msgid "_Text to find"
-msgstr ""
+msgstr "查找文本(_T)"
 
 #: src/mooedit/ui/mootextfind.ui:62
 msgid "Regular e_xpression"
-msgstr ""
+msgstr "正则表达式(_X)"
 
 #: src/mooedit/ui/mootextfind.ui:86 src/plugins/moofind.cpp:1053
 msgid "Find"
@@ -471,11 +472,11 @@ msgstr "查找"
 
 #: src/mooedit/ui/mootextfind.ui:115
 msgid "_Replacement text"
-msgstr ""
+msgstr "替换文本(_R)"
 
 #: src/mooedit/ui/mootextfind.ui:140
 msgid "_Literal replacement"
-msgstr ""
+msgstr "按字面替换(_L)"
 
 #: src/mooedit/ui/mootextfind.ui:164
 msgid "Replace With"
@@ -483,11 +484,11 @@ msgstr "替换为"
 
 #: src/mooedit/ui/mootextfind.ui:193
 msgid "Don't _prompt on replace"
-msgstr ""
+msgstr "替换时不提示(_P)"
 
 #: src/mooedit/ui/mootextfind.ui:210
 msgid "Find _backwards"
-msgstr ""
+msgstr "向后查找(_B)"
 
 #: src/mooedit/ui/mootextfind.ui:224 src/plugins/ui/moogrep.ui:182
 msgid "Case _sensitive"
@@ -495,15 +496,15 @@ msgstr "区分大小写(_c)"
 
 #: src/mooedit/ui/mootextfind.ui:236
 msgid "S_elected text"
-msgstr ""
+msgstr "选中的文本(_E)"
 
 #: src/mooedit/ui/mootextfind.ui:253
 msgid "From c_ursor"
-msgstr ""
+msgstr "从光标处(_U)"
 
 #: src/mooedit/ui/mootextfind.ui:268
 msgid "_Whole words only"
-msgstr ""
+msgstr "仅匹配整词(_W)"
 
 #: src/mooedit/ui/mootextfind-prompt.ui:4
 #: src/mooedit/ui/mootextfind-prompt.ui:12
@@ -551,7 +552,7 @@ msgstr "查看(_V)"
 
 #: src/mooedit/medit.xml.h:7
 msgid "Pa_nes"
-msgstr ""
+msgstr "面板(_N)"
 
 #. menu item label
 #: src/mooedit/medit.xml.h:9
@@ -591,11 +592,11 @@ msgstr ""
 msgid ""
 "Could not save file %s in encoding %s. Do you want to save it in UTF-8 "
 "encoding instead?"
-msgstr ""
+msgstr "无法以 %s 编码保存文件 %s。是否改为以 UTF-8 编码保存?"
 
 #: src/mooedit/mooeditdialogs.cpp:494
 msgid "Save file in UTF-8 encoding?"
-msgstr ""
+msgstr "以 UTF-8 编码保存文件?"
 
 #. Could not open file foo.txt
 #: src/mooedit/mooeditdialogs.cpp:527 src/mooedit/mooeditdialogs.cpp:602
@@ -616,12 +617,12 @@ msgstr "无法打开文档"
 msgid ""
 "Could not open file using character encoding %s. Try to select another "
 "encoding below."
-msgstr ""
+msgstr "无法使用字符编码 %s 打开文件。请在下面尝试选择其他编码。"
 
 #: src/mooedit/mooeditdialogs.cpp:542
 msgid ""
 "Could not detect file character encoding. Try to select an encoding below."
-msgstr ""
+msgstr "无法检测文件的字符编码。请在下面尝试选择一种编码。"
 
 #: src/mooedit/mooeditdialogs.cpp:558
 msgid "Cancel _All"
@@ -684,7 +685,7 @@ msgstr ""
 
 #: src/mooedit/mooeditdialogs.cpp:754
 msgid "Invalid regular expression"
-msgstr ""
+msgstr "无效的正则表达式"
 
 #: src/mooedit/mooedit-fileops.cpp:1127 src/plugins/moofileselector.cpp:496
 msgid "Untitled"
@@ -697,12 +698,12 @@ msgstr "未命名 %d"
 
 #: src/mooedit/mooeditor.cpp:323
 msgid "Open Recent Files Dialog"
-msgstr ""
+msgstr "打开最近文件对话框"
 
 #. Translators: remove the part before and including |
 #: src/mooedit/mooeditor.cpp:325
 msgid "Open Recent|_More..."
-msgstr ""
+msgstr "更多(_M)..."
 
 #: src/mooedit/mooeditor.cpp:597
 msgid "Open new editor window"
@@ -737,46 +738,46 @@ msgstr "encodings_list"
 #. Label of a Preferences dialog page, remove the part before and including |
 #: src/mooedit/mooeditprefspage.cpp:164
 msgid "PreferencesPage|General"
-msgstr ""
+msgstr "常规"
 
 #. Label of a Preferences dialog page, remove the part before and including |
 #: src/mooedit/mooeditprefspage.cpp:202
 msgid "PreferencesPage|File Filters"
-msgstr ""
+msgstr "文件过滤器"
 
 #. Label of a Preferences dialog page, remove the part before and including |
 #: src/mooedit/mooeditprefspage.cpp:256
 msgid "PreferencesPage|View"
-msgstr ""
+msgstr "视图"
 
 #. Label of a Preferences dialog page, remove the part before and including |
 #: src/mooedit/mooeditprefspage.cpp:305
 msgid "PreferencesPage|File"
-msgstr ""
+msgstr "文件"
 
 #. Label of a Preferences dialog page, remove the part before and including |
 #: src/mooedit/mooeditprefspage.cpp:347
 msgid "PreferencesPage|Languages"
-msgstr ""
+msgstr "语言"
 
 #. Label in the Language combo box on Languages preferences page,
 #. remove the part before and including |
 #. Menu item in the Language menu
 #: src/mooedit/mooeditprefspage.cpp:543 src/mooedit/mooeditwindow.cpp:4434
 msgid "Language|None"
-msgstr ""
+msgstr "无"
 
 #. Column label on File Filters prefs page
 #: src/mooedit/mooeditprefspage.cpp:988
 msgctxt "filter-prefs-column"
 msgid "Filter"
-msgstr ""
+msgstr "过滤器"
 
 #. Column label on File Filters prefs page
 #: src/mooedit/mooeditprefspage.cpp:990
 msgctxt "filter-prefs-column"
 msgid "Options"
-msgstr ""
+msgstr "选项"
 
 #. Actions
 #. Translators: the heading this window's commands are listed under in
@@ -858,27 +859,27 @@ msgstr "下一个标签"
 
 #: src/mooedit/mooeditwindow.cpp:544
 msgid "Previous Tab In View"
-msgstr ""
+msgstr "视图中的上一个标签页"
 
 #: src/mooedit/mooeditwindow.cpp:545
 msgid "_Previous Tab In View"
-msgstr ""
+msgstr "视图中的上一个标签页(_P)"
 
 #: src/mooedit/mooeditwindow.cpp:546
 msgid "Previous tab in view"
-msgstr ""
+msgstr "视图中的上一个标签页"
 
 #: src/mooedit/mooeditwindow.cpp:553
 msgid "Next Tab In View"
-msgstr ""
+msgstr "视图中的下一个标签页"
 
 #: src/mooedit/mooeditwindow.cpp:554
 msgid "_Next Tab In View"
-msgstr ""
+msgstr "视图中的下一个标签页(_N)"
 
 #: src/mooedit/mooeditwindow.cpp:555
 msgid "Next tab in view"
-msgstr ""
+msgstr "视图中的下一个标签页"
 
 #: src/mooedit/mooeditwindow.cpp:573
 msgid "Find Next"
@@ -938,7 +939,7 @@ msgstr "切换行号显示"
 
 #: src/mooedit/mooeditwindow.cpp:644
 msgid "Show _Line Numbers"
-msgstr ""
+msgstr "显示行号(_L)"
 
 #: src/mooedit/mooeditwindow.cpp:650
 msgid "Toggle Fold"
@@ -990,35 +991,35 @@ msgstr "将文字恢复为首选项中的大小"
 
 #: src/mooedit/mooeditwindow.cpp:688
 msgid "Focus Document"
-msgstr ""
+msgstr "聚焦文档"
 
 #: src/mooedit/mooeditwindow.cpp:689
 msgid "_Focus Document"
-msgstr ""
+msgstr "聚焦文档(_F)"
 
 #: src/mooedit/mooeditwindow.cpp:696 src/mooedit/mooeditwindow.cpp:697
 msgid "Focus Other Split Notebook"
-msgstr ""
+msgstr "聚焦另一个拆分笔记本"
 
 #: src/mooedit/mooeditwindow.cpp:704
 msgid "Move to Split Notebook"
-msgstr ""
+msgstr "移动到拆分笔记本"
 
 #: src/mooedit/mooeditwindow.cpp:705
 msgid "_Move to Split Notebook"
-msgstr ""
+msgstr "移动到拆分笔记本(_M)"
 
 #: src/mooedit/mooeditwindow.cpp:713 src/mooedit/mooeditwindow.cpp:714
 msgid "Split View Horizontally"
-msgstr ""
+msgstr "水平拆分视图"
 
 #: src/mooedit/mooeditwindow.cpp:721 src/mooedit/mooeditwindow.cpp:722
 msgid "Split View Vertically"
-msgstr ""
+msgstr "垂直拆分视图"
 
 #: src/mooedit/mooeditwindow.cpp:728 src/mooedit/mooeditwindow.cpp:729
 msgid "Focus Next Split View"
-msgstr ""
+msgstr "聚焦下一个拆分视图"
 
 #: src/mooedit/mooeditwindow.cpp:773
 msgid "Toggle Bookmark"
@@ -1026,7 +1027,7 @@ msgstr "书签切换"
 
 #: src/mooedit/mooeditwindow.cpp:774
 msgid "Toggle _Bookmark"
-msgstr ""
+msgstr "切换书签(_B)"
 
 #: src/mooedit/mooeditwindow.cpp:782
 msgid "Next Bookmark"
@@ -1034,7 +1035,7 @@ msgstr "下一个书签"
 
 #: src/mooedit/mooeditwindow.cpp:783
 msgid "_Next Bookmark"
-msgstr ""
+msgstr "下一个书签(_N)"
 
 #: src/mooedit/mooeditwindow.cpp:790
 msgid "Previous Bookmark"
@@ -1042,7 +1043,7 @@ msgstr "上一个书签"
 
 #: src/mooedit/mooeditwindow.cpp:791
 msgid "_Previous Bookmark"
-msgstr ""
+msgstr "上一个书签(_P)"
 
 #. action
 #: src/mooedit/mooeditwindow.cpp:799 src/mooedit/mooeditwindow.cpp:800
@@ -1153,43 +1154,43 @@ msgstr "导出为PDF文档"
 #: src/mooedit/mooeditwindow.cpp:1207
 #, c-format
 msgid "%s [new file]"
-msgstr ""
+msgstr "%s [新文件]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [modified on disk]"
 #: src/mooedit/mooeditwindow.cpp:1210
 #, c-format
 msgid "%s [modified on disk]"
-msgstr ""
+msgstr "%s [磁盘上已修改]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [deleted]"
 #: src/mooedit/mooeditwindow.cpp:1213
 #, c-format
 msgid "%s [deleted]"
-msgstr ""
+msgstr "%s [已删除]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [new file] [modified]"
 #: src/mooedit/mooeditwindow.cpp:1221
 #, c-format
 msgid "%s [new file] [modified]"
-msgstr ""
+msgstr "%s [新文件] [已修改]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [modified on disk] [modified]"
 #: src/mooedit/mooeditwindow.cpp:1224
 #, c-format
 msgid "%s [modified on disk] [modified]"
-msgstr ""
+msgstr "%s [磁盘上已修改] [已修改]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [deleted] [modified]"
 #: src/mooedit/mooeditwindow.cpp:1227
 #, c-format
 msgid "%s [deleted] [modified]"
-msgstr ""
+msgstr "%s [已删除] [已修改]"
 
 #. Translators: this goes into window title, %s stands for filename, e.g. "/foo/bar.txt [modified]"
 #: src/mooedit/mooeditwindow.cpp:1230
 #, c-format
 msgid "%s [modified]"
-msgstr ""
+msgstr "%s [已修改]"
 
 #: src/mooedit/mooeditwindow.cpp:1470
 msgid "Reopen Using Encoding"
@@ -1201,63 +1202,63 @@ msgstr "编码(_E)"
 
 #: src/mooedit/mooeditwindow.cpp:1574
 msgid "Line En_dings"
-msgstr ""
+msgstr "行尾(_D)"
 
 #: src/mooedit/mooeditwindow.cpp:1581
 msgid "_Windows (CR+LF)"
-msgstr ""
+msgstr "Windows (CR+LF)(_W)"
 
 #: src/mooedit/mooeditwindow.cpp:1586
 msgid "_Unix (LF)"
-msgstr ""
+msgstr "Unix (LF)(_U)"
 
 #: src/mooedit/mooeditwindow.cpp:1590
 msgid "_Mac (CR)"
-msgstr ""
+msgstr "Mac (CR)(_M)"
 
 #. Item in document tab context menu
 #: src/mooedit/mooeditwindow.cpp:2515
 msgctxt "tab-context-menu"
 msgid "Close"
-msgstr ""
+msgstr "关闭"
 
 #. Item in document tab context menu
 #: src/mooedit/mooeditwindow.cpp:2523
 msgctxt "tab-context-menu"
 msgid "Close All Others"
-msgstr ""
+msgstr "关闭其他所有"
 
 #. Item in document tab context menu
 #: src/mooedit/mooeditwindow.cpp:2532
 msgctxt "tab-context-menu"
 msgid "Copy Full Path"
-msgstr ""
+msgstr "复制完整路径"
 
 #. Item in document tab context menu
 #: src/mooedit/mooeditwindow.cpp:2542
 msgctxt "tab-context-menu"
 msgid "Detach"
-msgstr ""
+msgstr "分离"
 
 #. Item in document tab context menu
 #: src/mooedit/mooeditwindow.cpp:2548
 msgctxt "tab-context-menu"
 msgid "Move to Split Notebook"
-msgstr ""
+msgstr "移动到拆分笔记本"
 
 #: src/mooedit/mooeditwindow.cpp:3996
 msgid "File was deleted from disk."
-msgstr ""
+msgstr "文件已从磁盘删除。"
 
 #: src/mooedit/mooeditwindow.cpp:3999
 msgid "File was changed on disk."
-msgstr ""
+msgstr "文件在磁盘上已更改。"
 
 #: src/mooedit/mooeditwindow.cpp:4002
 msgid ""
 "Change tracking could not be started for this file; external changes will "
 "not be detected."
-msgstr ""
+msgstr "无法为此文件启动更改跟踪;将不会检测外部更改。"
 
 #: src/mooedit/mooeditwindow.cpp:4276
 #, c-format
@@ -1272,11 +1273,11 @@ msgstr "字符: %s"
 #. Label in the editor window statusbar - Overwrite or Insert mode
 #: src/mooedit/mooeditwindow.cpp:4320
 msgid "OVR"
-msgstr ""
+msgstr "改写"
 
 #: src/mooedit/mooeditwindow.cpp:4320
 msgid "INS"
-msgstr ""
+msgstr "插入"
 
 #: src/mooedit/mooeditwindow.cpp:4429
 msgid "_Language"
@@ -1292,27 +1293,27 @@ msgstr "拖放的文件夹包含超过 %u 个文件(包括子文件夹)。是否
 #: src/mooedit/mooplugin.cpp:1324
 msgctxt "Prefs page label"
 msgid "Plugins"
-msgstr ""
+msgstr "插件"
 
 #: src/mooedit/mooplugin.cpp:1351
 msgctxt "plugin-prefs-column"
 msgid "Enabled"
-msgstr ""
+msgstr "已启用"
 
 #: src/mooedit/mooplugin.cpp:1357
 msgctxt "plugin-prefs-column"
 msgid "Plugin"
-msgstr ""
+msgstr "插件"
 
 #: src/mooedit/mootextfind.cpp:158
 msgctxt "Dialog title"
 msgid "Replace"
-msgstr ""
+msgstr "替换"
 
 #: src/mooedit/mootextfind.cpp:164
 msgctxt "Dialog title"
 msgid "Find"
-msgstr ""
+msgstr "查找"
 
 #: src/mooedit/mootextfind.cpp:454
 msgid "No search term entered"
@@ -1405,19 +1406,19 @@ msgstr "另存为"
 #: src/moofileview/moobookmarkmgr.cpp:847
 msgctxt "fileview-bookmark-editor"
 msgid "Icon"
-msgstr ""
+msgstr "图标"
 
 #. Column label in file selector bookmark editor
 #: src/moofileview/moobookmarkmgr.cpp:863
 msgctxt "fileview-bookmark-editor"
 msgid "Label"
-msgstr ""
+msgstr "标签"
 
 #. Column label in file selector bookmark editor
 #: src/moofileview/moobookmarkmgr.cpp:881
 msgctxt "fileview-bookmark-editor"
 msgid "Path"
-msgstr ""
+msgstr "路径"
 
 #: src/moofileview/moofileview.cpp:1149 src/plugins/moofileselector.cpp:632
 #: src/plugins/moofileselector.cpp:633 src/plugins/moofileselector.cpp:1281
@@ -1435,7 +1436,7 @@ msgstr "删除"
 
 #: src/moofileview/moofileview.cpp:1218 src/moofileview/moofileview.cpp:3395
 msgid "Delete selected files"
-msgstr ""
+msgstr "删除选中的文件"
 
 #: src/moofileview/moofileview.cpp:1229 src/moofileview/moofileview.cpp:1230
 msgid "Show Hidden Files"
@@ -1451,7 +1452,7 @@ msgstr "排列时区分大小写"
 
 #: src/moofileview/moofileview.cpp:1252 src/moofileview/moofileview.cpp:1253
 msgid "Show Folders First"
-msgstr ""
+msgstr "文件夹优先显示"
 
 #. Menubar
 #: src/moofileview/moofileview.cpp:1270 src/moofileview/moofileview.cpp:1271
@@ -1471,48 +1472,48 @@ msgstr "过滤器"
 #: src/moofileview/moofileview.cpp:3238
 #, c-format
 msgid "Move folder %s to Trash?"
-msgstr ""
+msgstr "将文件夹 %s 移到回收站?"
 
 #: src/moofileview/moofileview.cpp:3241
 #, c-format
 msgid "Move file %s to Trash?"
-msgstr ""
+msgstr "将文件 %s 移到回收站?"
 
 #: src/moofileview/moofileview.cpp:3246
 msgid "Move selected files to Trash?"
-msgstr ""
+msgstr "将选中的文件移到回收站?"
 
 #: src/moofileview/moofileview.cpp:3254
 #, c-format
 msgid "Delete folder %s and all its content?"
-msgstr ""
+msgstr "删除文件夹 %s 及其所有内容?"
 
 #: src/moofileview/moofileview.cpp:3257
 #, c-format
 msgid "Delete file %s?"
-msgstr ""
+msgstr "删除文件 %s?"
 
 #: src/moofileview/moofileview.cpp:3262
 msgid "Delete selected files?"
-msgstr ""
+msgstr "删除选中的文件?"
 
 #: src/moofileview/moofileview.cpp:3324
 #, c-format
 msgid "Could not delete folder %s"
-msgstr ""
+msgstr "无法删除文件夹 %s"
 
 #: src/moofileview/moofileview.cpp:3327
 #, c-format
 msgid "Could not delete file %s"
-msgstr ""
+msgstr "无法删除文件 %s"
 
 #: src/moofileview/moofileview.cpp:3388
 msgid "Move to Trash..."
-msgstr ""
+msgstr "移到回收站..."
 
 #: src/moofileview/moofileview.cpp:3389
 msgid "Move selected files to Trash"
-msgstr ""
+msgstr "将选中的文件移到回收站"
 
 #. Translators: the first %s is a file name, the second one is a folder name
 #: src/moofileview/moofileview.cpp:5890
@@ -1580,7 +1581,7 @@ msgstr "无法创建指向 '%s' 的链接"
 #. Translators: this is a context menu item label in the file selector, remove the part before and including |
 #: src/moofileview/moofileview-tools.cpp:332
 msgid "Open with|Default Application"
-msgstr ""
+msgstr "默认应用程序"
 
 #. -*- Mode: XML; indent-tabs-mode: nil; c-basic-offset: 2 -*-
 #: src/moofileview/moofileview.xml.h:2
@@ -1597,19 +1598,16 @@ msgid "Search"
 msgstr "查找"
 
 #: src/mooutils/ui/mooaccelprefs.ui:76
-#, fuzzy
 msgctxt "Shortcut"
 msgid "None"
 msgstr "无"
 
 #: src/mooutils/ui/mooaccelprefs.ui:89
-#, fuzzy
 msgctxt "Shortcut"
 msgid "Default"
-msgstr "默认(_D)"
+msgstr "默认"
 
 #: src/mooutils/ui/mooaccelprefs.ui:105
-#, fuzzy
 msgctxt "Shortcut"
 msgid "Custom"
 msgstr "自定义"
@@ -1626,19 +1624,19 @@ msgstr "被选中动作的快捷键"
 #: src/mooutils/mooaccelprefs.cpp:320
 msgctxt "accel-editor-column"
 msgid "Action"
-msgstr ""
+msgstr "动作"
 
 #. Column label in Configure Shortcuts dialog
 #: src/mooutils/mooaccelprefs.cpp:329
 msgctxt "accel-editor-column"
 msgid "Shortcut"
-msgstr ""
+msgstr "快捷键"
 
 #. Column label in Configure Shortcuts dialog
 #: src/mooutils/mooaccelprefs.cpp:338
 msgctxt "accel-editor-column"
 msgid "Global"
-msgstr ""
+msgstr "全局"
 
 #: src/mooutils/mooaccelprefs.cpp:875
 msgid "Configure Shortcuts"
@@ -1667,7 +1665,7 @@ msgstr "如果你不保存,修改将会被丢弃"
 #. 5 - "Unicode"
 #: src/mooutils/mooencodings.cpp:176
 msgid "012345"
-msgstr ""
+msgstr "012345"
 
 #: src/mooutils/mooencodings.cpp:696
 msgid "Auto Detected"
@@ -1728,13 +1726,13 @@ msgstr "南欧"
 #: src/mooutils/mooencodings-data.h:58 src/mooutils/mooencodings-data.h:66
 #: src/mooutils/mooencodings-data.h:164
 msgid "Baltic"
-msgstr ""
+msgstr "波罗的语"
 
 #: src/mooutils/mooencodings-data.h:59 src/mooutils/mooencodings-data.h:123
 #: src/mooutils/mooencodings-data.h:130 src/mooutils/mooencodings-data.h:132
 #: src/mooutils/mooencodings-data.h:138 src/mooutils/mooencodings-data.h:158
 msgid "Cyrillic"
-msgstr ""
+msgstr "西里尔语"
 
 #: src/mooutils/mooencodings-data.h:60 src/mooutils/mooencodings-data.h:126
 #: src/mooutils/mooencodings-data.h:135 src/mooutils/mooencodings-data.h:163
@@ -1748,7 +1746,7 @@ msgstr "希腊语"
 
 #: src/mooutils/mooencodings-data.h:62
 msgid "Hebrew Visual"
-msgstr ""
+msgstr "希伯来语(视觉顺序)"
 
 #: src/mooutils/mooencodings-data.h:63 src/mooutils/mooencodings-data.h:125
 #: src/mooutils/mooencodings-data.h:144 src/mooutils/mooencodings-data.h:162
@@ -1762,11 +1760,11 @@ msgstr "土耳其语"
 
 #: src/mooutils/mooencodings-data.h:65
 msgid "Nordic"
-msgstr ""
+msgstr "北欧语"
 
 #: src/mooutils/mooencodings-data.h:67
 msgid "Celtic"
-msgstr ""
+msgstr "凯尔特语"
 
 #: src/mooutils/mooencodings-data.h:69 src/mooutils/mooencodings-data.h:147
 msgid "Romanian"
@@ -1775,77 +1773,77 @@ msgstr "罗马尼亚语"
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:72
 msgid "encoding label|UTF-7"
-msgstr ""
+msgstr "UTF-7"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:74
 msgid "encoding label|UTF-32BE-BOM (big-endian, with BOM)"
-msgstr ""
+msgstr "UTF-32BE-BOM (big-endian, with BOM)"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:76
 msgid "encoding label|UTF-32LE-BOM (little-endian, with BOM)"
-msgstr ""
+msgstr "UTF-32LE-BOM (little-endian, with BOM)"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:78
 msgid "encoding label|UTF-32BE (big-endian, no BOM)"
-msgstr ""
+msgstr "UTF-32BE (big-endian, no BOM)"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:80
 msgid "encoding label|UTF-32LE (little-endian, no BOM)"
-msgstr ""
+msgstr "UTF-32LE (little-endian, no BOM)"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:82
 msgid "encoding label|UTF-16BE-BOM (big-endian, with BOM)"
-msgstr ""
+msgstr "UTF-16BE-BOM (big-endian, with BOM)"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:84
 msgid "encoding label|UTF-16LE-BOM (little-endian, with BOM)"
-msgstr ""
+msgstr "UTF-16LE-BOM (little-endian, with BOM)"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:86
 msgid "encoding label|UTF-16BE (big-endian, no BOM)"
-msgstr ""
+msgstr "UTF-16BE (big-endian, no BOM)"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:88
 msgid "encoding label|UTF-16LE (little-endian, no BOM)"
-msgstr ""
+msgstr "UTF-16LE (little-endian, no BOM)"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:90
 msgid "encoding label|UTF-8-BOM"
-msgstr ""
+msgstr "UTF-8-BOM"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:92 src/mooutils/mooencodings-data.h:96
 msgid "encoding label|UTF-32-BOM"
-msgstr ""
+msgstr "UTF-32-BOM"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:94 src/mooutils/mooencodings-data.h:98
 msgid "encoding label|UTF-16-BOM"
-msgstr ""
+msgstr "UTF-16-BOM"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:100
 msgid "encoding label|UTF-32"
-msgstr ""
+msgstr "UTF-32"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:102
 msgid "encoding label|UTF-16"
-msgstr ""
+msgstr "UTF-16"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:104
 msgid "encoding label|UTF-8"
-msgstr ""
+msgstr "UTF-8"
 
 #: src/mooutils/mooencodings-data.h:106
 msgid "Armenian"
@@ -1877,11 +1875,11 @@ msgstr "简体中文"
 
 #: src/mooutils/mooencodings-data.h:118
 msgid "Georgian"
-msgstr ""
+msgstr "格鲁吉亚语"
 
 #: src/mooutils/mooencodings-data.h:133 src/mooutils/mooencodings-data.h:149
 msgid "Cyrillic/Ukrainian"
-msgstr ""
+msgstr "西里尔语/乌克兰语"
 
 #: src/mooutils/mooencodings-data.h:137
 msgid "Croatian"
@@ -1897,11 +1895,11 @@ msgstr "波斯语"
 
 #: src/mooutils/mooencodings-data.h:142
 msgid "Gujarati"
-msgstr ""
+msgstr "古吉拉特语"
 
 #: src/mooutils/mooencodings-data.h:143
 msgid "Gurmukhi"
-msgstr ""
+msgstr "果鲁穆奇语"
 
 #: src/mooutils/mooencodings-data.h:145
 msgid "Icelandic"
@@ -1920,48 +1918,45 @@ msgstr "泰语"
 #: src/mooutils/mooentry.cpp:523
 msgctxt "insert-special-char"
 msgid "Line End"
-msgstr ""
+msgstr "行尾"
 
 #. menu item in Insert Special Character submenu of text entry context menu
 #: src/mooutils/mooentry.cpp:525
 msgctxt "insert-special-char"
 msgid "Tab"
-msgstr ""
+msgstr "制表符"
 
 #. label of Insert Special Character submenu in text entry context menu
 #: src/mooutils/mooentry.cpp:572
 msgctxt "insert-special-char"
 msgid "Insert Special Character"
-msgstr ""
+msgstr "插入特殊字符"
 
 #: src/mooutils/moofiledialog.cpp:570
 msgid "Selected file is not a regular file"
-msgstr ""
+msgstr "所选文件不是常规文件"
 
 #: src/mooutils/moofilewriter.cpp:91
 #, c-format
 msgid "Could not open %s: %s"
-msgstr ""
+msgstr "无法打开 %s:%s"
 
 #: src/mooutils/moofilewriter.cpp:273
 #, c-format
 msgid "Could not create folder %s: %s"
-msgstr ""
+msgstr "无法创建文件夹 %s:%s"
 
 #: src/mooutils/moofiltermgr.cpp:548
 msgid "_Show"
-msgstr ""
+msgstr "显示(_S)"
 
 #: src/mooutils/moofontsel.cpp:496
 msgid "Show only fixed width fonts"
 msgstr "只显示固定宽度的字体"
 
 #: src/mooutils/moohelp.cpp:32
-#, fuzzy
 msgid "Could not open the medit web site"
-msgstr ""
-"无法打开文档\n"
-"%s"
+msgstr "无法打开 medit 网站"
 
 #: src/mooutils/moohistorymgr.cpp:1666
 msgid "Recent Files"
@@ -2024,32 +2019,32 @@ msgstr "新建窗口(_W)"
 #: src/mooutils/mooutils-fs.cpp:102
 #, c-format
 msgid "Could not run 'rm' command: %s"
-msgstr ""
+msgstr "无法运行“rm”命令:%s"
 
 #. This is error message in file selector when rm
 #. fails to delete a file or folder
 #: src/mooutils/mooutils-fs.cpp:123
 #, c-format
 msgid "'rm' command failed: %s"
-msgstr ""
+msgstr "“rm”命令失败:%s"
 
 #: src/mooutils/mooutils-fs.cpp:152
 #, c-format
 msgid "Could not remove %s: %s"
-msgstr ""
+msgstr "无法删除 %s:%s"
 
 #. Translators: remove the part before and including |
 #: src/mooutils/mooutils-misc.cpp:1578
 #, c-format
 msgid "console message|in file %s, line %d, function %s: %s"
-msgstr ""
+msgstr "在文件 %s 第 %d 行,函数 %s:%s"
 
 #. "Unknown error" may be displayed if there is a bug in the program
 #. and proper error message has not been set. It doesn't provide any
 #. useful information obviously
 #: src/mooutils/mooutils-misc.cpp:1785
 msgid "Unknown error"
-msgstr ""
+msgstr "未知错误"
 
 #: src/mooutils/moowindow.cpp:249
 msgid "Configure _Shortcuts..."
@@ -2065,12 +2060,12 @@ msgstr "显示菜单栏"
 
 #: src/mooutils/moowindow.cpp:272 src/mooutils/moowindow.cpp:273
 msgid "Show Statusbar"
-msgstr ""
+msgstr "显示状态栏"
 
 #: src/mooutils/moowindow.cpp:480
 #, c-format
 msgid "Could not parse geometry string '%s'\n"
-msgstr ""
+msgstr "无法解析几何字符串“%s”\n"
 
 #: src/mooutils/moowindow.cpp:1190
 msgid "_Icons Only"
@@ -2082,11 +2077,11 @@ msgstr "只显示标题(_L)"
 
 #: src/mooutils/moowindow.cpp:1192
 msgid "Labels _Below Icons"
-msgstr ""
+msgstr "标签在图标下方(_B)"
 
 #: src/mooutils/moowindow.cpp:1193
 msgid "Labels Be_side Icons"
-msgstr ""
+msgstr "标签在图标旁边(_S)"
 
 #: src/mooutils/moowindow.cpp:1203
 msgid "Toolbar _Style"
@@ -2096,7 +2091,7 @@ msgstr "工具栏样式(_S)"
 #: src/plugins/ctags/ctags-plugin.c:232 src/plugins/ctags/ctags-plugin.c:233
 msgctxt "window-pane"
 msgid "Functions"
-msgstr ""
+msgstr "函数"
 
 #: src/plugins/ui/moofileselector.ui:25
 msgid "Save as"
@@ -2118,12 +2113,12 @@ msgstr "<b>用...打开</b>"
 #: src/plugins/ui/moofileselector-prefs.ui:178
 msgid ""
 "Semicolon-separated list of mime types, e.g. 'text/*;application/x-glade'"
-msgstr ""
+msgstr "以分号分隔的 MIME 类型列表,例如“text/*;application/x-glade”"
 
 #: src/plugins/ui/moofileselector-prefs.ui:83
 #: src/plugins/ui/moofileselector-prefs.ui:164
 msgid "Semicolon-separated list of file globs, e.g. '*.txt;foo.*;*bar*'"
-msgstr ""
+msgstr "以分号分隔的文件通配符列表,例如“*.txt;foo.*;*bar*”"
 
 #: src/plugins/ui/moofileselector-prefs.ui:102
 #: src/plugins/ui/moofileselector-prefs.ui:150
@@ -2131,7 +2126,7 @@ msgstr ""
 msgid ""
 "Shell command to open the file: '%f' is replaced with file path, e.g. "
 "'foobar %f'"
-msgstr ""
+msgstr "用于打开文件的 Shell 命令:“%f”会被替换为文件路径,例如“foobar %f”"
 
 #: src/plugins/ui/moofileselector-prefs.ui:107
 msgid "Command"
@@ -2182,11 +2177,11 @@ msgstr "文档(_f)"
 #: src/plugins/moofilelist.cpp:2328 src/plugins/moofilelist.cpp:2329
 #: src/plugins/moofilelist.cpp:2386
 msgid "File List"
-msgstr ""
+msgstr "文件列表"
 
 #: src/plugins/moofilelist.cpp:2386
 msgid "List of files"
-msgstr ""
+msgstr "文件列表"
 
 #: src/plugins/moofileselector.cpp:370
 #, c-format
@@ -2308,7 +2303,7 @@ msgstr "输入文件名的一部分以打开文件"
 #: src/plugins/support/mooeditwindowoutput.cpp:48
 msgctxt "window-pane"
 msgid "Output"
-msgstr ""
+msgstr "输出"
 
 #. What the command said before it gave up, if it said anything: its
 #. standard error is the only account of itself it left.
@@ -2377,9 +2372,8 @@ msgid "The server had nothing to change."
 msgstr "服务器没有需要修改的内容。"
 
 #: src/plugins/lsp/lsp-edits.cpp:623
-#, fuzzy
 msgid "There is nothing to rename here."
-msgstr "服务器没有需要修改的内容。"
+msgstr "这里没有可重命名的内容。"
 
 #: src/plugins/lsp/lsp-edits.cpp:770
 msgid "Formatting failed"
@@ -2505,33 +2499,28 @@ msgid "Go to the implementation of what is under the cursor"
 msgstr "转到光标处内容的实现"
 
 #: src/plugins/lsp/lsp-plugin.cpp:1386
-#, fuzzy
 msgid "Expand Selection"
-msgstr "选项"
+msgstr "扩大选区"
 
 #: src/plugins/lsp/lsp-plugin.cpp:1387
-#, fuzzy
 msgid "E_xpand Selection"
-msgstr "选项"
+msgstr "扩大选区(_X)"
 
 #: src/plugins/lsp/lsp-plugin.cpp:1388
-#, fuzzy
 msgid "Select what contains the selection"
-msgstr "复制当前行或选中内容"
+msgstr "选择包含当前选区的内容"
 
 #: src/plugins/lsp/lsp-plugin.cpp:1394
-#, fuzzy
 msgid "Shrink Selection"
-msgstr "显示文件选择器"
+msgstr "缩小选区"
 
 #: src/plugins/lsp/lsp-plugin.cpp:1395
-#, fuzzy
 msgid "S_hrink Selection"
-msgstr "显示文件选择器"
+msgstr "缩小选区(_H)"
 
 #: src/plugins/lsp/lsp-plugin.cpp:1396
 msgid "Select what the selection contains"
-msgstr ""
+msgstr "选择当前选区所包含的内容"
 
 #: src/plugins/lsp/lsp-plugin.cpp:1459
 msgid "LSP Servers"
@@ -2902,43 +2891,43 @@ msgstr "任何语法高亮能区分注释、字符串与代码的文件。"
 
 #: src/plugins/terminal/terminal-colors.cpp:26
 msgid "Default"
-msgstr ""
+msgstr "默认"
 
 #: src/plugins/terminal/terminal-colors.cpp:28
 msgid "Black on White"
-msgstr ""
+msgstr "白底黑字"
 
 #: src/plugins/terminal/terminal-colors.cpp:33
 msgid "Black on Light Yellow"
-msgstr ""
+msgstr "浅黄底黑字"
 
 #: src/plugins/terminal/terminal-colors.cpp:38
 msgid "Marble"
-msgstr ""
+msgstr "大理石"
 
 #: src/plugins/terminal/terminal-colors.cpp:43
 msgid "Green on Black"
-msgstr ""
+msgstr "黑底绿字"
 
 #: src/plugins/terminal/terminal-colors.cpp:48
 msgid "Paper, Light"
-msgstr ""
+msgstr "纸张(浅色)"
 
 #: src/plugins/terminal/terminal-colors.cpp:53
 msgid "Paper"
-msgstr ""
+msgstr "纸张"
 
 #: src/plugins/terminal/terminal-colors.cpp:58
 msgid "Linux Colors"
-msgstr ""
+msgstr "Linux 配色"
 
 #: src/plugins/terminal/terminal-colors.cpp:63
 msgid "VIM Colors"
-msgstr ""
+msgstr "VIM 配色"
 
 #: src/plugins/terminal/terminal-colors.cpp:68
 msgid "White on Black"
-msgstr ""
+msgstr "黑底白字"
 
 #. start_shell() would reset the terminal and wipe this out. Applying
 #. the preferences starts a shell again, which is what the message
@@ -3023,7 +3012,7 @@ msgstr "使用系统等宽字体"
 #. Output filter for shell commands. Translators: remove the part before and including |.
 #: src/plugins/usertools/filters.xml.h:2
 msgid "Filter|Default"
-msgstr ""
+msgstr "默认"
 
 #. Output filter for shell commands. Translators: remove the part before and including |.
 #: src/plugins/usertools/filters.xml.h:4
@@ -3033,22 +3022,22 @@ msgstr "无"
 #. Output filter for shell commands. Translators: remove the part before and including |.
 #: src/plugins/usertools/filters.xml.h:6
 msgid "Filter|Bison"
-msgstr ""
+msgstr "Bison"
 
 #. Output filter for shell commands. Translators: remove the part before and including |.
 #: src/plugins/usertools/filters.xml.h:8
 msgid "Filter|Python"
-msgstr ""
+msgstr "Python"
 
 #. Output filter for shell commands. Translators: remove the part before and including |.
 #: src/plugins/usertools/filters.xml.h:10
 msgid "Filter|LaTeX"
-msgstr ""
+msgstr "LaTeX"
 
 #. Output filter for shell commands. Translators: remove the part before and including |.
 #: src/plugins/usertools/filters.xml.h:12
 msgid "Filter|Make"
-msgstr ""
+msgstr "Make"
 
 #: src/plugins/usertools/ui/mooedittools-exe.ui:59
 msgid "Output"
@@ -3080,31 +3069,31 @@ msgstr "启用"
 
 #: src/plugins/usertools/ui/moousertools.ui:156
 msgid "_Files"
-msgstr ""
+msgstr "文件(_F)"
 
 #: src/plugins/usertools/ui/moousertools.ui:183
 msgid "_Requires"
-msgstr ""
+msgstr "需要(_R)"
 
 #: src/plugins/usertools/ui/moousertools.ui:210
 msgid "_Save"
-msgstr ""
+msgstr "保存(_S)"
 
 #: src/plugins/usertools/ui/moousertools.ui:237
 msgid "_Type"
-msgstr ""
+msgstr "类型(_T)"
 
 #. Label of a notebook tab on the User Tools preferences page
 #: src/plugins/usertools/ui/moousertools.ui:318
 msgctxt "user-tools-prefs"
 msgid "Tools menu"
-msgstr ""
+msgstr "工具菜单"
 
 #. Label of a notebook tab on the User Tools preferences page
 #: src/plugins/usertools/ui/moousertools.ui:335
 msgctxt "user-tools-prefs"
 msgid "Context menu"
-msgstr ""
+msgstr "上下文菜单"
 
 #. Translators: this is an action for output of a shell command, remove the part before and including |
 #: src/plugins/usertools/moocommand-exe.cpp:68
@@ -3148,7 +3137,7 @@ msgstr "无"
 #. Translators: this is a kind of input for a shell command, remove the part before and including |
 #: src/plugins/usertools/moocommand-exe.cpp:1052
 msgid "Input|Selected lines"
-msgstr ""
+msgstr "选中的行"
 
 #. Translators: this is a kind of input for a shell command, remove the part before and including |
 #: src/plugins/usertools/moocommand-exe.cpp:1054
@@ -3163,7 +3152,7 @@ msgstr "全部"
 #. Translators: this is a kind of input for a shell command, remove the part before and including |
 #: src/plugins/usertools/moocommand-exe.cpp:1058
 msgid "Input|Document copy"
-msgstr ""
+msgstr "文档副本"
 
 #: src/plugins/usertools/moousertools.cpp:390
 #: src/plugins/usertools/moousertools-prefs.cpp:582
@@ -3172,11 +3161,11 @@ msgstr "工具"
 
 #: src/plugins/usertools/moousertools.cpp:1405
 msgid "User Tools"
-msgstr ""
+msgstr "用户工具"
 
 #: src/plugins/usertools/moousertools.cpp:1406
 msgid "Configurable tools"
-msgstr ""
+msgstr "可配置的工具"
 
 #: src/plugins/usertools/moousertools-prefs.cpp:108
 msgid "New Command"
@@ -3186,34 +3175,34 @@ msgstr "创建命令"
 #: src/plugins/usertools/moousertools-prefs.cpp:161
 msgctxt "Requires-combo"
 msgid "Nothing"
-msgstr ""
+msgstr "无"
 
 #. 'Requires' combo box entry on Tools prefs page
 #: src/plugins/usertools/moousertools-prefs.cpp:163
 msgctxt "Requires-combo"
 msgid "Document"
-msgstr ""
+msgstr "文档"
 
 #. 'Requires' combo box entry on Tools prefs page
 #: src/plugins/usertools/moousertools-prefs.cpp:165
 msgctxt "Requires-combo"
 msgid "File on disk"
-msgstr ""
+msgstr "磁盘上的文件"
 
 #. 'Save' combo box entry on Tools prefs page
 #: src/plugins/usertools/moousertools-prefs.cpp:177
 msgctxt "Save-combo"
 msgid "Nothing"
-msgstr ""
+msgstr "无"
 
 #. 'Save' combo box entry on Tools prefs page
 #: src/plugins/usertools/moousertools-prefs.cpp:179
 msgctxt "Save-combo"
 msgid "Current document"
-msgstr ""
+msgstr "当前文档"
 
 #. 'Save' combo box entry on Tools prefs page
 #: src/plugins/usertools/moousertools-prefs.cpp:181
 msgctxt "Save-combo"
 msgid "All documents"
-msgstr ""
+msgstr "所有文档"

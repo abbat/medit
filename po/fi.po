@@ -101,9 +101,8 @@ msgid "Text editor"
 msgstr "Tekstimuokkain"
 
 #: src/medit-app/medit.desktop.in.h:2
-#, fuzzy
 msgid "editor;texteditor;text"
-msgstr "medit on tekstieditori"
+msgstr "editori;tekstieditori;teksti;"
 
 #: src/mooapp/about.cpp:174
 msgid "old site"
@@ -175,7 +174,7 @@ msgstr "Ilmoita ohjelmavirheestä..."
 
 #: src/mooapp/mooapp.cpp:1119
 msgid "Checking for unsaved documents"
-msgstr ""
+msgstr "Tarkistetaan tallentamattomia asiakirjoja"
 
 #: src/mooedit/ui/mooeditprefs-file.ui:19
 msgid "<b>Loading</b>"
@@ -231,14 +230,12 @@ msgstr ""
 "Avaa- ja Tallenna nimellä -ikkunat avautuvat n_ykyisen asiakirjan kansioon"
 
 #: src/mooedit/ui/mooeditprefs-file.ui:329
-#, fuzzy
 msgid "<b>Autosync</b>"
-msgstr "<b>Tekijä:</b>"
+msgstr "<b>Automaattinen synkronointi</b>"
 
 #: src/mooedit/ui/mooeditprefs-file.ui:348
-#, fuzzy
 msgid "Automatically sync files with disk"
-msgstr "Lataa tiedosto automaattisesti uudelleen sen muututtua levyllä"
+msgstr "Synkronoi tiedostot levyn kanssa automaattisesti"
 
 #: src/mooedit/ui/mooeditprefs-filters.ui:19
 msgid "<b>File filters</b>"
@@ -482,7 +479,7 @@ msgstr "_Korvaava teksti"
 
 #: src/mooedit/ui/mootextfind.ui:140
 msgid "_Literal replacement"
-msgstr ""
+msgstr "_Kirjaimellinen korvaus"
 
 #: src/mooedit/ui/mootextfind.ui:164
 msgid "Replace With"
@@ -876,27 +873,27 @@ msgstr "Seuraava välilehti"
 
 #: src/mooedit/mooeditwindow.cpp:544
 msgid "Previous Tab In View"
-msgstr ""
+msgstr "Edellinen välilehti näkymässä"
 
 #: src/mooedit/mooeditwindow.cpp:545
 msgid "_Previous Tab In View"
-msgstr ""
+msgstr "_Edellinen välilehti näkymässä"
 
 #: src/mooedit/mooeditwindow.cpp:546
 msgid "Previous tab in view"
-msgstr ""
+msgstr "Edellinen välilehti näkymässä"
 
 #: src/mooedit/mooeditwindow.cpp:553
 msgid "Next Tab In View"
-msgstr ""
+msgstr "Seuraava välilehti näkymässä"
 
 #: src/mooedit/mooeditwindow.cpp:554
 msgid "_Next Tab In View"
-msgstr ""
+msgstr "_Seuraava välilehti näkymässä"
 
 #: src/mooedit/mooeditwindow.cpp:555
 msgid "Next tab in view"
-msgstr ""
+msgstr "Seuraava välilehti näkymässä"
 
 #: src/mooedit/mooeditwindow.cpp:573
 msgid "Find Next"
@@ -1017,15 +1014,15 @@ msgstr "Ko_hdista asiakirja"
 
 #: src/mooedit/mooeditwindow.cpp:696 src/mooedit/mooeditwindow.cpp:697
 msgid "Focus Other Split Notebook"
-msgstr ""
+msgstr "Siirrä kohdistus toiseen jaettuun muistikirjaan"
 
 #: src/mooedit/mooeditwindow.cpp:704
 msgid "Move to Split Notebook"
-msgstr ""
+msgstr "Siirrä jaettuun muistikirjaan"
 
 #: src/mooedit/mooeditwindow.cpp:705
 msgid "_Move to Split Notebook"
-msgstr ""
+msgstr "_Siirrä jaettuun muistikirjaan"
 
 #: src/mooedit/mooeditwindow.cpp:713 src/mooedit/mooeditwindow.cpp:714
 msgid "Split View Horizontally"
@@ -1250,7 +1247,7 @@ msgstr "Sulje kaikki muut"
 #: src/mooedit/mooeditwindow.cpp:2532
 msgctxt "tab-context-menu"
 msgid "Copy Full Path"
-msgstr ""
+msgstr "Kopioi koko polku"
 
 #. Item in document tab context menu
 #: src/mooedit/mooeditwindow.cpp:2542
@@ -1262,22 +1259,22 @@ msgstr "Irrota"
 #: src/mooedit/mooeditwindow.cpp:2548
 msgctxt "tab-context-menu"
 msgid "Move to Split Notebook"
-msgstr ""
+msgstr "Siirrä jaettuun muistikirjaan"
 
 #: src/mooedit/mooeditwindow.cpp:3996
 msgid "File was deleted from disk."
-msgstr ""
+msgstr "Tiedosto poistettiin levyltä."
 
 #: src/mooedit/mooeditwindow.cpp:3999
-#, fuzzy
 msgid "File was changed on disk."
-msgstr "Tiedosto levyllä"
+msgstr "Tiedostoa muutettiin levyllä."
 
 #: src/mooedit/mooeditwindow.cpp:4002
 msgid ""
 "Change tracking could not be started for this file; external changes will "
 "not be detected."
 msgstr ""
+"Muutosten seurantaa ei voitu käynnistää tälle tiedostolle; ulkoisia muutoksia ei havaita."
 
 #: src/mooedit/mooeditwindow.cpp:4276
 #, c-format
@@ -1626,10 +1623,9 @@ msgstr "Etsi"
 #: src/mooutils/ui/mooaccelprefs.ui:76
 msgctxt "Shortcut"
 msgid "None"
-msgstr ""
+msgstr "Ei mitään"
 
 #: src/mooutils/ui/mooaccelprefs.ui:89
-#, fuzzy
 msgctxt "Shortcut"
 msgid "Default"
 msgstr "Oletus"
@@ -1637,7 +1633,7 @@ msgstr "Oletus"
 #: src/mooutils/ui/mooaccelprefs.ui:105
 msgctxt "Shortcut"
 msgid "Custom"
-msgstr ""
+msgstr "Mukautettu"
 
 #: src/mooutils/ui/mooaccelprefs.ui:135
 msgid "Default key:"
@@ -1801,77 +1797,77 @@ msgstr "Romanialainen"
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:72
 msgid "encoding label|UTF-7"
-msgstr ""
+msgstr "UTF-7"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:74
 msgid "encoding label|UTF-32BE-BOM (big-endian, with BOM)"
-msgstr ""
+msgstr "UTF-32BE-BOM (big-endian, with BOM)"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:76
 msgid "encoding label|UTF-32LE-BOM (little-endian, with BOM)"
-msgstr ""
+msgstr "UTF-32LE-BOM (little-endian, with BOM)"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:78
 msgid "encoding label|UTF-32BE (big-endian, no BOM)"
-msgstr ""
+msgstr "UTF-32BE (big-endian, no BOM)"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:80
 msgid "encoding label|UTF-32LE (little-endian, no BOM)"
-msgstr ""
+msgstr "UTF-32LE (little-endian, no BOM)"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:82
 msgid "encoding label|UTF-16BE-BOM (big-endian, with BOM)"
-msgstr ""
+msgstr "UTF-16BE-BOM (big-endian, with BOM)"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:84
 msgid "encoding label|UTF-16LE-BOM (little-endian, with BOM)"
-msgstr ""
+msgstr "UTF-16LE-BOM (little-endian, with BOM)"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:86
 msgid "encoding label|UTF-16BE (big-endian, no BOM)"
-msgstr ""
+msgstr "UTF-16BE (big-endian, no BOM)"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:88
 msgid "encoding label|UTF-16LE (little-endian, no BOM)"
-msgstr ""
+msgstr "UTF-16LE (little-endian, no BOM)"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:90
 msgid "encoding label|UTF-8-BOM"
-msgstr ""
+msgstr "UTF-8-BOM"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:92 src/mooutils/mooencodings-data.h:96
 msgid "encoding label|UTF-32-BOM"
-msgstr ""
+msgstr "UTF-32-BOM"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:94 src/mooutils/mooencodings-data.h:98
 msgid "encoding label|UTF-16-BOM"
-msgstr ""
+msgstr "UTF-16-BOM"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:100
 msgid "encoding label|UTF-32"
-msgstr ""
+msgstr "UTF-32"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:102
 msgid "encoding label|UTF-16"
-msgstr ""
+msgstr "UTF-16"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:104
 msgid "encoding label|UTF-8"
-msgstr ""
+msgstr "UTF-8"
 
 #: src/mooutils/mooencodings-data.h:106
 msgid "Armenian"
@@ -1983,11 +1979,8 @@ msgid "Show only fixed width fonts"
 msgstr "Näytä vain tasalevyiset fontit"
 
 #: src/mooutils/moohelp.cpp:32
-#, fuzzy
 msgid "Could not open the medit web site"
-msgstr ""
-"Tiedostoa ei voitu avata:\n"
-"%s"
+msgstr "medit-verkkosivustoa ei voitu avata"
 
 #: src/mooutils/moohistorymgr.cpp:1666
 msgid "Recent Files"
@@ -2413,9 +2406,8 @@ msgid "The server had nothing to change."
 msgstr "Palvelimella ei ollut mitään muutettavaa."
 
 #: src/plugins/lsp/lsp-edits.cpp:623
-#, fuzzy
 msgid "There is nothing to rename here."
-msgstr "Palvelimella ei ollut mitään muutettavaa."
+msgstr "Tässä ei ole mitään nimettävää uudelleen."
 
 #: src/plugins/lsp/lsp-edits.cpp:770
 msgid "Formatting failed"
@@ -2541,33 +2533,28 @@ msgid "Go to the implementation of what is under the cursor"
 msgstr "Siirry sen toteutukseen, mikä on kohdistimen kohdalla"
 
 #: src/plugins/lsp/lsp-plugin.cpp:1386
-#, fuzzy
 msgid "Expand Selection"
-msgstr "Valinta"
+msgstr "Laajenna valintaa"
 
 #: src/plugins/lsp/lsp-plugin.cpp:1387
-#, fuzzy
 msgid "E_xpand Selection"
-msgstr "Valinta"
+msgstr "L_aajenna valintaa"
 
 #: src/plugins/lsp/lsp-plugin.cpp:1388
-#, fuzzy
 msgid "Select what contains the selection"
-msgstr "Monista rivi tai valinta"
+msgstr "Valitse se, mitä valinta sisältää"
 
 #: src/plugins/lsp/lsp-plugin.cpp:1394
-#, fuzzy
 msgid "Shrink Selection"
-msgstr "Mostrar selector de archivos"
+msgstr "Supista valintaa"
 
 #: src/plugins/lsp/lsp-plugin.cpp:1395
-#, fuzzy
 msgid "S_hrink Selection"
-msgstr "Mostrar selector de archivos"
+msgstr "_Supista valintaa"
 
 #: src/plugins/lsp/lsp-plugin.cpp:1396
 msgid "Select what the selection contains"
-msgstr ""
+msgstr "Valitse se, mitä valinta sisältää sisällään"
 
 #: src/plugins/lsp/lsp-plugin.cpp:1459
 msgid "LSP Servers"

@@ -102,9 +102,8 @@ msgid "Text editor"
 msgstr "Texteditor"
 
 #: src/medit-app/medit.desktop.in.h:2
-#, fuzzy
 msgid "editor;texteditor;text"
-msgstr "medit ist ein Texteditor"
+msgstr "editor;texteditor;text;texteditor;"
 
 #: src/mooapp/about.cpp:174
 msgid "old site"
@@ -178,7 +177,7 @@ msgstr "Einen Bug melden..."
 
 #: src/mooapp/mooapp.cpp:1119
 msgid "Checking for unsaved documents"
-msgstr ""
+msgstr "Ungespeicherte Dokumente werden geprüft"
 
 #: src/mooedit/ui/mooeditprefs-file.ui:19
 msgid "<b>Loading</b>"
@@ -234,14 +233,12 @@ msgid "Open and Save As dialogs show current document _folder"
 msgstr "Zeige Öffnen und Speichern Dialoge im aktuellen _Ordner"
 
 #: src/mooedit/ui/mooeditprefs-file.ui:329
-#, fuzzy
 msgid "<b>Autosync</b>"
-msgstr "<b>Autor:</b>"
+msgstr "<b>Automatische Synchronisierung</b>"
 
 #: src/mooedit/ui/mooeditprefs-file.ui:348
-#, fuzzy
 msgid "Automatically sync files with disk"
-msgstr "Lade die Datei bei Veränderung auf der Festplatte automatisch neu"
+msgstr "Dateien automatisch mit dem Datenträger abgleichen"
 
 #: src/mooedit/ui/mooeditprefs-filters.ui:19
 msgid "<b>File filters</b>"
@@ -878,27 +875,27 @@ msgstr "Nächster Reiter"
 
 #: src/mooedit/mooeditwindow.cpp:544
 msgid "Previous Tab In View"
-msgstr ""
+msgstr "Vorheriger Reiter in der Ansicht"
 
 #: src/mooedit/mooeditwindow.cpp:545
 msgid "_Previous Tab In View"
-msgstr ""
+msgstr "_Vorheriger Reiter in der Ansicht"
 
 #: src/mooedit/mooeditwindow.cpp:546
 msgid "Previous tab in view"
-msgstr ""
+msgstr "Vorheriger Reiter in der Ansicht"
 
 #: src/mooedit/mooeditwindow.cpp:553
 msgid "Next Tab In View"
-msgstr ""
+msgstr "Nächster Reiter in der Ansicht"
 
 #: src/mooedit/mooeditwindow.cpp:554
 msgid "_Next Tab In View"
-msgstr ""
+msgstr "_Nächster Reiter in der Ansicht"
 
 #: src/mooedit/mooeditwindow.cpp:555
 msgid "Next tab in view"
-msgstr ""
+msgstr "Nächster Reiter in der Ansicht"
 
 #: src/mooedit/mooeditwindow.cpp:573
 msgid "Find Next"
@@ -1018,7 +1015,7 @@ msgstr "Dokument _fokussieren"
 
 #: src/mooedit/mooeditwindow.cpp:696 src/mooedit/mooeditwindow.cpp:697
 msgid "Focus Other Split Notebook"
-msgstr ""
+msgstr "Anderes geteiltes Notizbuch fokussieren"
 
 #: src/mooedit/mooeditwindow.cpp:704
 msgid "Move to Split Notebook"
@@ -1251,7 +1248,7 @@ msgstr "Alle anderen Tabs schließen"
 #: src/mooedit/mooeditwindow.cpp:2532
 msgctxt "tab-context-menu"
 msgid "Copy Full Path"
-msgstr ""
+msgstr "Vollständigen Pfad kopieren"
 
 #. Item in document tab context menu
 #: src/mooedit/mooeditwindow.cpp:2542
@@ -1267,18 +1264,18 @@ msgstr "Wechsel zu geteilter Ansicht"
 
 #: src/mooedit/mooeditwindow.cpp:3996
 msgid "File was deleted from disk."
-msgstr ""
+msgstr "Die Datei wurde vom Datenträger gelöscht."
 
 #: src/mooedit/mooeditwindow.cpp:3999
-#, fuzzy
 msgid "File was changed on disk."
-msgstr "Datei auf der Festplatte"
+msgstr "Die Datei wurde auf dem Datenträger geändert."
 
 #: src/mooedit/mooeditwindow.cpp:4002
 msgid ""
 "Change tracking could not be started for this file; external changes will "
 "not be detected."
 msgstr ""
+"Die Änderungsverfolgung konnte für diese Datei nicht gestartet werden; externe Änderungen werden nicht erkannt."
 
 #: src/mooedit/mooeditwindow.cpp:4276
 #, c-format
@@ -1627,10 +1624,9 @@ msgstr "Suchen"
 #: src/mooutils/ui/mooaccelprefs.ui:76
 msgctxt "Shortcut"
 msgid "None"
-msgstr ""
+msgstr "Keine"
 
 #: src/mooutils/ui/mooaccelprefs.ui:89
-#, fuzzy
 msgctxt "Shortcut"
 msgid "Default"
 msgstr "Standard"
@@ -1638,7 +1634,7 @@ msgstr "Standard"
 #: src/mooutils/ui/mooaccelprefs.ui:105
 msgctxt "Shortcut"
 msgid "Custom"
-msgstr ""
+msgstr "Benutzerdefiniert"
 
 #: src/mooutils/ui/mooaccelprefs.ui:135
 msgid "Default key:"
@@ -1801,77 +1797,77 @@ msgstr "Rumänisch"
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:72
 msgid "encoding label|UTF-7"
-msgstr ""
+msgstr "UTF-7"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:74
 msgid "encoding label|UTF-32BE-BOM (big-endian, with BOM)"
-msgstr ""
+msgstr "UTF-32BE-BOM (big-endian, with BOM)"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:76
 msgid "encoding label|UTF-32LE-BOM (little-endian, with BOM)"
-msgstr ""
+msgstr "UTF-32LE-BOM (little-endian, with BOM)"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:78
 msgid "encoding label|UTF-32BE (big-endian, no BOM)"
-msgstr ""
+msgstr "UTF-32BE (big-endian, no BOM)"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:80
 msgid "encoding label|UTF-32LE (little-endian, no BOM)"
-msgstr ""
+msgstr "UTF-32LE (little-endian, no BOM)"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:82
 msgid "encoding label|UTF-16BE-BOM (big-endian, with BOM)"
-msgstr ""
+msgstr "UTF-16BE-BOM (big-endian, with BOM)"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:84
 msgid "encoding label|UTF-16LE-BOM (little-endian, with BOM)"
-msgstr ""
+msgstr "UTF-16LE-BOM (little-endian, with BOM)"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:86
 msgid "encoding label|UTF-16BE (big-endian, no BOM)"
-msgstr ""
+msgstr "UTF-16BE (big-endian, no BOM)"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:88
 msgid "encoding label|UTF-16LE (little-endian, no BOM)"
-msgstr ""
+msgstr "UTF-16LE (little-endian, no BOM)"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:90
 msgid "encoding label|UTF-8-BOM"
-msgstr ""
+msgstr "UTF-8-BOM"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:92 src/mooutils/mooencodings-data.h:96
 msgid "encoding label|UTF-32-BOM"
-msgstr ""
+msgstr "UTF-32-BOM"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:94 src/mooutils/mooencodings-data.h:98
 msgid "encoding label|UTF-16-BOM"
-msgstr ""
+msgstr "UTF-16-BOM"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:100
 msgid "encoding label|UTF-32"
-msgstr ""
+msgstr "UTF-32"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:102
 msgid "encoding label|UTF-16"
-msgstr ""
+msgstr "UTF-16"
 
 #. Label of an encoding menu item, remove the part before and including |
 #: src/mooutils/mooencodings-data.h:104
 msgid "encoding label|UTF-8"
-msgstr ""
+msgstr "UTF-8"
 
 #: src/mooutils/mooencodings-data.h:106
 msgid "Armenian"
@@ -1983,11 +1979,8 @@ msgid "Show only fixed width fonts"
 msgstr "Nur Schriftarten fester Breite anzeigen"
 
 #: src/mooutils/moohelp.cpp:32
-#, fuzzy
 msgid "Could not open the medit web site"
-msgstr ""
-"Datei konnte nicht geöffnet werden\n"
-"%s"
+msgstr "Die medit-Webseite konnte nicht geöffnet werden"
 
 #: src/mooutils/moohistorymgr.cpp:1666
 msgid "Recent Files"
@@ -2410,9 +2403,8 @@ msgid "The server had nothing to change."
 msgstr "Der Server hat nichts zu ändern."
 
 #: src/plugins/lsp/lsp-edits.cpp:623
-#, fuzzy
 msgid "There is nothing to rename here."
-msgstr "Der Server hat nichts zu ändern."
+msgstr "Hier gibt es nichts umzubenennen."
 
 #: src/plugins/lsp/lsp-edits.cpp:770
 msgid "Formatting failed"
@@ -2538,33 +2530,28 @@ msgid "Go to the implementation of what is under the cursor"
 msgstr "Zur Implementierung dessen springen, was unter dem Cursor steht"
 
 #: src/plugins/lsp/lsp-plugin.cpp:1386
-#, fuzzy
 msgid "Expand Selection"
-msgstr "Auswahl"
+msgstr "Auswahl erweitern"
 
 #: src/plugins/lsp/lsp-plugin.cpp:1387
-#, fuzzy
 msgid "E_xpand Selection"
-msgstr "Auswahl"
+msgstr "Auswahl _erweitern"
 
 #: src/plugins/lsp/lsp-plugin.cpp:1388
-#, fuzzy
 msgid "Select what contains the selection"
-msgstr "Die Zeile oder die Auswahl duplizieren"
+msgstr "Das auswählen, was die Auswahl enthält"
 
 #: src/plugins/lsp/lsp-plugin.cpp:1394
-#, fuzzy
 msgid "Shrink Selection"
-msgstr "Auswahl"
+msgstr "Auswahl verkleinern"
 
 #: src/plugins/lsp/lsp-plugin.cpp:1395
-#, fuzzy
 msgid "S_hrink Selection"
-msgstr "Auswahl"
+msgstr "Auswahl _verkleinern"
 
 #: src/plugins/lsp/lsp-plugin.cpp:1396
 msgid "Select what the selection contains"
-msgstr ""
+msgstr "Das auswählen, was in der Auswahl enthalten ist"
 
 #: src/plugins/lsp/lsp-plugin.cpp:1459
 msgid "LSP Servers"

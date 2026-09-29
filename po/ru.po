@@ -1275,18 +1275,19 @@ msgstr "Переместить в разделённый блокнот"
 
 #: src/mooedit/mooeditwindow.cpp:3996
 msgid "File was deleted from disk."
-msgstr ""
+msgstr "Файл был удалён с диска."
 
 #: src/mooedit/mooeditwindow.cpp:3999
-#, fuzzy
 msgid "File was changed on disk."
-msgstr "Файл на диске"
+msgstr "Файл был изменён на диске."
 
 #: src/mooedit/mooeditwindow.cpp:4002
 msgid ""
 "Change tracking could not be started for this file; external changes will "
 "not be detected."
 msgstr ""
+"Не удалось начать отслеживание изменений этого файла; внешние изменения не "
+"будут обнаружены."
 
 #: src/mooedit/mooeditwindow.cpp:4276
 #, c-format
@@ -2420,9 +2421,8 @@ msgid "The server had nothing to change."
 msgstr "Серверу нечего менять."
 
 #: src/plugins/lsp/lsp-edits.cpp:623
-#, fuzzy
 msgid "There is nothing to rename here."
-msgstr "Серверу нечего менять."
+msgstr "Здесь нечего переименовывать."
 
 #: src/plugins/lsp/lsp-edits.cpp:770
 msgid "Formatting failed"
