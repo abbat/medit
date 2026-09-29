@@ -595,8 +595,7 @@ moo_icon_view_dispose (GObject *object)
 
     _moo_icon_view_set_model (view, NULL);
 
-    g_object_unref (view->priv->adjustment);
-    view->priv->adjustment = NULL;
+    g_clear_object (&view->priv->adjustment);
 
 #if GTK_CHECK_VERSION(3,0,0)
     set_vadjustment (view, NULL);
@@ -626,8 +625,11 @@ moo_icon_view_dispose (GObject *object)
         view->priv->text.cell = NULL;
     }
 
-    destroy_layout (view);
-    free_selection (view);
+    /* dispose may run more than once */
+    if (view->priv->layout)
+        destroy_layout (view);
+    if (view->priv->selection)
+        free_selection (view);
 
     dnd_info_free (view->priv->dnd_info);
     view->priv->dnd_info = NULL;
