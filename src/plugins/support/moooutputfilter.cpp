@@ -294,7 +294,7 @@ moo_file_line_data_copy (MooFileLineData *data)
 
     if (data)
     {
-        copy = (MooFileLineData*) g_memdup (data, sizeof (MooFileLineData));
+        copy = (MooFileLineData*) g_memdup2 (data, sizeof (MooFileLineData));
         copy->file = g_strdup (data->file);
     }
 

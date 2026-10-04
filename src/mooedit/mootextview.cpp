@@ -1641,7 +1641,7 @@ moo_text_view_move_cursor (MooTextView *view,
             g_idle_add_full (G_PRIORITY_HIGH_IDLE + 9, /* between gtktextview's first validate priority and
                                                           * GTK_PRIORITY_RESIZE */
                                        (GSourceFunc) do_move_cursor,
-                                       g_memdup (&scroll, sizeof scroll),
+                                       g_memdup2 (&scroll, sizeof scroll),
                                        g_free);
     }
 }

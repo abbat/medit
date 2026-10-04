@@ -260,7 +260,7 @@ _moo_print_settings_copy (MooPrintSettings *settings)
 
     g_return_val_if_fail (settings != NULL, NULL);
 
-    copy = (MooPrintSettings *) g_memdup (settings, sizeof (MooPrintSettings));
+    copy = (MooPrintSettings *) g_memdup2 (settings, sizeof (MooPrintSettings));
 
     copy->font = g_strdup (settings->font);
     copy->ln_font = g_strdup (settings->ln_font);

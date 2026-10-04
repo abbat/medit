@@ -1672,7 +1672,7 @@ moo_plugin_method_newv (const char     *name,
     m->ptype = ptype;
     m->return_type = return_type;
     m->n_params = n_params;
-    m->param_types = n_params ? (GType *) g_memdup (param_types, n_params * sizeof (GType)) : NULL;
+    m->param_types = n_params ? (GType *) g_memdup2 (param_types, n_params * sizeof (GType)) : NULL;
     m->closure = g_closure_ref (closure);
     g_closure_sink (closure);
     g_closure_set_marshal (closure, c_marshaller);

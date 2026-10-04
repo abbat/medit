@@ -3517,7 +3517,7 @@ moo_pane_params_new (GdkRectangle *window_position,
 MooPaneParams*
 moo_pane_params_copy (MooPaneParams *params)
 {
-    return (MooPaneParams *) g_memdup (params, sizeof *params);
+    return (MooPaneParams *) g_memdup2 (params, sizeof *params);
 }
 
 
