@@ -22,7 +22,6 @@
 #include "mooutils/moodialogs.h"
 #include "mooutils/moohelp.h"
 #include "mooutils/mooutils-treeview.h"
-#include "mooutils/moocompat.h"
 
 
 enum {

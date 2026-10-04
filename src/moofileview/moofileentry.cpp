@@ -24,7 +24,6 @@
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooutils-debug.h"
 #include "mooutils/mooaccel.h"
-#include "mooutils/moocompat.h"
 
 #define MOD_MASK() (gtk_accelerator_get_default_mod_mask ())
 

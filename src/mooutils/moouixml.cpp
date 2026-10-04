@@ -32,7 +32,6 @@
 #include "mooutils/mooi18n.h"
 #include "mooutils/moomenu.h"
 #include "mooutils/mootype-macros.h"
-#include "mooutils/moocompat.h"
 
 
 #define REPORT_UNKNOWN_ACTIONS 0

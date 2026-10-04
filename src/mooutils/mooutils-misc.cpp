@@ -21,7 +21,6 @@
 #include "mooutils/mooatom.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooutils-enums.h"
-#include "mooutils/moocompat.h"
 #include "mooutils/mootype-macros.h"
 #include "mooutils/moobuilder.h"
 #ifdef HAVE_UNISTD_H

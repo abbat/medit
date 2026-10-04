@@ -19,7 +19,6 @@
 #include "mooutils/mooutils-gobject.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooutils-treeview.h"
-#include "mooutils/moocompat.h"
 
 
 typedef struct Column    Column;

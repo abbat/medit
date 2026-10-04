@@ -30,7 +30,6 @@
 #include "mooutils/mooeditops.h"
 #include "mooutils/mooentry.h"
 #include "mooutils/mooi18n.h"
-#include "mooutils/moocompat.h"
 
 #define LIGHT_BLUE "#EEF6FF"
 #define BOOL_CMP(b1,b2) ((b1 && b2) || (!b1 && !b2))

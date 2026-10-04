@@ -19,7 +19,6 @@
 #include "mooedit/mootext-private.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooaccel.h"
-#include "mooutils/moocompat.h"
 
 
 static gboolean

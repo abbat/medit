@@ -20,7 +20,6 @@
 #include "marshals.h"
 #include "mooutils/moocombo.h"
 #include "mooutils/mooentry.h"
-#include "mooutils/moocompat.h"
 
 
 #define MAX_POPUP_LEN 15

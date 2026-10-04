@@ -21,7 +21,6 @@
 #include "marshals.h"
 #include "mooutils/mooutils-gobject.h"
 #include "mooutils/mooutils-messages.h"
-#include "mooutils/moocompat.h"
 
 
 struct _MooLineViewPrivate {

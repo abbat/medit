@@ -24,7 +24,6 @@
 #include "mooutils/mooactiongroup.h"
 #include "mooutils/mootype-macros.h"
 #include "mooutils/moohelp.h"
-#include "mooutils/moocompat.h"
 #include "mooutils/moobuilder.h"
 
 

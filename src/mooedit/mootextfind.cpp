@@ -21,7 +21,6 @@
 #include "mooutils/mooentry.h"
 #include "mooutils/mooi18n.h"
 #include "mooutils/moohelp.h"
-#include "mooutils/moocompat.h"
 #include "mooutils/moobuilder.h"
 
 

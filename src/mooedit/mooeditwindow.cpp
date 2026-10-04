@@ -41,7 +41,6 @@
 #include "mooutils/mooi18n.h"
 #include "mooutils/mooaction-private.h"
 #include "mooutils/mooencodings.h"
-#include "mooutils/moocompat.h"
 #include "mooutils/mooutils-enums.h"
 #include "moocpp/gobjptr.h"
 #include "mooutils/moo-mime.h"

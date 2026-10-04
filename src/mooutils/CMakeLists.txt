@@ -35,7 +35,6 @@ target_sources(medit PRIVATE
     mooclosure.h
     moocombo.cpp
     moocombo.h
-    moocompat.h
     moodialogs.cpp
     moodialogs.h
     mooeditops.cpp

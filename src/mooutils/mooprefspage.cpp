@@ -24,7 +24,6 @@
 #include "mooutils/mooutils-gobject.h"
 #include "mooutils/moofontsel.h"
 #include "mooutils/mooi18n.h"
-#include "mooutils/moocompat.h"
 #include "marshals.h"
 
 struct _MooPrefsPagePrivate {

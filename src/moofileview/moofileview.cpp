@@ -38,7 +38,6 @@
 #include "mooutils/mooeditops.h"
 #include "mooutils/mooatom.h"
 #include "mooutils/moolist.h"
-#include "mooutils/moocompat.h"
 #include "marshals.h"
 #include "mooutils/mooi18n.h"
 

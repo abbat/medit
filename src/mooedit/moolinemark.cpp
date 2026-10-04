@@ -21,7 +21,6 @@
 #include "mooedit/mootext-private.h"
 #include "marshals.h"
 #include "mooutils/mooutils-misc.h"
-#include "mooutils/moocompat.h"
 
 
 struct MooLineMarkPrivate {

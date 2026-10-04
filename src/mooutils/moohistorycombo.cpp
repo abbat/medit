@@ -21,7 +21,6 @@
 #include "mooutils/moohistorycombo.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooi18n.h"
-#include "mooutils/moocompat.h"
 
 
 struct _MooHistoryComboPrivate {

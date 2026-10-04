@@ -27,7 +27,6 @@
 #define OPEN_PANE_TIMEOUT 200
 
 #include "mooutils-misc.h"
-#include "moocompat.h"
 #include "moohelp.h"
 #include "mooutils-gobject.h"
 #include "mooi18n.h"

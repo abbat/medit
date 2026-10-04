@@ -35,7 +35,6 @@
 
 #include "mooutils/moofontsel.h"
 #include "mooutils/mooi18n.h"
-#include "mooutils/moocompat.h"
 
 #define P_(String) dgettext ("gtk20-properties", String)
 

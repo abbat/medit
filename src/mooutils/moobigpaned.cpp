@@ -24,7 +24,6 @@
 #include "mooutils-mem.h"
 #include "mooutils-misc.h"
 #include "mooregion.h"
-#include "moocompat.h"
 
 typedef struct {
     GSList *order; /* ids */

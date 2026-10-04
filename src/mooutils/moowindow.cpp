@@ -33,7 +33,6 @@
 #include "mooutils/mooeditops.h"
 #include "mooutils/mootype-macros.h"
 #include "mooutils/mooutils-enums.h"
-#include "mooutils/moocompat.h"
 
 
 #define PREFS_REMEMBER_SIZE  "window/remember_size"

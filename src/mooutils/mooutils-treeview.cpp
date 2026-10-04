@@ -16,7 +16,6 @@
 #include "mooutils/mooutils-treeview.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooutils-gobject.h"
-#include "mooutils/moocompat.h"
 #include "mooutils/mootype-macros.h"
 #include "marshals.h"
 

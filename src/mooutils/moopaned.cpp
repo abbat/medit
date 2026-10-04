@@ -30,7 +30,6 @@
 #include "moopaned.h"
 
 # include "mooutils-misc.h"
-# include "moocompat.h"
 
 
 #define MIN_PANE_SIZE 10

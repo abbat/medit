@@ -18,7 +18,6 @@
 #include "mooutils/mooutils-fs.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooi18n.h"
-#include "mooutils/moocompat.h"
 #ifdef HAVE_UNISTD_H
 #endif
 

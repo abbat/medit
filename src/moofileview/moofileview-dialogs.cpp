@@ -21,7 +21,6 @@
 #include "mooutils/moodialogs.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooi18n.h"
-#include "mooutils/moocompat.h"
 #include "mooutils/moobuilder.h"
 
 static void moo_file_props_dialog_destroy   (GtkWidget          *object);

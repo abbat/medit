@@ -10,7 +10,6 @@
 #include "mooedit/mooeditbookmark.h"
 #include "mooedit/mooeditprefs.h"
 #include "mooutils/mooutils.h"
-#include "mooutils/moocompat.h"
 
 static void     moo_edit_view_dispose               (GObject            *object);
 

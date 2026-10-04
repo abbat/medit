@@ -27,7 +27,6 @@
 #include "mooutils/mooutils.h"
 #include "mooutils/mooutils-mem.h"
 #include "mooutils/mooutils-fs.h"
-#include "mooutils/moocompat.h"
 #ifdef HAVE_UNISTD_H
 #endif
 

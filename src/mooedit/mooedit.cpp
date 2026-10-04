@@ -51,7 +51,6 @@
 #include "mooutils/mooutils-fs.h"
 #include "mooutils/mooi18n.h"
 #include "mooutils/mooutils-misc.h"
-#include "mooutils/moocompat.h"
 
 #define KEY_ENCODING "encoding"
 #define KEY_LINE "line"
