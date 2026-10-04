@@ -384,11 +384,8 @@ moo_overwrite_file_dialog (const char *display_name,
     gtk_dialog_add_button (GTK_DIALOG (dialog), _("_Cancel"), GTK_RESPONSE_CANCEL);
 
     button = gtk_button_new_with_mnemonic ("_Replace");
-    /* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
-    G_GNUC_BEGIN_IGNORE_DEPRECATIONS
     gtk_button_set_image (GTK_BUTTON (button),
-                          gtk_image_new_from_stock (GTK_STOCK_SAVE_AS, GTK_ICON_SIZE_BUTTON));
-    G_GNUC_END_IGNORE_DEPRECATIONS
+                          gtk_image_new_from_icon_name ("document-save-as", GTK_ICON_SIZE_BUTTON));
     gtk_widget_show (button);
     gtk_dialog_add_action_widget (GTK_DIALOG (dialog), button, GTK_RESPONSE_YES);
 

@@ -1751,8 +1751,6 @@ tree_view_search_equal_func (GtkTreeModel *model,
         return TRUE;
 }
 
-/* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static void
 pixbuf_data_func (G_GNUC_UNUSED GtkTreeViewColumn *column,
                   GtkCellRenderer   *cell,
@@ -1761,11 +1759,10 @@ pixbuf_data_func (G_GNUC_UNUSED GtkTreeViewColumn *column,
 {
     Item *item = get_item_at_iter (FILE_LIST (model), iter);
     if (ITEM_IS_GROUP (item))
-        g_object_set (cell, "stock-id", GTK_STOCK_DIRECTORY, nullptr);
+        g_object_set (cell, "icon-name", "folder", nullptr);
     else if (ITEM_IS_FILE (item))
-        g_object_set (cell, "stock-id", GTK_STOCK_FILE, nullptr);
+        g_object_set (cell, "icon-name", "text-x-generic", nullptr);
 }
-G_GNUC_END_IGNORE_DEPRECATIONS
 
 static void
 text_data_func (G_GNUC_UNUSED GtkTreeViewColumn *column,

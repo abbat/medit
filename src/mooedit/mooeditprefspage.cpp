@@ -951,7 +951,6 @@ filter_icon_data_func (G_GNUC_UNUSED GtkTreeViewColumn *column,
     g_object_set (cell, "visible", invalid, nullptr);
 }
 
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static void
 create_filter_column (GtkTreeView  *treeview,
                       GtkListStore *store,
@@ -968,7 +967,7 @@ create_filter_column (GtkTreeView  *treeview,
     if (column_id == FILTER_COLUMN_FILTER)
     {
         cell = gtk_cell_renderer_pixbuf_new ();
-        g_object_set (cell, "stock-id", GTK_STOCK_DIALOG_ERROR, nullptr);
+        g_object_set (cell, "icon-name", "dialog-error", nullptr);
         gtk_tree_view_column_pack_start (column, cell, FALSE);
         gtk_tree_view_column_set_cell_data_func (column, cell,
                                                  (GtkTreeCellDataFunc) filter_icon_data_func,
@@ -983,7 +982,6 @@ create_filter_column (GtkTreeView  *treeview,
     g_object_set_data (G_OBJECT (cell), "filter-store-column-id", GINT_TO_POINTER (column_id));
     g_signal_connect (cell, "edited", G_CALLBACK (filter_cell_edited), store);
 }
-G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 static void

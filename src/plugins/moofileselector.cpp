@@ -1036,7 +1036,7 @@ static GtkWidget *
 create_menu_item (MooFileSelector *filesel,
                   MooEdit         *doc,
                   const char      *destdir,
-                  const char      *stock_icon,
+                  const char      *icon_name,
                   const char      *label,
                   const char      *alternate_label,
                   const char      *accel_label,
@@ -1044,12 +1044,9 @@ create_menu_item (MooFileSelector *filesel,
 {
     GtkWidget *item;
 
-    /* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
-    G_GNUC_BEGIN_IGNORE_DEPRECATIONS
     item = _moo_menu_item_new (label, FALSE,
-                               stock_icon ? gtk_image_new_from_stock (stock_icon, GTK_ICON_SIZE_MENU)
-                                          : NULL);
-    G_GNUC_END_IGNORE_DEPRECATIONS
+                               icon_name ? gtk_image_new_from_icon_name (icon_name, GTK_ICON_SIZE_MENU)
+                                         : NULL);
 
     g_object_set_data_full (G_OBJECT (item), "moo-menu-item-label",
                             g_strdup (label), g_free);
@@ -1111,7 +1108,7 @@ create_drop_doc_menu (MooFileSelector *filesel,
     g_signal_connect (menu, "alternate-toggled", G_CALLBACK (alternate_toggled), nullptr);
 
     item = create_menu_item (filesel, doc, destdir,
-                             MOO_STOCK_FILE_MOVE,
+                             nullptr,   /* no freedesktop icon for move */
                              _("Move Here"),
                              _("Move/Rename..."),
                              "Shift",
@@ -1120,7 +1117,7 @@ create_drop_doc_menu (MooFileSelector *filesel,
     items = g_slist_prepend (items, item);
 
     item = create_menu_item (filesel, doc, destdir,
-                             MOO_STOCK_FILE_SAVE_AS,
+                             "document-save-as",
                              _("Save Here"),
                              _("Save As..."),
                              "Control",
@@ -1129,7 +1126,7 @@ create_drop_doc_menu (MooFileSelector *filesel,
     items = g_slist_prepend (items, item);
 
     item = create_menu_item (filesel, doc, destdir,
-                             MOO_STOCK_FILE_SAVE_COPY,
+                             "document-save",
                              _("Save Copy"),
                              _("Save Copy As..."),
                              "Control+Shift",

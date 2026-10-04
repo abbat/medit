@@ -408,7 +408,8 @@ get_stock_icon (GtkWidget   *widget,
                 const char  *stock_id,
                 GtkIconSize  size)
 {
-    /* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
+    /* Only MOO_STOCK_FILE, our own pixmap, is asked for here; it goes with the
+       resource icon theme of stage 3.7. */
     G_GNUC_BEGIN_IGNORE_DEPRECATIONS
     return gtk_widget_render_icon (widget, stock_id, size, NULL);
     G_GNUC_END_IGNORE_DEPRECATIONS
@@ -420,14 +421,14 @@ create_named_icon (GtkIconTheme   *icon_theme,
                    GtkWidget      *widget,
                    GtkIconSize     size,
                    int             pixel_size,
-                   const char     *fallback_stock,
+                   const char     *fallback_icon,
                    ...)
 {
     GdkPixbuf *pixbuf = NULL;
     va_list args;
     char *name;
 
-    va_start (args, fallback_stock);
+    va_start (args, fallback_icon);
 
     while (!pixbuf && (name = va_arg (args, char *)))
     {
@@ -439,13 +440,11 @@ create_named_icon (GtkIconTheme   *icon_theme,
 
     va_end (args);
 
-    if (!pixbuf && fallback_stock)
+    if (!pixbuf && fallback_icon)
     {
-        G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-        pixbuf = gtk_widget_render_icon (widget, fallback_stock, size, NULL);
-        G_GNUC_END_IGNORE_DEPRECATIONS
+        pixbuf = get_named_icon (icon_theme, fallback_icon, pixel_size);
         if (!pixbuf)
-            moo_dmsg ("could not load stock '%s' icon", fallback_stock);
+            moo_dmsg ("could not load fallback '%s' icon", fallback_icon);
     }
 
     if (!pixbuf)
@@ -472,25 +471,11 @@ create_fallback_icon (GtkWidget   *widget,
 
 
 static GdkPixbuf *
-create_broken_link_icon (G_GNUC_UNUSED GtkIconTheme *icon_theme,
-                         GtkWidget    *widget,
-                         GtkIconSize   size)
+create_broken_icon (GtkIconTheme *icon_theme,
+                    int           pixel_size)
 {
     /* XXX */
-    G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-    return gtk_widget_render_icon (widget, GTK_STOCK_MISSING_IMAGE, size, NULL);
-    G_GNUC_END_IGNORE_DEPRECATIONS
-}
-
-static GdkPixbuf *
-create_broken_icon (G_GNUC_UNUSED GtkIconTheme *icon_theme,
-                    GtkWidget      *widget,
-                    GtkIconSize     size)
-{
-    /* XXX */
-    G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-    return gtk_widget_render_icon (widget, GTK_STOCK_MISSING_IMAGE, size, NULL);
-    G_GNUC_END_IGNORE_DEPRECATIONS
+    return get_named_icon (icon_theme, "image-missing", pixel_size);
 }
 
 /* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
@@ -514,27 +499,27 @@ create_special_icon (GtkWidget   *widget,
     switch (type)
     {
         case MOO_ICON_HOME:
-            return create_named_icon (icon_theme, widget, size, pixel_size, GTK_STOCK_HOME,
+            return create_named_icon (icon_theme, widget, size, pixel_size, "go-home",
                                       "user-home", "gnome-fs-home", "folder_home", NULL);
         case MOO_ICON_DESKTOP:
-            return create_named_icon (icon_theme, widget, size, pixel_size, GTK_STOCK_DIRECTORY,
+            return create_named_icon (icon_theme, widget, size, pixel_size, "folder",
                                       "user-desktop", "gnome-fs-desktop", "desktop",
                                       "folder", "gnome-fs-directory", NULL);
         case MOO_ICON_TRASH:
-            return create_named_icon (icon_theme, widget, size, pixel_size, GTK_STOCK_DIRECTORY,
+            return create_named_icon (icon_theme, widget, size, pixel_size, "folder",
                                       "user-trash", "gnome-fs-trash-full", "trashcan_full",
                                       "folder", "gnome-fs-directory", NULL);
         case MOO_ICON_DIRECTORY:
-            return create_named_icon (icon_theme, widget, size, pixel_size, GTK_STOCK_DIRECTORY,
+            return create_named_icon (icon_theme, widget, size, pixel_size, "folder",
                                       "folder", "gnome-fs-directory", NULL);
 
         case MOO_ICON_BROKEN_LINK:
-            return create_broken_link_icon (icon_theme, widget, size);
+            return create_broken_icon (icon_theme, pixel_size);
         case MOO_ICON_NONEXISTENT:
-            return create_broken_icon (icon_theme, widget, size);
+            return create_broken_icon (icon_theme, pixel_size);
 
         case MOO_ICON_BLOCK_DEVICE:
-            return create_named_icon (icon_theme, widget, size, pixel_size, GTK_STOCK_HARDDISK,
+            return create_named_icon (icon_theme, widget, size, pixel_size, "drive-harddisk",
                                       "drive-harddisk", "gnome-fs-blockdev", "blockdevice", NULL);
         case MOO_ICON_CHARACTER_DEVICE:
             return create_named_icon (icon_theme, widget, size, pixel_size, NULL,

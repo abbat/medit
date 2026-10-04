@@ -141,7 +141,15 @@ Facts the survey of 2026-10-04 established, so they need not be found again:
   `gtk_widget_render_icon` → `gtk_icon_theme_load_icon` (`moolinemark.cpp`,
   `moofileicon.cpp`); `_moo_window_set_icon_from_stock` →
   `gtk_window_set_icon_name`; cell renderers' `stock-id` → `icon-name`. Removes
-  `GtkCellRendererPixbuf:stock-id` from `KNOWN_DEPRECATED`.
+  `GtkCellRendererPixbuf:stock-id` from `KNOWN_DEPRECATED`. Partly done: the sites
+  whose id is a literal GTK one are converted (`moodialogs.cpp`, `moofileselector.cpp`,
+  `moofileicon.cpp` except its `MOO_STOCK_FILE` fallback, the `moofilelist.cpp` and
+  `mooeditprefspage.cpp` cell renderers). What remains takes its id from data or from
+  a pixmap of ours: `moolinemark.cpp` render_icon, `moopane.cpp` and
+  `_moo_window_set_icon_from_stock` (pane label, 3.4); `moouixml.cpp` (3.4);
+  `mooprefsdialog.cpp` and `moobookmarkmgr.cpp`/`moobookmarkview.cpp` renderers
+  (3.4/3.5, so `GtkCellRendererPixbuf:stock-id` stays in `KNOWN_DEPRECATED`);
+  `get_stock_icon (MOO_STOCK_FILE)` in `moofileicon.cpp` (3.7).
 - [ ] 3.4 Data fields: `MooPaneLabel.icon_stock_id`, MooPrefsPage `icon-stock-id`,
   MooLineMark `stock-id`, MooUiXml `stock-id`/`icon-stock-id`/`stock-label` →
   icon names and labels, with every in-tree caller and the two `.xml` files.
