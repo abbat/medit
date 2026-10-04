@@ -1291,23 +1291,6 @@ create_toolbar_style_action (MooWindow      *window,
 }
 
 
-static GtkToolbarStyle
-get_toolbar_style_gtk (MooWindow *window)
-{
-    GtkSettings *settings = gtk_widget_get_settings (GTK_WIDGET (window));
-    GtkToolbarStyle style = GTK_TOOLBAR_ICONS;
-    gpointer toolbar_class;
-
-    g_return_val_if_fail (settings != NULL, style);
-
-    toolbar_class = g_type_class_ref (GTK_TYPE_TOOLBAR);
-    g_object_get (settings, "gtk-toolbar-style", &style, NULL);
-    g_type_class_unref (toolbar_class);
-
-    g_return_val_if_fail ((int) style < N_STYLES, (GtkToolbarStyle) 0);
-    return style;
-}
-
 static void
 init_prefs (MooWindow *window)
 {
@@ -1315,8 +1298,10 @@ init_prefs (MooWindow *window)
     moo_prefs_new_key_bool (setting (window, PREFS_SHOW_TOOLBAR), TRUE);
     moo_prefs_new_key_bool (setting (window, PREFS_SHOW_MENUBAR), TRUE);
     moo_prefs_new_key_bool (setting (window, PREFS_SHOW_STATUSBAR), TRUE);
+    /* GTK+2 took the default from GtkSettings:gtk-toolbar-style; GTK+3
+     * deprecated that setting and GtkToolbar no longer reads it */
     moo_prefs_new_key_int (setting (window, PREFS_TOOLBAR_STYLE),
-                           get_toolbar_style_gtk (window));
+                           GTK_TOOLBAR_ICONS);
 
     moo_prefs_create_key (setting (window, PREFS_MAXIMIZED), MOO_PREFS_STATE, G_TYPE_BOOLEAN, FALSE);
     moo_prefs_create_key (setting (window, PREFS_WIDTH), MOO_PREFS_STATE, G_TYPE_INT, 800);
