@@ -545,7 +545,6 @@ create_special_chars_menu_item (GtkAction *action)
 {
     MooEditView *view;
     GtkWidget *item, *menu;
-    gboolean visible = TRUE;
 
     view = MOO_EDIT_VIEW (g_object_get_data (G_OBJECT (action), "moo-edit-view"));
     g_return_val_if_fail (MOO_IS_EDIT_VIEW (view), NULL);
@@ -556,10 +555,8 @@ create_special_chars_menu_item (GtkAction *action)
     gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
     append_special_char_menuitems (GTK_MENU_SHELL (menu), view);
 
-    g_object_get (gtk_widget_get_settings (GTK_WIDGET (view)),
-                  "gtk-show-unicode-menu", &visible,
-                  (char*) 0);
-    g_object_set (action, "visible", visible, (char*) 0);
+    /* GTK+2 hid the menu when GtkSettings:gtk-show-unicode-menu was off;
+     * GTK+3 deprecated the setting and nothing in GTK+ reads it any more */
 
     return item;
 }
