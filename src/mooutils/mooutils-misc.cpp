@@ -160,7 +160,7 @@ is_minimized (Display *display, XID w)
         wm_state_hidden = XInternAtom (display, "_NET_WM_STATE_HIDDEN", FALSE);
     }
 
-    gdk_error_trap_push ();
+    gdk_x11_display_error_trap_push (gdk_display_get_default ());
 
     ret = XGetWindowProperty (display, w,
                               wm_state, 0,
@@ -172,7 +172,7 @@ is_minimized (Display *display, XID w)
                               &cdata);
     data = (Atom*) cdata;
 
-    if (gdk_error_trap_pop () || ret != Success)
+    if (gdk_x11_display_error_trap_pop (gdk_display_get_default ()) || ret != Success)
     {
         g_warning ("oops");
         return FALSE;
@@ -279,7 +279,7 @@ _moo_get_top_window (GSList *windows)
     if (list_stacking_atom == None)
         list_stacking_atom = XInternAtom (display, "_NET_CLIENT_LIST_STACKING", FALSE);
 
-    gdk_error_trap_push ();
+    gdk_x11_display_error_trap_push (gdk_display_get_default ());
 
     ret = XGetWindowProperty (display, GDK_ROOT_WINDOW(),
                               list_stacking_atom, 0,
@@ -291,7 +291,7 @@ _moo_get_top_window (GSList *windows)
                               &cdata);
     data = (XID*) cdata;
 
-    if (gdk_error_trap_pop () || ret != Success)
+    if (gdk_x11_display_error_trap_pop (gdk_display_get_default ()) || ret != Success)
     {
         g_critical ("error in XGetWindowProperty");
         g_array_free (xids, TRUE);
