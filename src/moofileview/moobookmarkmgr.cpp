@@ -1358,7 +1358,10 @@ fill_icon_store (GtkListStore   *store,
     GtkTreeIter iter;
     GSList *stock_ids, *l;
 
+    /* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
+    G_GNUC_BEGIN_IGNORE_DEPRECATIONS
     stock_ids = gtk_stock_list_ids ();
+    G_GNUC_END_IGNORE_DEPRECATIONS
 
     for (l = stock_ids; l != NULL; l = l->next)
     {
@@ -1367,7 +1370,9 @@ fill_icon_store (GtkListStore   *store,
 
         // Deprecated since: 3.10
         // Use gtk_icon_theme_lookup_icon() instead.
+        G_GNUC_BEGIN_IGNORE_DEPRECATIONS
         set = gtk_style_context_lookup_icon_set (context, (const char *) l->data);
+        G_GNUC_END_IGNORE_DEPRECATIONS
 
         if (!set)
             continue;
@@ -1376,7 +1381,11 @@ fill_icon_store (GtkListStore   *store,
         gtk_list_store_set (store, &iter, ICON_COLUMN_STOCK,
                             (const char *) l->data, -1);
 
-        if (gtk_stock_lookup ((const char *) l->data, &item))
+        G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+        gboolean found = gtk_stock_lookup ((const char *) l->data, &item);
+        G_GNUC_END_IGNORE_DEPRECATIONS
+
+        if (found)
         {
             char *label = g_strdup (item.label);
             char *und = strchr (label, '_');

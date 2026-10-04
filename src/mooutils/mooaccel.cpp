@@ -16,6 +16,11 @@
 #include "mooutils/mooaccel.h"
 #include "mooutils/mooprefs.h"
 
+/* This file is the GtkAction/GtkStock family. Those classes are deprecated
+   since GTK+ 3.10 and have no replacement short of moving to GAction/GMenu and
+   named icons, which is GTK+ 4 work, so they are used knowingly. */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+
 #define MOO_ACCEL_PREFS_KEY "Shortcuts"
 #define COMMAND_MASK GDK_CONTROL_MASK
 
@@ -787,3 +792,5 @@ _moo_accel_normalize (const char *accel)
         return NULL;
     }
 }
+
+G_GNUC_END_IGNORE_DEPRECATIONS

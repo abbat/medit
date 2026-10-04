@@ -22,6 +22,11 @@
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/moowindow.h"
 
+/* This file is the GtkAction/GtkStock family. Those classes are deprecated
+   since GTK+ 3.10 and have no replacement short of moving to GAction/GMenu and
+   named icons, which is GTK+ 4 work, so they are used knowingly. */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+
 
 struct _MooActionCollectionPrivate {
     MooActionGroup *default_group;
@@ -277,3 +282,5 @@ _moo_action_collection_get_window (MooActionCollection *coll)
     g_return_val_if_fail (MOO_IS_ACTION_COLLECTION (coll), NULL);
     return coll->priv->window;
 }
+
+G_GNUC_END_IGNORE_DEPRECATIONS

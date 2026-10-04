@@ -22,6 +22,11 @@
 #include "mooutils/mooutils-gobject.h"
 #include "mooutils/mooactiongroup.h"
 
+/* This file is the GtkAction/GtkStock family. Those classes are deprecated
+   since GTK+ 3.10 and have no replacement short of moving to GAction/GMenu and
+   named icons, which is GTK+ 4 work, so they are used knowingly. */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+
 
 static void _moo_action_set_closure (MooAction  *action,
                                      MooClosure *closure);
@@ -682,3 +687,5 @@ disconnect_proxy (GtkAction *action,
     g_signal_emit_by_name (action, "disconnect-proxy", widget);
     parent->disconnect_proxy (action, widget);
 }
+
+G_GNUC_END_IGNORE_DEPRECATIONS

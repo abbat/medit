@@ -16,6 +16,11 @@
 #include "mooutils/moostock.h"
 #include "mooutils/mooi18n.h"
 
+/* This file is the GtkAction/GtkStock family. Those classes are deprecated
+   since GTK+ 3.10 and have no replacement short of moving to GAction/GMenu and
+   named icons, which is GTK+ 4 work, so they are used knowingly. */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+
 #define REAL_SMALL 6
 
 
@@ -218,3 +223,5 @@ _moo_stock_init (void)
     g_free (icon_theme_name);
     g_object_unref (G_OBJECT (factory));
 }
+
+G_GNUC_END_IGNORE_DEPRECATIONS

@@ -18,6 +18,11 @@
 #include "mooutils/mooaction.h"
 #include "mooutils/mooactionbase.h"
 
+/* This file is the GtkAction/GtkStock family. Those classes are deprecated
+   since GTK+ 3.10 and have no replacement short of moving to GAction/GMenu and
+   named icons, which is GTK+ 4 work, so they are used knowingly. */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+
 
 static MooActionFactory *moo_action_factory_new_valist  (GType       action_type,
                                                          const char *first_prop_name,
@@ -366,3 +371,5 @@ moo_action_factory_new_func (MooActionFactoryFunc factory_func,
 
     return factory;
 }
+
+G_GNUC_END_IGNORE_DEPRECATIONS

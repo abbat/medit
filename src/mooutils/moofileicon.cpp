@@ -408,7 +408,10 @@ get_stock_icon (GtkWidget   *widget,
                 const char  *stock_id,
                 GtkIconSize  size)
 {
+    /* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
+    G_GNUC_BEGIN_IGNORE_DEPRECATIONS
     return gtk_widget_render_icon (widget, stock_id, size, NULL);
+    G_GNUC_END_IGNORE_DEPRECATIONS
 }
 
 
@@ -438,7 +441,9 @@ create_named_icon (GtkIconTheme   *icon_theme,
 
     if (!pixbuf && fallback_stock)
     {
+        G_GNUC_BEGIN_IGNORE_DEPRECATIONS
         pixbuf = gtk_widget_render_icon (widget, fallback_stock, size, NULL);
+        G_GNUC_END_IGNORE_DEPRECATIONS
         if (!pixbuf)
             moo_dmsg ("could not load stock '%s' icon", fallback_stock);
     }
@@ -472,7 +477,9 @@ create_broken_link_icon (G_GNUC_UNUSED GtkIconTheme *icon_theme,
                          GtkIconSize   size)
 {
     /* XXX */
+    G_GNUC_BEGIN_IGNORE_DEPRECATIONS
     return gtk_widget_render_icon (widget, GTK_STOCK_MISSING_IMAGE, size, NULL);
+    G_GNUC_END_IGNORE_DEPRECATIONS
 }
 
 static GdkPixbuf *
@@ -481,7 +488,9 @@ create_broken_icon (G_GNUC_UNUSED GtkIconTheme *icon_theme,
                     GtkIconSize     size)
 {
     /* XXX */
+    G_GNUC_BEGIN_IGNORE_DEPRECATIONS
     return gtk_widget_render_icon (widget, GTK_STOCK_MISSING_IMAGE, size, NULL);
+    G_GNUC_END_IGNORE_DEPRECATIONS
 }
 
 static GdkPixbuf *

@@ -115,7 +115,10 @@ get_theme_colors (GtkWidget *widget,
     gtk_style_context_add_class (ctx, GTK_STYLE_CLASS_VIEW);
     gtk_style_context_set_state (ctx, GTK_STATE_FLAG_NORMAL);
     gtk_style_context_get_color (ctx, GTK_STATE_FLAG_NORMAL, fg);
+    /* No replacement for reading a theme colour: gtk_render_background() can only draw it. */
+    G_GNUC_BEGIN_IGNORE_DEPRECATIONS
     gtk_style_context_get_background_color (ctx, GTK_STATE_FLAG_NORMAL, bg);
+    G_GNUC_END_IGNORE_DEPRECATIONS
     gtk_style_context_restore (ctx);
 
     /* A theme that paints its view background with a css image rather than a

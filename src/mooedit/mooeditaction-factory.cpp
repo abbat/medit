@@ -22,6 +22,11 @@
 #include "mooutils/mooi18n.h"
 #include "mooutils/mooutils-mem.h"
 
+/* This file is the GtkAction/GtkStock family. Those classes are deprecated
+   since GTK+ 3.10 and have no replacement short of moving to GAction/GMenu and
+   named icons, which is GTK+ 4 work, so they are used knowingly. */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+
 
 static void moo_edit_add_action                 (MooEdit            *edit,
                                                  GtkAction          *action);
@@ -700,3 +705,5 @@ append_special_char_menuitems (GtkMenuShell *menu,
         gtk_menu_shell_append (menu, menuitem);
     }
 }
+
+G_GNUC_END_IGNORE_DEPRECATIONS

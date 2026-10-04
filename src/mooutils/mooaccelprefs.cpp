@@ -26,6 +26,11 @@
 #include "mooutils/moohelp.h"
 #include "mooutils/moobuilder.h"
 
+/* This file is the GtkAction/GtkStock family. Those classes are deprecated
+   since GTK+ 3.10 and have no replacement short of moving to GAction/GMenu and
+   named icons, which is GTK+ 4 work, so they are used knowingly. */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+
 
 typedef struct {
     MooPrefsPage base;
@@ -910,3 +915,5 @@ _moo_accel_prefs_dialog_run (MooActionCollection *collection,
     gtk_widget_destroy (dialog);
     return response == GTK_RESPONSE_OK;
 }
+
+G_GNUC_END_IGNORE_DEPRECATIONS

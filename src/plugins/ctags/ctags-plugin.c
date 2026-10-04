@@ -227,10 +227,13 @@ ctags_window_plugin_create (CtagsWindowPlugin *plugin)
   gtk_container_add (GTK_CONTAINER (swin), GTK_WIDGET (plugin->view));
   gtk_widget_show_all (swin);
 
+  /* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
+  G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   label = moo_pane_label_new (GTK_STOCK_INDEX, NULL,
                               /* label of Ctags plugin pane */
                               C_ ("window-pane", "Functions"),
                               C_ ("window-pane", "Functions"));
+  G_GNUC_END_IGNORE_DEPRECATIONS
   moo_edit_window_add_pane (window, CTAGS_PLUGIN_ID,
                             swin, label, MOO_PANE_POS_RIGHT);
   moo_pane_label_free (label);

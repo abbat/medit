@@ -572,10 +572,13 @@ update_pixbuf (MooLineMark *mark)
 
     if (!pixbuf)
     {
+        /* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
+        G_GNUC_BEGIN_IGNORE_DEPRECATIONS
         pixbuf = gtk_widget_render_icon (mark->priv->widget,
                                          mark->priv->stock_id,
                                          GTK_ICON_SIZE_MENU,
                                          NULL);
+        G_GNUC_END_IGNORE_DEPRECATIONS
         g_return_if_fail (pixbuf != NULL);
         g_hash_table_insert (cache, g_strdup (mark->priv->stock_id), pixbuf);
     }

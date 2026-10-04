@@ -75,8 +75,11 @@ get_string_maybe_stock (const char *string)
     char *underscore;
     char *copy;
 
+    /* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
+    G_GNUC_BEGIN_IGNORE_DEPRECATIONS
     if (!gtk_stock_lookup (string, &item))
         return g_strdup (string);
+    G_GNUC_END_IGNORE_DEPRECATIONS
 
     if (!(underscore = strchr (item.label, '_')))
         return g_strdup (item.label);

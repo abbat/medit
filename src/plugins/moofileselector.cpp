@@ -338,11 +338,14 @@ moo_file_selector_populate_popup (MooFileView *fileview,
     new_file = moo_action_collection_get_action (moo_file_view_get_actions (fileview), "NewFile");
     open = moo_action_collection_get_action (moo_file_view_get_actions (fileview), "Open");
 
+    /* GtkAction is deprecated since GTK+ 3.10; there is no replacement short of GAction/GMenu. */
+    G_GNUC_BEGIN_IGNORE_DEPRECATIONS
     if (new_file)
         gtk_action_set_sensitive (new_file, !selected || !selected->next);
 
     if (open)
         gtk_action_set_visible (open, anything_to_open (selected));
+    G_GNUC_END_IGNORE_DEPRECATIONS
 }
 
 
@@ -1038,9 +1041,12 @@ create_menu_item (MooFileSelector *filesel,
 {
     GtkWidget *item;
 
+    /* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
+    G_GNUC_BEGIN_IGNORE_DEPRECATIONS
     item = _moo_menu_item_new (label, FALSE,
                                stock_icon ? gtk_image_new_from_stock (stock_icon, GTK_ICON_SIZE_MENU)
                                           : NULL);
+    G_GNUC_END_IGNORE_DEPRECATIONS
 
     g_object_set_data_full (G_OBJECT (item), "moo-menu-item-label",
                             g_strdup (label), g_free);

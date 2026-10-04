@@ -1980,7 +1980,10 @@ create_bookmark_item (MooEditWindow   *window,
         if (action)
         {
             g_object_set (action, "label", label, "use-underline", FALSE, nullptr);
+            /* GtkAction is deprecated since GTK+ 3.10; there is no replacement short of GAction/GMenu. */
+            G_GNUC_BEGIN_IGNORE_DEPRECATIONS
             item = gtk_action_create_menu_item (action);
+            G_GNUC_END_IGNORE_DEPRECATIONS
         }
         else
         {
@@ -2037,9 +2040,11 @@ populate_bookmark_menu (MooEditWindow *window,
     bookmarks = doc ? moo_edit_list_bookmarks (doc) : nullptr;
 
     pn = moo_window_get_action (MOO_WINDOW (window), "PreviousBookmark");
+    G_GNUC_BEGIN_IGNORE_DEPRECATIONS
     gtk_action_set_sensitive (pn, bookmarks != nullptr);
     pn = moo_window_get_action (MOO_WINDOW (window), "NextBookmark");
     gtk_action_set_sensitive (pn, bookmarks != nullptr);
+    G_GNUC_END_IGNORE_DEPRECATIONS
 
     if (bookmarks)
     {
@@ -2909,10 +2914,14 @@ view_cursor_moved (MooEditWindow *window,
 static void
 sync_proxies (GtkAction *action)
 {
+    G_GNUC_BEGIN_IGNORE_DEPRECATIONS
     GSList *l = gtk_action_get_proxies (action);
+    G_GNUC_END_IGNORE_DEPRECATIONS
     while (l)
     {
+        G_GNUC_BEGIN_IGNORE_DEPRECATIONS
         gtk_activatable_sync_action_properties ((GtkActivatable*) l->data, action);
+        G_GNUC_END_IGNORE_DEPRECATIONS
         l = l->next;
     }
 }
@@ -2933,7 +2942,9 @@ view_wrap_mode_changed (MooEditWindow *window,
     g_return_if_fail (action != nullptr);
 
     g_object_get (view, "wrap-mode", &mode, nullptr);
+    G_GNUC_BEGIN_IGNORE_DEPRECATIONS
     gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), mode != GTK_WRAP_NONE);
+    G_GNUC_END_IGNORE_DEPRECATIONS
 
     sync_proxies (action);
 }
@@ -2954,7 +2965,9 @@ view_show_line_numbers_changed (MooEditWindow *window,
     g_return_if_fail (action != nullptr);
 
     g_object_get (view, "show-line-numbers", &show, nullptr);
+    G_GNUC_BEGIN_IGNORE_DEPRECATIONS
     gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), show);
+    G_GNUC_END_IGNORE_DEPRECATIONS
 
     sync_proxies (action);
 }
@@ -4987,8 +5000,10 @@ populate_window_menu (MooEditWindow *window,
         {
             char *action_name = g_strdup_printf (DOCUMENT_ACTION "%u", idx + 1);
             GtkAction *action = moo_window_get_action (MOO_WINDOW (window), action_name);
+            G_GNUC_BEGIN_IGNORE_DEPRECATIONS
             gtk_menu_item_set_accel_path (GTK_MENU_ITEM (item),
                                           gtk_action_get_accel_path (action));
+            G_GNUC_END_IGNORE_DEPRECATIONS
             g_free (action_name);
         }
     }
@@ -5481,9 +5496,11 @@ update_split_view_actions (MooEditWindow *window)
     has_split_horizontal = _moo_edit_tab_get_split_horizontal (tab);
     has_split_vertical = _moo_edit_tab_get_split_vertical (tab);
 
+    G_GNUC_BEGIN_IGNORE_DEPRECATIONS
     gtk_action_set_sensitive (action_cycle, has_split_horizontal || has_split_vertical);
     gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action_split_horizontal), has_split_horizontal);
     gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action_split_vertical), has_split_vertical);
+    G_GNUC_END_IGNORE_DEPRECATIONS
 
     sync_proxies (action_cycle);
     sync_proxies (action_split_horizontal);

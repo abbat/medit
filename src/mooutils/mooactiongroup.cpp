@@ -16,6 +16,11 @@
 #include "mooutils/mooactiongroup.h"
 #include "mooutils/mooutils-misc.h"
 
+/* This file is the GtkAction/GtkStock family. Those classes are deprecated
+   since GTK+ 3.10 and have no replacement short of moving to GAction/GMenu and
+   named icons, which is GTK+ 4 work, so they are used knowingly. */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+
 
 G_DEFINE_TYPE (MooActionGroup, _moo_action_group, GTK_TYPE_ACTION_GROUP)
 
@@ -103,4 +108,4 @@ _moo_action_group_set_collection (MooActionGroup      *group,
     group->collection = collection;
 }
 
-
+G_GNUC_END_IGNORE_DEPRECATIONS

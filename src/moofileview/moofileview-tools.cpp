@@ -183,7 +183,10 @@ remove_old_tools (MooFileView    *fileview,
         while (info->actions)
         {
             GtkAction *action = (GtkAction*) info->actions->data;
+            /* GtkAction is deprecated since GTK+ 3.10; there is no replacement short of GAction/GMenu. */
+            G_GNUC_BEGIN_IGNORE_DEPRECATIONS
             gtk_action_group_remove_action (group, action);
+            G_GNUC_END_IGNORE_DEPRECATIONS
             g_object_unref (action);
             info->actions = g_slist_delete_link (info->actions, info->actions);
         }
@@ -342,10 +345,12 @@ _moo_file_view_tools_load (MooFileView *fileview)
         GtkAction *action = (GtkAction*) l->data;
         char *markup;
 
+        G_GNUC_BEGIN_IGNORE_DEPRECATIONS
         gtk_action_group_add_action (group, action);
 
         markup = g_markup_printf_escaped ("<item action=\"%s\"/>",
                                           gtk_action_get_name (action));
+        G_GNUC_END_IGNORE_DEPRECATIONS
         moo_ui_xml_insert (xml, info->merge_id, ph, -1, markup);
         g_free (markup);
     }

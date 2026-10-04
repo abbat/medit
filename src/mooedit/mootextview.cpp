@@ -2182,7 +2182,10 @@ get_view_background_color (GtkWidget *widget,
        a bare widget context returns a fully transparent colour */
     gtk_style_context_save (context);
     gtk_style_context_add_class (context, GTK_STYLE_CLASS_VIEW);
+    /* No replacement for reading a theme colour: gtk_render_background() can only draw it. */
+    G_GNUC_BEGIN_IGNORE_DEPRECATIONS
     gtk_style_context_get_background_color (context, GTK_STATE_FLAG_NORMAL, color);
+    G_GNUC_END_IGNORE_DEPRECATIONS
     gtk_style_context_restore (context);
     color->alpha = 1;
 }

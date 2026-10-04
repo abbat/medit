@@ -275,7 +275,10 @@ moo_font_selection_init (MooFontSelection *fontsel)
   fontsel->monospace = FALSE;
   fontsel->filter_visible = TRUE;
 
+  /* Deprecated since GTK+ 3.10 in favour of widget templates, which this widget does not use. */
+  G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   gtk_widget_push_composite_child ();
+  G_GNUC_END_IGNORE_DEPRECATIONS
 
   gtk_box_set_spacing (GTK_BOX (fontsel), 12);
   fontsel->size = 12 * PANGO_SCALE;
@@ -426,7 +429,10 @@ moo_font_selection_init (MooFontSelection *fontsel)
   gtk_grid_attach (GTK_GRID (table), scrolled_win, 2, 2, 1, 1);
   focus_chain = g_list_append (focus_chain, scrolled_win);
 
+  /* Deprecated without a replacement; dropping it would change the Tab order. */
+  G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   gtk_container_set_focus_chain (GTK_CONTAINER (table), focus_chain);
+  G_GNUC_END_IGNORE_DEPRECATIONS
   g_list_free (focus_chain);
 
   /* Insert the fonts. */
@@ -521,7 +527,9 @@ moo_font_selection_init (MooFontSelection *fontsel)
   gtk_box_pack_start (GTK_BOX (text_box), fontsel->preview_entry,
                       TRUE, TRUE, 0);
 
+  G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   gtk_widget_pop_composite_child();
+  G_GNUC_END_IGNORE_DEPRECATIONS
 }
 
 GtkWidget *
@@ -1299,7 +1307,9 @@ moo_font_selection_dialog_init (MooFontSelectionDialog *fontseldiag)
 
   gtk_box_set_spacing (GTK_BOX (gtk_dialog_get_content_area (dialog)), 2); /* 2 * 5 + 2 = 12 */
 
+  G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   gtk_widget_push_composite_child ();
+  G_GNUC_END_IGNORE_DEPRECATIONS
 
   gtk_window_set_resizable (GTK_WINDOW (fontseldiag), TRUE);
 
@@ -1333,7 +1343,9 @@ moo_font_selection_dialog_init (MooFontSelectionDialog *fontseldiag)
   gtk_window_set_title (GTK_WINDOW (fontseldiag),
                         D_("Font Selection", "gtk30"));
 
+  G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   gtk_widget_pop_composite_child ();
+  G_GNUC_END_IGNORE_DEPRECATIONS
 
 }
 
@@ -2210,7 +2222,9 @@ moo_font_button_create_inside (MooFontButton *font_button)
 {
   GtkWidget *widget;
 
+  G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   gtk_widget_push_composite_child ();
+  G_GNUC_END_IGNORE_DEPRECATIONS
 
   widget = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 
@@ -2228,7 +2242,9 @@ moo_font_button_create_inside (MooFontButton *font_button)
 
   gtk_widget_show_all (widget);
 
+  G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   gtk_widget_pop_composite_child ();
+  G_GNUC_END_IGNORE_DEPRECATIONS
 
   return widget;
 }

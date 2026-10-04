@@ -414,8 +414,11 @@ _moo_window_set_icon_from_stock (GtkWindow  *window,
     g_return_if_fail (GTK_IS_WINDOW (window));
     g_return_if_fail (name != NULL);
 
+    /* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
+    G_GNUC_BEGIN_IGNORE_DEPRECATIONS
     icon = gtk_widget_render_icon (GTK_WIDGET (window), name,
                                    GTK_ICON_SIZE_BUTTON, 0);
+    G_GNUC_END_IGNORE_DEPRECATIONS
 
     if (icon)
     {
@@ -1024,6 +1027,7 @@ _moo_menu_item_new_from_stock (const char *stock_id)
 {
     g_return_val_if_fail (stock_id != NULL, NULL);
 
+    G_GNUC_BEGIN_IGNORE_DEPRECATIONS
     GtkStockItem stock_item;
 
     if (!gtk_stock_lookup (stock_id, &stock_item))
@@ -1032,6 +1036,7 @@ _moo_menu_item_new_from_stock (const char *stock_id)
 
     return _moo_menu_item_new (stock_item.label, TRUE,
                                gtk_image_new_from_stock (stock_id, GTK_ICON_SIZE_MENU));
+    G_GNUC_END_IGNORE_DEPRECATIONS
 }
 
 static GtkWidget *

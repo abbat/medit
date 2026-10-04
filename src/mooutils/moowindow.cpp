@@ -720,7 +720,10 @@ update_accels (MooWindow *window)
         GtkActionGroup *group = (GtkActionGroup *) l->data;
         GList *actions;
 
+        /* GtkAction is deprecated since GTK+ 3.10; there is no replacement short of GAction/GMenu. */
+        G_GNUC_BEGIN_IGNORE_DEPRECATIONS
         actions = gtk_action_group_list_actions (group);
+        G_GNUC_END_IGNORE_DEPRECATIONS
 
         while (actions != NULL)
         {
@@ -729,7 +732,11 @@ update_accels (MooWindow *window)
 
             if (MOO_IS_ACTION (action) &&
                 !_moo_action_get_no_accel (action))
-                    accel_path = gtk_action_get_accel_path (action);
+            {
+                G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+                accel_path = gtk_action_get_accel_path (action);
+                G_GNUC_END_IGNORE_DEPRECATIONS
+            }
 
             if (accel_path && _moo_accel_prefs_get_global (accel_path))
             {
@@ -781,7 +788,9 @@ activate_global_accel (MooWindow   *window,
 
         if (entry->keyval == keyval && entry->modifiers == mods)
         {
+            G_GNUC_BEGIN_IGNORE_DEPRECATIONS
             gtk_action_activate (entry->action);
+            G_GNUC_END_IGNORE_DEPRECATIONS
             return TRUE;
         }
     }
@@ -1868,8 +1877,10 @@ moo_window_add_action (MooWindow  *window,
     group = moo_action_collection_get_group (coll, group_name);
     g_return_if_fail (group != NULL);
 
+    G_GNUC_BEGIN_IGNORE_DEPRECATIONS
     gtk_action_group_add_action (group, action);
     gtk_action_set_accel_group (action, window->accel_group);
+    G_GNUC_END_IGNORE_DEPRECATIONS
 
     if (!_moo_action_get_dead (action) && !_moo_action_get_no_accel (action))
     {
@@ -1880,7 +1891,11 @@ moo_window_add_action (MooWindow  *window,
         _moo_action_set_accel_path (action, accel_path);
 
         if (_moo_action_get_connect_accel (action))
+        {
+            G_GNUC_BEGIN_IGNORE_DEPRECATIONS
             gtk_action_connect_accelerator (action);
+            G_GNUC_END_IGNORE_DEPRECATIONS
+        }
 
         accels_changed (window);
 

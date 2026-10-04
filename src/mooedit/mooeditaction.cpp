@@ -23,6 +23,11 @@
 #include "mooedit/mooedit-impl.h"
 #include "mooutils/mooutils.h"
 
+/* This file is the GtkAction/GtkStock family. Those classes are deprecated
+   since GTK+ 3.10 and have no replacement short of moving to GAction/GMenu and
+   named icons, which is GTK+ 4 work, so they are used knowingly. */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+
 
 typedef enum {
     FILTER_SENSITIVE,
@@ -462,3 +467,5 @@ unuse_filter_regex (GRegex *regex)
     if (!--ref->use_count)
         g_hash_table_remove (filter_store.hash, pattern);
 }
+
+G_GNUC_END_IGNORE_DEPRECATIONS

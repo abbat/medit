@@ -1205,7 +1205,10 @@ moo_icon_view_draw (GtkWidget *widget,
            a bare widget context gives a fully transparent one */
         gtk_style_context_save (context);
         gtk_style_context_add_class (context, GTK_STYLE_CLASS_VIEW);
+        /* No replacement for reading a theme colour: gtk_render_background() can only draw it. */
+        G_GNUC_BEGIN_IGNORE_DEPRECATIONS
         gtk_style_context_get_background_color (context, GTK_STATE_FLAG_SELECTED, &color);
+        G_GNUC_END_IGNORE_DEPRECATIONS
         gtk_style_context_restore (context);
         color.alpha = 1;
 

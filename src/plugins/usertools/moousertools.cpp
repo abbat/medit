@@ -1344,7 +1344,12 @@ moo_tool_action_check_state (MooEditAction *edit_action)
 
     MOO_EDIT_ACTION_CLASS (_moo_tool_action_parent_class)->check_state (edit_action);
 
-    if (!gtk_action_is_visible (GTK_ACTION (action)))
+    /* GtkAction is deprecated since GTK+ 3.10; there is no replacement short of GAction/GMenu. */
+    G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+    gboolean visible = gtk_action_is_visible (GTK_ACTION (action));
+    G_GNUC_END_IGNORE_DEPRECATIONS
+
+    if (!visible)
         return;
 
     doc = moo_edit_action_get_doc (edit_action);

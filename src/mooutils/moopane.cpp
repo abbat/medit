@@ -129,9 +129,13 @@ update_label_widgets (MooPane *pane)
             gtk_image_set_from_pixbuf (GTK_IMAGE (pane->icon_widget),
                                        pane->label->icon_pixbuf);
         else if (pane->label->icon_stock_id)
+        {
+            G_GNUC_BEGIN_IGNORE_DEPRECATIONS
             gtk_image_set_from_stock (GTK_IMAGE (pane->icon_widget),
                                       pane->label->icon_stock_id,
                                       GTK_ICON_SIZE_MENU);
+            G_GNUC_END_IGNORE_DEPRECATIONS
+        }
 
         g_object_set (pane->icon_widget, "visible",
                       pane->label->icon_pixbuf || pane->label->icon_stock_id,

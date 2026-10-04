@@ -20,6 +20,11 @@
 #include "mooutils/mooutils-gobject.h"
 #include "marshals.h"
 
+/* This file is the GtkAction/GtkStock family. Those classes are deprecated
+   since GTK+ 3.10 and have no replacement short of moving to GAction/GMenu and
+   named icons, which is GTK+ 4 work, so they are used knowingly. */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+
 
 static void proxy_set_use_underline       (GtkWidget *proxy,
                                            gboolean   use_underline);
@@ -652,3 +657,5 @@ _moo_action_base_init_instance (gpointer action)
     g_return_if_fail (MOO_IS_ACTION_BASE (action));
     set_bool (action, "moo-action-use-underline", TRUE);
 }
+
+G_GNUC_END_IGNORE_DEPRECATIONS

@@ -33,6 +33,11 @@
 #include "mooutils/moomenu.h"
 #include "mooutils/mootype-macros.h"
 
+/* This file is the GtkAction/GtkStock family. Those classes are deprecated
+   since GTK+ 3.10 and have no replacement short of moving to GAction/GMenu and
+   named icons, which is GTK+ 4 work, so they are used knowingly. */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+
 
 #define REPORT_UNKNOWN_ACTIONS 0
 
@@ -2719,3 +2724,5 @@ moo_ui_node_get_type (void)
 
     return type;
 }
+
+G_GNUC_END_IGNORE_DEPRECATIONS
