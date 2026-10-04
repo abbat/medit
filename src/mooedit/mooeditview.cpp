@@ -409,7 +409,7 @@ popup_position_func (GtkMenu   *menu,
 
     gtk_text_view_get_visible_rect (text_view, &onscreen_rect);
 
-    gtk_widget_size_request (GTK_WIDGET (menu), &req);
+    gtk_widget_get_preferred_size (GTK_WIDGET (menu), &req, NULL);
 
     /* can't use rectangle_intersect since cursor rect can have 0 width */
     gtk_widget_get_allocation(widget, &allocation);

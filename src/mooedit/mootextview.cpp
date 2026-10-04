@@ -3768,7 +3768,7 @@ moo_text_view_add_child_in_border (MooTextView        *view,
 
     if (gtk_widget_get_visible (widget))
     {
-        gtk_widget_size_request (widget, &child_req);
+        gtk_widget_get_preferred_size (widget, &child_req, NULL);
 
         switch (which_border)
         {

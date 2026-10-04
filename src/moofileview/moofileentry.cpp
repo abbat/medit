@@ -1402,8 +1402,8 @@ completion_resize_popup (MooFileEntryCompletion *cmpl)
                                  items * (height + vert_separator));
 
     gtk_widget_set_size_request (cmpl->priv->popup, -1, -1);
-    gtk_widget_size_request (cmpl->priv->popup, &popup_req);
-    gtk_widget_size_request (widget, &entry_req);
+    gtk_widget_get_preferred_size (cmpl->priv->popup, &popup_req, NULL);
+    gtk_widget_get_preferred_size (widget, &entry_req, NULL);
 
     if (x < monitor.x)
         x = monitor.x;

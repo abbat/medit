@@ -112,7 +112,7 @@ position_window (GtkWindow *dialog)
     screen_height = gdk_screen_get_height (screen);
     monitor_num = gdk_screen_get_monitor_at_point (screen, coord->x, coord->y);
 
-    gtk_widget_size_request (GTK_WIDGET (dialog), &req);
+    gtk_widget_get_preferred_size (GTK_WIDGET (dialog), &req, NULL);
 
     coord->x = coord->x - req.width / 2;
     coord->y = coord->y - req.height / 2;

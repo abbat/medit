@@ -1066,7 +1066,7 @@ moo_font_selection_update_preview (MooFontSelection *fontsel)
   gtk_widget_modify_style (preview_entry, rc_style);
   g_object_unref (rc_style);
 
-  gtk_widget_size_request (preview_entry, NULL);
+  gtk_widget_get_preferred_size (preview_entry, NULL, NULL);
 
   /* We don't ever want to be over MAX_PREVIEW_HEIGHT pixels high. */
   GtkRequisition req;

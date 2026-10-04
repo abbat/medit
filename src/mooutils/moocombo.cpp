@@ -813,7 +813,7 @@ resize_popup (MooCombo *combo)
     }
 
     gtk_widget_set_size_request (combo->priv->popup, -1, -1);
-    gtk_widget_size_request (combo->priv->popup, &popup_req);
+    gtk_widget_get_preferred_size (combo->priv->popup, &popup_req, NULL);
 
     if (x < monitor.x)
         x = monitor.x;
