@@ -2764,13 +2764,13 @@ moo_text_view_populate_popup (GtkTextView    *text_view,
     gtk_widget_show (item);
     gtk_menu_shell_prepend (GTK_MENU_SHELL (menu), item);
 
-    item = gtk_image_menu_item_new_from_stock (GTK_STOCK_REDO, NULL);
+    item = _moo_menu_item_new_from_stock (GTK_STOCK_REDO);
     gtk_widget_show (item);
     gtk_menu_shell_prepend (GTK_MENU_SHELL (menu), item);
     g_signal_connect_swapped (item, "activate", G_CALLBACK (moo_text_view_redo), view);
     gtk_widget_set_sensitive (item, moo_text_view_can_redo (view));
 
-    item = gtk_image_menu_item_new_from_stock (GTK_STOCK_UNDO, NULL);
+    item = _moo_menu_item_new_from_stock (GTK_STOCK_UNDO);
     gtk_widget_show (item);
     gtk_menu_shell_prepend (GTK_MENU_SHELL (menu), item);
     g_signal_connect_swapped (item, "activate", G_CALLBACK (moo_text_view_undo), view);

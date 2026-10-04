@@ -1329,17 +1329,15 @@ populate_menu (MooHistoryMgr *mgr,
         display_basename = uri_get_basename (hist_item->uri);
         display_name = uri_get_display_name (hist_item->uri);
 
-        item = gtk_image_menu_item_new_with_label (display_basename);
+        /* XXX */
+        pixbuf = moo_file_icon_get_pixbuf (moo_history_item_get_icon (hist_item),
+                                           GTK_WIDGET (menu),
+                                           GTK_ICON_SIZE_MENU);
+        image = gtk_image_new_from_pixbuf (pixbuf);
+        item = _moo_menu_item_new (display_basename, FALSE, image);
         _moo_widget_set_tooltip (item, display_name);
         gtk_widget_show (item);
         gtk_menu_shell_insert (GTK_MENU_SHELL (menu), item, i);
-
-        /* XXX */
-        pixbuf = moo_file_icon_get_pixbuf (moo_history_item_get_icon (hist_item),
-                                           GTK_WIDGET (item),
-                                           GTK_ICON_SIZE_MENU);
-        image = gtk_image_new_from_pixbuf (pixbuf);
-        gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
 
         g_object_set_data_full (G_OBJECT (item), "moo-history-menu-item-file",
                                 moo_history_item_copy (hist_item),

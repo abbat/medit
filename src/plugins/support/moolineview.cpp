@@ -20,6 +20,7 @@
 #include "moolineview.h"
 #include "marshals.h"
 #include "mooutils/mooutils-gobject.h"
+#include "mooutils/mooutils-misc.h"
 #include "mooutils/mooutils-messages.h"
 
 
@@ -613,7 +614,7 @@ moo_line_view_populate_popup (GtkTextView *text_view,
                            (GtkCallback) moo_widget_destroy,
                            NULL);
 
-    item = gtk_image_menu_item_new_from_stock (GTK_STOCK_COPY, NULL);
+    item = _moo_menu_item_new_from_stock (GTK_STOCK_COPY);
     g_signal_connect_swapped (item, "activate",
                               G_CALLBACK (copy_clipboard), text_view);
     has_selection = moo_text_view_has_selection (MOO_TEXT_VIEW (text_view));
@@ -621,7 +622,7 @@ moo_line_view_populate_popup (GtkTextView *text_view,
     gtk_widget_show (item);
     gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 
-    item = gtk_image_menu_item_new_from_stock (GTK_STOCK_SELECT_ALL, NULL);
+    item = _moo_menu_item_new_from_stock (GTK_STOCK_SELECT_ALL);
     g_signal_connect_swapped (item, "activate",
                               G_CALLBACK (moo_text_view_select_all),
                               text_view);

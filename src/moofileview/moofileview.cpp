@@ -6215,7 +6215,7 @@ popup_drop_action_menu (MooFileView    *fileview,
                             dir_copy, g_free);
 
 #define CREATE_IT(stock,action,accel_label)                                                 \
-    item = gtk_image_menu_item_new_from_stock (stock, NULL);                                \
+    item = _moo_menu_item_new_from_stock (stock);                                \
     g_object_set_data (G_OBJECT (item), "moo-file-view-drop-files", filenames);             \
     g_object_set_data (G_OBJECT (item), "moo-file-view-drop-dir", dir_copy);                \
     g_object_set_data (G_OBJECT (item), "moo-file-view-drop-action",                        \
@@ -6236,7 +6236,7 @@ popup_drop_action_menu (MooFileView    *fileview,
 
     /* Cancel carries no data and no handler: dismissing the menu is all it
        has to do, and the menu going away is what frees the list. */
-    item = gtk_image_menu_item_new_from_stock (GTK_STOCK_CANCEL, NULL);
+    item = _moo_menu_item_new_from_stock (GTK_STOCK_CANCEL);
     gtk_widget_show (item);
     _moo_menu_item_set_accel_label (item, "Escape");
     gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);

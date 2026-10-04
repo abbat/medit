@@ -23,6 +23,7 @@
 #include "plugins/mooplugin-builtin.h"
 #include "marshals.h"
 #include "mooutils/moostock.h"
+#include "mooutils/mooutils-misc.h"
 #include "mooutils/mooutils-fs.h"
 #include "mooutils/mooutils.h"
 #include "mooutils/mooentry.h"
@@ -1037,13 +1038,9 @@ create_menu_item (MooFileSelector *filesel,
 {
     GtkWidget *item;
 
-    item = gtk_image_menu_item_new_with_label (label);
-
-    if (stock_icon)
-    {
-        GtkWidget *icon = gtk_image_new_from_stock (stock_icon, GTK_ICON_SIZE_MENU);
-        gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), icon);
-    }
+    item = _moo_menu_item_new (label, FALSE,
+                               stock_icon ? gtk_image_new_from_stock (stock_icon, GTK_ICON_SIZE_MENU)
+                                          : NULL);
 
     g_object_set_data_full (G_OBJECT (item), "moo-menu-item-label",
                             g_strdup (label), g_free);
@@ -1137,7 +1134,7 @@ create_drop_doc_menu (MooFileSelector *filesel,
     gtk_widget_show (item);
     gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 
-    item = gtk_image_menu_item_new_from_stock (GTK_STOCK_CANCEL, nullptr);
+    item = _moo_menu_item_new_from_stock (GTK_STOCK_CANCEL);
     gtk_widget_show (item);
     _moo_menu_item_set_accel_label (item, "Escape");
     gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);

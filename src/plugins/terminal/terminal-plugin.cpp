@@ -575,12 +575,12 @@ create_popup_menu (WindowStuff *stuff)
 
     menu = gtk_menu_new ();
 
-    item = gtk_image_menu_item_new_from_stock (GTK_STOCK_COPY, NULL);
+    item = _moo_menu_item_new_from_stock (GTK_STOCK_COPY);
     gtk_widget_set_sensitive (item, vte_terminal_get_has_selection (stuff->terminal));
     g_signal_connect (item, "activate", G_CALLBACK (copy_item_activated), stuff);
     gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 
-    item = gtk_image_menu_item_new_from_stock (GTK_STOCK_PASTE, NULL);
+    item = _moo_menu_item_new_from_stock (GTK_STOCK_PASTE);
     g_signal_connect (item, "activate", G_CALLBACK (paste_item_activated), stuff);
     gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 
@@ -601,17 +601,17 @@ create_popup_menu (WindowStuff *stuff)
 
     gtk_menu_shell_append (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
 
-    item = gtk_image_menu_item_new_from_stock (GTK_STOCK_PROPERTIES, NULL);
+    item = _moo_menu_item_new_from_stock (GTK_STOCK_PROPERTIES);
     gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 
     submenu = gtk_menu_new ();
     gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), submenu);
 
-    item = gtk_image_menu_item_new_from_stock (GTK_STOCK_SELECT_FONT, NULL);
+    item = _moo_menu_item_new_from_stock (GTK_STOCK_SELECT_FONT);
     g_signal_connect (item, "activate", G_CALLBACK (font_item_activated), stuff);
     gtk_menu_shell_append (GTK_MENU_SHELL (submenu), item);
 
-    item = gtk_image_menu_item_new_from_stock (GTK_STOCK_SELECT_COLOR, NULL);
+    item = _moo_menu_item_new_from_stock (GTK_STOCK_SELECT_COLOR);
     gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), create_color_scheme_menu ());
     gtk_menu_shell_append (GTK_MENU_SHELL (submenu), item);
 

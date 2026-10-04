@@ -980,6 +980,72 @@ accel_label_screen_changed (GtkWidget  *accel_label)
     accel_label_set_string (accel_label, label);
 }
 
+/* GtkImageMenuItem is deprecated since GTK 3.10 and has no replacement: an item
+ * with an icon is a GtkMenuItem holding a box with the image and an accel label.
+ * Without an image this is the plain gtk_menu_item_new_with_[mnemonic_]label().
+ * The icon is always shown: GtkSettings:gtk-menu-images, which the image menu
+ * item honoured, is deprecated as well.
+ */
+GtkWidget *
+_moo_menu_item_new (const char *label,
+                    gboolean    mnemonic,
+                    GtkWidget  *image)
+{
+    g_return_val_if_fail (label != NULL, NULL);
+
+    if (!image)
+        return mnemonic ? gtk_menu_item_new_with_mnemonic (label)
+                        : gtk_menu_item_new_with_label (label);
+
+    GtkWidget *item = gtk_menu_item_new ();
+    GtkWidget *box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
+    GtkWidget *accel_label = gtk_accel_label_new (label);
+
+    gtk_label_set_use_underline (GTK_LABEL (accel_label), mnemonic);
+    gtk_label_set_xalign (GTK_LABEL (accel_label), 0.0);
+    gtk_accel_label_set_accel_widget (GTK_ACCEL_LABEL (accel_label), item);
+    gtk_label_set_mnemonic_widget (GTK_LABEL (accel_label), item);
+
+    gtk_box_pack_start (GTK_BOX (box), image, FALSE, FALSE, 0);
+    gtk_box_pack_start (GTK_BOX (box), accel_label, TRUE, TRUE, 0);
+    gtk_container_add (GTK_CONTAINER (item), box);
+    gtk_widget_show_all (box);
+
+    g_object_set_data (G_OBJECT (item), "moo-menu-item-label-widget", accel_label);
+
+    return item;
+}
+
+/* What gtk_image_menu_item_new_from_stock() made: the stock label as a mnemonic
+ * and the stock image. An unknown id is the label, as it was there.
+ */
+GtkWidget *
+_moo_menu_item_new_from_stock (const char *stock_id)
+{
+    g_return_val_if_fail (stock_id != NULL, NULL);
+
+    GtkStockItem stock_item;
+
+    if (!gtk_stock_lookup (stock_id, &stock_item))
+        return _moo_menu_item_new (stock_id, FALSE,
+                                   gtk_image_new_from_stock (stock_id, GTK_ICON_SIZE_MENU));
+
+    return _moo_menu_item_new (stock_item.label, TRUE,
+                               gtk_image_new_from_stock (stock_id, GTK_ICON_SIZE_MENU));
+}
+
+static GtkWidget *
+menu_item_get_label_widget (GtkWidget *item)
+{
+    GtkWidget *child = gtk_bin_get_child (GTK_BIN (item));
+
+    if (GTK_IS_BOX (child))
+        return GTK_WIDGET (g_object_get_data (G_OBJECT (item), "moo-menu-item-label-widget"));
+
+    return child;
+}
+
+
 void
 _moo_menu_item_set_accel_label (GtkWidget  *menu_item,
                                 const char *label)
@@ -991,7 +1057,7 @@ _moo_menu_item_set_accel_label (GtkWidget  *menu_item,
     if (!label)
         label = "";
 
-    accel_label = gtk_bin_get_child (GTK_BIN (menu_item));
+    accel_label = menu_item_get_label_widget (menu_item);
     g_return_if_fail (GTK_IS_ACCEL_LABEL (accel_label));
 
     g_signal_connect_after (accel_label, "screen-changed",
@@ -1012,7 +1078,7 @@ _moo_menu_item_set_label (GtkWidget  *item,
     g_return_if_fail (GTK_IS_MENU_ITEM (item));
     g_return_if_fail (text != NULL);
 
-    label = gtk_bin_get_child (GTK_BIN (item));
+    label = menu_item_get_label_widget (item);
     g_return_if_fail (GTK_IS_LABEL (label));
 
     if (mnemonic)

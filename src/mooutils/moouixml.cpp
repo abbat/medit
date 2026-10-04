@@ -1829,7 +1829,7 @@ create_menu_item (MooUiXml       *xml,
     {
         if (item->stock_id)
         {
-            menu_item = gtk_image_menu_item_new_from_stock (item->stock_id, NULL);
+            menu_item = _moo_menu_item_new_from_stock (item->stock_id);
         }
         else if (item->label)
         {
@@ -1837,8 +1837,7 @@ create_menu_item (MooUiXml       *xml,
             {
                 GtkWidget *icon = gtk_image_new_from_stock (item->icon_stock_id,
                                                             GTK_ICON_SIZE_MENU);
-                menu_item = gtk_image_menu_item_new_with_mnemonic (item->label);
-                gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item), icon);
+                menu_item = _moo_menu_item_new (item->label, TRUE, icon);
             }
             else
             {
