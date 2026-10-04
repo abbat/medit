@@ -84,7 +84,9 @@ sees.
 
 That includes deprecated API: `-Wdeprecated-declarations` is an error under strict. The
 GtkAction/GtkStock subsystems that have no GTK+3 replacement are wrapped in
-`G_GNUC_BEGIN_IGNORE_DEPRECATIONS` (see AGENTS.md); `src/vendor` is exempt.
+`G_GNUC_BEGIN_IGNORE_DEPRECATIONS` (see AGENTS.md); `src/vendor` is exempt. clang sees more
+of them than gcc (the `GTK_STOCK_*` macros, deprecated parent types), so a gcc-only build
+is not enough to know the clang job is green.
 
 | job | what it covers |
 |---|---|

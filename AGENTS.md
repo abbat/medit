@@ -190,6 +190,9 @@ times that on re-reading what it already had.
 | `--target analyze` does not run on this machine: the local `run-clang-tidy` is too old for `-warnings-as-errors=*` and stops with a usage message before analyzing anything. The clang here is 14; CI's is 19, and clang 14's `valist.Uninitialized` reports `create_named_icon()` in `moofileicon.cpp` although `va_start()` is two lines above the loop | run `clang-tidy -p builda -checks=… --extra-arg=-w <files>` over the files you touched instead, and read a `valist` finding as the old checker rather than as a defect. CI is the gate that counts |
 | A `# requires: MOO_BUILD_X` line says the feature was **compiled in**, not that the machine can run it. `MOO_BUILD_CTAGS` is unconditionally 1, so `ctags.pane_navigation` failed rather than skipped on a host with no `ctags` program — the plugin shells out to it | requirements on the machine get a `find_program()` in `tests/CMakeLists.txt` and their own name, the way `MOO_HAVE_CTAGS` does |
 | The same run takes **languages from the first** directory of the search path and **style schemes from the last**: `gtksourcelanguagemanager.c` keeps the first `.lang` it sees for an id, `gtksourcestyleschememanager.c` lets a later file replace an earlier scheme of the same id. A corpus dropped into `$XDG_DATA_HOME/medit/language-specs` is therefore used while the schemes sitting next to it are still overridden by the installed `/usr/share/medit/` — the new languages appear, the styles they need do not, and it reads as "the new lang file does not work" | point `MOO_DATA_DIRS` at a directory whose `language-specs` is a symlink to `src/mooedit/langs`: that drops the install prefix from the list, so both halves come from the tree |
+| `GLIB_CHECK_VERSION()`/`GTK_CHECK_VERSION()` test the **installed headers**, not the API level pinned by `GLIB_VERSION_MAX_ALLOWED` (2.72) and `GDK_VERSION_MAX_ALLOWED` (3.24). A guard that picks `g_string_free_and_steal()` on glib ≥ 2.76 compiles here (glib 2.74) and fails under strict on Ubuntu 26.04, Arch and Fedora with "Not available before 2.76" | do not guard to reach newer API; call what 2.72/3.24 has |
+| clang reports deprecations gcc does not: every `GTK_STOCK_*` macro (it casts to the deprecated `GtkStock` typedef) and a deprecated parent type in `G_DEFINE_TYPE` (`GTK_TYPE_VBOX`, `GTK_TYPE_ALIGNMENT`). A clean gcc strict build therefore says nothing about the clang job — 217 such sites went unseen until CI | build with clang too before pushing: a strict build dir configured with `-DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++` |
+| CI's clang-analyzer (`unix.Malloc`) reported `g_autofree` arrays handed to `g_object_new_with_properties()` as potential leaks in `_moo_object_newv()` — false, but `-warnings-as-errors` makes it a red job | where the analyzer loses a `g_autofree`, hold the data in a `std::vector` instead |
 
 ### Getting a backtrace for a warning or critical
 
@@ -435,6 +438,11 @@ The cost of running it anyway is not the noise in one commit. What this fork doe
 is read a line against the GTK+2 code it was ported from — the `GTK_CHECK_VERSION`
 splits are gone now, and that code lives in `v1.3.12` — and a tree-wide reformat puts one
 commit on top of every line of that history.
+
+**System headers are included in `src/sysheaders.h` and nowhere else.** It is the
+precompiled header under gcc and is forced into every translation unit with `-include` under
+clang (`src/CMakeLists.txt`), so a `#include <…>` in a source file is redundant. A new
+system or library header goes there; `src/vendor/` keeps its own includes.
 
 What is enforced is the mechanical half only, through `.editorconfig`: indent width,
 tabs, trailing whitespace, final newline, encoding. It needs no tool in CI and reformats
