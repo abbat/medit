@@ -389,6 +389,21 @@ moo_window_present (GtkWindow *window,
 #endif
 }
 
+/* Geometry of the monitor the window is mostly on; the first monitor when it
+ * is on none, so that there is always a monitor to measure. */
+void
+_moo_get_monitor_geometry_at_window (GdkWindow    *window,
+                                     GdkRectangle *geometry)
+{
+    GdkDisplay *display = gdk_window_get_display (window);
+    GdkMonitor *monitor = gdk_display_get_monitor_at_window (display, window);
+
+    if (!monitor)
+        monitor = gdk_display_get_monitor (display, 0);
+
+    gdk_monitor_get_geometry (monitor, geometry);
+}
+
 
 void
 _moo_window_set_icon_from_stock (GtkWindow  *window,

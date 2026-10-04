@@ -1365,8 +1365,6 @@ completion_resize_popup (MooFileEntryCompletion *cmpl)
     GtkWidget *widget = GTK_WIDGET (cmpl->priv->entry);
     gint x, y;
     gint matches, items, height, x_border, y_border;
-    GdkScreen *screen;
-    gint monitor_num;
     GdkRectangle monitor;
     GtkRequisition popup_req;
     GtkRequisition entry_req;
@@ -1390,9 +1388,7 @@ completion_resize_popup (MooFileEntryCompletion *cmpl)
     gtk_tree_view_column_cell_get_size (cmpl->priv->column, NULL,
                                         NULL, NULL, NULL, &height);
 
-    screen = gtk_widget_get_screen (widget);
-    monitor_num = gdk_screen_get_monitor_at_window (screen, gtk_widget_get_window (widget));
-    gdk_screen_get_monitor_geometry (screen, monitor_num, &monitor);
+    _moo_get_monitor_geometry_at_window (gtk_widget_get_window (widget), &monitor);
 
     width = gtk_widget_get_allocated_width (widget);
     width = MIN (width, monitor.width) - 2 * x_border;
