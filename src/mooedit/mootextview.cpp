@@ -70,27 +70,20 @@ static void     moo_text_view_get_property  (GObject            *object,
 static void     moo_text_view_realize       (GtkWidget          *widget);
 static void     moo_text_view_unrealize     (GtkWidget          *widget);
 
-#if GTK_CHECK_VERSION(3,0,0)
 static gboolean moo_text_view_draw          (GtkWidget          *widget,
                                              cairo_t            *cr);
-#else
-static gboolean moo_text_view_expose        (GtkWidget          *widget,
-                                             GdkEventExpose     *event);
-#endif
 
 static void     moo_text_view_style_set     (GtkWidget          *widget,
                                              GtkStyle           *previous_style);
 static void     moo_text_view_size_request  (GtkWidget          *widget,
                                              GtkRequisition     *requisition);
 
-#if GTK_CHECK_VERSION(3,0,0)
 static void     moo_text_view_get_preferred_width  (GtkWidget          *widget,
                                                     gint               *minimum_width,
                                                     gint               *natural_width);
 static void     moo_text_view_get_preferred_height (GtkWidget          *widget,
                                                     gint               *minimum_height,
                                                     gint               *natural_height);
-#endif
 
 
 static void     moo_text_view_size_allocate (GtkWidget          *widget,
@@ -104,11 +97,7 @@ static void     moo_text_view_cut_clipboard (GtkTextView        *text_view);
 static void     moo_text_view_paste_clipboard (GtkTextView      *text_view);
 
 static void     moo_text_view_populate_popup(GtkTextView        *text_view,
-#if GTK_CHECK_VERSION(3,0,0)
                                              GtkWidget          *menu);
-#else
-                                             GtkMenu            *menu);
-#endif
 
 static void     moo_text_view_apply_style_scheme (MooTextView   *view,
                                              MooTextStyleScheme *scheme);
@@ -292,14 +281,9 @@ static void moo_text_view_class_init (MooTextViewClass *klass)
     widget_class->realize = moo_text_view_realize;
     widget_class->unrealize = moo_text_view_unrealize;
 
-#if GTK_CHECK_VERSION(3,0,0)
     widget_class->draw = moo_text_view_draw;
     widget_class->get_preferred_width = moo_text_view_get_preferred_width;
     widget_class->get_preferred_height = moo_text_view_get_preferred_height;
-#else
-    widget_class->expose_event = moo_text_view_expose;
-    widget_class->size_request = moo_text_view_size_request;
-#endif
 
     widget_class->style_set = moo_text_view_style_set;
     widget_class->size_allocate = moo_text_view_size_allocate;
@@ -2189,7 +2173,6 @@ invalidate_gcs (MooTextView *view)
     }
 }
 
-#if GTK_CHECK_VERSION(3,0,0)
 static void
 get_view_background_color (GtkWidget *widget,
                            GdkColor  *color)
@@ -2209,7 +2192,6 @@ get_view_background_color (GtkWidget *widget,
     color->green = rgba.green * 65535;
     color->blue = rgba.blue * 65535;
 }
-#endif
 
 static void
 update_gc (MooTextView     *view,
@@ -2248,20 +2230,12 @@ update_gc (MooTextView     *view,
         {
             g_warning ("could not parse color %s",
                        view->priv->colors[color_num]);
-#if GTK_CHECK_VERSION(3,0,0)
             get_view_background_color (widget, &color);
-#else
-            color = widget->style->bg[GTK_STATE_NORMAL];
-#endif
         }
     }
     else
     {
-#if GTK_CHECK_VERSION(3,0,0)
         get_view_background_color (widget, &color);
-#else
-        color = widget->style->bg[GTK_STATE_NORMAL];
-#endif
     }
 
     if (!view->priv->gcs[color_num])
@@ -2385,7 +2359,6 @@ draw_tab_at_iter (GtkTextView    *text_view,
     points[2].x += 1;
     points[2].y += 1;
 
-#if GTK_CHECK_VERSION(3,0,0)
     {
         GtkStyleContext *context = gtk_widget_get_style_context (GTK_WIDGET (text_view));
         GdkRGBA color;
@@ -2410,12 +2383,6 @@ draw_tab_at_iter (GtkTextView    *text_view,
         cairo_fill (cr);
         cairo_restore (cr);
     }
-#else
-    gdk_draw_polygon (window,
-                      GTK_WIDGET(text_view)->style->text_gc[GTK_STATE_NORMAL],
-                      FALSE, points, 3);
-    (void) cr;
-#endif
 }
 
 static void
@@ -2480,28 +2447,9 @@ moo_text_view_draw_whitespace (GtkTextView       *text_view,
     while (gtk_text_iter_compare (&iter, end) < 0);
 }
 
-
-#if !GTK_CHECK_VERSION(3,0,0)
-/* Every caller is in the GTK+2 branch of moo_text_view_expose(); GTK+3 is
-   handed a cairo_t and never has to make one. */
-static inline cairo_t* moo_cairo_create(cairo_t *cr, GdkWindow *window)
-{
-    if (cr)
-        return cr;
-
-    return gdk_cairo_create (window);
-}
-#endif
-
-#if GTK_CHECK_VERSION(3,0,0)
 static gboolean
 moo_text_view_draw (GtkWidget *widget,
                     cairo_t   *cr)
-#else
-static gboolean
-moo_text_view_expose (GtkWidget      *widget,
-                      GdkEventExpose *event)
-#endif
 {
     gboolean handled;
     MooTextView *view = MOO_TEXT_VIEW (widget);
@@ -2514,7 +2462,6 @@ moo_text_view_expose (GtkWidget      *widget,
     GdkRectangle left_area = { 0, 0, 0, 0 };
     cairo_t *text_cr = NULL;
 
-#if GTK_CHECK_VERSION(3,0,0)
     /* GTK+3 emits one ::draw for the whole widget rather than an expose per
        GdkWindow, so ask the context which of the view's windows it covers. The
        drawing context's own window is the toplevel frame's and never equals
@@ -2536,11 +2483,6 @@ moo_text_view_expose (GtkWidget      *widget,
         left_area.width = gdk_window_get_width (left_window);
         left_area.height = gdk_window_get_height (left_window);
     }
-#else
-    draw_text_window = (event->window == text_window);
-    draw_left_window = (event->window == left_window);
-    text_area = left_area = event->area;
-#endif
 
     update_gcs (view);
 
@@ -2548,39 +2490,6 @@ moo_text_view_expose (GtkWidget      *widget,
 
     if (view->priv->update_n_lines_idle)
         update_n_lines_idle (view);
-
-#if !GTK_CHECK_VERSION(3,0,0)
-    if (draw_text_window)
-    {
-        if (gtk_widget_get_sensitive (GTK_WIDGET(view)))
-        {
-            if ((gtk_widget_has_focus (GTK_WIDGET (view)) ||
-                 view->priv->highlight_current_line_unfocused)
-                && view->priv->color_settings[MOO_TEXT_VIEW_COLOR_CURRENT_LINE]
-                && view->priv->gcs[MOO_TEXT_VIEW_COLOR_CURRENT_LINE])
-            {
-                text_cr = moo_cairo_create (text_cr, text_window);
-                moo_text_view_draw_current_line (text_view, text_cr);
-            }
-
-            if (gtk_widget_has_focus (GTK_WIDGET (view)) &&
-                view->priv->color_settings[MOO_TEXT_VIEW_COLOR_RIGHT_MARGIN] &&
-                view->priv->gcs[MOO_TEXT_VIEW_COLOR_RIGHT_MARGIN])
-            {
-                text_cr = moo_cairo_create (text_cr, text_window);
-                moo_text_view_draw_right_margin (text_view, text_window, text_cr);
-            }
-        }
-
-        text_cr = moo_cairo_create (text_cr, text_window);
-        draw_marks_background (view, text_window, &text_area, text_cr);
-    }
-#endif
-
-#if !GTK_CHECK_VERSION(3,0,0)
-    if (draw_left_window)
-        draw_left_margin (view, left_window, &left_area, NULL);
-#endif
 
     if (draw_text_window)
     {
@@ -2598,7 +2507,6 @@ moo_text_view_expose (GtkWidget      *widget,
     if (text_cr)
         cairo_destroy (text_cr);
 
-#if GTK_CHECK_VERSION(3,0,0)
     handled = GTK_WIDGET_CLASS(moo_text_view_parent_class)->draw (widget, cr);
 
     /* Everything below has to come after chaining up: GtkTextView fills the
@@ -2637,9 +2545,6 @@ moo_text_view_expose (GtkWidget      *widget,
         draw_left_margin (view, left_window, &left_area, cr);
         cairo_restore (cr);
     }
-#else
-    handled = GTK_WIDGET_CLASS(moo_text_view_parent_class)->expose_event (widget, event);
-#endif
 
     if (draw_text_window)
     {
@@ -2650,7 +2555,6 @@ moo_text_view_expose (GtkWidget      *widget,
         {
             if (view->priv->draw_whitespace != 0)
             {
-#if GTK_CHECK_VERSION(3,0,0)
                 /* Whitespace is painted in text_window coordinates, the way the
                    GTK+2 expose handler painted it; the widget's cairo_t arrives
                    in widget coordinates. */
@@ -2658,9 +2562,6 @@ moo_text_view_expose (GtkWidget      *widget,
                 gtk_cairo_transform_to_window (cr, widget, text_window);
                 moo_text_view_draw_whitespace (text_view, text_window, &start, &end, cr);
                 cairo_restore (cr);
-#else
-                moo_text_view_draw_whitespace (text_view, text_window, &start, &end, NULL);
-#endif
             }
         }
     }
@@ -2860,11 +2761,7 @@ moo_text_view_get_style_scheme (MooTextView *view)
 
 static void
 moo_text_view_populate_popup (GtkTextView    *text_view,
-#if GTK_CHECK_VERSION(3,0,0)
                               GtkWidget      *menu)
-#else
-                              GtkMenu        *menu)
-#endif
 {
     MooTextView *view = MOO_TEXT_VIEW (text_view);
     GtkWidget *item;
@@ -3101,11 +2998,7 @@ draw_marks (MooTextView    *view,
 {
     g_return_if_fail (marks != NULL);
 
-#if GTK_CHECK_VERSION(3,0,0)
     (void) window;
-#else
-    (void) cr;
-#endif
 
     while (marks)
     {
@@ -3131,16 +3024,10 @@ draw_marks (MooTextView    *view,
             x = MARK_ICON_LPAD + (view->priv->lm.icon_width - pw) / 2;
             y = line_y + (line_height - ph) / 2;
 
-#if GTK_CHECK_VERSION(3,0,0)
             cairo_save (cr);
             gdk_cairo_set_source_pixbuf (cr, pixbuf, x, y);
             cairo_paint (cr);
             cairo_restore (cr);
-#else
-            gdk_draw_pixbuf (window, NULL, pixbuf,
-                             0, 0, x, y, -1, -1,
-                             GDK_RGB_DITHER_NORMAL, 0, 0);
-#endif
         }
 
         markup = moo_line_mark_get_markup (mark);
@@ -3157,14 +3044,8 @@ draw_marks (MooTextView    *view,
             x = MARK_ICON_LPAD + (view->priv->lm.icon_width - rect.width) / 2;
             y = line_y;
 
-#if GTK_CHECK_VERSION(3,0,0)
             gtk_render_layout (gtk_widget_get_style_context (GTK_WIDGET (view)),
                                cr, x, y, layout);
-#else
-            gdk_draw_layout (window,
-                             GTK_WIDGET(view)->style->fg_gc[gtk_widget_get_state(GTK_WIDGET(view))],
-                             x, y, layout);
-#endif
 
             g_object_unref (layout);
         }
@@ -3181,7 +3062,6 @@ draw_fold_mark (MooTextView    *view,
                 int             window_width,
                 cairo_t        *cr)
 {
-#if GTK_CHECK_VERSION(3,0,0)
     {
         /* GTK+2 centred the expander on (x, y) and took its state as an
            argument; gtk_render_expander() takes a rectangle and reads the
@@ -3207,18 +3087,6 @@ draw_fold_mark (MooTextView    *view,
 
         gtk_style_context_restore (context);
     }
-#else
-    gtk_paint_expander (GTK_WIDGET(view)->style,
-                        window,
-                        gtk_widget_get_state (GTK_WIDGET (view)),
-                        window_area,
-                        GTK_WIDGET(view),
-                        "fold",
-                        window_width - view->priv->lm.fold_width / 2,
-                        y + height / 2,
-                        fold->collapsed ? GTK_EXPANDER_COLLAPSED : GTK_EXPANDER_EXPANDED);
-    (void) cr;
-#endif
 }
 
 /*
@@ -3251,22 +3119,11 @@ draw_line_number (MooTextView    *view,
     pango_layout_get_pixel_size (layout, &w, NULL);
     x = right_edge - w;
 
-#if GTK_CHECK_VERSION(3,0,0)
     (void) window;
     (void) window_area;
 
     gtk_render_layout (gtk_widget_get_style_context (GTK_WIDGET (view)),
                        cr, x, y, layout);
-#else
-    (void) cr;
-
-    gtk_paint_layout (GTK_WIDGET (view)->style,
-                      window,
-                      gtk_widget_get_state (GTK_WIDGET (view)),
-                      FALSE, window_area,
-                      GTK_WIDGET(view), NULL,
-                      x, y, layout);
-#endif
 }
 
 
@@ -3379,7 +3236,6 @@ draw_fold_background (MooTextView    *view,
                       cairo_t        *cr)
 {
     if (fold->collapsed)
-#if GTK_CHECK_VERSION(3,0,0)
     {
         GtkStyleContext *context = gtk_widget_get_style_context (GTK_WIDGET(view));
         GdkRGBA color;
@@ -3398,17 +3254,6 @@ draw_fold_background (MooTextView    *view,
         cairo_stroke (cr);
         cairo_restore (cr);
     }
-#else
-    {
-        gdk_draw_line (window,
-                       GTK_WIDGET(view)->style->text_gc[GTK_STATE_NORMAL],
-                       gtk_text_view_get_left_margin (GTK_TEXT_VIEW (view)),
-                       y + height - 1,
-                       gtk_text_view_get_left_margin (GTK_TEXT_VIEW (view)) + window_width,
-                       y + height - 1);
-        (void) cr;
-    }
-#endif
 }
 
 static void
@@ -3613,12 +3458,8 @@ update_tab_width (MooTextView *view)
         return;
 
     g_return_if_fail (view->priv->tab_width > 0);
-#if GTK_CHECK_VERSION(3,0,0)
     GtkStyleContext *context = gtk_widget_get_style_context (GTK_WIDGET (view));
     g_return_if_fail (context != NULL);
-#else
-    g_return_if_fail (GTK_WIDGET (view)->style != NULL);
-#endif
 
     string = g_strnfill (view->priv->tab_width, ' ');
     layout = gtk_widget_create_pango_layout (GTK_WIDGET (view), string);
@@ -3972,11 +3813,7 @@ moo_text_view_size_request (GtkWidget      *widget,
         GtkRequisition child_req;
 
         if (child && gtk_widget_get_visible (child))
-#if GTK_CHECK_VERSION(3,0,0)
             gtk_widget_get_preferred_size (child, &child_req, NULL);
-#else
-            gtk_widget_size_request (child, &child_req);
-#endif
         else
             child_req.width = child_req.height = 0;
 
@@ -4006,7 +3843,6 @@ moo_text_view_size_request (GtkWidget      *widget,
         }
     }
 
-#if GTK_CHECK_VERSION(3,0,0)
     {
         /* Unlike the gtk_widget_get_preferred_*() wrappers, the vfuncs themselves
            dereference both out-parameters unconditionally, so NULL is not allowed
@@ -4015,12 +3851,8 @@ moo_text_view_size_request (GtkWidget      *widget,
         GTK_WIDGET_CLASS(moo_text_view_parent_class)->get_preferred_width (widget, &requisition->width, &natural);
         GTK_WIDGET_CLASS(moo_text_view_parent_class)->get_preferred_height (widget, &requisition->height, &natural);
     }
-#else
-    GTK_WIDGET_CLASS(moo_text_view_parent_class)->size_request (widget, requisition);
-#endif
 }
 
-#if GTK_CHECK_VERSION(3,0,0)
 static void
 moo_text_view_get_preferred_width (GtkWidget *widget,
                                    gint      *minimum_width,
@@ -4051,7 +3883,6 @@ moo_text_view_get_preferred_height (GtkWidget *widget,
     if (natural_height)
         *natural_height = requisition.height;
 }
-#endif
 
 
 static void

@@ -397,7 +397,6 @@ clear_drag_stuff (MooTextView *view)
     view->priv->dnd.button = GDK_BUTTON_RELEASE;
 }
 
-#if GTK_CHECK_VERSION(3,0,0)
 /* In GTK+2 GtkTextView hid the pointer through the same mouse_cursor_obscured
    field we read, so whoever hid it, we knew. GTK+3 hides it with a flag of its
    own when a key it handles changes the buffer, and puts its own "text" cursor
@@ -415,7 +414,6 @@ text_window_shows (GtkTextView   *text_view,
     const GdkCursorType want = tcursor == MOO_TEXT_CURSOR_LINK ? GDK_HAND2 : GDK_XTERM;
     return cursor != NULL && gdk_cursor_get_cursor_type (cursor) == want;
 }
-#endif
 
 void
 _moo_text_view_update_text_cursor (MooTextView *view,
@@ -432,14 +430,9 @@ _moo_text_view_update_text_cursor (MooTextView *view,
 
     tcursor = MOO_TEXT_VIEW_GET_CLASS (view)->get_text_cursor (view, x, y);
 
-#if GTK_CHECK_VERSION(3,0,0)
     if (tcursor == view->priv->text_cursor && !view->priv->mouse_cursor_obscured &&
         text_window_shows (text_view, tcursor))
         return;
-#else
-    if (tcursor == view->priv->text_cursor && !text_view->mouse_cursor_obscured)
-        return;
-#endif
 
     switch (tcursor)
     {
@@ -459,11 +452,7 @@ _moo_text_view_update_text_cursor (MooTextView *view,
 
     gdk_window_set_cursor (gtk_text_view_get_window (text_view, GTK_TEXT_WINDOW_TEXT), cursor);
 
-#if GTK_CHECK_VERSION(3,0,0)
     view->priv->mouse_cursor_obscured = FALSE;
-#else
-    text_view->mouse_cursor_obscured = FALSE;
-#endif
     view->priv->text_cursor = tcursor;
 
     if (cursor)
@@ -482,7 +471,6 @@ set_invisible_cursor (GdkWindow *window)
 static void
 text_view_obscure_mouse_cursor (GtkTextView *text_view)
 {
-#if GTK_CHECK_VERSION(3,0,0)
     MooTextView *view = MOO_TEXT_VIEW (text_view);
 
     if (!view->priv->mouse_cursor_obscured)
@@ -493,16 +481,6 @@ text_view_obscure_mouse_cursor (GtkTextView *text_view)
         set_invisible_cursor (window);
         view->priv->mouse_cursor_obscured = TRUE;
     }
-#else
-    if (!text_view->mouse_cursor_obscured)
-    {
-        GdkWindow *window =
-                gtk_text_view_get_window (text_view,
-                                          GTK_TEXT_WINDOW_TEXT);
-        set_invisible_cursor (window);
-        text_view->mouse_cursor_obscured = TRUE;
-    }
-#endif
 }
 
 
@@ -951,12 +929,10 @@ _moo_text_view_motion_event (GtkWidget          *widget,
     int x, y;
     GtkTextIter iter;
 
-#if GTK_CHECK_VERSION(3,0,0)
     /* GtkTextView's handler does one thing in GTK+3: it clears the flag it hid
        the pointer with, so that the next key it handles can hide it again. The
        cursor it leaves behind is replaced right below. */
     GTK_WIDGET_CLASS (_moo_text_view_parent_class)->motion_notify_event (widget, event);
-#endif
 
     event_motion_to_buffer (text_view, event, &x, &y);
     _moo_text_view_update_text_cursor (view, x, y);
@@ -1048,19 +1024,9 @@ text_view_start_selection_dnd (GtkTextView       *text_view,
 
     gtk_target_list_add_text_targets (target_list, 0);
 
-#if GTK_CHECK_VERSION(3,0,0)
     gtk_drag_begin_with_coordinates (GTK_WIDGET (text_view), target_list,
                                      GDK_ACTION_COPY | GDK_ACTION_MOVE,
                                      1, (GdkEvent*) event, -1, -1);
-#else
-    text_view->drag_start_x = -1;
-    text_view->drag_start_y = -1;
-    text_view->pending_place_cursor_button = 0;
-
-    gtk_drag_begin (GTK_WIDGET (text_view), target_list,
-                    GDK_ACTION_COPY | GDK_ACTION_MOVE,
-                    1, (GdkEvent*) event);
-#endif
 
     gtk_target_list_unref (target_list);
 }

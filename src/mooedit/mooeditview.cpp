@@ -80,7 +80,6 @@ moo_edit_view_scroll_event (GtkWidget      *widget,
         case GDK_SCROLL_DOWN:
             step = -1;
             break;
-#if GTK_CHECK_VERSION(3,0,0)
         case GDK_SCROLL_SMOOTH:
         {
             static double smooth;
@@ -89,7 +88,6 @@ moo_edit_view_scroll_event (GtkWidget      *widget,
             smooth -= step;
             break;
         }
-#endif
         default:
             break;
     }

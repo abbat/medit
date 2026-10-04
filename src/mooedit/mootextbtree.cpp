@@ -29,12 +29,7 @@ static void     bt_data_free        (BTData     *data,
 
 #define NODE_IS_ROOT(node__) (!(node__)->parent)
 
-#if 0 && defined(MOO_DEBUG)
-#define WANT_CHECK_INTEGRITY
-static void CHECK_INTEGRITY (BTree *tree, gboolean check_capacity);
-#else
 #define CHECK_INTEGRITY(tree,check_capacity)
-#endif
 
 
 BTree*

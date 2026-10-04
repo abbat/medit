@@ -132,11 +132,7 @@ static GObject *moo_edit_window_constructor     (GType               type,
                                                  GObjectConstructParam *props);
 static void     moo_edit_window_finalize        (GObject            *object);
 
-#if GTK_CHECK_VERSION(3,0,0)
 static void     moo_edit_window_destroy         (GtkWidget          *object);
-#else
-static void     moo_edit_window_destroy         (GtkObject          *object);
-#endif
 
 static void     moo_edit_window_set_property    (GObject            *object,
                                                  guint               prop_id,
@@ -350,11 +346,7 @@ moo_edit_window_class_init (MooEditWindowClass *klass)
 {
     guint i;
     GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
-#if GTK_CHECK_VERSION(3,0,0)
     GtkWidgetClass *gtkobject_class = GTK_WIDGET_CLASS (klass);
-#else
-    GtkObjectClass *gtkobject_class = GTK_OBJECT_CLASS (klass);
-#endif
     MooWindowClass *window_class = MOO_WINDOW_CLASS (klass);
 
     action_checks_init ();
@@ -977,11 +969,7 @@ moo_edit_window_get_editor (MooEditWindow *window)
 
 
 static void
-#if GTK_CHECK_VERSION(3,0,0)
 moo_edit_window_destroy (GtkWidget *object)
-#else
-moo_edit_window_destroy (GtkObject *object)
-#endif
 {
     MooEditWindow *window = MOO_EDIT_WINDOW (object);
 
@@ -1019,11 +1007,7 @@ moo_edit_window_destroy (GtkObject *object)
 
     windows.erase(window);
 
-#if GTK_CHECK_VERSION(3,0,0)
     GTK_WIDGET_CLASS(moo_edit_window_parent_class)->destroy (object);
-#else
-    GTK_OBJECT_CLASS(moo_edit_window_parent_class)->destroy (object);
-#endif
 }
 
 

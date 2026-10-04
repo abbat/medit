@@ -101,11 +101,9 @@ struct MooTextViewPrivate {
 
     MooTextCursor text_cursor;
 
-#if GTK_CHECK_VERSION(3,0,0)
     /* GTK+2 kept this in GtkTextView's own mouse_cursor_obscured field, which
        GTK+3 moved into its private structure. */
     gboolean mouse_cursor_obscured;
-#endif
 
     /***********************************************************************/
     /* Drawing

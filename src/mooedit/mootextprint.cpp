@@ -1989,33 +1989,6 @@ get_options (GtkBuilder *xml)
         moo_prefs_set_string (PREFS_FONT, gtk_font_button_get_font_name (GTK_FONT_BUTTON (moo_builder_get (xml, "font"))));
 }
 
-
-#if 0
-void
-_moo_edit_print_options_dialog (GtkWidget *parent)
-{
-    GtkWidget *dialog;
-    GtkBuilder *xml;
-
-    xml = moo_builder_new ("/ui/mooprint.ui");
-    g_return_if_fail (xml != NULL);
-
-    dialog = GTK_WIDGET (moo_builder_get (xml, "dialog1"));
-    g_return_if_fail (dialog != NULL);
-
-    moo_window_set_parent (dialog, parent);
-
-    set_options (xml);
-
-    if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_OK)
-        get_options (xml);
-
-    g_object_unref (xml);
-    gtk_widget_destroy (dialog);
-}
-#endif
-
-
 static GtkWidget *
 moo_print_operation_create_custom_widget (G_GNUC_UNUSED GtkPrintOperation *operation)
 {
