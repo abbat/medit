@@ -34,13 +34,13 @@ typedef struct _MooIconViewClass   MooIconViewClass;
 
 struct _MooIconView
 {
-    GtkVBox             vbox;
+    GtkWidget           widget;
     MooIconViewPrivate *priv;
 };
 
 struct _MooIconViewClass
 {
-    GtkVBoxClass        vbox_class;
+    GtkWidgetClass      widget_class;
 
     void    (*set_scroll_adjustments)   (GtkWidget          *widget,
                                          GtkAdjustment      *hadjustment,

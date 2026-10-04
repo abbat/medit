@@ -410,10 +410,11 @@ to know when touching them:
   widgets from elsewhere need a `g_type_ensure()` of their own.
 * **Placeholder windows must not be `visible`**, or GtkBuilder shows them: empty windows
   appear beside the real dialog and get drawn after their content was moved out.
-* **Most of the `.ui` files still use `GtkVBox`/`GtkHBox`/`GtkTable`**, because they
-  had to load in the GTK+2 build; they are deprecated but load in GTK+3, and
-  `GtkBox`/`GtkGrid` are fine in a new one. A type GtkBuilder does not know is
-  reported as "Invalid object type", at the moment the dialog is opened.
+* **Use `GtkBox` with an `orientation`, `GtkGrid` and margins** — not
+  `GtkVBox`/`GtkHBox`/`GtkTable`/`GtkAlignment`, which the `.ui` files no longer hold.
+  When an alignment goes, a code lookup of its id has to move to the child, and a cast
+  to the old type (`GTK_VBOX (…)`) becomes an "invalid cast" critical. A type GtkBuilder
+  does not know is reported as "Invalid object type", at the moment the dialog is opened.
 * **Do not describe a model or cell renderers** for a combo the code fills itself
   (`init_combo()` and friends). Two renderers draw the value twice — "Selected lines
   Selected lines" — and it looks like a theme glitch rather than a bug.

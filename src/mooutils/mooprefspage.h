@@ -34,7 +34,7 @@ typedef struct _MooPrefsPageClass   MooPrefsPageClass;
 
 struct _MooPrefsPage
 {
-    GtkVBox base;
+    GtkBox base;
     MooPrefsPagePrivate *priv;
     gboolean auto_apply;
     char *label;
@@ -42,7 +42,7 @@ struct _MooPrefsPage
 
 struct _MooPrefsPageClass
 {
-    GtkVBoxClass base_class;
+    GtkBoxClass base_class;
     /**vtable:MooPrefsPage**/
     void (*init)  (MooPrefsPage *page);
     /**vtable:MooPrefsPage**/

@@ -1,5 +1,5 @@
 /**
- * class:MooEditTab: (parent GtkVBox) (moo.doc-object-name tab): document tab object
+ * class:MooEditTab: (parent GtkBox) (moo.doc-object-name tab): document tab object
  **/
 
 #include "mooedittab-impl.h"
@@ -10,7 +10,7 @@
 
 struct MooEditTab
 {
-    GtkVBox base;
+    GtkBox base;
 
     MooEditProgress *progress;
     GtkInfoBar *notice;
@@ -27,13 +27,10 @@ MOO_DEFINE_GOBJ_TRAITS(MooEditTab, MOO_TYPE_EDIT_TAB)
 
 struct MooEditTabClass
 {
-    GtkVBoxClass base_class;
+    GtkBoxClass base_class;
 };
 
-/* GtkVBox is deprecated since GTK+ 3.2; changing the parent type would change the widget hierarchy. */
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-G_DEFINE_TYPE (MooEditTab, moo_edit_tab, GTK_TYPE_VBOX)
-G_GNUC_END_IGNORE_DEPRECATIONS
+G_DEFINE_TYPE (MooEditTab, moo_edit_tab, GTK_TYPE_BOX)
 
 /**************************************************************************************************
  *
@@ -44,6 +41,7 @@ G_GNUC_END_IGNORE_DEPRECATIONS
 static void
 moo_edit_tab_init (MooEditTab *tab)
 {
+    gtk_orientable_set_orientation (GTK_ORIENTABLE (tab), GTK_ORIENTATION_VERTICAL);
     gtk_box_set_homogeneous (GTK_BOX (tab), FALSE);
     tab->hpaned = gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
     tab->vpaned1 = gtk_paned_new (GTK_ORIENTATION_VERTICAL);

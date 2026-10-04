@@ -23,14 +23,14 @@ typedef struct MooFileViewPrivate MooFileViewPrivate;
 
 struct _MooFileView
 {
-    GtkVBox vbox;
+    GtkBox vbox;
     GtkWidget *toolbar;
     MooFileViewPrivate *priv;
 };
 
 struct _MooFileViewClass
 {
-    GtkVBoxClass vbox_class;
+    GtkBoxClass vbox_class;
 
     gboolean    (*chdir)            (MooFileView    *fileview,
                                      const char     *dir,

@@ -81,7 +81,7 @@ bare start. Dialogs report more.
 - [x] 2.2 `GtkAlignment` in `.ui` → margins and `halign`/`valign` on the child.
   `left_padding` maps to `margin-start`, and so on. Also check `xalign`/`xpad` on
   anything that is not a `GtkLabel`: those are `GtkMisc` properties.
-- [ ] 2.3 The C++ classes deriving `GtkVBox`/`GtkHBox`/`GtkAlignment`
+- [x] 2.3 The C++ classes deriving `GtkVBox`/`GtkHBox`/`GtkAlignment`
   (`mooeditprogress`, `mooedittab`, `moofileview`, `mooplugin`, `mooprefspage`, and any
   that 0.1 turns up) → `GtkBox` with the orientation set in `_init`. Screenshot each.
 - [ ] 2.4 `use_stock`/`stock` buttons in `.ui` → `label` with a mnemonic and a `GtkImage`

@@ -130,10 +130,7 @@ static void    moo_font_selection_update_preview     (MooFontSelection *fs);
 static void    moo_font_selection_dialog_class_init  (MooFontSelectionDialogClass *klass);
 static void    moo_font_selection_dialog_init        (MooFontSelectionDialog *fontseldiag);
 
-/* GtkVBox is deprecated since GTK+ 3.2; changing the parent type would change the widget hierarchy. */
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-G_DEFINE_TYPE (MooFontSelection, moo_font_selection, GTK_TYPE_VBOX)
-G_GNUC_END_IGNORE_DEPRECATIONS
+G_DEFINE_TYPE (MooFontSelection, moo_font_selection, GTK_TYPE_BOX)
 
 
 static void
@@ -265,6 +262,8 @@ list_row_activated (GtkWidget *widget)
 static void
 moo_font_selection_init (MooFontSelection *fontsel)
 {
+  gtk_orientable_set_orientation (GTK_ORIENTABLE (fontsel), GTK_ORIENTATION_VERTICAL);
+
   GtkWidget *scrolled_win;
   GtkWidget *text_box;
   GtkWidget *table, *label;

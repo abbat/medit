@@ -434,12 +434,9 @@ static void     action_file_view_go_forward (MooFileView    *fileview);
 static void     action_file_view_go_home    (MooFileView    *fileview);
 
 /* MOO_TYPE_FILE_VIEW */
-/* GtkVBox is deprecated since GTK+ 3.2; changing the parent type would change the widget hierarchy. */
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-G_DEFINE_TYPE_WITH_CODE (MooFileView, moo_file_view, GTK_TYPE_VBOX,
+G_DEFINE_TYPE_WITH_CODE (MooFileView, moo_file_view, GTK_TYPE_BOX,
                          G_IMPLEMENT_INTERFACE (MOO_TYPE_EDIT_OPS,
                                                 edit_ops_iface_init))
-G_GNUC_END_IGNORE_DEPRECATIONS
 
 enum {
     PROP_0,
@@ -887,6 +884,7 @@ moo_file_view_class_init (MooFileViewClass *klass)
 static void
 moo_file_view_init (MooFileView *fileview)
 {
+    gtk_orientable_set_orientation (GTK_ORIENTABLE (fileview), GTK_ORIENTATION_VERTICAL);
     fileview->priv = g_new0 (MooFileViewPrivate, 1);
     fileview->priv->show_hidden_files = FALSE;
     fileview->priv->file_view_type = fileview->priv->view_type = MOO_FILE_VIEW_ICON;
