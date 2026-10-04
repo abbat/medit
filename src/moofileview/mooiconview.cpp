@@ -1913,8 +1913,6 @@ static void     moo_icon_view_update_adjustment (MooIconView    *view)
 
         gtk_adjustment_set_page_size (view->priv->adjustment, gtk_widget_get_allocated_width (GTK_WIDGET(view)));
     }
-
-    gtk_adjustment_changed (view->priv->adjustment);
 }
 
 
