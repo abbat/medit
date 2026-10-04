@@ -1117,7 +1117,7 @@ _moo_pane_get_size_request (MooPane        *pane,
                             GtkRequisition *req)
 {
     g_return_if_fail (MOO_IS_PANE (pane) && pane->frame != NULL);
-    gtk_widget_get_child_requisition (pane->frame, req);
+    gtk_widget_get_preferred_size (pane->frame, req, NULL);
 }
 
 GtkWidget *

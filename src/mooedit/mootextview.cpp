@@ -3908,7 +3908,7 @@ moo_text_view_size_allocate (GtkWidget     *widget,
 
         child_alloc.x = left + border_width;
         child_alloc.y = top + border_width;
-        gtk_widget_get_child_requisition (child, &child_req);
+        gtk_widget_get_preferred_size (child, &child_req, nullptr);
 
         switch (i)
         {
