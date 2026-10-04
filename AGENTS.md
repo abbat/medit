@@ -152,6 +152,12 @@ times that on re-reading what it already had.
    this tree pull files in whole even when only their shape was needed (a large file read
    in full runs several thousand tokens for one look). Drop to `full` only for the function
    you are about to touch.
+6. **Use lean-ctx where it is installed.** When the `lean-ctx` MCP server is available,
+   its tools come first: `ctx_shell` over a bare shell, `ctx_read`/`ctx_search` over
+   whole-file reads and grep, `ctx_edit` for edits. They compress what comes back, and
+   the shell is where compression pays most. A native tool is for what lean-ctx cannot
+   do. The same goes for a subagent: say so in its prompt, since it starts without this
+   file's context.
 
 ---
 
