@@ -4075,7 +4075,7 @@ add_pane_action (MooEditWindow *window,
                                                "display-name", label->label,
                                                "label", label->label,
                                                /* XXX IconInfo */
-                                               "stock-id", label->icon_stock_id,
+                                               "icon-name", label->icon_name,
                                                nullptr);
 
         xml = moo_editor_get_ui_xml (moo_editor_instance ());

@@ -634,7 +634,7 @@ moo_file_selector_constructor (GType           type,
                               "MooFileView/Menu", 0,
                               "<item action=\"Open\"/>");
 
-    label = moo_pane_label_new (MOO_STOCK_FILE_SELECTOR,
+    label = moo_pane_label_new ("medit-file-selector",
                                 nullptr, _("File Selector"),
                                 _("File Selector"));
     moo_edit_window_add_pane (filesel->window, MOO_FILE_SELECTOR_PLUGIN_ID,

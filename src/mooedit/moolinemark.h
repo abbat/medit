@@ -76,8 +76,8 @@ gboolean    moo_line_mark_get_visible           (MooLineMark    *mark);
 
 gboolean    moo_line_mark_get_deleted           (MooLineMark    *mark);
 
-void        moo_line_mark_set_stock_id          (MooLineMark    *mark,
-                                                 const char     *stock_id);
+void        moo_line_mark_set_icon_name          (MooLineMark    *mark,
+                                                 const char     *icon_name);
 void        moo_line_mark_set_pixbuf            (MooLineMark    *mark,
                                                  GdkPixbuf      *pixbuf);
 void        moo_line_mark_set_markup            (MooLineMark    *mark,

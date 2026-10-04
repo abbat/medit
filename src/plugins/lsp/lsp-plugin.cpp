@@ -1210,7 +1210,7 @@ lsp_window_plugin_create (LspWindowPlugin *stuff)
     gtk_container_add (GTK_CONTAINER (swin), GTK_WIDGET (stuff->output));
     gtk_widget_show_all (swin);
 
-    label = moo_pane_label_new (GTK_STOCK_DIALOG_WARNING, NULL,
+    label = moo_pane_label_new ("dialog-warning", NULL,
                                 _("Diagnostics"), _("Diagnostics"));
     stuff->pane = moo_edit_window_add_pane (stuff->window, MOO_LSP_PLUGIN_ID,
                                             swin, label, MOO_PANE_POS_BOTTOM);
@@ -1224,7 +1224,7 @@ lsp_window_plugin_create (LspWindowPlugin *stuff)
      */
     g_signal_connect_swapped (swin, "map", G_CALLBACK (queue_pane_update), stuff);
 
-    label = moo_pane_label_new (MOO_STOCK_FIND_IN_FILES, NULL,
+    label = moo_pane_label_new ("edit-find", NULL,
                                 _("References"), _("References"));
     stuff->references_pane = moo_edit_window_add_pane (stuff->window,
                                                        MOO_LSP_REFERENCES_PANE_ID,
@@ -1232,7 +1232,7 @@ lsp_window_plugin_create (LspWindowPlugin *stuff)
                                                        label, MOO_PANE_POS_BOTTOM);
     moo_pane_label_free (label);
 
-    label = moo_pane_label_new (GTK_STOCK_INDEX, NULL,
+    label = moo_pane_label_new (NULL, NULL,
                                 _("Symbols"), _("Symbols"));
     stuff->symbols_pane = moo_edit_window_add_pane (stuff->window,
                                                     MOO_LSP_SYMBOLS_PANE_ID,

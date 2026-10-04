@@ -2324,7 +2324,7 @@ file_list_window_plugin_create (WindowPlugin *plugin)
     gtk_container_add (GTK_CONTAINER (scrolled_window), GTK_WIDGET (plugin->treeview));
     gtk_widget_show_all (scrolled_window);
 
-    label = moo_pane_label_new (GTK_STOCK_DIRECTORY,
+    label = moo_pane_label_new ("folder",
                                 nullptr, _("File List"),
                                 _("File List"));
     moo_edit_window_add_pane (window,

@@ -286,7 +286,7 @@ moo_edit_add_bookmark (MooEdit *edit,
     }
     else
     {
-        moo_line_mark_set_stock_id (MOO_LINE_MARK (bk), MOO_STOCK_EDIT_BOOKMARK);
+        moo_line_mark_set_icon_name (MOO_LINE_MARK (bk), "help-about");
     }
 
     if (!edit->priv->update_bookmarks_idle)

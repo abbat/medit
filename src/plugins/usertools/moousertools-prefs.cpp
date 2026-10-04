@@ -577,7 +577,7 @@ moo_user_tools_prefs_page_new (void)
     GtkWidget *page;
     GtkBuilder *builder;
 
-    page = moo_prefs_page_new (_("Tools"), GTK_STOCK_EXECUTE);
+    page = moo_prefs_page_new (_("Tools"), "system-run");
 
     builder = moo_builder_new ("/ui/moousertools.ui");
     g_return_val_if_fail (builder != NULL, NULL);

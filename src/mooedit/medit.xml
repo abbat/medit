@@ -35,7 +35,7 @@
     </item>
 
     <!-- menu item label -->
-    <item name="Edit" stock-label="gtk-edit">
+    <item name="Edit" _label="_Edit">
       <separator/>
       <item action="Undo"/>
       <item action="Redo"/>
@@ -150,7 +150,7 @@
     </item>
 
     <!-- menu item label -->
-    <item name="Help" stock-label="gtk-help">
+    <item name="Help" _label="_Help">
       <separator/>
       <item action="Help"/>
       <item action="ReportBug"/>

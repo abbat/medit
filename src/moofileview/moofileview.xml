@@ -37,7 +37,7 @@
       <item action="GoBack"/>
       <item action="GoForward"/>
       <item action="GoHome"/>
-      <item action="BookmarksMenu" _tooltip="Bookmarks" icon-stock-id="gtk-about">
+      <item action="BookmarksMenu" _tooltip="Bookmarks" icon-name="help-about">
         <placeholder name="Bookmarks"/>
         <separator/>
         <item action="AddBookmark"/>

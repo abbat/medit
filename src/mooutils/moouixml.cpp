@@ -438,11 +438,9 @@ item_new_from_node (MooMarkupNode *node,
     Item *item;
     const char *name;
     const char *action;
-    const char *stock_id;
-    const char *stock_label;
     const char *label;
     const char *tooltip;
-    const char *icon_stock_id;
+    const char *icon_name;
     gboolean translatable = FALSE;
 
     name = moo_markup_get_prop (node, "name");
@@ -463,31 +461,12 @@ item_new_from_node (MooMarkupNode *node,
         tooltip = moo_markup_get_prop (node, "tooltip");
 
     action = moo_markup_get_prop (node, "action");
-    stock_id = moo_markup_get_prop (node, "stock-id");
-    stock_label = moo_markup_get_prop (node, "stock-label");
-    icon_stock_id = moo_markup_get_prop (node, "icon-stock-id"),
+    icon_name = moo_markup_get_prop (node, "icon-name");
 
     item = item_new (name, action);
 
-    item->stock_id = g_strdup (stock_id);
-    item->icon_stock_id = g_strdup (icon_stock_id);
-
-    if (stock_label)
-    {
-        GtkStockItem stock_item;
-
-        if (!gtk_stock_lookup (stock_label, &stock_item))
-            g_warning ("could not find stock item '%s'", stock_label);
-        else if (!stock_item.label)
-            g_warning ("stock item '%s' does not have a label", stock_label);
-        else
-            item->label = g_strdup (stock_item.label);
-    }
-    else
-    {
-        item->label = translate_string (label, translation_domain, translatable);
-    }
-
+    item->icon_name = g_strdup (icon_name);
+    item->label = translate_string (label, translation_domain, translatable);
     item->tooltip = translate_string (tooltip, translation_domain, translatable);
 
     return item;
@@ -578,10 +557,9 @@ static void
 item_free (Item *item)
 {
     g_free (item->action);
-    g_free (item->stock_id);
     g_free (item->label);
     g_free (item->tooltip);
-    g_free (item->icon_stock_id);
+    g_free (item->icon_name);
 }
 
 static void
@@ -1793,28 +1771,6 @@ static gboolean node_is_empty (Node *node)
 }
 
 
-/* What gtk_image_menu_item_new_from_stock() made: the stock label as a mnemonic
- * and the stock image. An unknown id is the label, as it was there. The stock id
- * comes from the xml here, so this goes with item 3.4 of doc/deprecations.md.
- */
-static GtkWidget *
-_moo_menu_item_new_from_stock (const char *stock_id)
-{
-    g_return_val_if_fail (stock_id != NULL, NULL);
-
-    G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-    GtkStockItem stock_item;
-
-    if (!gtk_stock_lookup (stock_id, &stock_item))
-        return _moo_menu_item_new (stock_id, FALSE,
-                                   gtk_image_new_from_stock (stock_id, GTK_ICON_SIZE_MENU));
-
-    return _moo_menu_item_new (stock_item.label, TRUE,
-                               gtk_image_new_from_stock (stock_id, GTK_ICON_SIZE_MENU));
-    G_GNUC_END_IGNORE_DEPRECATIONS
-}
-
-
 static void
 create_menu_item (MooUiXml       *xml,
                   Toplevel       *toplevel,
@@ -1854,16 +1810,12 @@ create_menu_item (MooUiXml       *xml,
     }
     else
     {
-        if (item->stock_id)
+        if (item->label)
         {
-            menu_item = _moo_menu_item_new_from_stock (item->stock_id);
-        }
-        else if (item->label)
-        {
-            if (item->icon_stock_id)
+            if (item->icon_name)
             {
-                GtkWidget *icon = gtk_image_new_from_stock (item->icon_stock_id,
-                                                            GTK_ICON_SIZE_MENU);
+                GtkWidget *icon = gtk_image_new_from_icon_name (item->icon_name,
+                                                                GTK_ICON_SIZE_MENU);
                 menu_item = _moo_menu_item_new (item->label, TRUE, icon);
             }
             else
@@ -1873,7 +1825,7 @@ create_menu_item (MooUiXml       *xml,
         }
         else
         {
-            g_warning ("item '%s' does not have an associated action, label, or stock id",
+            g_warning ("item '%s' does not have an associated action or label",
                        item->name);
         }
 

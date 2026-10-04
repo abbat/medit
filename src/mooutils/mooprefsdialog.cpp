@@ -27,7 +27,7 @@
 
 enum {
     ICON_COLUMN,
-    ICON_ID_COLUMN,
+    ICON_NAME_COLUMN,
     LABEL_COLUMN,
     PAGE_COLUMN,
     N_COLUMNS
@@ -229,7 +229,7 @@ setup_pages_list (MooPrefsDialog *dialog)
     icon_column =
         gtk_tree_view_column_new_with_attributes ("Icon",
                                                   icon_renderer,
-                                                  "stock-id", ICON_ID_COLUMN,
+                                                  "icon-name", ICON_NAME_COLUMN,
                                                   "pixbuf", ICON_COLUMN,
                                                   NULL);
     gtk_tree_view_append_column (GTK_TREE_VIEW (tree), icon_column);
@@ -452,7 +452,7 @@ moo_prefs_dialog_insert_page (MooPrefsDialog     *dialog,
                               GtkWidget          *page,
                               int                 position)
 {
-    char *label = NULL, *icon_id = NULL;
+    char *label = NULL, *icon_name = NULL;
     GdkPixbuf *icon = NULL;
     GtkTreeIter iter;
     GtkTreeRowReference *ref;
@@ -473,14 +473,11 @@ moo_prefs_dialog_insert_page (MooPrefsDialog     *dialog,
     g_object_get (page,
                   "label", &label,
                   "icon", &icon,
-                  "icon-stock-id", &icon_id,
+                  "icon-name", &icon_name,
                   NULL);
 
-    if (!icon_id)
-        icon_id = g_strdup (GTK_STOCK_PREFERENCES);
-
     gtk_list_store_set (dialog->store, &iter,
-                        ICON_ID_COLUMN, icon_id,
+                        ICON_NAME_COLUMN, icon_name,
                         ICON_COLUMN, icon,
                         LABEL_COLUMN, label,
                         PAGE_COLUMN, page,
@@ -497,7 +494,7 @@ moo_prefs_dialog_insert_page (MooPrefsDialog     *dialog,
     gtk_tree_path_free (path);
 
     g_free (label);
-    g_free (icon_id);
+    g_free (icon_name);
 
     if (icon)
         g_object_unref (icon);

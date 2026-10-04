@@ -28,9 +28,6 @@ void        moo_window_present              (GtkWindow  *window,
                                              guint32     stamp);
 GtkWindow  *_moo_get_top_window             (GSList     *windows);
 
-void        _moo_window_set_icon_from_stock (GtkWindow  *window,
-                                             const char *name);
-
 void        _moo_get_monitor_geometry_at_window (GdkWindow    *window,
                                                  GdkRectangle *geometry);
 void        _moo_window_get_pointer         (GdkWindow       *window,

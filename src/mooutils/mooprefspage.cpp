@@ -28,7 +28,7 @@
 
 struct _MooPrefsPagePrivate {
     GdkPixbuf   *icon;
-    char        *icon_stock_id;
+    char        *icon_name;
     GSList      *widgets;
     GSList      *children;
 
@@ -59,7 +59,7 @@ enum {
     PROP_0,
     PROP_LABEL,
     PROP_ICON,
-    PROP_ICON_STOCK_ID,
+    PROP_ICON_NAME,
     PROP_AUTO_APPLY
 };
 
@@ -90,8 +90,8 @@ moo_prefs_page_class_init (MooPrefsPageClass *klass)
         g_param_spec_string ("label", "label", "Label",
                              NULL, (GParamFlags) (G_PARAM_READWRITE | G_PARAM_CONSTRUCT)));
 
-    g_object_class_install_property (gobject_class, PROP_ICON_STOCK_ID,
-        g_param_spec_string ("icon-stock-id", "icon-stock-id", "icon-stock-id",
+    g_object_class_install_property (gobject_class, PROP_ICON_NAME,
+        g_param_spec_string ("icon-name", "icon-name", "icon-name",
                              NULL, (GParamFlags) (G_PARAM_READWRITE | G_PARAM_CONSTRUCT)));
 
     g_object_class_install_property (gobject_class, PROP_ICON,
@@ -129,7 +129,7 @@ moo_prefs_page_init (MooPrefsPage *page)
 
     page->label = NULL;
     page->priv->icon = NULL;
-    page->priv->icon_stock_id = NULL;
+    page->priv->icon_name = NULL;
     page->priv->widgets = NULL;
     page->priv->children = NULL;
     page->auto_apply = TRUE;
@@ -141,7 +141,7 @@ moo_prefs_page_finalize (GObject *object)
     MooPrefsPage *page = MOO_PREFS_PAGE (object);
 
     g_free (page->label);
-    g_free (page->priv->icon_stock_id);
+    g_free (page->priv->icon_name);
     if (page->priv->icon)
         g_object_unref (page->priv->icon);
     g_slist_free (page->priv->widgets);
@@ -178,10 +178,10 @@ moo_prefs_page_set_property (GObject      *object,
             g_object_notify (G_OBJECT (page), "icon");
             break;
 
-        case PROP_ICON_STOCK_ID:
-            g_free (page->priv->icon_stock_id);
-            page->priv->icon_stock_id = g_strdup (g_value_get_string (value));
-            g_object_notify (G_OBJECT (page), "icon-stock-id");
+        case PROP_ICON_NAME:
+            g_free (page->priv->icon_name);
+            page->priv->icon_name = g_strdup (g_value_get_string (value));
+            g_object_notify (G_OBJECT (page), "icon-name");
             break;
 
         case PROP_AUTO_APPLY:
@@ -212,8 +212,8 @@ moo_prefs_page_get_property (GObject    *object,
             g_value_set_object (value, page->priv->icon);
             break;
 
-        case PROP_ICON_STOCK_ID:
-            g_value_set_string (value, page->priv->icon_stock_id);
+        case PROP_ICON_NAME:
+            g_value_set_string (value, page->priv->icon_name);
             break;
 
         case PROP_AUTO_APPLY:
@@ -228,11 +228,11 @@ moo_prefs_page_get_property (GObject    *object,
 
 GtkWidget *
 moo_prefs_page_new (const char *label,
-                    const char *icon_stock_id)
+                    const char *icon_name)
 {
     return (GtkWidget *) g_object_new (MOO_TYPE_PREFS_PAGE,
                                        "label", label,
-                                       "icon-stock-id", icon_stock_id,
+                                       "icon-name", icon_name,
                                        (const char*) NULL);
 }
 

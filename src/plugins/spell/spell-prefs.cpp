@@ -36,7 +36,7 @@ _moo_spell_prefs_page (G_GNUC_UNUSED MooPlugin *plugin)
     GtkWidget *page;
     GtkBuilder *builder;
 
-    page = moo_prefs_page_new (_("Spell Checking"), GTK_STOCK_SPELL_CHECK);
+    page = moo_prefs_page_new (_("Spell Checking"), "tools-check-spelling");
 
     builder = moo_builder_new ("/ui/spell-prefs.ui");
     g_return_val_if_fail (builder != NULL, NULL);

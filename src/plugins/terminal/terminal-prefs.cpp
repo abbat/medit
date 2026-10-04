@@ -130,7 +130,7 @@ _moo_terminal_prefs_page (G_GNUC_UNUSED MooPlugin *plugin)
     const MooTerminalColorScheme *schemes;
     guint n_schemes, i;
 
-    page = moo_prefs_page_new (_("Terminal"), MOO_STOCK_TERMINAL);
+    page = moo_prefs_page_new (_("Terminal"), "medit-terminal");
 
     builder = moo_builder_new ("/ui/terminal-prefs.ui");
     g_return_val_if_fail (builder != NULL, NULL);

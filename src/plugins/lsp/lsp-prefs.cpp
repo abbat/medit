@@ -79,7 +79,7 @@ _moo_lsp_prefs_page (G_GNUC_UNUSED MooPlugin *plugin)
     GtkWidget *page;
     GtkBuilder *builder;
 
-    page = moo_prefs_page_new (_("Language Servers"), GTK_STOCK_INDEX);
+    page = moo_prefs_page_new (_("Language Servers"), NULL);
 
     builder = moo_builder_new ("/ui/lsp-prefs.ui");
     g_return_val_if_fail (builder != NULL, NULL);

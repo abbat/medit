@@ -36,7 +36,7 @@ typedef struct _MooPaneLabel     MooPaneLabel;
 typedef struct _MooPaneParams    MooPaneParams;
 
 struct _MooPaneLabel {
-    char *icon_stock_id;
+    char *icon_name;
     GdkPixbuf *icon_pixbuf;
     char *label;
     char *window_title;
@@ -94,7 +94,7 @@ MooPaneParams  *moo_pane_params_new         (GdkRectangle   *window_position,
 MooPaneParams  *moo_pane_params_copy        (MooPaneParams  *params);
 void            moo_pane_params_free        (MooPaneParams  *params);
 
-MooPaneLabel   *moo_pane_label_new          (const char     *icon_stock_id,
+MooPaneLabel   *moo_pane_label_new          (const char     *icon_name,
                                              GdkPixbuf      *pixbuf,
                                              const char     *label,
                                              const char     *window_title);

@@ -171,7 +171,7 @@ ensure_output (WindowStuff *stuff)
     if (stuff->output)
         return;
 
-    label = moo_pane_label_new (MOO_STOCK_FIND_IN_FILES, NULL,
+    label = moo_pane_label_new ("edit-find", NULL,
                                 _("Search Results"), _("Search Results"));
     stuff->output = MOO_CMD_VIEW (
         g_object_new (MOO_TYPE_CMD_VIEW,

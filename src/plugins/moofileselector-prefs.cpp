@@ -67,7 +67,7 @@ _moo_file_selector_prefs_page (MooPlugin *plugin)
     MooTreeHelper *helper;
     GtkBuilder *builder;
 
-    page = moo_prefs_page_new (_("File Selector"), MOO_STOCK_FILE_SELECTOR);
+    page = moo_prefs_page_new (_("File Selector"), "medit-file-selector");
 
     builder = moo_builder_new ("/ui/moofileselector-prefs.ui");
     g_return_val_if_fail (builder != NULL, NULL);

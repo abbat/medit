@@ -405,31 +405,6 @@ _moo_get_monitor_geometry_at_window (GdkWindow    *window,
 }
 
 
-void
-_moo_window_set_icon_from_stock (GtkWindow  *window,
-                                 const char *name)
-{
-    GdkPixbuf *icon;
-
-    g_return_if_fail (GTK_IS_WINDOW (window));
-    g_return_if_fail (name != NULL);
-
-    /* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
-    G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-    icon = gtk_widget_render_icon (GTK_WIDGET (window), name,
-                                   GTK_ICON_SIZE_BUTTON, 0);
-    G_GNUC_END_IGNORE_DEPRECATIONS
-
-    if (icon)
-    {
-        gtk_window_set_icon (GTK_WINDOW (window), icon);
-        g_object_unref (icon);
-    }
-}
-
-
-
-
 /***************************************************************************/
 /* Log window
  */

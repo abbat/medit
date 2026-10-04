@@ -104,8 +104,8 @@ set_pane_window_icon_and_title (MooPane *pane)
     {
         if (pane->label->icon_pixbuf)
             gtk_window_set_icon (GTK_WINDOW (pane->window), pane->label->icon_pixbuf);
-        else if (pane->label->icon_stock_id)
-            _moo_window_set_icon_from_stock (GTK_WINDOW (pane->window), pane->label->icon_stock_id);
+        else if (pane->label->icon_name)
+            gtk_window_set_icon_name (GTK_WINDOW (pane->window), pane->label->icon_name);
 
         if (pane->label->window_title)
             gtk_window_set_title (GTK_WINDOW (pane->window), pane->label->window_title);
@@ -128,17 +128,13 @@ update_label_widgets (MooPane *pane)
         if (pane->label->icon_pixbuf)
             gtk_image_set_from_pixbuf (GTK_IMAGE (pane->icon_widget),
                                        pane->label->icon_pixbuf);
-        else if (pane->label->icon_stock_id)
-        {
-            G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-            gtk_image_set_from_stock (GTK_IMAGE (pane->icon_widget),
-                                      pane->label->icon_stock_id,
-                                      GTK_ICON_SIZE_MENU);
-            G_GNUC_END_IGNORE_DEPRECATIONS
-        }
+        else if (pane->label->icon_name)
+            gtk_image_set_from_icon_name (GTK_IMAGE (pane->icon_widget),
+                                          pane->label->icon_name,
+                                          GTK_ICON_SIZE_MENU);
 
         g_object_set (pane->icon_widget, "visible",
-                      pane->label->icon_pixbuf || pane->label->icon_stock_id,
+                      pane->label->icon_pixbuf || pane->label->icon_name,
                       NULL);
     }
 

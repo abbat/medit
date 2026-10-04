@@ -189,6 +189,13 @@ _moo_stock_init (void)
 
     add_icon (factory, MOO_STOCK_TERMINAL, "terminal", 24, "/pixmap/stock-terminal-24.png");
 
+    /* The names data fields carry instead of the stock ids above. Builtin icons
+       are deprecated since GTK+ 3.14; 3.7 replaces them with an icon theme in
+       the GResource. */
+    add_default_image (24, "/pixmap/stock-file-selector-24.png", "medit-file-selector", NULL);
+    add_default_image (24, "/pixmap/stock-file-24.png", "medit-file", NULL);
+    add_default_image (24, "/pixmap/stock-terminal-24.png", "medit-terminal", NULL);
+
     add_default_image (24, "/pixmap/medit.png", "medit", NULL);
     add_default_image (48, "/pixmap/medit.png", "medit", NULL);
 

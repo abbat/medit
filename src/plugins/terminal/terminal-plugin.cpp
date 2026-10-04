@@ -793,7 +793,7 @@ terminal_window_plugin_create (WindowStuff *stuff)
     g_signal_connect (stuff->terminal, "key-press-event",
                       G_CALLBACK (terminal_key_press), stuff);
 
-    label = moo_pane_label_new (MOO_STOCK_TERMINAL, NULL,
+    label = moo_pane_label_new ("medit-terminal", NULL,
                                 _("Terminal"), _("Terminal"));
     stuff->pane = moo_edit_window_add_pane (stuff->window, MOO_TERMINAL_PLUGIN_ID,
                                             swin, label, MOO_PANE_POS_BOTTOM);

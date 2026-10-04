@@ -62,7 +62,7 @@ static MooTextStyleScheme *page_get_scheme  (GtkBuilder    *gxml);
 static GtkWidget *
 prefs_page_new (MooEditor          *editor,
                 const char         *label,
-                const char         *stock_id,
+                const char         *icon_name,
                 MooPrefsPageInitUi  init_ui,
                 MooPrefsPageInit    init,
                 MooPrefsPageApply   apply)
@@ -73,7 +73,7 @@ prefs_page_new (MooEditor          *editor,
 
     _moo_edit_init_config ();
 
-    prefs_page = moo_prefs_page_new (label, stock_id);
+    prefs_page = moo_prefs_page_new (label, icon_name);
     moo_prefs_page_set_callbacks (MOO_PREFS_PAGE (prefs_page),
                                   init_ui, init, apply);
 
@@ -164,7 +164,7 @@ moo_edit_prefs_page_new_1 (MooEditor *editor)
     return prefs_page_new (editor,
                            /* Label of a Preferences dialog page, remove the part before and including | */
                            Q_("PreferencesPage|General"),
-                           GTK_STOCK_EDIT,
+                           NULL,
                            page_general_init_ui,
                            page_general_init,
                            page_general_apply);
@@ -204,7 +204,7 @@ moo_edit_prefs_page_new_5 (MooEditor *editor)
     return prefs_page_new (editor,
                            /* Label of a Preferences dialog page, remove the part before and including | */
                            Q_("PreferencesPage|File Filters"),
-                           GTK_STOCK_EDIT,
+                           NULL,
                            page_filters_init_ui,
                            page_filters_init,
                            page_filters_apply);
@@ -260,7 +260,7 @@ moo_edit_prefs_page_new_2 (MooEditor *editor)
     return prefs_page_new (editor,
                            /* Label of a Preferences dialog page, remove the part before and including | */
                            Q_("PreferencesPage|View"),
-                           GTK_STOCK_EDIT,
+                           NULL,
                            page_view_init_ui,
                            page_view_init,
                            page_view_apply);
@@ -311,7 +311,7 @@ moo_edit_prefs_page_new_3 (MooEditor *editor)
     return prefs_page_new (editor,
                            /* Label of a Preferences dialog page, remove the part before and including | */
                            Q_("PreferencesPage|File"),
-                           GTK_STOCK_EDIT,
+                           NULL,
                            page_file_init_ui,
                            page_file_init,
                            page_file_apply);
@@ -355,7 +355,7 @@ moo_edit_prefs_page_new_4 (MooEditor *editor)
     return prefs_page_new (editor,
                            /* Label of a Preferences dialog page, remove the part before and including | */
                            Q_("PreferencesPage|Languages"),
-                           GTK_STOCK_EDIT,
+                           NULL,
                            page_langs_init_ui,
                            page_langs_init,
                            page_langs_apply);

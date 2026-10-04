@@ -70,8 +70,7 @@ struct MooUiItemNode {
 
     char *label;
     char *tooltip;
-    char *stock_id;
-    char *icon_stock_id;
+    char *icon_name;
 };
 
 typedef enum {

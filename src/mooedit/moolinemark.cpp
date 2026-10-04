@@ -26,7 +26,7 @@
 struct MooLineMarkPrivate {
     GdkRGBA background;
 
-    char *stock_id;
+    char *icon_name;
     GdkPixbuf *pixbuf;
 
     GtkWidget *widget;
@@ -79,7 +79,7 @@ enum {
     PROP_BACKGROUND_RGBA,
     PROP_BACKGROUND_SET,
     PROP_PIXBUF,
-    PROP_STOCK_ID,
+    PROP_ICON_NAME,
     PROP_MARKUP,
     PROP_VISIBLE,
     PROP_FOLD
@@ -150,10 +150,10 @@ moo_line_mark_class_init (MooLineMarkClass *klass)
                                              (GParamFlags) G_PARAM_READWRITE));
 
     g_object_class_install_property (gobject_class,
-                                     PROP_STOCK_ID,
-                                     g_param_spec_string ("stock-id",
-                                             "stock-id",
-                                             "stock-id",
+                                     PROP_ICON_NAME,
+                                     g_param_spec_string ("icon-name",
+                                             "icon-name",
+                                             "icon-name",
                                              NULL,
                                              (GParamFlags) G_PARAM_READWRITE));
 
@@ -192,7 +192,7 @@ moo_line_mark_finalize (GObject *object)
     if (mark->priv->pixbuf)
         g_object_unref (mark->priv->pixbuf);
 
-    g_free (mark->priv->stock_id);
+    g_free (mark->priv->icon_name);
     g_free (mark->priv->markup);
     g_free (mark->priv);
 
@@ -238,8 +238,8 @@ moo_line_mark_set_property (GObject        *object,
             moo_line_mark_set_pixbuf (mark, (GdkPixbuf *) g_value_get_object (value));
             break;
 
-        case PROP_STOCK_ID:
-            moo_line_mark_set_stock_id (mark, g_value_get_string (value));
+        case PROP_ICON_NAME:
+            moo_line_mark_set_icon_name (mark, g_value_get_string (value));
             break;
 
         default:
@@ -279,8 +279,8 @@ moo_line_mark_get_property (GObject        *object,
             g_value_set_object (value, mark->priv->pixbuf);
             break;
 
-        case PROP_STOCK_ID:
-            g_value_set_string (value, mark->priv->stock_id);
+        case PROP_ICON_NAME:
+            g_value_set_string (value, mark->priv->icon_name);
             break;
 
         case PROP_FOLD:
@@ -493,19 +493,19 @@ moo_line_mark_get_visible (MooLineMark *mark)
 
 
 void
-moo_line_mark_set_stock_id (MooLineMark *mark,
-                            const char  *stock_id)
+moo_line_mark_set_icon_name (MooLineMark *mark,
+                            const char  *icon_name)
 {
     g_return_if_fail (MOO_IS_LINE_MARK (mark));
 
-    if (stock_id != mark->priv->stock_id)
+    if (icon_name != mark->priv->icon_name)
     {
         if (mark->priv->pixbuf)
             g_object_unref (mark->priv->pixbuf);
         mark->priv->pixbuf = NULL;
-        g_free (mark->priv->stock_id);
+        g_free (mark->priv->icon_name);
 
-        mark->priv->stock_id = g_strdup (stock_id);
+        mark->priv->icon_name = g_strdup (icon_name);
 
         update_pixbuf (mark);
         g_signal_emit (mark, signals[CHANGED], 0);
@@ -525,8 +525,8 @@ moo_line_mark_set_pixbuf (MooLineMark    *mark,
         if (mark->priv->pixbuf)
             g_object_unref (mark->priv->pixbuf);
         mark->priv->pixbuf = NULL;
-        g_free (mark->priv->stock_id);
-        mark->priv->stock_id = NULL;
+        g_free (mark->priv->icon_name);
+        mark->priv->icon_name = NULL;
 
         mark->priv->pixbuf = g_object_ref (pixbuf);
 
@@ -549,7 +549,7 @@ update_pixbuf (MooLineMark *mark)
     GHashTable *cache;
     GdkPixbuf *pixbuf;
 
-    if (!mark->priv->realized || !mark->priv->stock_id)
+    if (!mark->priv->realized || !mark->priv->icon_name)
         return;
 
     g_assert (mark->priv->widget != NULL);
@@ -568,19 +568,19 @@ update_pixbuf (MooLineMark *mark)
                                 (GDestroyNotify) g_hash_table_destroy);
     }
 
-    pixbuf = (GdkPixbuf *) g_hash_table_lookup (cache, mark->priv->stock_id);
+    pixbuf = (GdkPixbuf *) g_hash_table_lookup (cache, mark->priv->icon_name);
 
     if (!pixbuf)
     {
-        /* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
-        G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-        pixbuf = gtk_widget_render_icon (mark->priv->widget,
-                                         mark->priv->stock_id,
-                                         GTK_ICON_SIZE_MENU,
-                                         NULL);
-        G_GNUC_END_IGNORE_DEPRECATIONS
+        GtkIconTheme *theme = gtk_icon_theme_get_for_screen (gtk_widget_get_screen (mark->priv->widget));
+        int width = 16, height = 16;
+
+        gtk_icon_size_lookup (GTK_ICON_SIZE_MENU, &width, &height);
+        pixbuf = gtk_icon_theme_load_icon (theme, mark->priv->icon_name,
+                                           MAX (width, height),
+                                           GTK_ICON_LOOKUP_USE_BUILTIN, NULL);
         g_return_if_fail (pixbuf != NULL);
-        g_hash_table_insert (cache, g_strdup (mark->priv->stock_id), pixbuf);
+        g_hash_table_insert (cache, g_strdup (mark->priv->icon_name), pixbuf);
     }
 
     mark->priv->pixbuf = g_object_ref (pixbuf);
@@ -620,7 +620,7 @@ _moo_line_mark_unrealize (MooLineMark *mark, G_GNUC_UNUSED gpointer data)
     mark->priv->realized = FALSE;
     mark->priv->widget = NULL;
 
-    if (mark->priv->pixbuf && mark->priv->stock_id)
+    if (mark->priv->pixbuf && mark->priv->icon_name)
     {
         g_object_unref (mark->priv->pixbuf);
         mark->priv->pixbuf = NULL;

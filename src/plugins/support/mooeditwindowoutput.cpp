@@ -42,7 +42,7 @@ moo_edit_window_get_output (MooEditWindow *window)
         gtk_widget_show_all (scrolled_window);
         g_object_set_data (G_OBJECT (scrolled_window), MOO_OUTPUT, cmd_view);
 
-        label = moo_pane_label_new (MOO_STOCK_TERMINAL, NULL,
+        label = moo_pane_label_new ("medit-terminal", NULL,
                                     /* label of Output window pane */
                                     C_("window-pane", "Output"),
                                     C_("window-pane", "Output"));

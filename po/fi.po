@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: moo\n"
 "Report-Msgid-Bugs-To: https://github.com/abbat/medit/issues\n"
-"POT-Creation-Date: 2026-10-04 20:30+0300\n"
+"POT-Creation-Date: 2026-10-04 20:39+0300\n"
 "PO-Revision-Date: 2012-01-31 14:17+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Tommi Nieminen <translator@legisign.org>\n"
@@ -383,11 +383,11 @@ msgstr "sarakkeeseen"
 #: src/moofileview/ui/moofileview-drop.ui:56
 #: src/moofileview/moofileview.cpp:3252 src/moofileview/moofileview.cpp:5851
 #: src/moofileview/moofileview.cpp:6251 src/mooutils/mooaccelprefs.cpp:882
-#: src/mooutils/moodialogs.cpp:384 src/mooutils/moodialogs.cpp:439
+#: src/mooutils/moodialogs.cpp:384 src/mooutils/moodialogs.cpp:436
 #: src/mooutils/moofiledialog.cpp:280 src/mooutils/moofontsel.cpp:1309
 #: src/mooutils/moohistorymgr.cpp:1667 src/plugins/ui/moofileselector.ui:56
 #: src/plugins/ui/moofileselector.ui:136 src/plugins/ui/moofind.ui:141
-#: src/plugins/ui/moogrep.ui:196 src/plugins/moofileselector.cpp:1147
+#: src/plugins/ui/moogrep.ui:196 src/plugins/moofileselector.cpp:1144
 #: src/plugins/lsp/lsp-edits.cpp:368
 msgid "_Cancel"
 msgstr "Per_u"
@@ -583,31 +583,42 @@ msgstr "_Tiedosto"
 
 #. menu item label
 #: src/mooedit/medit.xml.h:4
+msgid "_Edit"
+msgstr "_Muokkaa"
+
+#. menu item label
+#: src/mooedit/medit.xml.h:6
 msgid "_Search"
 msgstr "_Etsi"
 
 #. menu item label
-#: src/mooedit/medit.xml.h:6
+#: src/mooedit/medit.xml.h:8
 msgid "_View"
 msgstr "_Näkymä"
 
-#: src/mooedit/medit.xml.h:7
+#: src/mooedit/medit.xml.h:9
 msgid "Pa_nes"
 msgstr "Ke_hykset"
 
 #. menu item label
-#: src/mooedit/medit.xml.h:9
+#: src/mooedit/medit.xml.h:11
 msgid "_Document"
 msgstr "_Asiakirja"
 
-#: src/mooedit/medit.xml.h:10
+#: src/mooedit/medit.xml.h:12
 msgid "_Tools"
 msgstr "T_yökalut"
 
 #. menu item label
-#: src/mooedit/medit.xml.h:12
+#: src/mooedit/medit.xml.h:14
 msgid "_Window"
 msgstr "_Ikkuna"
+
+#. menu item label
+#: src/mooedit/medit.xml.h:16 src/mooutils/mooaccelprefs.cpp:881
+#: src/mooutils/moofiledialog.cpp:292
+msgid "_Help"
+msgstr "O_hje"
 
 #: src/mooedit/mooeditaction-factory.cpp:622
 msgid "_Insert Unicode Control Character"
@@ -850,13 +861,13 @@ msgid "Language|None"
 msgstr "Ei mitään"
 
 #. Column label on File Filters prefs page
-#: src/mooedit/mooeditprefspage.cpp:1001
+#: src/mooedit/mooeditprefspage.cpp:999
 msgctxt "filter-prefs-column"
 msgid "Filter"
 msgstr "Suodin"
 
 #. Column label on File Filters prefs page
-#: src/mooedit/mooeditprefspage.cpp:1003
+#: src/mooedit/mooeditprefspage.cpp:1001
 msgctxt "filter-prefs-column"
 msgid "Options"
 msgstr "Asetukset"
@@ -1508,7 +1519,7 @@ msgid "Path"
 msgstr "Sijainti"
 
 #: src/moofileview/moofileview.cpp:1136 src/plugins/moofileselector.cpp:638
-#: src/plugins/moofileselector.cpp:639 src/plugins/moofileselector.cpp:1289
+#: src/plugins/moofileselector.cpp:639 src/plugins/moofileselector.cpp:1286
 #: src/plugins/moofileselector-prefs.cpp:70
 msgid "File Selector"
 msgstr "Tiedostovalitsin"
@@ -1750,28 +1761,24 @@ msgstr "Yleinen"
 msgid "Configure Shortcuts"
 msgstr "Pikanäppäinasetukset"
 
-#: src/mooutils/mooaccelprefs.cpp:881 src/mooutils/moofiledialog.cpp:292
-msgid "_Help"
-msgstr "O_hje"
-
-#: src/mooutils/moodialogs.cpp:429
+#: src/mooutils/moodialogs.cpp:426
 #, c-format
 msgid "Save changes to document \"%s\" before closing?"
 msgstr "Tallennetaanko muutokset asiakirjaan ”%s” ennen sulkemista?"
 
-#: src/mooutils/moodialogs.cpp:430
+#: src/mooutils/moodialogs.cpp:427
 msgid "Save changes to the document before closing?"
 msgstr "Tallennetaan asiakirjamuutoksen ennen sulkemista?"
 
-#: src/mooutils/moodialogs.cpp:435
+#: src/mooutils/moodialogs.cpp:432
 msgid "If you don't save, changes will be discarded"
 msgstr "Ellet tallenna, muutokset hylätään"
 
-#: src/mooutils/moodialogs.cpp:438
+#: src/mooutils/moodialogs.cpp:435
 msgid "_Discard"
 msgstr "_Hylkää"
 
-#: src/mooutils/moodialogs.cpp:440 src/mooutils/moofiledialog.cpp:366
+#: src/mooutils/moodialogs.cpp:437 src/mooutils/moofiledialog.cpp:366
 #: src/plugins/usertools/ui/moousertools.ui:212
 msgid "_Save"
 msgstr "_Tallenna"
@@ -2063,7 +2070,7 @@ msgid "Insert Special Character"
 msgstr "Lisää erikoismerkki"
 
 #: src/mooutils/moofiledialog.cpp:355 src/mooutils/moohistorymgr.cpp:1668
-#: src/plugins/moofilelist.cpp:2018
+#: src/plugins/moofilelist.cpp:2015
 msgid "_Open"
 msgstr "_Avaa"
 
@@ -2101,31 +2108,31 @@ msgstr "medit-verkkosivustoa ei voitu avata"
 msgid "Recent Files"
 msgstr "Viimeaikaiset tiedostot"
 
-#: src/mooutils/moopane.cpp:653
+#: src/mooutils/moopane.cpp:649
 msgid "Remove pane"
 msgstr "Sulje kehys"
 
-#: src/mooutils/moopane.cpp:663
+#: src/mooutils/moopane.cpp:659
 msgid "Hide pane"
 msgstr "Piilota kehys"
 
-#: src/mooutils/moopane.cpp:667
+#: src/mooutils/moopane.cpp:663
 msgid "Sticky"
 msgstr "Fijo"
 
-#: src/mooutils/moopane.cpp:671
+#: src/mooutils/moopane.cpp:667
 msgid "Detach pane"
 msgstr "Irrota kehys"
 
-#: src/mooutils/moopane.cpp:684
+#: src/mooutils/moopane.cpp:680
 msgid "Attach"
 msgstr "Kiinnitä"
 
-#: src/mooutils/moopane.cpp:688
+#: src/mooutils/moopane.cpp:684
 msgid "Keep on top"
 msgstr "Pidä _ylinnä"
 
-#: src/mooutils/moostock.cpp:34 src/plugins/moofileselector.cpp:1133
+#: src/mooutils/moostock.cpp:34 src/plugins/moofileselector.cpp:1130
 msgid "Save Copy"
 msgstr "Tallenna kopio"
 
@@ -2157,7 +2164,7 @@ msgid "Could not remove %s: %s"
 msgstr "Ei voitu poistaa tiedostoa %s: %s"
 
 #. Translators: remove the part before and including |
-#: src/mooutils/mooutils-misc.cpp:1731
+#: src/mooutils/mooutils-misc.cpp:1706
 #, c-format
 msgid "console message|in file %s, line %d, function %s: %s"
 msgstr "tiedostossa %s, rivillä %d, funktiossa %s: %s"
@@ -2165,7 +2172,7 @@ msgstr "tiedostossa %s, rivillä %d, funktiossa %s: %s"
 #. "Unknown error" may be displayed if there is a bug in the program
 #. and proper error message has not been set. It doesn't provide any
 #. useful information obviously
-#: src/mooutils/mooutils-misc.cpp:1938
+#: src/mooutils/mooutils-misc.cpp:1913
 msgid "Unknown error"
 msgstr "Tuntematon virhe"
 
@@ -2303,16 +2310,16 @@ msgstr "Etsi tiedostoista"
 msgid "Fi_les"
 msgstr "_Tiedostot"
 
-#: src/plugins/moofilelist.cpp:2030
+#: src/plugins/moofilelist.cpp:2027
 msgid "_Remove"
 msgstr "_Poista"
 
-#: src/plugins/moofilelist.cpp:2331 src/plugins/moofilelist.cpp:2332
-#: src/plugins/moofilelist.cpp:2390
+#: src/plugins/moofilelist.cpp:2328 src/plugins/moofilelist.cpp:2329
+#: src/plugins/moofilelist.cpp:2387
 msgid "File List"
 msgstr "Tiedostoluettelo"
 
-#: src/plugins/moofilelist.cpp:2390
+#: src/plugins/moofilelist.cpp:2387
 msgid "List of files"
 msgstr "Tiedostojen luettelo"
 
@@ -2361,27 +2368,28 @@ msgstr "Tallenna kopio nimellä"
 msgid "Rename To"
 msgstr "Muuta nimeä"
 
-#: src/plugins/moofileselector.cpp:1115
+#. no freedesktop icon for move
+#: src/plugins/moofileselector.cpp:1112
 msgid "Move Here"
 msgstr "Siirrä tähän"
 
-#: src/plugins/moofileselector.cpp:1116
+#: src/plugins/moofileselector.cpp:1113
 msgid "Move/Rename..."
 msgstr "Siirrä tai muuta nimeä..."
 
-#: src/plugins/moofileselector.cpp:1124
+#: src/plugins/moofileselector.cpp:1121
 msgid "Save Here"
 msgstr "Tallenna tähän"
 
-#: src/plugins/moofileselector.cpp:1125
+#: src/plugins/moofileselector.cpp:1122
 msgid "Save As..."
 msgstr "Tallenna nimellä..."
 
-#: src/plugins/moofileselector.cpp:1134
+#: src/plugins/moofileselector.cpp:1131
 msgid "Save Copy As..."
 msgstr "Tallenna kopio nimellä..."
 
-#: src/plugins/moofileselector.cpp:1290
+#: src/plugins/moofileselector.cpp:1287
 msgid "File selector pane for editor window"
 msgstr "Muokkainikkunan tiedostonvalintaruutu"
 
@@ -2461,22 +2469,22 @@ msgstr "Tässä ei ole koodin toimintoja"
 msgid "The server has nothing to offer at this place."
 msgstr "Palvelimella ei ole mitään tarjottavaa tässä kohdassa."
 
-#: src/plugins/lsp/lsp-diagnostics.cpp:82
+#: src/plugins/lsp/lsp-diagnostics.cpp:79
 msgctxt "diagnostic severity"
 msgid "warning"
 msgstr "varoitus"
 
-#: src/plugins/lsp/lsp-diagnostics.cpp:84
+#: src/plugins/lsp/lsp-diagnostics.cpp:81
 msgctxt "diagnostic severity"
 msgid "information"
 msgstr "tiedote"
 
-#: src/plugins/lsp/lsp-diagnostics.cpp:86
+#: src/plugins/lsp/lsp-diagnostics.cpp:83
 msgctxt "diagnostic severity"
 msgid "hint"
 msgstr "vihje"
 
-#: src/plugins/lsp/lsp-diagnostics.cpp:89
+#: src/plugins/lsp/lsp-diagnostics.cpp:86
 msgctxt "diagnostic severity"
 msgid "error"
 msgstr "virhe"

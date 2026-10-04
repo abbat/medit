@@ -137,7 +137,7 @@ Facts the survey of 2026-10-04 established, so they need not be found again:
   `moofiledialog.cpp`'s `get_string_maybe_stock` goes; callers pass plain titles. Done: about 40 buttons and 2 titles across 12 files now take our own `_("_Cancel")`-style strings; `get_string_maybe_stock` is gone and the translations were copied from gtk30 into our catalogs.
 - [x] 3.2 Menu items: `_moo_menu_item_new_from_stock()` (`mooutils-misc.cpp`) →
   a label + icon-name constructor at every caller, then delete it. Done: every caller passes `_("_Undo")`-style label + icon name to `_moo_menu_item_new()`; ids with no freedesktop icon (cancel, font, colour, edit, move, link) pass no image. The function survives only as a static in `moouixml.cpp`, fed by the xml stock id, and goes with 3.4.
-- [ ] 3.3 Images: `gtk_image_*_from_stock` → `_from_icon_name`;
+- [x] 3.3 Images: `gtk_image_*_from_stock` → `_from_icon_name`;
   `gtk_widget_render_icon` → `gtk_icon_theme_load_icon` (`moolinemark.cpp`,
   `moofileicon.cpp`); `_moo_window_set_icon_from_stock` →
   `gtk_window_set_icon_name`; cell renderers' `stock-id` → `icon-name`. Removes
@@ -150,9 +150,22 @@ Facts the survey of 2026-10-04 established, so they need not be found again:
   `mooprefsdialog.cpp` and `moobookmarkmgr.cpp`/`moobookmarkview.cpp` renderers
   (3.4/3.5, so `GtkCellRendererPixbuf:stock-id` stays in `KNOWN_DEPRECATED`);
   `get_stock_icon (MOO_STOCK_FILE)` in `moofileicon.cpp` (3.7).
-- [ ] 3.4 Data fields: `MooPaneLabel.icon_stock_id`, MooPrefsPage `icon-stock-id`,
+  Done with 3.4: the pane label, `_moo_window_set_icon_from_stock` (deleted),
+  `moolinemark.cpp`, `moouixml.cpp` and the prefs dialog renderer (`icon-name`) are
+  converted. Left: the bookmark renderers (3.5, so `GtkCellRendererPixbuf:stock-id`
+  stays in `KNOWN_DEPRECATED`) and `get_stock_icon (MOO_STOCK_FILE)` (3.7).
+- [x] 3.4 Data fields: `MooPaneLabel.icon_stock_id`, MooPrefsPage `icon-stock-id`,
   MooLineMark `stock-id`, MooUiXml `stock-id`/`icon-stock-id`/`stock-label` →
   icon names and labels, with every in-tree caller and the two `.xml` files.
+  Done: `MooPaneLabel.icon_name`, MooPrefsPage `icon-name`, MooLineMark `icon-name`
+  (`moo_line_mark_set_icon_name`), MooUiXml `icon-name`; the unused `stock-id`
+  attribute and `_moo_menu_item_new_from_stock` are gone, `stock-label="gtk-edit"`/
+  `"gtk-help"` became `_label="_Edit"`/`"_Help"` (`_Edit` translated from gtk30).
+  Ids with no freedesktop icon (index, preferences, select-font, edit) pass no icon.
+  Our own pixmaps are named `medit-terminal`, `medit-file-selector`, `medit-file`;
+  until 3.7 `moostock.cpp` registers them with `gtk_icon_theme_add_builtin_icon`
+  from the same pixbufs. Nothing here is read from user config, so no id mapping
+  on load (bookmarks are 3.5).
 - [ ] 3.5 Bookmarks: map stock ids to icon names on load (unknown → `folder`),
   write icon names, build the icon combo from icon names. Test the round trip with
   an rc file written by the old code.

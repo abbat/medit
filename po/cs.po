@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: moo\n"
 "Report-Msgid-Bugs-To: https://github.com/abbat/medit/issues\n"
-"POT-Creation-Date: 2026-10-04 20:30+0300\n"
+"POT-Creation-Date: 2026-10-04 20:39+0300\n"
 "PO-Revision-Date: 2007-11-10 22:45+0100\n"
 "Last-Translator: Vlastimil Ott <vlastimil@e-ott.info>\n"
 "Language-Team:  <cs@li.org>\n"
@@ -383,11 +383,11 @@ msgstr "na řádku"
 #: src/moofileview/ui/moofileview-drop.ui:56
 #: src/moofileview/moofileview.cpp:3252 src/moofileview/moofileview.cpp:5851
 #: src/moofileview/moofileview.cpp:6251 src/mooutils/mooaccelprefs.cpp:882
-#: src/mooutils/moodialogs.cpp:384 src/mooutils/moodialogs.cpp:439
+#: src/mooutils/moodialogs.cpp:384 src/mooutils/moodialogs.cpp:436
 #: src/mooutils/moofiledialog.cpp:280 src/mooutils/moofontsel.cpp:1309
 #: src/mooutils/moohistorymgr.cpp:1667 src/plugins/ui/moofileselector.ui:56
 #: src/plugins/ui/moofileselector.ui:136 src/plugins/ui/moofind.ui:141
-#: src/plugins/ui/moogrep.ui:196 src/plugins/moofileselector.cpp:1147
+#: src/plugins/ui/moogrep.ui:196 src/plugins/moofileselector.cpp:1144
 #: src/plugins/lsp/lsp-edits.cpp:368
 msgid "_Cancel"
 msgstr "_Zrušit"
@@ -583,31 +583,42 @@ msgstr "_Soubor"
 
 #. menu item label
 #: src/mooedit/medit.xml.h:4
+msgid "_Edit"
+msgstr "_Upravit"
+
+#. menu item label
+#: src/mooedit/medit.xml.h:6
 msgid "_Search"
 msgstr "_Hledat"
 
 #. menu item label
-#: src/mooedit/medit.xml.h:6
+#: src/mooedit/medit.xml.h:8
 msgid "_View"
 msgstr "_Zobrazit"
 
-#: src/mooedit/medit.xml.h:7
+#: src/mooedit/medit.xml.h:9
 msgid "Pa_nes"
 msgstr "_Panely"
 
 #. menu item label
-#: src/mooedit/medit.xml.h:9
+#: src/mooedit/medit.xml.h:11
 msgid "_Document"
 msgstr "_Dokument"
 
-#: src/mooedit/medit.xml.h:10
+#: src/mooedit/medit.xml.h:12
 msgid "_Tools"
 msgstr "_Nástroje"
 
 #. menu item label
-#: src/mooedit/medit.xml.h:12
+#: src/mooedit/medit.xml.h:14
 msgid "_Window"
 msgstr "_Okna"
+
+#. menu item label
+#: src/mooedit/medit.xml.h:16 src/mooutils/mooaccelprefs.cpp:881
+#: src/mooutils/moofiledialog.cpp:292
+msgid "_Help"
+msgstr "_Nápověda"
 
 #: src/mooedit/mooeditaction-factory.cpp:622
 msgid "_Insert Unicode Control Character"
@@ -847,13 +858,13 @@ msgid "Language|None"
 msgstr "Žádný"
 
 #. Column label on File Filters prefs page
-#: src/mooedit/mooeditprefspage.cpp:1001
+#: src/mooedit/mooeditprefspage.cpp:999
 msgctxt "filter-prefs-column"
 msgid "Filter"
 msgstr "Filtr"
 
 #. Column label on File Filters prefs page
-#: src/mooedit/mooeditprefspage.cpp:1003
+#: src/mooedit/mooeditprefspage.cpp:1001
 msgctxt "filter-prefs-column"
 msgid "Options"
 msgstr "Volby"
@@ -1504,7 +1515,7 @@ msgid "Path"
 msgstr "Cesta"
 
 #: src/moofileview/moofileview.cpp:1136 src/plugins/moofileselector.cpp:638
-#: src/plugins/moofileselector.cpp:639 src/plugins/moofileselector.cpp:1289
+#: src/plugins/moofileselector.cpp:639 src/plugins/moofileselector.cpp:1286
 #: src/plugins/moofileselector-prefs.cpp:70
 msgid "File Selector"
 msgstr "Výběr souborů"
@@ -1743,28 +1754,24 @@ msgstr "Globální"
 msgid "Configure Shortcuts"
 msgstr "Nastavit klávesové zkratky"
 
-#: src/mooutils/mooaccelprefs.cpp:881 src/mooutils/moofiledialog.cpp:292
-msgid "_Help"
-msgstr "_Nápověda"
-
-#: src/mooutils/moodialogs.cpp:429
+#: src/mooutils/moodialogs.cpp:426
 #, c-format
 msgid "Save changes to document \"%s\" before closing?"
 msgstr "Uložit změny v dokumentu \"%s\" před jeho uzavřením?"
 
-#: src/mooutils/moodialogs.cpp:430
+#: src/mooutils/moodialogs.cpp:427
 msgid "Save changes to the document before closing?"
 msgstr "Uložit změny v dokumentu před jeho uzavřením?"
 
-#: src/mooutils/moodialogs.cpp:435
+#: src/mooutils/moodialogs.cpp:432
 msgid "If you don't save, changes will be discarded"
 msgstr "Pokud jej neuložíte, změny budou ztraceny"
 
-#: src/mooutils/moodialogs.cpp:438
+#: src/mooutils/moodialogs.cpp:435
 msgid "_Discard"
 msgstr "Za_hodit"
 
-#: src/mooutils/moodialogs.cpp:440 src/mooutils/moofiledialog.cpp:366
+#: src/mooutils/moodialogs.cpp:437 src/mooutils/moofiledialog.cpp:366
 #: src/plugins/usertools/ui/moousertools.ui:212
 msgid "_Save"
 msgstr "_Uložit"
@@ -2055,7 +2062,7 @@ msgid "Insert Special Character"
 msgstr "Vložit speciální znak"
 
 #: src/mooutils/moofiledialog.cpp:355 src/mooutils/moohistorymgr.cpp:1668
-#: src/plugins/moofilelist.cpp:2018
+#: src/plugins/moofilelist.cpp:2015
 msgid "_Open"
 msgstr "_Otevřít"
 
@@ -2093,31 +2100,31 @@ msgstr "Webovou stránku medit nelze otevřít"
 msgid "Recent Files"
 msgstr "Nedávné soubory"
 
-#: src/mooutils/moopane.cpp:653
+#: src/mooutils/moopane.cpp:649
 msgid "Remove pane"
 msgstr "Odstranit panel"
 
-#: src/mooutils/moopane.cpp:663
+#: src/mooutils/moopane.cpp:659
 msgid "Hide pane"
 msgstr "Skrýt panel"
 
-#: src/mooutils/moopane.cpp:667
+#: src/mooutils/moopane.cpp:663
 msgid "Sticky"
 msgstr "Přišpendlit"
 
-#: src/mooutils/moopane.cpp:671
+#: src/mooutils/moopane.cpp:667
 msgid "Detach pane"
 msgstr "Odpojit panel"
 
-#: src/mooutils/moopane.cpp:684
+#: src/mooutils/moopane.cpp:680
 msgid "Attach"
 msgstr "Ukotvit"
 
-#: src/mooutils/moopane.cpp:688
+#: src/mooutils/moopane.cpp:684
 msgid "Keep on top"
 msgstr "Stále navrchu"
 
-#: src/mooutils/moostock.cpp:34 src/plugins/moofileselector.cpp:1133
+#: src/mooutils/moostock.cpp:34 src/plugins/moofileselector.cpp:1130
 msgid "Save Copy"
 msgstr "Uložit kopii"
 
@@ -2149,7 +2156,7 @@ msgid "Could not remove %s: %s"
 msgstr "Nelze odstranit %s: %s"
 
 #. Translators: remove the part before and including |
-#: src/mooutils/mooutils-misc.cpp:1731
+#: src/mooutils/mooutils-misc.cpp:1706
 #, c-format
 msgid "console message|in file %s, line %d, function %s: %s"
 msgstr "v souboru %s, řádek %d, funkce %s: %s"
@@ -2157,7 +2164,7 @@ msgstr "v souboru %s, řádek %d, funkce %s: %s"
 #. "Unknown error" may be displayed if there is a bug in the program
 #. and proper error message has not been set. It doesn't provide any
 #. useful information obviously
-#: src/mooutils/mooutils-misc.cpp:1938
+#: src/mooutils/mooutils-misc.cpp:1913
 msgid "Unknown error"
 msgstr "Neznámá chyba"
 
@@ -2292,16 +2299,16 @@ msgstr "Najít v souborech"
 msgid "Fi_les"
 msgstr "S_oubory"
 
-#: src/plugins/moofilelist.cpp:2030
+#: src/plugins/moofilelist.cpp:2027
 msgid "_Remove"
 msgstr "O_dstranit"
 
-#: src/plugins/moofilelist.cpp:2331 src/plugins/moofilelist.cpp:2332
-#: src/plugins/moofilelist.cpp:2390
+#: src/plugins/moofilelist.cpp:2328 src/plugins/moofilelist.cpp:2329
+#: src/plugins/moofilelist.cpp:2387
 msgid "File List"
 msgstr "Seznam souborů"
 
-#: src/plugins/moofilelist.cpp:2390
+#: src/plugins/moofilelist.cpp:2387
 msgid "List of files"
 msgstr "Seznam souborů"
 
@@ -2350,27 +2357,28 @@ msgstr "Uložit kopii jako"
 msgid "Rename To"
 msgstr "Přejmenovat na"
 
-#: src/plugins/moofileselector.cpp:1115
+#. no freedesktop icon for move
+#: src/plugins/moofileselector.cpp:1112
 msgid "Move Here"
 msgstr "Přesunout sem"
 
-#: src/plugins/moofileselector.cpp:1116
+#: src/plugins/moofileselector.cpp:1113
 msgid "Move/Rename..."
 msgstr "Přesunout/Přejmenovat..."
 
-#: src/plugins/moofileselector.cpp:1124
+#: src/plugins/moofileselector.cpp:1121
 msgid "Save Here"
 msgstr "Uložit zde"
 
-#: src/plugins/moofileselector.cpp:1125
+#: src/plugins/moofileselector.cpp:1122
 msgid "Save As..."
 msgstr "Uložit jako..."
 
-#: src/plugins/moofileselector.cpp:1134
+#: src/plugins/moofileselector.cpp:1131
 msgid "Save Copy As..."
 msgstr "Uložit kopii jako..."
 
-#: src/plugins/moofileselector.cpp:1290
+#: src/plugins/moofileselector.cpp:1287
 msgid "File selector pane for editor window"
 msgstr "Panel výběru souborů pro okno editoru"
 
@@ -2452,22 +2460,22 @@ msgstr "Zde nejsou žádné akce kódu"
 msgid "The server has nothing to offer at this place."
 msgstr "Server nemá na tomto místě co nabídnout."
 
-#: src/plugins/lsp/lsp-diagnostics.cpp:82
+#: src/plugins/lsp/lsp-diagnostics.cpp:79
 msgctxt "diagnostic severity"
 msgid "warning"
 msgstr "varování"
 
-#: src/plugins/lsp/lsp-diagnostics.cpp:84
+#: src/plugins/lsp/lsp-diagnostics.cpp:81
 msgctxt "diagnostic severity"
 msgid "information"
 msgstr "informace"
 
-#: src/plugins/lsp/lsp-diagnostics.cpp:86
+#: src/plugins/lsp/lsp-diagnostics.cpp:83
 msgctxt "diagnostic severity"
 msgid "hint"
 msgstr "nápověda"
 
-#: src/plugins/lsp/lsp-diagnostics.cpp:89
+#: src/plugins/lsp/lsp-diagnostics.cpp:86
 msgctxt "diagnostic severity"
 msgid "error"
 msgstr "chyba"

@@ -52,7 +52,7 @@ struct _MooPrefsPageClass
 GType           moo_prefs_page_get_type     (void) G_GNUC_CONST;
 
 GtkWidget      *moo_prefs_page_new          (const char     *label,
-                                             const char     *icon_stock_id);
+                                             const char     *icon_name);
 
 typedef void (*MooPrefsPageInitUi)          (MooPrefsPage   *page);
 typedef void (*MooPrefsPageInit)            (MooPrefsPage   *page);

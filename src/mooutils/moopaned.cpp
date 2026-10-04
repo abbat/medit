@@ -3360,14 +3360,14 @@ moo_paned_set_handle_cursor_type (MooPaned     *paned,
  * @window_title: (type const-utf8) (allow-none) (default NULL):
  */
 MooPaneLabel *
-moo_pane_label_new (const char     *icon_stock_id,
+moo_pane_label_new (const char     *icon_name,
                     GdkPixbuf      *pixbuf,
                     const char     *text,
                     const char     *window_title)
 {
     MooPaneLabel *label = g_new0 (MooPaneLabel, 1);
 
-    label->icon_stock_id = g_strdup (icon_stock_id);
+    label->icon_name = g_strdup (icon_name);
     label->label = g_strdup (text);
     label->window_title = g_strdup (window_title);
 
@@ -3387,7 +3387,7 @@ moo_pane_label_copy (MooPaneLabel   *label)
 
     copy = g_new0 (MooPaneLabel, 1);
 
-    copy->icon_stock_id = g_strdup (label->icon_stock_id);
+    copy->icon_name = g_strdup (label->icon_name);
     copy->label = g_strdup (label->label);
     copy->window_title = g_strdup (label->window_title);
 
@@ -3403,7 +3403,7 @@ moo_pane_label_free (MooPaneLabel *label)
 {
     if (label)
     {
-        g_free (label->icon_stock_id);
+        g_free (label->icon_name);
         g_free (label->label);
         g_free (label->window_title);
 

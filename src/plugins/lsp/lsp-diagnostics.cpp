@@ -27,19 +27,16 @@
 typedef struct {
     int          severity;
     const char  *tag_name;
-    const char  *stock_id;
+    const char  *icon_name;
     const char  *color;     /* the underline colour, gtk3 only */
 } LspSeverityInfo;
 
-/* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static const LspSeverityInfo severity_info[] = {
-    { LSP_SEVERITY_ERROR,       "moo-lsp-error",       GTK_STOCK_DIALOG_ERROR,    "#c01c28" },
-    { LSP_SEVERITY_WARNING,     "moo-lsp-warning",     GTK_STOCK_DIALOG_WARNING,  "#e5a50a" },
-    { LSP_SEVERITY_INFORMATION, "moo-lsp-information", GTK_STOCK_DIALOG_INFO,     "#1c71d8" },
-    { LSP_SEVERITY_HINT,        "moo-lsp-hint",        GTK_STOCK_DIALOG_INFO,     "#77767b" }
+    { LSP_SEVERITY_ERROR,       "moo-lsp-error",       "dialog-error",       "#c01c28" },
+    { LSP_SEVERITY_WARNING,     "moo-lsp-warning",     "dialog-warning",     "#e5a50a" },
+    { LSP_SEVERITY_INFORMATION, "moo-lsp-information", "dialog-information", "#1c71d8" },
+    { LSP_SEVERITY_HINT,        "moo-lsp-hint",        "dialog-information", "#77767b" }
 };
-G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 static const LspSeverityInfo *
@@ -350,7 +347,7 @@ add_marks (MooEdit *doc,
                                                          "visible", TRUE,
                                                          (const char*) NULL));
 
-        moo_line_mark_set_stock_id (mark, info->stock_id);
+        moo_line_mark_set_icon_name (mark, info->icon_name);
         moo_text_buffer_add_line_mark (buffer, mark, GPOINTER_TO_INT (key));
 
         marks = g_slist_prepend (marks, mark);
