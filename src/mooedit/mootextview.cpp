@@ -2167,36 +2167,31 @@ invalidate_gcs (MooTextView *view)
     for (i = 0; i < MOO_TEXT_VIEW_N_COLORS; ++i)
     {
         if (view->priv->gcs[i])
-            gdk_color_free(view->priv->gcs[i]);
+            gdk_rgba_free (view->priv->gcs[i]);
         view->priv->gcs[i] = NULL;
     }
 }
 
 static void
 get_view_background_color (GtkWidget *widget,
-                           GdkColor  *color)
+                           GdkRGBA   *color)
 {
     GtkStyleContext *context = gtk_widget_get_style_context (widget);
-    GdkRGBA rgba;
 
     /* the view class is what makes the theme hand back the text background;
        a bare widget context returns a fully transparent colour */
     gtk_style_context_save (context);
     gtk_style_context_add_class (context, GTK_STYLE_CLASS_VIEW);
-    gtk_style_context_get_background_color (context, GTK_STATE_FLAG_NORMAL, &rgba);
+    gtk_style_context_get_background_color (context, GTK_STATE_FLAG_NORMAL, color);
     gtk_style_context_restore (context);
-
-    color->pixel = 0;
-    color->red = rgba.red * 65535;
-    color->green = rgba.green * 65535;
-    color->blue = rgba.blue * 65535;
+    color->alpha = 1;
 }
 
 static void
 update_gc (MooTextView     *view,
            MooTextViewColor color_num)
 {
-    GdkColor color;
+    GdkRGBA color;
     GtkWidget *widget = GTK_WIDGET (view);
     GdkWindow *window;
 
@@ -2209,7 +2204,7 @@ update_gc (MooTextView     *view,
     {
         if (view->priv->gcs[color_num])
         {
-            gdk_color_free(view->priv->gcs[color_num]);
+            gdk_rgba_free (view->priv->gcs[color_num]);
             view->priv->gcs[color_num] = NULL;
         }
 
@@ -2225,7 +2220,7 @@ update_gc (MooTextView     *view,
 
     if (view->priv->colors[color_num])
     {
-        if (!gdk_color_parse (view->priv->colors[color_num], &color))
+        if (!gdk_rgba_parse (&color, view->priv->colors[color_num]))
         {
             g_warning ("could not parse color %s",
                        view->priv->colors[color_num]);
@@ -2238,7 +2233,7 @@ update_gc (MooTextView     *view,
     }
 
     if (!view->priv->gcs[color_num])
-        view->priv->gcs[color_num] = gdk_color_copy(&color);
+        view->priv->gcs[color_num] = gdk_rgba_copy (&color);
 }
 
 static void
@@ -2264,7 +2259,7 @@ moo_text_view_draw_right_margin (GtkTextView    *text_view,
     if (gtk_scrollable_get_hadjustment (GTK_SCROLLABLE (text_view)))
         x -= gtk_adjustment_get_value (gtk_scrollable_get_hadjustment (GTK_SCROLLABLE (text_view)));
 
-    gdk_cairo_set_source_color(cr, view->priv->gcs[MOO_TEXT_VIEW_COLOR_RIGHT_MARGIN]);
+    gdk_cairo_set_source_rgba (cr, view->priv->gcs[MOO_TEXT_VIEW_COLOR_RIGHT_MARGIN]);
     cairo_rectangle(cr, x, 0, 1, y);
     cairo_fill(cr);
 }
@@ -2330,7 +2325,7 @@ moo_text_view_draw_current_line (GtkTextView    *text_view,
         margin = gtk_text_view_get_left_margin (text_view);
 
     cairo_set_source_rgb(cr, 0.1, 0.1, 0.1);
-    gdk_cairo_set_source_color(cr, MOO_TEXT_VIEW(text_view)->priv->gcs[MOO_TEXT_VIEW_COLOR_CURRENT_LINE]);
+    gdk_cairo_set_source_rgba (cr, MOO_TEXT_VIEW (text_view)->priv->gcs[MOO_TEXT_VIEW_COLOR_CURRENT_LINE]);
     cairo_rectangle(cr, redraw_rect.x + MAX(0, margin - 1),
                         win_y,
                         redraw_rect.width,
@@ -3300,7 +3295,7 @@ draw_marks_background (MooTextView    *view,
         if (TRUE)
         {
             MooLineMark *mark;
-            const GdkColor *color = NULL;
+            const GdkRGBA *color = NULL;
             GSList *marks = moo_text_buffer_get_line_marks_at_line (get_moo_buffer (view), line);
 
             if (marks)
@@ -3321,7 +3316,7 @@ draw_marks_background (MooTextView    *view,
                 /* XXX compose colors */
                 if (color)
                 {
-                    gdk_cairo_set_source_color (cr, color);
+                    gdk_cairo_set_source_rgba (cr, color);
                     cairo_rectangle(cr, gtk_text_view_get_left_margin(text_view),
                                         y,
                                         window_width,

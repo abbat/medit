@@ -1414,7 +1414,7 @@ static void
 test_value_to_string (void)
 {
     GValue src = G_VALUE_INIT;
-    GdkColor color;
+    GdkRGBA color;
 
     g_value_init (&src, G_TYPE_BOOLEAN);
     g_value_set_boolean (&src, TRUE);
@@ -1433,10 +1433,10 @@ test_value_to_string (void)
     check_to_string (&src, "9");
     g_value_unset (&src);
 
-    /* A colour is written as the eight bit "#rrggbb" gdk_color_parse() reads,
-       so the low byte of each sixteen bit channel is dropped. */
-    g_assert_true (gdk_color_parse ("#123456", &color));
-    g_value_init (&src, GDK_TYPE_COLOR);
+    /* A colour is written as the eight bit "#rrggbb" gdk_rgba_parse() reads,
+       so the channels are rounded to eight bits. */
+    g_assert_true (gdk_rgba_parse (&color, "#123456"));
+    g_value_init (&src, GDK_TYPE_RGBA);
     g_value_set_boxed (&src, &color);
     check_to_string (&src, "#123456");
     g_value_set_boxed (&src, NULL);
@@ -1465,7 +1465,7 @@ static void
 test_value_from_string (void)
 {
     GValue dest = G_VALUE_INIT;
-    const GdkColor *color;
+    const GdkRGBA *color;
 
     /* An absent or empty string is not a parse failure for any type: it is
        what a key that was never written reads as, and every type answers it
@@ -1507,13 +1507,13 @@ test_value_from_string (void)
     g_assert_false (convert_from_string ("half", &dest));
     g_value_unset (&dest);
 
-    g_value_init (&dest, GDK_TYPE_COLOR);
+    g_value_init (&dest, GDK_TYPE_RGBA);
     g_assert_true (convert_from_string ("#123456", &dest));
-    color = (const GdkColor*) g_value_get_boxed (&dest);
+    color = (const GdkRGBA*) g_value_get_boxed (&dest);
     g_assert_nonnull (color);
-    g_assert_cmpuint (color->red >> 8, ==, 0x12);
-    g_assert_cmpuint (color->green >> 8, ==, 0x34);
-    g_assert_cmpuint (color->blue >> 8, ==, 0x56);
+    g_assert_cmpuint ((guint) (color->red * 255 + .5), ==, 0x12);
+    g_assert_cmpuint ((guint) (color->green * 255 + .5), ==, 0x34);
+    g_assert_cmpuint ((guint) (color->blue * 255 + .5), ==, 0x56);
     g_assert_true (convert_from_string ("", &dest));
     g_assert_null (g_value_get_boxed (&dest));
     g_value_unset (&dest);

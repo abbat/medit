@@ -112,7 +112,7 @@ struct MooTextViewPrivate {
     guint tab_width;
     gboolean color_settings[MOO_TEXT_VIEW_N_COLORS];
     char *colors[MOO_TEXT_VIEW_N_COLORS];
-    GdkColor *gcs[MOO_TEXT_VIEW_N_COLORS];
+    GdkRGBA *gcs[MOO_TEXT_VIEW_N_COLORS];
     guint right_margin_offset;
     int right_margin_pixel_offset;
     MooDrawWsFlags draw_whitespace;

@@ -65,8 +65,8 @@ struct MooLineMarkClass
 GType       moo_line_mark_get_type              (void) G_GNUC_CONST;
 GType       moo_fold_get_type                   (void) G_GNUC_CONST;
 
-void        moo_line_mark_set_background_gdk    (MooLineMark    *mark,
-                                                 const GdkColor *color);
+void        moo_line_mark_set_background_rgba   (MooLineMark    *mark,
+                                                 const GdkRGBA  *color);
 void        moo_line_mark_set_background        (MooLineMark    *mark,
                                                  const char     *color);
 
@@ -84,7 +84,7 @@ void        moo_line_mark_set_markup            (MooLineMark    *mark,
                                                  const char     *markup);
 GdkPixbuf  *moo_line_mark_get_pixbuf            (MooLineMark    *mark);
 const char *moo_line_mark_get_markup            (MooLineMark    *mark);
-const GdkColor *moo_line_mark_get_background    (MooLineMark    *mark);
+const GdkRGBA  *moo_line_mark_get_background    (MooLineMark    *mark);
 
 
 G_END_DECLS

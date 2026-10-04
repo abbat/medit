@@ -24,7 +24,7 @@
 
 
 struct MooLineMarkPrivate {
-    GdkColor background;
+    GdkRGBA background;
 
     char *stock_id;
     GdkPixbuf *pixbuf;
@@ -76,7 +76,7 @@ static guint signals[LAST_SIGNAL];
 enum {
     PROP_0,
     PROP_BACKGROUND,
-    PROP_BACKGROUND_GDK,
+    PROP_BACKGROUND_RGBA,
     PROP_BACKGROUND_SET,
     PROP_PIXBUF,
     PROP_STOCK_ID,
@@ -110,11 +110,11 @@ moo_line_mark_class_init (MooLineMarkClass *klass)
                                              G_PARAM_WRITABLE));
 
     g_object_class_install_property (gobject_class,
-                                     PROP_BACKGROUND_GDK,
-                                     g_param_spec_boxed ("background-gdk",
-                                             "background-gdk",
-                                             "background-gdk",
-                                             GDK_TYPE_COLOR,
+                                     PROP_BACKGROUND_RGBA,
+                                     g_param_spec_boxed ("background-rgba",
+                                             "background-rgba",
+                                             "background-rgba",
+                                             GDK_TYPE_RGBA,
                                              (GParamFlags) G_PARAM_READWRITE));
 
     g_object_class_install_property (gobject_class,
@@ -181,7 +181,6 @@ moo_line_mark_init (MooLineMark *mark)
 {
     mark->priv = g_new0 (MooLineMarkPrivate, 1);
     mark->priv->line_no = -1;
-    gdk_color_parse ("0xFFF", &mark->priv->background);
 }
 
 
@@ -211,9 +210,9 @@ moo_line_mark_set_property (GObject        *object,
 
     switch (prop_id)
     {
-        case PROP_BACKGROUND_GDK:
-            moo_line_mark_set_background_gdk (mark,
-                                              (const GdkColor *) g_value_get_boxed (value));
+        case PROP_BACKGROUND_RGBA:
+            moo_line_mark_set_background_rgba (mark,
+                                               (const GdkRGBA  *) g_value_get_boxed (value));
             break;
 
         case PROP_BACKGROUND:
@@ -260,7 +259,7 @@ moo_line_mark_get_property (GObject        *object,
 
     switch (prop_id)
     {
-        case PROP_BACKGROUND_GDK:
+        case PROP_BACKGROUND_RGBA:
             g_value_set_boxed (value, &mark->priv->background);
             break;
 
@@ -296,8 +295,8 @@ moo_line_mark_get_property (GObject        *object,
 
 
 void
-moo_line_mark_set_background_gdk (MooLineMark    *mark,
-                                  const GdkColor *color)
+moo_line_mark_set_background_rgba (MooLineMark    *mark,
+                                   const GdkRGBA  *color)
 {
     gboolean changed = FALSE, notify_set = FALSE, notify_bg = FALSE;
 
@@ -337,7 +336,7 @@ moo_line_mark_set_background_gdk (MooLineMark    *mark,
         if (notify_bg)
         {
             g_object_notify (G_OBJECT (mark), "background");
-            g_object_notify (G_OBJECT (mark), "background-gdk");
+            g_object_notify (G_OBJECT (mark), "background-rgba");
         }
 
         g_object_thaw_notify (G_OBJECT (mark));
@@ -352,20 +351,20 @@ void
 moo_line_mark_set_background (MooLineMark    *mark,
                               const char     *color)
 {
-    GdkColor gdk_color;
+    GdkRGBA rgba;
 
     g_return_if_fail (MOO_IS_LINE_MARK (mark));
 
     if (color)
     {
-        if (gdk_color_parse (color, &gdk_color))
-            moo_line_mark_set_background_gdk (mark, &gdk_color);
+        if (gdk_rgba_parse (&rgba, color))
+            moo_line_mark_set_background_rgba (mark, &rgba);
         else
             g_warning ("could not parse color '%s'", color);
     }
     else
     {
-        moo_line_mark_set_background_gdk (mark, NULL);
+        moo_line_mark_set_background_rgba (mark, NULL);
     }
 }
 
@@ -626,7 +625,7 @@ _moo_line_mark_unrealize (MooLineMark *mark, G_GNUC_UNUSED gpointer data)
 }
 
 
-const GdkColor *
+const GdkRGBA  *
 moo_line_mark_get_background(MooLineMark *mark)
 {
     g_return_val_if_fail (MOO_IS_LINE_MARK (mark), NULL);

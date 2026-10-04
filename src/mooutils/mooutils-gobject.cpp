@@ -324,10 +324,10 @@ value_to_string (const GValue *src,
         return TRUE;
     }
 
-    if (src_type == GDK_TYPE_COLOR)
+    if (src_type == GDK_TYPE_RGBA)
     {
         char string[14];
-        const GdkColor *color = (const GdkColor*) g_value_get_boxed (src);
+        const GdkRGBA *color = (const GdkRGBA*) g_value_get_boxed (src);
 
         if (!color)
         {
@@ -336,13 +336,12 @@ value_to_string (const GValue *src,
         }
         else
         {
-            /* GdkColor channels are 16 bit and the written form is the 8 bit
-               "#rrggbb" that gdk_color_parse() reads back, so the low byte of
-               each channel is dropped on the way out. */
+            /* The written form is the 8 bit "#rrggbb" that gdk_rgba_parse()
+               reads back; the channels are rounded to it on the way out. */
             g_snprintf (string, 8, "#%02x%02x%02x",
-                        color->red >> 8,
-                        color->green >> 8,
-                        color->blue >> 8);
+                        (int) (CLAMP (color->red, 0., 1.) * 255 + .5),
+                        (int) (CLAMP (color->green, 0., 1.) * 255 + .5),
+                        (int) (CLAMP (color->blue, 0., 1.) * 255 + .5));
             g_value_set_string (dest, string);
             return TRUE;
         }
@@ -459,9 +458,9 @@ value_from_string (const GValue *src,
         return TRUE;
     }
 
-    if (dest_type == GDK_TYPE_COLOR)
+    if (dest_type == GDK_TYPE_RGBA)
     {
-        GdkColor color;
+        GdkRGBA color;
 
         if (!string || !string[0])
         {
@@ -469,7 +468,7 @@ value_from_string (const GValue *src,
             return TRUE;
         }
 
-        g_return_val_if_fail (gdk_color_parse (string, &color),
+        g_return_val_if_fail (gdk_rgba_parse (&color, string),
                               FALSE);
 
         g_value_set_boxed (dest, &color);
@@ -644,19 +643,17 @@ _moo_value_equal (const GValue *a,
             return !strcmp (sa, sb);
     }
 
-    if (type == GDK_TYPE_COLOR)
+    if (type == GDK_TYPE_RGBA)
     {
-        const GdkColor *ca, *cb;
+        const GdkRGBA *ca, *cb;
 
-        ca = (const GdkColor*) g_value_get_boxed (a);
-        cb = (const GdkColor*) g_value_get_boxed (b);
+        ca = (const GdkRGBA*) g_value_get_boxed (a);
+        cb = (const GdkRGBA*) g_value_get_boxed (b);
 
         if (!ca || !cb)
             return ca == cb;
         else
-            return ca->red == cb->red &&
-                    ca->green == cb->green &&
-                    ca->blue == cb->blue;
+            return gdk_rgba_equal (ca, cb);
     }
 
     if (G_TYPE_IS_ENUM (type))
@@ -677,7 +674,7 @@ _moo_value_type_supported (GType type)
             type == G_TYPE_UINT ||
             type == G_TYPE_DOUBLE ||
             type == G_TYPE_STRING ||
-            type == GDK_TYPE_COLOR ||
+            type == GDK_TYPE_RGBA ||
             G_TYPE_IS_ENUM (type) ||
             G_TYPE_IS_FLAGS (type);
 }

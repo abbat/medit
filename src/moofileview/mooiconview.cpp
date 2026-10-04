@@ -1192,12 +1192,10 @@ moo_icon_view_draw (GtkWidget *widget,
     if (view->priv->drag_select)
     {
         GdkRectangle rect;
-        GdkColor *color;
+        GdkRGBA color;
         double dash_len = 1.;
 
         GtkStyleContext *context = gtk_widget_get_style_context (widget);
-        GdkRGBA color_rgba;
-        GdkColor color_gdk;
 
         /* draw on the context we were handed: it is already set up for this
            widget's window, unlike a new one made from some other window */
@@ -1207,27 +1205,19 @@ moo_icon_view_draw (GtkWidget *widget,
            a bare widget context gives a fully transparent one */
         gtk_style_context_save (context);
         gtk_style_context_add_class (context, GTK_STYLE_CLASS_VIEW);
-        gtk_style_context_get_background_color (context, GTK_STATE_FLAG_SELECTED, &color_rgba);
+        gtk_style_context_get_background_color (context, GTK_STATE_FLAG_SELECTED, &color);
         gtk_style_context_restore (context);
-        color_gdk.pixel = 0;
-        color_gdk.red = color_rgba.red * 65535;
-        color_gdk.green = color_rgba.green * 65535;
-        color_gdk.blue = color_rgba.blue * 65535;
-        color = &color_gdk;
+        color.alpha = 1;
 
         get_drag_select_rect (view, &rect);
 
-        cairo_set_source_rgba (cr,
-                               color->red / 65535.,
-                               color->green / 65535.,
-                               color->blue / 65535.,
-                               1 / 3.);
+        cairo_set_source_rgba (cr, color.red, color.green, color.blue, 1 / 3.);
         gdk_cairo_rectangle (cr, &rect);
         cairo_fill (cr);
 
         cairo_set_dash (cr, &dash_len, 1, .5);
         cairo_set_line_width (cr, 1.);
-        gdk_cairo_set_source_color (cr, color);
+        gdk_cairo_set_source_rgba (cr, &color);
         cairo_rectangle (cr,
                          rect.x + .5,
                          rect.y + .5,

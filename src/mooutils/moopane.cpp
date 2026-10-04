@@ -1679,7 +1679,6 @@ get_pixbuf (MooIconWidget *icon)
             GdkPixbuf *pixbuf;
             guchar *pixels, *p;
             int width, height, rowstride, n_channels;
-            GdkColor *color;
             int x, y;
 
             pixbuf = gdk_pixbuf_new_from_inline (-1, icon->data, TRUE, NULL);
@@ -1700,12 +1699,10 @@ get_pixbuf (MooIconWidget *icon)
                to prelight, active and insensitive. */
             GtkStyleContext *context = gtk_widget_get_style_context (widget);
             GdkRGBA rgba_color;
-            GdkColor color_struct;
-            color = &color_struct;
             gtk_style_context_get_color (context, state_flags (state), &rgba_color);
-            color->red = rgba_color.red * 65535;
-            color->green = rgba_color.green * 65535;
-            color->blue = rgba_color.blue * 65535;
+            const guint16 red = rgba_color.red * 65535;
+            const guint16 green = rgba_color.green * 65535;
+            const guint16 blue = rgba_color.blue * 65535;
 
             for (x = 0; x < width; ++x)
             {
@@ -1715,9 +1712,9 @@ get_pixbuf (MooIconWidget *icon)
 
                     if (p[3] != 0)
                     {
-                        p[0] = color->red >> 8;
-                        p[1] = color->green >> 8;
-                        p[2] = color->blue >> 8;
+                        p[0] = red >> 8;
+                        p[1] = green >> 8;
+                        p[2] = blue >> 8;
                     }
                 }
             }
