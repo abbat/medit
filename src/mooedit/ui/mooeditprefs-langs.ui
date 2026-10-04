@@ -4,12 +4,14 @@
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkWindow" id="window5">
     <child>
-      <object class="GtkVBox" id="PrefsLangs">
+      <object class="GtkBox" id="PrefsLangs">
+        <property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="border_width">12</property>
         <property name="spacing">18</property>
         <child>
-          <object class="GtkVBox" id="vbox15">
+          <object class="GtkBox" id="vbox15">
+            <property name="orientation">vertical</property>
             <property name="visible">True</property>
             <property name="spacing">6</property>
             <child>
@@ -30,7 +32,8 @@
                 <property name="visible">True</property>
                 <property name="left_padding">12</property>
                 <child>
-                  <object class="GtkVBox" id="vbox16">
+                  <object class="GtkBox" id="vbox16">
+                    <property name="orientation">vertical</property>
                     <property name="visible">True</property>
                     <property name="spacing">6</property>
                     <child>

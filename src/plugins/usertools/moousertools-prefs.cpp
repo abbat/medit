@@ -320,7 +320,7 @@ update_widgets (MooPrefsPage *page,
         _moo_command_display_set (helper, NULL, NULL);
     }
 
-    gtk_widget_set_sensitive (GTK_WIDGET (GTK_VBOX (moo_builder_get (builder, "tool_vbox"))), path != NULL);
+    gtk_widget_set_sensitive (GTK_WIDGET (moo_builder_get (builder, "tool_vbox")), path != NULL);
 }
 
 

@@ -11,7 +11,8 @@
   <object class="GtkWindow" id="window1">
     <property name="title">window1</property>
     <child>
-      <object class="GtkVBox" id="PrefsPage">
+      <object class="GtkBox" id="PrefsPage">
+        <property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="border_width">12</property>
         <property name="spacing">6</property>
@@ -77,7 +78,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkHBox" id="delay_box">
+          <object class="GtkBox" id="delay_box">
             <property name="visible">True</property>
             <property name="spacing">6</property>
             <child>
@@ -132,7 +133,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkHBox" id="button_box">
+          <object class="GtkBox" id="button_box">
             <property name="visible">True</property>
             <property name="spacing">6</property>
             <child>

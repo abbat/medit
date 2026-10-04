@@ -3,10 +3,11 @@
   <object class="GtkWindow" id="window1">
     <property name="title">window1</property>
     <child>
-      <object class="GtkVBox" id="vbox1">
+      <object class="GtkBox" id="vbox1">
+        <property name="orientation">vertical</property>
         <property name="visible">True</property>
         <child>
-          <object class="GtkHBox" id="hbox1">
+          <object class="GtkBox" id="hbox1">
             <property name="visible">True</property>
             <child>
               <placeholder/>
@@ -30,7 +31,7 @@
                   <object class="GtkAlignment" id="alignment1">
                     <property name="visible">True</property>
                     <child>
-                      <object class="GtkHBox" id="hbox">
+                      <object class="GtkBox" id="hbox">
                         <property name="visible">True</property>
                         <child>
                           <object class="MooEntry" id="entry">
@@ -91,7 +92,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkHBox" id="hbox3">
+          <object class="GtkBox" id="hbox3">
             <property name="visible">True</property>
             <child>
               <placeholder/>

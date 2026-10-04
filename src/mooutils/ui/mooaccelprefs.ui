@@ -2,12 +2,13 @@
 <interface>
   <object class="GtkWindow" id="window1">
     <child>
-      <object class="GtkVBox" id="AccelPrefsPage">
+      <object class="GtkBox" id="AccelPrefsPage">
+        <property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="border_width">3</property>
         <property name="spacing">3</property>
         <child>
-          <object class="GtkHBox" id="hbox9">
+          <object class="GtkBox" id="hbox9">
             <property name="visible">True</property>
             <property name="spacing">3</property>
             <child>
@@ -65,10 +66,11 @@
                 <property name="left_padding">3</property>
                 <property name="right_padding">3</property>
                 <child>
-                  <object class="GtkVBox" id="vbox11">
+                  <object class="GtkBox" id="vbox11">
+                    <property name="orientation">vertical</property>
                     <property name="visible">True</property>
                     <child>
-                      <object class="GtkHBox" id="hbox10">
+                      <object class="GtkBox" id="hbox10">
                         <property name="visible">True</property>
                         <child>
                           <object class="GtkRadioButton" id="shortcut_none">
@@ -127,7 +129,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkHBox" id="hbox11">
+                      <object class="GtkBox" id="hbox11">
                         <property name="visible">True</property>
                         <child>
                           <object class="GtkLabel" id="label66">

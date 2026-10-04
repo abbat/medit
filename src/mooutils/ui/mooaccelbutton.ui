@@ -6,7 +6,8 @@
     <property name="window_position">GTK_WIN_POS_CENTER_ON_PARENT</property>
     <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
     <child internal-child="vbox">
-      <object class="GtkVBox" id="dialog-vbox1">
+      <object class="GtkBox" id="dialog-vbox1">
+        <property name="orientation">vertical</property>
         <property name="visible">True</property>
         <child>
           <object class="GtkEventBox" id="eventbox">
@@ -45,7 +46,7 @@ New accelerator...
           </packing>
         </child>
         <child internal-child="action_area">
-          <object class="GtkHButtonBox" id="dialog-action_area1">
+          <object class="GtkButtonBox" id="dialog-action_area1">
             <property name="visible">True</property>
             <property name="layout_style">GTK_BUTTONBOX_END</property>
             <child>
@@ -58,7 +59,7 @@ New accelerator...
                     <property name="xscale">0</property>
                     <property name="yscale">0</property>
                     <child>
-                      <object class="GtkHBox" id="hbox11">
+                      <object class="GtkBox" id="hbox11">
                         <property name="visible">True</property>
                         <property name="spacing">2</property>
                         <child>
@@ -99,7 +100,7 @@ New accelerator...
                     <property name="xscale">0</property>
                     <property name="yscale">0</property>
                     <child>
-                      <object class="GtkHBox" id="hbox12">
+                      <object class="GtkBox" id="hbox12">
                         <property name="visible">True</property>
                         <property name="spacing">2</property>
                         <child>

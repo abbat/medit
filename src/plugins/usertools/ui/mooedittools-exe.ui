@@ -3,7 +3,8 @@
   <object class="GtkWindow" id="window5">
     <property name="title">window2</property>
     <child>
-      <object class="GtkVBox" id="ExePage">
+      <object class="GtkBox" id="ExePage">
+        <property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="spacing">6</property>
         <child>

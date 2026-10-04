@@ -8,10 +8,12 @@
     <property name="destroy_with_parent">True</property>
     <property name="type_hint">dialog</property>
     <child internal-child="vbox">
-      <object class="GtkVBox" id="dialog-vbox1">
+      <object class="GtkBox" id="dialog-vbox1">
+        <property name="orientation">vertical</property>
         <property name="visible">True</property>
         <child>
-          <object class="GtkVBox" id="MooFindBox">
+          <object class="GtkBox" id="MooFindBox">
+            <property name="orientation">vertical</property>
             <property name="visible">True</property>
             <property name="border_width">3</property>
             <property name="spacing">3</property>
@@ -27,7 +29,8 @@
                     <property name="left_padding">6</property>
                     <property name="right_padding">6</property>
                     <child>
-                      <object class="GtkVBox" id="vbox2">
+                      <object class="GtkBox" id="vbox2">
+                        <property name="orientation">vertical</property>
                         <property name="visible">True</property>
                         <property name="spacing">3</property>
                         <child>
@@ -55,7 +58,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkHBox" id="hbox1">
+                          <object class="GtkBox" id="hbox1">
                             <property name="visible">True</property>
                             <child>
                               <object class="GtkCheckButton" id="regex">
@@ -105,7 +108,8 @@
                     <property name="left_padding">6</property>
                     <property name="right_padding">6</property>
                     <child>
-                      <object class="GtkVBox" id="vbox3">
+                      <object class="GtkBox" id="vbox3">
+                        <property name="orientation">vertical</property>
                         <property name="visible">True</property>
                         <property name="spacing">3</property>
                         <child>
@@ -133,7 +137,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkHBox" id="hbox2">
+                          <object class="GtkBox" id="hbox2">
                             <property name="visible">True</property>
                             <child>
                               <object class="GtkCheckButton" id="repl_literal">
@@ -295,7 +299,7 @@
           </packing>
         </child>
         <child internal-child="action_area">
-          <object class="GtkHButtonBox" id="dialog-action_area1">
+          <object class="GtkButtonBox" id="dialog-action_area1">
             <property name="visible">True</property>
             <property name="layout_style">end</property>
             <child>

@@ -20,12 +20,14 @@
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkWindow" id="window1">
     <child>
-      <object class="GtkVBox" id="PrefsGeneral">
+      <object class="GtkBox" id="PrefsGeneral">
+        <property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="border_width">12</property>
         <property name="spacing">18</property>
         <child>
-          <object class="GtkVBox" id="vbox21">
+          <object class="GtkBox" id="vbox21">
+            <property name="orientation">vertical</property>
             <property name="visible">True</property>
             <property name="spacing">6</property>
             <child>
@@ -46,7 +48,8 @@
                 <property name="visible">True</property>
                 <property name="left_padding">12</property>
                 <child>
-                  <object class="GtkVBox" id="vbox22">
+                  <object class="GtkBox" id="vbox22">
+                    <property name="orientation">vertical</property>
                     <property name="visible">True</property>
                     <property name="spacing">6</property>
                     <child>
@@ -216,7 +219,8 @@
           </packing>
         </child>
         <child>
-          <object class="GtkVBox" id="vbox19">
+          <object class="GtkBox" id="vbox19">
+            <property name="orientation">vertical</property>
             <property name="visible">True</property>
             <property name="spacing">6</property>
             <child>
@@ -237,7 +241,8 @@
                 <property name="visible">True</property>
                 <property name="left_padding">12</property>
                 <child>
-                  <object class="GtkVBox" id="vbox20">
+                  <object class="GtkBox" id="vbox20">
+                    <property name="orientation">vertical</property>
                     <property name="visible">True</property>
                     <property name="spacing">6</property>
                     <child>

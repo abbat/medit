@@ -74,7 +74,7 @@ bare start. Dialogs report more.
 
 ## Stage 2 — `.ui` files and container classes
 
-- [ ] 2.1 In `.ui`: `GtkVBox`/`GtkHBox` → `GtkBox` + `orientation`, `GtkHButtonBox` →
+- [x] 2.1 In `.ui`: `GtkVBox`/`GtkHBox` → `GtkBox` + `orientation`, `GtkHButtonBox` →
   `GtkButtonBox`, `GtkVSeparator` → `GtkSeparator` + `orientation`. A script, one commit
   per type. Check the defaults: a `GtkVBox` had `homogeneous` FALSE and `spacing` 0,
   the same as a `GtkBox`.

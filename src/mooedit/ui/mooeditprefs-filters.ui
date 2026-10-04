@@ -4,12 +4,14 @@
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkWindow" id="window3">
     <child>
-      <object class="GtkVBox" id="PrefsFilters">
+      <object class="GtkBox" id="PrefsFilters">
+        <property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="border_width">12</property>
         <property name="spacing">18</property>
         <child>
-          <object class="GtkVBox" id="vbox23">
+          <object class="GtkBox" id="vbox23">
+            <property name="orientation">vertical</property>
             <property name="visible">True</property>
             <property name="spacing">6</property>
             <child>
@@ -30,11 +32,13 @@
                 <property name="visible">True</property>
                 <property name="left_padding">12</property>
                 <child>
-                  <object class="GtkVBox" id="vbox24">
+                  <object class="GtkBox" id="vbox24">
+                    <property name="orientation">vertical</property>
                     <property name="visible">True</property>
                     <property name="spacing">6</property>
                     <child>
-                      <object class="GtkVBox" id="vbox25">
+                      <object class="GtkBox" id="vbox25">
+                        <property name="orientation">vertical</property>
                         <property name="visible">True</property>
                         <property name="spacing">6</property>
                         <child>
@@ -60,7 +64,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkHBox" id="hbox4">
+                          <object class="GtkBox" id="hbox4">
                             <property name="visible">True</property>
                             <property name="spacing">6</property>
                             <child>

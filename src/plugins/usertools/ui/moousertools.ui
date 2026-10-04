@@ -5,16 +5,18 @@
   <object class="GtkWindow" id="window1">
     <property name="title">window1</property>
     <child>
-      <object class="GtkVBox" id="Command">
+      <object class="GtkBox" id="Command">
+        <property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="border_width">12</property>
         <property name="spacing">18</property>
         <child>
-          <object class="GtkHBox" id="hbox1">
+          <object class="GtkBox" id="hbox1">
             <property name="visible">True</property>
             <property name="spacing">6</property>
             <child>
-              <object class="GtkVBox" id="vbox2">
+              <object class="GtkBox" id="vbox2">
+                <property name="orientation">vertical</property>
                 <property name="visible">True</property>
                 <property name="spacing">3</property>
                 <child>
@@ -37,7 +39,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkHBox" id="hbox2">
+                  <object class="GtkBox" id="hbox2">
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkButton" id="new">
@@ -126,7 +128,8 @@
               </packing>
             </child>
             <child>
-              <object class="GtkVBox" id="tool_vbox">
+              <object class="GtkBox" id="tool_vbox">
+                <property name="orientation">vertical</property>
                 <property name="visible">True</property>
                 <property name="spacing">6</property>
                 <child>
@@ -295,7 +298,8 @@
   <object class="GtkWindow" id="window3">
     <property name="title">window3</property>
     <child>
-      <object class="GtkVBox" id="PrefsPage">
+      <object class="GtkBox" id="PrefsPage">
+        <property name="orientation">vertical</property>
         <property name="visible">True</property>
         <child>
           <object class="GtkNotebook" id="notebook">
