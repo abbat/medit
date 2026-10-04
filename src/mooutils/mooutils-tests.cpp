@@ -45,6 +45,7 @@
 #include "mooutils/mooutils-gobject.h"
 #include "mooutils/mooutils-fs.h"
 #include "mooutils/mooutils-misc.h"
+#include "mooutils/moowindow.h"
 #include "plugins/terminal/terminal-colors.h"
 
 
@@ -1410,6 +1411,50 @@ test_font_description_to_css (void)
     g_assert_cmpstr (css, ==, "* { font-family: \"Mono\"; }");
 }
 
+/* The X geometry string, as XParseGeometry() and the gtk_window_parse_geometry()
+ * built on it read it */
+static void
+check_geometry (const char *text,
+                int         width,
+                int         height,
+                int         x,
+                int         y,
+                gboolean    has_size,
+                gboolean    has_pos,
+                gboolean    x_neg,
+                gboolean    y_neg)
+{
+    MooGeometry g;
+
+    g_assert_true (_moo_parse_geometry (text, &g));
+    g_assert_cmpint (g.has_size, ==, has_size);
+    g_assert_cmpint (g.has_pos, ==, has_pos);
+    g_assert_cmpint (g.width, ==, width);
+    g_assert_cmpint (g.height, ==, height);
+    g_assert_cmpint (g.x, ==, x);
+    g_assert_cmpint (g.y, ==, y);
+    g_assert_cmpint (g.x_neg, ==, x_neg);
+    g_assert_cmpint (g.y_neg, ==, y_neg);
+}
+
+static void
+test_parse_geometry (void)
+{
+    check_geometry ("80x24", 80, 24, 0, 0, TRUE, FALSE, FALSE, FALSE);
+    check_geometry ("80X24", 80, 24, 0, 0, TRUE, FALSE, FALSE, FALSE);
+    check_geometry ("+10+20", 0, 0, 10, 20, FALSE, TRUE, FALSE, FALSE);
+    check_geometry ("80x24-0-0", 80, 24, 0, 0, TRUE, TRUE, TRUE, TRUE);
+    check_geometry ("=80x24+1+2", 80, 24, 1, 2, TRUE, TRUE, FALSE, FALSE);
+    check_geometry ("800x600+5-7", 800, 600, 5, 7, TRUE, TRUE, FALSE, TRUE);
+    check_geometry ("-3+4", 0, 0, 3, 4, FALSE, TRUE, TRUE, FALSE);
+
+    MooGeometry g;
+    const char *invalid[] = { "", "=", "80", "80x", "x24", "80x24x", "80x24+1", "+1", "+1+",
+                              "80x24+1+2junk", "junk", "80 x 24", "+-1+2", "80x24 ", "70000x1" };
+    for (guint i = 0; i < G_N_ELEMENTS (invalid); i++)
+        g_assert_false (_moo_parse_geometry (invalid[i], &g));
+}
+
 static void
 test_value_to_string (void)
 {
@@ -2149,6 +2194,7 @@ _moo_add_mooutils_unit_tests (void)
     g_test_add_func ("/mooutils/paned/drop-mask", test_drop_mask);
     g_test_add_func ("/mooutils/file-writer", test_file_writer);
     g_test_add_func ("/mooutils/font-description-to-css", test_font_description_to_css);
+    g_test_add_func ("/mooutils/parse-geometry", test_parse_geometry);
 }
 
 #endif /* MOO_ENABLE_UNIT_TESTS */

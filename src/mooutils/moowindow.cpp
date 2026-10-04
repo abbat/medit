@@ -423,65 +423,98 @@ moo_window_class_init (MooWindowClass *klass)
 }
 
 
-/* gtk_window_parse_geometry() is deprecated without a replacement, so the
- * X geometry string "[=][WIDTH{xX}HEIGHT][{+-}XOFF{+-}YOFF]" is parsed here.
- * A negative offset is measured from the right or bottom edge of the screen.
- */
+/* Reads a decimal number, with no sign: the sign is part of the geometry
+ * syntax and comes before it. */
 static gboolean
-moo_window_parse_geometry (GtkWindow  *window,
-                           const char *geometry)
+read_geometry_number (const char **p,
+                      int         *number)
 {
-    const char *p = geometry;
+    if (!g_ascii_isdigit (**p))
+        return FALSE;
+
     char *end;
-    long width = 0, height = 0, x = 0, y = 0;
-    gboolean has_size = FALSE, has_pos = FALSE, x_neg = FALSE, y_neg = FALSE;
+    long value = strtol (*p, &end, 10);
+
+    if (value > 65535) /* X11 geometry is 16 bit */
+        return FALSE;
+
+    *number = (int) value;
+    *p = end;
+    return TRUE;
+}
+
+/* The X geometry string "[=][WIDTH{xX}HEIGHT][{+-}XOFF{+-}YOFF]", which is
+ * what gtk_window_parse_geometry() took before it was deprecated without a
+ * replacement. A negative offset is measured from the right or bottom edge of
+ * the screen; geometry->x and ->y hold its magnitude and x_neg and y_neg say
+ * which edge. Returns FALSE if the string is not a geometry, or is empty.
+ */
+gboolean
+_moo_parse_geometry (const char  *geometry,
+                     MooGeometry *result)
+{
+    g_return_val_if_fail (geometry != NULL && result != NULL, FALSE);
+
+    MooGeometry g = {};
+    const char *p = geometry;
 
     if (*p == '=')
         p++;
 
     if (g_ascii_isdigit (*p))
     {
-        width = strtol (p, &end, 10);
-        if ((*end != 'x' && *end != 'X') || !g_ascii_isdigit (end[1]))
+        if (!read_geometry_number (&p, &g.width) ||
+            (*p != 'x' && *p != 'X'))
             return FALSE;
-        height = strtol (end + 1, &end, 10);
-        p = end;
-        has_size = TRUE;
+        p++;
+        if (!read_geometry_number (&p, &g.height))
+            return FALSE;
+        g.has_size = TRUE;
     }
 
     if (*p == '+' || *p == '-')
     {
-        x_neg = *p == '-';
-        x = strtol (p + 1, &end, 10);
-        if (end == p + 1 || (*end != '+' && *end != '-'))
+        g.x_neg = *p++ == '-';
+        if (!read_geometry_number (&p, &g.x) || (*p != '+' && *p != '-'))
             return FALSE;
-        y_neg = *end == '-';
-        p = end + 1;
-        y = strtol (p, &end, 10);
-        if (end == p)
+        g.y_neg = *p++ == '-';
+        if (!read_geometry_number (&p, &g.y))
             return FALSE;
-        p = end;
-        has_pos = TRUE;
+        g.has_pos = TRUE;
     }
 
-    if (*p || (!has_size && !has_pos))
+    if (*p || (!g.has_size && !g.has_pos))
         return FALSE;
 
-    if (has_size)
-        gtk_window_set_default_size (window, width, height);
+    *result = g;
+    return TRUE;
+}
 
-    if (has_pos)
+static gboolean
+moo_window_parse_geometry (GtkWindow  *window,
+                           const char *geometry)
+{
+    MooGeometry g;
+
+    if (!_moo_parse_geometry (geometry, &g))
+        return FALSE;
+
+    if (g.has_size)
+        gtk_window_set_default_size (window, g.width, g.height);
+
+    if (g.has_pos)
     {
         GdkMonitor *monitor = gdk_display_get_primary_monitor (gdk_display_get_default ());
         GdkRectangle area = { 0, 0, 0, 0 };
+        int x = g.x, y = g.y;
 
         if (monitor)
             gdk_monitor_get_workarea (monitor, &area);
 
-        if (x_neg)
-            x = area.x + area.width - width - x;
-        if (y_neg)
-            y = area.y + area.height - height - y;
+        if (g.x_neg)
+            x = area.x + area.width - g.width - g.x;
+        if (g.y_neg)
+            y = area.y + area.height - g.height - g.y;
 
         gtk_window_move (window, x, y);
     }

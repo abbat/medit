@@ -130,6 +130,22 @@ GtkAction  *moo_window_get_action           (MooWindow          *window,
 
 void        moo_window_set_default_geometry (const char         *geometry);
 
+/* The fields of an X geometry string, "[=][WxH][{+-}X{+-}Y]"; x and y are
+   magnitudes, x_neg and y_neg say that the offset counts from the far edge. */
+typedef struct {
+    int         width;
+    int         height;
+    int         x;
+    int         y;
+    gboolean    has_size;
+    gboolean    has_pos;
+    gboolean    x_neg;
+    gboolean    y_neg;
+} MooGeometry;
+
+gboolean    _moo_parse_geometry             (const char         *geometry,
+                                             MooGeometry        *result);
+
 
 G_END_DECLS
 
