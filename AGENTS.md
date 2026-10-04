@@ -96,6 +96,7 @@ them.
 | write a test for the terminal, LSP or shortcuts; look at coverage | `doc/testing-panes.md` |
 | hunt a defect and want to know what this tree already got wrong | `doc/bugs.md` |
 | say what could be improved, or pick what to do next | `doc/todo.md`, "What to suggest first" |
+| remove deprecated API, or continue that work after an interruption | `doc/deprecations.md` |
 
 Below, in this file: the rules that cost real time when broken, the environment traps,
 the three GTK+3 porting mistakes to check first when anything looks wrong, and the
