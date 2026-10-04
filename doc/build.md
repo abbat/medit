@@ -82,6 +82,10 @@ errors everywhere — `build.yml` asks for it, and so do `debian/rules`,
 too: Fedora is where LTO happens, and `-Wodr` has caught defects there that nothing else
 sees.
 
+That includes deprecated API: `-Wdeprecated-declarations` is an error under strict. The
+GtkAction/GtkStock subsystems that have no GTK+3 replacement are wrapped in
+`G_GNUC_BEGIN_IGNORE_DEPRECATIONS` (see AGENTS.md); `src/vendor` is exempt.
+
 | job | what it covers |
 |---|---|
 | `deb` | ubuntu 22.04 — the low end of everything: gtk 3.24.33, glib 2.72, gcc 11, cmake 3.22 |

@@ -71,7 +71,11 @@ one only a user can. `tests/` and `tests/coverage.floor` say what the suite cove
 and ctags' `readtags.c`. It is excluded from `--target analyze`
 (`cmake/Analyze.cmake`), exempt from `.editorconfig`, and outside the style measurements
 anything else belongs upstream. Deprecation warnings are switched off for these files
-(`src/CMakeLists.txt`), so a warning count does not include them.
+(`src/CMakeLists.txt`). Everywhere else deprecated API is an error under `ENABLE_STRICT`;
+the only exceptions are the GtkAction/GtkActionGroup/GtkUIManager family, GtkStock and its
+icon helpers, `gtk_container_set_focus_chain`, `gtk_widget_push_composite_child` and reads of
+a theme background colour, which have no replacement short of GAction/GMenu and named icons
+and are wrapped in `G_GNUC_BEGIN_IGNORE_DEPRECATIONS`.
 anything else belongs upstream.
 
 ---

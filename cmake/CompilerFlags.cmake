@@ -49,14 +49,9 @@ foreach(flag
     moo_try_flag(${flag})
 endforeach()
 
-# Deprecated GTK+ and glib API is used all over the tree; porting away from it
-# is the GTK+4 work, not something an ordinary build should shout about. So an
-# ordinary build stays quiet, and a strict build shows the warnings without
-# failing on them -- they are the measure of how much of that work is left, and
-# -Wno-error for this one warning is added after -Werror below.
-if(NOT ENABLE_STRICT)
-    moo_try_flag(-Wno-deprecated-declarations)
-endif()
+# Deprecated API is not tolerated: -Wdeprecated-declarations is on, and an error
+# under strict. The GtkAction/GtkStock subsystems that have no replacement short
+# of GAction/GMenu are marked in the source with G_GNUC_BEGIN_IGNORE_DEPRECATIONS.
 
 moo_try_cxx_flag(-fno-rtti)
 
@@ -90,9 +85,6 @@ if(ENABLE_STRICT)
     foreach(flag -Wmissing-prototypes -Wnested-externs)
         moo_try_c_flag(${flag})
     endforeach()
-
-    # After -Werror above, so that deprecations warn but do not fail the build.
-    moo_try_flag(-Wno-error=deprecated-declarations)
 
     # -Wstrict-null-sentinel is deliberately absent from this list. It is a
     # portability warning about passing an uncast NULL where a variadic
@@ -236,7 +228,3 @@ else()
         NDEBUG=1 G_DISABLE_CAST_CHECKS G_DISABLE_ASSERT)
 endif()
 
-if(NOT ENABLE_STRICT)
-    # Not defining G_DISABLE_DEPRECATED is no longer enough to keep glib quiet.
-    list(APPEND MOO_COMPILE_DEFINITIONS GLIB_DISABLE_DEPRECATION_WARNINGS=1)
-endif()
