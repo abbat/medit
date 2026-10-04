@@ -66,15 +66,7 @@ create_logo_image (GtkBox *box)
   GtkWidget *widget;
   const char *resource_name = "/pixmap/medit.png";
 
-#if GTK_CHECK_VERSION(3, 0, 0)
   widget = gtk_image_new_from_resource (resource_name);
-#else
-  GdkPixbuf *pixbuf;
-
-  pixbuf = gdk_pixbuf_new_from_resource (resource_name, NULL);
-  widget = gtk_image_new_from_pixbuf (pixbuf);
-  g_object_unref (pixbuf);
-#endif
 
   gtk_box_pack_start (box, widget, FALSE, FALSE, 0);
   gtk_widget_show (widget);
@@ -219,14 +211,6 @@ create_credits_button (GtkDialog *dialog, GtkBox *hbox)
   GtkWidget *widget;
   const char *mnemonic = _ ("C_redits");
 
-#if !GTK_CHECK_VERSION(3, 0, 0)
-  GtkBox *bbox;
-  GtkWidget *wbox;
-  GtkWidget *label;
-  GtkWidget *alignment;
-#endif
-
-#if GTK_CHECK_VERSION(3, 0, 0)
   widget = gtk_button_new_with_mnemonic (mnemonic);
   button = GTK_BUTTON (widget);
   image = gtk_image_new_from_icon_name ("help-about", GTK_ICON_SIZE_BUTTON);
@@ -234,30 +218,6 @@ create_credits_button (GtkDialog *dialog, GtkBox *hbox)
   gtk_button_set_image (button, image);
   gtk_button_set_always_show_image (button, TRUE);
   gtk_widget_set_focus_on_click (widget, FALSE);
-#else
-  widget = gtk_button_new ();
-  button = GTK_BUTTON (widget);
-
-  gtk_button_set_focus_on_click (button, FALSE);
-
-  image = gtk_image_new_from_stock (GTK_STOCK_ABOUT, GTK_ICON_SIZE_BUTTON);
-  label = gtk_label_new_with_mnemonic (mnemonic);
-  alignment = gtk_alignment_new (0.5, 0.5, 0, 0);
-
-  wbox = gtk_hbox_new (FALSE, 2);
-  bbox = GTK_BOX (wbox);
-
-  gtk_box_pack_start (bbox, image, FALSE, FALSE, 0);
-  gtk_box_pack_start (bbox, label, FALSE, FALSE, 0);
-
-  gtk_container_add (GTK_CONTAINER (button), alignment);
-  gtk_container_add (GTK_CONTAINER (alignment), GTK_WIDGET (bbox));
-
-  gtk_widget_show (wbox);
-  gtk_widget_show (image);
-  gtk_widget_show (label);
-  gtk_widget_show (alignment);
-#endif
 
   gtk_widget_set_can_focus (widget, TRUE);
   gtk_widget_set_can_default (widget, TRUE);
@@ -282,11 +242,7 @@ create_license_button (GtkDialog *dialog, GtkBox *hbox)
   widget = gtk_button_new_with_mnemonic (mnemonic);
   button = GTK_BUTTON (widget);
 
-#if GTK_CHECK_VERSION(3, 0, 0)
   gtk_widget_set_focus_on_click (widget, FALSE);
-#else
-  gtk_button_set_focus_on_click (button, FALSE);
-#endif
 
   gtk_widget_set_can_focus (widget, TRUE);
   gtk_widget_set_can_default (widget, TRUE);
@@ -307,7 +263,6 @@ create_close_button (GtkDialog *dialog, GtkBox *hbox)
   GtkButton *button;
   GtkWidget *widget;
 
-#if GTK_CHECK_VERSION(3, 0, 0)
   GtkWidget *image;
   const char *mnemonic = _ ("_Close");
 
@@ -318,12 +273,6 @@ create_close_button (GtkDialog *dialog, GtkBox *hbox)
   gtk_button_set_image (button, image);
   gtk_button_set_always_show_image (button, TRUE);
   gtk_widget_set_focus_on_click (widget, FALSE);
-#else
-  widget = gtk_button_new_from_stock (GTK_STOCK_CLOSE);
-  button = GTK_BUTTON (widget);
-
-  gtk_button_set_focus_on_click (button, FALSE);
-#endif
 
   gtk_widget_set_can_focus (widget, TRUE);
   gtk_widget_set_can_default (widget, TRUE);
@@ -371,10 +320,6 @@ about_dialog_new (GtkWidget *parent)
   gtk_window_set_type_hint (window, GDK_WINDOW_TYPE_HINT_DIALOG);
   gtk_window_set_resizable (window, FALSE);
   gtk_window_set_destroy_with_parent (window, TRUE);
-
-#if !GTK_CHECK_VERSION(3, 0, 0)
-  gtk_dialog_set_has_separator (dialog, FALSE);
-#endif
 
   create_content_area (dialog);
   create_action_area (dialog);

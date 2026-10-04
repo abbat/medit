@@ -47,10 +47,8 @@ notebook_create_tab (GtkNotebook *notebook, const char *caption)
   widget = gtk_scrolled_window_new (NULL, NULL);
   tab = GTK_SCROLLED_WINDOW (widget);
 
-#if GTK_CHECK_VERSION(3, 0, 0)
   gtk_widget_set_hexpand (widget, TRUE);
   gtk_widget_set_vexpand (widget, TRUE);
-#endif
 
   gtk_scrolled_window_set_policy (tab, GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
   gtk_scrolled_window_set_shadow_type (tab, GTK_SHADOW_IN);
@@ -68,10 +66,8 @@ notebook_create_tab (GtkNotebook *notebook, const char *caption)
   gtk_text_view_set_left_margin (view, 3);
   gtk_text_view_set_right_margin (view, 3);
 
-#if GTK_CHECK_VERSION(3, 0, 0)
   gtk_text_view_set_top_margin (view, 3);
   gtk_text_view_set_bottom_margin (view, 3);
-#endif
 
   gtk_container_add (GTK_CONTAINER (tab), widget);
   gtk_widget_show (widget);
@@ -172,7 +168,6 @@ create_close_button (GtkDialog *dialog, GtkBox *hbox)
   GtkButton *button;
   GtkWidget *widget;
 
-#if GTK_CHECK_VERSION(3, 0, 0)
   GtkWidget *image;
   const char *mnemonic = _ ("_Close");
 
@@ -183,12 +178,6 @@ create_close_button (GtkDialog *dialog, GtkBox *hbox)
   gtk_button_set_image (button, image);
   gtk_button_set_always_show_image (button, TRUE);
   gtk_widget_set_focus_on_click (widget, FALSE);
-#else
-  widget = gtk_button_new_from_stock (GTK_STOCK_CLOSE);
-  button = GTK_BUTTON (widget);
-
-  gtk_button_set_focus_on_click (button, FALSE);
-#endif
 
   gtk_widget_set_can_focus (widget, TRUE);
   gtk_widget_set_can_default (widget, TRUE);
@@ -235,10 +224,6 @@ credits_dialog_new (GtkWidget *parent)
   gtk_window_set_default_size (window, 360, 260);
   gtk_window_set_resizable (window, TRUE);
   gtk_window_set_destroy_with_parent (window, TRUE);
-
-#if !GTK_CHECK_VERSION(3, 0, 0)
-  gtk_dialog_set_has_separator (dialog, FALSE);
-#endif
 
   create_content_area (dialog);
   create_action_area (dialog);
