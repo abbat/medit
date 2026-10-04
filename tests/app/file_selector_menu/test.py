@@ -1,6 +1,5 @@
 """File Selector: look at what a file is, rename it, and make another.
 
-# requires: MOO_GTK3
 
 One chain through the parts of the file view that a person actually uses on a
 file they did not mean to call that: select it, open the menu it has, ask for

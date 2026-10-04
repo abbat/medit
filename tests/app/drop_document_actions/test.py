@@ -1,6 +1,5 @@
 """Save a dropped document here, save a copy, and cancel the drop.
 
-# requires: MOO_GTK3
 
 The drop test covers the no-modifier menu and chooses Move Here. The other
 actions call different document operations and were not reached: Save Here

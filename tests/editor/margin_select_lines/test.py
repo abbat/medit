@@ -1,6 +1,5 @@
 """Clicking and dragging in the line-number margin selects whole lines.
 
-# requires: MOO_GTK3
 
 left_window_click() and select_lines() in mootextview-input.c. GtkTextView has
 no notion of it: the left border window is medit's, the click in it is medit's,

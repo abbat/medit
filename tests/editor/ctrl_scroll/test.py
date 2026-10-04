@@ -1,6 +1,5 @@
 """Ctrl with an arrow scrolls the view and leaves the cursor where it was.
 
-# requires: MOO_GTK3
 
 handle_ctrl_up() and handle_ctrl_pgup() in mootextview-input.c. GtkTextView has
 no such binding: Ctrl+Up there moves the cursor by a paragraph. Here the cursor

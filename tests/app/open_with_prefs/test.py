@@ -1,6 +1,5 @@
 """An Open With entry described in the preferences, and used from the pane.
 
-# requires: MOO_GTK3
 
 The File Selector page of the preferences is a list of programs to open files
 with -- src/plugins/moofileselector-prefs.cpp, which nothing had opened -- and

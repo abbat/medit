@@ -1,6 +1,5 @@
 """Reload asks before throwing away changes, and then re-reads the file.
 
-# requires: MOO_GTK3
 
 _moo_edit_reload_modified_dialog(), and moo_edit_question_dialog() under it.
 File/Reload on a document with unsaved changes is the other way medit can lose

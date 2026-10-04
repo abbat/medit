@@ -1,6 +1,5 @@
 """The pointer over the text is still there after a key has changed the text.
 
-# requires: MOO_GTK3
 
 GTK+3's text view hides the pointer when a key it handles itself changes the
 buffer -- an ordinary character, typed -- and keeps the fact in a flag of its

@@ -1,6 +1,6 @@
 """Resting the pointer on a word asks the server what it is.
 
-# requires: MOO_BUILD_LSP, MOO_GTK3
+# requires: MOO_BUILD_LSP
 
 What is asserted here is the question, not the tooltip. GTK+3's tooltip window
 is not on the accessibility bus -- it is not a toplevel of the application, and

@@ -1,6 +1,5 @@
 """The line endings menu says what the file uses, and changes what is written.
 
-# requires: MOO_GTK3
 
 create_doc_line_end_action() builds the submenu and update_doc_line_end_item()
 keeps its radio on whatever the document was read as -- so the menu is also the

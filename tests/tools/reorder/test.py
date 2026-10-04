@@ -1,6 +1,5 @@
 """Tools moved and deleted in the preferences, and the menu that follows.
 
-# requires: MOO_GTK3
 
 The buttons beside the list on the Tools page are not the page's own: they are
 MooTreeHelper, src/mooutils/mooutils-treeview.cpp, which every list of things in

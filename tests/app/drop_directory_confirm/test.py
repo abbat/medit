@@ -1,6 +1,5 @@
 """Dropping a directory with too many files onto the notebook asks first.
 
-# requires: MOO_GTK3
 
 notebook_drop_uri_list() opens every text file under a dropped directory, but
 a folder can hold far more than anyone means to open at once, so past

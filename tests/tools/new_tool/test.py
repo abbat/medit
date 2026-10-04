@@ -1,6 +1,5 @@
 """A tool made in the preferences ends up in the Tools menu and runs.
 
-# requires: MOO_GTK3
 
 The other half of moousertools-prefs.cpp. tests/tools/prefs_page reads a tool
 that a file described and switches it off; this one makes a tool that no file

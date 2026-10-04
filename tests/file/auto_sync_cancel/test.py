@@ -1,6 +1,5 @@
 """With auto_sync on, declining the dialog still marks the tab.
 
-# requires: MOO_GTK3
 
 file_modified_on_disk() and file_deleted() in mooedit-fileops.cpp reuse the very
 same moo_edit_reload()/moo_edit_close() the File menu uses, so with Editor/auto_sync

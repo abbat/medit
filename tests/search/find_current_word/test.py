@@ -1,6 +1,5 @@
 """Find Current Word searches for what the cursor is in, and wraps at the end.
 
-# requires: MOO_GTK3
 
 moo_text_view_run_find_current_word() in mootextfind.c: the word at the cursor
 becomes the search term with no dialog in the way, the search starts after that

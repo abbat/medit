@@ -1,6 +1,5 @@
 """The Tools page of the preferences: the list of tools, and switching one off.
 
-# requires: MOO_GTK3
 
 src/plugins/usertools/moousertools-prefs.cpp is where the tools of the Tools menu
 are edited, and nothing had opened it. Selecting a tool fills the page in from

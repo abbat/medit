@@ -1,6 +1,5 @@
 """Replace does all of them at once, or asks about each one.
 
-# requires: MOO_GTK3
 
 moo_text_view_run_replace() has two halves and the "Don't prompt on replace" box
 chooses between them: run_replace_silent() replaces every match and says how many

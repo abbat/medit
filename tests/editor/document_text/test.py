@@ -1,6 +1,5 @@
 """The document being edited is readable, and what is typed goes into it.
 
-# requires: MOO_GTK3
 
 GTK+3's notebook accessible puts every page of the editor's notebook in the
 tree, so the document on screen is there to be read. On GTK+2, where gail

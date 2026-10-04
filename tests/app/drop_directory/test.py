@@ -1,6 +1,5 @@
 """A directory dragged out of the file selector and onto the notebook.
 
-# requires: MOO_GTK3
 
 Dropping a directory onto the tab notebook used to be silently skipped --
 notebook_drop_uri_list() ignored any dropped URI that resolved to a

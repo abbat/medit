@@ -1,6 +1,5 @@
 """File Selector: copy a file somewhere, then move one.
 
-# requires: MOO_GTK3
 
 Cut, Copy and Paste in the pane are about files rather than about text, and
 what they did is on disk: a copy leaves the original where it was, a move does

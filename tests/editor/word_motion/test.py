@@ -1,6 +1,5 @@
 """Ctrl with an arrow, a Backspace or a Delete moves by medit's idea of a word.
 
-# requires: MOO_GTK3
 
 text_iter_forward_word_start() and its backward twin in mootextview-input.c,
 reached through _moo_text_view_move_cursor() and

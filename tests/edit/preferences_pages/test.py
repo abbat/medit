@@ -1,6 +1,5 @@
 """The other pages of the preferences: View, File, Languages, File Filters.
 
-# requires: MOO_GTK3
 
 tests/edit/preferences drives the dialog itself -- the list of pages, OK against
 Cancel -- on the General page. This one is about the rest of

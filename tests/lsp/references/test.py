@@ -1,6 +1,6 @@
 """Find References: every place the server names, listed and gone to.
 
-# requires: MOO_BUILD_LSP, MOO_GTK3
+# requires: MOO_BUILD_LSP
 
 Going to a definition needs one place out of the answer and can throw the rest
 away. This needs all of them, which is a pane rather than a jump, and the pane

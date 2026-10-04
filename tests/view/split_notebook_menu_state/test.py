@@ -1,6 +1,5 @@
 """The View menu follows the document that has the focus, in either notebook.
 
-# requires: MOO_GTK3
 
 Wrap Text and Show Line Numbers are settings of a document, and the menu shows
 those of the one in front. With two notebooks side by side a click can put the

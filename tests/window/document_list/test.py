@@ -1,6 +1,5 @@
 """The Window menu lists the open documents by name, and ticks the current one.
 
-# requires: MOO_GTK3
 
 populate_window_menu() in mooeditwindow.cpp. Three things in it are decisions
 rather than plumbing, and nothing watched any of them.

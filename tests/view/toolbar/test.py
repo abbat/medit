@@ -10,12 +10,6 @@ The style is read as the height of the toolbar rather than as the tick on the
 radio item, because the tick would move in a build where the toolbar never
 changed. Labels below icons need two rows where icons alone need one, so the
 comparison is between two styles asked for by name and never against a number.
-
-One of the few UI tests that run on GTK+2 as well: it reads the menu bar and the
-toolbar and nothing else. Everything in a pane, and every document, is off the
-accessibility bus in GTK+2 -- gail reports no children for MooPaned or for the
-notebook the documents are in -- which is what the other `# requires: MOO_GTK3`
-headers in tests/ come down to.
 """
 
 SHOW = "Show Toolbar"

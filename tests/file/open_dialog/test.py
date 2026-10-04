@@ -1,6 +1,5 @@
 """File/Open opens the file, and opening one that is already open goes to its tab.
 
-# requires: MOO_GTK3
 
 _moo_edit_open_dialog() puts up the chooser; moo_editor_open_files() decides what
 to do with what comes back, and moo_editor_get_doc_for_file() is the part worth a

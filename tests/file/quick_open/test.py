@@ -1,6 +1,5 @@
 """Quick Open filters by name, jumps to a typed ":N" line, and Escape opens nothing.
 
-# requires: MOO_GTK3
 
 src/plugins/mooquickopen.cpp. The dialog searches the active document's own
 directory (_moo_find_project_root() with no markers), and quick_open_split_line()

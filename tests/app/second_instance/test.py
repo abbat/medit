@@ -1,6 +1,5 @@
 """A second medit hands its files to the first one, unless it is told not to.
 
-# requires: MOO_GTK3
 
 The single instance handshake of src/medit-app: a copy started while another is
 running sends what it was given over the socket in the sandbox's temporary

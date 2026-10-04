@@ -1,6 +1,5 @@
 """A document dragged from its tab into the file selector.
 
-# requires: MOO_GTK3
 
 Dropping a document on the pane is a way of saving it somewhere, and the whole of
 it -- moo_file_selector_drop_doc(), the menu it puts up and the three things that

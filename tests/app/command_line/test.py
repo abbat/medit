@@ -1,6 +1,5 @@
 """What the command line says about where to open a file, and where in it.
 
-# requires: MOO_GTK3
 
 The startup path of src/medit-app, which is the least covered code in the tree
 and the part of it that runs before there is anything to click on: a name is

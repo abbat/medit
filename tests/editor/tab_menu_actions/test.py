@@ -1,6 +1,5 @@
 """What the rest of a tab's menu does: the path, the others, the new window.
 
-# requires: MOO_GTK3
 
 tests/editor/tab_popup pins which document the menu is about and drives Close;
 these are the other three entries of notebook_populate_popup(), and each of them

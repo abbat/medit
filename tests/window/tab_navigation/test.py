@@ -1,6 +1,5 @@
 """Previous Tab and Next Tab walk the strip and wrap round at both ends.
 
-# requires: MOO_GTK3
 
 action_previous_tab() and action_next_tab() in mooeditwindow.cpp. Walking one
 step is plumbing; the wrap is the decision, and it is written twice, once at each

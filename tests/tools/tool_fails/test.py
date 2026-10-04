@@ -1,6 +1,5 @@
 """A tool whose command is not installed says so, and leaves the document alone.
 
-# requires: MOO_GTK3
 
 Both failure paths of moocommand-exe.cpp used to end in the same g_message():
 a tool whose program is not there, or whose command line does not parse, was a

@@ -1,6 +1,5 @@
 """The File List pane: a group made, renamed and removed through its menu.
 
-# requires: MOO_GTK3
 
 src/plugins/moofilelist.cpp is a plugin that is on by default, has a pane of its
 own, and had never been opened by a test. Its list is a tree of groups and files,

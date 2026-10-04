@@ -1,6 +1,4 @@
 """Drop a selected file onto a directory in the file selector.
-
-# requires: MOO_GTK3
 """
 
 import os

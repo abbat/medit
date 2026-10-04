@@ -1,6 +1,5 @@
 """Cut, Copy, Paste and Delete, and what tells the last two apart.
 
-# requires: MOO_GTK3
 
 The Edit menu's clipboard items are MooWindow's, dispatched through the
 MooEditOps interface to whichever widget answers for editing at the time, and

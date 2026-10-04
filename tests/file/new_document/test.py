@@ -1,6 +1,5 @@
 """File/New makes a document with no file, and saving one asks where to put it.
 
-# requires: MOO_GTK3
 
 A document with no file behind it is a state the rest of medit has to keep
 working in, and the moment it matters is the first save: moo_edit_save() has

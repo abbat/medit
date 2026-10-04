@@ -1,6 +1,5 @@
 """medit's own page of the Print dialog, and what its options do to the paper.
 
-# requires: MOO_GTK3
 
 The options are the page moo_print_operation_create_custom_widget() puts inside
 GTK's Print dialog, and they reach the settings through get_options() when the

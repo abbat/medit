@@ -1,6 +1,5 @@
 """Edit / Preferences: the pages it is assembled from, and OK against Cancel.
 
-# requires: MOO_GTK3
 
 moo_app_create_prefs_dialog() puts the editor's five pages into one dialog and
 then lets every plugin add its own, so the list down the side is medit's whole

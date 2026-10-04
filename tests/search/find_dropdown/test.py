@@ -1,6 +1,5 @@
 """The drop-down button of the Find entry shows the history under the entry.
 
-# requires: MOO_GTK3
 
 The entry of the Find dialog is a MooCombo -- src/mooutils/moocombo.cpp -- which
 is an entry and an arrow button side by side rather than a GtkComboBox, and the

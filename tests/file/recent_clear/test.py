@@ -1,6 +1,5 @@
 """Open Recent offers to forget the files it lists.
 
-# requires: MOO_GTK3
 
 The recent files list used to be a one-way street: every file ever opened stayed
 under File / Open Recent for good, and the only way to take one out of it was to

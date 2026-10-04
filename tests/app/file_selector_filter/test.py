@@ -1,6 +1,5 @@
 """The file selector's filter box hides what does not match it.
 
-# requires: MOO_GTK3
 
 src/mooutils/moofiltermgr.c keeps the filters the pane offers, makes one out of
 whatever is typed into the box at the foot of it, and remembers it in the

@@ -36,10 +36,9 @@ def _menu_role_consts():
 
 
 class Test(object):
-    def __init__(self, app, gtk, url_log, log_dir, out, sandbox=None, binary=None):
+    def __init__(self, app, url_log, log_dir, out, sandbox=None, binary=None):
         self._started = time.time()
         self.app = app
-        self.gtk = int(gtk)
         self.log_dir = log_dir
         # what the test's setup function put in place, see lib/setup.py
         self.sandbox = sandbox

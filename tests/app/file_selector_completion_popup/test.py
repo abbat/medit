@@ -1,6 +1,5 @@
 """The file selector's path entry offers several matches in a popup.
 
-# requires: MOO_GTK3
 
 tests/app/file_selector_entry has Tab complete a name that only one folder
 fits. Here two do, so Tab has nothing to complete and the popup of

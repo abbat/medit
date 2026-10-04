@@ -1,6 +1,5 @@
 """A pane carried from one edge of the window to another.
 
-# requires: MOO_GTK3
 
 MooBigPaned holds four MooPaneds, one along each edge, and a pane is moved
 between them by dragging the grip in its own toolbar. While the drag is in

@@ -1,6 +1,5 @@
 """A pane taken out of the window and put back.
 
-# requires: MOO_GTK3
 
 Every pane has four buttons of its own -- sticky, hide, detach, remove -- and
 tests/app/pane_move and tests/app/pane_resize drive the strip and the divider

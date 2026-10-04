@@ -1,6 +1,6 @@
 """A server that gave up says why in the pane, whenever the pane is opened.
 
-# requires: MOO_BUILD_LSP, MOO_GTK3
+# requires: MOO_BUILD_LSP
 
 The pane is where a user looks when the client has gone quiet, and until the
 message was put in it the pane was empty in exactly the way it is for a

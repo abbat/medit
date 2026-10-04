@@ -1,6 +1,5 @@
 """A file deleted while it is open: medit says so, and a save brings it back.
 
-# requires: MOO_GTK3
 
 The third thing the file watch can report, after the change tests/file/reload uses
 and the change behind tests/file/overwrite_modified: the file is gone.

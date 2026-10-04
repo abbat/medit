@@ -1,6 +1,5 @@
 """Opening a file no encoding on the list can read: medit asks which to try.
 
-# requires: MOO_GTK3
 
 medit guesses the encoding of a file it opens by trying the ones on the
 autodetect list in turn, and when none of them produces valid text there is

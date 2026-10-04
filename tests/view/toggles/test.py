@@ -1,6 +1,5 @@
 """Wrap Text and Show Line Numbers change the view, and belong to the document.
 
-# requires: MOO_GTK3
 
 wrap_text_toggled() and line_numbers_toggled() in mooeditwindow.cpp. Both hand
 the change to the active view rather than to the window, so each document keeps

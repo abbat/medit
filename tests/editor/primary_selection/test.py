@@ -1,6 +1,5 @@
 """The primary selection is pasted by a middle click in the text view.
 
-# requires: MOO_GTK3
 
 _moo_text_view_ensure_primary() and the primary-selection branch of the button
 handler are only used by the X11 selection convention.  The ordinary clipboard

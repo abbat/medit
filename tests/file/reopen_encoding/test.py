@@ -1,6 +1,5 @@
 """Reopen Using Encoding reads the file again, and the choice sticks when it is saved.
 
-# requires: MOO_GTK3
 
 The encoding menu under File is medit's own, and what it does is re-read the
 bytes on disk through the encoding that was picked. It matters twice. Read

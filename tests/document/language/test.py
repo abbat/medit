@@ -1,6 +1,5 @@
 """The Language menu says what a document is, and changing it changes the editor.
 
-# requires: MOO_GTK3
 
 create_lang_action() builds the menu out of whatever language definitions are
 installed and update_lang_menu() keeps its radio on the language of the document

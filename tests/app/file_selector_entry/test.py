@@ -1,6 +1,5 @@
 """The file selector's path entry completes what is typed into it.
 
-# requires: MOO_GTK3
 
 src/moofileview/moofileentry.c is a completion of medit's own: it reads the
 directory as the entry is typed into, offers what matches in a popup, and Tab

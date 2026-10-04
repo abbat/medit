@@ -1,6 +1,5 @@
 """The Find dialog's options: whole words, regular expressions, from cursor.
 
-# requires: MOO_GTK3
 
 The boxes in the Options frame of the Find dialog are flags on the search, and
 each one takes a different path through src/mooedit/mootextsearch.c -- the plain

@@ -1,6 +1,5 @@
 """A tab's context menu is about that tab, whichever document is showing.
 
-# requires: MOO_GTK3
 
 moo_notebook_maybe_popup() finds the tab under the pointer and hands it to the
 menu; the button-3 branch of moo_notebook_button_press() does not switch to it

@@ -1,6 +1,5 @@
 """Saving over a file that changed on disk asks first.
 
-# requires: MOO_GTK3
 
 medit watches the files it has open -- moofilewatch under mooedit-fileops.cpp --
 and a document whose file has been written by something else is in a state of its

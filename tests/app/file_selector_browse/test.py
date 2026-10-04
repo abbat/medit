@@ -1,6 +1,5 @@
 """File Selector: find a file among many, scroll to it, open it.
 
-# requires: MOO_GTK3
 
 The pane opens on an icon view -- MOO_FILE_VIEW_ICON is what MooFileView is
 born with -- and that view lays its entries out in columns, filling downwards

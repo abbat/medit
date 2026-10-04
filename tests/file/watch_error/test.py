@@ -1,6 +1,5 @@
 """A file watch error when stat fails: the document is marked, so a save asks first.
 
-# requires: MOO_GTK3
 
 When file_watch_callback() receives a MOO_FILE_EVENT_ERROR (monitor->alive was set
 to FALSE by do_stat()), it sets modified_on_disk and clears file_monitor_id, so

@@ -1,6 +1,5 @@
 """Close All with several changed documents saves the ones that are ticked.
 
-# requires: MOO_GTK3
 
 _moo_edit_save_multiple_changes_dialog(). It is medit's own dialog, built from
 mooeditsavemult.ui: a list of the documents with a tick beside each, all ticked

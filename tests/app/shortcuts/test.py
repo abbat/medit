@@ -53,8 +53,7 @@ def run(t):
     t.check("Editor" in listed, "the editor's own commands are under a heading")
     t.check("LSP" in listed, "the client's commands are under a heading of their own")
 
-    if t.gtk == 3:
-        t.check("Terminal" in listed, "and the terminal's are under theirs")
+    t.check("Terminal" in listed, "and the terminal's are under theirs")
 
     # The Search box, which for twenty years was a widget with nothing behind
     # it: the list has a search column, so typing into the list searched and

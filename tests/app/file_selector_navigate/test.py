@@ -1,6 +1,5 @@
 """File Selector: go into a folder, and come back the four ways the menu offers.
 
-# requires: MOO_GTK3
 
 Up, Back, Forward and Home are the whole of the pane's navigation, and they are
 not the same thing: Up is where the current directory sits, Back and Forward

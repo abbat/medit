@@ -1,6 +1,5 @@
 """Saving text an encoding cannot hold: medit offers UTF-8 instead.
 
-# requires: MOO_GTK3
 
 A document remembers the encoding it was read as and writes itself back in it, so
 a character that encoding has no room for is a save that cannot happen.

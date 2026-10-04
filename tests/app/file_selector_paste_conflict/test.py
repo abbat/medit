@@ -1,6 +1,5 @@
 """Pasting a file over one of the same name asks before it does anything.
 
-# requires: MOO_GTK3
 
 Copying, moving and dropping all end up in run_command_on_files() in
 src/moofileview/moofileview.cpp, which used to hand the files to cp, mv or ln

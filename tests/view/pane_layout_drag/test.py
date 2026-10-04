@@ -1,6 +1,5 @@
 """Several documents across split notebooks and split views.
 
-# requires: MOO_GTK3
 
 The individual tests cover splitting a view, moving one tab to the split
 notebook, and reordering tabs. This scenario combines those operations in the

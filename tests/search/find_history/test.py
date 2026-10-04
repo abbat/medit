@@ -1,6 +1,5 @@
 """The Find dialog remembers what was searched for, and offers it again.
 
-# requires: MOO_GTK3
 
 The entry of the Find dialog is a MooHistoryCombo -- src/mooutils/moocombo.c and
 src/mooutils/moohistorycombo.c -- which keeps what has been typed into it and

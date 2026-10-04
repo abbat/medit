@@ -1,6 +1,5 @@
 """A tool whose output goes to the pane, and the Stop item that kills it.
 
-# requires: MOO_GTK3
 
 The other half of the user tools: output "pane" sends what the command prints to
 the Output pane rather than into the document, and MooCmdView there writes a line

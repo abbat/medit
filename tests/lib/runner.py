@@ -6,7 +6,7 @@ the one that starts medit and drives it. The split exists because the session
 bus comes from dbus-run-session, which replaces the process it is given.
 
     runner.py --test tests/app/about_dialog/test.py \\
-              --binary build3/src/medit --gtk 3 --log-dir build3/ui-tests/about
+              --binary build3/src/medit --log-dir build3/ui-tests/about
 
 The exit code is the test result. Everything the run produced -- medit's output,
 the X server's, the sanitizer logs, sanitizer.json, a screenshot if it failed --
@@ -51,7 +51,6 @@ def parse_args(argv):
     p = argparse.ArgumentParser()
     p.add_argument("--test", required=True, help="path to the test.py to run")
     p.add_argument("--binary", required=True, help="the medit to drive")
-    p.add_argument("--gtk", required=True, help="toolkit the binary was built with")
     p.add_argument("--log-dir", required=True, help="where to leave the evidence")
     p.add_argument("--sanitizers", default="", help="what -fsanitize= was built with")
     p.add_argument("--suppressions", default="", help="LSan suppression file")
@@ -146,7 +145,6 @@ def outer(args):
         inner = [sys.executable, os.path.abspath(__file__), "--inner"] + [
             "--test", os.path.abspath(args.test),
             "--binary", os.path.abspath(args.binary),
-            "--gtk", args.gtk,
             "--log-dir", log_dir,
             "--sanitizers", args.sanitizers,
         ]
@@ -356,7 +354,7 @@ def drive(module, args, prepared, proc, wm):
 
     try:
         app = a11y.application("medit", timeout=60)
-        t = Test(app, args.gtk, os.environ["MUI_URL_LOG"], log_dir, sys.stdout,
+        t = Test(app, os.environ["MUI_URL_LOG"], log_dir, sys.stdout,
                  sandbox=prepared, binary=args.binary)
 
         module.run(t)

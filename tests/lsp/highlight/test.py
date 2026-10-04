@@ -1,6 +1,6 @@
 """Every other use of what the cursor is in, marked in the text itself.
 
-# requires: MOO_BUILD_LSP, MOO_GTK3
+# requires: MOO_BUILD_LSP
 
 Nothing about this is a widget: the server answers with ranges, the client
 applies a GtkTextTag to them, and a tag has no name, no position and no

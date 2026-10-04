@@ -1,6 +1,6 @@
 """The context menu entry goes by the click, and the keyboard one by the cursor.
 
-# requires: MOO_BUILD_LSP, MOO_GTK3
+# requires: MOO_BUILD_LSP
 
 GtkTextView leaves the cursor where it was on a right click, so an entry that
 asked about the cursor would answer about wherever the cursor was last left --

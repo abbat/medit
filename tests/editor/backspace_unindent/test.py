@@ -1,6 +1,5 @@
 """Backspace in the indent goes to the indent of a line above, not back one space.
 
-# requires: MOO_GTK3
 
 handle_backspace() in mootextview-input.c, which is medit's own and is on by
 default (backspace_indents). When everything before the cursor on the line is

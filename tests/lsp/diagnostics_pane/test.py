@@ -1,6 +1,6 @@
 """What the server says is wrong with the document, listed and clickable.
 
-# requires: MOO_BUILD_LSP, MOO_GTK3
+# requires: MOO_BUILD_LSP
 
 GTK+3 only because it is a pane: a pane and its button are internal children of
 MooPaned, which GtkContainerAccessible does not list, and MooPanedAccessible --

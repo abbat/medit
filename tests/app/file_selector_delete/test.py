@@ -1,6 +1,5 @@
 """Deleting a file from the file selector, and changing one's mind about it.
 
-# requires: MOO_GTK3
 
 The delete entry of the listing's menu asks before it does anything --
 ask_delete_files() in src/moofileview/moofileview.c, a message dialog with Cancel

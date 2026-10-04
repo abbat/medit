@@ -1,6 +1,6 @@
 """The symbol tree: filled when it is looked at, and it goes where a row says.
 
-# requires: MOO_BUILD_LSP, MOO_GTK3
+# requires: MOO_BUILD_LSP
 
 GTK+3 only, being a pane -- see diagnostics_pane for why.
 

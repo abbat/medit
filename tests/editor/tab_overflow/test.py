@@ -1,6 +1,5 @@
 """When the tabs do not all fit, the wheel over the strip moves through them.
 
-# requires: MOO_GTK3
 
 The notebook is scrollable, which is what makes a strip that is too narrow
 scroll its tabs rather than shrink them, and a wheel over such a strip steps to

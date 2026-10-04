@@ -1,6 +1,5 @@
 """Tab and Shift+Tab move whole lines, and leave the selection where it was.
 
-# requires: MOO_GTK3
 
 tab_indent() and tab_unindent() in mootextview-input.c, which is medit's own
 code and not GtkTextView's: with a selection Tab shifts every line it touches

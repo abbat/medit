@@ -1,6 +1,5 @@
 """Export as PDF names the file after the document and writes a real PDF.
 
-# requires: MOO_GTK3
 
 action_print_pdf() in mooeditwindow.cpp offers a name for the file before the
 chooser is shown: the document's own basename with its extension replaced by

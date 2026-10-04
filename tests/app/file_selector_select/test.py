@@ -1,6 +1,5 @@
 """Selecting several files in the file selector: Ctrl, Shift and a rubber band.
 
-# requires: MOO_GTK3
 
 src/moofileview/mooiconview.c draws its own rows and does its own selecting:
 Ctrl adds a row to what is selected, Shift takes everything between the cursor

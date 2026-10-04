@@ -1,6 +1,5 @@
 """Move to Split Notebook, and Focus Document.
 
-# requires: MOO_GTK3
 
 The two entries of the View menu that no test had used. A window has two
 notebooks side by side rather than one, and the second is empty until something

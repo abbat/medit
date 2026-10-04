@@ -1,6 +1,5 @@
 """Bookmarks are set on a line and walked to, from the Document menu.
 
-# requires: MOO_GTK3
 
 action_toggle_bookmark(), action_next_bookmark(), action_prev_bookmark() and
 populate_bookmark_menu(). Where the cursor ends up is the whole of what a

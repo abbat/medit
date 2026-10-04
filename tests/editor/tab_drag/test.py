@@ -1,6 +1,5 @@
 """Three documents, and the middle tab dragged to the front.
 
-# requires: MOO_GTK3
 
 Each page of the notebook is in the accessibility tree as a tab named after its
 document, in the order the notebook holds them -- which is what reordering

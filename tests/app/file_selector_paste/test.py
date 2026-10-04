@@ -1,6 +1,4 @@
 """Paste a copied file into a second directory.
-
-# requires: MOO_GTK3
 """
 
 import os

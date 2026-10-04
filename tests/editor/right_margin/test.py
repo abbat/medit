@@ -1,6 +1,5 @@
 """The View preference makes MooTextView draw its right margin.
 
-# requires: MOO_GTK3
 
 The right margin is painted in the text window and has no accessibility node.
 Its position is the width of COLUMN columns, which the test measures off the

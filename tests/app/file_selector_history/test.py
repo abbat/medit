@@ -1,6 +1,4 @@
 """Exercise branching Back/Forward history in the file selector.
-
-# requires: MOO_GTK3
 """
 
 from app.file_selector_common import go, open_pane, where

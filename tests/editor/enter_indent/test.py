@@ -1,6 +1,5 @@
 """Enter carries the indent down, and Shift+Enter does not.
 
-# requires: MOO_GTK3
 
 handle_enter() in mootextview-input.c and moo_indenter_character() behind it.
 The new line is given the indent of the line it came from, which is the whole

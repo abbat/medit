@@ -1,6 +1,5 @@
 """Closing a changed document asks, and each of the three answers is obeyed.
 
-# requires: MOO_GTK3
 
 moo_save_changes_dialog() in moodialogs.c, reached through
 _moo_edit_save_changes_dialog() when File/Close is used on a document with

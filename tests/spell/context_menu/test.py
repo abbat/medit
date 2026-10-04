@@ -1,6 +1,6 @@
 """A misspelled word offers its corrections, and the dictionary learns.
 
-# requires: MOO_BUILD_SPELL, MOO_GTK3
+# requires: MOO_BUILD_SPELL
 
 The plugin is off until it is switched on, and checks only the extensions it is
 told about, so "notes.txt" is checked and "notes.log" is not. The dictionary is

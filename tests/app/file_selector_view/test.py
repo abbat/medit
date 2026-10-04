@@ -1,6 +1,5 @@
 """File Selector: show the hidden files, and re-read the folder.
 
-# requires: MOO_GTK3
 
 The two entries of the View submenu change what the listing holds rather than
 what any widget says, and MooIconView tells the accessibility tree nothing

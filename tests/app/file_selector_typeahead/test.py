@@ -1,6 +1,5 @@
 """Typing a name into the file selector's entry, rather than a path.
 
-# requires: MOO_GTK3
 
 The entry above the listing does two different things depending on what is typed
 into it: a path is completed (tests/app/file_selector_entry), and a bare name is

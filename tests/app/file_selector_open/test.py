@@ -1,6 +1,5 @@
 """File Selector: the two entries that open what is selected.
 
-# requires: MOO_GTK3
 
 "Open" hands the selection to medit, and "Open With / Default Application"
 hands it to whatever the desktop would use -- xdg-open, which in the sandbox is

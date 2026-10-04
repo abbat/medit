@@ -1,6 +1,5 @@
 """A user tool in the document's context menu.
 
-# requires: MOO_GTK3
 
 The user tools plugin reads two files, not one: menu.xml for the Tools menu and
 context.xml for the menu a document has under the right mouse button. Everything

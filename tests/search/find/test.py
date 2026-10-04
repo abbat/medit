@@ -1,6 +1,5 @@
 """Find selects the match, Find Next walks them, and both ends wrap.
 
-# requires: MOO_GTK3
 
 moo_text_view_run_find() and the MooFind dialog behind it, then
 moo_text_view_run_find_next() for the walk. Nothing in the tests had ever typed

@@ -4,16 +4,16 @@
 # X server, session bus -- so the entries are safe to run in parallel and none
 # of them touches the settings of the machine they run on.
 #
-#   cmake -S . -B buildu3 -DGTK_VERSION=3 -DENABLE_UI_TESTS=ON \
+#   cmake -S . -B buildu3 -DENABLE_UI_TESTS=ON \
 #         -DENABLE_SANITIZERS=address,undefined
 #   cmake --build buildu3 -j"$(nproc)"
 #
-#   cd buildu3 && ctest -j8                      # every test of this toolkit
+#   cd buildu3 && ctest -j8                      # every test
 #   ctest -R about_dialog --output-on-failure     # one test
 #   ctest -L app                                  # one subsystem
 #   cmake --build buildu3 --target ui-test        # ctest -j UI_TEST_PARALLEL
 #
-# ../tests/run.sh --gtk both runs both toolkits from the source tree.
+# ../tests/run.sh runs them from the source tree.
 #
 # The harness is python, and it is the only python in the tree. It is a
 # developer's tool: not built, not installed, not packaged, and nothing below
@@ -97,14 +97,6 @@ if(NOT _moo_ui_tests)
     message(WARNING "ENABLE_UI_TESTS is on, but tests/*/*/test.py matched nothing")
 endif()
 
-# So that a test can require the toolkit itself, which is not otherwise a
-# variable that says yes or no -- GTK_VERSION is "2" or "3" and both are true.
-if(GTK_VERSION STREQUAL "3")
-    set(MOO_GTK3 1)
-else()
-    set(MOO_GTK2 1)
-endif()
-
 # The ctags plugin shells out to the ctags program, so a test that waits for
 # symbols in the pane needs one installed on the machine running it.
 # MOO_BUILD_CTAGS is not that: the plugin is compiled unconditionally, and
@@ -159,18 +151,14 @@ foreach(_test ${_moo_ui_tests})
             "${CMAKE_CURRENT_SOURCE_DIR}/lib/runner.py"
             --test "${CMAKE_CURRENT_SOURCE_DIR}/${_test}"
             --binary "$<TARGET_FILE:medit>"
-            --gtk "${GTK_VERSION}"
             --log-dir "${_test_logs}"
             --sanitizers "${ENABLE_SANITIZERS}"
             --suppressions "${CMAKE_CURRENT_SOURCE_DIR}/lsan.supp"
             --tmp-root "${UI_TEST_TMP_ROOT}"
             --timeout ${UI_TEST_TIMEOUT})
 
-    # The toolkit is a label as well as a property of the build directory, so
-    # that a run over both of them can still be filtered and so that the label
-    # shows up in the output.
     set_tests_properties(${_test_name} PROPERTIES
-        LABELS "${_subsystem};gtk${GTK_VERSION}"
+        LABELS "${_subsystem}"
         TIMEOUT ${UI_TEST_TIMEOUT})
 
     # Where this test's coverage counters go. Named after the test, so that a

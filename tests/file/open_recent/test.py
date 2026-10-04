@@ -1,6 +1,5 @@
 """Open Recent lists what was opened, opens it again, and has a dialog behind it.
 
-# requires: MOO_GTK3
 
 MooHistoryMgr, src/mooutils/moohistorymgr.c, which keeps the list and builds both
 of the widgets that show it -- the submenu under File and the "More..." dialog at

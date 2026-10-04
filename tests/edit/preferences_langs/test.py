@@ -1,6 +1,5 @@
 """The Languages page: which files a language is used for.
 
-# requires: MOO_GTK3
 
 The page is per-language settings -- the globs a language claims, the mime types
 it claims, and the document options to use for it -- kept by moolangmgr.cpp

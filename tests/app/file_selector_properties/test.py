@@ -1,6 +1,4 @@
 """Open Properties for both a regular file and a directory.
-
-# requires: MOO_GTK3
 """
 
 from app.file_selector_common import open_pane, properties

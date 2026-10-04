@@ -1,6 +1,5 @@
 """Undo and Redo walk the document back and forward, and say when they cannot.
 
-# requires: MOO_GTK3
 
 The Edit menu's Undo and Redo are MooWindow's, not the document's: they hand the
 work to whichever widget currently answers for editing operations -- the

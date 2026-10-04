@@ -1,6 +1,5 @@
 """Comment and Uncomment with a language that has only block comments.
 
-# requires: MOO_GTK3
 
 moo_edit_comment_selection() has two branches -- line_comment() where the
 language names a line comment, block_comment() where it names only a block one --

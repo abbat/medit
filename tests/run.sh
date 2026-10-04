@@ -1,47 +1,43 @@
-#!/bin/sh
+# Run the UI tests.
 #
-# Run the UI tests over one toolkit or both.
-#
-#   tests/run.sh                      # both toolkits, every test
-#   tests/run.sh --gtk 3 -R about     # one toolkit, tests matching a regex
-#   tests/run.sh --gtk 2 -L terminal  # one toolkit, one subsystem
+#   tests/run.sh                      # every test
+#   tests/run.sh -R about             # tests matching a regex
+#   tests/run.sh -L terminal          # one subsystem
 #   tests/run.sh -j 4                 # four at a time instead of UI_TEST_PARALLEL
 #   tests/run.sh --verbose            # every line ctest prints, as it prints it
 #
-# ctest itself is the runner; this only picks the build directories and reports
-# both results at the end. Inside one build directory ctest is enough:
+# ctest itself is the runner; this only picks the build directory and reports
+# the result at the end. Inside the build directory ctest is enough:
 #
 #   cd buildu3 && ctest -R about_dialog --output-on-failure
 #
-# The build directories are buildu2 and buildu3, alongside build2 and build3.
-# They are separate because a test build is configured differently -- UI tests
+# The build directory is buildu3, alongside build3 (MUI_BUILD overrides it).
+# It is separate because a test build is configured differently -- UI tests
 # on, sanitizers on -- and because a sanitized binary is three times the size
 # and visibly slower, which is not what an ordinary build should become.
 #
-# A passing run says one line per toolkit and nothing else: the compile and the
-# per-test "Passed" lines go to <build dir>/run.log, which is worth reading only
-# when something is wrong. A failing run prints what failed and where the log
-# is. The exit code is the whole answer on a green run -- 0, or 1 if either
-# toolkit failed -- which is the point: reading 120 lines of "Passed" to learn
-# what one number already said is a waste of whoever is reading, human or not.
+# A passing run says one line and nothing else: the compile and the per-test
+# "Passed" lines go to <build dir>/run.log, which is worth reading only when
+# something is wrong. A failing run prints what failed and where the log is.
+# The exit code is the whole answer on a green run -- 0, or 1 on a failure --
+# which is the point: reading 120 lines of "Passed" to learn what one number
+# already said is a waste of whoever is reading, human or not.
 
 set -eu
 
 top=$(cd "$(dirname "$0")/.." && pwd)
 
-gtk=both
 jobs=
 verbose=
 ctest_args=
 
 usage () {
-    sed -n '3,26p' "$0" | sed 's/^# \{0,1\}//'
+    sed -n '3,25p' "$0" | sed 's/^# \{0,1\}//'
     exit "${1:-0}"
 }
 
 while [ $# -gt 0 ]; do
     case "$1" in
-        --gtk) gtk="$2"; shift 2 ;;
         -j|--parallel) jobs="$2"; shift 2 ;;
         -v|--verbose) verbose=1; shift ;;
         -h|--help) usage 0 ;;
@@ -51,12 +47,6 @@ while [ $# -gt 0 ]; do
 done
 
 ctest_args="$*"
-
-case "$gtk" in
-    2|3) toolkits="$gtk" ;;
-    both) toolkits="2 3" ;;
-    *) echo "--gtk takes 2, 3 or both" >&2; exit 2 ;;
-esac
 
 status=0
 
@@ -82,56 +72,51 @@ summarize () {
     fi
 }
 
-for v in $toolkits; do
-    eval "build=\${MUI_BUILD$v:-$top/buildu$v}"
+build=${MUI_BUILD:-$top/buildu3}
 
-    if [ ! -f "$build/CMakeCache.txt" ]; then
-        echo "no build directory at $build. Configure one with:" >&2
-        echo >&2
-        echo "  cmake -S $top -B $build -DGTK_VERSION=$v -DENABLE_UI_TESTS=ON \\" >&2
-        echo "        -DENABLE_SANITIZERS=address,undefined" >&2
-        echo "  cmake --build $build -j\"\$(nproc)\"" >&2
-        status=1
-        continue
-    fi
+if [ ! -f "$build/CMakeCache.txt" ]; then
+    echo "no build directory at $build. Configure one with:" >&2
+    echo >&2
+    echo "  cmake -S $top -B $build -DENABLE_UI_TESTS=ON \\" >&2
+    echo "        -DENABLE_SANITIZERS=address,undefined" >&2
+    echo "  cmake --build $build -j\"\$(nproc)\"" >&2
+    exit 1
+fi
 
-    log="$build/run.log"
+log="$build/run.log"
 
-    if [ -n "$jobs" ]; then
-        parallel="-j $jobs"
-    else
-        parallel="-j $(cmake -L -N "$build" 2>/dev/null |
-                       sed -n 's/^UI_TEST_PARALLEL:STRING=//p')"
-    fi
+if [ -n "$jobs" ]; then
+    parallel="-j $jobs"
+else
+    parallel="-j $(cmake -L -N "$build" 2>/dev/null |
+                   sed -n 's/^UI_TEST_PARALLEL:STRING=//p')"
+fi
 
-    if [ -n "$verbose" ]; then
-        echo "=== GTK+$v ($build)"
-        # The binary the tests drive has to be the current one, or a green run
-        # says nothing about the change that is being tested.
-        cmake --build "$build" -j"$(nproc)" >/dev/null
-        # shellcheck disable=SC2086 -- both are deliberately word-split
-        (cd "$build" && ctest $parallel --output-on-failure $ctest_args) || status=1
-        continue
-    fi
-
-    if ! cmake --build "$build" -j"$(nproc)" > "$log" 2>&1; then
-        echo "GTK+$v  build failed, last 40 lines of $log:"
-        tail -40 "$log"
-        status=1
-        continue
-    fi
-
+if [ -n "$verbose" ]; then
+    # The binary the tests drive has to be the current one, or a green run
+    # says nothing about the change that is being tested.
+    cmake --build "$build" -j"$(nproc)" >/dev/null
     # shellcheck disable=SC2086 -- both are deliberately word-split
-    if (cd "$build" && ctest $parallel --output-on-failure $ctest_args) > "$log" 2>&1; then
-        summarize "$log" "GTK+$v"
-    else
-        summarize "$log" "GTK+$v"
-        # Everything the log holds except the roll call: what a failing test
-        # printed, and the list at the end.
-        grep -Ev '^ *[0-9]+/[0-9]+ Test +#[0-9]+:.*Passed|^ *Start +[0-9]+:|^Test project ' "$log"
-        echo "--- the whole run is in $log"
-        status=1
-    fi
-done
+    (cd "$build" && ctest $parallel --output-on-failure $ctest_args) || status=1
+    exit $status
+fi
+
+if ! cmake --build "$build" -j"$(nproc)" > "$log" 2>&1; then
+    echo "build failed, last 40 lines of $log:"
+    tail -40 "$log"
+    exit 1
+fi
+
+# shellcheck disable=SC2086 -- both are deliberately word-split
+if (cd "$build" && ctest $parallel --output-on-failure $ctest_args) > "$log" 2>&1; then
+    summarize "$log" "UI"
+else
+    summarize "$log" "UI"
+    # Everything the log holds except the roll call: what a failing test
+    # printed, and the list at the end.
+    grep -Ev '^ *[0-9]+/[0-9]+ Test +#[0-9]+:.*Passed|^ *Start +[0-9]+:|^Test project ' "$log"
+    echo "--- the whole run is in $log"
+    status=1
+fi
 
 exit $status

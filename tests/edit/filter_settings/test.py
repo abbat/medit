@@ -1,6 +1,5 @@
 """File Filters: settings that apply to the files a glob picks out.
 
-# requires: MOO_GTK3
 
 The File Filters page maps a filter to a set of document settings --
 src/mooedit/mooeditfiltersettings.cpp parses both halves and applies them to

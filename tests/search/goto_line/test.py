@@ -1,6 +1,5 @@
 """Go to Line takes the cursor to the line that was typed, and Cancel does not.
 
-# requires: MOO_GTK3
 
 moo_text_view_run_goto_line() in mootextfind.c. The dialog is medit's own, built
 from mootextgotoline.ui, and three things about it are decisions: it opens on the

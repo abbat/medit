@@ -1,6 +1,5 @@
 """The drop-down of the Find entry offers to forget what it remembers.
 
-# requires: MOO_GTK3
 
 The history of the Find entry used to be a one-way street: everything typed into
 it stayed there for good, and a mistyped or a private search came back under the

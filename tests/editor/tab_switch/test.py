@@ -1,8 +1,6 @@
 """Clicking a tab brings its document forward with the keyboard, and closing one
 goes back to the document that was open before it.
 
-# requires: MOO_GTK3
-
 Two behaviours, neither watched, and the second is not what it looks like.
 
 moo_notebook_button_press() does not only switch the page when a tab is clicked:

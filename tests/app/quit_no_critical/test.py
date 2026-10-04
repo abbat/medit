@@ -1,6 +1,5 @@
 """Quitting with several tabs open must not trip a GTK-CRITICAL.
 
-# requires: MOO_GTK3
 
 _moo_edit_window_remove_doc() removes a tab's page with
 gtk_notebook_remove_page(), which can synchronously fire GTK's own

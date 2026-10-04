@@ -1,6 +1,5 @@
 """Find in Files runs the search and puts the matches in a pane.
 
-# requires: MOO_GTK3
 
 The Find plugin, src/plugins/moofind.cpp, which nothing had ever driven. It is
 not a search of its own: it builds a grep command line out of the dialog -- the

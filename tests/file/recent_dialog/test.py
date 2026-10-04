@@ -1,6 +1,5 @@
 """The recent files dialog says what it is, and offers to forget what it lists.
 
-# requires: MOO_GTK3
 
 The dialog behind File / Open Recent / "More..." came up with an empty title --
 a window called "medit" by the window manager and nothing by anything else --

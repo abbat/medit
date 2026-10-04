@@ -1,6 +1,5 @@
 """The file selector's bookmarks: added from its menu, edited in its dialog.
 
-# requires: MOO_GTK3
 
 src/moofileview/moobookmarkmgr.c keeps the bookmarks of the file selector and
 builds both things that show them -- the menu the toolbar's bookmark button drops

@@ -1,6 +1,5 @@
 """Splitting the view gives two windows onto one document.
 
-# requires: MOO_GTK3
 
 _moo_edit_tab_set_split_horizontal() and its vertical twin, through the View
 menu's two toggles. What comes out is a second MooEditView over the same MooEdit,

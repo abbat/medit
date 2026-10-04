@@ -1,6 +1,5 @@
 """The text is zoomed from the View menu and with Ctrl and the wheel, in every document.
 
-# requires: MOO_GTK3
 
 _moo_edit_zoom() in mooeditprefs.cpp. The zoom is one for the whole editor, so a
 document that was not in front when it changed shows the new size once it is, and

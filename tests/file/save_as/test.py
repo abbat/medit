@@ -1,6 +1,5 @@
 """Save As writes the new file, renames the document, and leaves the old file alone.
 
-# requires: MOO_GTK3
 
 _moo_edit_save_as_dialog() in mooeditdialogs.cpp. The dialog is a
 GtkFileChooserDialog, but what medit does with it is its own: it seeds the name

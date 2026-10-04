@@ -1,6 +1,5 @@
 """The Encoding menu says what a document will be written as, and changes it.
 
-# requires: MOO_GTK3
 
 create_doc_encoding_action() hangs _moo_encodings_menu_new()'s menu off the
 Document menu and update_doc_encoding_item() keeps its first item on the encoding

@@ -1,6 +1,5 @@
 """Show spaces and Show trailing spaces change what the text view paints.
 
-# requires: MOO_GTK3
 
 The preferences are reachable through the View page, while the marks themselves
 are painted by MooTextView and are not exposed in the accessibility tree.  The

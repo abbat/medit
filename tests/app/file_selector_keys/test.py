@@ -1,6 +1,5 @@
 """Walking the file selector's listing with the arrows, Home and End.
 
-# requires: MOO_GTK3
 
 src/mooutils/mooiconview.c is a view of medit's own -- GTK's icon view could not
 do what the file selector wanted of it -- and the tests had only ever clicked in

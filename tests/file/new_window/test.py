@@ -1,6 +1,5 @@
 """File/New Window is a second window with its own documents.
 
-# requires: MOO_GTK3
 
 Two windows are two MooEditWindows over one MooEditor, and every open file
 belongs to one of them. What has to be right is which one: a file opened from a

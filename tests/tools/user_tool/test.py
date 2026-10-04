@@ -1,6 +1,5 @@
 """A tool the user defined is in the Tools menu and runs on the document.
 
-# requires: MOO_GTK3
 
 The Tools menu is mostly a place other things put items into: the terminal and
 LSP plugins add theirs from code, and the UserTools plugin reads descriptions out

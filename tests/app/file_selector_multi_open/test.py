@@ -1,6 +1,4 @@
 """Open several selected files from the file selector.
-
-# requires: MOO_GTK3
 """
 
 from app.file_selector_common import open_pane, select_row

@@ -1,6 +1,5 @@
 """The font dialog behind the Preferences font button.
 
-# requires: MOO_GTK3
 
 src/mooutils/moofontsel.c is medit's own copy of GTK's font selection, kept
 because GTK's has no way to show only the fonts an editor can use, and no test

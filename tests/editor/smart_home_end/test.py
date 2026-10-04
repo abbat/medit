@@ -1,6 +1,5 @@
 """Home and End go where medit says, not where GtkTextView would.
 
-# requires: MOO_GTK3
 
 Both keys are medit's own: GtkTextView moves to the ends of the display line,
 and moo_text_view_home_end() puts the cursor at the text instead and toggles to

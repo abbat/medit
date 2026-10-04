@@ -1,6 +1,4 @@
 """Create a folder from the file selector and verify its model update.
-
-# requires: MOO_GTK3
 """
 
 from app.file_selector_common import first_row_menu, open_pane

@@ -1,6 +1,5 @@
 """A tab strip with more tabs than it can show: the arrows at its ends.
 
-# requires: MOO_GTK3
 
 A scrollable notebook draws an arrow at each end of a strip that overflows, and
 a click on one steps to the next document and scrolls the strip to keep its tab

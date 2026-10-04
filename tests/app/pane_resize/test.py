@@ -1,6 +1,5 @@
 """A pane: make it wider, put it away, bring it back, and try to overdo it.
 
-# requires: MOO_GTK3
 
 Every pane of the window is a MooPaned holding the document and, along one
 edge, the pane's own widget with a splitter between them. The splitter is not

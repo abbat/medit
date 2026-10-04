@@ -1,6 +1,5 @@
 """Renaming a file to a name already taken asks before it overwrites anything.
 
-# requires: MOO_GTK3
 
 The name in the Properties dialog is applied by rename_file() in
 src/moofileview/moofileview-dialogs.cpp, which renames through rename(2): a

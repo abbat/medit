@@ -1,6 +1,5 @@
 """A double click takes a run of one kind of character, a triple click the line.
 
-# requires: MOO_GTK3
 
 _moo_text_view_extend_selection() in mootextview-input.c. GtkTextView selects a
 word on a double click by pango's word rule; medit selects by character class

@@ -1,6 +1,5 @@
 """Increase and Decrease Indent from the Edit menu, with Tab turned off.
 
-# requires: MOO_GTK3
 
 The menu items call moo_text_view_indent() and its twin directly, where the Tab
 key reaches the same code through handle_tab() and only when the "tab indents"

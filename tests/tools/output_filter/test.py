@@ -1,6 +1,5 @@
 """A user tool's output filter turns a line of output into a place in a file.
 
-# requires: MOO_GTK3
 
 src/plugins/usertools/moooutputfilterregex.cpp reads filters.xml out of medit's
 data directory, and each filter is a set of regular expressions with named groups
