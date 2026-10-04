@@ -716,11 +716,11 @@ pack_frame_in_table (GtkWidget      *vbox,
     {
         case MOO_PANE_POS_LEFT:
         case MOO_PANE_POS_RIGHT:
-            separator = gtk_vseparator_new ();
+            separator = gtk_separator_new (GTK_ORIENTATION_VERTICAL);
             break;
         case MOO_PANE_POS_TOP:
         case MOO_PANE_POS_BOTTOM:
-            separator = gtk_hseparator_new ();
+            separator = gtk_separator_new (GTK_ORIENTATION_HORIZONTAL);
             break;
     }
 
@@ -778,7 +778,7 @@ create_frame_widget (MooPane        *pane,
     toolbar = create_frame_toolbar (pane, embedded);
     gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
 
-    separator = gtk_hseparator_new ();
+    separator = gtk_separator_new (GTK_ORIENTATION_HORIZONTAL);
     gtk_widget_show (separator);
     gtk_box_pack_start (GTK_BOX (vbox), separator, FALSE, FALSE, 0);
 

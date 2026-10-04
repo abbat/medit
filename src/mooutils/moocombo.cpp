@@ -443,7 +443,7 @@ create_popup_window (MooCombo *combo)
 
     combo->priv->bottom_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
     gtk_widget_set_no_show_all (combo->priv->bottom_box, TRUE);
-    separator = gtk_hseparator_new ();
+    separator = gtk_separator_new (GTK_ORIENTATION_HORIZONTAL);
     gtk_widget_show (separator);
     gtk_box_pack_start (GTK_BOX (combo->priv->bottom_box), separator, FALSE, FALSE, 0);
     gtk_box_pack_start (GTK_BOX (vbox), combo->priv->bottom_box, FALSE, FALSE, 0);
