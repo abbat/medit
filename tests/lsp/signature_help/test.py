@@ -4,7 +4,8 @@
 
 Asked for by the characters the server names -- "(" and "," for most of them --
 and by Ctrl+Shift+Space, which is what a call already typed needs. The popup is
-a window of the plugin's own, the way the completion popup is: a plain GtkWindow with a GtkLabel in it.
+a window of the plugin's own, the way the completion popup is: a plain GtkWindow
+with a GtkLabel in it.
 
 Which parameter of the signature is the one being typed is the whole point of
 the feature, and the only part of it a test can see from outside is the line
