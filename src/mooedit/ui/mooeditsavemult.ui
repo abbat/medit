@@ -11,79 +11,74 @@
         <property name="orientation">vertical</property>
         <property name="visible">True</property>
         <child>
-          <object class="GtkAlignment" id="alignment">
+          <object class="GtkGrid" id="table1">
+            <property name="margin_top">6</property>
+            <property name="margin_bottom">6</property>
+            <property name="margin_start">6</property>
+            <property name="margin_end">6</property>
             <property name="visible">True</property>
-            <property name="top_padding">6</property>
-            <property name="bottom_padding">6</property>
-            <property name="left_padding">6</property>
-            <property name="right_padding">6</property>
+            <property name="column_spacing">6</property>
+            <property name="row_spacing">6</property>
             <child>
-              <object class="GtkGrid" id="table1">
+              <object class="GtkImage" id="image1">
                 <property name="visible">True</property>
-                <property name="column_spacing">6</property>
-                <property name="row_spacing">6</property>
+                <property name="stock">gtk-dialog-warning</property>
+                <property name="icon-size">6</property>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label">
+                <property name="hexpand">True</property>
+                <property name="valign">center</property>
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="label">&lt;span weight="bold" size="larger"&gt;There are n documents with unsaved changes. Save changes before closing?&lt;/span&gt;</property>
+                <property name="use_markup">True</property>
+                <property name="wrap">True</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="top_attach">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label2">
+                <property name="hexpand">True</property>
+                <property name="valign">center</property>
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">Select the documents you want to save:</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="top_attach">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkScrolledWindow" id="scrolledwindow1">
+                <property name="hexpand">True</property>
+                <property name="vexpand">True</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="hscrollbar_policy">automatic</property>
+                <property name="vscrollbar_policy">automatic</property>
+                <property name="shadow_type">in</property>
                 <child>
-                  <object class="GtkImage" id="image1">
+                  <object class="GtkTreeView" id="treeview">
                     <property name="visible">True</property>
-                    <property name="stock">gtk-dialog-warning</property>
-                    <property name="icon-size">6</property>
+                    <property name="headers_visible">False</property>
+                    <property name="enable_search">False</property>
                   </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel" id="label">
-                    <property name="hexpand">True</property>
-                    <property name="valign">center</property>
-                    <property name="visible">True</property>
-                    <property name="xalign">0</property>
-                    <property name="label">&lt;span weight="bold" size="larger"&gt;There are n documents with unsaved changes. Save changes before closing?&lt;/span&gt;</property>
-                    <property name="use_markup">True</property>
-                    <property name="wrap">True</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel" id="label2">
-                    <property name="hexpand">True</property>
-                    <property name="valign">center</property>
-                    <property name="visible">True</property>
-                    <property name="xalign">0</property>
-                    <property name="label" translatable="yes">Select the documents you want to save:</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkScrolledWindow" id="scrolledwindow1">
-                    <property name="hexpand">True</property>
-                    <property name="vexpand">True</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="hscrollbar_policy">automatic</property>
-                    <property name="vscrollbar_policy">automatic</property>
-                    <property name="shadow_type">in</property>
-                    <child>
-                      <object class="GtkTreeView" id="treeview">
-                        <property name="visible">True</property>
-                        <property name="headers_visible">False</property>
-                        <property name="enable_search">False</property>
-                      </object>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">2</property>
-                  </packing>
                 </child>
               </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="top_attach">2</property>
+              </packing>
             </child>
           </object>
           <packing>

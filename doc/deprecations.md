@@ -78,7 +78,7 @@ bare start. Dialogs report more.
   `GtkButtonBox`, `GtkVSeparator` → `GtkSeparator` + `orientation`. A script, one commit
   per type. Check the defaults: a `GtkVBox` had `homogeneous` FALSE and `spacing` 0,
   the same as a `GtkBox`.
-- [ ] 2.2 `GtkAlignment` in `.ui` → margins and `halign`/`valign` on the child.
+- [x] 2.2 `GtkAlignment` in `.ui` → margins and `halign`/`valign` on the child.
   `left_padding` maps to `margin-start`, and so on. Also check `xalign`/`xpad` on
   anything that is not a `GtkLabel`: those are `GtkMisc` properties.
 - [ ] 2.3 The C++ classes deriving `GtkVBox`/`GtkHBox`/`GtkAlignment`

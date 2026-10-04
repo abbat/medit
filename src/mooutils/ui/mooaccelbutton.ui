@@ -22,20 +22,15 @@
                 <property name="border_width">6</property>
                 <property name="label_xalign">0</property>
                 <child>
-                  <object class="GtkAlignment" id="alignment31">
+                  <object class="GtkLabel" id="label">
+                    <property name="margin_top">6</property>
+                    <property name="margin_bottom">6</property>
+                    <property name="margin_start">6</property>
+                    <property name="margin_end">6</property>
                     <property name="visible">True</property>
-                    <property name="top_padding">6</property>
-                    <property name="bottom_padding">6</property>
-                    <property name="left_padding">6</property>
-                    <property name="right_padding">6</property>
-                    <child>
-                      <object class="GtkLabel" id="label">
-                        <property name="visible">True</property>
-                        <property name="label">
+                    <property name="label">
 New accelerator...
 </property>
-                      </object>
-                    </child>
                   </object>
                 </child>
               </object>
@@ -54,37 +49,32 @@ New accelerator...
                 <property name="visible">True</property>
                 <property name="focus_on_click">False</property>
                 <child>
-                  <object class="GtkAlignment" id="alignment29">
+                  <object class="GtkBox" id="hbox11">
+                    <property name="halign">center</property>
+                    <property name="valign">center</property>
                     <property name="visible">True</property>
-                    <property name="xscale">0</property>
-                    <property name="yscale">0</property>
+                    <property name="spacing">2</property>
                     <child>
-                      <object class="GtkBox" id="hbox11">
+                      <object class="GtkImage" id="image1">
                         <property name="visible">True</property>
-                        <property name="spacing">2</property>
-                        <child>
-                          <object class="GtkImage" id="image1">
-                            <property name="visible">True</property>
-                            <property name="stock">gtk-cancel</property>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">False</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkLabel" id="label65">
-                            <property name="visible">True</property>
-                            <property name="label">Cancel</property>
-                            <property name="use_underline">True</property>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">False</property>
-                            <property name="position">1</property>
-                          </packing>
-                        </child>
+                        <property name="stock">gtk-cancel</property>
                       </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="label65">
+                        <property name="visible">True</property>
+                        <property name="label">Cancel</property>
+                        <property name="use_underline">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="position">1</property>
+                      </packing>
                     </child>
                   </object>
                 </child>
@@ -95,37 +85,32 @@ New accelerator...
                 <property name="visible">True</property>
                 <property name="focus_on_click">False</property>
                 <child>
-                  <object class="GtkAlignment" id="alignment30">
+                  <object class="GtkBox" id="hbox12">
+                    <property name="halign">center</property>
+                    <property name="valign">center</property>
                     <property name="visible">True</property>
-                    <property name="xscale">0</property>
-                    <property name="yscale">0</property>
+                    <property name="spacing">2</property>
                     <child>
-                      <object class="GtkBox" id="hbox12">
+                      <object class="GtkImage" id="image2">
                         <property name="visible">True</property>
-                        <property name="spacing">2</property>
-                        <child>
-                          <object class="GtkImage" id="image2">
-                            <property name="visible">True</property>
-                            <property name="stock">gtk-ok</property>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">False</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkLabel" id="label66">
-                            <property name="visible">True</property>
-                            <property name="label">OK</property>
-                            <property name="use_underline">True</property>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">False</property>
-                            <property name="position">1</property>
-                          </packing>
-                        </child>
+                        <property name="stock">gtk-ok</property>
                       </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="label66">
+                        <property name="visible">True</property>
+                        <property name="label">OK</property>
+                        <property name="use_underline">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="position">1</property>
+                      </packing>
                     </child>
                   </object>
                 </child>

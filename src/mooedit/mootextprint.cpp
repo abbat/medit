@@ -2002,8 +2002,8 @@ moo_print_operation_create_custom_widget (G_GNUC_UNUSED GtkPrintOperation *opera
     g_return_val_if_fail (xml != NULL, NULL);
 
     moo_bind_sensitive (GTK_WIDGET (GTK_CHECK_BUTTON (moo_builder_get (xml, "wrap"))), GTK_WIDGET (GTK_CHECK_BUTTON (moo_builder_get (xml, "ellipsize"))), TRUE);
-    moo_bind_sensitive (GTK_WIDGET (GTK_CHECK_BUTTON (moo_builder_get (xml, "print_header"))), GTK_WIDGET (GTK_ALIGNMENT (moo_builder_get (xml, "header_alignment"))), FALSE);
-    moo_bind_sensitive (GTK_WIDGET (GTK_CHECK_BUTTON (moo_builder_get (xml, "print_footer"))), GTK_WIDGET (GTK_ALIGNMENT (moo_builder_get (xml, "footer_alignment"))), FALSE);
+    moo_bind_sensitive (GTK_WIDGET (GTK_CHECK_BUTTON (moo_builder_get (xml, "print_header"))), GTK_WIDGET (moo_builder_get (xml, "header_alignment")), FALSE);
+    moo_bind_sensitive (GTK_WIDGET (GTK_CHECK_BUTTON (moo_builder_get (xml, "print_footer"))), GTK_WIDGET (moo_builder_get (xml, "footer_alignment")), FALSE);
     moo_bind_sensitive (GTK_WIDGET (GTK_CHECK_BUTTON (moo_builder_get (xml, "use_custom_font"))), GTK_WIDGET (GTK_FONT_BUTTON (moo_builder_get (xml, "font"))), FALSE);
     moo_bind_sensitive (GTK_WIDGET (GTK_CHECK_BUTTON (moo_builder_get (xml, "line_numbers"))), GTK_WIDGET (moo_builder_get (xml, "line_numbers_hbox")), FALSE);
 

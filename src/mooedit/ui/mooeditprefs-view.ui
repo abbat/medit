@@ -36,45 +36,40 @@
               </packing>
             </child>
             <child>
-              <object class="GtkAlignment" id="alignment2">
+              <object class="GtkBox" id="vbox10">
+                <property name="margin_start">12</property>
+                <property name="orientation">vertical</property>
                 <property name="visible">True</property>
-                <property name="left_padding">12</property>
+                <property name="spacing">6</property>
                 <child>
-                  <object class="GtkBox" id="vbox10">
-                    <property name="orientation">vertical</property>
+                  <object class="GtkCheckButton" id="enable_wrapping">
+                    <property name="label" translatable="yes">Enable text wrapping</property>
                     <property name="visible">True</property>
-                    <property name="spacing">6</property>
-                    <child>
-                      <object class="GtkCheckButton" id="enable_wrapping">
-                        <property name="label" translatable="yes">Enable text wrapping</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="receives_default">False</property>
-                        <property name="use_underline">True</property>
-                        <property name="draw_indicator">True</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkCheckButton" id="dont_split_words">
-                        <property name="label" translatable="yes">Do not split words</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="receives_default">False</property>
-                        <property name="use_underline">True</property>
-                        <property name="draw_indicator">True</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
+                    <property name="can_focus">False</property>
+                    <property name="receives_default">False</property>
+                    <property name="use_underline">True</property>
+                    <property name="draw_indicator">True</property>
                   </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkCheckButton" id="dont_split_words">
+                    <property name="label" translatable="yes">Do not split words</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="receives_default">False</property>
+                    <property name="use_underline">True</property>
+                    <property name="draw_indicator">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">1</property>
+                  </packing>
                 </child>
               </object>
               <packing>
@@ -109,75 +104,70 @@
               </packing>
             </child>
             <child>
-              <object class="GtkAlignment" id="alignment6">
+              <object class="GtkBox" id="vbox12">
+                <property name="margin_start">12</property>
+                <property name="orientation">vertical</property>
                 <property name="visible">True</property>
-                <property name="left_padding">12</property>
+                <property name="spacing">6</property>
                 <child>
-                  <object class="GtkBox" id="vbox12">
-                    <property name="orientation">vertical</property>
+                  <object class="GtkCheckButton" id="check_enable_highlighting">
+                    <property name="label" translatable="yes">Enable syntax highlighting</property>
                     <property name="visible">True</property>
-                    <property name="spacing">6</property>
-                    <child>
-                      <object class="GtkCheckButton" id="check_enable_highlighting">
-                        <property name="label" translatable="yes">Enable syntax highlighting</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="receives_default">False</property>
-                        <property name="use_underline">True</property>
-                        <property name="draw_indicator">True</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkCheckButton" id="check_highlight_matching_brackets">
-                        <property name="label" translatable="yes">Highlight matching brackets</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="receives_default">False</property>
-                        <property name="use_underline">True</property>
-                        <property name="draw_indicator">True</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkCheckButton" id="check_highlight_mismatching_brackets">
-                        <property name="label" translatable="yes">Highlight mismatching brackets</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="receives_default">False</property>
-                        <property name="use_underline">True</property>
-                        <property name="draw_indicator">True</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="position">2</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkCheckButton" id="check_highlight_current_line">
-                        <property name="label" translatable="yes">Highlight current line</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="receives_default">False</property>
-                        <property name="use_underline">True</property>
-                        <property name="draw_indicator">True</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="position">3</property>
-                      </packing>
-                    </child>
+                    <property name="can_focus">False</property>
+                    <property name="receives_default">False</property>
+                    <property name="use_underline">True</property>
+                    <property name="draw_indicator">True</property>
                   </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkCheckButton" id="check_highlight_matching_brackets">
+                    <property name="label" translatable="yes">Highlight matching brackets</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="receives_default">False</property>
+                    <property name="use_underline">True</property>
+                    <property name="draw_indicator">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkCheckButton" id="check_highlight_mismatching_brackets">
+                    <property name="label" translatable="yes">Highlight mismatching brackets</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="receives_default">False</property>
+                    <property name="use_underline">True</property>
+                    <property name="draw_indicator">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkCheckButton" id="check_highlight_current_line">
+                    <property name="label" translatable="yes">Highlight current line</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="receives_default">False</property>
+                    <property name="use_underline">True</property>
+                    <property name="draw_indicator">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">3</property>
+                  </packing>
                 </child>
               </object>
               <packing>
@@ -212,21 +202,80 @@
               </packing>
             </child>
             <child>
-              <object class="GtkAlignment" id="alignment7">
+              <object class="GtkBox" id="vbox14">
+                <property name="margin_start">12</property>
+                <property name="orientation">vertical</property>
                 <property name="visible">True</property>
-                <property name="left_padding">12</property>
+                <property name="spacing">6</property>
                 <child>
-                  <object class="GtkBox" id="vbox14">
-                    <property name="orientation">vertical</property>
+                  <object class="GtkCheckButton" id="show_line_numbers">
+                    <property name="label" translatable="yes">Show line numbers</property>
                     <property name="visible">True</property>
-                    <property name="spacing">6</property>
+                    <property name="can_focus">False</property>
+                    <property name="receives_default">False</property>
+                    <property name="use_underline">True</property>
+                    <property name="draw_indicator">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkCheckButton" id="check_show_tabs">
+                    <property name="label" translatable="yes">Show tabs</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="receives_default">False</property>
+                    <property name="use_underline">True</property>
+                    <property name="draw_indicator">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkCheckButton" id="check_show_spaces">
+                    <property name="label" translatable="yes">Show spaces</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="receives_default">False</property>
+                    <property name="use_underline">True</property>
+                    <property name="draw_indicator">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkCheckButton" id="check_show_trailing_spaces">
+                    <property name="label" translatable="yes">Show trailing spaces</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="receives_default">False</property>
+                    <property name="use_underline">True</property>
+                    <property name="draw_indicator">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkBox" id="hbox3">
+                    <property name="visible">True</property>
                     <child>
-                      <object class="GtkCheckButton" id="show_line_numbers">
-                        <property name="label" translatable="yes">Show line numbers</property>
+                      <object class="GtkCheckButton" id="draw_rigth_margin">
+                        <property name="label" translatable="yes" comments="Part of the phrase &quot;Draw right margin at column [XX]&quot;">Draw right margin</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="receives_default">False</property>
-                        <property name="use_underline">True</property>
                         <property name="draw_indicator">True</property>
                       </object>
                       <packing>
@@ -236,60 +285,13 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkCheckButton" id="check_show_tabs">
-                        <property name="label" translatable="yes">Show tabs</property>
+                      <object class="GtkBox" id="right_margin_box">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="receives_default">False</property>
-                        <property name="use_underline">True</property>
-                        <property name="draw_indicator">True</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkCheckButton" id="check_show_spaces">
-                        <property name="label" translatable="yes">Show spaces</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="receives_default">False</property>
-                        <property name="use_underline">True</property>
-                        <property name="draw_indicator">True</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="position">2</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkCheckButton" id="check_show_trailing_spaces">
-                        <property name="label" translatable="yes">Show trailing spaces</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="receives_default">False</property>
-                        <property name="use_underline">True</property>
-                        <property name="draw_indicator">True</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="position">3</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkBox" id="hbox3">
-                        <property name="visible">True</property>
+                        <property name="spacing">6</property>
                         <child>
-                          <object class="GtkCheckButton" id="draw_rigth_margin">
-                            <property name="label" translatable="yes" comments="Part of the phrase &quot;Draw right margin at column [XX]&quot;">Draw right margin</property>
+                          <object class="GtkLabel" id="label9">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="receives_default">False</property>
-                            <property name="draw_indicator">True</property>
+                            <property name="label" translatable="yes" comments="Part of the phrase &quot;Draw right margin at column [XX]&quot;">at column</property>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -298,46 +300,29 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkBox" id="right_margin_box">
+                          <object class="GtkSpinButton" id="spin_right_margin_offset">
                             <property name="visible">True</property>
-                            <property name="spacing">6</property>
-                            <child>
-                              <object class="GtkLabel" id="label9">
-                                <property name="visible">True</property>
-                                <property name="label" translatable="yes" comments="Part of the phrase &quot;Draw right margin at column [XX]&quot;">at column</property>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">False</property>
-                                <property name="position">0</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkSpinButton" id="spin_right_margin_offset">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="adjustment">adjustment1</property>
-                                <property name="numeric">True</property>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">False</property>
-                                <property name="position">1</property>
-                              </packing>
-                            </child>
+                            <property name="can_focus">True</property>
+                            <property name="adjustment">adjustment1</property>
+                            <property name="numeric">True</property>
                           </object>
                           <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
                             <property name="position">1</property>
                           </packing>
                         </child>
                       </object>
                       <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="position">4</property>
+                        <property name="position">1</property>
                       </packing>
                     </child>
                   </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">4</property>
+                  </packing>
                 </child>
               </object>
               <packing>

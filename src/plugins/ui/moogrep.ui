@@ -9,186 +9,176 @@
         <property name="orientation">vertical</property>
         <property name="visible">True</property>
         <child>
-          <object class="GtkAlignment" id="alignment1">
+          <object class="GtkBox" id="vbox1">
+            <property name="margin_top">6</property>
+            <property name="margin_bottom">6</property>
+            <property name="margin_start">6</property>
+            <property name="margin_end">6</property>
+            <property name="orientation">vertical</property>
             <property name="visible">True</property>
-            <property name="top_padding">6</property>
-            <property name="bottom_padding">6</property>
-            <property name="left_padding">6</property>
-            <property name="right_padding">6</property>
             <child>
-              <object class="GtkBox" id="vbox1">
-                <property name="orientation">vertical</property>
+              <object class="GtkGrid" id="table1">
                 <property name="visible">True</property>
+                <property name="column_spacing">6</property>
+                <property name="row_spacing">6</property>
                 <child>
-                  <object class="GtkGrid" id="table1">
+                  <object class="GtkEventBox" id="eventbox1">
+                    <property name="valign">center</property>
                     <property name="visible">True</property>
-                    <property name="column_spacing">6</property>
-                    <property name="row_spacing">6</property>
+                    <property name="tooltip-text">This entry content will be passed to grep</property>
                     <child>
-                      <object class="GtkEventBox" id="eventbox1">
-                        <property name="valign">center</property>
+                      <object class="GtkLabel" id="label1">
                         <property name="visible">True</property>
-                        <property name="tooltip-text">This entry content will be passed to grep</property>
-                        <child>
-                          <object class="GtkLabel" id="label1">
-                            <property name="visible">True</property>
-                            <property name="xalign">1</property>
-                            <property name="label" translatable="yes">_Pattern</property>
-                            <property name="use_underline">True</property>
-                            <property name="mnemonic_widget">pattern_combo</property>
-                          </object>
-                        </child>
+                        <property name="xalign">1</property>
+                        <property name="label" translatable="yes">_Pattern</property>
+                        <property name="use_underline">True</property>
+                        <property name="mnemonic_widget">pattern_combo</property>
                       </object>
-                      <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkEventBox" id="eventbox2">
-                        <property name="valign">center</property>
-                        <property name="visible">True</property>
-                        <property name="tooltip-text">Enter semicolon-separated list of globs</property>
-                        <child>
-                          <object class="GtkLabel" id="label2">
-                            <property name="visible">True</property>
-                            <property name="xalign">1</property>
-                            <property name="label" translatable="yes">Fi_les</property>
-                            <property name="use_underline">True</property>
-                            <property name="mnemonic_widget">glob_combo</property>
-                          </object>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkEventBox" id="eventbox3">
-                        <property name="valign">center</property>
-                        <property name="visible">True</property>
-                        <property name="tooltip-text">You can use Tab completion in this entry</property>
-                        <child>
-                          <object class="GtkLabel" id="label3">
-                            <property name="visible">True</property>
-                            <property name="xalign">1</property>
-                            <property name="label" translatable="yes">_Directory</property>
-                            <property name="use_underline">True</property>
-                            <property name="mnemonic_widget">dir_combo</property>
-                          </object>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">2</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkEventBox" id="eventbox4">
-                        <property name="valign">center</property>
-                        <property name="visible">True</property>
-                        <property name="tooltip-text">Enter semicolon-separated list of globs</property>
-                        <child>
-                          <object class="GtkLabel" id="label5">
-                            <property name="visible">True</property>
-                            <property name="xalign">1</property>
-                            <property name="label" translatable="yes">S_kip files</property>
-                            <property name="use_underline">True</property>
-                            <property name="mnemonic_widget">skip_combo</property>
-                          </object>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">3</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="MooHistoryCombo" id="pattern_combo">
-                        <property name="hexpand">True</property>
-                        <property name="valign">center</property>
-  <property name="history-list-id">FindPlugin/grep/pattern</property>
-                        <property name="visible">True</property>
-                        <property name="tooltip-text">This entry content will be passed to grep</property>
-                        <property name="activates_default">True</property>
-                      </object>
-                      <packing>
-                        <property name="left_attach">1</property>
-                        <property name="top_attach">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="MooHistoryCombo" id="glob_combo">
-                        <property name="hexpand">True</property>
-                        <property name="valign">center</property>
-  <property name="history-list-id">FindPlugin/grep/glob</property>
-                        <property name="visible">True</property>
-                        <property name="tooltip-text">Enter semicolon-separated list of globs</property>
-                        <property name="activates_default">True</property>
-                      </object>
-                      <packing>
-                        <property name="left_attach">1</property>
-                        <property name="top_attach">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="MooHistoryCombo" id="dir_combo">
-                        <property name="hexpand">True</property>
-                        <property name="valign">center</property>
-  <property name="history-list-id">FindPlugin/grep/dir</property>
-                        <property name="visible">True</property>
-                        <property name="tooltip-text">You can use Tab completion in this entry</property>
-                        <property name="activates_default">True</property>
-                      </object>
-                      <packing>
-                        <property name="left_attach">1</property>
-                        <property name="top_attach">2</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="MooHistoryCombo" id="skip_combo">
-                        <property name="hexpand">True</property>
-                        <property name="valign">center</property>
-  <property name="history-list-id">FindPlugin/grep/skip</property>
-                        <property name="visible">True</property>
-                        <property name="tooltip-text">Enter semicolon-separated list of globs</property>
-                        <property name="activates_default">True</property>
-                      </object>
-                      <packing>
-                        <property name="left_attach">1</property>
-                        <property name="top_attach">3</property>
-                      </packing>
                     </child>
                   </object>
                   <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">0</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkAlignment" id="alignment2">
+                  <object class="GtkEventBox" id="eventbox2">
+                    <property name="valign">center</property>
                     <property name="visible">True</property>
-                    <property name="top_padding">6</property>
-                    <property name="bottom_padding">6</property>
-                    <property name="left_padding">12</property>
+                    <property name="tooltip-text">Enter semicolon-separated list of globs</property>
                     <child>
-                      <object class="GtkCheckButton" id="case_sensitive_button">
+                      <object class="GtkLabel" id="label2">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Case _sensitive</property>
+                        <property name="xalign">1</property>
+                        <property name="label" translatable="yes">Fi_les</property>
                         <property name="use_underline">True</property>
-                        <property name="active">True</property>
-                        <property name="draw_indicator">True</property>
+                        <property name="mnemonic_widget">glob_combo</property>
                       </object>
                     </child>
                   </object>
                   <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">1</property>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkEventBox" id="eventbox3">
+                    <property name="valign">center</property>
+                    <property name="visible">True</property>
+                    <property name="tooltip-text">You can use Tab completion in this entry</property>
+                    <child>
+                      <object class="GtkLabel" id="label3">
+                        <property name="visible">True</property>
+                        <property name="xalign">1</property>
+                        <property name="label" translatable="yes">_Directory</property>
+                        <property name="use_underline">True</property>
+                        <property name="mnemonic_widget">dir_combo</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkEventBox" id="eventbox4">
+                    <property name="valign">center</property>
+                    <property name="visible">True</property>
+                    <property name="tooltip-text">Enter semicolon-separated list of globs</property>
+                    <child>
+                      <object class="GtkLabel" id="label5">
+                        <property name="visible">True</property>
+                        <property name="xalign">1</property>
+                        <property name="label" translatable="yes">S_kip files</property>
+                        <property name="use_underline">True</property>
+                        <property name="mnemonic_widget">skip_combo</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">3</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="MooHistoryCombo" id="pattern_combo">
+                    <property name="hexpand">True</property>
+                    <property name="valign">center</property>
+  <property name="history-list-id">FindPlugin/grep/pattern</property>
+                    <property name="visible">True</property>
+                    <property name="tooltip-text">This entry content will be passed to grep</property>
+                    <property name="activates_default">True</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="MooHistoryCombo" id="glob_combo">
+                    <property name="hexpand">True</property>
+                    <property name="valign">center</property>
+  <property name="history-list-id">FindPlugin/grep/glob</property>
+                    <property name="visible">True</property>
+                    <property name="tooltip-text">Enter semicolon-separated list of globs</property>
+                    <property name="activates_default">True</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="MooHistoryCombo" id="dir_combo">
+                    <property name="hexpand">True</property>
+                    <property name="valign">center</property>
+  <property name="history-list-id">FindPlugin/grep/dir</property>
+                    <property name="visible">True</property>
+                    <property name="tooltip-text">You can use Tab completion in this entry</property>
+                    <property name="activates_default">True</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="MooHistoryCombo" id="skip_combo">
+                    <property name="hexpand">True</property>
+                    <property name="valign">center</property>
+  <property name="history-list-id">FindPlugin/grep/skip</property>
+                    <property name="visible">True</property>
+                    <property name="tooltip-text">Enter semicolon-separated list of globs</property>
+                    <property name="activates_default">True</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">3</property>
                   </packing>
                 </child>
               </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="case_sensitive_button">
+                <property name="margin_top">6</property>
+                <property name="margin_bottom">6</property>
+                <property name="margin_start">12</property>
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Case _sensitive</property>
+                <property name="use_underline">True</property>
+                <property name="active">True</property>
+                <property name="draw_indicator">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">1</property>
+              </packing>
             </child>
           </object>
           <packing>

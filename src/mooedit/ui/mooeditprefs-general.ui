@@ -44,165 +44,160 @@
               </packing>
             </child>
             <child>
-              <object class="GtkAlignment" id="alignment11">
+              <object class="GtkBox" id="vbox22">
+                <property name="margin_start">12</property>
+                <property name="orientation">vertical</property>
                 <property name="visible">True</property>
-                <property name="left_padding">12</property>
+                <property name="spacing">6</property>
                 <child>
-                  <object class="GtkBox" id="vbox22">
-                    <property name="orientation">vertical</property>
+                  <object class="GtkCheckButton" id="smarthome">
+                    <property name="label" translatable="yes">Smart Home and End</property>
                     <property name="visible">True</property>
-                    <property name="spacing">6</property>
+                    <property name="can_focus">False</property>
+                    <property name="receives_default">False</property>
+                    <property name="use_underline">True</property>
+                    <property name="focus_on_click">False</property>
+                    <property name="draw_indicator">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkCheckButton" id="enable_auto_indent">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="receives_default">False</property>
+                    <property name="draw_indicator">True</property>
                     <child>
-                      <object class="GtkCheckButton" id="smarthome">
-                        <property name="label" translatable="yes">Smart Home and End</property>
+                      <object class="GtkLabel" id="label16">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="receives_default">False</property>
-                        <property name="use_underline">True</property>
-                        <property name="focus_on_click">False</property>
-                        <property name="draw_indicator">True</property>
+                        <property name="label" translatable="yes">Enable auto indentation</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkCheckButton" id="usespaces">
+                    <property name="label" translatable="yes">Do not use tabs for indentation</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="receives_default">False</property>
+                    <property name="use_underline">True</property>
+                    <property name="focus_on_click">False</property>
+                    <property name="draw_indicator">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkCheckButton" id="backspace_indents">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="receives_default">False</property>
+                    <property name="draw_indicator">True</property>
+                    <child>
+                      <object class="GtkLabel" id="label17">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Backspace key unindents</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkCheckButton" id="tab_indents">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="receives_default">False</property>
+                    <property name="draw_indicator">True</property>
+                    <child>
+                      <object class="GtkLabel" id="label18">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Tab key indents</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">4</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkGrid" id="table1">
+                    <property name="visible">True</property>
+                    <property name="column_spacing">6</property>
+                    <property name="row_spacing">6</property>
+                    <child>
+                      <object class="GtkSpinButton" id="indent_width">
+                        <property name="halign">center</property>
+                        <property name="vexpand">True</property>
+                        <property name="visible">True</property>
+                        <property name="adjustment">adjustment1</property>
+                        <property name="climb_rate">1</property>
+                        <property name="numeric">True</property>
                       </object>
                       <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="position">0</property>
+                        <property name="left_attach">1</property>
+                        <property name="top_attach">1</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkCheckButton" id="enable_auto_indent">
+                      <object class="GtkLabel" id="label32">
+                        <property name="vexpand">True</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="receives_default">False</property>
-                        <property name="draw_indicator">True</property>
-                        <child>
-                          <object class="GtkLabel" id="label16">
-                            <property name="visible">True</property>
-                            <property name="label" translatable="yes">Enable auto indentation</property>
-                          </object>
-                        </child>
+                        <property name="xalign">1</property>
+                        <property name="label" translatable="yes">Indent width</property>
+                        <property name="mnemonic_widget">indent_width</property>
                       </object>
                       <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="position">1</property>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">1</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkCheckButton" id="usespaces">
-                        <property name="label" translatable="yes">Do not use tabs for indentation</property>
+                      <object class="GtkSpinButton" id="tab_width">
+                        <property name="halign">center</property>
+                        <property name="vexpand">True</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="receives_default">False</property>
-                        <property name="use_underline">True</property>
-                        <property name="focus_on_click">False</property>
-                        <property name="draw_indicator">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="adjustment">adjustment2</property>
+                        <property name="numeric">True</property>
+                        <property name="update_policy">if-valid</property>
                       </object>
                       <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="position">2</property>
+                        <property name="left_attach">1</property>
+                        <property name="top_attach">0</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkCheckButton" id="backspace_indents">
+                      <object class="GtkLabel" id="label19">
+                        <property name="vexpand">True</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="receives_default">False</property>
-                        <property name="draw_indicator">True</property>
-                        <child>
-                          <object class="GtkLabel" id="label17">
-                            <property name="visible">True</property>
-                            <property name="label" translatable="yes">Backspace key unindents</property>
-                          </object>
-                        </child>
+                        <property name="xalign">1</property>
+                        <property name="label" translatable="yes">Tab width</property>
+                        <property name="mnemonic_widget">tab_width</property>
                       </object>
                       <packing>
-                        <property name="position">3</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkCheckButton" id="tab_indents">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="receives_default">False</property>
-                        <property name="draw_indicator">True</property>
-                        <child>
-                          <object class="GtkLabel" id="label18">
-                            <property name="visible">True</property>
-                            <property name="label" translatable="yes">Tab key indents</property>
-                          </object>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="position">4</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkGrid" id="table1">
-                        <property name="visible">True</property>
-                        <property name="column_spacing">6</property>
-                        <property name="row_spacing">6</property>
-                        <child>
-                          <object class="GtkSpinButton" id="indent_width">
-                            <property name="halign">center</property>
-                            <property name="vexpand">True</property>
-                            <property name="visible">True</property>
-                            <property name="adjustment">adjustment1</property>
-                            <property name="climb_rate">1</property>
-                            <property name="numeric">True</property>
-                          </object>
-                          <packing>
-                            <property name="left_attach">1</property>
-                            <property name="top_attach">1</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkLabel" id="label32">
-                            <property name="vexpand">True</property>
-                            <property name="visible">True</property>
-                            <property name="xalign">1</property>
-                            <property name="label" translatable="yes">Indent width</property>
-                            <property name="mnemonic_widget">indent_width</property>
-                          </object>
-                          <packing>
-                            <property name="left_attach">0</property>
-                            <property name="top_attach">1</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkSpinButton" id="tab_width">
-                            <property name="halign">center</property>
-                            <property name="vexpand">True</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="adjustment">adjustment2</property>
-                            <property name="numeric">True</property>
-                            <property name="update_policy">if-valid</property>
-                          </object>
-                          <packing>
-                            <property name="left_attach">1</property>
-                            <property name="top_attach">0</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkLabel" id="label19">
-                            <property name="vexpand">True</property>
-                            <property name="visible">True</property>
-                            <property name="xalign">1</property>
-                            <property name="label" translatable="yes">Tab width</property>
-                            <property name="mnemonic_widget">tab_width</property>
-                          </object>
-                          <packing>
-                            <property name="left_attach">0</property>
-                            <property name="top_attach">0</property>
-                          </packing>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="position">5</property>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">0</property>
                       </packing>
                     </child>
                   </object>
+                  <packing>
+                    <property name="position">5</property>
+                  </packing>
                 </child>
               </object>
               <packing>
@@ -237,75 +232,70 @@
               </packing>
             </child>
             <child>
-              <object class="GtkAlignment" id="alignment10">
+              <object class="GtkBox" id="vbox20">
+                <property name="margin_start">12</property>
+                <property name="orientation">vertical</property>
                 <property name="visible">True</property>
-                <property name="left_padding">12</property>
+                <property name="spacing">6</property>
                 <child>
-                  <object class="GtkBox" id="vbox20">
-                    <property name="orientation">vertical</property>
+                  <object class="GtkGrid" id="table2">
                     <property name="visible">True</property>
-                    <property name="spacing">6</property>
+                    <property name="column_spacing">6</property>
+                    <property name="row_spacing">6</property>
                     <child>
-                      <object class="GtkGrid" id="table2">
+                      <object class="GtkLabel" id="label99">
+                        <property name="valign">center</property>
                         <property name="visible">True</property>
-                        <property name="column_spacing">6</property>
-                        <property name="row_spacing">6</property>
-                        <child>
-                          <object class="GtkLabel" id="label99">
-                            <property name="valign">center</property>
-                            <property name="visible">True</property>
-                            <property name="xalign">1</property>
-                            <property name="label" translatable="yes">Font</property>
-                          </object>
-                          <packing>
-                            <property name="left_attach">0</property>
-                            <property name="top_attach">0</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkComboBox" id="color_scheme_combo">
-                            <property name="valign">center</property>
-                            <property name="visible">True</property>
-                          </object>
-                          <packing>
-                            <property name="left_attach">1</property>
-                            <property name="top_attach">1</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkLabel" id="label100">
-                            <property name="valign">center</property>
-                            <property name="visible">True</property>
-                            <property name="xalign">1</property>
-                            <property name="label" translatable="yes">Color scheme</property>
-                          </object>
-                          <packing>
-                            <property name="left_attach">0</property>
-                            <property name="top_attach">1</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="MooFontButton" id="fontbutton">
-                            <property name="hexpand">True</property>
-                            <property name="valign">center</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="receives_default">False</property>
-                            <property name="use_font">True</property>
-                            <property name="use_size">True</property>
-                          </object>
-                          <packing>
-                            <property name="left_attach">1</property>
-                            <property name="top_attach">0</property>
-                          </packing>
-                        </child>
+                        <property name="xalign">1</property>
+                        <property name="label" translatable="yes">Font</property>
                       </object>
                       <packing>
-                        <property name="expand">False</property>
-                        <property name="position">0</property>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkComboBox" id="color_scheme_combo">
+                        <property name="valign">center</property>
+                        <property name="visible">True</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="top_attach">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="label100">
+                        <property name="valign">center</property>
+                        <property name="visible">True</property>
+                        <property name="xalign">1</property>
+                        <property name="label" translatable="yes">Color scheme</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="MooFontButton" id="fontbutton">
+                        <property name="hexpand">True</property>
+                        <property name="valign">center</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="receives_default">False</property>
+                        <property name="use_font">True</property>
+                        <property name="use_size">True</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="top_attach">0</property>
                       </packing>
                     </child>
                   </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="position">0</property>
+                  </packing>
                 </child>
               </object>
               <packing>
