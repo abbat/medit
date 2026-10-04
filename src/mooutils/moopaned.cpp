@@ -1936,7 +1936,7 @@ moo_paned_motion (GtkWidget      *widget,
         {
             case MOO_PANE_POS_LEFT:
             case MOO_PANE_POS_RIGHT:
-                gdk_window_get_pointer (paned->priv->bin_window, &size, NULL, NULL);
+                _moo_window_get_pointer (paned->priv->bin_window, &size, NULL, NULL);
 
                 if (paned->priv->pane_position == MOO_PANE_POS_RIGHT)
                     size = gtk_widget_get_allocated_width (widget) - size;
@@ -1949,7 +1949,7 @@ moo_paned_motion (GtkWidget      *widget,
 
             case MOO_PANE_POS_TOP:
             case MOO_PANE_POS_BOTTOM:
-                gdk_window_get_pointer (paned->priv->bin_window, NULL, &size, NULL);
+                _moo_window_get_pointer (paned->priv->bin_window, NULL, &size, NULL);
 
                 if (paned->priv->pane_position == MOO_PANE_POS_BOTTOM)
                     size = gtk_widget_get_allocated_height (widget) - size;

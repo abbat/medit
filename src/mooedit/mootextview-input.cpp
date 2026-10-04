@@ -683,7 +683,7 @@ event_motion_to_buffer (GtkTextView    *text_view,
 
     if (event->is_hint)
     {
-        gdk_window_get_pointer (event->window, &event_x, &event_y, NULL);
+        _moo_window_get_pointer (event->window, &event_x, &event_y, NULL);
     }
     else
     {
@@ -994,8 +994,8 @@ _moo_text_view_motion_event (GtkWidget          *widget,
     {
         /* this piece is from gtktextview.c */
         GtkTextIter start;
-        gdk_window_get_pointer (gtk_text_view_get_window (text_view, GTK_TEXT_WINDOW_TEXT),
-                                &x, &y, NULL);
+        _moo_window_get_pointer (gtk_text_view_get_window (text_view, GTK_TEXT_WINDOW_TEXT),
+                                 &x, &y, NULL);
 
         if (gtk_drag_check_threshold (widget,
                                       view->priv->dnd.start_x,
@@ -1179,7 +1179,7 @@ drag_scroll_timeout_func (MooTextView *view)
     win_type = view->priv->dnd.type == MOO_TEXT_VIEW_DRAG_SELECT ?
         GTK_TEXT_WINDOW_TEXT : GTK_TEXT_WINDOW_LEFT;
 
-    gdk_window_get_pointer (gtk_text_view_get_window (text_view, win_type), &px, &py, NULL);
+    _moo_window_get_pointer (gtk_text_view_get_window (text_view, win_type), &px, &py, NULL);
     gtk_text_view_window_to_buffer_coords (text_view, win_type, px, py, &x, &y);
     gtk_text_view_get_iter_at_location (text_view, &iter, x, y);
 

@@ -3836,7 +3836,7 @@ drag_scroll_timeout (MooIconView *view)
 
     gtk_widget_get_allocation (widget, alc);
 
-    gdk_window_get_pointer (gtk_widget_get_window (widget), &x, &y, &mask);
+    _moo_window_get_pointer (gtk_widget_get_window (widget), &x, &y, &mask);
 
     if (view->priv->drag_select)
     {
@@ -3886,7 +3886,7 @@ drag_scroll_timeout (MooIconView *view)
 
         event->motion.window = g_object_ref (gtk_widget_get_window (widget));
         event->motion.axes = NULL;
-        gdk_window_get_pointer (gtk_widget_get_window (widget), &x, &y, &mask);
+        _moo_window_get_pointer (gtk_widget_get_window (widget), &x, &y, &mask);
         event->motion.x = x;
         event->motion.y = y;
         event->motion.state = mask;
@@ -3910,7 +3910,7 @@ drag_scroll_timeout (MooIconView *view)
         gdk_window_get_position (gtk_widget_get_window (toplevel), &x, &y);
         event->dnd.x_root = x;
         event->dnd.y_root = y;
-        gdk_window_get_pointer (gtk_widget_get_window (toplevel), &x, &y, &mask);
+        _moo_window_get_pointer (gtk_widget_get_window (toplevel), &x, &y, &mask);
         event->dnd.x_root += x;
         event->dnd.y_root += y;
     }

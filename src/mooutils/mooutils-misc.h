@@ -33,6 +33,11 @@ void        _moo_window_set_icon_from_stock (GtkWindow  *window,
 
 void        _moo_get_monitor_geometry_at_window (GdkWindow    *window,
                                                  GdkRectangle *geometry);
+void        _moo_window_get_pointer         (GdkWindow       *window,
+                                             int             *x,
+                                             int             *y,
+                                             GdkModifierType *mask);
+
 
 void        moo_set_log_func_window         (gboolean        show_now);
 void        moo_set_log_func_file           (const char     *log_file);

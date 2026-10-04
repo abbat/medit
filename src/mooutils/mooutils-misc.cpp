@@ -890,7 +890,8 @@ _moo_get_modifiers (GtkWidget *widget)
     display = gtk_widget_get_display (widget);
     g_return_val_if_fail (display != NULL, GdkModifierType (0));
 
-    gdk_display_get_pointer (display, NULL, NULL, NULL, &mask);
+    _moo_window_get_pointer (gdk_screen_get_root_window (gdk_display_get_default_screen (display)),
+                             NULL, NULL, &mask);
 
     return mask;
 }
@@ -1852,4 +1853,17 @@ moo_debug_enabled (const char *domain,
 
     g_strfreev (domains);
     return FALSE;
+}
+
+
+/* Replacement for gdk_window_get_pointer(): the position and button/modifier
+ * state of the default seat's pointer, relative to window. */
+void
+_moo_window_get_pointer (GdkWindow       *window,
+                         int             *x,
+                         int             *y,
+                         GdkModifierType *mask)
+{
+    GdkSeat *seat = gdk_display_get_default_seat (gdk_window_get_display (window));
+    gdk_window_get_device_position (window, gdk_seat_get_pointer (seat), x, y, mask);
 }

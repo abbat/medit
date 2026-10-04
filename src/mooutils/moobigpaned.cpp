@@ -1167,7 +1167,7 @@ handle_drag_motion (MooPaned       *child,
 
     g_return_if_fail (gtk_widget_get_realized (paned->priv->outer));
 
-    gdk_window_get_pointer (gtk_widget_get_window (paned->priv->outer), &x, &y, NULL);
+    _moo_window_get_pointer (gtk_widget_get_window (paned->priv->outer), &x, &y, NULL);
 
     if (!get_new_drop_position (paned, child, x, y))
         return;
@@ -1238,7 +1238,7 @@ handle_drag_end (MooPaned    *child,
         return;
     }
 
-    gdk_window_get_pointer (gtk_widget_get_window (paned->priv->outer), &x, &y, NULL);
+    _moo_window_get_pointer (gtk_widget_get_window (paned->priv->outer), &x, &y, NULL);
     get_new_drop_position (paned, child, x, y);
 
     if (paned->priv->drop_pos < 0)
