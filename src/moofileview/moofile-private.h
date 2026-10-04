@@ -21,12 +21,7 @@
 
 G_BEGIN_DECLS
 
-
 #define MOO_TYPE_FILE               (_moo_file_get_type ())
-
-/* time_t */
-/* XXX it's not time_t! */
-typedef GTime MooFileTime;
 
 typedef gint64 MooFileSize;
 typedef struct MooCollationKey MooCollationKey;
