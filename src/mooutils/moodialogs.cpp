@@ -88,14 +88,36 @@ clamp_window_to_rectangle (gint               *x,
         *y = rect->y + rect->height - h;
 }
 
+/* The size of the whole screen: the far corner of the monitors, which is what
+ * gdk_screen_get_width() and gdk_screen_get_height() reported. */
+static void
+get_screen_size (GdkDisplay *display,
+                 int        *width,
+                 int        *height)
+{
+    *width = 0;
+    *height = 0;
+
+    for (int i = 0; i < gdk_display_get_n_monitors (display); ++i)
+    {
+        GdkRectangle geometry;
+
+        gdk_monitor_get_geometry (gdk_display_get_monitor (display, i), &geometry);
+        *width = MAX (*width, geometry.x + geometry.width);
+        *height = MAX (*height, geometry.y + geometry.height);
+    }
+}
+
+
 
 static void
 position_window (GtkWindow *dialog)
 {
     GdkPoint *coord;
-    int screen_width, screen_height, monitor_num;
+    int screen_width, screen_height;
     GdkRectangle monitor;
     GdkScreen *screen;
+    GdkDisplay *display;
     GtkRequisition req;
 
     g_signal_handlers_disconnect_by_func (dialog,
@@ -108,9 +130,9 @@ position_window (GtkWindow *dialog)
     screen = gtk_widget_get_screen (GTK_WIDGET (dialog));
     g_return_if_fail (screen != NULL);
 
-    screen_width = gdk_screen_get_width (screen);
-    screen_height = gdk_screen_get_height (screen);
-    monitor_num = gdk_screen_get_monitor_at_point (screen, coord->x, coord->y);
+    display = gdk_screen_get_display (screen);
+    get_screen_size (display, &screen_width, &screen_height);
+    GdkMonitor *gdk_monitor = gdk_display_get_monitor_at_point (display, coord->x, coord->y);
 
     gtk_widget_get_preferred_size (GTK_WIDGET (dialog), &req, NULL);
 
@@ -119,7 +141,7 @@ position_window (GtkWindow *dialog)
     coord->x = CLAMP (coord->x, 0, screen_width - req.width);
     coord->y = CLAMP (coord->y, 0, screen_height - req.height);
 
-    gdk_screen_get_monitor_geometry (screen, monitor_num, &monitor);
+    gdk_monitor_get_geometry (gdk_monitor, &monitor);
     clamp_window_to_rectangle (&coord->x, &coord->y, req.width, req.height, &monitor);
 
     gtk_window_move (dialog, coord->x, coord->y);
