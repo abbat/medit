@@ -184,6 +184,14 @@ if(MOO_BUILD_LSP)
 endif()
 
 add_subdirectory(vendor/gtksourceview)
+
+# Vendor code is carried verbatim from upstream, so its deprecation warnings
+# are not ours to fix.
+file(GLOB _moo_vendor_sources
+    ${CMAKE_CURRENT_SOURCE_DIR}/vendor/gtksourceview/*.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/vendor/ctags/readtags.c)
+set_source_files_properties(${_moo_vendor_sources}
+    PROPERTIES COMPILE_OPTIONS -Wno-deprecated-declarations)
 add_subdirectory(mooapp)
 add_subdirectory(moocpp)
 add_subdirectory(mooedit)
