@@ -2046,14 +2046,10 @@ moo_paned_button_press (GtkWidget      *widget,
         paned->priv->in_drag = TRUE;
 
         /* This is copied from gtkpaned.c */
-        gdk_pointer_grab (paned->priv->handle_window, FALSE,
-                          (GdkEventMask) (GDK_POINTER_MOTION_HINT_MASK
-                                  | GDK_BUTTON1_MOTION_MASK
-                                  | GDK_BUTTON_RELEASE_MASK
-                                  | GDK_ENTER_NOTIFY_MASK
-                                  | GDK_LEAVE_NOTIFY_MASK),
-                          NULL, NULL,
-                          event->time);
+        gdk_seat_grab (gdk_display_get_default_seat (gtk_widget_get_display (widget)),
+                       paned->priv->handle_window,
+                       GDK_SEAT_CAPABILITY_POINTER, FALSE,
+                       NULL, (GdkEvent*) event, NULL, NULL);
 
         switch (paned->priv->pane_position)
         {
@@ -2084,8 +2080,7 @@ moo_paned_button_release (GtkWidget      *widget,
     {
         paned->priv->in_drag = FALSE;
         paned->priv->drag_start = -1;
-        gdk_display_pointer_ungrab (gtk_widget_get_display (widget),
-                                    event->time);
+        gdk_seat_ungrab (gdk_display_get_default_seat (gtk_widget_get_display (widget)));
         return TRUE;
     }
 

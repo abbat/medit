@@ -288,7 +288,8 @@ create_arrow_button (MooCombo       *combo)
     gtk_widget_show (frame);
     gtk_container_add (GTK_CONTAINER (combo->priv->button), frame);
 
-    arrow = gtk_arrow_new (GTK_ARROW_DOWN, GTK_SHADOW_ETCHED_IN);
+    arrow = gtk_image_new_from_icon_name ("pan-down-symbolic", GTK_ICON_SIZE_MENU);
+    gtk_image_set_pixel_size (GTK_IMAGE (arrow), 10);
     gtk_widget_set_size_request (arrow, 10, 10);
     gtk_widget_show (arrow);
     gtk_container_add (GTK_CONTAINER (frame), arrow);
@@ -608,8 +609,6 @@ moo_combo_popup_real (MooCombo *combo)
 
     gtk_widget_show (combo->priv->popup);
 
-    gtk_widget_ensure_style (GTK_WIDGET (combo->priv->treeview));
-
     {
         GtkStyleContext *context =
             gtk_widget_get_style_context (GTK_WIDGET (combo->priv->treeview));
@@ -622,11 +621,10 @@ moo_combo_popup_real (MooCombo *combo)
     }
 
     gtk_grab_add (combo->priv->popup);
-    gdk_pointer_grab (gtk_widget_get_window (combo->priv->popup), TRUE,
-                      (GdkEventMask) (GDK_BUTTON_PRESS_MASK |
-                              GDK_BUTTON_RELEASE_MASK |
-                              GDK_POINTER_MOTION_MASK),
-                      NULL, NULL, GDK_CURRENT_TIME);
+    gdk_seat_grab (gdk_display_get_default_seat (gtk_widget_get_display (combo->priv->popup)),
+                   gtk_widget_get_window (combo->priv->popup),
+                   GDK_SEAT_CAPABILITY_POINTER, TRUE,
+                   NULL, NULL, NULL, NULL);
 
     g_signal_connect_swapped (combo->entry, "focus-out-event",
                               G_CALLBACK (entry_focus_out), combo);
@@ -666,7 +664,7 @@ moo_combo_popdown_real (MooCombo       *combo)
                                           (gpointer) list_button_press,
                                           combo);
 
-    gdk_pointer_ungrab (GDK_CURRENT_TIME);
+    gdk_seat_ungrab (gdk_display_get_default_seat (gtk_widget_get_display (combo->priv->popup)));
     gtk_grab_remove (combo->priv->popup);
     gtk_widget_hide (combo->priv->popup);
 }

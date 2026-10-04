@@ -779,8 +779,6 @@ completion_popup (MooFileEntryCompletion *cmpl)
 
     gtk_widget_show (cmpl->priv->popup);
 
-    gtk_widget_ensure_style (GTK_WIDGET (cmpl->priv->treeview));
-
     {
         GtkStyleContext *context =
             gtk_widget_get_style_context (GTK_WIDGET (cmpl->priv->treeview));
@@ -793,11 +791,10 @@ completion_popup (MooFileEntryCompletion *cmpl)
     }
 
     gtk_grab_add (cmpl->priv->popup);
-    gdk_pointer_grab (gtk_widget_get_window (cmpl->priv->popup), TRUE,
-                      (GdkEventMask) (GDK_BUTTON_PRESS_MASK |
-                              GDK_BUTTON_RELEASE_MASK |
-                              GDK_POINTER_MOTION_MASK),
-                      NULL, NULL, GDK_CURRENT_TIME);
+    gdk_seat_grab (gdk_display_get_default_seat (gtk_widget_get_display (cmpl->priv->popup)),
+                   gtk_widget_get_window (cmpl->priv->popup),
+                   GDK_SEAT_CAPABILITY_POINTER, TRUE,
+                   NULL, NULL, NULL, NULL);
 
     g_signal_connect (cmpl->priv->entry, "focus-out-event",
                       G_CALLBACK (completion_entry_focus_out), cmpl);
@@ -850,7 +847,7 @@ completion_popdown (MooFileEntryCompletion *cmpl)
                                           (gpointer) completion_list_button_press,
                                           cmpl);
 
-    gdk_pointer_ungrab (GDK_CURRENT_TIME);
+    gdk_seat_ungrab (gdk_display_get_default_seat (gtk_widget_get_display (cmpl->priv->popup)));
     gtk_grab_remove (cmpl->priv->popup);
     gtk_widget_hide (cmpl->priv->popup);
     gtk_widget_unrealize (cmpl->priv->popup);
