@@ -7,8 +7,8 @@ own with a list in it, placed under the cursor, taking Up, Down, Enter and
 Escape before the text view sees them. It is a toplevel of the application
 rather than anything inside the window, which is where this looks for it.
 
-Both toolkits: nothing here is a pane, and the popup is a plain GtkWindow with
-a GtkTreeView in it, which gail describes as readily as GTK+3 does.
+Nothing here is a pane, and the popup is a plain GtkWindow with a GtkTreeView
+in it.
 
 Ctrl+Space is the other half of the reason this is worth a test.
 moo_window_key_press_event() hands a key to the focused widget before it tries

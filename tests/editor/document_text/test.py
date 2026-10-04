@@ -2,8 +2,7 @@
 
 
 GTK+3's notebook accessible puts every page of the editor's notebook in the
-tree, so the document on screen is there to be read. On GTK+2, where gail
-reports the notebook as having no children, it is not.
+tree, so the document on screen is there to be read.
 """
 
 CONTENT = "hello from the document\n"

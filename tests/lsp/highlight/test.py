@@ -14,7 +14,6 @@ place a symbol is written to is marked differently from a place it is read
 from, and at-spi reports the colour of every tag on GTK+3 as 0,0,0, measured.
 So this says a character is marked and lsp-tests.cpp says which way.
 
-GTK+3 only, the document having no accessible on GTK+2.
 """
 
 CONTENT = "alpha beta\ngamma alpha\n"

@@ -5,7 +5,7 @@
 The reply is a list of TextEdits over the document that was sent, which is the
 same thing a rename comes back with for one file -- so the applying, the order
 and the single undo step are the same code and are asserted the same way, on
-the bytes in the sandbox rather than on the text of a widget. Both toolkits.
+the bytes in the sandbox rather than on the text of a widget.
 
 What is new here is what goes out: a formatting request carries the settings
 medit would indent with, and a server that is not told them formats to its own

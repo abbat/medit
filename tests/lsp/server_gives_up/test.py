@@ -8,7 +8,7 @@ read it back, so the client simply went quiet -- three processes in two seconds
 and then an editor that never mentions language servers again.
 
 Here it is asserted on medit's own output, which is the half of the report that
-works on both toolkits. The other half, the line in the diagnostics pane, is
+needs no pane. The other half, the line in the diagnostics pane, is
 what failure_pane tests.
 """
 

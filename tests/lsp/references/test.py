@@ -13,8 +13,7 @@ The path is written relative to the root of the project the server was started
 for, which is what makes the lines readable at all; the root here is the
 directory the two files are in, there being no root markers in this lsp.xml.
 
-GTK+3 only, being a pane: see diagnostics_pane for why a pane has no accessible
-on GTK+2.
+A pane: see diagnostics_pane for how a pane gets on the accessibility bus.
 """
 
 CONTENT = "alpha beta\ngamma alpha\n"

@@ -11,8 +11,7 @@ The answer is a LocationLink and not a Location, because linkSupport is what
 the client announces for this method: the place to go is then targetSelectionRange,
 the name itself, rather than targetRange, which is the whole of what is declared.
 
-Both toolkits: the cursor is read off the status bar, which needs no accessible
-the GTK+2 build lacks.
+The cursor is read off the status bar, not off the document's accessible.
 """
 
 CONTENT = "alpha beta\ngamma delta\n"

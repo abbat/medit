@@ -14,8 +14,8 @@ moved to another key, one cleared. So the assertions are "the new key works",
 being the one that was wrong, the client falling back on the default it was
 compiled with.
 
-Both toolkits: the popup this opens is a window of the plugin's own, and the
-request behind it is in the server's log either way.
+The popup this opens is a window of the plugin's own, and the request behind it
+is in the server's log either way.
 """
 
 CONTENT = "alpha\n"

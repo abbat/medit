@@ -10,9 +10,8 @@ whose whole job is to hand the user a copy of them -- wrote an empty file. Every
 green run had quietly supplied by hand the thing that was missing.
 
 So: no lsp.xml, and the assertions are about what the untouched machine does.
-Both toolkits -- the client is not a GTK+3-only plugin, and nothing here needs
-to look inside a pane, so the file is read from disk and the window title says
-which document is open.
+Nothing here needs to look inside a pane, so the file is read from disk and the
+window title says which document is open.
 """
 
 # Entries of the shipped file. Not a byte comparison against the source tree:
@@ -54,8 +53,7 @@ def run(t):
     # again. The item creates the file only when there is none; a second
     # invocation must hand back what the user wrote, not the defaults again.
     # At the end, and typed rather than clicked into: the document behind the
-    # keys is the one that was just opened, and on GTK+2 there is no accessible
-    # for the view to click at. The focus first, since the menu that opened it
+    # keys is the one that was just opened. The focus first, since the menu that opened it
     # took it into a window that no longer exists.
     t.focus()
     t.key("ctrl+End")

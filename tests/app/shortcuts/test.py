@@ -11,8 +11,8 @@ The second is the round trip. The dialog writes into the accelerator map and
 into the preferences, and the key it wrote is the one that has to work
 afterwards -- for an action of a plugin as much as for one of the editor.
 
-Both toolkits: a tree, three radio buttons and a dialog that catches a
-keystroke are all things gail describes as readily as GTK+3 does.
+A tree, three radio buttons and a dialog that catches a keystroke are all
+things the accessibility tree describes.
 """
 
 CONTENT = "alpha\n"

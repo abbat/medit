@@ -13,8 +13,7 @@ that a screenshot would not show:
 * the edits of one file are one undo step, not one per range.
 
 So this is asserted from the files on disk, saved by hand at each step, which
-also makes it a test both toolkits can run: nothing here reads the text out of
-the document's accessible.
+also means nothing here reads the text out of the document's accessible.
 
 Nothing is saved by the rename itself. A rename touching files the user never
 opened is exactly the operation worth looking at before it is on disk.
@@ -171,8 +170,8 @@ def alert(t, needle):
     """The message dialog carrying that text, whatever at-spi calls it here.
 
     Not t.dialog(): a GtkMessageDialog has no title to look it up by, and its
-    role is not "dialog" but "alert" -- on both toolkits, measured, which is
-    the only reason this says so.
+    role is not "dialog" but "alert" -- measured, which is the only reason
+    this says so.
     """
     for top in t.on_screen(t.find_all(t.app, role="alert", depth=2)):
         if t.find(top, role="label", depth=8,

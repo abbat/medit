@@ -2,10 +2,9 @@
 
 # requires: MOO_BUILD_LSP
 
-GTK+3 only because it is a pane: a pane and its button are internal children of
-MooPaned, which GtkContainerAccessible does not list, and MooPanedAccessible --
-the class that puts them on the bus -- cannot exist on GTK+2, where those types
-live inside the gail module.
+A pane and its button are internal children of MooPaned, which
+GtkContainerAccessible does not list; MooPanedAccessible is the class that puts
+them on the bus.
 
 The line the pane draws is the whole answer: the position resolved in the
 buffer rather than in the server's own UTF-16 counting, the severity by name,

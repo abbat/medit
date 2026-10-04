@@ -12,8 +12,7 @@ asked where the widget is and xdotool is asked to click there, which goes
 through the X server the same way a user's pointer would.
 
 The coordinates always come from the tree, never from a table of screen
-positions: a fixed coordinate is only correct for one window size, one theme and
-one toolkit.
+positions: a fixed coordinate is only correct for one window size, one theme.
 """
 
 import re
@@ -36,7 +35,8 @@ _size = None
 # toolkit acts on is decided by the first of those.
 #
 # It matters more than it sounds. "xdotool mousemove x y click 1" warps the
-# pointer and presses in the same instant, and on GTK+2 the press then acts on
+# pointer and presses in the same instant, and on GTK+2 (measured there, before the
+# port) the press then acts on
 # whatever the toolkit thought was under the pointer beforehand: a link in the
 # About dialog does not open on the first click after a button in the same
 # dialog was clicked, and opens on the second. Measured, one variant per row:

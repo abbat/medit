@@ -1,10 +1,8 @@
 """Merges lcov reports, reports what they say, and compares it with the floor.
 
-The two toolkits are two builds, so they are two profiles and two exported
-reports; this puts them together. Line for line, because that is what they
-have in common -- the same sources compiled twice, once with GTK+2 and once
-with GTK+3, so a line the GTK+3 build never compiled is still a line the
-GTK+2 build may have run.
+Several reports are put together line for line, because that is what they
+have in common -- the same sources compiled more than once. (There were two
+reports while there were two builds, GTK+2 and GTK+3; there is one now.)
 
     python3 tests/coverage.py build*/coverage/medit.info \\
             --output coverage.info --floor tests/coverage.floor
@@ -41,8 +39,8 @@ class File(object):
 
     lines maps a line number to how many times it ran, funcs a function name to
     how many times it was called. Both are summed when reports are merged: a
-    line run by the GTK+2 build and by the GTK+3 build ran twice, and a line
-    only one of them compiled keeps the count of the build that had it.
+    line run in two reports ran twice, and a line only one of them compiled
+    keeps the count of the report that had it.
     """
 
     def __init__(self):

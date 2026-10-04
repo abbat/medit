@@ -10,7 +10,7 @@ both go through lsp_manager_reload().
 
 The assertion is that the *new* file is what took effect: the entry is replaced
 by one naming a different server, and it is that server which ends up with the
-document. Both toolkits.
+document.
 """
 
 CONFIG = """<?xml version="1.0" encoding="UTF-8"?>

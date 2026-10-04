@@ -51,8 +51,7 @@ foreach(_tool ${_moo_ui_test_tools})
         message(FATAL_ERROR
             "${_tool} not found, and ENABLE_UI_TESTS needs it. The UI tests need "
             "Xvfb (xvfb), xdotool, dbus-run-session (dbus-daemon), at-spi2-core "
-            "and the python at-spi bindings (python3-pyatspi); a GTK+2 build also "
-            "needs libgail (libgail-common).")
+            "and the python at-spi bindings (python3-pyatspi).")
     endif()
 endforeach()
 
@@ -60,7 +59,7 @@ endforeach()
 # and are written for that. One test needs a second window to be somewhere
 # other than on top of the first, and asks for one -- see lib/sandbox.py -- so
 # this is looked up rather than required, and the test that asks is registered
-# and disabled where it is not found, the way the terminal tests are on GTK+2.
+# and disabled where it is not found, the way the terminal tests are without vte.
 #
 # xprop with it: it is how the harness knows the window manager has the screen
 # before medit's first window is mapped.
@@ -112,8 +111,8 @@ endif()
 #     # requires: MOO_BUILD_TERMINAL
 #
 # A build without them still registers the test, disabled, so that "ctest -N"
-# on a GTK+2 build lists the terminal tests and says why they did not run,
-# rather than silently listing fewer tests than the other build.
+# on a build without vte lists the terminal tests and says why they did not run,
+# rather than silently listing fewer tests than another build.
 function(moo_ui_test_requirements path out)
     file(STRINGS "${path}" _lines REGEX "^# *requires:")
     set(_missing "")

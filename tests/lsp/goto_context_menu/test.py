@@ -13,8 +13,8 @@ Neither half can be seen on screen: both look like a menu with the same item in
 it. What tells them apart is the position in the request, which is why this is
 asserted from the server's log.
 
-GTK+3 only: the click has to land on a particular word of the document, and the
-document has no accessible to ask about that on GTK+2.
+The click has to land on a particular word of the document, which the
+document's accessible is asked about.
 """
 
 CONTENT = "alpha beta\ngamma delta\n"

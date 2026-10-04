@@ -10,8 +10,8 @@ of the file at G_PRIORITY_HIGH_IDLE + 9 and do_move_cursor() cancels whatever
 other move is pending when it runs, so asking for the column any earlier gets
 it thrown away.
 
-Both toolkits: the cursor is read off the status bar and the open document off
-the window title, neither of which needs an accessible the GTK+2 build lacks.
+The cursor is read off the status bar and the open document off the window
+title, not off the document's accessible.
 """
 
 CONTENT = "alpha beta\ngamma delta\n"

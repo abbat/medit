@@ -242,9 +242,7 @@ class Test(object):
         """The text view of the document on screen.
 
         The one text widget that has a position: the others in the tree belong
-        to panes that are not open. GTK+3 only, like every test that reads a
-        document -- on GTK+2 gail puts no page of the editor's notebook in the
-        tree at all, where GTK+3's own notebook accessible puts them all there.
+        to panes that are not open.
         """
         views = self.on_screen(self.find_all(self.frame, role="text", depth=25))
 

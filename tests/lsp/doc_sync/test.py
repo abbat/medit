@@ -11,7 +11,7 @@ A whole second of it here, so that xdotool's typing is comfortably inside one
 window of quiet: what is being tested is that the burst becomes one message,
 and a delay of the same order as the typing would be testing the timer.
 
-Both toolkits: all of it is read from the server's log.
+All of it is read from the server's log.
 """
 
 CONTENT = "alpha\n"

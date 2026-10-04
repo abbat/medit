@@ -11,7 +11,7 @@ markers, and the file's own directory when nothing does. All three cases are
 here, and they are told apart by the pid the fake server writes into its log --
 the two servers share a log, as they would share a configuration file.
 
-Both toolkits: nothing is read from the screen.
+Nothing is read from the screen.
 """
 
 # A made-up name rather than ".git", which is what an lsp.xml really names. The

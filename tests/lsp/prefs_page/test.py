@@ -11,7 +11,6 @@ read where a server is started rather than where it is set: ticking it does
 nothing to the servers already running, and the button beside it is how a user
 makes it take effect. The protocol on medit's own output is then the evidence.
 
-Both toolkits.
 """
 
 SETTINGS = ("Underline problems and list them in the Diagnostics pane",

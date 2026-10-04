@@ -9,7 +9,6 @@ document is announced again -- and a client that forgot to would go on asking
 about files its server has never heard of, and get nothing back for the rest of
 the session.
 
-Both toolkits.
 """
 
 

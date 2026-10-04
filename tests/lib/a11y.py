@@ -3,8 +3,7 @@
 Everything a test asserts is read through AT-SPI: the widget hierarchy, the
 names, the text, the hyperlinks. Nothing is read from a screenshot, so a test
 says "the Credits button is there" rather than "these pixels are there", and it
-says the same thing for both toolkits -- GTK+2 through libgail and GTK+3
-natively expose the same tree.
+says it by name.
 
 Input is the exception, see input.py.
 """
@@ -257,7 +256,7 @@ def attributes_of(node, offset):
     return found
 
 
-# A bare URL in a label's text, for the GTK+2 fallback below. The trailing
+# A bare URL in a label's text, for the fallback below. The trailing
 # class excludes the punctuation a sentence puts after a URL.
 _URL = re.compile(r"https?://[^\s<>]+?(?=[\s<>]|[.,;:)]?$)", re.MULTILINE)
 
@@ -270,13 +269,10 @@ def links_of(node):
     for something clickable. It is a range of the label's text, and its position
     on screen comes from the label's Text interface.
 
-    On GTK+3 the range and the href come from AtkHypertext. GTK+2 has neither:
-    gail's label accessible implements AtkText but not AtkHypertext, so the same
-    dialog reports zero links there even though the links are on screen and
-    clickable. The fallback finds the URLs in the label's own text instead,
-    which works because the labels medit puts links in show the address as the
-    link text -- and it makes the test a little stricter on GTK+2 than on GTK+3,
-    since it then also proves that what the label shows is where it goes.
+    The range and the href come from AtkHypertext. Where a label's accessible
+    lists no links, the fallback finds the URLs in the label's own text
+    instead, which works because the labels medit puts links in show the
+    address as the link text.
     """
     try:
         hypertext = node.queryHypertext()

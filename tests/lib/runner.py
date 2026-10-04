@@ -104,9 +104,9 @@ def outer(args):
         # on every host. Nothing else reads it.
         env["MOO_SPELL_STUB"] = "1"
 
-        # GTK+2 has no accessibility of its own: the tree comes from libgail,
-        # and the bridge to the at-spi bus from atk-bridge. Naming both is
-        # harmless on GTK+3, which loads what it needs itself.
+        # The bridge to the at-spi bus is atk-bridge. gail is a leftover of
+        # GTK+2, where the tree came from libgail; GTK+3 loads what it needs
+        # itself, so naming it is harmless.
         env["GTK_MODULES"] = "gail:atk-bridge"
         env["NO_AT_BRIDGE"] = "0"
         env["GTK_A11Y"] = "atspi"

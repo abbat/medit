@@ -2,8 +2,8 @@
 
 # requires: MOO_BUILD_TERMINAL
 
-The pane is built for the GTK+3 build only -- vte dropped GTK+2 in 0.30 -- so
-on a GTK+2 build this test is registered and disabled rather than missing.
+The pane needs vte, so a build without it registers this test disabled rather
+than missing.
 """
 
 # The command is written so that what the shell echoes back is not what it

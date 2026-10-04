@@ -3,7 +3,7 @@
 Everything in this dialog leads somewhere else -- another dialog, or a browser --
 which is why it is the first test: it exercises a dialog opening over a dialog,
 a dialog closing without taking its parent with it, and a hyperlink handed to
-the desktop, and it does all of that identically on both toolkits.
+the desktop, and it does all of that without a pixel being read.
 """
 
 TABS = ("Thanks", "Written by", "Translated by")
