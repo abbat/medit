@@ -67,6 +67,14 @@ endif()
 #         -DENABLE_UI_TESTS=ON -DENABLE_COVERAGE=ON
 option(ENABLE_COVERAGE "Compile with clang's coverage instrumentation" OFF)
 
+# Makes G_GNUC_BEGIN/END_IGNORE_DEPRECATIONS expand to nothing (src/sysheaders.h),
+# so a build without ENABLE_STRICT lists every deprecated call still left in the
+# tree. doc/deprecations.md tracks that count.
+option(MOO_SHOW_DEPRECATIONS "List the deprecated API the source silences" OFF)
+if(MOO_SHOW_DEPRECATIONS)
+    add_compile_definitions(MOO_SHOW_DEPRECATIONS)
+endif()
+
 # Comma-separated, passed straight to -fsanitize=. Empty means no sanitizer.
 # The UI tests read the logs it produces, so a test build normally sets it:
 #

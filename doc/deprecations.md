@@ -37,10 +37,23 @@ bare start. Dialogs report more.
 
 ## Stage 0 — measuring
 
-- [ ] 0.1 Replace `G_GNUC_BEGIN/END_IGNORE_DEPRECATIONS` outside `src/vendor/` with
-  `MOO_BEGIN/END_IGNORE_DEPRECATIONS` from `mooutils/mooutils-macros.h`. A CMake option
-  `-DMOO_SHOW_DEPRECATIONS=ON` makes them expand to nothing, so a non-strict build
-  lists every remaining site. Record the count here.
+- [x] 0.1 `-DMOO_SHOW_DEPRECATIONS=ON` makes `G_GNUC_BEGIN/END_IGNORE_DEPRECATIONS`
+  expand to nothing (`src/sysheaders.h`), so a non-strict build lists every remaining
+  site. Measure it with clang, which also reports `GTK_STOCK_*` and deprecated parent
+  types:
+  ```
+  cmake -S . -B build-deps -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ \
+        -DENABLE_STRICT=OFF -DMOO_SHOW_DEPRECATIONS=ON -DENABLE_UNIT_TESTS=ON
+  make -C build-deps -j8 -k >deps.log 2>&1
+  grep "warning:.*Wdeprecated-declarations" deps.log | grep -v /vendor/ \
+      | grep -oE "^[^ ]+:[0-9]+:[0-9]+" | sort -u | wc -l
+  ```
+  | date | sites | breakdown |
+  |---|---|---|
+  | 2026-10-04 | 384 | `GtkStock` 255; GtkAction family ~75; icon factory/set/source and `gtk_stock_*` ~30; `render_icon`/`*_from_stock` 12; `gtk_vbox_get_type` 4, `gtk_alignment_get_type` 1; composite child 6; `get_background_color` 3; `gdk_color_get_type` 2; focus chain 1 |
+
+  `gtk_misc_set_alignment`, `GtkTable` and `GtkImageMenuItem` in the inventory above
+  were grep hits in comments; there is no code to change for them.
 - [ ] 0.2 Runtime inventory: run the whole UI suite with `G_ENABLE_DIAGNOSTIC=1`
   and collect every distinct "is deprecated" message from the logs, with the test
   that produced it. Find who reads `gtk-toolbar-style` and `gtk-menu-images`, our
@@ -48,8 +61,7 @@ bare start. Dialogs report more.
 
 ## Stage 1 — single-site replacements
 
-- [ ] 1.1 `gtk_misc_set_alignment` (`lsp-edits.cpp`) → `gtk_label_set_xalign`/`yalign`
-  or `halign`/`valign`. `GtkTable` → `GtkGrid`.
+- [x] 1.1 Nothing to do (see 0.1).
 - [ ] 1.2 `GdkColor` in `mooedit-tests.cpp` and `mooedit-perf.cpp` → `GdkRGBA`.
 - [ ] 1.3 `gtk_style_context_get_background_color` (`mooiconview.cpp`,
   `mootextview.cpp`, `terminal-colors.cpp`) → `gtk_style_context_get (ctx, state,
@@ -57,7 +69,7 @@ bare start. Dialogs report more.
 - [ ] 1.4 `moofontsel.cpp`: drop `gtk_widget_push/pop_composite_child`. Replace
   `gtk_container_set_focus_chain` with child order or a `::focus` override. Check the
   Tab order by hand.
-- [ ] 1.5 `GtkImageMenuItem` → `GtkMenuItem` through `_moo_menu_item_new`.
+- [x] 1.5 Nothing to do (see 0.1).
 - [ ] 1.6 Push and CI.
 
 ## Stage 2 — `.ui` files and container classes

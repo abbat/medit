@@ -87,4 +87,13 @@
 
 #endif
 
+#ifdef MOO_SHOW_DEPRECATIONS
+/* See MOO_SHOW_DEPRECATIONS in CMakeLists.txt. glib.h has been included above,
+ * so its definitions are not coming back. */
+#undef G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+#undef G_GNUC_END_IGNORE_DEPRECATIONS
+#define G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+#define G_GNUC_END_IGNORE_DEPRECATIONS
+#endif
+
 #endif // _medit_sysheaders_h_
