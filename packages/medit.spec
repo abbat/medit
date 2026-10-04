@@ -26,8 +26,6 @@ BuildRequires:  intltool
 # the language server client
 BuildRequires:  json-glib-devel
 # the session management code talks to the X session manager directly
-BuildRequires:  libICE-devel
-BuildRequires:  libSM-devel
 BuildRequires:  libxml2-devel
 
 %if 0%{?suse_version}

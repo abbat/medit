@@ -7,7 +7,7 @@ pkgdesc="Useful programming and around-programming text editor"
 arch=(x86_64)
 url="https://github.com/abbat/medit"
 license=(LGPL-2.1-only)
-depends=(glib2 gtk3 hicolor-icon-theme json-glib libice libsm libx11 libxml2 vte3)
+depends=(glib2 gtk3 hicolor-icon-theme json-glib libx11 libxml2 vte3)
 makedepends=(cmake gdk-pixbuf2 gettext glib2-devel intltool)
 optdepends=('ctags: list the functions of the open document'
             'clang: clangd, the language server for C and C++'

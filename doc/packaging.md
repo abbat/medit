@@ -82,7 +82,7 @@ docker build -t medit-f44 - <<'EOF'
 FROM fedora:44
 RUN dnf -y --setopt=install_weak_deps=False --disablerepo=fedora-cisco-openh264 install \
         rpm-build rpmdevtools cmake gcc gcc-c++ gtk3-devel glib2-devel libxml2-devel \
-        gdk-pixbuf2-devel libICE-devel libSM-devel intltool gettext desktop-file-utils
+        gdk-pixbuf2-devel intltool gettext desktop-file-utils
 EOF
 ```
 

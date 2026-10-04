@@ -108,7 +108,7 @@ pkg_check_modules(XML REQUIRED IMPORTED_TARGET libxml-2.0)
 # X11 libraries, when gdk targets X11. Each one is optional.
 pkg_get_variable(GDK_TARGET gtk+-3.0 target)
 if(GDK_TARGET STREQUAL "" OR GDK_TARGET STREQUAL "x11")
-    foreach(pkg x11 xext xrender ice sm)
+    foreach(pkg x11)
         pkg_check_modules(${pkg} IMPORTED_TARGET ${pkg})
         if(${pkg}_FOUND)
             list(APPEND MOO_X_TARGETS PkgConfig::${pkg})
