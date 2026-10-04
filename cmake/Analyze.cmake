@@ -27,13 +27,12 @@ set(MOO_ANALYZE_JOBS ${_moo_nproc} CACHE STRING "Parallel jobs for the analyze t
 find_program(CLANG_TIDY NAMES clang-tidy)
 find_program(RUN_CLANG_TIDY NAMES run-clang-tidy run-clang-tidy.py)
 
-# Upstream code we carry verbatim. gtksourceview and eggsmclient are
-# whole directories; the ctags plugin is ours except for readtags.c, which comes
+# Upstream code we carry verbatim. gtksourceview is a
+# whole directory; the ctags plugin is ours except for readtags.c, which comes
 # from the ctags project. Analyzing them reports real enough findings that are
 # still not ours to fix, and they would show up on every run.
 set(MOO_ANALYZE_EXCLUDE
     "src/vendor/gtksourceview/"
-    "src/vendor/eggsmclient/"
     "src/vendor/ctags/readtags\\.c")
 
 list(JOIN MOO_ANALYZE_EXCLUDE "|" _moo_analyze_exclude)

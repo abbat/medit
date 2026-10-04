@@ -40,9 +40,6 @@ set(GETTEXT_PACKAGE_GSV "${MOO_PACKAGE_NAME}-gsv")
 # Options
 # ---------------------------------------------------------------------------
 
-set(GTK_VERSION "3" CACHE STRING "GTK version to compile with (2, 3 or 4)")
-set_property(CACHE GTK_VERSION PROPERTY STRINGS 2 3 4)
-
 option(ENABLE_NLS "Native Language Support" ON)
 option(ENABLE_STRICT "Enable all warnings and -Werror" OFF)
 option(ENABLE_INSTALL_HOOKS "Run gtk-update-icon-cache during install" ON)
@@ -98,33 +95,18 @@ set(MOO_TEXT_LANG_FILES_DIR "${MOO_DATA_DIR}/language-specs")
 
 find_package(PkgConfig REQUIRED)
 
-if(GTK_VERSION STREQUAL "2")
-    set(GTK_PACKAGE gtk+-2.0)
-elseif(GTK_VERSION STREQUAL "3")
-    set(GTK_PACKAGE gtk+-3.0)
-elseif(GTK_VERSION STREQUAL "4")
-    # gtk4 dropped the "gtk+-" prefix from its pkg-config name
-    set(GTK_PACKAGE gtk4)
-else()
-    message(FATAL_ERROR "Unsupported GTK version: ${GTK_VERSION}. Supported versions are 2, 3 and 4.")
-endif()
-
 # The prefix is GTKPKG and not GTK on purpose. pkg_check_modules writes
-# <prefix>_VERSION into the cache, so with a prefix of GTK it overwrites the
-# GTK_VERSION entry above -- the one that selects the toolkit -- with the
-# version of the module it found. The first configure still works, because the
-# selection has already been read by then; the second fails with
-#
-#   Unsupported GTK version: 3.24.38. Supported versions are 2, 3 and 4.
-#
-# and the choice of toolkit is gone from the cache for good.
-pkg_check_modules(GTKPKG REQUIRED IMPORTED_TARGET ${GTK_PACKAGE})
-message(STATUS "Building against ${GTK_PACKAGE} ${GTKPKG_VERSION}")
+# <prefix>_VERSION into the cache, so a prefix that names one of our own
+# options would overwrite that option with the version of the module it
+# found, and the second configure would fail on the clobbered value. 3.24.33
+# is what Ubuntu 22.04, the oldest supported distribution, ships.
+pkg_check_modules(GTKPKG REQUIRED IMPORTED_TARGET gtk+-3.0>=3.24.33)
+message(STATUS "Building against gtk+-3.0 ${GTKPKG_VERSION}")
 pkg_check_modules(GLIB REQUIRED IMPORTED_TARGET glib-2.0 gthread-2.0 gmodule-2.0)
 pkg_check_modules(XML REQUIRED IMPORTED_TARGET libxml-2.0)
 
 # X11 libraries, when gdk targets X11. Each one is optional.
-pkg_get_variable(GDK_TARGET ${GTK_PACKAGE} target)
+pkg_get_variable(GDK_TARGET gtk+-3.0 target)
 if(GDK_TARGET STREQUAL "" OR GDK_TARGET STREQUAL "x11")
     foreach(pkg x11 xext xrender ice sm)
         pkg_check_modules(${pkg} IMPORTED_TARGET ${pkg})
@@ -187,18 +169,12 @@ check_symbol_exists(bind_textdomain_codeset libintl.h HAVE_BIND_TEXTDOMAIN_CODES
 # ctags plugin builds on unix only
 set(MOO_BUILD_CTAGS 1)
 
-# The terminal pane needs vte. vte dropped GTK+2 in 0.30 (2011), the last GTK+2
-# release being 0.28.2, so the pane is built for the GTK+3 build only.
+# The terminal pane needs vte-2.91.
 set(ENABLE_TERMINAL "AUTO" CACHE STRING "Terminal pane, needs vte-2.91 (AUTO, ON or OFF)")
 set_property(CACHE ENABLE_TERMINAL PROPERTY STRINGS AUTO ON OFF)
 
 if(ENABLE_TERMINAL STREQUAL "OFF")
     message(STATUS "Building without the terminal pane")
-elseif(NOT GTK_VERSION STREQUAL "3")
-    if(ENABLE_TERMINAL STREQUAL "ON")
-        message(FATAL_ERROR "ENABLE_TERMINAL=ON needs vte-2.91, which exists for GTK+3 only")
-    endif()
-    message(STATUS "Not a GTK+3 build, building without the terminal pane")
 else()
     pkg_check_modules(VTE IMPORTED_TARGET vte-2.91)
 
@@ -212,7 +188,7 @@ else()
 endif()
 
 # The LSP client needs json-glib to speak JSON-RPC. json-glib does not depend on
-# gtk, so unlike the terminal this is built for both toolkits.
+# gtk.
 set(ENABLE_LSP "AUTO" CACHE STRING "LSP client, needs json-glib (AUTO, ON or OFF)")
 set_property(CACHE ENABLE_LSP PROPERTY STRINGS AUTO ON OFF)
 

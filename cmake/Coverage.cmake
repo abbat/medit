@@ -6,7 +6,7 @@
 # always the same:
 #
 #   cmake -S . -B buildc3 -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ \
-#         -DGTK_VERSION=3 -DENABLE_UI_TESTS=ON -DENABLE_COVERAGE=ON \
+#         -DENABLE_UI_TESTS=ON -DENABLE_COVERAGE=ON \
 #         -DENABLE_SANITIZERS=address,undefined
 #   cmake --build buildc3 -j"$(nproc)"
 #   cmake --build buildc3 --target ui-test        # or ctest -R lsp, or -L unit

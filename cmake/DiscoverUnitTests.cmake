@@ -4,7 +4,7 @@
 # the binary and there is no binary at configure time. The output is included
 # by ctest through the TEST_INCLUDE_FILES property.
 #
-# Inputs: MEDIT, OUTPUT, GTK_VERSION, COVERAGE_DIR (empty when coverage is off),
+# Inputs: MEDIT, OUTPUT, COVERAGE_DIR (empty when coverage is off),
 # and PYTHON/WRAPPER/SANITIZERS/LOG_ROOT, which are empty unless the build is
 # sanitized and an interpreter was found -- see cmake/UnitTests.cmake. With them
 # a test runs through the wrapper, which reads what the sanitizer runtime wrote;
@@ -98,7 +98,7 @@ foreach(_moo_line IN LISTS _moo_lines)
     string(APPEND _moo_out
         "add_test([==[${_moo_name}]==] ${_moo_command})\n"
         "set_tests_properties([==[${_moo_name}]==] PROPERTIES\n"
-        "    LABELS \"unit;gtk${GTK_VERSION};${_moo_group}\"\n"
+        "    LABELS \"unit;${_moo_group}\"\n"
         "    ENVIRONMENT \"${_moo_env}\"\n"
         "    RESOURCE_LOCK unit\n"
         "    TIMEOUT ${_moo_timeout})\n")

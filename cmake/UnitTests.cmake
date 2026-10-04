@@ -73,7 +73,6 @@ add_custom_target(unit-tests-list ALL
     COMMAND ${CMAKE_COMMAND}
             "-DMEDIT=$<TARGET_FILE:medit>"
             "-DOUTPUT=${MOO_UNIT_TESTS_FILE}"
-            "-DGTK_VERSION=${GTK_VERSION}"
             "-DCOVERAGE_DIR=${_moo_unit_coverage_dir}"
             "-DPYTHON=${_moo_unit_python}"
             "-DWRAPPER=${_moo_unit_wrapper}"
