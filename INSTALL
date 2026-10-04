@@ -7,20 +7,18 @@ cmake --install build
 This will configure, build, and install medit to /usr/local. Pass
 -DCMAKE_INSTALL_PREFIX=/usr to install into /usr instead.
 
-medit requires development packages of the following: gtk3 (or gtk2), glib2, libxml2.
+medit requires development packages of the following: gtk3 (3.24.33 or newer), glib2, libxml2.
 For example, on Debian you may need to install libgtk-3-dev, libxml2-dev, and to build
-the sources also cmake, pkg-config, intltool and gettext. The gtk2 build, which is kept
-for older systems, needs libgtk2.0-dev instead.
+the sources also cmake, pkg-config, intltool and gettext.
 
-The terminal pane additionally needs vte (libvte-2.91-dev on Debian). It is optional
-and looked for only in the gtk3 build; see ENABLE_TERMINAL below.
+The terminal pane additionally needs vte (libvte-2.91-dev on Debian). It is optional;
+see ENABLE_TERMINAL below.
 
 The language server client additionally needs json-glib (libjson-glib-dev on Debian).
-It is optional and built for both gtk versions; see ENABLE_LSP below.
+It is optional; see ENABLE_LSP below.
 
 Build options:
 
-  -DGTK_VERSION=2|3|4    GTK version to build against (default: 3, see below)
   -DENABLE_NLS=ON|OFF    Native Language Support (default: ON)
   -DENABLE_STRICT=ON|OFF all warnings and -Werror (default: OFF)
   -DENABLE_INSTALL_HOOKS=ON|OFF
@@ -33,8 +31,8 @@ Build options:
 
 The build is out of source, so several configurations can live side by side:
 
-cmake -S . -B build2 -DGTK_VERSION=2 && cmake --build build2 -j$(nproc)
-cmake -S . -B build3 -DGTK_VERSION=3 && cmake --build build3 -j$(nproc)
+cmake -S . -B build-debug -DCMAKE_BUILD_TYPE=Debug && cmake --build build-debug -j$(nproc)
+cmake -S . -B build-strict -DENABLE_STRICT=ON && cmake --build build-strict -j$(nproc)
 
 The binary is built as <build dir>/src/medit and can be run straight from there: it
 finds its translations in <build dir>/locale without an install.
@@ -46,8 +44,7 @@ To remove the build directories and whatever a package build left in debian/, ru
 the terminal pane
 -----------------
 
-The pane at the bottom of the window that runs a shell is built on vte. vte dropped
-GTK+2 in 0.30, back in 2011, so the pane exists in the gtk3 build only. AUTO, the
+The pane at the bottom of the window that runs a shell is built on vte. AUTO, the
 default, builds it when pkg-config finds vte-2.91 and silently leaves it out when it
 does not; ON turns a missing vte into a configure error, which is what the packaging
 uses; OFF never builds it.
@@ -57,7 +54,7 @@ the language server client
 
 Diagnostics, a symbol tree, go to definition, hover and completion, spoken to a
 language server over the language server protocol. It needs json-glib, which does not
-depend on gtk, so unlike the terminal it is built for both toolkits. AUTO, the default,
+depend on gtk. AUTO, the default,
 builds it when pkg-config finds json-glib-1.0 and silently leaves it out when it does
 not; ON turns a missing json-glib into a configure error, which is what the packaging
 uses; OFF never builds it.
@@ -70,11 +67,3 @@ ones you want (clangd, pylsp, gopls, rust-analyzer and so on) and medit will use
 Which server handles which files is described in lsp.xml, installed next to the other
 data files; Tools -> LSP Servers... copies it into your own data directory and opens it
 for editing.
-
-gtk-4
------
-
--DGTK_VERSION=4 configures against the gtk4 package (libgtk-4-dev on Debian), but the
-sources are not ported to gtk-4 yet, so the build fails: gtk-4 removed the GtkAction
-family, gtk_widget_destroy() and the X11 headers the session management code uses.
-The option is there for the port to come; use 2 or 3 to build medit today.

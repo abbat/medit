@@ -30,19 +30,17 @@ for Debian 12, 13, Ubuntu 22.04, 24.04, 26.04, Fedora and openSUSE — deb and
 rpm come from the same place, and the page walks you through adding the
 repository for whichever one you are on.
 
-On deb, `medit` is a metapackage that pulls in `medit-gtk3`, or leaves
-`medit-gtk2` in place if that is what is already installed — install one of
-those directly to pick the toolkit yourself. The two are mutually exclusive, and
-only `medit-gtk3` has the terminal pane. The rpm is a single `medit` package,
-built against GTK+3.
+On deb, `medit` is a metapackage that pulls in `medit-gtk3`, the only build
+there is. GTK+2 support has ended: **1.3.12 is the last version with a GTK+2
+build**, and the `medit-gtk2` package is gone. A system that still needs GTK+2
+can stay on 1.3.12. The rpm is a single `medit` package, built against GTK+3.
 
 ## what this fork changes
 
 Everything that kept medit out of the distributions is gone:
 
-* **GTK+3.** medit builds and runs against gtk-3.24, which is what the build
-  defaults to; the gtk-2.24 build is kept for older systems and
-  `-DGTK_VERSION=2` selects it.
+* **GTK+3.** medit builds and runs against gtk-3.24 (3.24.33 or newer).
+  The gtk-2.24 build was kept up to 1.3.12 and is gone since.
 * **No python.** The dialogs used to be generated from glade files by a python
   script and parsed at runtime by a bundled copy of libglade. They are plain
   `.ui` files now, loaded by GtkBuilder from a GResource bundle, so neither the
@@ -61,7 +59,7 @@ Everything that kept medit out of the distributions is gone:
   completion, and what a server is busy with while it is busy.
   Which server handles which files is one small xml file, and
   `Tools → LSP Servers…` opens your copy of it. It needs json-glib, which does
-  not depend on gtk, so both builds have it (`-DENABLE_LSP=OFF` to leave it
+  not depend on gtk, so it is built whenever gtk is (`-DENABLE_LSP=OFF` to leave it
   out). **It is off until you switch it on** in `Preferences → Plugins`, the
   same as the ctags module: it runs other people's programs, one per project,
   and that is not something to start behind your back.
@@ -88,11 +86,10 @@ Everything that kept medit out of the distributions is gone:
   GTK+2 vte; it is a builtin C++ plugin on top of vte-2.91 now, with the same
   shell, color schemes and context menu, plus an entry in the Tools menu bound
   to ``Ctrl+` ``; that key, and the pane's own copy and paste, are in
-  `Edit → Configure Shortcuts` like every other command. The GTK+2 build does
-  not get it — vte's last GTK+2 release is
-  0.28.2 from 2011 — and vte is optional either way (`-DENABLE_TERMINAL=OFF`).
-* **CMake** instead of autotools. The build is out of source, so a gtk-2 and a
-  gtk-3 build directory can live side by side.
+  `Edit → Configure Shortcuts` like every other command. vte is optional
+  (`-DENABLE_TERMINAL=OFF`).
+* **CMake** instead of autotools. The build is out of source, so several build
+  directories can live side by side.
 * **C++ instead of C.** Every source in the tree is compiled as C++ and named
   `.cpp`, so what used to be a comment about who frees what is the type of the
   thing being freed, and a function with nine exits has no cleanup label at the
@@ -111,7 +108,7 @@ See [NEWS](NEWS) for the full list.
 ```bash
 git clone https://github.com/abbat/medit.git
 cd medit
-cmake -S . -B build -DGTK_VERSION=3
+cmake -S . -B build
 cmake --build build -j$(nproc)
 ```
 
