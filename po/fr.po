@@ -103,7 +103,6 @@ msgid "Text editor"
 msgstr "Éditeur de texte"
 
 #: src/medit-app/medit.desktop.in.h:2
-#, fuzzy
 msgid "editor;texteditor;text;"
 msgstr "éditeur;éditeur de texte;texte;"
 

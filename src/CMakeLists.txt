@@ -192,6 +192,12 @@ install(FILES mooutils/pixmaps/medit.png
     DESTINATION "${CMAKE_INSTALL_DATADIR}/icons/hicolor/48x48/apps")
 
 if(ENABLE_NLS)
+    # The translations come from the catalogs, so a catalog change has to regenerate it
+    file(STRINGS "${CMAKE_SOURCE_DIR}/po/LINGUAS" desktop_linguas REGEX "^[^#]")
+    set(desktop_po)
+    foreach(lang ${desktop_linguas})
+        list(APPEND desktop_po "${CMAKE_SOURCE_DIR}/po/${lang}.po")
+    endforeach()
     add_custom_command(
         OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/medit.desktop"
         COMMAND ${CMAKE_COMMAND} -E env LC_ALL=C ${INTLTOOL_MERGE} -d -u
@@ -199,7 +205,7 @@ if(ENABLE_NLS)
                 "${CMAKE_SOURCE_DIR}/po"
                 "${CMAKE_CURRENT_SOURCE_DIR}/medit-app/medit.desktop.in"
                 "${CMAKE_CURRENT_BINARY_DIR}/medit.desktop"
-        DEPENDS medit-app/medit.desktop.in
+        DEPENDS medit-app/medit.desktop.in ${desktop_po}
         COMMENT "Generating medit.desktop"
         VERBATIM)
 else()
