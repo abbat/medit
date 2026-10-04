@@ -668,9 +668,7 @@ quick_open_activate (MooEditWindow *window)
     gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll),
                                     GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
     gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scroll), GTK_SHADOW_IN);
-#if GTK_CHECK_VERSION(3,0,0)
     gtk_widget_set_vexpand (scroll, TRUE);
-#endif
     gtk_box_pack_start (GTK_BOX (vbox), scroll, TRUE, TRUE, 0);
 
     dlg.store = gtk_list_store_new (N_COLUMNS, G_TYPE_STRING, G_TYPE_STRING);

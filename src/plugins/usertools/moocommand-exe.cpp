@@ -563,7 +563,6 @@ run_command (MooCommandExe     *cmd,
 }
 
 
-#if GTK_CHECK_VERSION(3, 0, 0)
 /*
  * The environment a child should get to come up on a particular screen: the
  * one it would otherwise have, with DISPLAY replaced.
@@ -608,7 +607,6 @@ env_with_display (char     **env,
 
     return (char**) g_ptr_array_free (out, FALSE);
 }
-#endif
 
 
 static gboolean
@@ -639,7 +637,6 @@ run_async (const char     *cmd_line,
 
         if (screen)
         {
-#if GTK_CHECK_VERSION(3, 0, 0)
             /* gdk_spawn_on_screen() is gone, and what it did was put the
                screen's display into the child's environment. The port wrote it
                into *this* process's environment instead and put it back
@@ -653,10 +650,6 @@ run_async (const char     *cmd_line,
                                     flags, NULL, NULL, NULL, error);
 
             g_strfreev (display_env);
-#else
-            result = gdk_spawn_on_screen (screen, working_dir, (char**) argv, real_env,
-                                          flags, NULL, NULL, NULL, error);
-#endif
         }
         else
         {

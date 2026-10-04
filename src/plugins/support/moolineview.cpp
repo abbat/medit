@@ -46,11 +46,7 @@ static void      moo_line_view_move_cursor      (GtkTextView    *text_view,
                                                  gboolean        extend_selection);
 
 static void      moo_line_view_populate_popup   (GtkTextView    *text_view,
-#if GTK_CHECK_VERSION(3,0,0)
                                                  GtkWidget      *menu);
-#else
-                                                 GtkMenu        *menu);
-#endif
 
 static MooTextCursor
                  moo_line_view_get_text_cursor  (MooTextView    *view,
@@ -163,14 +159,9 @@ moo_line_view_parent_set (GtkWidget *widget,
 
     view->priv->hscrollbar = NULL;
 
-#if GTK_CHECK_VERSION(3,0,0)
     GtkWidget *parent = gtk_widget_get_parent(widget);
     if (parent && GTK_IS_SCROLLED_WINDOW(parent))
         view->priv->hscrollbar = gtk_scrolled_window_get_hscrollbar(GTK_SCROLLED_WINDOW(parent));
-#else
-    if (widget->parent && GTK_IS_SCROLLED_WINDOW (widget->parent))
-        view->priv->hscrollbar = GTK_SCROLLED_WINDOW(widget->parent)->hscrollbar;
-#endif
 
     if (GTK_WIDGET_CLASS (moo_line_view_parent_class)->parent_set)
         GTK_WIDGET_CLASS (moo_line_view_parent_class)->parent_set (widget, old_parent);
@@ -614,11 +605,7 @@ copy_clipboard (GtkTextView *text_view)
 
 static void
 moo_line_view_populate_popup (GtkTextView *text_view,
-#if GTK_CHECK_VERSION(3,0,0)
                               GtkWidget      *menu)
-#else
-                              GtkMenu        *menu)
-#endif
 {
     GtkWidget *item;
     gboolean has_selection, has_text;

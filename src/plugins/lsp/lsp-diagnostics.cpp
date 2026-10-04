@@ -207,7 +207,6 @@ get_tag (GtkTextBuffer         *buffer,
                                       "underline", PANGO_UNDERLINE_ERROR,
                                       (const char*) NULL);
 
-#if GTK_CHECK_VERSION(3,16,0)
     /*
      * Only GTK+3 can colour an underline separately from the text, so on
      * GTK+2 every severity gets the same squiggle and the margin icon and the
@@ -219,7 +218,6 @@ get_tag (GtkTextBuffer         *buffer,
         if (gdk_rgba_parse (&rgba, info->color))
             g_object_set (tag, "underline-rgba", &rgba, (const char*) NULL);
     }
-#endif
 
     return tag;
 }

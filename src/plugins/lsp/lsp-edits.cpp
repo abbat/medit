@@ -378,11 +378,7 @@ ask_for_name (MooEditWindow *window,
 
     /* gtk_misc_set_alignment() is what GTK+2 has and what GTK+3 deprecated;
        the tree is trying to have fewer of those, not more. */
-#if GTK_CHECK_VERSION(3,16,0)
     gtk_label_set_xalign (GTK_LABEL (label), 0.0);
-#else
-    gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-#endif
 
     entry = gtk_entry_new ();
     gtk_entry_set_text (GTK_ENTRY (entry), old_name ? old_name : "");
