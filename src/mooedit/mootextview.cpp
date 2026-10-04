@@ -2849,15 +2849,12 @@ update_line_mark_icons (MooTextView *view)
 {
     int i;
     char str[32];
-    GtkSettings *settings;
     PangoLayout *layout;
 
     g_return_if_fail (gtk_widget_get_realized (GTK_WIDGET (view)));
 
-    settings = gtk_widget_get_settings (GTK_WIDGET (view));
-
-    if (!gtk_icon_size_lookup_for_settings (settings, GTK_ICON_SIZE_MENU,
-                                            &view->priv->lm.icon_width, NULL))
+    if (!gtk_icon_size_lookup (GTK_ICON_SIZE_MENU,
+                               &view->priv->lm.icon_width, NULL))
         view->priv->lm.icon_width = 16;
 
     layout = gtk_widget_create_pango_layout (GTK_WIDGET (view), NULL);

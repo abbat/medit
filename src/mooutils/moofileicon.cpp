@@ -357,21 +357,18 @@ add_emblem (GdkPixbuf     *original,
 
 
 static void
-pixels_from_icon_size (GdkScreen   *screen,
+pixels_from_icon_size (G_GNUC_UNUSED GdkScreen *screen,
                        GtkIconSize  size,
                        int         *widthp,
                        int         *heightp)
 {
-    GtkSettings *settings;
     int width, height;
 
-    settings = gtk_settings_get_for_screen (screen);
-
-    if (!gtk_icon_size_lookup_for_settings (settings, size, &width, &height))
+    if (!gtk_icon_size_lookup (size, &width, &height))
     {
         g_critical ("invalid icon size");
         size = GTK_ICON_SIZE_MENU;
-        gtk_icon_size_lookup_for_settings (settings, size, &width, &height);
+        gtk_icon_size_lookup (size, &width, &height);
     }
 
     if (widthp)
