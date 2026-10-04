@@ -17,6 +17,8 @@ starts with different families does not. The rest is the round trip: pick a
 family, accept it, and the button says what was picked.
 """
 
+from lib import a11y
+
 FILTER = "Show only fixed width fonts"
 
 # The buttons of the preferences dialog itself, which are not on the page.
@@ -61,6 +63,8 @@ def run(t):
     chosen = back[0]
     t.click(cell(t, dialog, chosen))
 
+    tab_order(t, dialog)
+
     t.click(t.button(dialog, "OK"))
     t.no_toplevel("Pick a Font")
 
@@ -69,6 +73,39 @@ def run(t):
 
     t.click(t.button(prefs, "OK"))
     t.no_toplevel("Preferences")
+
+
+def tab_order(t, dialog):
+    """Tab goes family list, style list, size entry, size list.
+
+    That order was a focus chain once; now the size entry and list share a box
+    of their own, so the grid's sort cannot put the entry first. Begins with the
+    focus in the family list.
+    """
+    def focused():
+        found = t.find_all(dialog, pred=lambda node: t.state(node, "focused"))
+        return found[0] if found else None
+
+    def is_list(node):
+        return a11y.role(node) == a11y.role_const("table")
+
+    def is_size_list(node):
+        names = [c.name for c in t.find_all(node, role="table cell") if c.name]
+        return bool(names) and all(n.isdigit() for n in names)
+
+    t.focus(dialog)
+    family = t.wait(focused, "the family list to have the focus")
+    expected = [
+        ("the style list", lambda n: is_list(n) and n != family and not is_size_list(n)),
+        ("the size entry", lambda n: a11y.role(n) == a11y.role_const("text")),
+        ("the size list", lambda n: is_list(n) and is_size_list(n)),
+    ]
+
+    for what, ok in expected:
+        t.key("Tab")
+        t.wait(lambda: focused() is not None and ok(focused()),
+               "Tab to move the focus to %s" % what)
+        t.log("ok: Tab moved the focus to %s" % what)
 
 
 def font_button(t, prefs):

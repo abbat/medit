@@ -268,20 +268,14 @@ moo_font_selection_init (MooFontSelection *fontsel)
   GtkWidget *scrolled_win;
   GtkWidget *text_box;
   GtkWidget *table, *label;
-  GtkWidget *font_label, *style_label;
+  GtkWidget *font_label, *style_label, *size_box;
   GtkWidget *vbox;
   GtkListStore *model;
   GtkTreeViewColumn *column;
-  GList *focus_chain = NULL;
   AtkObject *atk_obj;
 
   fontsel->monospace = FALSE;
   fontsel->filter_visible = TRUE;
-
-  /* Deprecated since GTK+ 3.10 in favour of widget templates, which this widget does not use. */
-  G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-  gtk_widget_push_composite_child ();
-  G_GNUC_END_IGNORE_DEPRECATIONS
 
   gtk_box_set_spacing (GTK_BOX (fontsel), 12);
   fontsel->size = 12 * PANGO_SCALE;
@@ -296,8 +290,12 @@ moo_font_selection_init (MooFontSelection *fontsel)
   fontsel->size_entry = gtk_entry_new ();
   gtk_widget_set_size_request (fontsel->size_entry, 20, -1);
   gtk_widget_show (fontsel->size_entry);
-  gtk_widget_set_valign (fontsel->size_entry, GTK_ALIGN_CENTER);
-  gtk_grid_attach (GTK_GRID (table), fontsel->size_entry, 2, 1, 1, 1);
+  /* One column for the size entry and list, so that Tab reaches them after the
+     family and style lists and in that order, as the focus chain once set. */
+  size_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+  gtk_widget_show (size_box);
+  gtk_grid_attach (GTK_GRID (table), size_box, 2, 1, 1, 2);
+  gtk_box_pack_start (GTK_BOX (size_box), fontsel->size_entry, FALSE, FALSE, 0);
   g_signal_connect (fontsel->size_entry, "activate",
                     G_CALLBACK (moo_font_selection_size_activate),
                     fontsel);
@@ -364,7 +362,6 @@ moo_font_selection_init (MooFontSelection *fontsel)
   gtk_widget_set_hexpand (scrolled_win, TRUE);
   gtk_widget_set_vexpand (scrolled_win, TRUE);
   gtk_grid_attach (GTK_GRID (table), scrolled_win, 0, 1, 1, 2);
-  focus_chain = g_list_append (focus_chain, scrolled_win);
 
   model = gtk_list_store_new (2,
                               G_TYPE_OBJECT,  /* FACE_COLUMN */
@@ -399,9 +396,7 @@ moo_font_selection_init (MooFontSelection *fontsel)
   gtk_widget_set_hexpand (scrolled_win, TRUE);
   gtk_widget_set_vexpand (scrolled_win, TRUE);
   gtk_grid_attach (GTK_GRID (table), scrolled_win, 1, 1, 1, 2);
-  focus_chain = g_list_append (focus_chain, scrolled_win);
 
-  focus_chain = g_list_append (focus_chain, fontsel->size_entry);
 
   model = gtk_list_store_new (1, G_TYPE_INT);
   fontsel->size_list = gtk_tree_view_new_with_model (GTK_TREE_MODEL (model));
@@ -429,14 +424,7 @@ moo_font_selection_init (MooFontSelection *fontsel)
   gtk_widget_show (fontsel->size_list);
   gtk_widget_show (scrolled_win);
   gtk_widget_set_vexpand (scrolled_win, TRUE);
-  gtk_grid_attach (GTK_GRID (table), scrolled_win, 2, 2, 1, 1);
-  focus_chain = g_list_append (focus_chain, scrolled_win);
-
-  /* Deprecated without a replacement; dropping it would change the Tab order. */
-  G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-  gtk_container_set_focus_chain (GTK_CONTAINER (table), focus_chain);
-  G_GNUC_END_IGNORE_DEPRECATIONS
-  g_list_free (focus_chain);
+  gtk_box_pack_start (GTK_BOX (size_box), scrolled_win, TRUE, TRUE, 0);
 
   /* Insert the fonts. */
   g_signal_connect (gtk_tree_view_get_selection (GTK_TREE_VIEW (fontsel->family_list)), "changed",
@@ -529,10 +517,6 @@ moo_font_selection_init (MooFontSelection *fontsel)
                                -1, INITIAL_PREVIEW_HEIGHT);
   gtk_box_pack_start (GTK_BOX (text_box), fontsel->preview_entry,
                       TRUE, TRUE, 0);
-
-  G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-  gtk_widget_pop_composite_child();
-  G_GNUC_END_IGNORE_DEPRECATIONS
 }
 
 GtkWidget *
@@ -1312,10 +1296,6 @@ moo_font_selection_dialog_init (MooFontSelectionDialog *fontseldiag)
 
   gtk_box_set_spacing (GTK_BOX (gtk_dialog_get_content_area (dialog)), 2); /* 2 * 5 + 2 = 12 */
 
-  G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-  gtk_widget_push_composite_child ();
-  G_GNUC_END_IGNORE_DEPRECATIONS
-
   gtk_window_set_resizable (GTK_WINDOW (fontseldiag), TRUE);
 
   fontseldiag->main_vbox = gtk_dialog_get_content_area (dialog);
@@ -1347,10 +1327,6 @@ moo_font_selection_dialog_init (MooFontSelectionDialog *fontseldiag)
 
   gtk_window_set_title (GTK_WINDOW (fontseldiag),
                         D_("Font Selection", "gtk30"));
-
-  G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-  gtk_widget_pop_composite_child ();
-  G_GNUC_END_IGNORE_DEPRECATIONS
 
 }
 G_GNUC_END_IGNORE_DEPRECATIONS
@@ -2228,10 +2204,6 @@ moo_font_button_create_inside (MooFontButton *font_button)
 {
   GtkWidget *widget;
 
-  G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-  gtk_widget_push_composite_child ();
-  G_GNUC_END_IGNORE_DEPRECATIONS
-
   widget = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 
   font_button->priv->font_label = gtk_label_new (D_("Font", "gtk30"));
@@ -2247,10 +2219,6 @@ moo_font_button_create_inside (MooFontButton *font_button)
     }
 
   gtk_widget_show_all (widget);
-
-  G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-  gtk_widget_pop_composite_child ();
-  G_GNUC_END_IGNORE_DEPRECATIONS
 
   return widget;
 }
