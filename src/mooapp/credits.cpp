@@ -19,18 +19,6 @@
 #include "mooutils/moobuilder.h"
 
 /*!
- * \brief Callback function for the close button click event
- * \param widget The button widget that triggered the event (unused)
- * \param data The dialog window to close
- */
-static void
-on_close_button_clicked (GtkWidget *widget, gpointer data)
-{
-  (void) widget;
-  gtk_dialog_response (GTK_DIALOG (data), GTK_RESPONSE_CLOSE);
-}
-
-/*!
  * \brief Creates a new tab in a notebook with a text view
  * \param notebook The notebook widget to add the tab to
  * \param caption The text to display on the tab label
@@ -160,10 +148,9 @@ create_content_area (GtkDialog *dialog)
 /*!
  * \brief Creates the close button for the credits dialog
  * \param dialog The dialog to create the button for
- * \param hbox The box container to add the button to
  */
-static void
-create_close_button (GtkDialog *dialog, GtkBox *hbox)
+static GtkWidget *
+create_close_button (GtkDialog *dialog)
 {
   GtkButton *button;
   GtkWidget *widget;
@@ -181,10 +168,10 @@ create_close_button (GtkDialog *dialog, GtkBox *hbox)
 
   gtk_widget_set_can_focus (widget, TRUE);
   gtk_widget_set_can_default (widget, TRUE);
-  gtk_box_pack_start (hbox, widget, FALSE, FALSE, 0);
   gtk_widget_show (widget);
 
-  g_signal_connect (button, "clicked", G_CALLBACK (on_close_button_clicked), dialog);
+  gtk_dialog_add_action_widget (dialog, widget, GTK_RESPONSE_CLOSE);
+  return widget;
 }
 
 /*!
@@ -194,12 +181,7 @@ create_close_button (GtkDialog *dialog, GtkBox *hbox)
 static void
 create_action_area (GtkDialog *dialog)
 {
-  GtkBox *hbox;
-
-  hbox = GTK_BOX (gtk_dialog_get_action_area (dialog));
-  gtk_button_box_set_layout (GTK_BUTTON_BOX (hbox), GTK_BUTTONBOX_END);
-
-  create_close_button (dialog, hbox);
+  create_close_button (dialog);
 }
 
 /*!

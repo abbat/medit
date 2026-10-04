@@ -45,18 +45,6 @@ on_license_button_clicked (GtkWidget *widget, gpointer data)
 }
 
 /*!
- * \brief Callback function for close button click event
- * \param widget The button widget that triggered the event
- * \param data The dialog widget
- */
-static void
-on_close_button_clicked (GtkWidget *widget, gpointer data)
-{
-  (void) widget;
-  gtk_dialog_response (GTK_DIALOG (data), GTK_RESPONSE_CLOSE);
-}
-
-/*!
  * \brief Creates and adds the application logo image to the dialog
  * \param box The box container to add the logo to
  */
@@ -255,10 +243,9 @@ create_license_button (GtkDialog *dialog, GtkBox *hbox)
 /*!
  * \brief Creates and adds the close button to the dialog
  * \param dialog The dialog to close when button is clicked
- * \param hbox The action box to add the button to
  */
-static void
-create_close_button (GtkDialog *dialog, GtkBox *hbox)
+static GtkWidget *
+create_close_button (GtkDialog *dialog)
 {
   GtkButton *button;
   GtkWidget *widget;
@@ -276,10 +263,10 @@ create_close_button (GtkDialog *dialog, GtkBox *hbox)
 
   gtk_widget_set_can_focus (widget, TRUE);
   gtk_widget_set_can_default (widget, TRUE);
-  gtk_box_pack_start (hbox, widget, FALSE, FALSE, 0);
   gtk_widget_show (widget);
 
-  g_signal_connect (button, "clicked", G_CALLBACK (on_close_button_clicked), dialog);
+  gtk_dialog_add_action_widget (dialog, widget, GTK_RESPONSE_CLOSE);
+  return widget;
 }
 
 /*!
@@ -289,14 +276,14 @@ create_close_button (GtkDialog *dialog, GtkBox *hbox)
 static void
 create_action_area (GtkDialog *dialog)
 {
-  GtkBox *hbox;
-
-  hbox = GTK_BOX (gtk_dialog_get_action_area (dialog));
-  gtk_button_box_set_layout (GTK_BUTTON_BOX (hbox), GTK_BUTTONBOX_END);
+  GtkWidget *close_button = create_close_button (dialog);
+  /* The credits and license buttons are no responses of the dialog, so they
+     are put into the box that holds the close button, ahead of it. */
+  GtkBox *hbox = GTK_BOX (gtk_widget_get_parent (close_button));
 
   create_credits_button (dialog, hbox);
   create_license_button (dialog, hbox);
-  create_close_button (dialog, hbox);
+  gtk_box_reorder_child (hbox, close_button, -1);
 }
 
 /*!

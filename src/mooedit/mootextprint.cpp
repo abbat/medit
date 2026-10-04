@@ -1944,7 +1944,7 @@ set_options (GtkBuilder *xml)
                                moo_prefs_get_int (PREFS_LINE_NUMBERS_STEP));
 
     if ((s = moo_prefs_get_string (PREFS_FONT)))
-        gtk_font_button_set_font_name (GTK_FONT_BUTTON (moo_builder_get (xml, "font")), s);
+        gtk_font_chooser_set_font (GTK_FONT_CHOOSER (moo_builder_get (xml, "font")), s);
 }
 
 
@@ -1986,7 +1986,10 @@ get_options (GtkBuilder *xml)
     }
 
     if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GTK_CHECK_BUTTON (moo_builder_get (xml, "use_custom_font")))))
-        moo_prefs_set_string (PREFS_FONT, gtk_font_button_get_font_name (GTK_FONT_BUTTON (moo_builder_get (xml, "font"))));
+    {
+        g_autofree char *font = gtk_font_chooser_get_font (GTK_FONT_CHOOSER (moo_builder_get (xml, "font")));
+        moo_prefs_set_string (PREFS_FONT, font);
+    }
 }
 
 static GtkWidget *

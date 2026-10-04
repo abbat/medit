@@ -314,27 +314,6 @@ files_treeview_get_to_save (GtkTreeView  *treeview,
 }
 
 
-static GtkWidget *
-find_widget_for_response (GtkDialog *dialog,
-                          int        response)
-{
-    GList *l, *children;
-    GtkWidget *ret = NULL;
-
-    children = gtk_container_get_children (GTK_CONTAINER (gtk_dialog_get_action_area(dialog)));
-
-    for (l = children; ret == NULL && l != NULL; l = l->next)
-    {
-        GtkWidget *widget = GTK_WIDGET (l->data);
-        int response_here = gtk_dialog_get_response_for_widget (dialog, widget);
-        if (response_here == response)
-            ret = widget;
-    }
-
-    g_list_free (children);
-    return ret;
-}
-
 MooSaveChangesResponse
 _moo_edit_save_multiple_changes_dialog (MooEditArray *docs,
                                         MooEditArray *to_save)
@@ -378,7 +357,7 @@ _moo_edit_save_multiple_changes_dialog (MooEditArray *docs,
 
     {
         GtkWidget *button;
-        button = find_widget_for_response (GTK_DIALOG (dialog), GTK_RESPONSE_YES);
+        button = gtk_dialog_get_widget_for_response (GTK_DIALOG (dialog), GTK_RESPONSE_YES);
         gtk_widget_grab_focus (button);
     }
 
