@@ -36,7 +36,7 @@
 #include "mooutils/moofontsel.h"
 #include "mooutils/mooi18n.h"
 
-#define P_(String) dgettext ("gtk20-properties", String)
+#define P_(String) dgettext ("gtk30-properties", String)
 
 
 /* This is the default text shown in the preview entry, though the user
@@ -299,19 +299,19 @@ moo_font_selection_init (MooFontSelection *fontsel)
                          fontsel, NULL,
                          (GConnectFlags) (G_CONNECT_AFTER | G_CONNECT_SWAPPED));
 
-  font_label = gtk_label_new_with_mnemonic (D_("_Family:", "gtk20"));
+  font_label = gtk_label_new_with_mnemonic (D_("_Family:", "gtk30"));
   gtk_misc_set_alignment (GTK_MISC (font_label), 0.0, 0.5);
   gtk_widget_show (font_label);
   gtk_table_attach (GTK_TABLE (table), font_label, 0, 1, 0, 1,
                     (GtkAttachOptions) GTK_FILL, (GtkAttachOptions) 0, 0, 0);
 
-  style_label = gtk_label_new_with_mnemonic (D_("_Style:", "gtk20"));
+  style_label = gtk_label_new_with_mnemonic (D_("_Style:", "gtk30"));
   gtk_misc_set_alignment (GTK_MISC (style_label), 0.0, 0.5);
   gtk_widget_show (style_label);
   gtk_table_attach (GTK_TABLE (table), style_label, 1, 2, 0, 1,
                     (GtkAttachOptions) GTK_FILL, (GtkAttachOptions) 0, 0, 0);
 
-  label = gtk_label_new_with_mnemonic (D_("Si_ze:", "gtk20"));
+  label = gtk_label_new_with_mnemonic (D_("Si_ze:", "gtk30"));
   gtk_label_set_mnemonic_widget (GTK_LABEL (label),
                                  fontsel->size_entry);
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
@@ -501,7 +501,7 @@ moo_font_selection_init (MooFontSelection *fontsel)
   gtk_box_pack_start (GTK_BOX (vbox), fontsel->filter_button, FALSE, FALSE, 0);
 
   /* create the text entry widget */
-  label = gtk_label_new_with_mnemonic (D_("_Preview:", "gtk20"));
+  label = gtk_label_new_with_mnemonic (D_("_Preview:", "gtk30"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
   gtk_widget_show (label);
   gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, TRUE, 0);
@@ -1079,7 +1079,7 @@ moo_font_selection_update_preview (MooFontSelection *fontsel)
   /* This sets the preview text, if it hasn't been set already. */
   text = gtk_entry_get_text (GTK_ENTRY (preview_entry));
   if (strlen (text) == 0)
-    gtk_entry_set_text (GTK_ENTRY (preview_entry), D_(PREVIEW_TEXT, "gtk20"));
+    gtk_entry_set_text (GTK_ENTRY (preview_entry), D_(PREVIEW_TEXT, "gtk30"));
   gtk_editable_set_position (GTK_EDITABLE (preview_entry), 0);
 }
 
@@ -1342,7 +1342,7 @@ moo_font_selection_dialog_init (MooFontSelectionDialog *fontseldiag)
                                            -1);
 
   gtk_window_set_title (GTK_WINDOW (fontseldiag),
-                        D_("Font Selection", "gtk20"));
+                        D_("Font Selection", "gtk30"));
 
   gtk_widget_pop_composite_child ();
 
@@ -1513,7 +1513,7 @@ moo_font_button_class_init (MooFontButtonClass *klass)
                                    g_param_spec_string ("title",
                                                         P_("Title"),
                                                         P_("The title of the font selection dialog"),
-                                                        D_("Pick a Font", "gtk20"),
+                                                        D_("Pick a Font", "gtk30"),
                                                         G_PARAM_READWRITE));
 
   /**
@@ -1632,13 +1632,13 @@ moo_font_button_init (MooFontButton *font_button)
   font_button->priv = (MooFontButtonPrivate*) moo_font_button_get_instance_private (font_button);
 
   /* Initialize fields */
-  font_button->priv->fontname = g_strdup (D_("Sans 12", "gtk20"));
+  font_button->priv->fontname = g_strdup (D_("Sans 12", "gtk30"));
   font_button->priv->use_font = FALSE;
   font_button->priv->use_size = FALSE;
   font_button->priv->show_style = TRUE;
   font_button->priv->show_size = TRUE;
   font_button->priv->font_dialog = NULL;
-  font_button->priv->title = g_strdup (D_("Pick a Font", "gtk20"));
+  font_button->priv->title = g_strdup (D_("Pick a Font", "gtk30"));
   font_button->priv->monospace = FALSE;
   font_button->priv->filter_visible = TRUE;
 
@@ -2225,7 +2225,7 @@ moo_font_button_create_inside (MooFontButton *font_button)
 
   widget = gtk_hbox_new (FALSE, 0);
 
-  font_button->priv->font_label = gtk_label_new (D_("Font", "gtk20"));
+  font_button->priv->font_label = gtk_label_new (D_("Font", "gtk30"));
 
   gtk_label_set_justify (GTK_LABEL (font_button->priv->font_label), GTK_JUSTIFY_LEFT);
   gtk_box_pack_start (GTK_BOX (widget), font_button->priv->font_label, TRUE, TRUE, 5);

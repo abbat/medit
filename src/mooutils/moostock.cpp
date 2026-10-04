@@ -26,10 +26,10 @@
 static GtkStockItem stock_items[] = {
     {(char*) MOO_STOCK_SAVE_NONE, (char*) N_("Save _None"), (GdkModifierType) 0, 0, (char*) GETTEXT_PACKAGE},
     {(char*) MOO_STOCK_SAVE_SELECTED, (char*) N_("Save _Selected"), (GdkModifierType) 0, 0, (char*) GETTEXT_PACKAGE},
-    {(char*) MOO_STOCK_FILE_COPY, (char*) "_Copy", (GdkModifierType) 0, 0, (char*) "gtk20"},
+    {(char*) MOO_STOCK_FILE_COPY, (char*) "_Copy", (GdkModifierType) 0, 0, (char*) "gtk30"},
     {(char*) MOO_STOCK_FILE_MOVE, (char*) N_("Move"), (GdkModifierType) 0, 0, (char*) GETTEXT_PACKAGE},
     {(char*) MOO_STOCK_FILE_LINK, (char*) N_("Link"), (GdkModifierType) 0, 0, (char*) GETTEXT_PACKAGE},
-    {(char*) MOO_STOCK_FILE_SAVE_AS, (char*) "Save _As", (GdkModifierType) 0, 0, (char*) "gtk20"},
+    {(char*) MOO_STOCK_FILE_SAVE_AS, (char*) "Save _As", (GdkModifierType) 0, 0, (char*) "gtk30"},
     {(char*) MOO_STOCK_FILE_SAVE_COPY, (char*) N_("Save Copy"), (GdkModifierType) 0, 0, (char*) GETTEXT_PACKAGE},
     {(char*) MOO_STOCK_NEW_FOLDER, (char*) N_("_New Folder"), (GdkModifierType) 0, 0, (char*) GETTEXT_PACKAGE},
     {(char*) MOO_STOCK_NEW_WINDOW, (char*) N_("New _Window"), (GdkModifierType) 0, 0, (char*) GETTEXT_PACKAGE}
