@@ -485,7 +485,7 @@ static void
 check_if_scrolled (MooLineView *view)
 {
     int delta;
-    GtkAdjustment *adj = gtk_text_view_get_vadjustment (GTK_TEXT_VIEW (view)); // DEPRECATED:
+    GtkAdjustment *adj = gtk_scrollable_get_vadjustment (GTK_SCROLLABLE (view));
 
     delta = 10;
 

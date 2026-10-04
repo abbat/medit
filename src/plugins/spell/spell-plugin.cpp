@@ -728,7 +728,7 @@ hook_view (MooEditView *view)
         g_signal_connect (view, "size-allocate", G_CALLBACK (view_resized), NULL);
     }
 
-    GtkAdjustment *adj = gtk_text_view_get_vadjustment (GTK_TEXT_VIEW (view));
+    GtkAdjustment *adj = gtk_scrollable_get_vadjustment (GTK_SCROLLABLE (view));
 
     if (adj && g_object_get_data (G_OBJECT (view), SPELL_VIEW_ADJ_QUARK) != adj)
     {

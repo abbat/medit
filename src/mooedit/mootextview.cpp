@@ -2261,8 +2261,8 @@ moo_text_view_draw_right_margin (GtkTextView    *text_view,
 
     y = gdk_window_get_height(window);
     x = view->priv->right_margin_pixel_offset + gtk_text_view_get_left_margin (text_view);
-    if (gtk_text_view_get_hadjustment (text_view)) // DEPRECATED:
-        x -= gtk_adjustment_get_value (gtk_text_view_get_hadjustment (text_view));
+    if (gtk_scrollable_get_hadjustment (GTK_SCROLLABLE (text_view)))
+        x -= gtk_adjustment_get_value (gtk_scrollable_get_hadjustment (GTK_SCROLLABLE (text_view)));
 
     gdk_cairo_set_source_color(cr, view->priv->gcs[MOO_TEXT_VIEW_COLOR_RIGHT_MARGIN]);
     cairo_rectangle(cr, x, 0, 1, y);
@@ -2324,8 +2324,8 @@ moo_text_view_draw_current_line (GtkTextView    *text_view,
     redraw_rect.width = visible_rect.width;
     redraw_rect.height = visible_rect.height;
 
-    if (gtk_text_view_get_hadjustment (text_view)) // DEPRECATED:
-        margin = gtk_text_view_get_left_margin (text_view) - (int) gtk_adjustment_get_value (gtk_text_view_get_hadjustment (text_view));
+    if (gtk_scrollable_get_hadjustment (GTK_SCROLLABLE (text_view)))
+        margin = gtk_text_view_get_left_margin (text_view) - (int) gtk_adjustment_get_value (gtk_scrollable_get_hadjustment (GTK_SCROLLABLE (text_view)));
     else
         margin = gtk_text_view_get_left_margin (text_view);
 

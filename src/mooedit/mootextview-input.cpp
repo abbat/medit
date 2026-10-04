@@ -1656,7 +1656,7 @@ handle_ctrl_up (MooTextView        *view,
         return FALSE;
 
     text_view = GTK_TEXT_VIEW (view);
-    adjustment = gtk_text_view_get_vadjustment (text_view); // DEPRECATED: use gtk_scrollable_get_vadjustment()
+    adjustment = gtk_scrollable_get_vadjustment (GTK_SCROLLABLE (text_view));
 
     if (!adjustment)
         return FALSE;
@@ -1697,7 +1697,7 @@ handle_ctrl_pgup (MooTextView        *view,
         return FALSE;
 
     text_view = GTK_TEXT_VIEW (view);
-    adjustment = gtk_text_view_get_vadjustment (text_view); // DEPRECATED: Use gtk_scrollable_get_vadjustment()
+    adjustment = gtk_scrollable_get_vadjustment (GTK_SCROLLABLE (text_view));
 
     if (!adjustment)
         return FALSE;
