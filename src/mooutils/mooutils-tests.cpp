@@ -29,7 +29,6 @@
 
 #ifdef MOO_ENABLE_UNIT_TESTS
 
-#include <string.h>
 
 #include "mooutils/mooaccel.h"
 #include "mooutils/moobigpaned.h"

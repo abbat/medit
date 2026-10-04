@@ -15,10 +15,6 @@
 
 #include "moocpp/gstr.h"
 
-#include <glib.h>
-#include <string>
-#include <unordered_map>
-#include <vector>
 
 /*
  * The pure half of Quick Open: scoring and ranking candidates, and parsing a

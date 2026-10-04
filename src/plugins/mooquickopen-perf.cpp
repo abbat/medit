@@ -35,8 +35,6 @@
 
 #include "plugins/mooquickopen-ranker.h"
 
-#include <cstdio>
-#include <cstring>
 
 #define PERF_RUNS 3
 

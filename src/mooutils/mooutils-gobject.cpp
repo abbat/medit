@@ -15,7 +15,6 @@
 
 #include "mooutils/mooutils-gobject-private.h"
 #include "mooutils/mootype-macros.h"
-#include <vector>
 
 
 /*****************************************************************************/

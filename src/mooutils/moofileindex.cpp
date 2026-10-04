@@ -14,7 +14,6 @@
  */
 
 #include "mooutils/moofileindex.h"
-#include <string.h>
 
 #define MOO_FILE_INDEX_MAX_AGE_SEC 5
 

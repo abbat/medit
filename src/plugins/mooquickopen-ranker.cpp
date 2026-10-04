@@ -15,8 +15,6 @@
 #include "mooutils/moofuzzy.h"
 #include "mooutils/mooutils-fs.h"
 
-#include <algorithm>
-#include <cmath>
 
 #define QUICK_OPEN_BASENAME_BONUS 16
 #define QUICK_OPEN_FRECENCY_WEIGHT 8.0

@@ -18,9 +18,6 @@
 
 #include "mooutils/mooappinput-priv.h"
 
-# include <sys/socket.h>
-# include <sys/un.h>
-
 
 #include "mooapp-ipc.h"
 #include "mooutils-misc.h"

@@ -35,8 +35,6 @@
 #pragma GCC diagnostic pop
 #endif
 
-#include <string.h>
-
 
 /* Reverse of moo_file_cmp: a resort with this as the new comparator must
    reverse the list's walk order. */

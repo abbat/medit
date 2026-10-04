@@ -26,10 +26,6 @@
 #include "moofileview/mooiconview.h"
 #include "moofileview/moofileview-impl.h"
 
-#include <gdk/gdkkeysyms.h>
-
-#include <string.h>
-
 
 static void
 test_file_info_for_stat (void)

@@ -21,8 +21,6 @@
  */
 
 #include "mooutils/moofuzzy.h"
-#include <limits.h>
-#include <string.h>
 
 /* Nothing real is this long; refusing outsized input is simpler than
    growing an O(pattern*text) matrix without bound. */

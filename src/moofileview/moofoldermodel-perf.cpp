@@ -43,8 +43,6 @@
 #pragma GCC diagnostic pop
 #endif
 
-#include <stdio.h>
-#include <string.h>
 
 #define PERF_RUNS 3
 

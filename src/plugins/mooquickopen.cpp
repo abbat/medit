@@ -27,11 +27,6 @@
 #include "mooutils/moohistorymgr.h"
 #include "moocpp/gstr.h"
 
-#include <gtk/gtk.h>
-#include <string>
-#include <utility>
-#include <vector>
-#include <unordered_map>
 
 #define QUICK_OPEN_ACTION_ID "QuickOpen"
 
