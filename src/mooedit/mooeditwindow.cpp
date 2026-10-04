@@ -3795,24 +3795,6 @@ create_tab_label (MooEditWindow *window,
         GtkWidget *button;
         GtkWidget *close_icon;
 
-        {
-            static gboolean been_here;
-            if (!been_here)
-            {
-                been_here = TRUE;
-                gtk_rc_parse_string (
-                    "style \"moo-edit-tab-close-button\" {\n"
-                    "   GtkWidget::focus-line-width = 0\n"
-                    "   GtkWidget::focus-padding = 0\n"
-                    "   GtkButton::default-border = { 0, 0, 0, 0 }\n"
-                    "   GtkButton::default-outside-border = { 0, 0, 0, 0 }\n"
-                    "   GtkButton::inner-border = { 0, 0, 0, 0 }\n"
-                    "}\n"
-                    "widget \"*.moo-edit-tab-close-button\" style \"moo-edit-tab-close-button\""
-                );
-            }
-        }
-
         frame = gtk_aspect_frame_new (nullptr, 0.5, 0.5, 1.0, FALSE);
         gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
 

@@ -526,23 +526,6 @@ moo_window_set_default_geometry (const char *geometry)
 
 
 static void
-parse_shadow_style (void)
-{
-    static gboolean been_here;
-
-    if (!been_here)
-    {
-        gtk_rc_parse_string (
-            "style \"no-shadow\" {\n"
-            "    GtkStatusbar::shadow-type = GTK_SHADOW_NONE\n"
-            "}\n"
-            "widget \"no-shadow\" style \"no-shadow\"\n"
-        );
-        been_here = TRUE;
-    }
-}
-
-static void
 moo_window_init (MooWindow *window)
 {
 
@@ -550,8 +533,6 @@ moo_window_init (MooWindow *window)
 
     window->vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
     gtk_widget_show (window->vbox);
-
-    parse_shadow_style ();
 
     window->status_area = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
     window->statusbar = (GtkStatusbar *) g_object_new (GTK_TYPE_STATUSBAR,

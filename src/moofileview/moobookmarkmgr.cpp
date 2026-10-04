@@ -1240,7 +1240,6 @@ init_icon_combo (GtkComboBox *combo,
     if (!icon_store)
     {
         GtkWidget *dialog = GTK_WIDGET (moo_builder_get (builder, "BkEditor"));
-        gtk_widget_ensure_style (dialog);
 
         icon_store = gtk_list_store_new (3, GDK_TYPE_PIXBUF,
                                          G_TYPE_STRING, G_TYPE_STRING);
