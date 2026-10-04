@@ -1998,9 +1998,7 @@ can_remove (FileList *list,
 
 static void
 popup_menu (WindowPlugin *plugin,
-            GList        *selected,
-            int           button,
-            guint32       time)
+            GList        *selected)
 {
     GtkWidget *menu, *menuitem;
     GtkTreePath *single_path;
@@ -2040,7 +2038,7 @@ popup_menu (WindowPlugin *plugin,
     }
 
     gtk_widget_show_all (menu);
-    gtk_menu_popup (GTK_MENU (menu), nullptr, nullptr, nullptr, nullptr, button, time);
+    gtk_menu_popup_at_pointer (GTK_MENU (menu), nullptr);
 }
 
 static gboolean
@@ -2067,7 +2065,7 @@ treeview_button_press (GtkTreeView    *treeview,
         gtk_tree_view_set_cursor (treeview, path, plugin->column, FALSE);
 
     selected = gtk_tree_selection_get_selected_rows (selection, nullptr);
-    popup_menu (plugin, selected, event->button, event->time);
+    popup_menu (plugin, selected);
 
     if (path)
         gtk_tree_path_free (path);

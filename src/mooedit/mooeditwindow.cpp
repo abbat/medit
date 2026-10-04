@@ -2612,8 +2612,7 @@ notebook_button_press (GtkNotebook    *notebook,
     if (!notebook_populate_popup (window,
                                   gtk_notebook_get_nth_page (notebook, n),
                                   GTK_MENU (menu)))
-        gtk_menu_popup (GTK_MENU (menu), nullptr, nullptr, nullptr, nullptr,
-                        event->button, event->time);
+        gtk_menu_popup_at_pointer (GTK_MENU (menu), (GdkEvent*) event);
 
     g_object_unref (menu);
 

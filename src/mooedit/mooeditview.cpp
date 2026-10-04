@@ -370,46 +370,25 @@ moo_edit_view_drag_drop (GtkWidget      *widget,
 /* popup menu
  */
 
-/* gtktextview.c */
+/* From gtktextview.c: where the keyboard-invoked menu goes. The rectangle is in
+   the coordinates of the view's own window; the menu hangs from the corner below
+   and right of the cursor, or, when the cursor is off screen, is centered on the
+   view. Fitting the menu on the monitor is up to GTK+. */
 static void
-popup_position_func (GtkMenu   *menu,
-                     gint      *x,
-                     gint      *y,
-                     gboolean  *push_in,
-                     gpointer   user_data)
+popup_get_rect (GtkTextView  *text_view,
+                GdkRectangle *rect,
+                GdkGravity   *anchor)
 {
-    GtkTextView *text_view;
-    GtkWidget *widget;
-    GtkAllocation allocation;
-    GdkRectangle cursor_rect;
-    GdkRectangle onscreen_rect;
-    gint root_x, root_y;
+    GtkWidget *widget = GTK_WIDGET (text_view);
+    GtkTextBuffer *buffer = gtk_text_view_get_buffer (text_view);
     GtkTextIter iter;
-    GtkRequisition req;
-    gint monitor_num;
-    GdkRectangle monitor;
+    GdkRectangle cursor_rect, onscreen_rect;
 
-    text_view = GTK_TEXT_VIEW (user_data);
-    widget = GTK_WIDGET (text_view);
-
-    g_return_if_fail (gtk_widget_get_realized (GTK_WIDGET (text_view)));
-
-    gdk_window_get_origin (gtk_widget_get_window(widget), &root_x, &root_y);
-
-    gtk_text_buffer_get_iter_at_mark (gtk_text_view_get_buffer (text_view),
-                                      &iter,
-                                      gtk_text_buffer_get_insert (gtk_text_view_get_buffer (text_view)));
-
-    gtk_text_view_get_iter_location (text_view,
-                                     &iter,
-                                     &cursor_rect);
-
+    gtk_text_buffer_get_iter_at_mark (buffer, &iter, gtk_text_buffer_get_insert (buffer));
+    gtk_text_view_get_iter_location (text_view, &iter, &cursor_rect);
     gtk_text_view_get_visible_rect (text_view, &onscreen_rect);
 
-    gtk_widget_get_preferred_size (GTK_WIDGET (menu), &req, NULL);
-
     /* can't use rectangle_intersect since cursor rect can have 0 width */
-    gtk_widget_get_allocation(widget, &allocation);
     if (cursor_rect.x >= onscreen_rect.x &&
         cursor_rect.x < onscreen_rect.x + onscreen_rect.width &&
         cursor_rect.y >= onscreen_rect.y &&
@@ -420,37 +399,20 @@ popup_position_func (GtkMenu   *menu,
                                                cursor_rect.x, cursor_rect.y,
                                                &cursor_rect.x, &cursor_rect.y);
 
-        *x = root_x + cursor_rect.x + cursor_rect.width;
-        *y = root_y + cursor_rect.y + cursor_rect.height;
+        rect->x = cursor_rect.x + cursor_rect.width;
+        rect->y = cursor_rect.y + cursor_rect.height;
+        *anchor = GDK_GRAVITY_NORTH_WEST;
     }
     else
     {
         /* Just center the menu, since cursor is offscreen. */
-        *x = root_x + (allocation.width / 2 - req.width / 2);
-        *y = root_y + (allocation.height / 2 - req.height / 2);
+        rect->x = gtk_widget_get_allocated_width (widget) / 2;
+        rect->y = gtk_widget_get_allocated_height (widget) / 2;
+        *anchor = GDK_GRAVITY_CENTER;
     }
 
-    /* Ensure sanity */
-    *x = CLAMP (*x, root_x, (root_x + allocation.width));
-    *y = CLAMP (*y, root_y, (root_y + allocation.height));
-
-    GdkDisplay *display = gtk_widget_get_display (widget);
-    GdkMonitor *gdk_monitor = gdk_display_get_monitor_at_point (display, *x, *y);
-
-    /* gtk_menu_set_monitor() wants the number of the monitor */
-    for (monitor_num = 0; monitor_num < gdk_display_get_n_monitors (display); ++monitor_num)
-    {
-        if (gdk_display_get_monitor (display, monitor_num) == gdk_monitor)
-            break;
-    }
-
-    gtk_menu_set_monitor (menu, monitor_num);
-    gdk_monitor_get_geometry (gdk_monitor, &monitor);
-
-    *x = CLAMP (*x, monitor.x, monitor.x + MAX (0, monitor.width - req.width));
-    *y = CLAMP (*y, monitor.y, monitor.y + MAX (0, monitor.height - req.height));
-
-    *push_in = FALSE;
+    rect->width = 1;
+    rect->height = 1;
 }
 
 void
@@ -475,14 +437,16 @@ _moo_edit_view_do_popup (MooEditView    *view,
 
     if (event)
     {
-        gtk_menu_popup (menu, NULL, NULL, NULL, NULL,
-                        event->button, event->time);
+        gtk_menu_popup_at_pointer (menu, (GdkEvent*) event);
     }
     else
     {
-        gtk_menu_popup (menu, NULL, NULL,
-                        popup_position_func, view,
-                        0, gtk_get_current_event_time ());
+        GdkRectangle rect;
+        GdkGravity anchor;
+
+        popup_get_rect (GTK_TEXT_VIEW (view), &rect, &anchor);
+        gtk_menu_popup_at_rect (menu, gtk_widget_get_window (GTK_WIDGET (view)), &rect,
+                                anchor, anchor, NULL);
         gtk_menu_shell_select_first (GTK_MENU_SHELL (menu), FALSE);
     }
 

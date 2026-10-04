@@ -374,38 +374,35 @@ action_chosen (G_GNUC_UNUSED GtkMenuItem *item,
  * place in the text, and a menu that came up under the pointer would be about
  * wherever the pointer was left.
  */
-static void
-menu_position (G_GNUC_UNUSED GtkMenu *menu,
-               int                   *x,
-               int                   *y,
-               gboolean              *push_in,
-               gpointer               data)
+static gboolean
+menu_get_rect (MooEditView  *view,
+               GdkWindow   **out_window,
+               GdkRectangle *rect)
 {
-    MooEditView *view = (MooEditView*) data;
     GtkTextBuffer *buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (view));
     GdkWindow *window = gtk_text_view_get_window (GTK_TEXT_VIEW (view),
                                                   GTK_TEXT_WINDOW_TEXT);
     GtkTextIter iter;
-    GdkRectangle rect;
+    GdkRectangle cursor;
     int window_x = 0, window_y = 0;
-    int origin_x = 0, origin_y = 0;
-
-    *push_in = TRUE;
 
     if (!window)
-        return;
+        return FALSE;
 
     gtk_text_buffer_get_iter_at_mark (buffer, &iter,
                                       gtk_text_buffer_get_insert (buffer));
-    gtk_text_view_get_iter_location (GTK_TEXT_VIEW (view), &iter, &rect);
+    gtk_text_view_get_iter_location (GTK_TEXT_VIEW (view), &iter, &cursor);
     gtk_text_view_buffer_to_window_coords (GTK_TEXT_VIEW (view),
                                            GTK_TEXT_WINDOW_TEXT,
-                                           rect.x, rect.y + rect.height,
+                                           cursor.x, cursor.y + cursor.height,
                                            &window_x, &window_y);
-    gdk_window_get_origin (window, &origin_x, &origin_y);
 
-    *x = origin_x + window_x;
-    *y = origin_y + window_y;
+    *out_window = window;
+    rect->x = window_x;
+    rect->y = window_y;
+    rect->width = 1;
+    rect->height = 1;
+    return TRUE;
 }
 
 
@@ -464,8 +461,14 @@ show_menu (MooEditWindow       *window,
     g_object_ref_sink (menu);
     g_signal_connect (menu, "selection-done", G_CALLBACK (gtk_widget_destroy), NULL);
 
-    gtk_menu_popup (GTK_MENU (menu), NULL, NULL, menu_position, view,
-                    0, gtk_get_current_event_time ());
+    GdkWindow *text_window = NULL;
+    GdkRectangle rect;
+
+    if (menu_get_rect (view, &text_window, &rect))
+        gtk_menu_popup_at_rect (GTK_MENU (menu), text_window, &rect,
+                                GDK_GRAVITY_NORTH_WEST, GDK_GRAVITY_NORTH_WEST, NULL);
+    else
+        gtk_menu_popup_at_pointer (GTK_MENU (menu), NULL);
     gtk_menu_shell_select_first (GTK_MENU_SHELL (menu), FALSE);
 
     g_object_unref (menu);

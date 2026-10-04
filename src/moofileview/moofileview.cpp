@@ -3469,27 +3469,6 @@ file_view_properties_dialog (MooFileView *fileview)
 /* Popup menu
  */
 
-/* TODO */
-static void
-menu_position_func (G_GNUC_UNUSED GtkMenu *menu,
-                    gint       *x,
-                    gint       *y,
-                    gboolean   *push_in,
-                    gpointer    user_data)
-{
-    GdkWindow *window;
-
-    struct {
-        MooFileView *fileview;
-        GList *rows;
-    } *data = (decltype(data)) user_data;
-
-    window = gtk_widget_get_window (GTK_WIDGET(data->fileview));
-    gdk_window_get_origin (window, x, y);
-
-    *push_in = TRUE;
-}
-
 static void
 do_popup (MooFileView    *fileview,
           GdkEventButton *event,
@@ -3498,10 +3477,6 @@ do_popup (MooFileView    *fileview,
     GtkWidget *menu;
     FileList *files = NULL;
     GList *l;
-    struct {
-        MooFileView *fileview;
-        GList *rows;
-    } position_data;
 
     for (l = selected; l != NULL; l = l->next)
     {
@@ -3528,17 +3503,11 @@ do_popup (MooFileView    *fileview,
     _moo_file_view_tools_check (fileview);
     g_signal_emit (fileview, signals[POPULATE_POPUP], 0, files, menu);
 
-    position_data.fileview = fileview;
-    position_data.rows = selected;
-
     if (event)
-        gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL,
-                        event->button, event->time);
+        gtk_menu_popup_at_pointer (GTK_MENU (menu), (GdkEvent*) event);
     else
-        gtk_menu_popup (GTK_MENU (menu), NULL, NULL,
-                        menu_position_func,
-                        &position_data, 0,
-                        gtk_get_current_event_time ());
+        gtk_menu_popup_at_widget (GTK_MENU (menu), GTK_WIDGET (fileview),
+                                  GDK_GRAVITY_NORTH_WEST, GDK_GRAVITY_NORTH_WEST, NULL);
 
     g_object_unref (menu);
     file_list_free (files);
@@ -6276,7 +6245,7 @@ popup_drop_action_menu (MooFileView    *fileview,
 
     /* The menu keeps itself alive while it is up, so this reference is the
        one taken above and not the menu's last. */
-    gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL, 0, 0);
+    gtk_menu_popup_at_pointer (GTK_MENU (menu), NULL);
     g_object_unref (menu);
 }
 
