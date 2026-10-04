@@ -14,7 +14,7 @@
  */
 
 /**
- * class:MooCombo: (parent GtkTable) (constructable) (moo.private 1)
+ * class:MooCombo: (parent GtkGrid) (constructable) (moo.private 1)
  **/
 
 #include "marshals.h"
@@ -121,7 +121,7 @@ static char    *default_get_text_func       (GtkTreeModel   *model,
 static void     entry_changed               (MooCombo       *combo);
 
 
-G_DEFINE_TYPE_WITH_CODE (MooCombo, moo_combo, GTK_TYPE_TABLE,
+G_DEFINE_TYPE_WITH_CODE (MooCombo, moo_combo, GTK_TYPE_GRID,
                          G_IMPLEMENT_INTERFACE(GTK_TYPE_CELL_LAYOUT, moo_combo_cell_layout_init)
                          G_ADD_PRIVATE(MooCombo))
 
@@ -247,16 +247,13 @@ moo_combo_init (MooCombo *combo)
     combo->priv->get_text_func = default_get_text_func;
     combo->priv->get_text_data = combo;
 
-    gtk_table_resize (GTK_TABLE (combo), 1, 2);
-
     combo->priv->size_group = gtk_size_group_new (GTK_SIZE_GROUP_VERTICAL);
 
     combo->entry = moo_entry_new ();
     gtk_widget_show (combo->entry);
-    gtk_table_attach (GTK_TABLE (combo), combo->entry,
-                      0, 1, 0, 1,
-                      (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                      (GtkAttachOptions) 0, 0, 0);
+    gtk_widget_set_hexpand (combo->entry, TRUE);
+    gtk_widget_set_valign (combo->entry, GTK_ALIGN_CENTER);
+    gtk_grid_attach (GTK_GRID (combo), combo->entry, 0, 0, 1, 1);
     gtk_size_group_add_widget (combo->priv->size_group, combo->entry);
 
     g_signal_connect_swapped (combo->entry, "changed",
@@ -276,9 +273,9 @@ create_arrow_button (MooCombo       *combo)
     gtk_widget_set_focus_on_click (GTK_WIDGET (combo->priv->button), FALSE);
     gtk_widget_show (combo->priv->button);
     gtk_size_group_add_widget (combo->priv->size_group, combo->priv->button);
-    gtk_table_attach (GTK_TABLE (combo), combo->priv->button,
-                      1, 2, 0, 1,
-                      (GtkAttachOptions) 0, (GtkAttachOptions) 0, 0, 0);
+    gtk_widget_set_halign (combo->priv->button, GTK_ALIGN_CENTER);
+    gtk_widget_set_valign (combo->priv->button, GTK_ALIGN_CENTER);
+    gtk_grid_attach (GTK_GRID (combo), combo->priv->button, 1, 0, 1, 1);
 
     g_signal_connect_swapped (combo->priv->button, "clicked",
                               G_CALLBACK (button_clicked), combo);

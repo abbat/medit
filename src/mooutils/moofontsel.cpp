@@ -281,17 +281,17 @@ moo_font_selection_init (MooFontSelection *fontsel)
   fontsel->size = 12 * PANGO_SCALE;
 
   /* Create the table of font, style & size. */
-  table = gtk_table_new (3, 3, FALSE);
+  table = gtk_grid_new ();
   gtk_widget_show (table);
-  gtk_table_set_row_spacings (GTK_TABLE (table), 6);
-  gtk_table_set_col_spacings (GTK_TABLE (table), 12);
+  gtk_grid_set_row_spacing (GTK_GRID (table), 6);
+  gtk_grid_set_column_spacing (GTK_GRID (table), 12);
   gtk_box_pack_start (GTK_BOX (fontsel), table, TRUE, TRUE, 0);
 
   fontsel->size_entry = gtk_entry_new ();
   gtk_widget_set_size_request (fontsel->size_entry, 20, -1);
   gtk_widget_show (fontsel->size_entry);
-  gtk_table_attach (GTK_TABLE (table), fontsel->size_entry, 2, 3, 1, 2,
-                    (GtkAttachOptions) GTK_FILL, (GtkAttachOptions) 0, 0, 0);
+  gtk_widget_set_valign (fontsel->size_entry, GTK_ALIGN_CENTER);
+  gtk_grid_attach (GTK_GRID (table), fontsel->size_entry, 2, 1, 1, 1);
   g_signal_connect (fontsel->size_entry, "activate",
                     G_CALLBACK (moo_font_selection_size_activate),
                     fontsel);
@@ -303,22 +303,22 @@ moo_font_selection_init (MooFontSelection *fontsel)
   font_label = gtk_label_new_with_mnemonic (D_("_Family:", "gtk30"));
   gtk_label_set_xalign (GTK_LABEL (font_label), 0.0);
   gtk_widget_show (font_label);
-  gtk_table_attach (GTK_TABLE (table), font_label, 0, 1, 0, 1,
-                    (GtkAttachOptions) GTK_FILL, (GtkAttachOptions) 0, 0, 0);
+  gtk_widget_set_valign (font_label, GTK_ALIGN_CENTER);
+  gtk_grid_attach (GTK_GRID (table), font_label, 0, 0, 1, 1);
 
   style_label = gtk_label_new_with_mnemonic (D_("_Style:", "gtk30"));
   gtk_label_set_xalign (GTK_LABEL (style_label), 0.0);
   gtk_widget_show (style_label);
-  gtk_table_attach (GTK_TABLE (table), style_label, 1, 2, 0, 1,
-                    (GtkAttachOptions) GTK_FILL, (GtkAttachOptions) 0, 0, 0);
+  gtk_widget_set_valign (style_label, GTK_ALIGN_CENTER);
+  gtk_grid_attach (GTK_GRID (table), style_label, 1, 0, 1, 1);
 
   label = gtk_label_new_with_mnemonic (D_("Si_ze:", "gtk30"));
   gtk_label_set_mnemonic_widget (GTK_LABEL (label),
                                  fontsel->size_entry);
   gtk_label_set_xalign (GTK_LABEL (label), 0.0);
   gtk_widget_show (label);
-  gtk_table_attach (GTK_TABLE (table), label, 2, 3, 0, 1,
-                    (GtkAttachOptions) GTK_FILL, (GtkAttachOptions) 0, 0, 0);
+  gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
+  gtk_grid_attach (GTK_GRID (table), label, 2, 0, 1, 1);
 
 
   /* Create the lists  */
@@ -355,9 +355,9 @@ moo_font_selection_init (MooFontSelection *fontsel)
   gtk_widget_show (fontsel->family_list);
   gtk_widget_show (scrolled_win);
 
-  gtk_table_attach (GTK_TABLE (table), scrolled_win, 0, 1, 1, 3,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
+  gtk_widget_set_hexpand (scrolled_win, TRUE);
+  gtk_widget_set_vexpand (scrolled_win, TRUE);
+  gtk_grid_attach (GTK_GRID (table), scrolled_win, 0, 1, 1, 2);
   focus_chain = g_list_append (focus_chain, scrolled_win);
 
   model = gtk_list_store_new (2,
@@ -390,9 +390,9 @@ moo_font_selection_init (MooFontSelection *fontsel)
                                   GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS);
   gtk_widget_show (fontsel->face_list);
   gtk_widget_show (scrolled_win);
-  gtk_table_attach (GTK_TABLE (table), scrolled_win, 1, 2, 1, 3,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
+  gtk_widget_set_hexpand (scrolled_win, TRUE);
+  gtk_widget_set_vexpand (scrolled_win, TRUE);
+  gtk_grid_attach (GTK_GRID (table), scrolled_win, 1, 1, 1, 2);
   focus_chain = g_list_append (focus_chain, scrolled_win);
 
   focus_chain = g_list_append (focus_chain, fontsel->size_entry);
@@ -422,9 +422,8 @@ moo_font_selection_init (MooFontSelection *fontsel)
                                   GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
   gtk_widget_show (fontsel->size_list);
   gtk_widget_show (scrolled_win);
-  gtk_table_attach (GTK_TABLE (table), scrolled_win, 2, 3, 2, 3,
-                    (GtkAttachOptions) GTK_FILL,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
+  gtk_widget_set_vexpand (scrolled_win, TRUE);
+  gtk_grid_attach (GTK_GRID (table), scrolled_win, 2, 2, 1, 1);
   focus_chain = g_list_append (focus_chain, scrolled_win);
 
   gtk_container_set_focus_chain (GTK_CONTAINER (table), focus_chain);

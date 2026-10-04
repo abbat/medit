@@ -280,16 +280,16 @@ _moo_file_props_dialog_set_file (MooFilePropsDialog *dialog,
         gtk_label_set_markup (GTK_LABEL (label), text);
         g_free (text);
         gtk_label_set_xalign (GTK_LABEL (label), 1.0);
-        gtk_table_attach (GTK_TABLE (dialog->table), label, 0, 1, i, i+1,
-                          (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                          (GtkAttachOptions) 0, 0, 0);
+        gtk_widget_set_hexpand (label, TRUE);
+        gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
+        gtk_grid_attach (GTK_GRID (dialog->table), label, 0, i, 1, 1);
 
         label = gtk_label_new (*(p++));
         gtk_label_set_selectable (GTK_LABEL (label), TRUE);
         gtk_label_set_xalign (GTK_LABEL (label), 0.0);
-        gtk_table_attach (GTK_TABLE (dialog->table), label, 1, 2, i, i+1,
-                          (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                          (GtkAttachOptions) 0, 0, 0);
+        gtk_widget_set_hexpand (label, TRUE);
+        gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
+        gtk_grid_attach (GTK_GRID (dialog->table), label, 1, i, 1, 1);
     }
 
     gtk_widget_show_all (dialog->table);

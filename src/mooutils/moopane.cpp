@@ -710,7 +710,7 @@ pack_frame_in_table (GtkWidget      *vbox,
 {
     GtkWidget *table, *separator = NULL;
 
-    table = gtk_table_new (2, 2, FALSE);
+    table = gtk_grid_new ();
 
     switch (position)
     {
@@ -726,39 +726,29 @@ pack_frame_in_table (GtkWidget      *vbox,
 
     gtk_widget_show (separator);
 
+    // GtkTable did not fill a child without GTK_FILL: the separator keeps its
+    // natural width and is centered, the vbox expands and fills both ways
+    gtk_widget_set_halign (separator, GTK_ALIGN_CENTER);
+    gtk_widget_set_hexpand (vbox, TRUE);
+    gtk_widget_set_vexpand (vbox, TRUE);
+
     switch (position)
     {
         case MOO_PANE_POS_LEFT:
-            gtk_table_attach (GTK_TABLE (table), separator,
-                              0, 1, 0, 1,
-                              (GtkAttachOptions) 0, (GtkAttachOptions) GTK_FILL, 0, 0);
-            gtk_table_attach (GTK_TABLE (table), vbox,
-                              1, 2, 0, 1,
-                              (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
+            gtk_grid_attach (GTK_GRID (table), separator, 0, 0, 1, 1);
+            gtk_grid_attach (GTK_GRID (table), vbox, 1, 0, 1, 1);
             break;
         case MOO_PANE_POS_TOP:
-            gtk_table_attach (GTK_TABLE (table), separator,
-                              0, 1, 0, 1,
-                              (GtkAttachOptions) 0, (GtkAttachOptions) GTK_FILL, 0, 0);
-            gtk_table_attach (GTK_TABLE (table), vbox,
-                              0, 1, 1, 2,
-                              (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
+            gtk_grid_attach (GTK_GRID (table), separator, 0, 0, 1, 1);
+            gtk_grid_attach (GTK_GRID (table), vbox, 0, 1, 1, 1);
             break;
         case MOO_PANE_POS_RIGHT:
-            gtk_table_attach (GTK_TABLE (table), separator,
-                              1, 2, 0, 1,
-                              (GtkAttachOptions) 0, (GtkAttachOptions) GTK_FILL, 0, 0);
-            gtk_table_attach (GTK_TABLE (table), vbox,
-                              0, 1, 0, 1,
-                              (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
+            gtk_grid_attach (GTK_GRID (table), separator, 1, 0, 1, 1);
+            gtk_grid_attach (GTK_GRID (table), vbox, 0, 0, 1, 1);
             break;
         case MOO_PANE_POS_BOTTOM:
-            gtk_table_attach (GTK_TABLE (table), separator,
-                              0, 1, 1, 2,
-                              (GtkAttachOptions) 0, (GtkAttachOptions) GTK_FILL, 0, 0);
-            gtk_table_attach (GTK_TABLE (table), vbox,
-                              0, 1, 0, 1,
-                              (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
+            gtk_grid_attach (GTK_GRID (table), separator, 0, 1, 1, 1);
+            gtk_grid_attach (GTK_GRID (table), vbox, 0, 0, 1, 1);
             break;
     }
 
