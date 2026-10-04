@@ -217,6 +217,8 @@ static gpointer moo_window_grand_parent_class;
     g_object_class_install_property (gobject_class, prop_id,                \
         g_param_spec_boolean (name, name, name, FALSE, G_PARAM_READABLE))
 
+/* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static void
 moo_window_class_init (MooWindowClass *klass)
 {
@@ -421,6 +423,7 @@ moo_window_class_init (MooWindowClass *klass)
                       _moo_marshal_ENUM__VOID,
                       MOO_TYPE_CLOSE_RESPONSE, 0);
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 /* Reads a decimal number, with no sign: the sign is part of the geometry

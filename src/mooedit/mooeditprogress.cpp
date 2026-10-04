@@ -33,7 +33,10 @@ struct MooEditProgressClass
 
 static void     cancel_clicked      (MooEditProgress *pr);
 
+/* GtkAlignment is deprecated since GTK+ 3.14; changing the parent type would change the widget hierarchy. */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 G_DEFINE_TYPE (MooEditProgress, moo_edit_progress, GTK_TYPE_ALIGNMENT)
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 static void
 moo_edit_progress_init (MooEditProgress *pr)

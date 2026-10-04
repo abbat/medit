@@ -119,6 +119,8 @@ moo_prefs_dialog_class_init (MooPrefsDialogClass *klass)
 }
 
 
+/* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static void
 moo_prefs_dialog_init (MooPrefsDialog *dialog)
 {
@@ -163,6 +165,7 @@ moo_prefs_dialog_init (MooPrefsDialog *dialog)
 
     dialog->notebook = GTK_NOTEBOOK (notebook);
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 static gboolean
@@ -442,6 +445,7 @@ moo_prefs_dialog_append_page (MooPrefsDialog     *dialog,
 }
 
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 void
 moo_prefs_dialog_insert_page (MooPrefsDialog     *dialog,
                               GtkWidget          *page,
@@ -497,6 +501,7 @@ moo_prefs_dialog_insert_page (MooPrefsDialog     *dialog,
     if (icon)
         g_object_unref (icon);
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 void

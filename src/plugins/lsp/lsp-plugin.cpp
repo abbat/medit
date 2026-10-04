@@ -1168,6 +1168,8 @@ show_diagnostics_cb (MooEditWindow *window)
 }
 
 
+/* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static gboolean
 lsp_window_plugin_create (LspWindowPlugin *stuff)
 {
@@ -1247,6 +1249,7 @@ lsp_window_plugin_create (LspWindowPlugin *stuff)
 
     return TRUE;
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 static void
@@ -1290,6 +1293,7 @@ lsp_window_plugin_destroy (LspWindowPlugin *stuff)
 /* The plugin
  */
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static gboolean
 lsp_plugin_init (LspPlugin *plugin)
 {
@@ -1565,6 +1569,7 @@ lsp_plugin_init (LspPlugin *plugin)
 
     return TRUE;
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 static void

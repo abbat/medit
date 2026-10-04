@@ -18,6 +18,8 @@
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooi18n.h"
 
+/* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static GtkWidget *
 create_message_dialog (GtkWindow  *parent,
                        GtkMessageType type,
@@ -62,6 +64,7 @@ create_message_dialog (GtkWindow  *parent,
 
     return dialog;
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 /* gtkwindow.c */
@@ -351,6 +354,7 @@ moo_warning_dialog (const char *text,
  * @display_dirname: (type const-utf8)
  * @parent: (allow-none) (default NULL)
  **/
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 gboolean
 moo_overwrite_file_dialog (const char *display_name,
                            const char *display_dirname,
@@ -397,6 +401,7 @@ moo_overwrite_file_dialog (const char *display_name,
 
     return response == GTK_RESPONSE_YES;
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 /**
  * moo_save_changes_dialog:
@@ -404,6 +409,7 @@ moo_overwrite_file_dialog (const char *display_name,
  * @display_name: (type const-utf8)
  * @parent: (allow-none) (default NULL)
  **/
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 MooSaveChangesResponse
 moo_save_changes_dialog (const char *display_name,
                          GtkWidget  *parent)
@@ -456,6 +462,7 @@ moo_save_changes_dialog (const char *display_name,
 
     g_return_val_if_reached (MOO_SAVE_CHANGES_RESPONSE_CANCEL);
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 typedef struct {

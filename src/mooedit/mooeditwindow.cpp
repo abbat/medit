@@ -340,6 +340,8 @@ static guint signals[NUM_SIGNALS];
     g_object_class_install_property (gobject_class, prop_id,                \
         g_param_spec_boolean (name, name, name, FALSE, G_PARAM_READABLE))
 
+/* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static void
 moo_edit_window_class_init (MooEditWindowClass *klass)
 {
@@ -933,6 +935,7 @@ moo_edit_window_class_init (MooEditWindowClass *klass)
         moo_prefs_new_key (PREFS_KEY_SPLIT_POS, G_TYPE_INT, &val, MOO_PREFS_STATE);
     }
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 static void

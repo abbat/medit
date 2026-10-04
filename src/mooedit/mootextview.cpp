@@ -2756,6 +2756,8 @@ moo_text_view_get_style_scheme (MooTextView *view)
 }
 
 
+/* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static void
 moo_text_view_populate_popup (GtkTextView    *text_view,
                               GtkWidget      *menu)
@@ -2779,6 +2781,7 @@ moo_text_view_populate_popup (GtkTextView    *text_view,
     g_signal_connect_swapped (item, "activate", G_CALLBACK (moo_text_view_undo), view);
     gtk_widget_set_sensitive (item, moo_text_view_can_undo (view));
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 int

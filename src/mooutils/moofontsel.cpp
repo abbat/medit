@@ -130,7 +130,10 @@ static void    moo_font_selection_update_preview     (MooFontSelection *fs);
 static void    moo_font_selection_dialog_class_init  (MooFontSelectionDialogClass *klass);
 static void    moo_font_selection_dialog_init        (MooFontSelectionDialog *fontseldiag);
 
+/* GtkVBox is deprecated since GTK+ 3.2; changing the parent type would change the widget hierarchy. */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 G_DEFINE_TYPE (MooFontSelection, moo_font_selection, GTK_TYPE_VBOX)
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 static void
@@ -1298,6 +1301,8 @@ moo_font_selection_dialog_class_init (G_GNUC_UNUSED MooFontSelectionDialogClass 
 {
 }
 
+/* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static void
 moo_font_selection_dialog_init (MooFontSelectionDialog *fontseldiag)
 {
@@ -1348,6 +1353,7 @@ moo_font_selection_dialog_init (MooFontSelectionDialog *fontseldiag)
   G_GNUC_END_IGNORE_DEPRECATIONS
 
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 GtkWidget*
 moo_font_selection_dialog_new (const gchar *title)

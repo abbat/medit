@@ -1751,6 +1751,8 @@ tree_view_search_equal_func (GtkTreeModel *model,
         return TRUE;
 }
 
+/* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static void
 pixbuf_data_func (G_GNUC_UNUSED GtkTreeViewColumn *column,
                   GtkCellRenderer   *cell,
@@ -1763,6 +1765,7 @@ pixbuf_data_func (G_GNUC_UNUSED GtkTreeViewColumn *column,
     else if (ITEM_IS_FILE (item))
         g_object_set (cell, "stock-id", GTK_STOCK_FILE, nullptr);
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 static void
 text_data_func (G_GNUC_UNUSED GtkTreeViewColumn *column,
@@ -1996,6 +1999,7 @@ can_remove (FileList *list,
     return FALSE;
 }
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static void
 popup_menu (WindowPlugin *plugin,
             GList        *selected)
@@ -2040,6 +2044,7 @@ popup_menu (WindowPlugin *plugin,
     gtk_widget_show_all (menu);
     gtk_menu_popup_at_pointer (GTK_MENU (menu), nullptr);
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 static gboolean
 treeview_button_press (GtkTreeView    *treeview,
@@ -2300,6 +2305,7 @@ window_plugin_queue_update_ui (WindowPlugin *plugin)
 }
 
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static gboolean
 file_list_window_plugin_create (WindowPlugin *plugin)
 {
@@ -2344,6 +2350,7 @@ file_list_window_plugin_create (WindowPlugin *plugin)
 
     return TRUE;
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 static void
 file_list_window_plugin_destroy (WindowPlugin *plugin)

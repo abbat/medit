@@ -156,6 +156,8 @@ page_general_apply (MooPrefsPage *page)
     }
 }
 
+/* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 GtkWidget *
 moo_edit_prefs_page_new_1 (MooEditor *editor)
 {
@@ -167,6 +169,7 @@ moo_edit_prefs_page_new_1 (MooEditor *editor)
                            page_general_init,
                            page_general_apply);
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 static void
@@ -194,6 +197,7 @@ page_filters_apply (MooPrefsPage *page)
     apply_filter_settings (gxml);
 }
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 GtkWidget *
 moo_edit_prefs_page_new_5 (MooEditor *editor)
 {
@@ -205,6 +209,7 @@ moo_edit_prefs_page_new_5 (MooEditor *editor)
                            page_filters_init,
                            page_filters_apply);
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 static void
@@ -248,6 +253,7 @@ page_view_apply (MooPrefsPage *page)
     MOO_UNUSED (gxml);
 }
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 GtkWidget *
 moo_edit_prefs_page_new_2 (MooEditor *editor)
 {
@@ -259,6 +265,7 @@ moo_edit_prefs_page_new_2 (MooEditor *editor)
                            page_view_init,
                            page_view_apply);
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 static void
@@ -297,6 +304,7 @@ page_file_apply (MooPrefsPage *page)
     save_encoding_combo_apply (gxml);
 }
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 GtkWidget *
 moo_edit_prefs_page_new_3 (MooEditor *editor)
 {
@@ -308,6 +316,7 @@ moo_edit_prefs_page_new_3 (MooEditor *editor)
                            page_file_init,
                            page_file_apply);
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 static void
@@ -339,6 +348,7 @@ page_langs_apply (MooPrefsPage *page)
     prefs_page_apply_lang_prefs (page);
 }
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 GtkWidget *
 moo_edit_prefs_page_new_4 (MooEditor *editor)
 {
@@ -350,6 +360,7 @@ moo_edit_prefs_page_new_4 (MooEditor *editor)
                            page_langs_init,
                            page_langs_apply);
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 static void
@@ -940,6 +951,7 @@ filter_icon_data_func (G_GNUC_UNUSED GtkTreeViewColumn *column,
     g_object_set (cell, "visible", invalid, nullptr);
 }
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static void
 create_filter_column (GtkTreeView  *treeview,
                       GtkListStore *store,
@@ -971,6 +983,7 @@ create_filter_column (GtkTreeView  *treeview,
     g_object_set_data (G_OBJECT (cell), "filter-store-column-id", GINT_TO_POINTER (column_id));
     g_signal_connect (cell, "edited", G_CALLBACK (filter_cell_edited), store);
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 static void

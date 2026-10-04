@@ -434,9 +434,12 @@ static void     action_file_view_go_forward (MooFileView    *fileview);
 static void     action_file_view_go_home    (MooFileView    *fileview);
 
 /* MOO_TYPE_FILE_VIEW */
+/* GtkVBox is deprecated since GTK+ 3.2; changing the parent type would change the widget hierarchy. */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 G_DEFINE_TYPE_WITH_CODE (MooFileView, moo_file_view, GTK_TYPE_VBOX,
                          G_IMPLEMENT_INTERFACE (MOO_TYPE_EDIT_OPS,
                                                 edit_ops_iface_init))
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 enum {
     PROP_0,
@@ -1124,6 +1127,8 @@ moo_file_view_reload (MooFileView *fileview)
  * connected to a signal rather than to a function, so that the embedder can
  * intercept them.
  */
+/* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static void
 init_actions (MooFileView *fileview)
 {
@@ -1318,6 +1323,7 @@ init_actions (MooFileView *fileview)
                                  "closure-signal", "reload",
                                  NULL);
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 static void
 action_file_view_go_up (MooFileView *fileview)
@@ -3186,6 +3192,7 @@ file_view_get_selected_files (MooFileView *fileview)
 }
 
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static gboolean
 ask_delete_files (MooFileView *fileview,
                   FileList    *files,
@@ -3255,6 +3262,7 @@ ask_delete_files (MooFileView *fileview,
     g_free (primary);
     return response == GTK_RESPONSE_OK;
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 static void
 file_view_do_delete_selected (MooFileView *fileview,
@@ -3333,6 +3341,7 @@ file_view_delete_selected_cb (GtkAction   *action,
     file_view_do_delete_selected (fileview, trash);
 }
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static void
 update_delete_action (MooFileView *fileview,
                       GtkWidget   *menu)
@@ -3369,6 +3378,7 @@ update_delete_action (MooFileView *fileview,
                        "moo-file-view-trash-selected",
                        GINT_TO_POINTER (trash));
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 static void
@@ -5811,6 +5821,7 @@ find_free_name (const char *destdir,
  * the caller then owns. @can_replace is %FALSE when the file being dropped is
  * the file which is in the way, where replacing it means losing it.
  */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static DropConflictResponse
 drop_conflict_dialog (MooFileView *fileview,
                       const char  *destdir,
@@ -5922,6 +5933,7 @@ drop_conflict_dialog (MooFileView *fileview,
 
     return retval;
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 /*
@@ -6196,6 +6208,7 @@ drop_item_activated (GObject     *item,
  * source must not be left waiting for an answer the user may take any amount
  * of time to give, or never give.
  */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static void
 popup_drop_action_menu (MooFileView    *fileview,
                         GList          *filenames,
@@ -6248,6 +6261,7 @@ popup_drop_action_menu (MooFileView    *fileview,
     gtk_menu_popup_at_pointer (GTK_MENU (menu), NULL);
     g_object_unref (menu);
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 /*

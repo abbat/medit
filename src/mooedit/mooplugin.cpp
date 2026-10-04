@@ -1310,6 +1310,8 @@ enable_toggled (GtkCellRendererToggle *cell,
 }
 
 
+/* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 void
 moo_plugin_attach_prefs (GtkWidget *dialog)
 {
@@ -1360,6 +1362,7 @@ moo_plugin_attach_prefs (GtkWidget *dialog)
     moo_prefs_dialog_append_page (MOO_PREFS_DIALOG (dialog), GTK_WIDGET (page));
     prefs_page_init (MOO_PREFS_PAGE (page), gxml);
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 /*****************************************************************************/

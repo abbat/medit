@@ -137,6 +137,8 @@ moo_find_init (MooFind *find)
 }
 
 
+/* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static GObject*
 moo_find_constructor (GType           type,
                       guint           n_props,
@@ -178,6 +180,7 @@ moo_find_constructor (GType           type,
 
     return object;
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 static void

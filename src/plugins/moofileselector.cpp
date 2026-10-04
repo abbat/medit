@@ -567,6 +567,8 @@ notify_show_hidden_files (MooFileSelector *filesel)
 /* Constructor
  */
 
+/* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static GObject *
 moo_file_selector_constructor (GType           type,
                                guint           n_props,
@@ -645,6 +647,7 @@ moo_file_selector_constructor (GType           type,
 
     return object;
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 static gboolean
@@ -1095,6 +1098,7 @@ alternate_toggled (GtkWidget *menu)
     }
 }
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static GtkWidget *
 create_drop_doc_menu (MooFileSelector *filesel,
                       MooEdit         *doc,
@@ -1147,6 +1151,7 @@ create_drop_doc_menu (MooFileSelector *filesel,
 
     return menu;
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 static void

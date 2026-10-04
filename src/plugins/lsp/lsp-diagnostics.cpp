@@ -31,12 +31,15 @@ typedef struct {
     const char  *color;     /* the underline colour, gtk3 only */
 } LspSeverityInfo;
 
+/* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static const LspSeverityInfo severity_info[] = {
     { LSP_SEVERITY_ERROR,       "moo-lsp-error",       GTK_STOCK_DIALOG_ERROR,    "#c01c28" },
     { LSP_SEVERITY_WARNING,     "moo-lsp-warning",     GTK_STOCK_DIALOG_WARNING,  "#e5a50a" },
     { LSP_SEVERITY_INFORMATION, "moo-lsp-information", GTK_STOCK_DIALOG_INFO,     "#1c71d8" },
     { LSP_SEVERITY_HINT,        "moo-lsp-hint",        GTK_STOCK_DIALOG_INFO,     "#77767b" }
 };
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 static const LspSeverityInfo *

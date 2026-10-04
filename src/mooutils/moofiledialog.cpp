@@ -290,6 +290,8 @@ moo_file_dialog_class_init (MooFileDialogClass *klass)
 }
 
 
+/* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 inline static
 GtkWidget *file_chooser_dialog_new (const char *title,
                                     GtkFileChooserAction action,
@@ -316,6 +318,7 @@ GtkWidget *file_chooser_dialog_new (const char *title,
 
     return dialog;
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 #define file_chooser_set_select_multiple(dialog,multiple) \
     gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (dialog), multiple)
@@ -353,6 +356,7 @@ moo_file_dialog (GtkWidget  *parent,
 }
 
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static GtkWidget *
 moo_file_dialog_create_widget (MooFileDialog *dialog)
 {
@@ -427,6 +431,7 @@ moo_file_dialog_create_widget (MooFileDialog *dialog)
 
     return widget;
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 static char **

@@ -22,6 +22,8 @@
 #include "mooutils/mooencodings.h"
 #include "mooutils/mooutils.h"
 
+/* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 MooOpenInfoArray *
 _moo_edit_open_dialog (GtkWidget *widget,
                        MooEdit   *current_doc)
@@ -87,8 +89,10 @@ _moo_edit_open_dialog (GtkWidget *widget,
     delete files;
     return info_array;
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 MooSaveInfo *
 _moo_edit_save_as_dialog (MooEdit    *doc,
                           const char *display_basename)
@@ -149,6 +153,7 @@ _moo_edit_save_as_dialog (MooEdit    *doc,
     g_object_unref (dialog);
     return info;
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 MooSaveChangesResponse
 _moo_edit_save_changes_dialog (MooEdit *doc)
@@ -314,6 +319,7 @@ files_treeview_get_to_save (GtkTreeView  *treeview,
 }
 
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 MooSaveChangesResponse
 _moo_edit_save_multiple_changes_dialog (MooEditArray *docs,
                                         MooEditArray *to_save)
@@ -382,6 +388,7 @@ _moo_edit_save_multiple_changes_dialog (MooEditArray *docs,
     g_object_unref (xml);
     return retval;
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 /*****************************************************************************/
@@ -408,6 +415,7 @@ _moo_edit_save_error_dialog (MooEdit *doc,
     g_free (filename);
 }
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static gboolean
 moo_edit_question_dialog (MooEdit    *doc,
                           const char *text,
@@ -442,7 +450,9 @@ moo_edit_question_dialog (MooEdit    *doc,
 
     return res == GTK_RESPONSE_YES;
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 gboolean
 _moo_edit_save_error_enc_dialog (MooEdit    *doc,
                                  GFile      *file,
@@ -468,12 +478,14 @@ _moo_edit_save_error_enc_dialog (MooEdit    *doc,
     g_free (filename);
     return result;
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 /* Positive response ids are free for custom buttons; GTK's own
    GTK_RESPONSE_* constants are all <= 0. */
 enum { MOO_RESPONSE_CANCEL_ALL = 1 };
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 MooEditTryEncodingResponse
 _moo_edit_try_encoding_dialog (GFile       *file,
                                const char  *encoding,
@@ -550,6 +562,7 @@ _moo_edit_try_encoding_dialog (GFile       *file,
             return MOO_EDIT_TRY_ENCODING_RESPONSE_CANCEL;
     }
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 void
@@ -664,6 +677,7 @@ _moo_edit_overwrite_modified_dialog (MooEdit *doc)
 /* Search dialogs
  */
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 gboolean
 _moo_text_search_from_start_dialog (GtkWidget *widget,
                                     gboolean   backwards)
@@ -695,8 +709,10 @@ _moo_text_search_from_start_dialog (GtkWidget *widget,
 
     return response == GTK_RESPONSE_YES;
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 void
 _moo_text_regex_error_dialog (GtkWidget  *parent,
                               GError     *error)
@@ -729,6 +745,7 @@ _moo_text_regex_error_dialog (GtkWidget  *parent,
 
     g_free (msg_text);
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 GtkWidget *

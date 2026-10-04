@@ -568,6 +568,8 @@ create_color_scheme_menu (void)
 }
 
 
+/* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static GtkWidget *
 create_popup_menu (WindowStuff *stuff)
 {
@@ -620,6 +622,7 @@ create_popup_menu (WindowStuff *stuff)
 
     return menu;
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 static gboolean

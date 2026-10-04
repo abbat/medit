@@ -454,6 +454,8 @@ user_info_free (UserInfo *info)
 }
 
 
+/* GtkAction is deprecated since GTK+ 3.10; the bookmark menu items are actions. */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static void
 item_activated (GtkAction      *action,
                 MooBookmarkMgr *mgr)
@@ -471,6 +473,7 @@ item_activated (GtkAction      *action,
 
     g_signal_emit (mgr, signals[ACTIVATE], 0, bookmark, user);
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 static void

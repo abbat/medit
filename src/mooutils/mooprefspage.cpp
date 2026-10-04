@@ -72,7 +72,10 @@ enum {
 static G_GNUC_UNUSED guint signals[LAST_SIGNAL];
 
 /* MOO_TYPE_PREFS_PAGE */
+/* GtkVBox is deprecated since GTK+ 3.2; changing the parent type would change the widget hierarchy. */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 G_DEFINE_TYPE_WITH_CODE (MooPrefsPage, moo_prefs_page, GTK_TYPE_VBOX, G_ADD_PRIVATE(MooPrefsPage))
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 static void
 moo_prefs_page_class_init (MooPrefsPageClass *klass)

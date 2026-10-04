@@ -493,6 +493,8 @@ create_broken_icon (G_GNUC_UNUSED GtkIconTheme *icon_theme,
     G_GNUC_END_IGNORE_DEPRECATIONS
 }
 
+/* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static GdkPixbuf *
 create_special_icon (GtkWidget   *widget,
                      MooIconType  type,
@@ -556,6 +558,7 @@ create_special_icon (GtkWidget   *widget,
 
     g_return_val_if_reached (NULL);
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 static GdkPixbuf *
