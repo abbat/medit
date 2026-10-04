@@ -1321,7 +1321,7 @@ lsp_plugin_init (LspPlugin *plugin)
                                  "display-name", _("Diagnostics"),
                                  "label", _("Diagnostics"),
                                  "tooltip", _("Show the diagnostics pane"),
-                                 "stock-id", GTK_STOCK_DIALOG_WARNING,
+                                 "icon-name", "dialog-warning",
                                  "closure-callback", show_diagnostics_cb,
                                  nullptr);
 
@@ -1337,7 +1337,7 @@ lsp_plugin_init (LspPlugin *plugin)
                                  "display-name", _("Find References"),
                                  "label", _("Find _References"),
                                  "tooltip", _("List every use of what is under the cursor"),
-                                 "stock-id", MOO_STOCK_FIND_IN_FILES,
+                                 "icon-name", "edit-find",
                                  "default-accel", MOO_EDIT_ACCEL_FIND_REFERENCES,
                                  "closure-callback", find_references_cb,
                                  nullptr);
@@ -1463,7 +1463,7 @@ lsp_plugin_init (LspPlugin *plugin)
                                  "display-name", _("LSP Servers"),
                                  "label", _("LSP _Servers..."),
                                  "tooltip", _("Edit the list of language servers"),
-                                 "stock-id", GTK_STOCK_INDEX,
+                                 "icon-name", "view-list",
                                  "closure-callback", edit_config_cb,
                                  nullptr);
 
@@ -1471,7 +1471,7 @@ lsp_plugin_init (LspPlugin *plugin)
                                  "display-name", _("Restart Language Servers"),
                                  "label", _("Restart Language Servers"),
                                  "tooltip", _("Re-read the configuration and start every server again"),
-                                 "stock-id", MOO_STOCK_RESTART,
+                                 "icon-name", "view-refresh",
                                  "closure-callback", restart_servers_cb,
                                  nullptr);
 
@@ -1495,7 +1495,7 @@ lsp_plugin_init (LspPlugin *plugin)
                                  "display-name", _("References"),
                                  "label", _("References"),
                                  "tooltip", _("Show the references pane"),
-                                 "stock-id", MOO_STOCK_FIND_IN_FILES,
+                                 "icon-name", "edit-find",
                                  "closure-callback", show_references_cb,
                                  nullptr);
 
@@ -1503,7 +1503,7 @@ lsp_plugin_init (LspPlugin *plugin)
                                  "display-name", _("Symbols"),
                                  "label", _("Symbols"),
                                  "tooltip", _("Show the symbol tree"),
-                                 "stock-id", GTK_STOCK_INDEX,
+                                 "icon-name", "view-list",
                                  "closure-callback", show_symbols_cb,
                                  nullptr);
 

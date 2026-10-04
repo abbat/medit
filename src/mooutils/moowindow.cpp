@@ -249,7 +249,7 @@ moo_window_class_init (MooWindowClass *klass)
     moo_window_class_new_action (klass, "ConfigureShortcuts", NULL,
                                  "label", _("Configure _Shortcuts..."),
                                  "no-accel", TRUE,
-                                 "stock-id", MOO_STOCK_KEYBOARD,
+                                 "icon-name", "preferences-desktop-keyboard-shortcuts",
                                  "closure-callback", moo_window_shortcuts_prefs_dialog,
                                  NULL);
 
@@ -282,69 +282,69 @@ moo_window_class_init (MooWindowClass *klass)
     /* Edit/undo actions delegated to the currently focused edit/undo widget
        via the MooEditOps and MooUndoOps interfaces */
     moo_window_class_new_action (klass, "Cut", NULL,
-                                 "display-name", GTK_STOCK_CUT,
-                                 "label", GTK_STOCK_CUT,
-                                 "tooltip", GTK_STOCK_CUT,
-                                 "stock-id", GTK_STOCK_CUT,
+                                 "display-name", _("Cut"),
+                                 "label", _("Cu_t"),
+                                 "tooltip", _("Cut"),
+                                 "icon-name", "edit-cut",
                                  "default-accel", MOO_ACCEL_CUT,
                                  "closure-callback", moo_window_action_cut,
                                  "condition::sensitive", "can-cut",
                                  NULL);
 
     moo_window_class_new_action (klass, "Copy", NULL,
-                                 "display-name", GTK_STOCK_COPY,
-                                 "label", GTK_STOCK_COPY,
-                                 "tooltip", GTK_STOCK_COPY,
-                                 "stock-id", GTK_STOCK_COPY,
+                                 "display-name", _("Copy"),
+                                 "label", _("_Copy"),
+                                 "tooltip", _("Copy"),
+                                 "icon-name", "edit-copy",
                                  "default-accel", MOO_ACCEL_COPY,
                                  "closure-callback", moo_window_action_copy,
                                  "condition::sensitive", "can-copy",
                                  NULL);
 
     moo_window_class_new_action (klass, "Paste", NULL,
-                                 "display-name", GTK_STOCK_PASTE,
-                                 "label", GTK_STOCK_PASTE,
-                                 "tooltip", GTK_STOCK_PASTE,
-                                 "stock-id", GTK_STOCK_PASTE,
+                                 "display-name", _("Paste"),
+                                 "label", _("_Paste"),
+                                 "tooltip", _("Paste"),
+                                 "icon-name", "edit-paste",
                                  "default-accel", MOO_ACCEL_PASTE,
                                  "closure-callback", moo_window_action_paste,
                                  "condition::sensitive", "can-paste",
                                  NULL);
 
     moo_window_class_new_action (klass, "Delete", NULL,
-                                 "display-name", GTK_STOCK_DELETE,
-                                 "label", GTK_STOCK_DELETE,
-                                 "tooltip", GTK_STOCK_DELETE,
-                                 "stock-id", GTK_STOCK_DELETE,
+                                 "display-name", _("Delete"),
+                                 "label", _("_Delete"),
+                                 "tooltip", _("Delete"),
+                                 "icon-name", "edit-delete",
                                  "closure-callback", moo_window_action_delete,
                                  "condition::sensitive", "can-delete",
                                  NULL);
 
     moo_window_class_new_action (klass, "SelectAll", NULL,
-                                 "display-name", GTK_STOCK_SELECT_ALL,
-                                 "label", GTK_STOCK_SELECT_ALL,
-                                 "tooltip", GTK_STOCK_SELECT_ALL,
-                                 "stock-id", GTK_STOCK_SELECT_ALL,
+                                 "display-name", _("Select All"),
+                                 "label", _("Select _All"),
+                                 "tooltip", _("Select All"),
+                                 "icon-name", "edit-select-all",
                                  "default-accel", MOO_ACCEL_SELECT_ALL,
                                  "closure-callback", moo_window_action_select_all,
                                  "condition::sensitive", "can-select-all",
                                  NULL);
 
     moo_window_class_new_action (klass, "Undo", NULL,
-                                 "display-name", GTK_STOCK_UNDO,
-                                 "label", GTK_STOCK_UNDO,
-                                 "tooltip", GTK_STOCK_UNDO,
-                                 "stock-id", GTK_STOCK_UNDO,
+                                 "display-name", _("Undo"),
+                                 "label", _("_Undo"),
+                                 "tooltip", _("Undo"),
+                                 "icon-name", "edit-undo",
                                  "default-accel", MOO_ACCEL_UNDO,
                                  "closure-callback", moo_window_action_undo,
                                  "condition::sensitive", "can-undo",
                                  NULL);
 
     moo_window_class_new_action (klass, "Redo", NULL,
-                                 "display-name", GTK_STOCK_REDO,
-                                 "label", GTK_STOCK_REDO,
-                                 "tooltip", GTK_STOCK_REDO,
-                                 "stock-id", GTK_STOCK_REDO,
+                                 "display-name", _("Redo"),
+                                 "label", _("_Redo"),
+                                 "tooltip", _("Redo"),
+                                 "icon-name", "edit-redo",
                                  "default-accel", MOO_ACCEL_REDO,
                                  "closure-callback", moo_window_action_redo,
                                  "condition::sensitive", "can-redo",
@@ -1881,7 +1881,6 @@ moo_window_class_set_id (MooWindowClass     *klass,
     g_return_if_fail (g_type_get_qdata (type, MOO_WINDOW_NAME_QUARK) == NULL);
     g_type_set_qdata (type, MOO_WINDOW_NAME_QUARK, g_strdup (name));
 }
-
 
 static void
 moo_window_add_action (MooWindow  *window,

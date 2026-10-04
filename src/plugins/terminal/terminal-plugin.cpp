@@ -852,7 +852,7 @@ terminal_plugin_init (TerminalPlugin *plugin)
                                  "label", _("Terminal"),
                                  "tooltip", _("Show the terminal pane"),
                                  "default-accel", MOO_EDIT_ACCEL_TERMINAL,
-                                 "stock-id", MOO_STOCK_TERMINAL,
+                                 "icon-name", "medit-terminal",
                                  "closure-callback", show_terminal_cb,
                                  nullptr);
 

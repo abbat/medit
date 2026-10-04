@@ -178,11 +178,17 @@ Facts the survey of 2026-10-04 established, so they need not be found again:
   else; `_moo_bookmark_mgr_load_node()` is the load without the prefs global, so
   `unit.moofileview.bookmark.load-old-rc` feeds it an rc as the old code wrote it.
   The editor's combo is a fixed list of eleven icon names.
-- [ ] 3.6 MooAction `stock-id` → `icon-name` + an explicit `label`, then drop
+- [x] 3.6 MooAction `stock-id` → `icon-name` + an explicit `label`, then drop
   `gtk_stock_lookup` from `mooactionbase.cpp`. Four actions have no label of their
   own: GoToCurrentDocDir (`moofileselector.cpp`), Cut/Copy/Paste
   (`mooeditaction-factory.cpp`). Dump every action's accelerator before and after
   and diff the two.
+  Done: every action sets `icon-name` and carries its own `_()` label, and the
+  `display-name`/`tooltip` that were stock ids are plain `_()` strings (new msgids,
+  translated from gtk30). `moo_action_base_set_{display_name,label,tooltip}` no
+  longer call `gtk_stock_lookup`, and `strip_underscore` is gone. The 109 action
+  accelerators dumped before and after are identical. Our own Keyboard id maps to
+  `preferences-desktop-keyboard-shortcuts`, as on the Shortcuts page.
 - [ ] 3.7 `moostock.cpp`: the pixmaps become an icon theme in the GResource
   (`gtk_icon_theme_add_resource_path`); the factory, the aliases,
   `gtk_stock_add_static` and `_moo_stock_init` go. Fix `mooaccelbutton.ui`.

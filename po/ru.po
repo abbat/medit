@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: moo\n"
 "Report-Msgid-Bugs-To: https://github.com/abbat/medit/issues\n"
-"POT-Creation-Date: 2026-10-04 20:57+0300\n"
+"POT-Creation-Date: 2026-10-04 21:04+0300\n"
 "PO-Revision-Date: 2019-10-28 16:46MSK\n"
 "Last-Translator: Olesya Gerasimenko <gammaray@basealt.ru>\n"
 "Language-Team: Basealt Translation Team\n"
@@ -125,7 +125,8 @@ msgid "_License"
 msgstr "_Лицензия"
 
 #: src/mooapp/about.cpp:254 src/mooapp/credits.cpp:159
-#: src/mooedit/mooeditdialogs.cpp:739 src/mooutils/moodialogs.cpp:49
+#: src/mooedit/mooeditdialogs.cpp:739 src/mooedit/mooeditwindow.cpp:499
+#: src/mooutils/moodialogs.cpp:49
 msgid "_Close"
 msgstr "_Закрыть"
 
@@ -176,13 +177,36 @@ msgid "Open URL?"
 msgstr "Открыть интернет-адрес?"
 
 #. Prefs dialog title
-#: src/mooapp/mooapp.cpp:200
+#: src/mooapp/mooapp.cpp:200 src/mooapp/mooapp.cpp:241
+#: src/mooapp/mooapp.cpp:243
 msgid "Preferences"
 msgstr "Настройки"
+
+#: src/mooapp/mooapp.cpp:242
+msgid "_Preferences"
+msgstr "_Параметры"
+
+#: src/mooapp/mooapp.cpp:249
+msgid "_About"
+msgstr "_О программе"
+
+#. menu item label
+#: src/mooapp/mooapp.cpp:256 src/mooedit/medit.xml.h:16
+#: src/mooutils/mooaccelprefs.cpp:882 src/mooutils/moofiledialog.cpp:292
+msgid "_Help"
+msgstr "_Справка"
 
 #: src/mooapp/mooapp.cpp:263
 msgid "Report a Bug..."
 msgstr "Сообщить о проблеме..."
+
+#: src/mooapp/mooapp.cpp:268 src/mooapp/mooapp.cpp:270
+msgid "Quit"
+msgstr "Выйти"
+
+#: src/mooapp/mooapp.cpp:269
+msgid "_Quit"
+msgstr "В_ыйти"
 
 #: src/mooapp/mooapp.cpp:1035
 msgid "Checking for unsaved documents"
@@ -397,7 +421,7 @@ msgstr "в столбце"
 #: src/mooutils/moofiledialog.cpp:280 src/mooutils/moofontsel.cpp:1309
 #: src/mooutils/moohistorymgr.cpp:1667 src/plugins/ui/moofileselector.ui:56
 #: src/plugins/ui/moofileselector.ui:136 src/plugins/ui/moofind.ui:141
-#: src/plugins/ui/moogrep.ui:196 src/plugins/moofileselector.cpp:1144
+#: src/plugins/ui/moogrep.ui:196 src/plugins/moofileselector.cpp:1145
 #: src/plugins/lsp/lsp-edits.cpp:368
 msgid "_Cancel"
 msgstr "О_тменить"
@@ -512,7 +536,8 @@ msgstr "_Текст для поиска"
 msgid "Regular e_xpression"
 msgstr "Регулярное в_ыражение"
 
-#: src/mooedit/ui/mootextfind.ui:84 src/plugins/moofind.cpp:1045
+#: src/mooedit/ui/mootextfind.ui:84 src/mooedit/mooeditwindow.cpp:555
+#: src/mooedit/mooeditwindow.cpp:557 src/plugins/moofind.cpp:1045
 msgid "Find"
 msgstr "Найти"
 
@@ -552,8 +577,9 @@ msgstr "От _курсора"
 msgid "_Whole words only"
 msgstr "Только _целые слова"
 
-#: src/mooedit/ui/mootextfind.ui:306 src/mooedit/mootextfind.cpp:164
-#: src/plugins/ui/moofind.ui:151 src/plugins/ui/moogrep.ui:206
+#: src/mooedit/ui/mootextfind.ui:306 src/mooedit/mooeditwindow.cpp:556
+#: src/mooedit/mootextfind.cpp:164 src/plugins/ui/moofind.ui:151
+#: src/plugins/ui/moogrep.ui:206
 msgid "_Find"
 msgstr "_Найти"
 
@@ -624,23 +650,85 @@ msgstr "_Инструменты"
 msgid "_Window"
 msgstr "_Окно"
 
-#. menu item label
-#: src/mooedit/medit.xml.h:16 src/mooutils/mooaccelprefs.cpp:882
-#: src/mooutils/moofiledialog.cpp:292
-msgid "_Help"
-msgstr "_Справка"
+#: src/mooedit/mooeditaction-factory.cpp:568
+#: src/mooedit/mooeditaction-factory.cpp:570 src/mooutils/moowindow.cpp:334
+#: src/mooutils/moowindow.cpp:336
+msgid "Undo"
+msgstr "Отменить"
 
-#: src/mooedit/mooeditaction-factory.cpp:622
+#: src/mooedit/mooeditaction-factory.cpp:569 src/mooutils/mooentry.cpp:534
+#: src/mooutils/moowindow.cpp:335
+msgid "_Undo"
+msgstr "_Отменить"
+
+#: src/mooedit/mooeditaction-factory.cpp:578
+#: src/mooedit/mooeditaction-factory.cpp:580 src/mooutils/moowindow.cpp:344
+#: src/mooutils/moowindow.cpp:346
+msgid "Redo"
+msgstr "Вернуть"
+
+#: src/mooedit/mooeditaction-factory.cpp:579 src/mooutils/mooentry.cpp:527
+#: src/mooutils/moowindow.cpp:345
+msgid "_Redo"
+msgstr "Ве_рнуть"
+
+#: src/mooedit/mooeditaction-factory.cpp:588
+#: src/moofileview/moofileview.cpp:1284 src/mooutils/moowindow.cpp:285
+#: src/mooutils/moowindow.cpp:287
+msgid "Cut"
+msgstr "Вырезать"
+
+#: src/mooedit/mooeditaction-factory.cpp:589
+#: src/moofileview/moofileview.cpp:1283 src/mooutils/moowindow.cpp:286
+msgid "Cu_t"
+msgstr "_Вырезать"
+
+#: src/mooedit/mooeditaction-factory.cpp:597
+#: src/moofileview/moofileview.cpp:1295 src/mooutils/moowindow.cpp:295
+#: src/mooutils/moowindow.cpp:297
+msgid "Copy"
+msgstr "Копировать"
+
+#: src/mooedit/mooeditaction-factory.cpp:598
+#: src/moofileview/moofileview.cpp:1294 src/moofileview/moofileview.cpp:6240
+#: src/mooutils/moowindow.cpp:296 src/plugins/terminal/terminal-plugin.cpp:580
+msgid "_Copy"
+msgstr "_Копировать"
+
+#: src/mooedit/mooeditaction-factory.cpp:606
+#: src/moofileview/moofileview.cpp:1306 src/mooutils/moowindow.cpp:305
+#: src/mooutils/moowindow.cpp:307
+msgid "Paste"
+msgstr "Вставить"
+
+#: src/mooedit/mooeditaction-factory.cpp:607
+#: src/moofileview/moofileview.cpp:1305 src/mooutils/moowindow.cpp:306
+#: src/plugins/terminal/terminal-plugin.cpp:585
+msgid "_Paste"
+msgstr "Вст_авить"
+
+#: src/mooedit/mooeditaction-factory.cpp:614
+#: src/mooedit/mooeditaction-factory.cpp:616 src/mooutils/moowindow.cpp:324
+#: src/mooutils/moowindow.cpp:326
+msgid "Select All"
+msgstr "Выделить всё"
+
+#: src/mooedit/mooeditaction-factory.cpp:615 src/mooutils/moowindow.cpp:325
+msgid "Select _All"
+msgstr "Выделить вс_ё"
+
+#: src/mooedit/mooeditaction-factory.cpp:625
 msgid "_Insert Unicode Control Character"
 msgstr "Вст_авить управляющий символ Юникод"
 
-#: src/mooedit/mooeditdialogs.cpp:60 src/moofileview/moobookmarkmgr.cpp:1462
+#: src/mooedit/mooeditdialogs.cpp:60 src/mooedit/mooeditwindow.cpp:447
+#: src/moofileview/moobookmarkmgr.cpp:1462 src/plugins/moofileselector.cpp:624
 msgid "Open"
 msgstr "Открыть"
 
-#: src/mooedit/mooeditdialogs.cpp:127 src/moofileview/ui/moofileview-drop.ui:5
-#: src/plugins/ui/moofileselector.ui:4 src/plugins/moofileselector.cpp:904
-#: src/plugins/moofileselector.cpp:929
+#: src/mooedit/mooeditdialogs.cpp:127 src/mooedit/mooeditwindow.cpp:488
+#: src/moofileview/ui/moofileview-drop.ui:5 src/plugins/ui/moofileselector.ui:4
+#: src/plugins/moofileselector.cpp:905 src/plugins/moofileselector.cpp:930
 msgid "Save As"
 msgstr "Сохранить как"
 
@@ -811,6 +899,14 @@ msgstr "Последние файлы"
 msgid "Open Recent|_More..."
 msgstr "_Ещё..."
 
+#: src/mooedit/mooeditor.cpp:595
+msgid "New Window"
+msgstr ""
+
+#: src/mooedit/mooeditor.cpp:596 src/mooutils/moostock.cpp:36
+msgid "New _Window"
+msgstr "Новое _окно"
+
 #: src/mooedit/mooeditor.cpp:597
 msgid "Open new editor window"
 msgstr "Открыть новое окно"
@@ -894,6 +990,16 @@ msgstr "Параметры"
 msgid "Editor"
 msgstr "Редактор"
 
+#: src/mooedit/mooeditwindow.cpp:438
+#: src/moofileview/ui/moobookmark-editor.ui:108
+#: src/plugins/ui/moofileselector-prefs.ui:197
+msgid "New"
+msgstr "Создать"
+
+#: src/mooedit/mooeditwindow.cpp:439
+msgid "_New"
+msgstr "_Создать"
+
 #: src/mooedit/mooeditwindow.cpp:440
 msgid "Create new document"
 msgstr "Создать новый документ"
@@ -915,6 +1021,16 @@ msgstr "Обновить"
 msgid "Reload document"
 msgstr "Обновить документ"
 
+#: src/mooedit/mooeditwindow.cpp:478 src/mooedit/mooeditwindow.cpp:480
+msgid "Save"
+msgstr "Сохранить"
+
+#: src/mooedit/mooeditwindow.cpp:479 src/mooutils/moodialogs.cpp:437
+#: src/mooutils/moofiledialog.cpp:366
+#: src/plugins/usertools/ui/moousertools.ui:212
+msgid "_Save"
+msgstr "Сохранить"
+
 #: src/mooedit/mooeditwindow.cpp:489
 msgid "Save _As..."
 msgstr "Сохранить _как..."
@@ -922,6 +1038,10 @@ msgstr "Сохранить _как..."
 #: src/mooedit/mooeditwindow.cpp:490
 msgid "Save as..."
 msgstr "Сохранить как..."
+
+#: src/mooedit/mooeditwindow.cpp:498
+msgid "Close"
+msgstr "Закрыть"
 
 #: src/mooedit/mooeditwindow.cpp:500
 msgid "Close document"
@@ -1006,6 +1126,14 @@ msgstr "Найти _предыдущее"
 #: src/mooedit/mooeditwindow.cpp:579
 msgid "Find previous"
 msgstr "Найти предыдущее"
+
+#: src/mooedit/mooeditwindow.cpp:588 src/mooedit/mooeditwindow.cpp:590
+msgid "Find and Replace"
+msgstr "Найти и заменить"
+
+#: src/mooedit/mooeditwindow.cpp:589 src/mooedit/mootextfind.cpp:158
+msgid "Find and _Replace"
+msgstr "Найти и _заменить"
 
 #: src/mooedit/mooeditwindow.cpp:599
 msgid "Find Current Word"
@@ -1127,6 +1255,14 @@ msgstr "Разделить представление по вертикали"
 msgid "Focus Next Split View"
 msgstr "Перейти к следующему разделённому представлению"
 
+#: src/mooedit/mooeditwindow.cpp:728 src/mooedit/mooeditwindow.cpp:730
+msgid "Stop"
+msgstr "Остановить"
+
+#: src/mooedit/mooeditwindow.cpp:729
+msgid "_Stop"
+msgstr "_Остановить"
+
 #: src/mooedit/mooeditwindow.cpp:766
 msgid "Toggle Bookmark"
 msgstr "Поставить/снять закладку"
@@ -1162,6 +1298,16 @@ msgstr "Закомментировать"
 #: src/mooedit/mooeditwindow.cpp:804
 msgid "Uncomment"
 msgstr "Раскомментировать"
+
+#: src/mooedit/mooeditwindow.cpp:811 src/mooedit/mooeditwindow.cpp:812
+#: src/mooedit/mooeditwindow.cpp:813
+msgid "Increase Indent"
+msgstr "Увеличить отступ"
+
+#: src/mooedit/mooeditwindow.cpp:821 src/mooedit/mooeditwindow.cpp:822
+#: src/mooedit/mooeditwindow.cpp:823
+msgid "Decrease Indent"
+msgstr "Уменьшить отступ"
 
 #: src/mooedit/mooeditwindow.cpp:831
 msgid "Duplicate Line"
@@ -1239,6 +1385,18 @@ msgstr "П_араметры страницы..."
 #: src/mooedit/mooeditwindow.cpp:893
 msgid "Page Setup..."
 msgstr "Параметры страницы..."
+
+#: src/mooedit/mooeditwindow.cpp:899 src/mooedit/mooeditwindow.cpp:901
+msgid "Print Preview"
+msgstr "Просмотр"
+
+#: src/mooedit/mooeditwindow.cpp:900
+msgid "Print Pre_view"
+msgstr "П_росмотр"
+
+#: src/mooedit/mooeditwindow.cpp:908
+msgid "Print"
+msgstr "Печать"
 
 #: src/mooedit/mooeditwindow.cpp:909 src/mooedit/mooeditwindow.cpp:910
 msgid "Print..."
@@ -1415,10 +1573,6 @@ msgctxt "plugin-prefs-column"
 msgid "Plugin"
 msgstr "Модуль"
 
-#: src/mooedit/mootextfind.cpp:158
-msgid "Find and _Replace"
-msgstr "Найти и _заменить"
-
 #: src/mooedit/mootextfind.cpp:159
 msgctxt "Dialog title"
 msgid "Replace"
@@ -1483,11 +1637,6 @@ msgstr "Путь"
 msgid "Add bookmark"
 msgstr "Добавить закладку"
 
-#: src/moofileview/ui/moobookmark-editor.ui:108
-#: src/plugins/ui/moofileselector-prefs.ui:197
-msgid "New"
-msgstr "Создать"
-
 #: src/moofileview/ui/moobookmark-editor.ui:128
 msgid "Add separator"
 msgstr "Добавить разделитель"
@@ -1500,8 +1649,8 @@ msgstr "Добавить разделитель"
 msgid "Delete selected items"
 msgstr "Удалить выделенное"
 
-#: src/moofileview/ui/moobookmark-editor.ui:174
-#: src/plugins/ui/moofileselector-prefs.ui:214
+#: src/moofileview/ui/moobookmark-editor.ui:174 src/mooutils/moowindow.cpp:315
+#: src/mooutils/moowindow.cpp:317 src/plugins/ui/moofileselector-prefs.ui:214
 msgid "Delete"
 msgstr "Удалить"
 
@@ -1535,7 +1684,7 @@ msgstr "Путь"
 msgid "Folder"
 msgstr ""
 
-#: src/moofileview/moobookmarkmgr.cpp:1455
+#: src/moofileview/moobookmarkmgr.cpp:1455 src/moofileview/moofileview.cpp:1186
 msgid "Home"
 msgstr "Домой"
 
@@ -1571,15 +1720,47 @@ msgstr "Файл"
 msgid "Bookmark"
 msgstr ""
 
-#: src/moofileview/moofileview.cpp:1136 src/plugins/moofileselector.cpp:638
-#: src/plugins/moofileselector.cpp:639 src/plugins/moofileselector.cpp:1286
+#: src/moofileview/moofileview.cpp:1136 src/plugins/moofileselector.cpp:639
+#: src/plugins/moofileselector.cpp:640 src/plugins/moofileselector.cpp:1287
 #: src/plugins/moofileselector-prefs.cpp:70
 msgid "File Selector"
 msgstr "Выбор файлов"
 
+#: src/moofileview/moofileview.cpp:1153
+msgid "_Up"
+msgstr "Вв_ерх"
+
 #: src/moofileview/moofileview.cpp:1154
 msgid "Go to parent folder"
 msgstr "Вверх"
+
+#: src/moofileview/moofileview.cpp:1163
+msgid "_Back"
+msgstr "На_зад"
+
+#: src/moofileview/moofileview.cpp:1164
+msgid "Back"
+msgstr "Назад"
+
+#: src/moofileview/moofileview.cpp:1174
+msgid "_Forward"
+msgstr "_Вперёд"
+
+#: src/moofileview/moofileview.cpp:1175
+msgid "Forward"
+msgstr "Вперёд"
+
+#: src/moofileview/moofileview.cpp:1185
+msgid "_Home"
+msgstr "_Домой"
+
+#: src/moofileview/moofileview.cpp:1196 src/mooutils/moostock.cpp:35
+msgid "_New Folder"
+msgstr "Новая _папка"
+
+#: src/moofileview/moofileview.cpp:1197
+msgid "New Folder"
+msgstr ""
 
 #: src/moofileview/moofileview.cpp:1204 src/moofileview/moofileview.cpp:3370
 msgid "Delete..."
@@ -1604,6 +1785,15 @@ msgstr "Сортировка с учётом регистра"
 #: src/moofileview/moofileview.cpp:1239 src/moofileview/moofileview.cpp:1240
 msgid "Show Folders First"
 msgstr "Показывать папки первыми"
+
+#: src/moofileview/moofileview.cpp:1246
+#: src/plugins/terminal/terminal-plugin.cpp:606
+msgid "_Properties"
+msgstr "_Свойства"
+
+#: src/moofileview/moofileview.cpp:1247
+msgid "Properties"
+msgstr "Свойства"
 
 #. Menubar
 #: src/moofileview/moofileview.cpp:1257 src/moofileview/moofileview.cpp:1258
@@ -1648,7 +1838,7 @@ msgstr "Удалить файл %s?"
 msgid "Delete selected files?"
 msgstr "Удалить выделенные файлы?"
 
-#: src/moofileview/moofileview.cpp:3253
+#: src/moofileview/moofileview.cpp:3253 src/mooutils/moowindow.cpp:316
 msgid "_Delete"
 msgstr "_Удалить"
 
@@ -1741,11 +1931,6 @@ msgstr "Не удалось создать ссылку на «%s»"
 msgid "Move"
 msgstr "Переместить"
 
-#: src/moofileview/moofileview.cpp:6240
-#: src/plugins/terminal/terminal-plugin.cpp:580
-msgid "_Copy"
-msgstr "_Копировать"
-
 #: src/moofileview/moofileview.cpp:6242 src/mooutils/moostock.cpp:32
 msgid "Link"
 msgstr "Создать ссылку"
@@ -1830,11 +2015,6 @@ msgstr "Если вы не сохраните документ, изменени
 #: src/mooutils/moodialogs.cpp:435
 msgid "_Discard"
 msgstr "От_бросить"
-
-#: src/mooutils/moodialogs.cpp:437 src/mooutils/moofiledialog.cpp:366
-#: src/plugins/usertools/ui/moousertools.ui:212
-msgid "_Save"
-msgstr "Сохранить"
 
 #. Translators: 012345 denotes order in which character encoding
 #. groups should appear, e.g. 543210 means inverse order.
@@ -2107,14 +2287,6 @@ msgctxt "insert-special-char"
 msgid "Tab"
 msgstr "Табуляция"
 
-#: src/mooutils/mooentry.cpp:527
-msgid "_Redo"
-msgstr "Ве_рнуть"
-
-#: src/mooutils/mooentry.cpp:534
-msgid "_Undo"
-msgstr "_Отменить"
-
 #. label of Insert Special Character submenu in text entry context menu
 #: src/mooutils/mooentry.cpp:551
 msgctxt "insert-special-char"
@@ -2122,7 +2294,7 @@ msgid "Insert Special Character"
 msgstr "Вставить специальный символ"
 
 #: src/mooutils/moofiledialog.cpp:355 src/mooutils/moohistorymgr.cpp:1668
-#: src/plugins/moofilelist.cpp:2015
+#: src/plugins/moofilelist.cpp:2015 src/plugins/moofileselector.cpp:623
 msgid "_Open"
 msgstr "_Открыть"
 
@@ -2184,17 +2356,9 @@ msgstr "Прикрепить"
 msgid "Keep on top"
 msgstr "Удерживать наверху"
 
-#: src/mooutils/moostock.cpp:34 src/plugins/moofileselector.cpp:1130
+#: src/mooutils/moostock.cpp:34 src/plugins/moofileselector.cpp:1131
 msgid "Save Copy"
 msgstr "Сохранить копию"
-
-#: src/mooutils/moostock.cpp:35
-msgid "_New Folder"
-msgstr "Новая _папка"
-
-#: src/mooutils/moostock.cpp:36
-msgid "New _Window"
-msgstr "Новое _окно"
 
 #. This is error message in file selector when rm
 #. fails for some strange reason
@@ -2385,7 +2549,7 @@ msgstr "Создать файл в папке «%s»"
 msgid "Could not create file '%s'"
 msgstr "Не удалось создать файл «%s»"
 
-#: src/plugins/moofileselector.cpp:431 src/plugins/moofileselector.cpp:815
+#: src/plugins/moofileselector.cpp:431 src/plugins/moofileselector.cpp:816
 #, c-format
 msgid ""
 "Could not convert '%s' to filename encoding. Please consider simpler name, "
@@ -2399,49 +2563,53 @@ msgstr ""
 msgid "File '%s' already exists"
 msgstr "Файл «%s» уже существует"
 
-#: src/plugins/moofileselector.cpp:603
+#: src/plugins/moofileselector.cpp:602
+msgid "_Jump to"
+msgstr "Перейти _к"
+
+#: src/plugins/moofileselector.cpp:604
 msgid "Go to current document directory"
 msgstr "Перейти в папку с текущим документом"
 
-#: src/plugins/moofileselector.cpp:615 src/plugins/moofileselector.cpp:616
+#: src/plugins/moofileselector.cpp:616 src/plugins/moofileselector.cpp:617
 msgid "New File..."
 msgstr "Создать файл..."
 
-#: src/plugins/moofileselector.cpp:814
+#: src/plugins/moofileselector.cpp:815
 #, c-format
 msgid "Could not save file as '%s'"
 msgstr "Не удалось сохранить файл как «%s»"
 
-#: src/plugins/moofileselector.cpp:949
+#: src/plugins/moofileselector.cpp:950
 msgid "Save Copy As"
 msgstr "Сохранить копию как"
 
-#: src/plugins/moofileselector.cpp:975
+#: src/plugins/moofileselector.cpp:976
 msgid "Rename To"
 msgstr "Переименовать"
 
 #. no freedesktop icon for move
-#: src/plugins/moofileselector.cpp:1112
+#: src/plugins/moofileselector.cpp:1113
 msgid "Move Here"
 msgstr "Переместить сюда"
 
-#: src/plugins/moofileselector.cpp:1113
+#: src/plugins/moofileselector.cpp:1114
 msgid "Move/Rename..."
 msgstr "Переместить/переименовать..."
 
-#: src/plugins/moofileselector.cpp:1121
+#: src/plugins/moofileselector.cpp:1122
 msgid "Save Here"
 msgstr "Сохранить здесь"
 
-#: src/plugins/moofileselector.cpp:1122
+#: src/plugins/moofileselector.cpp:1123
 msgid "Save As..."
 msgstr "Сохранить как..."
 
-#: src/plugins/moofileselector.cpp:1131
+#: src/plugins/moofileselector.cpp:1132
 msgid "Save Copy As..."
 msgstr "Сохранить копию как..."
 
-#: src/plugins/moofileselector.cpp:1287
+#: src/plugins/moofileselector.cpp:1288
 msgid "File selector pane for editor window"
 msgstr "Панель выбора файлов в окне редактора"
 
@@ -3159,10 +3327,6 @@ msgstr ""
 msgid "Terminal"
 msgstr "Терминал"
 
-#: src/plugins/terminal/terminal-plugin.cpp:585
-msgid "_Paste"
-msgstr "Вст_авить"
-
 #: src/plugins/terminal/terminal-plugin.cpp:591
 msgid "“cd” to current file directory"
 msgstr "«cd» в папке с текущим файлом"
@@ -3170,10 +3334,6 @@ msgstr "«cd» в папке с текущим файлом"
 #: src/plugins/terminal/terminal-plugin.cpp:598
 msgid "“pushd” to current file directory"
 msgstr "«pushd» в папке с текущим файлом"
-
-#: src/plugins/terminal/terminal-plugin.cpp:606
-msgid "_Properties"
-msgstr "_Свойства"
 
 #: src/plugins/terminal/terminal-plugin.cpp:612
 #: src/plugins/terminal/ui/terminal-prefs.ui:68

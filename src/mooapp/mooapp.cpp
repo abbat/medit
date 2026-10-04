@@ -238,24 +238,24 @@ install_common_actions (void)
   g_return_if_fail (klass != NULL);
 
   moo_window_class_new_action (klass, "Preferences", NULL,
-                               "display-name", GTK_STOCK_PREFERENCES,
-                               "label", GTK_STOCK_PREFERENCES,
-                               "tooltip", GTK_STOCK_PREFERENCES,
-                               "stock-id", GTK_STOCK_PREFERENCES,
+                               "display-name", _("Preferences"),
+                               "label", _("_Preferences"),
+                               "tooltip", _("Preferences"),
+                               "icon-name", "preferences-system",
                                "closure-callback", moo_app_prefs_dialog,
                                nullptr);
 
   moo_window_class_new_action (klass, "About", NULL,
-                               "label", GTK_STOCK_ABOUT,
+                               "label", _("_About"),
                                "no-accel", TRUE,
-                               "stock-id", GTK_STOCK_ABOUT,
+                               "icon-name", "help-about",
                                "closure-callback", show_about /* was moo_app_about_dialog from mooappabout.h */,
                                nullptr);
 
   moo_window_class_new_action (klass, "Help", NULL,
-                               "label", GTK_STOCK_HELP,
+                               "label", _("_Help"),
                                "default-accel", MOO_APP_ACCEL_HELP,
-                               "stock-id", GTK_STOCK_HELP,
+                               "icon-name", "help-browser",
                                "closure-callback", moo_app_help,
                                nullptr);
 
@@ -265,10 +265,10 @@ install_common_actions (void)
                                nullptr);
 
   moo_window_class_new_action (klass, "Quit", NULL,
-                               "display-name", GTK_STOCK_QUIT,
-                               "label", GTK_STOCK_QUIT,
-                               "tooltip", GTK_STOCK_QUIT,
-                               "stock-id", GTK_STOCK_QUIT,
+                               "display-name", _("Quit"),
+                               "label", _("_Quit"),
+                               "tooltip", _("Quit"),
+                               "icon-name", "application-exit",
                                "default-accel", MOO_APP_ACCEL_QUIT,
                                "closure-callback", moo_app_quit,
                                "closure-proxy-func", moo_app_instance,

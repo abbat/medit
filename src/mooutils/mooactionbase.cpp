@@ -160,23 +160,6 @@ moo_action_base_get_type (void)
 }
 
 
-static char *
-strip_underscore (const char *label)
-{
-    char *stripped, *underscore;
-
-    g_return_val_if_fail (label != NULL, NULL);
-
-    stripped = g_strdup (label);
-    underscore = strchr (stripped, '_');
-
-    if (underscore)
-        memmove (underscore, underscore + 1, strlen (underscore + 1) + 1);
-
-    return stripped;
-}
-
-
 static void
 set_string (gpointer    object,
             const char *id,
@@ -213,22 +196,11 @@ static void
 moo_action_base_set_display_name (MooActionBase *ab,
                                   const char    *name)
 {
-    GtkStockItem stock_item;
-    char *freeme = NULL;
-
     g_return_if_fail (MOO_IS_ACTION_BASE (ab));
     g_return_if_fail (name != NULL);
 
-    if (gtk_stock_lookup (name, &stock_item))
-    {
-        freeme = strip_underscore (stock_item.label);
-        name = freeme;
-    }
-
     set_string (ab, "moo-action-display-name", name);
     g_object_notify (G_OBJECT (ab), "display-name");
-
-    g_free (freeme);
 }
 
 const char *
@@ -423,12 +395,7 @@ static void
 moo_action_base_set_label (MooActionBase *ab,
                            const char    *label)
 {
-    GtkStockItem stock_item;
-
     g_return_if_fail (MOO_IS_ACTION_BASE (ab));
-
-    if (label && gtk_stock_lookup (label, &stock_item))
-        label = stock_item.label;
 
     g_object_set (G_OBJECT (ab), "GtkAction::label", label, NULL);
 
@@ -440,19 +407,9 @@ static void
 moo_action_base_set_tooltip (MooActionBase *ab,
                              const char    *tooltip)
 {
-    GtkStockItem stock_item;
-    char *freeme = NULL;
-
     g_return_if_fail (MOO_IS_ACTION_BASE (ab));
 
-    if (tooltip && gtk_stock_lookup (tooltip, &stock_item))
-    {
-        freeme = strip_underscore (stock_item.label);
-        tooltip = freeme;
-    }
-
     g_object_set (G_OBJECT (ab), "GtkAction::tooltip", tooltip, NULL);
-    g_free (freeme);
 }
 
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.1.x-trunk\n"
 "Report-Msgid-Bugs-To: https://github.com/abbat/medit/issues\n"
-"POT-Creation-Date: 2026-10-04 20:57+0300\n"
+"POT-Creation-Date: 2026-10-04 21:04+0300\n"
 "PO-Revision-Date: 2012-08-18 11:07+0900\n"
 "Last-Translator: Toshiharu Kudoh <toshi.kd2@gmail.com>\n"
 "Language-Team: Japanese\n"
@@ -118,7 +118,8 @@ msgid "_License"
 msgstr "ライセンス(_L)"
 
 #: src/mooapp/about.cpp:254 src/mooapp/credits.cpp:159
-#: src/mooedit/mooeditdialogs.cpp:739 src/mooutils/moodialogs.cpp:49
+#: src/mooedit/mooeditdialogs.cpp:739 src/mooedit/mooeditwindow.cpp:499
+#: src/mooutils/moodialogs.cpp:49
 msgid "_Close"
 msgstr "閉じる(_C)"
 
@@ -166,13 +167,36 @@ msgid "Open URL?"
 msgstr "URL を開きますか？"
 
 #. Prefs dialog title
-#: src/mooapp/mooapp.cpp:200
+#: src/mooapp/mooapp.cpp:200 src/mooapp/mooapp.cpp:241
+#: src/mooapp/mooapp.cpp:243
 msgid "Preferences"
 msgstr "設定"
+
+#: src/mooapp/mooapp.cpp:242
+msgid "_Preferences"
+msgstr "設定(_P)"
+
+#: src/mooapp/mooapp.cpp:249
+msgid "_About"
+msgstr "このアプリケーションについて(_A)"
+
+#. menu item label
+#: src/mooapp/mooapp.cpp:256 src/mooedit/medit.xml.h:16
+#: src/mooutils/mooaccelprefs.cpp:882 src/mooutils/moofiledialog.cpp:292
+msgid "_Help"
+msgstr "ヘルプ(_H)"
 
 #: src/mooapp/mooapp.cpp:263
 msgid "Report a Bug..."
 msgstr "バグを報告..."
+
+#: src/mooapp/mooapp.cpp:268 src/mooapp/mooapp.cpp:270
+msgid "Quit"
+msgstr "終了(Q)"
+
+#: src/mooapp/mooapp.cpp:269
+msgid "_Quit"
+msgstr "終了(_Q)"
 
 #: src/mooapp/mooapp.cpp:1035
 msgid "Checking for unsaved documents"
@@ -386,7 +410,7 @@ msgstr "列"
 #: src/mooutils/moofiledialog.cpp:280 src/mooutils/moofontsel.cpp:1309
 #: src/mooutils/moohistorymgr.cpp:1667 src/plugins/ui/moofileselector.ui:56
 #: src/plugins/ui/moofileselector.ui:136 src/plugins/ui/moofind.ui:141
-#: src/plugins/ui/moogrep.ui:196 src/plugins/moofileselector.cpp:1144
+#: src/plugins/ui/moogrep.ui:196 src/plugins/moofileselector.cpp:1145
 #: src/plugins/lsp/lsp-edits.cpp:368
 msgid "_Cancel"
 msgstr "キャンセル(_C)"
@@ -501,7 +525,8 @@ msgstr "検索するテキスト(_T)"
 msgid "Regular e_xpression"
 msgstr "正規表現(_X)"
 
-#: src/mooedit/ui/mootextfind.ui:84 src/plugins/moofind.cpp:1045
+#: src/mooedit/ui/mootextfind.ui:84 src/mooedit/mooeditwindow.cpp:555
+#: src/mooedit/mooeditwindow.cpp:557 src/plugins/moofind.cpp:1045
 msgid "Find"
 msgstr "検索"
 
@@ -541,8 +566,9 @@ msgstr "カーソルから(_U)"
 msgid "_Whole words only"
 msgstr "完全に一致する単語のみ(_W)"
 
-#: src/mooedit/ui/mootextfind.ui:306 src/mooedit/mootextfind.cpp:164
-#: src/plugins/ui/moofind.ui:151 src/plugins/ui/moogrep.ui:206
+#: src/mooedit/ui/mootextfind.ui:306 src/mooedit/mooeditwindow.cpp:556
+#: src/mooedit/mootextfind.cpp:164 src/plugins/ui/moofind.ui:151
+#: src/plugins/ui/moogrep.ui:206
 msgid "_Find"
 msgstr "検索(_F)"
 
@@ -613,23 +639,85 @@ msgstr "ツール(_T)"
 msgid "_Window"
 msgstr "ウィンドウ(_W)"
 
-#. menu item label
-#: src/mooedit/medit.xml.h:16 src/mooutils/mooaccelprefs.cpp:882
-#: src/mooutils/moofiledialog.cpp:292
-msgid "_Help"
-msgstr "ヘルプ(_H)"
+#: src/mooedit/mooeditaction-factory.cpp:568
+#: src/mooedit/mooeditaction-factory.cpp:570 src/mooutils/moowindow.cpp:334
+#: src/mooutils/moowindow.cpp:336
+msgid "Undo"
+msgstr "元に戻す(U)"
 
-#: src/mooedit/mooeditaction-factory.cpp:622
+#: src/mooedit/mooeditaction-factory.cpp:569 src/mooutils/mooentry.cpp:534
+#: src/mooutils/moowindow.cpp:335
+msgid "_Undo"
+msgstr "元に戻す(_U)"
+
+#: src/mooedit/mooeditaction-factory.cpp:578
+#: src/mooedit/mooeditaction-factory.cpp:580 src/mooutils/moowindow.cpp:344
+#: src/mooutils/moowindow.cpp:346
+msgid "Redo"
+msgstr "やり直す(R)"
+
+#: src/mooedit/mooeditaction-factory.cpp:579 src/mooutils/mooentry.cpp:527
+#: src/mooutils/moowindow.cpp:345
+msgid "_Redo"
+msgstr "やり直す(_R)"
+
+#: src/mooedit/mooeditaction-factory.cpp:588
+#: src/moofileview/moofileview.cpp:1284 src/mooutils/moowindow.cpp:285
+#: src/mooutils/moowindow.cpp:287
+msgid "Cut"
+msgstr "切り取り(T)"
+
+#: src/mooedit/mooeditaction-factory.cpp:589
+#: src/moofileview/moofileview.cpp:1283 src/mooutils/moowindow.cpp:286
+msgid "Cu_t"
+msgstr "切り取り(_T)"
+
+#: src/mooedit/mooeditaction-factory.cpp:597
+#: src/moofileview/moofileview.cpp:1295 src/mooutils/moowindow.cpp:295
+#: src/mooutils/moowindow.cpp:297
+msgid "Copy"
+msgstr "コピー(C)"
+
+#: src/mooedit/mooeditaction-factory.cpp:598
+#: src/moofileview/moofileview.cpp:1294 src/moofileview/moofileview.cpp:6240
+#: src/mooutils/moowindow.cpp:296 src/plugins/terminal/terminal-plugin.cpp:580
+msgid "_Copy"
+msgstr "コピー(_C)"
+
+#: src/mooedit/mooeditaction-factory.cpp:606
+#: src/moofileview/moofileview.cpp:1306 src/mooutils/moowindow.cpp:305
+#: src/mooutils/moowindow.cpp:307
+msgid "Paste"
+msgstr "貼り付け(P)"
+
+#: src/mooedit/mooeditaction-factory.cpp:607
+#: src/moofileview/moofileview.cpp:1305 src/mooutils/moowindow.cpp:306
+#: src/plugins/terminal/terminal-plugin.cpp:585
+msgid "_Paste"
+msgstr "貼り付け(_P)"
+
+#: src/mooedit/mooeditaction-factory.cpp:614
+#: src/mooedit/mooeditaction-factory.cpp:616 src/mooutils/moowindow.cpp:324
+#: src/mooutils/moowindow.cpp:326
+msgid "Select All"
+msgstr "すべて選択(A)"
+
+#: src/mooedit/mooeditaction-factory.cpp:615 src/mooutils/moowindow.cpp:325
+msgid "Select _All"
+msgstr "すべて選択(_A)"
+
+#: src/mooedit/mooeditaction-factory.cpp:625
 msgid "_Insert Unicode Control Character"
 msgstr "Unicode 制御文字の挿入(_I)"
 
-#: src/mooedit/mooeditdialogs.cpp:60 src/moofileview/moobookmarkmgr.cpp:1462
+#: src/mooedit/mooeditdialogs.cpp:60 src/mooedit/mooeditwindow.cpp:447
+#: src/moofileview/moobookmarkmgr.cpp:1462 src/plugins/moofileselector.cpp:624
 msgid "Open"
 msgstr "開く"
 
-#: src/mooedit/mooeditdialogs.cpp:127 src/moofileview/ui/moofileview-drop.ui:5
-#: src/plugins/ui/moofileselector.ui:4 src/plugins/moofileselector.cpp:904
-#: src/plugins/moofileselector.cpp:929
+#: src/mooedit/mooeditdialogs.cpp:127 src/mooedit/mooeditwindow.cpp:488
+#: src/moofileview/ui/moofileview-drop.ui:5 src/plugins/ui/moofileselector.ui:4
+#: src/plugins/moofileselector.cpp:905 src/plugins/moofileselector.cpp:930
 msgid "Save As"
 msgstr "別名で保存"
 
@@ -795,6 +883,14 @@ msgstr "最近使ったファイルを開くダイアログ"
 msgid "Open Recent|_More..."
 msgstr "詳細(_M)..."
 
+#: src/mooedit/mooeditor.cpp:595
+msgid "New Window"
+msgstr ""
+
+#: src/mooedit/mooeditor.cpp:596 src/mooutils/moostock.cpp:36
+msgid "New _Window"
+msgstr "新規ウィンドウ(_W)"
+
 #: src/mooedit/mooeditor.cpp:597
 msgid "Open new editor window"
 msgstr "新規エディターウィンドウを開く"
@@ -878,6 +974,16 @@ msgstr "オプション"
 msgid "Editor"
 msgstr "エディタ"
 
+#: src/mooedit/mooeditwindow.cpp:438
+#: src/moofileview/ui/moobookmark-editor.ui:108
+#: src/plugins/ui/moofileselector-prefs.ui:197
+msgid "New"
+msgstr "新規"
+
+#: src/mooedit/mooeditwindow.cpp:439
+msgid "_New"
+msgstr "新規(_N)"
+
 #: src/mooedit/mooeditwindow.cpp:440
 msgid "Create new document"
 msgstr "新規ドキュメントを作成"
@@ -899,6 +1005,16 @@ msgstr "再読込"
 msgid "Reload document"
 msgstr "ドキュメントを再読込"
 
+#: src/mooedit/mooeditwindow.cpp:478 src/mooedit/mooeditwindow.cpp:480
+msgid "Save"
+msgstr "保存(S)"
+
+#: src/mooedit/mooeditwindow.cpp:479 src/mooutils/moodialogs.cpp:437
+#: src/mooutils/moofiledialog.cpp:366
+#: src/plugins/usertools/ui/moousertools.ui:212
+msgid "_Save"
+msgstr "保存(_S)"
+
 #: src/mooedit/mooeditwindow.cpp:489
 msgid "Save _As..."
 msgstr "別名で保存(_A)..."
@@ -906,6 +1022,10 @@ msgstr "別名で保存(_A)..."
 #: src/mooedit/mooeditwindow.cpp:490
 msgid "Save as..."
 msgstr "別名で保存..."
+
+#: src/mooedit/mooeditwindow.cpp:498
+msgid "Close"
+msgstr "閉じる(C)"
 
 #: src/mooedit/mooeditwindow.cpp:500
 msgid "Close document"
@@ -990,6 +1110,14 @@ msgstr "前を検索(_P)"
 #: src/mooedit/mooeditwindow.cpp:579
 msgid "Find previous"
 msgstr "前を検索"
+
+#: src/mooedit/mooeditwindow.cpp:588 src/mooedit/mooeditwindow.cpp:590
+msgid "Find and Replace"
+msgstr "検索して置換(R)"
+
+#: src/mooedit/mooeditwindow.cpp:589 src/mooedit/mootextfind.cpp:158
+msgid "Find and _Replace"
+msgstr "検索して置換(_R)"
 
 #: src/mooedit/mooeditwindow.cpp:599
 msgid "Find Current Word"
@@ -1111,6 +1239,14 @@ msgstr "垂直に表示を分割"
 msgid "Focus Next Split View"
 msgstr "次の分割表示にフォーカス"
 
+#: src/mooedit/mooeditwindow.cpp:728 src/mooedit/mooeditwindow.cpp:730
+msgid "Stop"
+msgstr "停止(S)"
+
+#: src/mooedit/mooeditwindow.cpp:729
+msgid "_Stop"
+msgstr "停止(_S)"
+
 #: src/mooedit/mooeditwindow.cpp:766
 msgid "Toggle Bookmark"
 msgstr "ブックマークを切り替え"
@@ -1146,6 +1282,16 @@ msgstr "コメントをつける"
 #: src/mooedit/mooeditwindow.cpp:804
 msgid "Uncomment"
 msgstr "コメントを外す"
+
+#: src/mooedit/mooeditwindow.cpp:811 src/mooedit/mooeditwindow.cpp:812
+#: src/mooedit/mooeditwindow.cpp:813
+msgid "Increase Indent"
+msgstr "インデントを増やす"
+
+#: src/mooedit/mooeditwindow.cpp:821 src/mooedit/mooeditwindow.cpp:822
+#: src/mooedit/mooeditwindow.cpp:823
+msgid "Decrease Indent"
+msgstr "インデントを減らす"
 
 #: src/mooedit/mooeditwindow.cpp:831
 msgid "Duplicate Line"
@@ -1223,6 +1369,18 @@ msgstr "ページ設定(_E)"
 #: src/mooedit/mooeditwindow.cpp:893
 msgid "Page Setup..."
 msgstr "ページ設定..."
+
+#: src/mooedit/mooeditwindow.cpp:899 src/mooedit/mooeditwindow.cpp:901
+msgid "Print Preview"
+msgstr "印刷プレビュー(V)"
+
+#: src/mooedit/mooeditwindow.cpp:900
+msgid "Print Pre_view"
+msgstr "印刷プレビュー(_V)"
+
+#: src/mooedit/mooeditwindow.cpp:908
+msgid "Print"
+msgstr "印刷(P)"
 
 #: src/mooedit/mooeditwindow.cpp:909 src/mooedit/mooeditwindow.cpp:910
 msgid "Print..."
@@ -1399,10 +1557,6 @@ msgctxt "plugin-prefs-column"
 msgid "Plugin"
 msgstr "プラグイン"
 
-#: src/mooedit/mootextfind.cpp:158
-msgid "Find and _Replace"
-msgstr "検索して置換(_R)"
-
 #: src/mooedit/mootextfind.cpp:159
 msgctxt "Dialog title"
 msgid "Replace"
@@ -1465,11 +1619,6 @@ msgstr "パス"
 msgid "Add bookmark"
 msgstr "ブックマークを追加"
 
-#: src/moofileview/ui/moobookmark-editor.ui:108
-#: src/plugins/ui/moofileselector-prefs.ui:197
-msgid "New"
-msgstr "新規"
-
 #: src/moofileview/ui/moobookmark-editor.ui:128
 msgid "Add separator"
 msgstr "セパレーターを追加"
@@ -1482,8 +1631,8 @@ msgstr "セパレーターを追加"
 msgid "Delete selected items"
 msgstr "選択されたアイテムを削除"
 
-#: src/moofileview/ui/moobookmark-editor.ui:174
-#: src/plugins/ui/moofileselector-prefs.ui:214
+#: src/moofileview/ui/moobookmark-editor.ui:174 src/mooutils/moowindow.cpp:315
+#: src/mooutils/moowindow.cpp:317 src/plugins/ui/moofileselector-prefs.ui:214
 msgid "Delete"
 msgstr "削除"
 
@@ -1517,7 +1666,7 @@ msgstr "パス"
 msgid "Folder"
 msgstr ""
 
-#: src/moofileview/moobookmarkmgr.cpp:1455
+#: src/moofileview/moobookmarkmgr.cpp:1455 src/moofileview/moofileview.cpp:1186
 msgid "Home"
 msgstr "ホーム"
 
@@ -1553,15 +1702,47 @@ msgstr "ファイル"
 msgid "Bookmark"
 msgstr ""
 
-#: src/moofileview/moofileview.cpp:1136 src/plugins/moofileselector.cpp:638
-#: src/plugins/moofileselector.cpp:639 src/plugins/moofileselector.cpp:1286
+#: src/moofileview/moofileview.cpp:1136 src/plugins/moofileselector.cpp:639
+#: src/plugins/moofileselector.cpp:640 src/plugins/moofileselector.cpp:1287
 #: src/plugins/moofileselector-prefs.cpp:70
 msgid "File Selector"
 msgstr "ファイルセレクター"
 
+#: src/moofileview/moofileview.cpp:1153
+msgid "_Up"
+msgstr "上へ(_U)"
+
 #: src/moofileview/moofileview.cpp:1154
 msgid "Go to parent folder"
 msgstr "親フォルダへ移動"
+
+#: src/moofileview/moofileview.cpp:1163
+msgid "_Back"
+msgstr "戻る(_B)"
+
+#: src/moofileview/moofileview.cpp:1164
+msgid "Back"
+msgstr "戻る(B)"
+
+#: src/moofileview/moofileview.cpp:1174
+msgid "_Forward"
+msgstr "進む(_F)"
+
+#: src/moofileview/moofileview.cpp:1175
+msgid "Forward"
+msgstr "進む(F)"
+
+#: src/moofileview/moofileview.cpp:1185
+msgid "_Home"
+msgstr "ホーム(_H)"
+
+#: src/moofileview/moofileview.cpp:1196 src/mooutils/moostock.cpp:35
+msgid "_New Folder"
+msgstr "新規フォルダー(_N)"
+
+#: src/moofileview/moofileview.cpp:1197
+msgid "New Folder"
+msgstr ""
 
 #: src/moofileview/moofileview.cpp:1204 src/moofileview/moofileview.cpp:3370
 msgid "Delete..."
@@ -1586,6 +1767,15 @@ msgstr "大文字小文字を区別して整列"
 #: src/moofileview/moofileview.cpp:1239 src/moofileview/moofileview.cpp:1240
 msgid "Show Folders First"
 msgstr "最初にフォルダーを表示"
+
+#: src/moofileview/moofileview.cpp:1246
+#: src/plugins/terminal/terminal-plugin.cpp:606
+msgid "_Properties"
+msgstr "プロパティ(_P)"
+
+#: src/moofileview/moofileview.cpp:1247
+msgid "Properties"
+msgstr "プロパティ(P)"
 
 #. Menubar
 #: src/moofileview/moofileview.cpp:1257 src/moofileview/moofileview.cpp:1258
@@ -1630,7 +1820,7 @@ msgstr "ファイル %s を削除しますか？"
 msgid "Delete selected files?"
 msgstr "選択されたファイルを削除しますか？"
 
-#: src/moofileview/moofileview.cpp:3253
+#: src/moofileview/moofileview.cpp:3253 src/mooutils/moowindow.cpp:316
 msgid "_Delete"
 msgstr "削除(_D)"
 
@@ -1721,11 +1911,6 @@ msgstr "'%s' へのリンクを作成できませんでした"
 msgid "Move"
 msgstr "移動"
 
-#: src/moofileview/moofileview.cpp:6240
-#: src/plugins/terminal/terminal-plugin.cpp:580
-msgid "_Copy"
-msgstr "コピー(_C)"
-
 #: src/moofileview/moofileview.cpp:6242 src/mooutils/moostock.cpp:32
 msgid "Link"
 msgstr "リンク"
@@ -1810,11 +1995,6 @@ msgstr "保存しない場合、変更は破棄されます"
 #: src/mooutils/moodialogs.cpp:435
 msgid "_Discard"
 msgstr "無効(_D)"
-
-#: src/mooutils/moodialogs.cpp:437 src/mooutils/moofiledialog.cpp:366
-#: src/plugins/usertools/ui/moousertools.ui:212
-msgid "_Save"
-msgstr "保存(_S)"
 
 #. Translators: 012345 denotes order in which character encoding
 #. groups should appear, e.g. 543210 means inverse order.
@@ -2087,14 +2267,6 @@ msgctxt "insert-special-char"
 msgid "Tab"
 msgstr "タブ"
 
-#: src/mooutils/mooentry.cpp:527
-msgid "_Redo"
-msgstr "やり直す(_R)"
-
-#: src/mooutils/mooentry.cpp:534
-msgid "_Undo"
-msgstr "元に戻す(_U)"
-
 #. label of Insert Special Character submenu in text entry context menu
 #: src/mooutils/mooentry.cpp:551
 msgctxt "insert-special-char"
@@ -2102,7 +2274,7 @@ msgid "Insert Special Character"
 msgstr "特殊文字を挿入"
 
 #: src/mooutils/moofiledialog.cpp:355 src/mooutils/moohistorymgr.cpp:1668
-#: src/plugins/moofilelist.cpp:2015
+#: src/plugins/moofilelist.cpp:2015 src/plugins/moofileselector.cpp:623
 msgid "_Open"
 msgstr "開く(_O)"
 
@@ -2164,17 +2336,9 @@ msgstr "張りつける"
 msgid "Keep on top"
 msgstr "トップを維持する"
 
-#: src/mooutils/moostock.cpp:34 src/plugins/moofileselector.cpp:1130
+#: src/mooutils/moostock.cpp:34 src/plugins/moofileselector.cpp:1131
 msgid "Save Copy"
 msgstr "複製を保存"
-
-#: src/mooutils/moostock.cpp:35
-msgid "_New Folder"
-msgstr "新規フォルダー(_N)"
-
-#: src/mooutils/moostock.cpp:36
-msgid "New _Window"
-msgstr "新規ウィンドウ(_W)"
 
 #. This is error message in file selector when rm
 #. fails for some strange reason
@@ -2361,7 +2525,7 @@ msgstr "フォルダー '%s' 内にファイルを作成"
 msgid "Could not create file '%s'"
 msgstr "ファイル '%s' を作成できませんでした"
 
-#: src/plugins/moofileselector.cpp:431 src/plugins/moofileselector.cpp:815
+#: src/plugins/moofileselector.cpp:431 src/plugins/moofileselector.cpp:816
 #, c-format
 msgid ""
 "Could not convert '%s' to filename encoding. Please consider simpler name, "
@@ -2375,49 +2539,53 @@ msgstr ""
 msgid "File '%s' already exists"
 msgstr "ファイル '%s' は既に存在しています"
 
-#: src/plugins/moofileselector.cpp:603
+#: src/plugins/moofileselector.cpp:602
+msgid "_Jump to"
+msgstr "移動(_J)"
+
+#: src/plugins/moofileselector.cpp:604
 msgid "Go to current document directory"
 msgstr "現在のドキュメントディレクトリーに移動"
 
-#: src/plugins/moofileselector.cpp:615 src/plugins/moofileselector.cpp:616
+#: src/plugins/moofileselector.cpp:616 src/plugins/moofileselector.cpp:617
 msgid "New File..."
 msgstr "新規ファイル..."
 
-#: src/plugins/moofileselector.cpp:814
+#: src/plugins/moofileselector.cpp:815
 #, c-format
 msgid "Could not save file as '%s'"
 msgstr "ファイルを '%s' として保存できませんでした"
 
-#: src/plugins/moofileselector.cpp:949
+#: src/plugins/moofileselector.cpp:950
 msgid "Save Copy As"
 msgstr "別名で保存"
 
-#: src/plugins/moofileselector.cpp:975
+#: src/plugins/moofileselector.cpp:976
 msgid "Rename To"
 msgstr "名称変更"
 
 #. no freedesktop icon for move
-#: src/plugins/moofileselector.cpp:1112
+#: src/plugins/moofileselector.cpp:1113
 msgid "Move Here"
 msgstr "ここに移動"
 
-#: src/plugins/moofileselector.cpp:1113
+#: src/plugins/moofileselector.cpp:1114
 msgid "Move/Rename..."
 msgstr "移動/リネーム..."
 
-#: src/plugins/moofileselector.cpp:1121
+#: src/plugins/moofileselector.cpp:1122
 msgid "Save Here"
 msgstr "ここに保存"
 
-#: src/plugins/moofileselector.cpp:1122
+#: src/plugins/moofileselector.cpp:1123
 msgid "Save As..."
 msgstr "別名で保存..."
 
-#: src/plugins/moofileselector.cpp:1131
+#: src/plugins/moofileselector.cpp:1132
 msgid "Save Copy As..."
 msgstr "コピーを保存..."
 
-#: src/plugins/moofileselector.cpp:1287
+#: src/plugins/moofileselector.cpp:1288
 msgid "File selector pane for editor window"
 msgstr "エディターウィンドウのためのファイルセレクターペイン"
 
@@ -3129,10 +3297,6 @@ msgstr ""
 msgid "Terminal"
 msgstr "端末"
 
-#: src/plugins/terminal/terminal-plugin.cpp:585
-msgid "_Paste"
-msgstr "貼り付け(_P)"
-
 #: src/plugins/terminal/terminal-plugin.cpp:591
 msgid "“cd” to current file directory"
 msgstr "現在のファイルのディレクトリへ「cd」"
@@ -3140,10 +3304,6 @@ msgstr "現在のファイルのディレクトリへ「cd」"
 #: src/plugins/terminal/terminal-plugin.cpp:598
 msgid "“pushd” to current file directory"
 msgstr "現在のファイルのディレクトリへ「pushd」"
-
-#: src/plugins/terminal/terminal-plugin.cpp:606
-msgid "_Properties"
-msgstr "プロパティ(_P)"
 
 #: src/plugins/terminal/terminal-plugin.cpp:612
 #: src/plugins/terminal/ui/terminal-prefs.ui:68

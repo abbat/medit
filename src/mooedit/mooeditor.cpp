@@ -592,10 +592,10 @@ add_new_window_action (void)
 
     if (!moo_window_class_find_action (klass, "NewWindow"))
         moo_window_class_new_action (klass, "NewWindow", NULL,
-                                     "display-name", MOO_STOCK_NEW_WINDOW,
-                                     "label", MOO_STOCK_NEW_WINDOW,
+                                     "display-name", _("New Window"),
+                                     "label", _("New _Window"),
                                      "tooltip", _("Open new editor window"),
-                                     "stock-id", MOO_STOCK_NEW_WINDOW,
+                                     "icon-name", "window-new",
                                      "default-accel", MOO_EDIT_ACCEL_NEW_WINDOW,
                                      "closure-callback", moo_editor_new_window,
                                      "closure-proxy-func", moo_edit_window_get_editor,

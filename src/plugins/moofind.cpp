@@ -241,7 +241,7 @@ find_plugin_init (FindPlugin *plugin)
                                  "label", _("Find In Files"),
                                  "tooltip", _("Find in files"),
                                  "default-accel", MOO_EDIT_ACCEL_FIND_IN_FILES,
-                                 "stock-id", MOO_STOCK_FIND_IN_FILES,
+                                 "icon-name", "edit-find",
                                  "closure-callback", find_in_files_cb,
                                  nullptr);
 
@@ -249,7 +249,7 @@ find_plugin_init (FindPlugin *plugin)
                                  "display-name", _("Find File"),
                                  "label", _("Find File"),
                                  "tooltip", _("Find file"),
-                                 "stock-id", MOO_STOCK_FIND_FILE,
+                                 "icon-name", "edit-find",
                                  "closure-callback", find_file_cb,
                                  nullptr);
 
