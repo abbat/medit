@@ -105,19 +105,61 @@ them.
 
 ## Stage 3 — stock to named icons
 
-- [ ] 3.1 `moostock.cpp`: ship our own icons as an icon theme in the GResource
-  (`gtk_icon_theme_add_resource_path`) and drop the GtkIconFactory/IconSet code and
-  `gtk_icon_theme_add_builtin_icon`.
-- [ ] 3.2 `gtk_image_new_from_stock`, `gtk_image_set_from_stock`,
-  `gtk_widget_render_icon`, `gtk_style_context_lookup_icon_set` →
-  `gtk_image_new_from_icon_name` and `gtk_icon_theme_load_icon`.
-- [ ] 3.3 `GTK_STOCK_*` used as an icon → a freedesktop icon name.
-- [ ] 3.4 `GTK_STOCK_*` used as a button or menu label → our own translatable string
-  (the 2.4 trap applies here too).
-- [ ] 3.5 MooAction's `stock-id` → `icon-name` + `label`. `gtk_stock_lookup` supplied a
-  default label and accelerator; set both explicitly. Dump every action's accelerator
-  before and after and diff the two: a lost default accelerator fails silently.
-- [ ] 3.6 Remove `moostock.h` names that are left unused. Push and CI.
+The callers move first and the factory goes last: `moostock.cpp` registers the
+labels and the icon sets every other step still looks up, so removing it first
+would blank icons and labels all over the UI.
+
+Facts the survey of 2026-10-04 established, so they need not be found again:
+
+- **Accelerators are not at risk.** GtkAction takes a stock item's accelerator
+  only in `gtk_action_group_add_action_with_accel()`; medit adds actions with
+  plain `gtk_action_group_add_action()` and sets its own `default-accel`. What a
+  stock id supplies is the label (`gtkaction.c`, `set_stock_id`) and the image.
+  The before/after accelerator diff in 3.6 is still the check.
+- **One persisted path: bookmarks.** `moobookmarkmgr.cpp` writes
+  `<bookmark icon="…">` under `FileSelector/bookmarks`, with any id from
+  `gtk_stock_list_ids()`. Everything else (pane labels, line marks, prefs pages,
+  usertools, LSP, file selector) is a literal in the tree.
+- **No `.ui` file uses `use_stock` or `stock`.** `mooaccelbutton.ui` names
+  `gtk-cancel`/`gtk-ok` as `icon_name`; `medit.xml` and `moofileview.xml` carry
+  `stock-label`/`icon-stock-id` attributes.
+- **Some `gtk-*` icons exist only in GTK's own factory** — apply, cancel, ok,
+  yes, no, edit, index, preferences, select-color, select-font. They need a
+  freedesktop substitute or no icon, never the user's theme by luck.
+- **Moving labels off GTK's catalog loses GTK's translations** of them; take the
+  existing `gtk30` "Stock label" translations into our `.po` files, as in 2.4.
+- **Unused `moostock.h` ids:** BUILD, CLOSE_PROJECT, COMPILE, DOC_DELETED,
+  DOC_MODIFIED, DOC_MODIFIED_ON_DISK, EXECUTE, MENU, NEW_PROJECT, OPEN_PROJECT,
+  PROJECT_OPTIONS.
+
+- [ ] 3.1 Dialog and button text: `gtk_dialog_add_button`/`gtk_info_bar_add_button`
+  given a `GTK_STOCK_*` → our own `_("_Cancel")`-style string. Also
+  `moofiledialog.cpp`'s `get_string_maybe_stock` goes; callers pass plain titles.
+- [ ] 3.2 Menu items: `_moo_menu_item_new_from_stock()` (`mooutils-misc.cpp`) →
+  a label + icon-name constructor at every caller, then delete it.
+- [ ] 3.3 Images: `gtk_image_*_from_stock` → `_from_icon_name`;
+  `gtk_widget_render_icon` → `gtk_icon_theme_load_icon` (`moolinemark.cpp`,
+  `moofileicon.cpp`); `_moo_window_set_icon_from_stock` →
+  `gtk_window_set_icon_name`; cell renderers' `stock-id` → `icon-name`. Removes
+  `GtkCellRendererPixbuf:stock-id` from `KNOWN_DEPRECATED`.
+- [ ] 3.4 Data fields: `MooPaneLabel.icon_stock_id`, MooPrefsPage `icon-stock-id`,
+  MooLineMark `stock-id`, MooUiXml `stock-id`/`icon-stock-id`/`stock-label` →
+  icon names and labels, with every in-tree caller and the two `.xml` files.
+- [ ] 3.5 Bookmarks: map stock ids to icon names on load (unknown → `folder`),
+  write icon names, build the icon combo from icon names. Test the round trip with
+  an rc file written by the old code.
+- [ ] 3.6 MooAction `stock-id` → `icon-name` + an explicit `label`, then drop
+  `gtk_stock_lookup` from `mooactionbase.cpp`. Four actions have no label of their
+  own: GoToCurrentDocDir (`moofileselector.cpp`), Cut/Copy/Paste
+  (`mooeditaction-factory.cpp`). Dump every action's accelerator before and after
+  and diff the two.
+- [ ] 3.7 `moostock.cpp`: the pixmaps become an icon theme in the GResource
+  (`gtk_icon_theme_add_resource_path`); the factory, the aliases,
+  `gtk_stock_add_static` and `_moo_stock_init` go. Fix `mooaccelbutton.ui`.
+  Removes `GtkButton:use-stock` and `GtkSettings:gtk-button-images` from
+  `KNOWN_DEPRECATED`, if stock buttons were their source.
+- [ ] 3.8 Remove what is left unused in `moostock.h`, or the header. Build with
+  clang too — it flags every `GTK_STOCK_*` macro gcc lets through. Push and CI.
 
 ## Stage 4 — GtkAction
 
