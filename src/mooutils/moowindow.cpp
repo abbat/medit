@@ -423,6 +423,73 @@ moo_window_class_init (MooWindowClass *klass)
 }
 
 
+/* gtk_window_parse_geometry() is deprecated without a replacement, so the
+ * X geometry string "[=][WIDTH{xX}HEIGHT][{+-}XOFF{+-}YOFF]" is parsed here.
+ * A negative offset is measured from the right or bottom edge of the screen.
+ */
+static gboolean
+moo_window_parse_geometry (GtkWindow  *window,
+                           const char *geometry)
+{
+    const char *p = geometry;
+    char *end;
+    long width = 0, height = 0, x = 0, y = 0;
+    gboolean has_size = FALSE, has_pos = FALSE, x_neg = FALSE, y_neg = FALSE;
+
+    if (*p == '=')
+        p++;
+
+    if (g_ascii_isdigit (*p))
+    {
+        width = strtol (p, &end, 10);
+        if ((*end != 'x' && *end != 'X') || !g_ascii_isdigit (end[1]))
+            return FALSE;
+        height = strtol (end + 1, &end, 10);
+        p = end;
+        has_size = TRUE;
+    }
+
+    if (*p == '+' || *p == '-')
+    {
+        x_neg = *p == '-';
+        x = strtol (p + 1, &end, 10);
+        if (end == p + 1 || (*end != '+' && *end != '-'))
+            return FALSE;
+        y_neg = *end == '-';
+        p = end + 1;
+        y = strtol (p, &end, 10);
+        if (end == p)
+            return FALSE;
+        p = end;
+        has_pos = TRUE;
+    }
+
+    if (*p || (!has_size && !has_pos))
+        return FALSE;
+
+    if (has_size)
+        gtk_window_set_default_size (window, width, height);
+
+    if (has_pos)
+    {
+        GdkMonitor *monitor = gdk_display_get_primary_monitor (gdk_display_get_default ());
+        GdkRectangle area = { 0, 0, 0, 0 };
+
+        if (monitor)
+            gdk_monitor_get_workarea (monitor, &area);
+
+        if (x_neg)
+            x = area.x + area.width - width - x;
+        if (y_neg)
+            y = area.y + area.height - height - y;
+
+        gtk_window_move (window, x, y);
+    }
+
+    return TRUE;
+}
+
+
 static GObject *
 moo_window_constructor (GType                  type,
                         guint                  n_props,
@@ -475,7 +542,7 @@ moo_window_constructor (GType                  type,
 
     if (default_geometry && *default_geometry)
     {
-        if (!gtk_window_parse_geometry (GTK_WINDOW (window), default_geometry))
+        if (!moo_window_parse_geometry (GTK_WINDOW (window), default_geometry))
             g_printerr (_("Could not parse geometry string '%s'\n"), default_geometry);
     }
     else if (moo_prefs_get_bool (setting (window, PREFS_REMEMBER_SIZE)))
