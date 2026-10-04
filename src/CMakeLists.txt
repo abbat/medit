@@ -23,13 +23,15 @@ add_custom_command(
 
 # every .ui, at any depth: plugins keep theirs one level deeper
 file(GLOB_RECURSE MOO_UI_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/*.ui")
+# the pixbufs in the bundle: editing one has to rebuild it
+file(GLOB MOO_PIXMAPS CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/mooutils/pixmaps/*.png")
 
 add_custom_command(
     OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/resources.cpp"
     COMMAND ${GLIB_COMPILE_RESOURCES} "${CMAKE_CURRENT_SOURCE_DIR}/resources.xml"
             --sourcedir "${CMAKE_CURRENT_SOURCE_DIR}"
             --target "${CMAKE_CURRENT_BINARY_DIR}/resources.cpp" --generate-source
-    DEPENDS resources.xml ${MOO_UI_FILES} "${CMAKE_SOURCE_DIR}/THANKS"
+    DEPENDS resources.xml ${MOO_UI_FILES} ${MOO_PIXMAPS} "${CMAKE_SOURCE_DIR}/THANKS"
             mooedit/medit.xml mooedit/mooedit.xml moofileview/moofileview.xml
             plugins/lsp/lsp.xml
     COMMENT "Generating resources.cpp"
