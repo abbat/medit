@@ -63,7 +63,7 @@ bare start. Dialogs report more.
 
 - [x] 1.1 Nothing to do (see 0.1).
 - [ ] 1.2 `GdkColor` in `mooedit-tests.cpp` and `mooedit-perf.cpp` → `GdkRGBA`.
-- [ ] 1.3 `gtk_style_context_get_background_color` (`mooiconview.cpp`,
+- [x] 1.3 `gtk_style_context_get_background_color` (`mooiconview.cpp`,
   `mootextview.cpp`, `terminal-colors.cpp`) → `gtk_style_context_get (ctx, state,
   GTK_STYLE_PROPERTY_BACKGROUND_COLOR, &rgba, NULL)`, then free the result.
 - [ ] 1.4 `moofontsel.cpp`: drop `gtk_widget_push/pop_composite_child`. Replace
