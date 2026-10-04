@@ -1549,6 +1549,25 @@ static void     set_pixbuf_size         (MooIconView    *view,
     }
 }
 
+/* The size gtk_cell_renderer_get_size() used to report, which is the
+   minimum one; either output may be NULL. */
+static void
+cell_size (GtkCellRenderer *cell,
+           GtkWidget       *widget,
+           int             *width,
+           int             *height)
+{
+    GtkRequisition size;
+
+    gtk_cell_renderer_get_preferred_size (cell, widget, &size, NULL);
+
+    if (width)
+        *width = size.width;
+    if (height)
+        *height = size.height;
+}
+
+
 
 static void     calculate_pixbuf_size   (MooIconView    *view)
 {
@@ -1590,9 +1609,7 @@ static void     calculate_pixbuf_size   (MooIconView    *view)
     view->priv->pixbuf.func (view, view->priv->pixbuf.cell,
                              view->priv->model, &iter,
                              view->priv->pixbuf.func_data);
-    gtk_cell_renderer_get_size (view->priv->pixbuf.cell,
-                                GTK_WIDGET (view), NULL,
-                                NULL, NULL, &width, &height);
+    cell_size (view->priv->pixbuf.cell, GTK_WIDGET (view), &width, &height);
 
     set_pixbuf_size (view, width, height);
 }
@@ -1633,9 +1650,7 @@ static void     calculate_row_height    (MooIconView    *view)
     view->priv->text.func (view, view->priv->text.cell,
                            view->priv->model, &iter,
                            view->priv->text.func_data);
-    gtk_cell_renderer_get_size (view->priv->text.cell,
-                                GTK_WIDGET (view), NULL,
-                                NULL, NULL, NULL, &height);
+    cell_size (view->priv->text.cell, GTK_WIDGET (view), NULL, &height);
 
     set_text_height (view, height);
 }
@@ -1665,9 +1680,7 @@ static gboolean calculate_column_width  (MooIconView    *view,
             view->priv->text.func (view, view->priv->text.cell,
                                    model, iter,
                                    view->priv->text.func_data);
-            gtk_cell_renderer_get_size (view->priv->text.cell,
-                                        widget, NULL, NULL, NULL,
-                                        &text_width, NULL);
+            cell_size (view->priv->text.cell, widget, &text_width, NULL);
             if (column->width < text_width)
                 column->width = text_width;
 
@@ -2793,9 +2806,7 @@ column_get_path_at_xy (MooIconView        *view,
         view->priv->text.func (view, view->priv->text.cell,
                                view->priv->model, &iter,
                                view->priv->text.func_data);
-        gtk_cell_renderer_get_size (view->priv->text.cell,
-                                    GTK_WIDGET (view), NULL,
-                                    NULL, NULL, &text_width, NULL);
+        cell_size (view->priv->text.cell, GTK_WIDGET (view), &text_width, NULL);
 
         if (x < text_width + pixbuf_width)
         {
@@ -2845,9 +2856,7 @@ get_cell_rect (MooIconView  *view,
         view->priv->text.func (view, view->priv->text.cell,
                                view->priv->model, &iter,
                                view->priv->text.func_data);
-        gtk_cell_renderer_get_size (view->priv->text.cell,
-                                    GTK_WIDGET (view), NULL,
-                                    NULL, NULL, &text_width, NULL);
+        cell_size (view->priv->text.cell, GTK_WIDGET (view), &text_width, NULL);
     }
 
     rect->x = column->offset;
