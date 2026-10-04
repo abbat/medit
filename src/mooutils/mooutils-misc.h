@@ -102,6 +102,10 @@ void       _moo_menu_item_set_label         (GtkWidget      *menu_item,
 void       _moo_widget_set_tooltip          (GtkWidget      *widget,
                                              const char     *tip);
 
+char      *_moo_font_description_to_css     (const PangoFontDescription *desc);
+void       _moo_widget_set_font             (GtkWidget      *widget,
+                                             const PangoFontDescription *desc);
+
 typedef struct {
     const char *text;
     gsize len;

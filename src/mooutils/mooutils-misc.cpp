@@ -482,7 +482,7 @@ moo_log_window_new (void)
 
     if (font)
     {
-        gtk_widget_modify_font (GTK_WIDGET (log->textview), font);
+        _moo_widget_set_font (GTK_WIDGET (log->textview), font);
         pango_font_description_free (font);
     }
 
@@ -1532,6 +1532,100 @@ _moo_widget_set_tooltip (GtkWidget  *widget,
         gtk_tool_item_set_tooltip_text (GTK_TOOL_ITEM (widget), tip);
     else
         gtk_widget_set_tooltip_text (widget, tip);
+}
+
+
+/* What gtk_widget_modify_font() set, as a style sheet: the fields the font
+   description has set become the matching properties, and the rest is left to
+   the theme. The size is in points, as Pango has it, unless it is absolute. */
+char *
+_moo_font_description_to_css (const PangoFontDescription *desc)
+{
+    g_return_val_if_fail (desc != NULL, NULL);
+
+    PangoFontMask mask = pango_font_description_get_set_fields (desc);
+    GString *css = g_string_new ("* {");
+
+    if (mask & PANGO_FONT_MASK_FAMILY)
+    {
+        char **families = g_strsplit (pango_font_description_get_family (desc), ",", -1);
+
+        g_string_append (css, " font-family:");
+        for (char **p = families; *p; ++p)
+        {
+            g_strstrip (*p);
+            g_string_append_printf (css, "%s \"%s\"", p == families ? "" : ",", *p);
+        }
+        g_string_append_c (css, ';');
+        g_strfreev (families);
+    }
+
+    if (mask & PANGO_FONT_MASK_SIZE)
+    {
+        char buf[G_ASCII_DTOSTR_BUF_SIZE];
+        g_ascii_formatd (buf, sizeof buf, "%g",
+                         (double) pango_font_description_get_size (desc) / PANGO_SCALE);
+        g_string_append_printf (css, " font-size: %s%s;", buf,
+                                pango_font_description_get_size_is_absolute (desc) ? "px" : "pt");
+    }
+
+    if (mask & PANGO_FONT_MASK_WEIGHT)
+        g_string_append_printf (css, " font-weight: %d;",
+                                CLAMP ((int) pango_font_description_get_weight (desc), 100, 900));
+
+    if (mask & PANGO_FONT_MASK_STYLE)
+    {
+        const char *style = "normal";
+
+        switch (pango_font_description_get_style (desc))
+        {
+            case PANGO_STYLE_ITALIC:  style = "italic"; break;
+            case PANGO_STYLE_OBLIQUE: style = "oblique"; break;
+            case PANGO_STYLE_NORMAL:  break;
+        }
+
+        g_string_append_printf (css, " font-style: %s;", style);
+    }
+
+    g_string_append (css, " }");
+    return g_string_free (css, FALSE);
+}
+
+/* The replacement for gtk_widget_modify_font(): one provider per widget, kept
+   on the widget and reloaded on every change, and removed again for NULL. */
+void
+_moo_widget_set_font (GtkWidget                  *widget,
+                      const PangoFontDescription *desc)
+{
+    static const char *key = "moo-font-css-provider";
+
+    g_return_if_fail (GTK_IS_WIDGET (widget));
+
+    GtkStyleContext *context = gtk_widget_get_style_context (widget);
+    GtkCssProvider *provider = (GtkCssProvider*) g_object_get_data (G_OBJECT (widget), key);
+
+    if (!desc)
+    {
+        if (provider)
+        {
+            gtk_style_context_remove_provider (context, GTK_STYLE_PROVIDER (provider));
+            g_object_set_data (G_OBJECT (widget), key, NULL);
+        }
+
+        return;
+    }
+
+    g_autofree char *css = _moo_font_description_to_css (desc);
+
+    if (!provider)
+    {
+        provider = gtk_css_provider_new ();
+        g_object_set_data_full (G_OBJECT (widget), key, provider, g_object_unref);
+        gtk_style_context_add_provider (context, GTK_STYLE_PROVIDER (provider),
+                                        GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+    }
+
+    gtk_css_provider_load_from_data (provider, css, -1, NULL);
 }
 
 

@@ -967,7 +967,7 @@ moo_text_view_set_font_from_string (MooTextView *view,
     if (font)
         font_desc = pango_font_description_from_string (font);
 
-    gtk_widget_modify_font (GTK_WIDGET (view), font_desc);
+    _moo_widget_set_font (GTK_WIDGET (view), font_desc);
 
     if (font_desc)
         pango_font_description_free (font_desc);

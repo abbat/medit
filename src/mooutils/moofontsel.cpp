@@ -35,6 +35,7 @@
 
 #include "mooutils/moofontsel.h"
 #include "mooutils/mooi18n.h"
+#include "mooutils/mooutils-misc.h"
 
 #define P_(String) dgettext ("gtk30-properties", String)
 
@@ -1052,21 +1053,17 @@ moo_font_selection_get_font_description (MooFontSelection *fontsel)
 static void
 moo_font_selection_update_preview (MooFontSelection *fontsel)
 {
-  GtkRcStyle *rc_style;
   gint new_height;
   GtkRequisition old_requisition;
+  PangoFontDescription *font_desc;
   GtkWidget *preview_entry = fontsel->preview_entry;
   const gchar *text;
 
-  gtk_widget_get_child_requisition (preview_entry, &old_requisition);
+  gtk_widget_get_preferred_size (preview_entry, &old_requisition, NULL);
 
-  rc_style = gtk_rc_style_new ();
-  rc_style->font_desc = moo_font_selection_get_font_description (fontsel);
-
-  gtk_widget_modify_style (preview_entry, rc_style);
-  g_object_unref (rc_style);
-
-  gtk_widget_get_preferred_size (preview_entry, NULL, NULL);
+  font_desc = moo_font_selection_get_font_description (fontsel);
+  _moo_widget_set_font (preview_entry, font_desc);
+  pango_font_description_free (font_desc);
 
   /* We don't ever want to be over MAX_PREVIEW_HEIGHT pixels high. */
   GtkRequisition req;
@@ -1303,9 +1300,6 @@ moo_font_selection_dialog_init (MooFontSelectionDialog *fontseldiag)
 
   gtk_box_set_spacing (GTK_BOX (gtk_dialog_get_content_area (dialog)), 2); /* 2 * 5 + 2 = 12 */
 
-  gtk_container_set_border_width (GTK_CONTAINER (gtk_dialog_get_action_area (dialog)), 5);
-  gtk_box_set_spacing (GTK_BOX (gtk_dialog_get_action_area (dialog)), 6);
-
   gtk_widget_push_composite_child ();
 
   gtk_window_set_resizable (GTK_WINDOW (fontseldiag), TRUE);
@@ -1318,12 +1312,14 @@ moo_font_selection_dialog_init (MooFontSelectionDialog *fontseldiag)
   gtk_box_pack_start (GTK_BOX (fontseldiag->main_vbox),
                       fontseldiag->fontsel, TRUE, TRUE, 0);
 
-  /* Create the action area */
-  fontseldiag->action_area = gtk_dialog_get_action_area (dialog);
-
   fontseldiag->cancel_button = gtk_dialog_add_button (dialog,
                                                       GTK_STOCK_CANCEL,
                                                       GTK_RESPONSE_CANCEL);
+
+  /* The action area: the box the dialog put its first button in. */
+  fontseldiag->action_area = gtk_widget_get_parent (fontseldiag->cancel_button);
+  gtk_container_set_border_width (GTK_CONTAINER (fontseldiag->action_area), 5);
+  gtk_box_set_spacing (GTK_BOX (fontseldiag->action_area), 6);
 
   fontseldiag->apply_button = gtk_dialog_add_button (dialog,
                                                      GTK_STOCK_APPLY,
@@ -1751,7 +1747,7 @@ moo_font_button_realize (GtkWidget *widget)
   if (font_button->priv->use_font)
     moo_font_button_label_use_font (font_button);
   else
-    gtk_widget_set_style (font_button->priv->font_label, NULL);
+    _moo_widget_set_font (font_button->priv->font_label, NULL);
 }
 
 
@@ -1875,7 +1871,7 @@ moo_font_button_set_use_font (MooFontButton *font_button,
           if (use_font)
             moo_font_button_label_use_font (font_button);
           else
-            gtk_widget_set_style (font_button->priv->font_label, NULL);
+            _moo_widget_set_font (font_button->priv->font_label, NULL);
         }
 
      g_object_notify (G_OBJECT (font_button), "use-font");
@@ -2267,7 +2263,7 @@ moo_font_button_label_use_font (MooFontButton *font_button)
     pango_font_description_unset_fields (desc, PANGO_FONT_MASK_SIZE);
 
   if (font_button->priv->font_label)
-    gtk_widget_modify_font (font_button->priv->font_label, desc);
+    _moo_widget_set_font (font_button->priv->font_label, desc);
 
   pango_font_description_free (desc);
 }

@@ -1393,6 +1393,24 @@ convert_from_string (const char *string,
 }
 
 static void
+test_font_description_to_css (void)
+{
+    PangoFontDescription *desc = pango_font_description_from_string ("Foo Bar, Sans Bold Italic 10.5");
+    g_autofree char *css = _moo_font_description_to_css (desc);
+    pango_font_description_free (desc);
+
+    g_assert_cmpstr (css, ==, "* { font-family: \"Foo Bar\", \"Sans\"; font-size: 10.5pt; "
+                              "font-weight: 700; font-style: italic; }");
+
+    desc = pango_font_description_new ();
+    pango_font_description_set_family (desc, "Mono");
+    g_free (css);
+    css = _moo_font_description_to_css (desc);
+    pango_font_description_free (desc);
+    g_assert_cmpstr (css, ==, "* { font-family: \"Mono\"; }");
+}
+
+static void
 test_value_to_string (void)
 {
     GValue src = G_VALUE_INIT;
@@ -2130,6 +2148,7 @@ _moo_add_mooutils_unit_tests (void)
     g_test_add_func ("/mooutils/terminal/colors", test_terminal_color_schemes_memory);
     g_test_add_func ("/mooutils/paned/drop-mask", test_drop_mask);
     g_test_add_func ("/mooutils/file-writer", test_file_writer);
+    g_test_add_func ("/mooutils/font-description-to-css", test_font_description_to_css);
 }
 
 #endif /* MOO_ENABLE_UNIT_TESTS */
