@@ -138,8 +138,8 @@
               <object class="GtkButton" id="button3">
                 <property name="visible">True</property>
                 <property name="can_default">True</property>
-                <property name="label">gtk-cancel</property>
-                <property name="use_stock">True</property>
+                <property name="label" translatable="yes">_Cancel</property>
+                <property name="use_underline">True</property>
                 <property name="focus_on_click">False</property>
               </object>
             </child>
@@ -148,8 +148,8 @@
                 <property name="visible">True</property>
                 <property name="can_default">True</property>
                 <property name="has_default">True</property>
-                <property name="label">gtk-find</property>
-                <property name="use_stock">True</property>
+                <property name="label" translatable="yes">_Find</property>
+                <property name="use_underline">True</property>
                 <property name="focus_on_click">False</property>
               </object>
               <packing>

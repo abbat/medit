@@ -23,7 +23,7 @@
                     <child>
                       <object class="GtkImage" id="icon">
                         <property name="visible">True</property>
-                        <property name="stock">gtk-directory</property>
+                        <property name="icon_name">folder</property>
                         <property name="icon_size">6</property>
                       </object>
                       <packing>
@@ -80,8 +80,8 @@
               <object class="GtkButton" id="cancelbutton1">
                 <property name="visible">True</property>
                 <property name="can_default">True</property>
-                <property name="label">gtk-cancel</property>
-                <property name="use_stock">True</property>
+                <property name="label" translatable="yes">_Cancel</property>
+                <property name="use_underline">True</property>
                 <property name="focus_on_click">False</property>
               </object>
             </child>
@@ -90,8 +90,8 @@
                 <property name="visible">True</property>
                 <property name="can_default">True</property>
                 <property name="has_default">True</property>
-                <property name="label">gtk-ok</property>
-                <property name="use_stock">True</property>
+                <property name="label" translatable="yes">_OK</property>
+                <property name="use_underline">True</property>
                 <property name="focus_on_click">False</property>
               </object>
               <packing>

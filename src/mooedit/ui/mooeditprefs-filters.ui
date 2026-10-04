@@ -73,7 +73,7 @@
                             <child>
                               <object class="GtkImage" id="image1">
                                 <property name="visible">True</property>
-                                <property name="stock">gtk-new</property>
+                                <property name="icon_name">document-new</property>
                               </object>
                             </child>
                           </object>
@@ -92,7 +92,7 @@
                             <child>
                               <object class="GtkImage" id="image2">
                                 <property name="visible">True</property>
-                                <property name="stock">gtk-delete</property>
+                                <property name="icon_name">edit-delete</property>
                               </object>
                             </child>
                           </object>
@@ -110,7 +110,7 @@
                             <child>
                               <object class="GtkImage" id="image3">
                                 <property name="visible">True</property>
-                                <property name="stock">gtk-go-down</property>
+                                <property name="icon_name">go-down</property>
                               </object>
                             </child>
                           </object>
@@ -128,7 +128,7 @@
                             <child>
                               <object class="GtkImage" id="image4">
                                 <property name="visible">True</property>
-                                <property name="stock">gtk-go-up</property>
+                                <property name="icon_name">go-up</property>
                               </object>
                             </child>
                           </object>

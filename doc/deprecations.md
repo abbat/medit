@@ -84,10 +84,11 @@ bare start. Dialogs report more.
 - [x] 2.3 The C++ classes deriving `GtkVBox`/`GtkHBox`/`GtkAlignment`
   (`mooeditprogress`, `mooedittab`, `moofileview`, `mooplugin`, `mooprefspage`, and any
   that 0.1 turns up) → `GtkBox` with the orientation set in `_init`. Screenshot each.
-- [ ] 2.4 `use_stock`/`stock` buttons in `.ui` → `label` with a mnemonic and a `GtkImage`
-  with `icon-name`. **Translation trap:** GTK+'s own domain translated the stock labels.
-  The new strings are ours and must reach `po/`, or the buttons turn English under
-  a Russian locale.
+- [x] 2.4 `use_stock`/`stock` buttons in `.ui` → a translatable `label` with `use_underline`
+  (no image: GTK+3 hides button images by default, so the stock buttons showed none);
+  `GtkImage` `stock` → `icon_name` (each pair probed pixel-identical).
+  **Translation trap:** GTK+'s own domain translated the stock labels. The new strings
+  are ours and carry gtk30's "Stock label" translations, so the buttons read as before.
 - [ ] 2.5 Gate: `tests/lib/runner.py` fails a test on any "is deprecated" diagnostic.
   Push and CI.
 

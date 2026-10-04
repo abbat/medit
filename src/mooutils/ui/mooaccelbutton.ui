@@ -57,7 +57,7 @@ New accelerator...
                     <child>
                       <object class="GtkImage" id="image1">
                         <property name="visible">True</property>
-                        <property name="stock">gtk-cancel</property>
+                        <property name="icon_name">gtk-cancel</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -93,7 +93,7 @@ New accelerator...
                     <child>
                       <object class="GtkImage" id="image2">
                         <property name="visible">True</property>
-                        <property name="stock">gtk-ok</property>
+                        <property name="icon_name">gtk-ok</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>

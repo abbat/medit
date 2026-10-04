@@ -30,11 +30,11 @@
           <object class="GtkButton" id="cancel">
             <property name="hexpand">True</property>
             <property name="vexpand">True</property>
-            <property name="label">gtk-cancel</property>
+            <property name="label" translatable="yes">_Cancel</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
-            <property name="use_stock">True</property>
+            <property name="use_underline">True</property>
             <property name="focus_on_click">False</property>
           </object>
           <packing>
