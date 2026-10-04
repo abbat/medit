@@ -476,7 +476,7 @@ moo_accel_translate_event (GtkWidget       *widget,
     if (widget && gtk_widget_get_realized (GTK_WIDGET (widget)))
         keymap = gdk_keymap_get_for_display (gtk_widget_get_display (widget));
     else
-        keymap = gdk_keymap_get_default ();
+        keymap = gdk_keymap_get_for_display (gdk_display_get_default ());
 
     moo_keymap_translate_keyboard_state (keymap, event->hardware_keycode,
                                          (GdkModifierType) event->state, event->group,
