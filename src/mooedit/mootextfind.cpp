@@ -172,10 +172,6 @@ moo_find_constructor (GType           type,
                             GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                             stock_id, GTK_RESPONSE_OK,
                             nullptr);
-    gtk_dialog_set_alternative_button_order (GTK_DIALOG (find),
-                                             GTK_RESPONSE_OK,
-                                             GTK_RESPONSE_CANCEL,
-                                             -1);
     gtk_dialog_set_default_response (GTK_DIALOG (find), GTK_RESPONSE_OK);
 
     moo_help_connect_keys (GTK_WIDGET (find));
@@ -1320,11 +1316,6 @@ moo_text_view_run_goto_line (GtkTextView *view)
     dialog = GTK_DIALOG (moo_builder_get (builder, "GotoLineDialog"));
     scale = GTK_RANGE (moo_builder_get (builder, "scale"));
     spin = GTK_SPIN_BUTTON (moo_builder_get (builder, "spin"));
-
-    gtk_dialog_set_alternative_button_order (dialog,
-                                             GTK_RESPONSE_OK,
-                                             GTK_RESPONSE_CANCEL,
-                                             -1);
 
     gtk_text_buffer_get_iter_at_mark (buffer, &iter,
                                       gtk_text_buffer_get_insert (buffer));

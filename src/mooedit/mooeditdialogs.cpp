@@ -361,11 +361,6 @@ _moo_edit_save_multiple_changes_dialog (MooEditArray *docs,
 
     gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_YES);
 
-    gtk_dialog_set_alternative_button_order (GTK_DIALOG (dialog),
-                                             GTK_RESPONSE_YES,
-                                             GTK_RESPONSE_NO,
-                                             GTK_RESPONSE_CANCEL, -1);
-
     question = g_strdup_printf (dngettext (GETTEXT_PACKAGE,
                                            /* Translators: number of documents here is always greater than one, so
                                               ignore singular form (which is simply copy of the plural here) */
@@ -461,10 +456,6 @@ moo_edit_question_dialog (MooEdit    *doc,
                             button, GTK_RESPONSE_YES,
                             nullptr);
 
-    gtk_dialog_set_alternative_button_order (GTK_DIALOG (dialog),
-                                             GTK_RESPONSE_YES,
-                                             GTK_RESPONSE_CANCEL,
-                                             -1);
     gtk_dialog_set_default_response (GTK_DIALOG (dialog), default_response);
 
     res = gtk_dialog_run (GTK_DIALOG (dialog));
@@ -560,11 +551,6 @@ _moo_edit_try_encoding_dialog (GFile       *file,
                             GTK_STOCK_OK, GTK_RESPONSE_OK,
                             nullptr);
     gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
-    gtk_dialog_set_alternative_button_order (GTK_DIALOG (dialog),
-                                             GTK_RESPONSE_OK,
-                                             GTK_RESPONSE_CANCEL,
-                                             MOO_RESPONSE_CANCEL_ALL,
-                                             -1);
 
     dialog_response = gtk_dialog_run (GTK_DIALOG (dialog));
 
@@ -724,10 +710,6 @@ _moo_text_search_from_start_dialog (GtkWidget *widget,
                             GTK_STOCK_YES, GTK_RESPONSE_YES,
                             nullptr);
     gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_YES);
-    gtk_dialog_set_alternative_button_order (GTK_DIALOG (dialog),
-                                             GTK_RESPONSE_YES,
-                                             GTK_RESPONSE_CANCEL,
-                                             -1);
 
     response = gtk_dialog_run (GTK_DIALOG (dialog));
     gtk_widget_destroy (dialog);

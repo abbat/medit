@@ -1667,10 +1667,6 @@ moo_history_mgr_create_dialog (MooHistoryMgr   *mgr,
                                           GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                                           GTK_STOCK_OPEN, GTK_RESPONSE_OK,
                                           NULL);
-    gtk_dialog_set_alternative_button_order (GTK_DIALOG (dialog),
-                                             GTK_RESPONSE_OK,
-                                             GTK_RESPONSE_CANCEL,
-                                             -1);
 
     swin = gtk_scrolled_window_new (NULL, NULL);
     gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (swin),

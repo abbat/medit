@@ -363,11 +363,6 @@ moo_overwrite_file_dialog (const char *display_name,
     gtk_widget_show (button);
     gtk_dialog_add_action_widget (GTK_DIALOG (dialog), button, GTK_RESPONSE_YES);
 
-    gtk_dialog_set_alternative_button_order (GTK_DIALOG (dialog),
-                                             GTK_RESPONSE_YES,
-                                             GTK_RESPONSE_CANCEL,
-                                             -1);
-
     gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CANCEL);
 
     moo_window_set_parent (dialog, parent);
@@ -413,9 +408,6 @@ moo_save_changes_dialog (const char *display_name,
         GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
         GTK_STOCK_SAVE, GTK_RESPONSE_YES,
         NULL);
-
-    gtk_dialog_set_alternative_button_order (dialog,
-        GTK_RESPONSE_YES, GTK_RESPONSE_NO, GTK_RESPONSE_CANCEL, -1);
 
     gtk_dialog_set_default_response (dialog, GTK_RESPONSE_YES);
 

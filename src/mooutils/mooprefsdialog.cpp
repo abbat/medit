@@ -137,12 +137,6 @@ moo_prefs_dialog_init (MooPrefsDialog *dialog)
                             GTK_STOCK_OK, GTK_RESPONSE_OK,
                             NULL);
 #if GTK_MINOR_VERSION >= 6
-    gtk_dialog_set_alternative_button_order (GTK_DIALOG (dialog),
-                                             GTK_RESPONSE_HELP,
-                                             GTK_RESPONSE_OK,
-                                             GTK_RESPONSE_CANCEL,
-                                             GTK_RESPONSE_APPLY,
-                                            -1);
 #endif /* GTK_MINOR_VERSION >= 6 */
     gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 

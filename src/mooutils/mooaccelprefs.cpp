@@ -877,10 +877,6 @@ _moo_accel_prefs_dialog_new (MooActionCollection *collection)
                                           GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                                           GTK_STOCK_OK, GTK_RESPONSE_OK,
                                           nullptr);
-    gtk_dialog_set_alternative_button_order (GTK_DIALOG (dialog),
-                                             GTK_RESPONSE_OK,
-                                             GTK_RESPONSE_CANCEL,
-                                             -1);
     gtk_window_set_default_size (GTK_WINDOW (dialog), -1, 400);
 
     page = _moo_accel_prefs_page_new (collection);

@@ -300,11 +300,6 @@ GtkWidget *file_chooser_dialog_new (const char *title,
                                          okbtn, GTK_RESPONSE_OK,
                                          NULL);
 
-    gtk_dialog_set_alternative_button_order (GTK_DIALOG (dialog),
-                                             GTK_RESPONSE_OK,
-                                             GTK_RESPONSE_CANCEL,
-                                             -1);
-
     if (start_dir_uri)
         gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER(dialog),
                                                  start_dir_uri);
