@@ -1644,6 +1644,23 @@ state_flags (int state)
 }
 
 
+/* The replacement for the deprecated gtk_widget_get_state(). */
+static GtkStateType
+widget_state_type (GtkWidget *widget)
+{
+    GtkStateFlags flags = gtk_widget_get_state_flags (widget);
+
+    if (flags & GTK_STATE_FLAG_INSENSITIVE)
+        return GTK_STATE_INSENSITIVE;
+    if (flags & GTK_STATE_FLAG_ACTIVE)
+        return GTK_STATE_ACTIVE;
+    if (flags & GTK_STATE_FLAG_SELECTED)
+        return GTK_STATE_SELECTED;
+    if (flags & GTK_STATE_FLAG_PRELIGHT)
+        return GTK_STATE_PRELIGHT;
+    return GTK_STATE_NORMAL;
+}
+
 static GdkPixbuf *
 get_pixbuf (MooIconWidget *icon)
 {
@@ -1706,7 +1723,7 @@ get_pixbuf (MooIconWidget *icon)
         }
     }
 
-    return icon->pixbufs[gtk_widget_get_state (GTK_WIDGET (icon))];
+    return icon->pixbufs[widget_state_type (GTK_WIDGET (icon))];
 }
 
 static void

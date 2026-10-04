@@ -988,6 +988,23 @@ moo_expander_cell_get_size (GtkCellRenderer      *cell,
         *height_p = height;
 }
 
+/* The replacement for the deprecated gtk_widget_get_state(). */
+static GtkStateType
+widget_state_type (GtkWidget *widget)
+{
+    GtkStateFlags flags = gtk_widget_get_state_flags (widget);
+
+    if (flags & GTK_STATE_FLAG_INSENSITIVE)
+        return GTK_STATE_INSENSITIVE;
+    if (flags & GTK_STATE_FLAG_ACTIVE)
+        return GTK_STATE_ACTIVE;
+    if (flags & GTK_STATE_FLAG_SELECTED)
+        return GTK_STATE_SELECTED;
+    if (flags & GTK_STATE_FLAG_PRELIGHT)
+        return GTK_STATE_PRELIGHT;
+    return GTK_STATE_NORMAL;
+}
+
 static void
 moo_expander_cell_render (GtkCellRenderer     *cell,
                          cairo_t              *cr,
@@ -1026,7 +1043,7 @@ moo_expander_cell_render (GtkCellRenderer     *cell,
         !gdk_rectangle_intersect (expose_area, &draw_rect, &draw_rect))
             return;
 
-    state = (GtkStateType) gtk_widget_get_state (GTK_WIDGET (widget));
+    state = widget_state_type (GTK_WIDGET (widget));
 
     if (!gtk_cell_renderer_get_sensitive (cell))
     {
