@@ -67,10 +67,11 @@ around it. It reads better, and it is the difference between a branch a test can
 one only a user can. `tests/` and `tests/coverage.floor` say what the suite covers today;
 `doc/testing-panes.md` explains both.
 
-**Upstream code carried verbatim lives under `src/vendor/`**: `gtksourceview`,
-`eggsmclient`, and ctags' `readtags.c`. It is excluded from `--target analyze`
+**Upstream code carried verbatim lives under `src/vendor/`**: `gtksourceview`
+and ctags' `readtags.c`. It is excluded from `--target analyze`
 (`cmake/Analyze.cmake`), exempt from `.editorconfig`, and outside the style measurements
-below. Do not reformat or restyle it, and keep a change there to what our build needs —
+anything else belongs upstream. Deprecation warnings are switched off for these files
+(`src/CMakeLists.txt`), so a warning count does not include them.
 anything else belongs upstream.
 
 ---

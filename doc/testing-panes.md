@@ -331,8 +331,8 @@ runs. `llvm-cov` is told to name files relative to the top of the tree so that r
 made in different containers agree on what a file is. The script lives
 under `tests/` because that is where the harness lives and where `flake8` already reads.
 
-Vendored code is not measured — `src/vendor/gtksourceview`, `src/vendor/eggsmclient` and
-`src/vendor/ctags/readtags.c`, the same three the `analyze` target skips, which together
+Vendored code is not measured — `src/vendor/gtksourceview` and
+`src/vendor/ctags/readtags.c`, the same two the `analyze` target skips, which together
 are the whole of `src/vendor/` — and neither is anything the build generates or any
 system header glib inlines into every file.
 
