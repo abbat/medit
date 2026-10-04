@@ -272,7 +272,7 @@ create_arrow_button (MooCombo       *combo)
     GtkWidget *arrow, *frame;
 
     combo->priv->button = gtk_button_new ();
-    gtk_button_set_focus_on_click (GTK_BUTTON (combo->priv->button), FALSE);
+    gtk_widget_set_focus_on_click (GTK_WIDGET (combo->priv->button), FALSE);
     gtk_widget_show (combo->priv->button);
     gtk_size_group_add_widget (combo->priv->size_group, combo->priv->button);
     gtk_table_attach (GTK_TABLE (combo), combo->priv->button,

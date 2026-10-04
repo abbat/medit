@@ -581,7 +581,7 @@ create_button (MooPane      *pane,
         button = gtk_button_new ();
 
     g_object_set_data (G_OBJECT (button), "moo-pane", pane);
-    gtk_button_set_focus_on_click (GTK_BUTTON (button), FALSE);
+    gtk_widget_set_focus_on_click (GTK_WIDGET (button), FALSE);
     gtk_button_set_relief (GTK_BUTTON (button), GTK_RELIEF_NONE);
     _moo_widget_set_tooltip (button, tip);
 
@@ -1012,7 +1012,7 @@ create_widgets (MooPane         *pane,
 
     pane->button = gtk_toggle_button_new ();
     gtk_widget_show (pane->button);
-    gtk_button_set_focus_on_click (GTK_BUTTON (pane->button), FALSE);
+    gtk_widget_set_focus_on_click (GTK_WIDGET (pane->button), FALSE);
 
     label = create_label_widget (position,
                                  &pane->label_widget,

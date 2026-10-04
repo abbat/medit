@@ -2806,7 +2806,7 @@ setup_notebook (MooEditWindow *window,
     gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
 
     button = gtk_button_new ();
-    gtk_button_set_focus_on_click (GTK_BUTTON (button), FALSE);
+    gtk_widget_set_focus_on_click (GTK_WIDGET (button), FALSE);
     data_notebook.set(button, notebook);
     g_signal_connect (button, "clicked",
                       G_CALLBACK (notebook_close_button_clicked),
@@ -3825,7 +3825,7 @@ create_tab_label (MooEditWindow *window,
         gtk_container_add (GTK_CONTAINER (button), close_icon);
 
         gtk_button_set_relief (GTK_BUTTON (button), GTK_RELIEF_NONE);
-        gtk_button_set_focus_on_click (GTK_BUTTON (button), FALSE);
+        gtk_widget_set_focus_on_click (GTK_WIDGET (button), FALSE);
         gtk_widget_set_name (button, "moo-edit-tab-close-button");
         g_signal_connect_swapped (button, "clicked",
                                   G_CALLBACK (tab_close_button_clicked),
