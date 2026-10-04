@@ -60,6 +60,7 @@ them.
   | `GtkCellRendererPixbuf:stock-id` | 162 | stock icons in tree views | 3 |
   | `GtkSettings:gtk-menu-images` | 162 | GtkImageMenuItem made by `gtk_action_create_menu_item` | 4.1 |
   | `GtkWidget::visibility-notify-event` | 162 | libvte's VteTerminalAccessible, when atk-bridge asks for it (gdb: `g_signal_connect_data` ← libvte ← libatk-bridge); absent without a11y. Not ours to remove | — |
+  | `VteTerminal::window-title-changed` | 163 | the same VteTerminalAccessible (`vteaccess.cc` connects it even in VTE 0.80); our terminal plugin uses `termprop-changed` from VTE 0.78 on. Not ours to remove | — |
   | `GtkSettings:gtk-button-images` | 61 | stock buttons, presumably; not traced | 3 |
   | `GtkButton:use-stock` | 60 | stock buttons in `.ui` and code | 3 |
 

@@ -297,6 +297,7 @@ KNOWN_DEPRECATED = frozenset([
     "GtkSettings:gtk-button-images",        # 3: stock buttons
     "GtkSettings:gtk-menu-images",          # 4.1: GtkAction's menu proxies
     "GtkWidget::visibility-notify-event",   # VTE's own accessible; not ours
+    "VteTerminal::window-title-changed",    # same accessible (vteaccess.cc); we use termprops
 ])
 
 
