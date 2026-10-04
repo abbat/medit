@@ -601,11 +601,7 @@ moo_markup_node_get_string (MooMarkupNode *node)
                 g_assert_not_reached ();
         }
 
-#if GLIB_CHECK_VERSION(2,76,0)
-    return g_string_free_and_steal (str);
-#else
     return g_string_free (str, FALSE);
-#endif
 }
 
 
