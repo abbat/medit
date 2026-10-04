@@ -16,7 +16,6 @@
 
 #include "mooregion.h"
 
-#if GTK_CHECK_VERSION(3, 0, 0)
 MooRegion *
 moo_region_polygon (const GdkPoint *points, gint n_points)
 {
@@ -51,9 +50,7 @@ moo_region_polygon (const GdkPoint *points, gint n_points)
 
   return region;
 }
-#endif
 
-#if GTK_CHECK_VERSION(3, 0, 0)
 gboolean
 moo_region_point_in (const MooRegion *region, int x, int y)
 {
@@ -62,9 +59,7 @@ moo_region_point_in (const MooRegion *region, int x, int y)
 
   return cairo_in_fill (region->cr, x, y);
 }
-#endif
 
-#if GTK_CHECK_VERSION(3, 0, 0)
 void
 moo_region_destroy (MooRegion *region)
 {
@@ -76,4 +71,3 @@ moo_region_destroy (MooRegion *region)
   cairo_surface_destroy (region->cs);
   g_free (region);
 }
-#endif

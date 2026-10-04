@@ -81,7 +81,6 @@ void            moo_big_paned_reorder_pane      (MooBigPaned    *paned,
 void            moo_big_paned_present_pane      (MooBigPaned    *paned,
                                                  GtkWidget      *pane_widget);
 
-#if GTK_CHECK_VERSION(3,0,0)
 /* The shape of the window that shows where a pane being dragged would land.
    Named here rather than kept static so that a unit test can ask what shape it
    is: the window has nothing in it but the two outlines this describes, so the
@@ -89,7 +88,6 @@ void            moo_big_paned_present_pane      (MooBigPaned    *paned,
 cairo_region_t *_moo_big_paned_drop_mask        (int             width,
                                                  int             height,
                                                  GdkRectangle   *button_rect);
-#endif
 
 G_END_DECLS
 

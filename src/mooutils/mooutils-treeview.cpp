@@ -50,11 +50,7 @@ static gboolean tree_helper_move_row_default    (MooTreeHelper      *helper,
                                                  GtkTreePath        *new_path);
 
 
-#if GTK_CHECK_VERSION(3,0,0)
 G_DEFINE_TYPE (MooTreeHelper, _moo_tree_helper, GTK_TYPE_WIDGET)
-#else
-G_DEFINE_TYPE (MooTreeHelper, _moo_tree_helper, GTK_TYPE_OBJECT)
-#endif
 
 
 enum {
@@ -194,11 +190,7 @@ combo_changed (GtkComboBox   *combo,
 
 
 static void
-#if GTK_CHECK_VERSION(3,0,0)
 moo_tree_helper_destroy (GtkWidget *object)
-#else
-moo_tree_helper_destroy (GtkObject *object)
-#endif
 {
     MooTreeHelper *helper = MOO_TREE_HELPER (object);
 
@@ -206,15 +198,9 @@ moo_tree_helper_destroy (GtkObject *object)
     {
         GtkTreeSelection *selection;
 
-#if GTK_CHECK_VERSION(3,0,0)
         g_signal_handlers_disconnect_by_func (helper->widget,
                                               (gpointer) gtk_widget_destroy,
                                               helper);
-#else
-        g_signal_handlers_disconnect_by_func (helper->widget,
-                                              (gpointer) gtk_object_destroy,
-                                              helper);
-#endif
 
         switch (helper->type)
         {
@@ -252,11 +238,7 @@ moo_tree_helper_destroy (GtkObject *object)
         helper->widget = NULL;
     }
 
-#if GTK_CHECK_VERSION(3,0,0)
     GTK_WIDGET_CLASS (_moo_tree_helper_parent_class)->destroy (object);
-#else
-    GTK_OBJECT_CLASS (_moo_tree_helper_parent_class)->destroy (object);
-#endif
 }
 
 
@@ -331,11 +313,7 @@ tree_helper_move_row_default (G_GNUC_UNUSED MooTreeHelper *helper,
 static void
 _moo_tree_helper_class_init (MooTreeHelperClass *klass)
 {
-#if GTK_CHECK_VERSION(3,0,0)
     GTK_WIDGET_CLASS(klass)->destroy = moo_tree_helper_destroy;
-#else
-    GTK_OBJECT_CLASS(klass)->destroy = moo_tree_helper_destroy;
-#endif
 
     klass->move_row = tree_helper_move_row_default;
     klass->new_row = tree_helper_new_row_default;
@@ -740,15 +718,9 @@ _moo_tree_helper_connect (MooTreeHelper *helper,
     helper->up_btn = up_btn;
     helper->down_btn = down_btn;
 
-#if GTK_CHECK_VERSION(3,0,0)
     g_signal_connect_swapped (widget, "destroy",
                               G_CALLBACK (gtk_widget_destroy),
                               helper);
-#else
-    g_signal_connect_swapped (widget, "destroy",
-                              G_CALLBACK (gtk_object_destroy),
-                              helper);
-#endif
 
     switch (helper->type)
     {
@@ -969,7 +941,6 @@ moo_expander_cell_init (MooExpanderCell *cell)
     cell->expanded = FALSE;
 }
 
-#if GTK_CHECK_VERSION(3,0,0)
 static void
 moo_expander_cell_get_size (GtkCellRenderer      *cell,
                             GtkWidget            *widget,
@@ -978,16 +949,6 @@ moo_expander_cell_get_size (GtkCellRenderer      *cell,
                             int                  *y_offset,
                             int                  *width_p,
                             int                  *height_p)
-#else
-static void
-moo_expander_cell_get_size (GtkCellRenderer      *cell,
-                            GtkWidget            *widget,
-                            GdkRectangle         *cell_area,
-                            int                  *x_offset,
-                            int                  *y_offset,
-                            int                  *width_p,
-                            int                  *height_p)
-#endif
 {
     gfloat xalign, yalign;
     int width, height;
@@ -1029,22 +990,12 @@ moo_expander_cell_get_size (GtkCellRenderer      *cell,
 }
 
 static void
-#if GTK_CHECK_VERSION(3,0,0)
 moo_expander_cell_render (GtkCellRenderer     *cell,
                          cairo_t              *cr,
                          GtkWidget            *widget,
                          const GdkRectangle   *background_area,
                          const GdkRectangle   *cell_area,
                          GtkCellRendererState  flags)
-#else
-moo_expander_cell_render (GtkCellRenderer      *cell,
-                          GdkDrawable          *window,
-                          GtkWidget            *widget,
-                          GdkRectangle         *background_area,
-                          GdkRectangle         *cell_area,
-                          GdkRectangle         *expose_area,
-                          GtkCellRendererState  flags)
-#endif
 {
     MooExpanderCell *exp_cell = MOO_EXPANDER_CELL (cell);
     GdkRectangle pix_rect;
@@ -1054,14 +1005,12 @@ moo_expander_cell_render (GtkCellRenderer      *cell,
     // unused
     (void)(background_area);
 
-#if GTK_CHECK_VERSION(3,0,0)
     GdkRectangle  area;
     GdkRectangle *expose_area = &area;
 
     if (!gdk_cairo_get_clip_rectangle(cr, &area)) {
         memset(&area, 0, sizeof(GdkRectangle));
     }
-#endif
 
     moo_expander_cell_get_size (cell, widget, cell_area,
                                 &pix_rect.x,
@@ -1096,7 +1045,6 @@ moo_expander_cell_render (GtkCellRenderer      *cell,
         state = GTK_STATE_PRELIGHT;
     }
 
-#if GTK_CHECK_VERSION(3,0,0)
     cairo_save (cr);
 
     /* Set the color based on the widget state */
@@ -1142,19 +1090,6 @@ moo_expander_cell_render (GtkCellRenderer      *cell,
     }
 
     cairo_restore (cr);
-#else
-    /* GTK-2 code - use gdk_draw_* functions */
-    gdk_draw_rectangle (window, widget->style->text_gc[state], FALSE,
-                        pix_rect.x, pix_rect.y,
-                        pix_rect.width, pix_rect.height);
-    gdk_draw_line (window, widget->style->text_gc[state],
-                   pix_rect.x + 2, pix_rect.y + pix_rect.height / 2,
-                   pix_rect.x + pix_rect.width - 2, pix_rect.y + pix_rect.height / 2);
-    if (!exp_cell->expanded)
-        gdk_draw_line (window, widget->style->text_gc[state],
-                       pix_rect.x + pix_rect.width / 2, pix_rect.y + 2,
-                       pix_rect.x + pix_rect.width / 2, pix_rect.y + pix_rect.height - 2);
-#endif
 }
 
 static void

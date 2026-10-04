@@ -33,11 +33,7 @@
 #include "mooi18n.h"
 
 struct _MooPane {
-#if GTK_CHECK_VERSION(3,0,0)
     GtkWidget base;
-#else
-    GtkObject base;
-#endif
 
     char         *id;
     MooPaned     *parent;
@@ -80,19 +76,11 @@ struct _MooPane {
 };
 
 struct _MooPaneClass {
-#if GTK_CHECK_VERSION(3,0,0)
     GtkWidgetClass base_class;
-#else
-    GtkObjectClass base_class;
-#endif
     gboolean (*remove) (MooPane *pane);
 };
 
-#if GTK_CHECK_VERSION(3,0,0)
 G_DEFINE_TYPE (MooPane, moo_pane, GTK_TYPE_WIDGET)
-#else
-G_DEFINE_TYPE (MooPane, moo_pane, GTK_TYPE_OBJECT)
-#endif
 
 enum {
     PROP_0,
@@ -1640,7 +1628,6 @@ moo_icon_widget_dispose (GObject *object)
     G_OBJECT_CLASS (_moo_icon_widget_parent_class)->dispose (object);
 }
 
-#if GTK_CHECK_VERSION(3,0,0)
 /* The five states this icon is tinted for are GtkStateType values, which are
    an enumeration where GtkStateFlags is a set of bits; nothing converts one to
    the other, and the two do not even agree on the numbers. */
@@ -1656,7 +1643,6 @@ state_flags (int state)
         default:                     return GTK_STATE_FLAG_NORMAL;
     }
 }
-#endif
 
 
 static GdkPixbuf *
@@ -1691,7 +1677,6 @@ get_pixbuf (MooIconWidget *icon)
             g_assert (n_channels == 4);
             rowstride = gdk_pixbuf_get_rowstride (pixbuf);
 
-#if GTK_CHECK_VERSION(3,0,0)
             /* The colour of *this* state, which is what the loop is for. The
                port asked for the widget's current state every time round and
                so made five identical copies, and the buttons stopped reacting
@@ -1704,9 +1689,6 @@ get_pixbuf (MooIconWidget *icon)
             color->red = rgba_color.red * 65535;
             color->green = rgba_color.green * 65535;
             color->blue = rgba_color.blue * 65535;
-#else
-            color = &widget->style->fg[state];
-#endif
 
             for (x = 0; x < width; ++x)
             {
@@ -1730,11 +1712,7 @@ get_pixbuf (MooIconWidget *icon)
 
 static void
 draw_pixbuf (GtkWidget      *widget,
-#if GTK_CHECK_VERSION(3,0,0)
              cairo_t        *cr
-#else
-             GdkEventExpose *event
-#endif
 )
 {
     GtkAllocation allocation;
@@ -1752,33 +1730,13 @@ draw_pixbuf (GtkWidget      *widget,
     x = (allocation.width - pixbuf_width) / 2;
     y = (allocation.height - pixbuf_height) / 2;
 
-#if !GTK_CHECK_VERSION(3,0,0)
-    /* GTK+2 draws onto the parent's window, so the allocation offset belongs in
-       the coordinates. The GTK+3 cairo context is already translated to this
-       widget, and adding it there put the icon outside the widget's clip. */
-    x += allocation.x;
-    y += allocation.y;
-#endif
-
-#if GTK_CHECK_VERSION(3,0,0)
     gdk_cairo_set_source_pixbuf (cr, pixbuf, x, y);
     cairo_paint (cr);
-#else
-    gdk_draw_pixbuf (event->window,
-                     widget->style->black_gc,
-                     pixbuf,
-                     0, 0, x, y, pixbuf_width, pixbuf_height,
-                     GDK_RGB_DITHER_NORMAL, 0, 0);
-#endif
 }
 
 static void
 draw_arrow (GtkWidget      *widget,
-#if GTK_CHECK_VERSION(3,0,0)
             cairo_t        *cr
-#else
-            GdkEventExpose *event
-#endif
 )
 {
     GtkAllocation allocation;
@@ -1809,13 +1767,6 @@ draw_arrow (GtkWidget      *widget,
     x = width / 6;
     y = height / 6;
 
-#if !GTK_CHECK_VERSION(3,0,0)
-    /* see draw_pixbuf(): only GTK+2 wants the allocation offset here */
-    x += allocation.x;
-    y += allocation.y;
-#endif
-
-#if GTK_CHECK_VERSION(3,0,0)
     GtkStyleContext *context = gtk_widget_get_style_context(widget);
     gtk_style_context_set_state(context, gtk_widget_get_state_flags(widget));
 
@@ -1839,49 +1790,24 @@ draw_arrow (GtkWidget      *widget,
     }
 
     gtk_render_arrow(context, cr, angle, x, y, MIN(width, height));
-#else
-    gtk_paint_arrow (widget->style,
-                     event->window,
-                     gtk_widget_get_state (widget),
-                     GTK_SHADOW_IN,
-                     &event->area,
-                     widget,
-                     NULL,
-                     arrow_type,
-                     TRUE,
-                     x, y, width, height);
-#endif
 }
 
 static gboolean
-#if GTK_CHECK_VERSION(3,0,0)
 moo_icon_widget_draw_event (GtkWidget      *widget,
                             cairo_t        *cr)
-#else
-moo_icon_widget_expose_event (GtkWidget      *widget,
-                              GdkEventExpose *event)
-#endif
 {
     MooIconWidget *icon = (MooIconWidget*) widget;
 
     switch (icon->type)
     {
         case ICON_PIXBUFS:
-#if GTK_CHECK_VERSION(3,0,0)
             draw_pixbuf (widget, cr);
-#else
-            draw_pixbuf (widget, event);
-#endif
             break;
         case ICON_ARROW_UP:
         case ICON_ARROW_DOWN:
         case ICON_ARROW_LEFT:
         case ICON_ARROW_RIGHT:
-#if GTK_CHECK_VERSION(3,0,0)
             draw_arrow (widget, cr);
-#else
-            draw_arrow (widget, event);
-#endif
             break;
     }
 
@@ -1898,11 +1824,7 @@ _moo_icon_widget_class_init (MooIconWidgetClass *klass)
 
     widget_class->style_set = moo_icon_widget_style_set;
 
-#if GTK_CHECK_VERSION(3,0,0)
     widget_class->draw = moo_icon_widget_draw_event;
-#else
-    widget_class->expose_event = moo_icon_widget_expose_event;
-#endif
 }
 
 GtkWidget *

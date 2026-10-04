@@ -31,16 +31,9 @@
 #define MOO_MSVC_WARNING_DISABLE(N)
 #define MOO_MSVC_WARNING_PUSH_DISABLE(N)
 
-#if defined(MOO_CL_GCC) && 0
-#define _MOO_GCC_PRAGMA(x) _Pragma (#x)
-#define MOO_COMPILER_MESSAGE(x)     _MOO_GCC_PRAGMA(message (#x))
-#define MOO_TODO(x)                 _MOO_GCC_PRAGMA(message ("TODO: " #x))
-#define MOO_IMPLEMENT_ME            _MOO_GCC_PRAGMA(message ("IMPLEMENT ME"))
-#else
 #define MOO_COMPILER_MESSAGE(x)
 #define MOO_TODO(x)
 #define MOO_IMPLEMENT_ME
-#endif
 
 #define MOO_CONCAT__(a, b) a##b
 #define MOO_CONCAT(a, b) MOO_CONCAT__(a, b)

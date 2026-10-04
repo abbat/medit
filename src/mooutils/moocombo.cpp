@@ -77,11 +77,7 @@ static void moo_combo_cell_layout_reorder               (GtkCellLayout      *cel
                                                          GtkCellRenderer    *cell,
                                                          gint                position);
 
-#if GTK_CHECK_VERSION(3,0,0)
 static void     moo_combo_destroy           (GtkWidget      *object);
-#else
-static void     moo_combo_destroy           (GtkObject      *object);
-#endif
 
 static void     moo_combo_set_property      (GObject        *object,
                                              guint           prop_id,
@@ -150,11 +146,7 @@ static void
 moo_combo_class_init (MooComboClass *klass)
 {
     GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
-#if GTK_CHECK_VERSION(3,0,0)
     GtkWidgetClass *gtkobject_class = GTK_WIDGET_CLASS (klass);
-#else
-    GtkObjectClass *gtkobject_class = GTK_OBJECT_CLASS (klass);
-#endif
     GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
     GtkBindingSet *binding_set;
 
@@ -304,11 +296,7 @@ create_arrow_button (MooCombo       *combo)
 
 
 static void
-#if GTK_CHECK_VERSION(3,0,0)
 moo_combo_destroy (GtkWidget *object)
-#else
-moo_combo_destroy (GtkObject *object)
-#endif
 {
     MooCombo *combo = MOO_COMBO (object);
 
@@ -356,11 +344,7 @@ moo_combo_destroy (GtkObject *object)
         combo->priv->size_group = NULL;
     }
 
-#if GTK_CHECK_VERSION(3,0,0)
     GTK_WIDGET_CLASS(moo_combo_parent_class)->destroy (object);
-#else
-    GTK_OBJECT_CLASS(moo_combo_parent_class)->destroy (object);
-#endif
 }
 
 
@@ -559,16 +543,11 @@ entry_get_borders (GtkEntry *entry,
 
     if (gtk_entry_get_has_frame (entry))
     {
-#if GTK_CHECK_VERSION(3,0,0)
         GtkBorder border;
         gtk_style_context_get_border(gtk_widget_get_style_context(widget),
                                      GTK_STATE_FLAG_NORMAL, &border);
         *xborder = border.left;
         *yborder = border.top;
-#else
-        *xborder = widget->style->xthickness;
-        *yborder = widget->style->ythickness;
-#endif
     }
     else
     {
@@ -592,7 +571,6 @@ model_is_empty (GtkTreeModel *model)
 }
 
 
-#if GTK_CHECK_VERSION(3,0,0)
 static const char *popup_selection_css =
     /* keep the selected row looking selected even though the popup's tree
        view never takes focus; GTK+2 did this by copying base[SELECTED]
@@ -601,7 +579,6 @@ static const char *popup_selection_css =
     "  background-color: @theme_selected_bg_color;"
     "  color: @theme_selected_fg_color;"
     "}";
-#endif
 
 static void
 moo_combo_popup_real (MooCombo *combo)
@@ -633,7 +610,6 @@ moo_combo_popup_real (MooCombo *combo)
 
     gtk_widget_ensure_style (GTK_WIDGET (combo->priv->treeview));
 
-#if GTK_CHECK_VERSION(3,0,0)
     {
         GtkStyleContext *context =
             gtk_widget_get_style_context (GTK_WIDGET (combo->priv->treeview));
@@ -644,12 +620,6 @@ moo_combo_popup_real (MooCombo *combo)
                                         GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
         g_object_unref (provider);
     }
-#else
-    gtk_widget_modify_bg (GTK_WIDGET (combo->priv->treeview), GTK_STATE_ACTIVE,
-                          &GTK_WIDGET(combo->priv->treeview)->style->base[GTK_STATE_SELECTED]);
-    gtk_widget_modify_base (GTK_WIDGET (combo->priv->treeview), GTK_STATE_ACTIVE,
-                            &GTK_WIDGET(combo->priv->treeview)->style->base[GTK_STATE_SELECTED]);
-#endif
 
     gtk_grab_add (combo->priv->popup);
     gdk_pointer_grab (gtk_widget_get_window (combo->priv->popup), TRUE,
@@ -809,7 +779,6 @@ resize_popup (MooCombo *combo)
                           &vert_separator, NULL);
     list_height = separator_height + items * (height + vert_separator);
 
-#if GTK_CHECK_VERSION(3,0,0)
     /*
      * A GTK+3 scrolled window asks for nothing on behalf of its child -- the
      * child can scroll, so its size is not the scrolled window's -- and a size
@@ -843,9 +812,6 @@ resize_popup (MooCombo *combo)
         gtk_scrolled_window_set_min_content_width (swin, list_width);
         gtk_scrolled_window_set_min_content_height (swin, list_height);
     }
-#else
-    gtk_widget_set_size_request (GTK_WIDGET (combo->priv->treeview), width, list_height);
-#endif
 
     gtk_widget_set_size_request (combo->priv->popup, -1, -1);
     gtk_widget_size_request (combo->priv->popup, &popup_req);

@@ -24,13 +24,9 @@
 #include "marshals.h"
 #include "mooutils/moolist.h"
 
-#if 1
 static void  G_GNUC_PRINTF(1,2) DEBUG_PRINT (G_GNUC_UNUSED const char *format, ...)
 {
 }
-#else
-#define DEBUG_PRINT _moo_message
-#endif
 
 typedef struct {
     guint id;

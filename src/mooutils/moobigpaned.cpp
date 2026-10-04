@@ -72,15 +72,9 @@ static void     moo_big_paned_get_property  (GObject        *object,
                                              GValue         *value,
                                              GParamSpec     *pspec);
 
-#if GTK_CHECK_VERSION(3,0,0)
 static gboolean moo_big_paned_draw          (GtkWidget      *widget,
                                              cairo_t        *cr,
                                              MooBigPaned    *paned);
-#else
-static gboolean moo_big_paned_expose        (GtkWidget      *widget,
-                                             GdkEventExpose *event,
-                                             MooBigPaned    *paned);
-#endif
 
 static void     child_set_pane_size         (GtkWidget      *child,
                                              int             size,
@@ -1058,13 +1052,8 @@ handle_drag_start (G_GNUC_UNUSED MooPaned *child,
 {
     g_return_if_fail (gtk_widget_get_realized (paned->priv->outer));
 
-#if GTK_CHECK_VERSION (3, 0, 0)
     g_signal_connect (paned->priv->outer, "draw",
                       G_CALLBACK (moo_big_paned_draw), paned);
-#else
-    g_signal_connect (paned->priv->outer, "expose-event",
-                      G_CALLBACK (moo_big_paned_expose), paned);
-#endif
 
     paned->priv->drop_pos = -1;
     get_drop_zones (paned);
@@ -1218,15 +1207,9 @@ cleanup_drag (MooBigPaned *paned)
     paned->priv->drop_pos = -1;
     paned->priv->drop_region = NULL;
 
-#if GTK_CHECK_VERSION(3,0,0)
     g_signal_handlers_disconnect_by_func (paned->priv->outer,
                                           (gpointer) moo_big_paned_draw,
                                           paned);
-#else
-    g_signal_handlers_disconnect_by_func (paned->priv->outer,
-                                          (gpointer) moo_big_paned_expose,
-                                          paned);
-#endif
 
     for (pos = 0; pos < 4; ++pos)
     {
@@ -1356,7 +1339,6 @@ get_drop_area (MooBigPaned    *paned,
                                  x >= (rect)->x && y >= (rect)->y)
 
 
-#if GTK_CHECK_VERSION(3,0,0)
 static gboolean
 moo_big_paned_draw (GtkWidget   *widget,
                     cairo_t     *cr,
@@ -1407,34 +1389,7 @@ moo_big_paned_draw (GtkWidget   *widget,
 
     return FALSE;
 }
-#else
-static gboolean
-moo_big_paned_expose (GtkWidget      *widget,
-                      GdkEventExpose *event,
-                      MooBigPaned    *paned)
-{
-    GTK_WIDGET_CLASS(G_OBJECT_GET_CLASS (widget))->expose_event (widget, event);
 
-    if (paned->priv->drop_pos >= 0)
-    {
-        g_return_val_if_fail (paned->priv->drop_outline != NULL, FALSE);
-        gdk_draw_rectangle (paned->priv->drop_outline,
-                            widget->style->fg_gc[GTK_STATE_NORMAL],
-                            FALSE, 0, 0,
-                            paned->priv->drop_rect.width - 1,
-                            paned->priv->drop_rect.height - 1);
-        gdk_draw_rectangle (paned->priv->drop_outline,
-                            widget->style->fg_gc[GTK_STATE_NORMAL],
-                            FALSE, 1, 1,
-                            paned->priv->drop_rect.width - 3,
-                            paned->priv->drop_rect.height - 3);
-    }
-
-    return FALSE;
-}
-#endif
-
-#if GTK_CHECK_VERSION(3,0,0)
 /* How thick the two outlines of the drop indicator are, in pixels. */
 #define BORDER 2
 
@@ -1488,41 +1443,6 @@ _moo_big_paned_drop_mask (int           width,
 
     return region;
 }
-#else
-static GdkBitmap *
-create_rect_mask (int           width,
-                  int           height,
-                  GdkRectangle *rect)
-{
-    GdkBitmap *bitmap;
-    GdkGC *gc;
-    GdkColor white = {0, 0, 0, 0};
-    GdkColor black = {1, 1, 1, 1};
-
-    bitmap = gdk_pixmap_new (NULL, width, height, 1);
-    gc = gdk_gc_new (bitmap);
-
-    gdk_gc_set_foreground (gc, &white);
-    gdk_draw_rectangle (bitmap, gc, TRUE, 0, 0,
-                        width, height);
-
-    gdk_gc_set_foreground (gc, &black);
-    gdk_draw_rectangle (bitmap, gc, FALSE, 0, 0,
-                        width - 1, height - 1);
-    gdk_draw_rectangle (bitmap, gc, FALSE, 1, 1,
-                        width - 3, height - 3);
-
-    gdk_draw_rectangle (bitmap, gc, FALSE,
-                        rect->x, rect->y,
-                        rect->width, rect->height);
-    gdk_draw_rectangle (bitmap, gc, FALSE,
-                        rect->x + 1, rect->y + 1,
-                        rect->width - 2, rect->height - 2);
-
-    g_object_unref (gc);
-    return bitmap;
-}
-#endif
 
 static void
 create_drop_outline (MooBigPaned *paned)
@@ -1531,11 +1451,7 @@ create_drop_outline (MooBigPaned *paned)
     int attributes_mask;
     GdkRectangle button_rect;
 
-#if GTK_CHECK_VERSION(3, 0, 0)
     cairo_region_t *mask;
-#else
-    GdkBitmap *mask;
-#endif
 
     g_return_if_fail (paned->priv->drop_outline == NULL);
 
@@ -1548,12 +1464,7 @@ create_drop_outline (MooBigPaned *paned)
     attributes.visual = gtk_widget_get_visual (paned->priv->outer);
     attributes.wclass = GDK_INPUT_OUTPUT;
 
-#if GTK_CHECK_VERSION(3, 0, 0)
     attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL;
-#else
-    attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL | GDK_WA_COLORMAP;
-    attributes.colormap = gtk_widget_get_colormap (paned->priv->outer);
-#endif
 
     paned->priv->drop_outline = gdk_window_new (gtk_widget_get_window (paned->priv->outer),
                                                 &attributes, attributes_mask);
@@ -1566,24 +1477,13 @@ create_drop_outline (MooBigPaned *paned)
     button_rect = paned->priv->drop_button_rect;
     button_rect.x -= paned->priv->drop_rect.x;
     button_rect.y -= paned->priv->drop_rect.y;
-#if GTK_CHECK_VERSION(3, 0, 0)
     mask = _moo_big_paned_drop_mask (paned->priv->drop_rect.width,
                                      paned->priv->drop_rect.height,
                                      &button_rect);
-#else
-    mask = create_rect_mask (paned->priv->drop_rect.width,
-                             paned->priv->drop_rect.height,
-                             &button_rect);
-#endif
 
-#if GTK_CHECK_VERSION(3, 0, 0)
     gdk_window_shape_combine_region (paned->priv->drop_outline, mask, 0, 0);
     /* a cairo_region_t is not a GObject */
     cairo_region_destroy (mask);
-#else
-    gdk_window_shape_combine_mask (paned->priv->drop_outline, mask, 0, 0);
-    g_object_unref (mask);
-#endif
 
     gdk_window_show (paned->priv->drop_outline);
 }

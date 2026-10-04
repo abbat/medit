@@ -951,18 +951,11 @@ accel_label_set_string (GtkWidget  *accel_label,
 {
     g_return_if_fail (GTK_IS_ACCEL_LABEL (accel_label));
 
-#if GTK_CHECK_VERSION(3,0,0)
     guint key = 0;
     GdkModifierType mods = GdkModifierType (0);
 
     _moo_menu_item_parse_accel_label (label, &key, &mods);
     gtk_accel_label_set_accel (GTK_ACCEL_LABEL (accel_label), key, mods);
-#else
-    /* GTK-2 code - direct access to accel_string field */
-    g_free (GTK_ACCEL_LABEL(accel_label)->accel_string);
-    GTK_ACCEL_LABEL(accel_label)->accel_string = g_strdup (label);
-    gtk_widget_queue_resize (accel_label);
-#endif
 }
 
 static void

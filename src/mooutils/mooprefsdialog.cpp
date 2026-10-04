@@ -43,11 +43,7 @@ static void moo_prefs_dialog_get_property   (GObject        *object,
                                              GValue         *value,
                                              GParamSpec     *pspec);
 
-#if GTK_CHECK_VERSION(3,0,0)
 static void moo_prefs_dialog_destroy        (GtkWidget      *object);
-#else
-static void moo_prefs_dialog_destroy        (GtkObject      *object);
-#endif
 
 static void moo_prefs_dialog_response       (GtkDialog      *dialog,
                                              int             response);
@@ -85,11 +81,7 @@ static void
 moo_prefs_dialog_class_init (MooPrefsDialogClass *klass)
 {
     GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
-#if GTK_CHECK_VERSION(3,0,0)
     GtkWidgetClass *gtkobject_class = GTK_WIDGET_CLASS (klass);
-#else
-    GtkObjectClass *gtkobject_class = GTK_OBJECT_CLASS (klass);
-#endif
     GtkDialogClass *dialog_class = GTK_DIALOG_CLASS (klass);
 
     gobject_class->set_property = moo_prefs_dialog_set_property;
@@ -157,11 +149,7 @@ moo_prefs_dialog_init (MooPrefsDialog *dialog)
 
     hbox = gtk_hbox_new (FALSE, 0);
     gtk_widget_show (GTK_WIDGET (hbox));
-#if GTK_CHECK_VERSION(3,0,0)
     gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG(dialog))), hbox, TRUE, TRUE, 0);
-#else
-    gtk_box_pack_start (GTK_BOX (GTK_DIALOG(dialog)->vbox), hbox, TRUE, TRUE, 0);
-#endif
 
     scrolledwindow = gtk_scrolled_window_new (NULL, NULL);
     gtk_widget_show (scrolledwindow);
@@ -202,11 +190,7 @@ destroy_page (GtkTreeModel  *model,
 }
 
 static void
-#if GTK_CHECK_VERSION(3,0,0)
 moo_prefs_dialog_destroy (GtkWidget *object)
-#else
-moo_prefs_dialog_destroy (GtkObject *object)
-#endif
 {
     MooPrefsDialog *dialog = MOO_PREFS_DIALOG (object);
 
@@ -223,11 +207,7 @@ moo_prefs_dialog_destroy (GtkObject *object)
         dialog->store = NULL;
     }
 
-#if GTK_CHECK_VERSION(3,0,0)
     GTK_WIDGET_CLASS(moo_prefs_dialog_parent_class)->destroy (object);
-#else
-    GTK_OBJECT_CLASS(moo_prefs_dialog_parent_class)->destroy (object);
-#endif
 }
 
 

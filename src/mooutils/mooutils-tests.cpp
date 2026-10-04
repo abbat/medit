@@ -45,9 +45,7 @@
 #include "mooutils/mooutils-gobject.h"
 #include "mooutils/mooutils-fs.h"
 #include "mooutils/mooutils-misc.h"
-#if GTK_CHECK_VERSION(3,0,0)
 #include "plugins/terminal/terminal-colors.h"
-#endif
 
 
 
@@ -1135,7 +1133,6 @@ test_history_list_limit_noop (void)
 }
 
 
-#if GTK_CHECK_VERSION(3,0,0)
 /* -------------------------------------------------------------------------
  * The shape of the drop indicator
  *
@@ -1171,7 +1168,6 @@ test_drop_mask (void)
 
     cairo_region_destroy (mask);
 }
-#endif
 
 
 /* -------------------------------------------------------------------------
@@ -2053,7 +2049,6 @@ test_file_index_cache_stale_while_revalidate (void)
 }
 
 
-#if GTK_CHECK_VERSION(3,0,0)
 static void
 test_terminal_color_schemes_memory (void)
 {
@@ -2075,7 +2070,6 @@ test_terminal_color_schemes_memory (void)
                 g_assert_nonnull (schemes[i].colors[j]);
     }
 }
-#endif
 
 
 void
@@ -2133,10 +2127,8 @@ _moo_add_mooutils_unit_tests (void)
     g_test_add_func ("/mooutils/file-index/symlink-not-followed", test_file_index_symlink_not_followed);
     g_test_add_func ("/mooutils/file-index/max-files-limit", test_file_index_max_files_limit);
     g_test_add_func ("/mooutils/file-index/cache-stale-while-revalidate", test_file_index_cache_stale_while_revalidate);
-#if GTK_CHECK_VERSION(3,0,0)
     g_test_add_func ("/mooutils/terminal/colors", test_terminal_color_schemes_memory);
     g_test_add_func ("/mooutils/paned/drop-mask", test_drop_mask);
-#endif
     g_test_add_func ("/mooutils/file-writer", test_file_writer);
 }
 

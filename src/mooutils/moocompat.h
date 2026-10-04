@@ -3,11 +3,4 @@
 
 #include "mooglib/moo-glib.h"
 
-#if !GTK_CHECK_VERSION(3,0,0)
-
-#define gtk_widget_get_allocated_width(widget)  (widget->allocation.width)
-#define gtk_widget_get_allocated_height(widget) (widget->allocation.height)
-
-#endif /* gtk-3.x */
-
 #endif /* MOO_GTK_H */
