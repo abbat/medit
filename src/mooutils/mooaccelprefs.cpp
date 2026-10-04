@@ -304,7 +304,8 @@ _moo_accel_prefs_page_init (MooAccelPrefsPage *page)
 
     gtk_widget_destroy (window);
     g_object_unref (builder);
-    g_object_set (page, "label", "Shortcuts", (char*)NULL);
+    g_object_set (page, "label", "Shortcuts",
+                  "icon-name", "preferences-desktop-keyboard-shortcuts", (char*)NULL);
 
 
     g_signal_connect_swapped (page->treeview, "row-activated",

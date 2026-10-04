@@ -1232,7 +1232,7 @@ lsp_window_plugin_create (LspWindowPlugin *stuff)
                                                        label, MOO_PANE_POS_BOTTOM);
     moo_pane_label_free (label);
 
-    label = moo_pane_label_new (NULL, NULL,
+    label = moo_pane_label_new ("view-list", NULL,
                                 _("Symbols"), _("Symbols"));
     stuff->symbols_pane = moo_edit_window_add_pane (stuff->window,
                                                     MOO_LSP_SYMBOLS_PANE_ID,

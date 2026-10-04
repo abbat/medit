@@ -161,7 +161,10 @@ Facts the survey of 2026-10-04 established, so they need not be found again:
   (`moo_line_mark_set_icon_name`), MooUiXml `icon-name`; the unused `stock-id`
   attribute and `_moo_menu_item_new_from_stock` are gone, `stock-label="gtk-edit"`/
   `"gtk-help"` became `_label="_Edit"`/`"_Help"` (`_Edit` translated from gtk30).
-  Ids with no freedesktop icon (index, preferences, select-font, edit) pass no icon.
+  Ids with no freedesktop icon got a substitute: preferences → `preferences-system`
+  (also the default for a page without one), edit → `accessories-text-editor`,
+  index → `view-list`, the Shortcuts page → `preferences-desktop-keyboard-shortcuts`,
+  Plugins → `application-x-addon`.
   Our own pixmaps are named `medit-terminal`, `medit-file-selector`, `medit-file`;
   until 3.7 `moostock.cpp` registers them with `gtk_icon_theme_add_builtin_icon`
   from the same pixbufs. Nothing here is read from user config, so no id mapping

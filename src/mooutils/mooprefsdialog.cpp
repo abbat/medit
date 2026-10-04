@@ -476,6 +476,9 @@ moo_prefs_dialog_insert_page (MooPrefsDialog     *dialog,
                   "icon-name", &icon_name,
                   NULL);
 
+    if (!icon_name)
+        icon_name = g_strdup ("preferences-system");
+
     gtk_list_store_set (dialog->store, &iter,
                         ICON_NAME_COLUMN, icon_name,
                         ICON_COLUMN, icon,

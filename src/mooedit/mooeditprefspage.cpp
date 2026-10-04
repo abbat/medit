@@ -164,7 +164,7 @@ moo_edit_prefs_page_new_1 (MooEditor *editor)
     return prefs_page_new (editor,
                            /* Label of a Preferences dialog page, remove the part before and including | */
                            Q_("PreferencesPage|General"),
-                           NULL,
+                           "accessories-text-editor",
                            page_general_init_ui,
                            page_general_init,
                            page_general_apply);
@@ -204,7 +204,7 @@ moo_edit_prefs_page_new_5 (MooEditor *editor)
     return prefs_page_new (editor,
                            /* Label of a Preferences dialog page, remove the part before and including | */
                            Q_("PreferencesPage|File Filters"),
-                           NULL,
+                           "accessories-text-editor",
                            page_filters_init_ui,
                            page_filters_init,
                            page_filters_apply);
@@ -260,7 +260,7 @@ moo_edit_prefs_page_new_2 (MooEditor *editor)
     return prefs_page_new (editor,
                            /* Label of a Preferences dialog page, remove the part before and including | */
                            Q_("PreferencesPage|View"),
-                           NULL,
+                           "accessories-text-editor",
                            page_view_init_ui,
                            page_view_init,
                            page_view_apply);
@@ -311,7 +311,7 @@ moo_edit_prefs_page_new_3 (MooEditor *editor)
     return prefs_page_new (editor,
                            /* Label of a Preferences dialog page, remove the part before and including | */
                            Q_("PreferencesPage|File"),
-                           NULL,
+                           "accessories-text-editor",
                            page_file_init_ui,
                            page_file_init,
                            page_file_apply);
@@ -355,7 +355,7 @@ moo_edit_prefs_page_new_4 (MooEditor *editor)
     return prefs_page_new (editor,
                            /* Label of a Preferences dialog page, remove the part before and including | */
                            Q_("PreferencesPage|Languages"),
-                           NULL,
+                           "accessories-text-editor",
                            page_langs_init_ui,
                            page_langs_init,
                            page_langs_apply);
