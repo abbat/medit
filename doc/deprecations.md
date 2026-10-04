@@ -132,9 +132,9 @@ Facts the survey of 2026-10-04 established, so they need not be found again:
   DOC_MODIFIED, DOC_MODIFIED_ON_DISK, EXECUTE, MENU, NEW_PROJECT, OPEN_PROJECT,
   PROJECT_OPTIONS.
 
-- [ ] 3.1 Dialog and button text: `gtk_dialog_add_button`/`gtk_info_bar_add_button`
+- [x] 3.1 Dialog and button text: `gtk_dialog_add_button`/`gtk_info_bar_add_button`
   given a `GTK_STOCK_*` → our own `_("_Cancel")`-style string. Also
-  `moofiledialog.cpp`'s `get_string_maybe_stock` goes; callers pass plain titles.
+  `moofiledialog.cpp`'s `get_string_maybe_stock` goes; callers pass plain titles. Done: about 40 buttons and 2 titles across 12 files now take our own `_("_Cancel")`-style strings; `get_string_maybe_stock` is gone and the translations were copied from gtk30 into our catalogs.
 - [ ] 3.2 Menu items: `_moo_menu_item_new_from_stock()` (`mooutils-misc.cpp`) →
   a label + icon-name constructor at every caller, then delete it.
 - [ ] 3.3 Images: `gtk_image_*_from_stock` → `_from_icon_name`;

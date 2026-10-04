@@ -68,30 +68,6 @@ enum {
     PROP_ENABLE_ENCODINGS
 };
 
-static char *
-get_string_maybe_stock (const char *string)
-{
-    GtkStockItem item;
-    char *underscore;
-    char *copy;
-
-    /* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
-    G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-    if (!gtk_stock_lookup (string, &item))
-        return g_strdup (string);
-    G_GNUC_END_IGNORE_DEPRECATIONS
-
-    if (!(underscore = strchr (item.label, '_')))
-        return g_strdup (item.label);
-
-    copy = g_strdup (item.label);
-    memmove (copy + (underscore - item.label),
-             copy + (underscore - item.label) + 1,
-             strlen (copy + (underscore - item.label) + 1) + 1);
-
-    return copy;
-}
-
 static void
 moo_file_dialog_set_property (GObject        *object,
                               guint           prop_id,
@@ -110,7 +86,7 @@ moo_file_dialog_set_property (GObject        *object,
 
         case PROP_TITLE:
             tmp = dialog->priv->title;
-            dialog->priv->title = get_string_maybe_stock (g_value_get_string (value));
+            dialog->priv->title = g_value_dup_string (value);
             g_free (tmp);
             g_object_notify (object, "title");
             break;
@@ -301,7 +277,7 @@ GtkWidget *file_chooser_dialog_new (const char *title,
 {
     GtkWidget *dialog =
             gtk_file_chooser_dialog_new (title, NULL, action,
-                                         GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                                         _("_Cancel"), GTK_RESPONSE_CANCEL,
                                          okbtn, GTK_RESPONSE_OK,
                                          NULL);
 
@@ -313,7 +289,7 @@ GtkWidget *file_chooser_dialog_new (const char *title,
     if (show_help)
     {
         moo_help_connect_keys (dialog);
-        gtk_dialog_add_button (GTK_DIALOG (dialog), GTK_STOCK_HELP, GTK_RESPONSE_HELP);
+        gtk_dialog_add_button (GTK_DIALOG (dialog), _("_Help"), GTK_RESPONSE_HELP);
     }
 
     return dialog;
@@ -376,7 +352,7 @@ moo_file_dialog_create_widget (MooFileDialog *dialog)
 
             widget = file_chooser_dialog_new (dialog->priv->title,
                                               chooser_action,
-                                              GTK_STOCK_OPEN,
+                                              _("_Open"),
                                               dialog->priv->current_dir,
                                               dialog->priv->show_help);
             file_chooser_set_select_multiple (widget, dialog->priv->multiple);
@@ -387,7 +363,7 @@ moo_file_dialog_create_widget (MooFileDialog *dialog)
 
             widget = file_chooser_dialog_new (dialog->priv->title,
                                               chooser_action,
-                                              GTK_STOCK_SAVE,
+                                              _("_Save"),
                                               dialog->priv->current_dir,
                                               dialog->priv->show_help);
 

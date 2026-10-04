@@ -878,9 +878,9 @@ _moo_accel_prefs_dialog_new (MooActionCollection *collection)
 
     dialog = gtk_dialog_new_with_buttons (_("Configure Shortcuts"), NULL,
                                           (GtkDialogFlags) 0,
-                                          GTK_STOCK_HELP, GTK_RESPONSE_HELP,
-                                          GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                                          GTK_STOCK_OK, GTK_RESPONSE_OK,
+                                          _("_Help"), GTK_RESPONSE_HELP,
+                                          _("_Cancel"), GTK_RESPONSE_CANCEL,
+                                          _("_OK"), GTK_RESPONSE_OK,
                                           nullptr);
     gtk_window_set_default_size (GTK_WINDOW (dialog), -1, 400);
 

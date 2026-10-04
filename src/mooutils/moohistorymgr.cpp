@@ -1664,8 +1664,8 @@ moo_history_mgr_create_dialog (MooHistoryMgr   *mgr,
     g_return_val_if_fail (callback != NULL, NULL);
 
     dialog = gtk_dialog_new_with_buttons (_("Recent Files"), NULL, GTK_DIALOG_DESTROY_WITH_PARENT,
-                                          GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                                          GTK_STOCK_OPEN, GTK_RESPONSE_OK,
+                                          _("_Cancel"), GTK_RESPONSE_CANCEL,
+                                          _("_Open"), GTK_RESPONSE_OK,
                                           NULL);
 
     swin = gtk_scrolled_window_new (NULL, NULL);

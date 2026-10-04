@@ -1306,7 +1306,7 @@ moo_font_selection_dialog_init (MooFontSelectionDialog *fontseldiag)
                       fontseldiag->fontsel, TRUE, TRUE, 0);
 
   fontseldiag->cancel_button = gtk_dialog_add_button (dialog,
-                                                      GTK_STOCK_CANCEL,
+                                                      _("_Cancel"),
                                                       GTK_RESPONSE_CANCEL);
 
   /* The action area: the box the dialog put its first button in. */
@@ -1315,12 +1315,12 @@ moo_font_selection_dialog_init (MooFontSelectionDialog *fontseldiag)
   gtk_box_set_spacing (GTK_BOX (fontseldiag->action_area), 6);
 
   fontseldiag->apply_button = gtk_dialog_add_button (dialog,
-                                                     GTK_STOCK_APPLY,
+                                                     _("_Apply"),
                                                      GTK_RESPONSE_APPLY);
   gtk_widget_hide (fontseldiag->apply_button);
 
   fontseldiag->ok_button = gtk_dialog_add_button (dialog,
-                                                  GTK_STOCK_OK,
+                                                  _("_OK"),
                                                   GTK_RESPONSE_OK);
   gtk_widget_grab_default (fontseldiag->ok_button);
 

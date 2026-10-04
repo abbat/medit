@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: medit\n"
 "Report-Msgid-Bugs-To: https://github.com/abbat/medit/issues\n"
-"POT-Creation-Date: 2026-10-04 19:48+0300\n"
+"POT-Creation-Date: 2026-10-04 20:26+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -119,6 +119,7 @@ msgid "_License"
 msgstr ""
 
 #: src/mooapp/about.cpp:254 src/mooapp/credits.cpp:159
+#: src/mooedit/mooeditdialogs.cpp:739 src/mooutils/moodialogs.cpp:49
 msgid "_Close"
 msgstr ""
 
@@ -367,12 +368,19 @@ msgstr ""
 
 #: src/mooedit/ui/mooeditprogress.ui:33 src/mooedit/ui/mooprint.ui:483
 #: src/mooedit/ui/mootextfind.ui:292 src/mooedit/ui/mootextgotoline.ui:89
-#: src/moofileview/ui/moobookmark-editor.ui:234
+#: src/mooedit/mooeditdialogs.cpp:343 src/mooedit/mooeditdialogs.cpp:442
+#: src/mooedit/mooeditdialogs.cpp:541 src/mooedit/mootextfind.cpp:174
+#: src/moofileview/ui/moobookmark-editor.ui:233
 #: src/moofileview/ui/moocreatefolder.ui:54
 #: src/moofileview/ui/moofileprops.ui:83
 #: src/moofileview/ui/moofileview-drop.ui:56
+#: src/moofileview/moofileview.cpp:3252 src/moofileview/moofileview.cpp:5851
+#: src/mooutils/mooaccelprefs.cpp:882 src/mooutils/moodialogs.cpp:384
+#: src/mooutils/moodialogs.cpp:439 src/mooutils/moofiledialog.cpp:280
+#: src/mooutils/moofontsel.cpp:1309 src/mooutils/moohistorymgr.cpp:1667
 #: src/plugins/ui/moofileselector.ui:56 src/plugins/ui/moofileselector.ui:136
 #: src/plugins/ui/moofind.ui:141 src/plugins/ui/moogrep.ui:196
+#: src/plugins/lsp/lsp-edits.cpp:368
 msgid "_Cancel"
 msgstr ""
 
@@ -460,10 +468,12 @@ msgid "Footer"
 msgstr ""
 
 #: src/mooedit/ui/mooprint.ui:492 src/mooedit/ui/mootextgotoline.ui:99
-#: src/moofileview/ui/moobookmark-editor.ui:243
+#: src/mooedit/mooeditdialogs.cpp:475 src/mooedit/mooeditdialogs.cpp:542
+#: src/moofileview/ui/moobookmark-editor.ui:242
 #: src/moofileview/ui/moocreatefolder.ui:63
 #: src/moofileview/ui/moofileprops.ui:93
-#: src/moofileview/ui/moofileview-drop.ui:65
+#: src/moofileview/ui/moofileview-drop.ui:65 src/mooutils/mooaccelprefs.cpp:883
+#: src/mooutils/moodialogs.cpp:49 src/mooutils/moofontsel.cpp:1323
 #: src/plugins/ui/moofileselector.ui:65 src/plugins/ui/moofileselector.ui:145
 msgid "_OK"
 msgstr ""
@@ -524,8 +534,8 @@ msgstr ""
 msgid "_Whole words only"
 msgstr ""
 
-#: src/mooedit/ui/mootextfind.ui:306 src/plugins/ui/moofind.ui:151
-#: src/plugins/ui/moogrep.ui:206
+#: src/mooedit/ui/mootextfind.ui:306 src/mooedit/mootextfind.cpp:164
+#: src/plugins/ui/moofind.ui:151 src/plugins/ui/moogrep.ui:206
 msgid "_Find"
 msgstr ""
 
@@ -591,8 +601,26 @@ msgstr ""
 msgid "_Window"
 msgstr ""
 
-#: src/mooedit/mooeditaction-factory.cpp:625
+#: src/mooedit/mooeditaction-factory.cpp:622
 msgid "_Insert Unicode Control Character"
+msgstr ""
+
+#: src/mooedit/mooeditdialogs.cpp:60
+msgid "Open"
+msgstr ""
+
+#: src/mooedit/mooeditdialogs.cpp:127 src/moofileview/ui/moofileview-drop.ui:5
+#: src/plugins/ui/moofileselector.ui:4 src/plugins/moofileselector.cpp:904
+#: src/plugins/moofileselector.cpp:929
+msgid "Save As"
+msgstr ""
+
+#: src/mooedit/mooeditdialogs.cpp:342 src/mooutils/moostock.cpp:28
+msgid "Save _None"
+msgstr ""
+
+#: src/mooedit/mooeditdialogs.cpp:344 src/mooutils/moostock.cpp:29
+msgid "Save _Selected"
 msgstr ""
 
 #. Translators: number of documents here is always greater than one, so
@@ -699,6 +727,14 @@ msgstr ""
 msgid ""
 "End of document reached.\n"
 "Continue from the beginning?"
+msgstr ""
+
+#: src/mooedit/mooeditdialogs.cpp:702
+msgid "_No"
+msgstr ""
+
+#: src/mooedit/mooeditdialogs.cpp:703
+msgid "_Yes"
 msgstr ""
 
 #: src/mooedit/mooeditdialogs.cpp:731
@@ -1323,6 +1359,10 @@ msgctxt "plugin-prefs-column"
 msgid "Plugin"
 msgstr ""
 
+#: src/mooedit/mootextfind.cpp:158
+msgid "Find and _Replace"
+msgstr ""
+
 #: src/mooedit/mootextfind.cpp:159
 msgctxt "Dialog title"
 msgid "Replace"
@@ -1414,11 +1454,6 @@ msgstr ""
 
 #: src/moofileview/ui/moofileprops.ui:64
 msgid "General"
-msgstr ""
-
-#: src/moofileview/ui/moofileview-drop.ui:5 src/plugins/ui/moofileselector.ui:4
-#: src/plugins/moofileselector.cpp:904 src/plugins/moofileselector.cpp:929
-msgid "Save As"
 msgstr ""
 
 #. Column label in file selector bookmark editor
@@ -1514,6 +1549,10 @@ msgstr ""
 
 #: src/moofileview/moofileview.cpp:3236
 msgid "Delete selected files?"
+msgstr ""
+
+#: src/moofileview/moofileview.cpp:3253
+msgid "_Delete"
 msgstr ""
 
 #: src/moofileview/moofileview.cpp:3299
@@ -1616,26 +1655,26 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
-#: src/mooutils/ui/mooaccelprefs.ui:75
+#: src/mooutils/ui/mooaccelprefs.ui:74
 msgctxt "Shortcut"
 msgid "None"
 msgstr ""
 
-#: src/mooutils/ui/mooaccelprefs.ui:88
+#: src/mooutils/ui/mooaccelprefs.ui:87
 msgctxt "Shortcut"
 msgid "Default"
 msgstr ""
 
-#: src/mooutils/ui/mooaccelprefs.ui:104
+#: src/mooutils/ui/mooaccelprefs.ui:103
 msgctxt "Shortcut"
 msgid "Custom"
 msgstr ""
 
-#: src/mooutils/ui/mooaccelprefs.ui:134
+#: src/mooutils/ui/mooaccelprefs.ui:133
 msgid "Default key:"
 msgstr ""
 
-#: src/mooutils/ui/mooaccelprefs.ui:162
+#: src/mooutils/ui/mooaccelprefs.ui:161
 msgid "Shortcut for selected action"
 msgstr ""
 
@@ -1661,6 +1700,10 @@ msgstr ""
 msgid "Configure Shortcuts"
 msgstr ""
 
+#: src/mooutils/mooaccelprefs.cpp:881 src/mooutils/moofiledialog.cpp:292
+msgid "_Help"
+msgstr ""
+
 #: src/mooutils/moodialogs.cpp:429
 #, c-format
 msgid "Save changes to document \"%s\" before closing?"
@@ -1672,6 +1715,15 @@ msgstr ""
 
 #: src/mooutils/moodialogs.cpp:435
 msgid "If you don't save, changes will be discarded"
+msgstr ""
+
+#: src/mooutils/moodialogs.cpp:438
+msgid "_Discard"
+msgstr ""
+
+#: src/mooutils/moodialogs.cpp:440 src/mooutils/moofiledialog.cpp:366
+#: src/plugins/usertools/ui/moousertools.ui:212
+msgid "_Save"
 msgstr ""
 
 #. Translators: 012345 denotes order in which character encoding
@@ -1951,7 +2003,11 @@ msgctxt "insert-special-char"
 msgid "Insert Special Character"
 msgstr ""
 
-#: src/mooutils/moofiledialog.cpp:573
+#: src/mooutils/moofiledialog.cpp:355 src/mooutils/moohistorymgr.cpp:1668
+msgid "_Open"
+msgstr ""
+
+#: src/mooutils/moofiledialog.cpp:549
 msgid "Selected file is not a regular file"
 msgstr ""
 
@@ -1971,6 +2027,10 @@ msgstr ""
 
 #: src/mooutils/moofontsel.cpp:491
 msgid "Show only fixed width fonts"
+msgstr ""
+
+#: src/mooutils/moofontsel.cpp:1318
+msgid "_Apply"
 msgstr ""
 
 #: src/mooutils/moohelp.cpp:32
@@ -2003,14 +2063,6 @@ msgstr ""
 
 #: src/mooutils/moopane.cpp:688
 msgid "Keep on top"
-msgstr ""
-
-#: src/mooutils/moostock.cpp:28
-msgid "Save _None"
-msgstr ""
-
-#: src/mooutils/moostock.cpp:29
-msgid "Save _Selected"
 msgstr ""
 
 #: src/mooutils/moostock.cpp:31
@@ -3092,10 +3144,6 @@ msgstr ""
 
 #: src/plugins/usertools/ui/moousertools.ui:186
 msgid "_Requires"
-msgstr ""
-
-#: src/plugins/usertools/ui/moousertools.ui:212
-msgid "_Save"
 msgstr ""
 
 #: src/plugins/usertools/ui/moousertools.ui:238

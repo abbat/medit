@@ -365,7 +365,7 @@ ask_for_name (MooEditWindow *window,
     dialog = gtk_dialog_new_with_buttons (_("Rename"), GTK_WINDOW (window),
                                           (GtkDialogFlags) (GTK_DIALOG_MODAL |
                                                             GTK_DIALOG_DESTROY_WITH_PARENT),
-                                          GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                                          _("_Cancel"), GTK_RESPONSE_CANCEL,
                                           _("_Rename"), GTK_RESPONSE_OK,
                                           (const char*) NULL);
 

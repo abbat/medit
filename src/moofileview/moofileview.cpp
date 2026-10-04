@@ -3249,8 +3249,8 @@ ask_delete_files (MooFileView *fileview,
 
     moo_window_set_parent (dialog, GTK_WIDGET (fileview));
     gtk_dialog_add_buttons (GTK_DIALOG (dialog),
-                            GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                            GTK_STOCK_DELETE, GTK_RESPONSE_OK, NULL);
+                            _("_Cancel"), GTK_RESPONSE_CANCEL,
+                            _("_Delete"), GTK_RESPONSE_OK, NULL);
     gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CANCEL);
 
     response = gtk_dialog_run (GTK_DIALOG (dialog));
@@ -5848,7 +5848,7 @@ drop_conflict_dialog (MooFileView *fileview,
                                                   _("This is that file itself, so it can only "
                                                     "be put there under the name below."));
 
-    gtk_dialog_add_button (GTK_DIALOG (dialog), GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL);
+    gtk_dialog_add_button (GTK_DIALOG (dialog), _("_Cancel"), GTK_RESPONSE_CANCEL);
     gtk_dialog_add_button (GTK_DIALOG (dialog), _("_Skip"), DROP_RESPONSE_SKIP);
     if (can_replace)
         gtk_dialog_add_button (GTK_DIALOG (dialog), _("_Replace"), DROP_RESPONSE_REPLACE);

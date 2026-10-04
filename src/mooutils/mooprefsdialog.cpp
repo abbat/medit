@@ -21,6 +21,7 @@
 #include "mooutils/mooprefsdialog.h"
 #include "mooutils/moodialogs.h"
 #include "mooutils/moohelp.h"
+#include "mooutils/mooi18n.h"
 #include "mooutils/mooutils-treeview.h"
 
 
@@ -133,10 +134,10 @@ moo_prefs_dialog_init (MooPrefsDialog *dialog)
     gtk_window_set_destroy_with_parent (GTK_WINDOW (dialog), TRUE);
 
     gtk_dialog_add_buttons (GTK_DIALOG (dialog),
-                            GTK_STOCK_HELP, GTK_RESPONSE_HELP,
-                            GTK_STOCK_APPLY, GTK_RESPONSE_APPLY,
-                            GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                            GTK_STOCK_OK, GTK_RESPONSE_OK,
+                            _("_Help"), GTK_RESPONSE_HELP,
+                            _("_Apply"), GTK_RESPONSE_APPLY,
+                            _("_Cancel"), GTK_RESPONSE_CANCEL,
+                            _("_OK"), GTK_RESPONSE_OK,
                             NULL);
 #if GTK_MINOR_VERSION >= 6
 #endif /* GTK_MINOR_VERSION >= 6 */

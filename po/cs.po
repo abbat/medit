@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: moo\n"
 "Report-Msgid-Bugs-To: https://github.com/abbat/medit/issues\n"
-"POT-Creation-Date: 2026-10-04 19:48+0300\n"
+"POT-Creation-Date: 2026-10-04 20:25+0300\n"
 "PO-Revision-Date: 2007-11-10 22:45+0100\n"
 "Last-Translator: Vlastimil Ott <vlastimil@e-ott.info>\n"
 "Language-Team:  <cs@li.org>\n"
@@ -119,6 +119,7 @@ msgid "_License"
 msgstr "_Licence"
 
 #: src/mooapp/about.cpp:254 src/mooapp/credits.cpp:159
+#: src/mooedit/mooeditdialogs.cpp:739 src/mooutils/moodialogs.cpp:49
 msgid "_Close"
 msgstr "_Zavřít"
 
@@ -372,12 +373,19 @@ msgstr "na řádku"
 
 #: src/mooedit/ui/mooeditprogress.ui:33 src/mooedit/ui/mooprint.ui:483
 #: src/mooedit/ui/mootextfind.ui:292 src/mooedit/ui/mootextgotoline.ui:89
-#: src/moofileview/ui/moobookmark-editor.ui:234
+#: src/mooedit/mooeditdialogs.cpp:343 src/mooedit/mooeditdialogs.cpp:442
+#: src/mooedit/mooeditdialogs.cpp:541 src/mooedit/mootextfind.cpp:174
+#: src/moofileview/ui/moobookmark-editor.ui:233
 #: src/moofileview/ui/moocreatefolder.ui:54
 #: src/moofileview/ui/moofileprops.ui:83
 #: src/moofileview/ui/moofileview-drop.ui:56
+#: src/moofileview/moofileview.cpp:3252 src/moofileview/moofileview.cpp:5851
+#: src/mooutils/mooaccelprefs.cpp:882 src/mooutils/moodialogs.cpp:384
+#: src/mooutils/moodialogs.cpp:439 src/mooutils/moofiledialog.cpp:280
+#: src/mooutils/moofontsel.cpp:1309 src/mooutils/moohistorymgr.cpp:1667
 #: src/plugins/ui/moofileselector.ui:56 src/plugins/ui/moofileselector.ui:136
 #: src/plugins/ui/moofind.ui:141 src/plugins/ui/moogrep.ui:196
+#: src/plugins/lsp/lsp-edits.cpp:368
 msgid "_Cancel"
 msgstr "_Zrušit"
 
@@ -465,10 +473,12 @@ msgid "Footer"
 msgstr "Patička"
 
 #: src/mooedit/ui/mooprint.ui:492 src/mooedit/ui/mootextgotoline.ui:99
-#: src/moofileview/ui/moobookmark-editor.ui:243
+#: src/mooedit/mooeditdialogs.cpp:475 src/mooedit/mooeditdialogs.cpp:542
+#: src/moofileview/ui/moobookmark-editor.ui:242
 #: src/moofileview/ui/moocreatefolder.ui:63
 #: src/moofileview/ui/moofileprops.ui:93
-#: src/moofileview/ui/moofileview-drop.ui:65
+#: src/moofileview/ui/moofileview-drop.ui:65 src/mooutils/mooaccelprefs.cpp:883
+#: src/mooutils/moodialogs.cpp:49 src/mooutils/moofontsel.cpp:1323
 #: src/plugins/ui/moofileselector.ui:65 src/plugins/ui/moofileselector.ui:145
 msgid "_OK"
 msgstr "_Budiž"
@@ -529,8 +539,8 @@ msgstr "Od _kurzoru"
 msgid "_Whole words only"
 msgstr "Pouze _celá slova"
 
-#: src/mooedit/ui/mootextfind.ui:306 src/plugins/ui/moofind.ui:151
-#: src/plugins/ui/moogrep.ui:206
+#: src/mooedit/ui/mootextfind.ui:306 src/mooedit/mootextfind.cpp:164
+#: src/plugins/ui/moofind.ui:151 src/plugins/ui/moogrep.ui:206
 msgid "_Find"
 msgstr "_Hledat"
 
@@ -596,9 +606,27 @@ msgstr "_Nástroje"
 msgid "_Window"
 msgstr "_Okna"
 
-#: src/mooedit/mooeditaction-factory.cpp:625
+#: src/mooedit/mooeditaction-factory.cpp:622
 msgid "_Insert Unicode Control Character"
 msgstr "Vloži_t řídící znak Unicode"
+
+#: src/mooedit/mooeditdialogs.cpp:60
+msgid "Open"
+msgstr "Otevřít"
+
+#: src/mooedit/mooeditdialogs.cpp:127 src/moofileview/ui/moofileview-drop.ui:5
+#: src/plugins/ui/moofileselector.ui:4 src/plugins/moofileselector.cpp:904
+#: src/plugins/moofileselector.cpp:929
+msgid "Save As"
+msgstr "Uložit jako"
+
+#: src/mooedit/mooeditdialogs.cpp:342 src/mooutils/moostock.cpp:28
+msgid "Save _None"
+msgstr "Neukládat _nic"
+
+#: src/mooedit/mooeditdialogs.cpp:344 src/mooutils/moostock.cpp:29
+msgid "Save _Selected"
+msgstr "Uložit _vybrané"
 
 #. Translators: number of documents here is always greater than one, so
 #. ignore singular form (which is simply copy of the plural here)
@@ -722,6 +750,14 @@ msgid ""
 msgstr ""
 "Dosaženo konce dokumentu.\n"
 "Pokračovat od jeho začátku?"
+
+#: src/mooedit/mooeditdialogs.cpp:702
+msgid "_No"
+msgstr "_Ne"
+
+#: src/mooedit/mooeditdialogs.cpp:703
+msgid "_Yes"
+msgstr "_Ano"
 
 #: src/mooedit/mooeditdialogs.cpp:731
 msgid "Invalid regular expression"
@@ -1348,6 +1384,10 @@ msgctxt "plugin-prefs-column"
 msgid "Plugin"
 msgstr "Zásuvný modul"
 
+#: src/mooedit/mootextfind.cpp:158
+msgid "Find and _Replace"
+msgstr "Hledat a nah_radit"
+
 #: src/mooedit/mootextfind.cpp:159
 msgctxt "Dialog title"
 msgid "Replace"
@@ -1441,11 +1481,6 @@ msgstr "Vytvořit adresář"
 #: src/moofileview/ui/moofileprops.ui:64
 msgid "General"
 msgstr "Obecné"
-
-#: src/moofileview/ui/moofileview-drop.ui:5 src/plugins/ui/moofileselector.ui:4
-#: src/plugins/moofileselector.cpp:904 src/plugins/moofileselector.cpp:929
-msgid "Save As"
-msgstr "Uložit jako"
 
 #. Column label in file selector bookmark editor
 #: src/moofileview/moobookmarkmgr.cpp:850
@@ -1541,6 +1576,10 @@ msgstr "Odstranit soubor %s?"
 #: src/moofileview/moofileview.cpp:3236
 msgid "Delete selected files?"
 msgstr "Odstranit vybrané soubory?"
+
+#: src/moofileview/moofileview.cpp:3253
+msgid "_Delete"
+msgstr "_Smazat"
 
 #: src/moofileview/moofileview.cpp:3299
 #, c-format
@@ -1643,26 +1682,26 @@ msgstr "Otevřít po_mocí"
 msgid "Search"
 msgstr "Hledat"
 
-#: src/mooutils/ui/mooaccelprefs.ui:75
+#: src/mooutils/ui/mooaccelprefs.ui:74
 msgctxt "Shortcut"
 msgid "None"
 msgstr "Žádná"
 
-#: src/mooutils/ui/mooaccelprefs.ui:88
+#: src/mooutils/ui/mooaccelprefs.ui:87
 msgctxt "Shortcut"
 msgid "Default"
 msgstr "Výchozí"
 
-#: src/mooutils/ui/mooaccelprefs.ui:104
+#: src/mooutils/ui/mooaccelprefs.ui:103
 msgctxt "Shortcut"
 msgid "Custom"
 msgstr "Vlastní"
 
-#: src/mooutils/ui/mooaccelprefs.ui:134
+#: src/mooutils/ui/mooaccelprefs.ui:133
 msgid "Default key:"
 msgstr "Předvolená klávesa:"
 
-#: src/mooutils/ui/mooaccelprefs.ui:162
+#: src/mooutils/ui/mooaccelprefs.ui:161
 msgid "Shortcut for selected action"
 msgstr "Klávesová zkratka pro vybranou akci"
 
@@ -1688,6 +1727,10 @@ msgstr "Globální"
 msgid "Configure Shortcuts"
 msgstr "Nastavit klávesové zkratky"
 
+#: src/mooutils/mooaccelprefs.cpp:881 src/mooutils/moofiledialog.cpp:292
+msgid "_Help"
+msgstr "_Nápověda"
+
 #: src/mooutils/moodialogs.cpp:429
 #, c-format
 msgid "Save changes to document \"%s\" before closing?"
@@ -1700,6 +1743,15 @@ msgstr "Uložit změny v dokumentu před jeho uzavřením?"
 #: src/mooutils/moodialogs.cpp:435
 msgid "If you don't save, changes will be discarded"
 msgstr "Pokud jej neuložíte, změny budou ztraceny"
+
+#: src/mooutils/moodialogs.cpp:438
+msgid "_Discard"
+msgstr "Za_hodit"
+
+#: src/mooutils/moodialogs.cpp:440 src/mooutils/moofiledialog.cpp:366
+#: src/plugins/usertools/ui/moousertools.ui:212
+msgid "_Save"
+msgstr "_Uložit"
 
 #. Translators: 012345 denotes order in which character encoding
 #. groups should appear, e.g. 543210 means inverse order.
@@ -1978,7 +2030,11 @@ msgctxt "insert-special-char"
 msgid "Insert Special Character"
 msgstr "Vložit speciální znak"
 
-#: src/mooutils/moofiledialog.cpp:573
+#: src/mooutils/moofiledialog.cpp:355 src/mooutils/moohistorymgr.cpp:1668
+msgid "_Open"
+msgstr "_Otevřít"
+
+#: src/mooutils/moofiledialog.cpp:549
 msgid "Selected file is not a regular file"
 msgstr "Vybraný soubor není běžný soubor"
 
@@ -1999,6 +2055,10 @@ msgstr "_Zobrazit"
 #: src/mooutils/moofontsel.cpp:491
 msgid "Show only fixed width fonts"
 msgstr "Zobrazovat jen písma s pevnou šířkou"
+
+#: src/mooutils/moofontsel.cpp:1318
+msgid "_Apply"
+msgstr "_Použít"
 
 #: src/mooutils/moohelp.cpp:32
 msgid "Could not open the medit web site"
@@ -2031,14 +2091,6 @@ msgstr "Ukotvit"
 #: src/mooutils/moopane.cpp:688
 msgid "Keep on top"
 msgstr "Stále navrchu"
-
-#: src/mooutils/moostock.cpp:28
-msgid "Save _None"
-msgstr "Neukládat _nic"
-
-#: src/mooutils/moostock.cpp:29
-msgid "Save _Selected"
-msgstr "Uložit _vybrané"
 
 #: src/mooutils/moostock.cpp:31
 msgid "Move"
@@ -3141,10 +3193,6 @@ msgstr "_Soubory"
 #: src/plugins/usertools/ui/moousertools.ui:186
 msgid "_Requires"
 msgstr "_Vyžaduje"
-
-#: src/plugins/usertools/ui/moousertools.ui:212
-msgid "_Save"
-msgstr "_Uložit"
 
 #: src/plugins/usertools/ui/moousertools.ui:238
 msgid "_Type"

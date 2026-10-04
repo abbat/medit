@@ -498,7 +498,7 @@ _moo_edit_tab_set_notice (MooEditTab     *tab,
 
     if (show_reload)
         gtk_info_bar_add_button (tab->notice, _("Reload"), GTK_RESPONSE_OK);
-    gtk_info_bar_add_button (tab->notice, GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE);
+    gtk_info_bar_add_button (tab->notice, _("_Close"), GTK_RESPONSE_CLOSE);
 
     label = gtk_label_new (text);
     gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);

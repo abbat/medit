@@ -46,7 +46,7 @@ create_message_dialog (GtkWindow  *parent,
     if (buttons == GTK_BUTTONS_CLOSE || buttons == GTK_BUTTONS_OK)
     {
         gtk_dialog_add_buttons (GTK_DIALOG (dialog),
-                                buttons == GTK_BUTTONS_CLOSE ? GTK_STOCK_CLOSE : GTK_STOCK_OK,
+                                buttons == GTK_BUTTONS_CLOSE ? _("_Close") : _("_OK"),
                                 GTK_RESPONSE_CANCEL,
                                 NULL);
         gtk_dialog_set_default_response (GTK_DIALOG (dialog),
@@ -381,7 +381,7 @@ moo_overwrite_file_dialog (const char *display_name,
                                               "overwrite its contents.",
                                               display_dirname);
 
-    gtk_dialog_add_button (GTK_DIALOG (dialog), GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL);
+    gtk_dialog_add_button (GTK_DIALOG (dialog), _("_Cancel"), GTK_RESPONSE_CANCEL);
 
     button = gtk_button_new_with_mnemonic ("_Replace");
     /* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
@@ -435,9 +435,9 @@ moo_save_changes_dialog (const char *display_name,
         _("If you don't save, changes will be discarded"));
 
     gtk_dialog_add_buttons (dialog,
-        GTK_STOCK_DISCARD, GTK_RESPONSE_NO,
-        GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-        GTK_STOCK_SAVE, GTK_RESPONSE_YES,
+        _("_Discard"), GTK_RESPONSE_NO,
+        _("_Cancel"), GTK_RESPONSE_CANCEL,
+        _("_Save"), GTK_RESPONSE_YES,
         NULL);
 
     gtk_dialog_set_default_response (dialog, GTK_RESPONSE_YES);
