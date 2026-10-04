@@ -15,6 +15,7 @@
 
 #include "mooutils/mooutils-gobject-private.h"
 #include "mooutils/mootype-macros.h"
+#include <vector>
 
 
 /*****************************************************************************/
@@ -901,8 +902,8 @@ _moo_object_newv (GType         type,
                   guint         n_params,
                   MooParameter *params)
 {
-    g_autofree const char **names = g_new (const char *, n_params + 1);
-    g_autofree GValue *values = g_new (GValue, n_params + 1);
+    std::vector<const char *> names (n_params);
+    std::vector<GValue> values (n_params);
 
     for (guint i = 0; i < n_params; ++i)
     {
@@ -910,7 +911,7 @@ _moo_object_newv (GType         type,
         values[i] = params[i].value;
     }
 
-    return g_object_new_with_properties (type, n_params, names, values);
+    return g_object_new_with_properties (type, n_params, names.data (), values.data ());
 }
 
 
