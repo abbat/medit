@@ -3717,7 +3717,7 @@ add_bookmark (MooFileView *fileview)
 
     path = _moo_folder_get_path (fileview->priv->current_dir);
     display_path = g_filename_display_name (path);
-    bookmark = _moo_bookmark_new (display_path, path, MOO_STOCK_FOLDER);
+    bookmark = _moo_bookmark_new (display_path, path, "folder");
 
     _moo_bookmark_mgr_add (fileview->priv->bookmark_mgr,
                            bookmark);

@@ -44,7 +44,7 @@ struct _MooBookmark {
     char *path;
     char *display_path;
     char *label;
-    char *icon_stock_id;
+    char *icon_name;
     GdkPixbuf *pixbuf;
 };
 
@@ -74,7 +74,11 @@ MooBookmark    *_moo_bookmark_new           (const char     *name,
                                              const char     *icon);
 void            _moo_bookmark_free          (MooBookmark    *bookmark);
 
+const char     *_moo_bookmark_icon_name_for_stock (const char *id);
+
 MooBookmarkMgr *_moo_bookmark_mgr_new       (void);
+void            _moo_bookmark_mgr_load_node (MooBookmarkMgr *mgr,
+                                             MooMarkupNode  *root);
 GtkTreeModel   *_moo_bookmark_mgr_get_model (MooBookmarkMgr *mgr);
 
 void            _moo_bookmark_mgr_add       (MooBookmarkMgr *mgr,

@@ -294,7 +294,6 @@ DEPRECATED = re.compile(r"The (?:property|signal) ([\w.:-]+) is deprecated")
 # a name out of here in the commit that stops using it.
 KNOWN_DEPRECATED = frozenset([
     "GtkButton:use-stock",                  # 3: stock buttons
-    "GtkCellRendererPixbuf:stock-id",       # 3: stock icons in tree views
     "GtkSettings:gtk-button-images",        # 3: stock buttons
     "GtkSettings:gtk-menu-images",          # 4.1: GtkAction's menu proxies
     "GtkWidget::visibility-notify-event",   # VTE's own accessible; not ours

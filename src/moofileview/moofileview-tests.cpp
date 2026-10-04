@@ -25,6 +25,8 @@
 #include "moofileview/moofile-private.h"
 #include "moofileview/mooiconview.h"
 #include "moofileview/moofileview-impl.h"
+#include "moofileview/moobookmarkmgr.h"
+#include "mooutils/moomarkup.h"
 
 
 static void
@@ -161,12 +163,90 @@ test_key_is_text_input (void)
 }
 
 
+static void
+test_bookmark_icon_name_for_stock (void)
+{
+    /* The stock ids the old code wrote, as freedesktop names. */
+    g_assert_cmpstr (_moo_bookmark_icon_name_for_stock ("gtk-directory"), ==, "folder");
+    g_assert_cmpstr (_moo_bookmark_icon_name_for_stock ("gtk-home"), ==, "go-home");
+    g_assert_cmpstr (_moo_bookmark_icon_name_for_stock ("gtk-harddisk"), ==, "drive-harddisk");
+    g_assert_cmpstr (_moo_bookmark_icon_name_for_stock ("gtk-network"), ==, "network-workgroup");
+    g_assert_cmpstr (_moo_bookmark_icon_name_for_stock ("gtk-cdrom"), ==, "media-optical");
+    g_assert_cmpstr (_moo_bookmark_icon_name_for_stock ("gtk-floppy"), ==, "media-floppy");
+    g_assert_cmpstr (_moo_bookmark_icon_name_for_stock ("gtk-file"), ==, "text-x-generic");
+    g_assert_cmpstr (_moo_bookmark_icon_name_for_stock ("gtk-open"), ==, "document-open");
+    g_assert_cmpstr (_moo_bookmark_icon_name_for_stock ("moo-folder"), ==, "folder");
+
+    /* A stock id that nothing knows is a folder; an icon name is kept. */
+    g_assert_cmpstr (_moo_bookmark_icon_name_for_stock ("gtk-no-such-id"), ==, "folder");
+    g_assert_cmpstr (_moo_bookmark_icon_name_for_stock ("user-desktop"), ==, "user-desktop");
+    g_assert_cmpstr (_moo_bookmark_icon_name_for_stock ("go-home"), ==, "go-home");
+}
+
+
+static char *
+bookmark_icon_at (MooBookmarkMgr *mgr,
+                  int             n)
+{
+    GtkTreeModel *model = _moo_bookmark_mgr_get_model (mgr);
+    GtkTreeIter iter;
+    MooBookmark *bookmark = NULL;
+
+    g_assert_true (gtk_tree_model_iter_nth_child (model, &iter, NULL, n));
+    gtk_tree_model_get (model, &iter, MOO_BOOKMARK_MGR_COLUMN_BOOKMARK, &bookmark, -1);
+    g_assert_nonnull (bookmark);
+    char *icon = g_strdup (bookmark->icon_name);
+    _moo_bookmark_free (bookmark);
+    return icon;
+}
+
+
+/* An rc file as the code that stored stock ids wrote it. */
+static void
+test_bookmark_load_old_rc (void)
+{
+    static const char rc[] =
+        "<medit-prefs><FileSelector><bookmarks>"
+        "<bookmark label=\"Home\" icon=\"gtk-home\">/home/x</bookmark>"
+        "<separator/>"
+        "<bookmark label=\"Disk\" icon=\"gtk-harddisk\">/mnt</bookmark>"
+        "<bookmark label=\"Odd\" icon=\"gtk-no-such-id\">/odd</bookmark>"
+        "<bookmark label=\"New\" icon=\"user-desktop\">/desk</bookmark>"
+        "<bookmark label=\"Bare\">/bare</bookmark>"
+        "</bookmarks></FileSelector></medit-prefs>";
+
+    MooMarkupDoc *doc = moo_markup_parse_memory (rc, -1, NULL);
+    g_assert_nonnull (doc);
+    MooMarkupNode *root = moo_markup_get_element (moo_markup_get_root_element (doc, "medit-prefs"), "FileSelector/bookmarks");
+    g_assert_nonnull (root);
+
+    MooBookmarkMgr *mgr = MOO_BOOKMARK_MGR (g_object_new (MOO_TYPE_BOOKMARK_MGR, (const char*) NULL));
+    _moo_bookmark_mgr_load_node (mgr, root);
+
+    g_autofree char *i0 = bookmark_icon_at (mgr, 0);
+    g_autofree char *i2 = bookmark_icon_at (mgr, 2);
+    g_autofree char *i3 = bookmark_icon_at (mgr, 3);
+    g_autofree char *i4 = bookmark_icon_at (mgr, 4);
+    g_assert_cmpstr (i0, ==, "go-home");
+    g_assert_cmpstr (i2, ==, "drive-harddisk");
+    g_assert_cmpstr (i3, ==, "folder");
+    g_assert_cmpstr (i4, ==, "user-desktop");
+    g_autofree char *i5 = bookmark_icon_at (mgr, 5);
+    g_assert_null (i5);
+
+    g_object_unref (mgr);
+    moo_markup_doc_unref (doc);
+}
+
+
 void
 _moo_add_moofileview_unit_tests (void)
 {
     g_test_add_func ("/moofileview/file/info-for-stat", test_file_info_for_stat);
     g_test_add_func ("/moofileview/icon-view/drag-scroll-delta", test_drag_scroll_delta);
     g_test_add_func ("/moofileview/key-is-text-input", test_key_is_text_input);
+    g_test_add_func ("/moofileview/bookmark/icon-name-for-stock", test_bookmark_icon_name_for_stock);
+    g_test_add_func ("/moofileview/bookmark/load-old-rc", test_bookmark_load_old_rc);
 }
 
 #endif /* MOO_ENABLE_UNIT_TESTS */

@@ -20,7 +20,6 @@
 #include "marshals.h"
 #include "mooutils/mooactionfactory.h"
 #include "mooutils/mooutils-misc.h"
-#include "mooutils/moostock.h"
 #include "mooutils/mootype-macros.h"
 #include "mooutils/mooutils-treeview.h"
 #include "mooutils/moobuilder.h"
@@ -219,7 +218,7 @@ _moo_bookmark_new (const char     *label,
     bookmark->path = g_strdup (path);
     bookmark->display_path = path ? g_filename_display_name (path) : NULL;
     bookmark->label = g_strdup (label);
-    bookmark->icon_stock_id = g_strdup (icon);
+    bookmark->icon_name = g_strdup (icon);
 
     return bookmark;
 }
@@ -237,7 +236,7 @@ _moo_bookmark_copy (MooBookmark *bookmark)
     copy->path = g_strdup (bookmark->path);
     copy->display_path = g_strdup (bookmark->display_path);
     copy->label = g_strdup (bookmark->label);
-    copy->icon_stock_id = g_strdup (bookmark->icon_stock_id);
+    copy->icon_name = g_strdup (bookmark->icon_name);
     if (bookmark->pixbuf)
         copy->pixbuf = g_object_ref (bookmark->pixbuf);
 
@@ -253,7 +252,7 @@ _moo_bookmark_free (MooBookmark *bookmark)
         g_free (bookmark->path);
         g_free (bookmark->display_path);
         g_free (bookmark->label);
-        g_free (bookmark->icon_stock_id);
+        g_free (bookmark->icon_name);
         if (bookmark->pixbuf)
             g_object_unref (bookmark->pixbuf);
         g_free (bookmark);
@@ -284,25 +283,108 @@ _moo_bookmark_set_display_path (MooBookmark  *bookmark,
 /***************************************************************************/
 /* Loading and saving
  */
+
+/* What a stock id stood for, as a freedesktop icon name: the ids GTK+ 3.24's
+   gtkiconfactory.c knows, and our own. Older versions stored a stock id in the
+   rc file; the table is only read on load. */
+static const struct {
+    const char *stock;
+    const char *name;
+} stock_icon_names[] = {
+    { "gtk-directory",      "folder" },
+    { "gtk-home",           "go-home" },
+    { "gtk-harddisk",       "drive-harddisk" },
+    { "gtk-network",        "network-workgroup" },
+    { "gtk-cdrom",          "media-optical" },
+    { "gtk-floppy",         "media-floppy" },
+    { "gtk-file",           "text-x-generic" },
+    { "gtk-open",           "document-open" },
+    { "gtk-new",            "document-new" },
+    { "gtk-save",           "document-save" },
+    { "gtk-save-as",        "document-save-as" },
+    { "gtk-print",          "document-print" },
+    { "gtk-properties",     "document-properties" },
+    { "gtk-revert-to-saved", "document-revert" },
+    { "gtk-add",            "list-add" },
+    { "gtk-remove",         "list-remove" },
+    { "gtk-delete",         "edit-delete" },
+    { "gtk-find",           "edit-find" },
+    { "gtk-find-and-replace", "edit-find-replace" },
+    { "gtk-copy",           "edit-copy" },
+    { "gtk-cut",            "edit-cut" },
+    { "gtk-paste",          "edit-paste" },
+    { "gtk-undo",           "edit-undo" },
+    { "gtk-redo",           "edit-redo" },
+    { "gtk-clear",          "edit-clear" },
+    { "gtk-select-all",     "edit-select-all" },
+    { "gtk-edit",           "accessories-text-editor" },
+    { "gtk-refresh",        "view-refresh" },
+    { "gtk-index",          "view-list" },
+    { "gtk-preferences",    "preferences-system" },
+    { "gtk-go-up",          "go-up" },
+    { "gtk-go-down",        "go-down" },
+    { "gtk-go-back",        "go-previous" },
+    { "gtk-go-forward",     "go-next" },
+    { "gtk-goto-top",       "go-top" },
+    { "gtk-goto-bottom",    "go-bottom" },
+    { "gtk-goto-first",     "go-first" },
+    { "gtk-goto-last",      "go-last" },
+    { "gtk-jump-to",        "go-jump" },
+    { "gtk-execute",        "system-run" },
+    { "gtk-stop",           "process-stop" },
+    { "gtk-close",          "window-close" },
+    { "gtk-quit",           "application-exit" },
+    { "gtk-help",           "help-browser" },
+    { "gtk-about",          "help-about" },
+    { "gtk-info",           "dialog-information" },
+    { "gtk-dialog-info",    "dialog-information" },
+    { "gtk-dialog-warning", "dialog-warning" },
+    { "gtk-dialog-error",   "dialog-error" },
+    { "gtk-dialog-question", "dialog-question" },
+    { "gtk-zoom-in",        "zoom-in" },
+    { "gtk-zoom-out",       "zoom-out" },
+    { "gtk-zoom-100",       "zoom-original" },
+    { "gtk-zoom-fit",       "zoom-fit-best" },
+    { "gtk-select-color",   "applications-graphics" },
+    { "gtk-select-font",    "preferences-desktop-font" },
+    { "gtk-spell-check",    "tools-check-spelling" },
+    { "moo-folder",         "folder" },
+    { "moo-file-selector",  "folder" },
+    { "moo-file",           "text-x-generic" },
+    { "moo-new-folder",     "folder-new" },
+    { "moo-file-bookmark",  "bookmark" },
+    { "moo-edit-bookmark",  "bookmark" },
+    { "moo-terminal",       "utilities-terminal" },
+};
+
+/* Stock ids were "gtk-..." and "moo-..."; anything else is already an icon
+   name and is kept. A stock id nothing here knows becomes a folder. */
+const char *
+_moo_bookmark_icon_name_for_stock (const char *id)
+{
+    g_return_val_if_fail (id != NULL, "folder");
+
+    if (!g_str_has_prefix (id, "gtk-") && !g_str_has_prefix (id, "moo-"))
+        return id;
+
+    for (const auto &item : stock_icon_names)
+        if (!strcmp (item.stock, id))
+            return item.name;
+
+    return "folder";
+}
+
 #define BOOKMARKS_ROOT "FileSelector/bookmarks"
 #define ELEMENT_BOOKMARK "bookmark"
 #define ELEMENT_SEPARATOR "separator"
 #define PROP_LABEL "label"
 #define PROP_ICON "icon"
 
-static void
-moo_bookmark_mgr_load (MooBookmarkMgr *mgr)
+void
+_moo_bookmark_mgr_load_node (MooBookmarkMgr *mgr,
+                             MooMarkupNode  *root)
 {
-    MooMarkupNode *builder;
-    MooMarkupNode *root, *node;
-
-    builder = moo_prefs_get_markup (MOO_PREFS_RC);
-    g_return_if_fail (builder != NULL);
-
-    root = moo_markup_get_element (builder, BOOKMARKS_ROOT);
-
-    if (!root)
-        return;
+    MooMarkupNode *node;
 
     mgr->priv->loading = TRUE;
 
@@ -315,7 +397,8 @@ moo_bookmark_mgr_load (MooBookmarkMgr *mgr)
         {
             MooBookmark *bookmark;
             const char *label = moo_markup_get_prop (node, PROP_LABEL);
-            const char *icon = moo_markup_get_prop (node, PROP_ICON);
+            const char *stored_icon = moo_markup_get_prop (node, PROP_ICON);
+            const char *icon = stored_icon ? _moo_bookmark_icon_name_for_stock (stored_icon) : NULL;
             const char *path_utf8 = moo_markup_get_content (node);
             char *path;
 
@@ -350,6 +433,19 @@ moo_bookmark_mgr_load (MooBookmarkMgr *mgr)
     }
 
     mgr->priv->loading = FALSE;
+}
+
+
+static void
+moo_bookmark_mgr_load (MooBookmarkMgr *mgr)
+{
+    MooMarkupNode *builder = moo_prefs_get_markup (MOO_PREFS_RC);
+    g_return_if_fail (builder != NULL);
+
+    MooMarkupNode *root = moo_markup_get_element (builder, BOOKMARKS_ROOT);
+
+    if (root)
+        _moo_bookmark_mgr_load_node (mgr, root);
 }
 
 
@@ -394,8 +490,8 @@ moo_bookmark_mgr_save (MooBookmarkMgr *mgr)
         elm = moo_markup_create_text_element (root, ELEMENT_BOOKMARK,
                                               bookmark->display_path);
         moo_markup_set_prop (elm, PROP_LABEL, bookmark->label);
-        if (bookmark->icon_stock_id)
-            moo_markup_set_prop (elm, PROP_ICON, bookmark->icon_stock_id);
+        if (bookmark->icon_name)
+            moo_markup_set_prop (elm, PROP_ICON, bookmark->icon_name);
 
         _moo_bookmark_free (bookmark);
     }
@@ -511,7 +607,7 @@ make_menu (MooBookmarkMgr *mgr,
 
         action = moo_action_group_add_action (group, action_id,
                                               "label", bookmark->label ? bookmark->label : bookmark->display_path,
-                                              "stock-id", bookmark->icon_stock_id,
+                                              "icon-name", bookmark->icon_name,
                                               "tooltip", bookmark->display_path,
                                               "no-accel", TRUE,
                                               NULL);
@@ -930,12 +1026,12 @@ icon_data_func (G_GNUC_UNUSED GtkTreeViewColumn *column,
     if (!bookmark)
         g_object_set (cell,
                       "pixbuf", NULL,
-                      "stock-id", NULL,
+                      "icon-name", NULL,
                       NULL);
     else
         g_object_set (cell,
                       "pixbuf", bookmark->pixbuf,
-                      "stock-id", bookmark->icon_stock_id,
+                      "icon-name", bookmark->icon_name,
                       "stock-size", GTK_ICON_SIZE_MENU,
                       NULL);
 
@@ -1040,7 +1136,7 @@ new_clicked (GtkBuilder *builder)
     store = GTK_LIST_STORE (gtk_tree_view_get_model (treeview));
 
     bookmark = _moo_bookmark_new ("New bookmark", NULL,
-                                  MOO_STOCK_FOLDER);
+                                  "folder");
     gtk_list_store_append (store, &iter);
     set_bookmark (store, &iter, bookmark);
 
@@ -1220,12 +1316,11 @@ static void combo_label_data_func   (GtkCellLayout      *cell_layout,
                                      GtkCellRenderer    *cell,
                                      GtkTreeModel       *model,
                                      GtkTreeIter        *iter, gpointer);
-static void fill_icon_store         (GtkListStore       *store,
-                                     GtkStyleContext    *context);
+static void fill_icon_store         (GtkListStore       *store);
 static void icon_store_find_pixbuf  (GtkListStore       *store,
                                      GtkTreeIter        *iter,
                                      GdkPixbuf          *pixbuf);
-static void icon_store_find_stock   (GtkListStore       *store,
+static void icon_store_find_name   (GtkListStore       *store,
                                      GtkTreeIter        *iter,
                                      const char         *stock);
 static void icon_store_find_empty   (GtkListStore       *store,
@@ -1242,13 +1337,9 @@ init_icon_combo (GtkComboBox *combo,
 
     if (!icon_store)
     {
-        GtkWidget *dialog = GTK_WIDGET (moo_builder_get (builder, "BkEditor"));
-
         icon_store = gtk_list_store_new (3, GDK_TYPE_PIXBUF,
                                          G_TYPE_STRING, G_TYPE_STRING);
-
-        GtkStyleContext *context = gtk_widget_get_style_context (dialog);
-        fill_icon_store (icon_store, context);
+        fill_icon_store (icon_store);
     }
 
     gtk_cell_layout_clear (GTK_CELL_LAYOUT (combo));
@@ -1295,8 +1386,8 @@ combo_update_icon (GtkComboBox *combo,
 
     if (bookmark->pixbuf)
         icon_store_find_pixbuf (icon_store, &iter, bookmark->pixbuf);
-    else if (bookmark->icon_stock_id)
-        icon_store_find_stock (icon_store, &iter, bookmark->icon_stock_id);
+    else if (bookmark->icon_name)
+        icon_store_find_name (icon_store, &iter, bookmark->icon_name);
     else
         icon_store_find_empty (icon_store, &iter);
 
@@ -1312,7 +1403,7 @@ combo_update_icon (GtkComboBox *combo,
 
 enum {
     ICON_COLUMN_PIXBUF = 0,
-    ICON_COLUMN_STOCK  = 1,
+    ICON_COLUMN_NAME   = 1,
     ICON_COLUMN_LABEL  = 2
 };
 
@@ -1322,7 +1413,7 @@ combo_icon_data_func (G_GNUC_UNUSED GtkCellLayout *cell_layout,
                       GtkTreeModel       *model,
                       GtkTreeIter        *iter, G_GNUC_UNUSED gpointer data)
 {
-    char *stock = NULL;
+    char *name = NULL;
     GdkPixbuf *pixbuf = NULL;
 
     gtk_tree_model_get (model, iter, ICON_COLUMN_PIXBUF, &pixbuf, -1);
@@ -1333,10 +1424,10 @@ combo_icon_data_func (G_GNUC_UNUSED GtkCellLayout *cell_layout,
         return;
     }
 
-    gtk_tree_model_get (model, iter, ICON_COLUMN_STOCK, &stock, -1);
-    g_object_set (cell, "stock-id", stock,
+    gtk_tree_model_get (model, iter, ICON_COLUMN_NAME, &name, -1);
+    g_object_set (cell, "icon-name", name,
                   "stock-size", GTK_ICON_SIZE_MENU, NULL);
-    g_free (stock);
+    g_free (name);
 }
 
 
@@ -1354,76 +1445,37 @@ combo_label_data_func (G_GNUC_UNUSED GtkCellLayout *cell_layout,
 
 
 static void
-fill_icon_store (GtkListStore   *store,
-                GtkStyleContext *context
-)
+fill_icon_store (GtkListStore *store)
 {
+    static const struct {
+        const char *name;
+        const char *label;
+    } icons[] = {
+        { "folder",             N_("Folder") },
+        { "go-home",            N_("Home") },
+        { "user-desktop",       N_("Desktop") },
+        { "folder-documents",   N_("Documents") },
+        { "drive-harddisk",     N_("Hard Disk") },
+        { "media-optical",      N_("CD-ROM") },
+        { "media-floppy",       N_("Floppy") },
+        { "network-workgroup",  N_("Network") },
+        { "document-open",      N_("Open") },
+        { "text-x-generic",     N_("File") },
+        { "bookmark",           N_("Bookmark") },
+    };
+
     GtkTreeIter iter;
-    GSList *stock_ids, *l;
 
-    /* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
-    G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-    stock_ids = gtk_stock_list_ids ();
-    G_GNUC_END_IGNORE_DEPRECATIONS
-
-    for (l = stock_ids; l != NULL; l = l->next)
+    for (const auto &icon : icons)
     {
-        GtkStockItem item;
-        GtkIconSet* set;
-
-        // Deprecated since: 3.10
-        // Use gtk_icon_theme_lookup_icon() instead.
-        G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-        set = gtk_style_context_lookup_icon_set (context, (const char *) l->data);
-        G_GNUC_END_IGNORE_DEPRECATIONS
-
-        if (!set)
-            continue;
-
         gtk_list_store_append (store, &iter);
-        gtk_list_store_set (store, &iter, ICON_COLUMN_STOCK,
-                            (const char *) l->data, -1);
-
-        G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-        gboolean found = gtk_stock_lookup ((const char *) l->data, &item);
-        G_GNUC_END_IGNORE_DEPRECATIONS
-
-        if (found)
-        {
-            char *label = g_strdup (item.label);
-            char *und = strchr (label, '_');
-
-            if (und)
-            {
-                if (und[1] == 0)
-                    *und = 0;
-                else
-                    memmove (und, und + 1, strlen (label) - (und - label));
-            }
-
-            gtk_list_store_set (store, &iter, ICON_COLUMN_LABEL,
-                                label, -1);
-            g_free (label);
-        }
-        else
-        {
-            gtk_list_store_set (store, &iter, ICON_COLUMN_LABEL,
-                                (const char *) l->data, -1);
-        }
+        gtk_list_store_set (store, &iter,
+                            ICON_COLUMN_NAME, icon.name,
+                            ICON_COLUMN_LABEL, _(icon.label), -1);
     }
-
-    gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (store),
-                                          ICON_COLUMN_LABEL,
-                                          GTK_SORT_ASCENDING);
-    gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (store),
-                                          GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID,
-                                          GTK_SORT_ASCENDING);
 
     gtk_list_store_append (store, &iter);
     gtk_list_store_set (store, &iter, ICON_COLUMN_LABEL, "None", -1);
-
-    g_slist_free_full (stock_ids, (GDestroyNotify) g_free);
-
 }
 
 
@@ -1438,7 +1490,7 @@ icon_combo_changed (GtkComboBox *combo,
     MooBookmark *bookmark;
     GtkTreeModel *icon_model;
     GdkPixbuf *pixbuf = NULL;
-    char *stock = NULL;
+    char *name = NULL;
 
     selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (moo_builder_get (builder, "treeview")));
     rows = gtk_tree_selection_get_selected_rows (selection, &model);
@@ -1454,8 +1506,8 @@ icon_combo_changed (GtkComboBox *combo,
     if (bookmark->pixbuf)
         g_object_unref (bookmark->pixbuf);
     bookmark->pixbuf = NULL;
-    g_free (bookmark->icon_stock_id);
-    bookmark->icon_stock_id = NULL;
+    g_free (bookmark->icon_name);
+    bookmark->icon_name = NULL;
 
     gtk_tree_model_get (icon_model, &icon_iter, ICON_COLUMN_PIXBUF,
                         &pixbuf, -1);
@@ -1465,9 +1517,9 @@ icon_combo_changed (GtkComboBox *combo,
 
     if (!pixbuf)
     {
-        gtk_tree_model_get (icon_model, &icon_iter, ICON_COLUMN_STOCK,
-                            &stock, -1);
-        bookmark->icon_stock_id = stock;
+        gtk_tree_model_get (icon_model, &icon_iter, ICON_COLUMN_NAME,
+                            &name, -1);
+        bookmark->icon_name = name;
     }
 
     set_bookmark (GTK_LIST_STORE (model), &iter, bookmark);
@@ -1510,7 +1562,7 @@ icon_store_find_pixbuf (GtkListStore       *store,
 
 
 static void
-icon_store_find_stock (GtkListStore       *store,
+icon_store_find_name (GtkListStore       *store,
                        GtkTreeIter        *iter,
                        const char         *stock)
 {
@@ -1521,7 +1573,7 @@ icon_store_find_stock (GtkListStore       *store,
     if (gtk_tree_model_get_iter_first (model, iter)) do
     {
         char *id = NULL;
-        gtk_tree_model_get (model, iter, ICON_COLUMN_STOCK, &id, -1);
+        gtk_tree_model_get (model, iter, ICON_COLUMN_NAME, &id, -1);
 
         if (id && !strcmp (id, stock))
         {
@@ -1534,7 +1586,7 @@ icon_store_find_stock (GtkListStore       *store,
     while (gtk_tree_model_iter_next (model, iter));
 
     gtk_list_store_append (store, iter);
-    gtk_list_store_set (store, iter, ICON_COLUMN_STOCK, stock, -1);
+    gtk_list_store_set (store, iter, ICON_COLUMN_NAME, stock, -1);
 }
 
 
@@ -1549,7 +1601,7 @@ icon_store_find_empty (GtkListStore       *store,
         char *id = NULL;
         GdkPixbuf *pixbuf = NULL;
 
-        gtk_tree_model_get (model, iter, ICON_COLUMN_STOCK, &id,
+        gtk_tree_model_get (model, iter, ICON_COLUMN_NAME, &id,
                             ICON_COLUMN_PIXBUF, &pixbuf, -1);
 
         if (!id && !pixbuf)

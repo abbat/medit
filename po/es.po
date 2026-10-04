@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: moo\n"
 "Report-Msgid-Bugs-To: https://github.com/abbat/medit/issues\n"
-"POT-Creation-Date: 2026-10-04 20:39+0300\n"
+"POT-Creation-Date: 2026-10-04 20:57+0300\n"
 "PO-Revision-Date: 2014-01-03 20:25+0100\n"
 "Last-Translator: Eulogio Serradilla <eserradi@gmail.com>\n"
 "Language-Team:  <es@li.org>\n"
@@ -382,7 +382,7 @@ msgstr "en la columna"
 #: src/moofileview/ui/moofileprops.ui:83
 #: src/moofileview/ui/moofileview-drop.ui:56
 #: src/moofileview/moofileview.cpp:3252 src/moofileview/moofileview.cpp:5851
-#: src/moofileview/moofileview.cpp:6251 src/mooutils/mooaccelprefs.cpp:882
+#: src/moofileview/moofileview.cpp:6251 src/mooutils/mooaccelprefs.cpp:883
 #: src/mooutils/moodialogs.cpp:384 src/mooutils/moodialogs.cpp:436
 #: src/mooutils/moofiledialog.cpp:280 src/mooutils/moofontsel.cpp:1309
 #: src/mooutils/moohistorymgr.cpp:1667 src/plugins/ui/moofileselector.ui:56
@@ -480,7 +480,7 @@ msgstr "Pie de página"
 #: src/moofileview/ui/moobookmark-editor.ui:242
 #: src/moofileview/ui/moocreatefolder.ui:63
 #: src/moofileview/ui/moofileprops.ui:93
-#: src/moofileview/ui/moofileview-drop.ui:65 src/mooutils/mooaccelprefs.cpp:883
+#: src/moofileview/ui/moofileview-drop.ui:65 src/mooutils/mooaccelprefs.cpp:884
 #: src/mooutils/moodialogs.cpp:49 src/mooutils/moofontsel.cpp:1323
 #: src/plugins/ui/moofileselector.ui:65 src/plugins/ui/moofileselector.ui:145
 msgid "_OK"
@@ -615,7 +615,7 @@ msgid "_Window"
 msgstr "_Ventana"
 
 #. menu item label
-#: src/mooedit/medit.xml.h:16 src/mooutils/mooaccelprefs.cpp:881
+#: src/mooedit/medit.xml.h:16 src/mooutils/mooaccelprefs.cpp:882
 #: src/mooutils/moofiledialog.cpp:292
 msgid "_Help"
 msgstr "Ay_uda"
@@ -624,7 +624,7 @@ msgstr "Ay_uda"
 msgid "_Insert Unicode Control Character"
 msgstr "_Insertar un carácter de control Unicode"
 
-#: src/mooedit/mooeditdialogs.cpp:60
+#: src/mooedit/mooeditdialogs.cpp:60 src/moofileview/moobookmarkmgr.cpp:1462
 msgid "Open"
 msgstr "Abrir"
 
@@ -1503,22 +1503,62 @@ msgid "General"
 msgstr "General"
 
 #. Column label in file selector bookmark editor
-#: src/moofileview/moobookmarkmgr.cpp:850
+#: src/moofileview/moobookmarkmgr.cpp:946
 msgctxt "fileview-bookmark-editor"
 msgid "Icon"
 msgstr "Icono"
 
 #. Column label in file selector bookmark editor
-#: src/moofileview/moobookmarkmgr.cpp:866
+#: src/moofileview/moobookmarkmgr.cpp:962
 msgctxt "fileview-bookmark-editor"
 msgid "Label"
 msgstr "Etiqueta"
 
 #. Column label in file selector bookmark editor
-#: src/moofileview/moobookmarkmgr.cpp:884
+#: src/moofileview/moobookmarkmgr.cpp:980
 msgctxt "fileview-bookmark-editor"
 msgid "Path"
 msgstr "Ruta"
+
+#: src/moofileview/moobookmarkmgr.cpp:1454
+msgid "Folder"
+msgstr ""
+
+#: src/moofileview/moobookmarkmgr.cpp:1455
+msgid "Home"
+msgstr "Inicio"
+
+#: src/moofileview/moobookmarkmgr.cpp:1456
+msgid "Desktop"
+msgstr ""
+
+#: src/moofileview/moobookmarkmgr.cpp:1457
+msgid "Documents"
+msgstr ""
+
+#: src/moofileview/moobookmarkmgr.cpp:1458
+msgid "Hard Disk"
+msgstr "Disco duro"
+
+#: src/moofileview/moobookmarkmgr.cpp:1459
+msgid "CD-ROM"
+msgstr ""
+
+#: src/moofileview/moobookmarkmgr.cpp:1460
+msgid "Floppy"
+msgstr "Disquete"
+
+#: src/moofileview/moobookmarkmgr.cpp:1461
+msgid "Network"
+msgstr "Red"
+
+#: src/moofileview/moobookmarkmgr.cpp:1463
+msgid "File"
+msgstr "Archivo"
+
+#: src/moofileview/moobookmarkmgr.cpp:1464
+msgid "Bookmark"
+msgstr ""
 
 #: src/moofileview/moofileview.cpp:1136 src/plugins/moofileselector.cpp:638
 #: src/plugins/moofileselector.cpp:639 src/plugins/moofileselector.cpp:1286
@@ -1741,24 +1781,24 @@ msgid "Shortcut for selected action"
 msgstr "Combinación para la acción seleccionada"
 
 #. Column label in Configure Shortcuts dialog
-#: src/mooutils/mooaccelprefs.cpp:324
+#: src/mooutils/mooaccelprefs.cpp:325
 msgctxt "accel-editor-column"
 msgid "Action"
 msgstr "Acción"
 
 #. Column label in Configure Shortcuts dialog
-#: src/mooutils/mooaccelprefs.cpp:333
+#: src/mooutils/mooaccelprefs.cpp:334
 msgctxt "accel-editor-column"
 msgid "Shortcut"
 msgstr "Atajo"
 
 #. Column label in Configure Shortcuts dialog
-#: src/mooutils/mooaccelprefs.cpp:342
+#: src/mooutils/mooaccelprefs.cpp:343
 msgctxt "accel-editor-column"
 msgid "Global"
 msgstr "Global"
 
-#: src/mooutils/mooaccelprefs.cpp:879
+#: src/mooutils/mooaccelprefs.cpp:880
 msgid "Configure Shortcuts"
 msgstr "Atajos del teclado"
 
@@ -2218,7 +2258,7 @@ msgid "Toolbar _Style"
 msgstr "_Estilo de la barra de herramientas"
 
 #. label of Ctags plugin pane
-#: src/plugins/ctags/ctags-plugin.c:234 src/plugins/ctags/ctags-plugin.c:235
+#: src/plugins/ctags/ctags-plugin.c:232 src/plugins/ctags/ctags-plugin.c:233
 msgctxt "window-pane"
 msgid "Functions"
 msgstr "Funciones"

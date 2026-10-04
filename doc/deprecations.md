@@ -152,8 +152,9 @@ Facts the survey of 2026-10-04 established, so they need not be found again:
   `get_stock_icon (MOO_STOCK_FILE)` in `moofileicon.cpp` (3.7).
   Done with 3.4: the pane label, `_moo_window_set_icon_from_stock` (deleted),
   `moolinemark.cpp`, `moouixml.cpp` and the prefs dialog renderer (`icon-name`) are
-  converted. Left: the bookmark renderers (3.5, so `GtkCellRendererPixbuf:stock-id`
-  stays in `KNOWN_DEPRECATED`) and `get_stock_icon (MOO_STOCK_FILE)` (3.7).
+  converted. Done with 3.5: the bookmark renderers too, so
+  `GtkCellRendererPixbuf:stock-id` is out of `KNOWN_DEPRECATED`. Left:
+  `get_stock_icon (MOO_STOCK_FILE)` (3.7).
 - [x] 3.4 Data fields: `MooPaneLabel.icon_stock_id`, MooPrefsPage `icon-stock-id`,
   MooLineMark `stock-id`, MooUiXml `stock-id`/`icon-stock-id`/`stock-label` →
   icon names and labels, with every in-tree caller and the two `.xml` files.
@@ -169,9 +170,13 @@ Facts the survey of 2026-10-04 established, so they need not be found again:
   until 3.7 `moostock.cpp` registers them with `gtk_icon_theme_add_builtin_icon`
   from the same pixbufs. Nothing here is read from user config, so no id mapping
   on load (bookmarks are 3.5).
-- [ ] 3.5 Bookmarks: map stock ids to icon names on load (unknown → `folder`),
+- [x] 3.5 Bookmarks: map stock ids to icon names on load (unknown → `folder`),
   write icon names, build the icon combo from icon names. Test the round trip with
-  an rc file written by the old code.
+  an rc file written by the old code. Done: `MooBookmark.icon_name`;
+  `_moo_bookmark_icon_name_for_stock()` maps `gtk-*`/`moo-*` ids and keeps anything
+  else; `_moo_bookmark_mgr_load_node()` is the load without the prefs global, so
+  `unit.moofileview.bookmark.load-old-rc` feeds it an rc as the old code wrote it.
+  The editor's combo is a fixed list of eleven icon names.
 - [ ] 3.6 MooAction `stock-id` → `icon-name` + an explicit `label`, then drop
   `gtk_stock_lookup` from `mooactionbase.cpp`. Four actions have no label of their
   own: GoToCurrentDocDir (`moofileselector.cpp`), Cut/Copy/Paste
