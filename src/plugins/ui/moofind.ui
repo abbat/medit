@@ -17,14 +17,13 @@
               <object class="GtkVBox" id="vbox2">
                 <property name="visible">True</property>
                 <child>
-                  <object class="GtkTable" id="table2">
+                  <object class="GtkGrid" id="table2">
                     <property name="visible">True</property>
-                    <property name="n_rows">3</property>
-                    <property name="n_columns">2</property>
                     <property name="column_spacing">6</property>
                     <property name="row_spacing">6</property>
                     <child>
                       <object class="GtkEventBox" id="eventbox5">
+                        <property name="valign">center</property>
                         <property name="visible">True</property>
                         <property name="tooltip-text">This entry content will be passed to grep</property>
                         <child>
@@ -38,12 +37,13 @@
                         </child>
                       </object>
                       <packing>
-                        <property name="x_options">GTK_FILL</property>
-                        <property name="y_options"/>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">0</property>
                       </packing>
                     </child>
                     <child>
                       <object class="GtkEventBox" id="eventbox7">
+                        <property name="valign">center</property>
                         <property name="visible">True</property>
                         <property name="tooltip-text">You can use Tab completion in this entry. Try also Ctrl-L</property>
                         <child>
@@ -57,14 +57,13 @@
                         </child>
                       </object>
                       <packing>
+                        <property name="left_attach">0</property>
                         <property name="top_attach">1</property>
-                        <property name="bottom_attach">2</property>
-                        <property name="x_options">GTK_FILL</property>
-                        <property name="y_options"/>
                       </packing>
                     </child>
                     <child>
                       <object class="GtkEventBox" id="eventbox8">
+                        <property name="valign">center</property>
                         <property name="visible">True</property>
                         <property name="tooltip-text">Enter semicolon-separated list of globs</property>
                         <child>
@@ -78,50 +77,47 @@
                         </child>
                       </object>
                       <packing>
+                        <property name="left_attach">0</property>
                         <property name="top_attach">2</property>
-                        <property name="bottom_attach">3</property>
-                        <property name="x_options">GTK_FILL</property>
-                        <property name="y_options"/>
                       </packing>
                     </child>
                     <child>
                       <object class="MooHistoryCombo" id="pattern_combo">
+                        <property name="hexpand">True</property>
+                        <property name="valign">center</property>
   <property name="history-list-id">FindPlugin/find/pattern</property>
                         <property name="visible">True</property>
                         <property name="activates_default">True</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
-                        <property name="right_attach">2</property>
-                        <property name="y_options"/>
+                        <property name="top_attach">0</property>
                       </packing>
                     </child>
                     <child>
                       <object class="MooHistoryCombo" id="dir_combo">
+                        <property name="hexpand">True</property>
+                        <property name="valign">center</property>
   <property name="history-list-id">FindPlugin/find/dir</property>
                         <property name="visible">True</property>
                         <property name="activates_default">True</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
-                        <property name="right_attach">2</property>
                         <property name="top_attach">1</property>
-                        <property name="bottom_attach">2</property>
-                        <property name="y_options"/>
                       </packing>
                     </child>
                     <child>
                       <object class="MooHistoryCombo" id="skip_combo">
+                        <property name="hexpand">True</property>
+                        <property name="valign">center</property>
   <property name="history-list-id">FindPlugin/find/skip</property>
                         <property name="visible">True</property>
                         <property name="activates_default">True</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
-                        <property name="right_attach">2</property>
                         <property name="top_attach">2</property>
-                        <property name="bottom_attach">3</property>
-                        <property name="y_options"/>
                       </packing>
                     </child>
                   </object>

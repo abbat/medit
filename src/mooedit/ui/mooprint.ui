@@ -205,14 +205,14 @@
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkTable" id="table1">
+                                      <object class="GtkGrid" id="table1">
                                         <property name="visible">True</property>
-                                        <property name="n_rows">3</property>
-                                        <property name="n_columns">2</property>
                                         <property name="column_spacing">12</property>
                                         <property name="row_spacing">6</property>
                                         <child>
                                           <object class="GtkEntry" id="header_right">
+                                            <property name="hexpand">True</property>
+                                            <property name="valign">center</property>
                                             <property name="visible">True</property>
                                             <property name="tooltip-text">Format is similar to that of strftime (3), with the following additions:
 %Ef - printed document name;
@@ -222,14 +222,13 @@
                                           </object>
                                           <packing>
                                             <property name="left_attach">1</property>
-                                            <property name="right_attach">2</property>
                                             <property name="top_attach">2</property>
-                                            <property name="bottom_attach">3</property>
-                                            <property name="y_options"/>
                                           </packing>
                                         </child>
                                         <child>
                                           <object class="GtkEntry" id="header_center">
+                                            <property name="hexpand">True</property>
+                                            <property name="valign">center</property>
                                             <property name="visible">True</property>
                                             <property name="tooltip-text">Format is similar to that of strftime (3), with the following additions:
 %Ef - printed document name;
@@ -239,14 +238,13 @@
                                           </object>
                                           <packing>
                                             <property name="left_attach">1</property>
-                                            <property name="right_attach">2</property>
                                             <property name="top_attach">1</property>
-                                            <property name="bottom_attach">2</property>
-                                            <property name="y_options"/>
                                           </packing>
                                         </child>
                                         <child>
                                           <object class="GtkEntry" id="header_left">
+                                            <property name="hexpand">True</property>
+                                            <property name="valign">center</property>
                                             <property name="visible">True</property>
                                             <property name="tooltip-text">Format is similar to that of strftime (3), with the following additions:
 %Ef - printed document name;
@@ -256,45 +254,43 @@
                                           </object>
                                           <packing>
                                             <property name="left_attach">1</property>
-                                            <property name="right_attach">2</property>
-                                            <property name="y_options"/>
+                                            <property name="top_attach">0</property>
                                           </packing>
                                         </child>
                                         <child>
                                           <object class="GtkLabel" id="label5">
+                                            <property name="valign">center</property>
                                             <property name="visible">True</property>
                                             <property name="xalign">0</property>
                                             <property name="label" translatable="yes">Right</property>
                                           </object>
                                           <packing>
+                                            <property name="left_attach">0</property>
                                             <property name="top_attach">2</property>
-                                            <property name="bottom_attach">3</property>
-                                            <property name="x_options">GTK_FILL</property>
-                                            <property name="y_options"/>
                                           </packing>
                                         </child>
                                         <child>
                                           <object class="GtkLabel" id="label4">
+                                            <property name="valign">center</property>
                                             <property name="visible">True</property>
                                             <property name="xalign">0</property>
                                             <property name="label" translatable="yes">Center</property>
                                           </object>
                                           <packing>
+                                            <property name="left_attach">0</property>
                                             <property name="top_attach">1</property>
-                                            <property name="bottom_attach">2</property>
-                                            <property name="x_options">GTK_FILL</property>
-                                            <property name="y_options"/>
                                           </packing>
                                         </child>
                                         <child>
                                           <object class="GtkLabel" id="label3">
+                                            <property name="valign">center</property>
                                             <property name="visible">True</property>
                                             <property name="xalign">0</property>
                                             <property name="label" translatable="yes">Left</property>
                                           </object>
                                           <packing>
-                                            <property name="x_options">GTK_FILL</property>
-                                            <property name="y_options"/>
+                                            <property name="left_attach">0</property>
+                                            <property name="top_attach">0</property>
                                           </packing>
                                         </child>
                                       </object>
@@ -366,14 +362,14 @@
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkTable" id="table4">
+                                      <object class="GtkGrid" id="table4">
                                         <property name="visible">True</property>
-                                        <property name="n_rows">3</property>
-                                        <property name="n_columns">2</property>
                                         <property name="column_spacing">12</property>
                                         <property name="row_spacing">6</property>
                                         <child>
                                           <object class="GtkEntry" id="footer_right">
+                                            <property name="hexpand">True</property>
+                                            <property name="valign">center</property>
                                             <property name="visible">True</property>
                                             <property name="tooltip-text">Format is similar to that of strftime (3), with the following additions:
 %Ef - printed document name;
@@ -383,14 +379,13 @@
                                           </object>
                                           <packing>
                                             <property name="left_attach">1</property>
-                                            <property name="right_attach">2</property>
                                             <property name="top_attach">2</property>
-                                            <property name="bottom_attach">3</property>
-                                            <property name="y_options"/>
                                           </packing>
                                         </child>
                                         <child>
                                           <object class="GtkEntry" id="footer_center">
+                                            <property name="hexpand">True</property>
+                                            <property name="valign">center</property>
                                             <property name="visible">True</property>
                                             <property name="tooltip-text">Format is similar to that of strftime (3), with the following additions:
 %Ef - printed document name;
@@ -400,14 +395,13 @@
                                           </object>
                                           <packing>
                                             <property name="left_attach">1</property>
-                                            <property name="right_attach">2</property>
                                             <property name="top_attach">1</property>
-                                            <property name="bottom_attach">2</property>
-                                            <property name="y_options"/>
                                           </packing>
                                         </child>
                                         <child>
                                           <object class="GtkEntry" id="footer_left">
+                                            <property name="hexpand">True</property>
+                                            <property name="valign">center</property>
                                             <property name="visible">True</property>
                                             <property name="tooltip-text">Format is similar to that of strftime (3), with the following additions:
 %Ef - printed document name;
@@ -417,45 +411,43 @@
                                           </object>
                                           <packing>
                                             <property name="left_attach">1</property>
-                                            <property name="right_attach">2</property>
-                                            <property name="y_options"/>
+                                            <property name="top_attach">0</property>
                                           </packing>
                                         </child>
                                         <child>
                                           <object class="GtkLabel" id="label14">
+                                            <property name="valign">center</property>
                                             <property name="visible">True</property>
                                             <property name="xalign">0</property>
                                             <property name="label" translatable="yes">Right</property>
                                           </object>
                                           <packing>
+                                            <property name="left_attach">0</property>
                                             <property name="top_attach">2</property>
-                                            <property name="bottom_attach">3</property>
-                                            <property name="x_options">GTK_FILL</property>
-                                            <property name="y_options"/>
                                           </packing>
                                         </child>
                                         <child>
                                           <object class="GtkLabel" id="label15">
+                                            <property name="valign">center</property>
                                             <property name="visible">True</property>
                                             <property name="xalign">0</property>
                                             <property name="label" translatable="yes">Center</property>
                                           </object>
                                           <packing>
+                                            <property name="left_attach">0</property>
                                             <property name="top_attach">1</property>
-                                            <property name="bottom_attach">2</property>
-                                            <property name="x_options">GTK_FILL</property>
-                                            <property name="y_options"/>
                                           </packing>
                                         </child>
                                         <child>
                                           <object class="GtkLabel" id="label16">
+                                            <property name="valign">center</property>
                                             <property name="visible">True</property>
                                             <property name="xalign">0</property>
                                             <property name="label" translatable="yes">Left</property>
                                           </object>
                                           <packing>
-                                            <property name="x_options">GTK_FILL</property>
-                                            <property name="y_options"/>
+                                            <property name="left_attach">0</property>
+                                            <property name="top_attach">0</property>
                                           </packing>
                                         </child>
                                       </object>

@@ -183,13 +183,12 @@
                     <property name="left_padding">3</property>
                     <property name="right_padding">3</property>
                     <child>
-                      <object class="GtkTable" id="table1">
+                      <object class="GtkGrid" id="table1">
                         <property name="visible">True</property>
-                        <property name="n_rows">3</property>
-                        <property name="n_columns">2</property>
                         <property name="column_spacing">3</property>
                         <child>
                           <object class="GtkCheckButton" id="dont_prompt">
+                            <property name="valign">center</property>
                             <property name="label" translatable="yes">Don't _prompt on replace</property>
                             <property name="visible">True</property>
                             <property name="use_underline">True</property>
@@ -198,15 +197,13 @@
                           </object>
                           <packing>
                             <property name="left_attach">1</property>
-                            <property name="right_attach">2</property>
                             <property name="top_attach">2</property>
-                            <property name="bottom_attach">3</property>
-                            <property name="x_options">GTK_FILL</property>
-                            <property name="y_options"/>
                           </packing>
                         </child>
                         <child>
                           <object class="GtkCheckButton" id="backwards">
+                            <property name="hexpand">True</property>
+                            <property name="valign">center</property>
                             <property name="label" translatable="yes">Find _backwards</property>
                             <property name="visible">True</property>
                             <property name="use_underline">True</property>
@@ -215,12 +212,13 @@
                           </object>
                           <packing>
                             <property name="left_attach">1</property>
-                            <property name="right_attach">2</property>
-                            <property name="y_options"/>
+                            <property name="top_attach">0</property>
                           </packing>
                         </child>
                         <child>
                           <object class="GtkCheckButton" id="case_sensitive">
+                            <property name="hexpand">True</property>
+                            <property name="valign">center</property>
                             <property name="label" translatable="yes">Case _sensitive</property>
                             <property name="visible">True</property>
                             <property name="use_underline">True</property>
@@ -228,11 +226,13 @@
                             <property name="draw_indicator">True</property>
                           </object>
                           <packing>
-                            <property name="y_options"/>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">0</property>
                           </packing>
                         </child>
                         <child>
                           <object class="GtkCheckButton" id="selected">
+                            <property name="valign">center</property>
                             <property name="label" translatable="yes">S_elected text</property>
                             <property name="visible">True</property>
                             <property name="use_underline">True</property>
@@ -241,15 +241,12 @@
                           </object>
                           <packing>
                             <property name="left_attach">1</property>
-                            <property name="right_attach">2</property>
                             <property name="top_attach">1</property>
-                            <property name="bottom_attach">2</property>
-                            <property name="x_options">GTK_FILL</property>
-                            <property name="y_options"/>
                           </packing>
                         </child>
                         <child>
                           <object class="GtkCheckButton" id="from_cursor">
+                            <property name="valign">center</property>
                             <property name="label" translatable="yes">From c_ursor</property>
                             <property name="visible">True</property>
                             <property name="use_underline">True</property>
@@ -257,14 +254,13 @@
                             <property name="draw_indicator">True</property>
                           </object>
                           <packing>
+                            <property name="left_attach">0</property>
                             <property name="top_attach">2</property>
-                            <property name="bottom_attach">3</property>
-                            <property name="x_options">GTK_FILL</property>
-                            <property name="y_options"/>
                           </packing>
                         </child>
                         <child>
                           <object class="GtkCheckButton" id="whole_words">
+                            <property name="valign">center</property>
                             <property name="label" translatable="yes">_Whole words only</property>
                             <property name="visible">True</property>
                             <property name="use_underline">True</property>
@@ -272,10 +268,8 @@
                             <property name="draw_indicator">True</property>
                           </object>
                           <packing>
+                            <property name="left_attach">0</property>
                             <property name="top_attach">1</property>
-                            <property name="bottom_attach">2</property>
-                            <property name="x_options">GTK_FILL</property>
-                            <property name="y_options"/>
                           </packing>
                         </child>
                       </object>

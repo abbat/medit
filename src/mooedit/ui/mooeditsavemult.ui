@@ -17,10 +17,8 @@
             <property name="left_padding">6</property>
             <property name="right_padding">6</property>
             <child>
-              <object class="GtkTable" id="table1">
+              <object class="GtkGrid" id="table1">
                 <property name="visible">True</property>
-                <property name="n_rows">3</property>
-                <property name="n_columns">2</property>
                 <property name="column_spacing">6</property>
                 <property name="row_spacing">6</property>
                 <child>
@@ -30,12 +28,14 @@
                     <property name="icon-size">6</property>
                   </object>
                   <packing>
-                    <property name="x_options">GTK_FILL</property>
-                    <property name="y_options">GTK_FILL</property>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">0</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel" id="label">
+                    <property name="hexpand">True</property>
+                    <property name="valign">center</property>
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="label">&lt;span weight="bold" size="larger"&gt;There are n documents with unsaved changes. Save changes before closing?&lt;/span&gt;</property>
@@ -44,26 +44,26 @@
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
-                    <property name="y_options"/>
+                    <property name="top_attach">0</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel" id="label2">
+                    <property name="hexpand">True</property>
+                    <property name="valign">center</property>
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Select the documents you want to save:</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
                     <property name="top_attach">1</property>
-                    <property name="bottom_attach">2</property>
-                    <property name="y_options"/>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkScrolledWindow" id="scrolledwindow1">
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">True</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="hscrollbar_policy">automatic</property>
@@ -79,16 +79,8 @@
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
                     <property name="top_attach">2</property>
-                    <property name="bottom_attach">3</property>
                   </packing>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
                 </child>
               </object>
             </child>

@@ -9,12 +9,11 @@
       <object class="GtkVBox" id="dialog-vbox1">
         <property name="visible">True</property>
         <child>
-          <object class="GtkTable" id="table1">
+          <object class="GtkGrid" id="table1">
             <property name="visible">True</property>
-            <property name="n_rows">3</property>
-            <property name="n_columns">1</property>
             <child>
               <object class="GtkHBox" id="selected_hbox">
+                <property name="valign">center</property>
                 <property name="visible">True</property>
                 <property name="spacing">6</property>
                 <child>
@@ -72,14 +71,14 @@
                 </child>
               </object>
               <packing>
+                <property name="left_attach">0</property>
                 <property name="top_attach">2</property>
-                <property name="bottom_attach">3</property>
-                <property name="x_options">GTK_FILL</property>
-                <property name="y_options"/>
               </packing>
             </child>
             <child>
               <object class="GtkAlignment" id="alignment2">
+                <property name="hexpand">True</property>
+                <property name="valign">center</property>
                 <property name="visible">True</property>
                 <child>
                   <object class="GtkHBox" id="hbox1">
@@ -205,11 +204,14 @@
                 </child>
               </object>
               <packing>
-                <property name="y_options"/>
+                <property name="left_attach">0</property>
+                <property name="top_attach">0</property>
               </packing>
             </child>
             <child>
               <object class="GtkScrolledWindow" id="scrolledwindow">
+                <property name="hexpand">True</property>
+                <property name="vexpand">True</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
@@ -225,8 +227,8 @@
                 </child>
               </object>
               <packing>
+                <property name="left_attach">0</property>
                 <property name="top_attach">1</property>
-                <property name="bottom_attach">2</property>
               </packing>
             </child>
           </object>

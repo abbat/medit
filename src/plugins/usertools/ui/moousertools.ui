@@ -130,14 +130,14 @@
                 <property name="visible">True</property>
                 <property name="spacing">6</property>
                 <child>
-                  <object class="GtkTable" id="table">
+                  <object class="GtkGrid" id="table">
                     <property name="visible">True</property>
-                    <property name="n_rows">5</property>
-                    <property name="n_columns">2</property>
                     <property name="column_spacing">6</property>
                     <property name="row_spacing">6</property>
                     <child>
                       <object class="GtkCheckButton" id="enabled">
+                        <property name="hexpand">True</property>
+                        <property name="valign">center</property>
                         <property name="label" translatable="yes">Enabled</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
@@ -145,12 +145,14 @@
                         <property name="draw_indicator">True</property>
                       </object>
                       <packing>
-                        <property name="right_attach">2</property>
-                        <property name="y_options"/>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">0</property>
+                        <property name="width">2</property>
                       </packing>
                     </child>
                     <child>
                       <object class="GtkLabel" id="label8">
+                        <property name="valign">center</property>
                         <property name="visible">True</property>
                         <property name="xalign">1</property>
                         <property name="label" translatable="yes">_Files</property>
@@ -158,26 +160,24 @@
                         <property name="mnemonic_widget">filter</property>
                       </object>
                       <packing>
+                        <property name="left_attach">0</property>
                         <property name="top_attach">1</property>
-                        <property name="bottom_attach">2</property>
-                        <property name="x_options">GTK_FILL</property>
-                        <property name="y_options"/>
                       </packing>
                     </child>
                     <child>
                       <object class="GtkEntry" id="filter">
+                        <property name="hexpand">True</property>
+                        <property name="valign">center</property>
                         <property name="visible">True</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
-                        <property name="right_attach">2</property>
                         <property name="top_attach">1</property>
-                        <property name="bottom_attach">2</property>
-                        <property name="y_options"/>
                       </packing>
                     </child>
                     <child>
                       <object class="GtkLabel" id="label1">
+                        <property name="valign">center</property>
                         <property name="visible">True</property>
                         <property name="xalign">1</property>
                         <property name="label" translatable="yes">_Requires</property>
@@ -185,26 +185,25 @@
                         <property name="mnemonic_widget">combo_requires</property>
                       </object>
                       <packing>
+                        <property name="left_attach">0</property>
                         <property name="top_attach">2</property>
-                        <property name="bottom_attach">3</property>
-                        <property name="x_options">GTK_FILL</property>
-                        <property name="y_options"/>
                       </packing>
                     </child>
                     <child>
                       <object class="GtkComboBox" id="combo_requires">
+                        <property name="hexpand">True</property>
+                        <property name="vexpand">True</property>
                         <property name="visible">True</property>
                         <property name="focus_on_click">False</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
-                        <property name="right_attach">2</property>
                         <property name="top_attach">2</property>
-                        <property name="bottom_attach">3</property>
                       </packing>
                     </child>
                     <child>
                       <object class="GtkLabel" id="label2">
+                        <property name="valign">center</property>
                         <property name="visible">True</property>
                         <property name="xalign">1</property>
                         <property name="label" translatable="yes">_Save</property>
@@ -212,26 +211,25 @@
                         <property name="mnemonic_widget">combo_save</property>
                       </object>
                       <packing>
+                        <property name="left_attach">0</property>
                         <property name="top_attach">3</property>
-                        <property name="bottom_attach">4</property>
-                        <property name="x_options">GTK_FILL</property>
-                        <property name="y_options"/>
                       </packing>
                     </child>
                     <child>
                       <object class="GtkComboBox" id="combo_save">
+                        <property name="hexpand">True</property>
+                        <property name="vexpand">True</property>
                         <property name="visible">True</property>
                         <property name="focus_on_click">False</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
-                        <property name="right_attach">2</property>
                         <property name="top_attach">3</property>
-                        <property name="bottom_attach">4</property>
                       </packing>
                     </child>
                     <child>
                       <object class="GtkLabel" id="label5">
+                        <property name="valign">center</property>
                         <property name="visible">True</property>
                         <property name="xalign">1</property>
                         <property name="label" translatable="yes">_Type</property>
@@ -239,22 +237,20 @@
                         <property name="mnemonic_widget">combo_type</property>
                       </object>
                       <packing>
+                        <property name="left_attach">0</property>
                         <property name="top_attach">4</property>
-                        <property name="bottom_attach">5</property>
-                        <property name="x_options">GTK_FILL</property>
-                        <property name="y_options"/>
                       </packing>
                     </child>
                     <child>
                       <object class="GtkComboBox" id="combo_type">
+                        <property name="hexpand">True</property>
+                        <property name="vexpand">True</property>
                         <property name="visible">True</property>
                         <property name="focus_on_click">False</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
-                        <property name="right_attach">2</property>
                         <property name="top_attach">4</property>
-                        <property name="bottom_attach">5</property>
                       </packing>
                     </child>
                   </object>
