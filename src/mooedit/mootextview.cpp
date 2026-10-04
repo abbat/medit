@@ -3553,7 +3553,7 @@ text_iter_forward_visible_line (MooTextView *view,
 
             *line += 1;
 
-            if (!gtk_text_iter_has_tag (iter, tag) && !gtk_text_iter_begins_tag (iter, tag))
+            if (!gtk_text_iter_has_tag (iter, tag) && !gtk_text_iter_starts_tag (iter, tag))
                 return TRUE;
         }
     }

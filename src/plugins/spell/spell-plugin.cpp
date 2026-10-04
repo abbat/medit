@@ -515,7 +515,7 @@ update_menu (SpellDocPlugin    *sp,
     {
         e = s;
 
-        if (!gtk_text_iter_begins_tag (&s, sp->tag))
+        if (!gtk_text_iter_starts_tag (&s, sp->tag))
             gtk_text_iter_backward_to_tag_toggle (&s, sp->tag);
         gtk_text_iter_forward_to_tag_toggle (&e, sp->tag);
 

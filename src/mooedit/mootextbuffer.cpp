@@ -563,7 +563,7 @@ moo_text_buffer_insert_text (GtkTextBuffer      *text_buffer,
 
     if ((tag = get_placeholder_tag (text_buffer)) &&
          gtk_text_iter_has_tag (pos, tag) &&
-         !gtk_text_iter_begins_tag (pos, tag))
+         !gtk_text_iter_starts_tag (pos, tag))
     {
         GtkTextIter tag_start = *pos;
         GtkTextIter tag_end = *pos;
@@ -673,7 +673,7 @@ moo_text_buffer_delete_range (GtkTextBuffer      *text_buffer,
         GtkTextIter tag_end = *end;
 
         if (gtk_text_iter_has_tag (&tag_start, tag) &&
-            !gtk_text_iter_begins_tag (&tag_start, tag))
+            !gtk_text_iter_starts_tag (&tag_start, tag))
                 gtk_text_iter_backward_to_tag_toggle (&tag_start, tag);
 
         if (gtk_text_iter_has_tag (&tag_end, tag))
