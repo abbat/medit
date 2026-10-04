@@ -187,7 +187,7 @@ moo_command_factory_finalize (GObject *object)
 static GtkWidget *
 dummy_create_widget (G_GNUC_UNUSED MooCommandFactory *factory)
 {
-    return gtk_vbox_new (FALSE, FALSE);
+    return gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 }
 
 static void

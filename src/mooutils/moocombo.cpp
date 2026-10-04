@@ -438,10 +438,10 @@ create_popup_window (MooCombo *combo)
      * it is never shown by show_all, which would show the widget the owner may
      * be keeping hidden.
      */
-    vbox = gtk_vbox_new (FALSE, 0);
+    vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
     gtk_box_pack_start (GTK_BOX (vbox), scrolled_window, TRUE, TRUE, 0);
 
-    combo->priv->bottom_box = gtk_vbox_new (FALSE, 0);
+    combo->priv->bottom_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
     gtk_widget_set_no_show_all (combo->priv->bottom_box, TRUE);
     separator = gtk_hseparator_new ();
     gtk_widget_show (separator);

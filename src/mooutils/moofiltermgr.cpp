@@ -541,7 +541,7 @@ moo_filter_mgr_attach (MooFilterMgr   *mgr,
 
     mgr_load (mgr);
 
-    hbox = gtk_hbox_new (FALSE, 0);
+    hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_widget_show (hbox);
     gtk_box_pack_end (GTK_BOX (parent), hbox, FALSE, FALSE, 0);
 

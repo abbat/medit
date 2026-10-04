@@ -558,18 +558,18 @@ moo_paned_constructor (GType                  type,
     {
         case MOO_PANE_POS_LEFT:
         case MOO_PANE_POS_RIGHT:
-            paned->button_box = gtk_vbox_new (FALSE, button_spacing);
+            paned->button_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, button_spacing);
             break;
         case MOO_PANE_POS_TOP:
         case MOO_PANE_POS_BOTTOM:
-            paned->button_box = gtk_hbox_new (FALSE, button_spacing);
+            paned->button_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, button_spacing);
             break;
         default:
             g_warning ("invalid 'pane-position' property value '%u',"
                        "falling back to MOO_PANE_POS_LEFT",
                        paned->priv->pane_position);
             paned->priv->pane_position = MOO_PANE_POS_LEFT;
-            paned->button_box = gtk_vbox_new (FALSE, button_spacing);
+            paned->button_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, button_spacing);
             break;
     }
 

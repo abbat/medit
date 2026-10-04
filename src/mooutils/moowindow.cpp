@@ -447,15 +447,15 @@ moo_window_constructor (GType                  type,
     moo_window_create_class_actions (window);
     window_instances = g_slist_prepend (window_instances, object);
 
-    vbox = gtk_vbox_new (FALSE, 0);
+    vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
     gtk_widget_show (vbox);
     gtk_container_add (GTK_CONTAINER (window), vbox);
 
-    window->priv->menubar_holder = gtk_vbox_new (FALSE, 0);
+    window->priv->menubar_holder = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
     gtk_widget_show (window->priv->menubar_holder);
     gtk_box_pack_start (GTK_BOX (vbox), window->priv->menubar_holder, FALSE, FALSE, 0);
 
-    window->priv->toolbar_holder = gtk_vbox_new (FALSE, 0);
+    window->priv->toolbar_holder = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
     gtk_widget_show (window->priv->toolbar_holder);
     gtk_box_pack_start (GTK_BOX (vbox), window->priv->toolbar_holder, FALSE, FALSE, 0);
 
@@ -548,12 +548,12 @@ moo_window_init (MooWindow *window)
 
     window->priv = g_new0 (MooWindowPrivate, 1);
 
-    window->vbox = gtk_vbox_new (FALSE, 0);
+    window->vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
     gtk_widget_show (window->vbox);
 
     parse_shadow_style ();
 
-    window->status_area = gtk_hbox_new (FALSE, 0);
+    window->status_area = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
     window->statusbar = (GtkStatusbar *) g_object_new (GTK_TYPE_STATUSBAR,
                                       (const char*) NULL);
     gtk_widget_set_name (GTK_WIDGET (window->statusbar), "no-shadow");

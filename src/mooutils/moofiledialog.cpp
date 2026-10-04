@@ -402,7 +402,7 @@ moo_file_dialog_create_widget (MooFileDialog *dialog)
 
     if (dialog->priv->filter_mgr_id || dialog->priv->enable_encodings)
     {
-        extra_box = gtk_hbox_new (FALSE, 0);
+        extra_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
         gtk_file_chooser_set_extra_widget (GTK_FILE_CHOOSER (widget), extra_box);
         gtk_widget_show (extra_box);
     }

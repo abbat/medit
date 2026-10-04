@@ -146,7 +146,7 @@ moo_prefs_dialog_init (MooPrefsDialog *dialog)
 #endif /* GTK_MINOR_VERSION >= 6 */
     gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 
-    hbox = gtk_hbox_new (FALSE, 0);
+    hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_widget_show (GTK_WIDGET (hbox));
     gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG(dialog))), hbox, TRUE, TRUE, 0);
 

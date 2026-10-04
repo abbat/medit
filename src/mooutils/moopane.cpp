@@ -611,14 +611,14 @@ create_frame_toolbar (MooPane  *pane,
 {
     GtkWidget *toolbar, *handle, *handle_hbox, *frame_label;
 
-    toolbar = gtk_hbox_new (FALSE, 0);
+    toolbar = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 
     handle = gtk_event_box_new ();
     gtk_widget_show (handle);
     gtk_box_pack_start (GTK_BOX (toolbar), handle, TRUE, TRUE, 3);
     pane->handle = handle;
 
-    handle_hbox = gtk_hbox_new (FALSE, 0);
+    handle_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_widget_show (handle_hbox);
     gtk_container_add (GTK_CONTAINER (pane->handle), handle_hbox);
 
@@ -772,7 +772,7 @@ create_frame_widget (MooPane        *pane,
 {
     GtkWidget *vbox, *toolbar, *separator, *child_holder;
 
-    vbox = gtk_vbox_new (FALSE, 0);
+    vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
     gtk_widget_show (vbox);
 
     toolbar = create_frame_toolbar (pane, embedded);
@@ -785,7 +785,7 @@ create_frame_widget (MooPane        *pane,
     /* The pane's own widget goes in here later; it is kept apart from the
        frame so that it can be moved between the embedded frame and the window
        one without being rebuilt. */
-    child_holder = gtk_vbox_new (FALSE, 0);
+    child_holder = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
     gtk_widget_show (child_holder);
     gtk_box_pack_start (GTK_BOX (vbox), child_holder, TRUE, TRUE, 0);
     if (embedded)
@@ -825,10 +825,10 @@ create_label_widget (MooPanePosition position,
     {
         case MOO_PANE_POS_LEFT:
         case MOO_PANE_POS_RIGHT:
-            box = gtk_vbox_new (FALSE, SPACING_IN_BUTTON);
+            box = gtk_box_new (GTK_ORIENTATION_VERTICAL, SPACING_IN_BUTTON);
             break;
         default:
-            box = gtk_hbox_new (FALSE, SPACING_IN_BUTTON);
+            box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, SPACING_IN_BUTTON);
             break;
     }
 

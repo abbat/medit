@@ -842,7 +842,7 @@ _moo_encodings_attach_combo (GtkWidget  *dialog,
 
     g_return_if_fail (GTK_IS_FILE_CHOOSER (dialog));
 
-    hbox = gtk_hbox_new (FALSE, 0);
+    hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_widget_show (hbox);
     gtk_box_pack_start (GTK_BOX (parent), hbox, FALSE, FALSE, 0);
 

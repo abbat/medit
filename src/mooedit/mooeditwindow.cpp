@@ -3774,7 +3774,7 @@ create_tab_label (MooEditWindow *window,
 
     group = gtk_size_group_new (GTK_SIZE_GROUP_VERTICAL);
 
-    hbox = gtk_hbox_new (FALSE, 3);
+    hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 3);
     gtk_widget_show (hbox);
 
     evbox = gtk_event_box_new ();

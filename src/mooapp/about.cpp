@@ -184,7 +184,7 @@ create_content_area (GtkDialog *dialog)
 
   vbox = GTK_BOX (gtk_dialog_get_content_area (dialog));
 
-  widget = gtk_vbox_new (FALSE, 8);
+  widget = gtk_box_new (GTK_ORIENTATION_VERTICAL, 8);
   box = GTK_BOX (widget);
 
   gtk_container_set_border_width (GTK_CONTAINER (widget), 12);

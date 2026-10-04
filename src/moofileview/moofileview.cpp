@@ -1622,7 +1622,7 @@ create_filter_combo (G_GNUC_UNUSED MooFileView *fileview)
 {
     GtkWidget *hbox, *button, *combo;
 
-    hbox = gtk_hbox_new (FALSE, 0);
+    hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 
     button = gtk_toggle_button_new_with_label (_("Filter"));
     gtk_widget_show (button);

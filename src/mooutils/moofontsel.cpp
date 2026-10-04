@@ -488,7 +488,7 @@ moo_font_selection_init (MooFontSelection *fontsel)
     }
 
 
-  vbox = gtk_vbox_new (FALSE, 6);
+  vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
   gtk_widget_show (vbox);
   gtk_box_pack_start (GTK_BOX (fontsel), vbox, FALSE, TRUE, 0);
 
@@ -506,7 +506,7 @@ moo_font_selection_init (MooFontSelection *fontsel)
   gtk_widget_show (label);
   gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, TRUE, 0);
 
-  text_box = gtk_hbox_new (FALSE, 0);
+  text_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
   gtk_widget_show (text_box);
   gtk_box_pack_start (GTK_BOX (vbox), text_box, FALSE, TRUE, 0);
 
@@ -2223,7 +2223,7 @@ moo_font_button_create_inside (MooFontButton *font_button)
 
   gtk_widget_push_composite_child ();
 
-  widget = gtk_hbox_new (FALSE, 0);
+  widget = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 
   font_button->priv->font_label = gtk_label_new (D_("Font", "gtk30"));
 

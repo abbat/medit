@@ -657,7 +657,7 @@ quick_open_activate (MooEditWindow *window)
     gtk_window_set_resizable (GTK_WINDOW (dlg.window), TRUE);
     gtk_window_set_default_size (GTK_WINDOW (dlg.window), 500, 400);
 
-    GtkWidget *vbox = gtk_vbox_new (FALSE, 6);
+    GtkWidget *vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
     gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
     gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (dlg.window))), vbox);
 
