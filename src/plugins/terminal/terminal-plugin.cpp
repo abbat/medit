@@ -17,8 +17,7 @@
 
 /*
  * The terminal pane, a port of the python plugin medit carried until 1.2.92.
- * vte dropped GTK+2 in 0.30, so this builds for the GTK+3 build only and the
- * whole file is compiled out when cmake does not find vte-2.91.
+ * The whole file is compiled out when cmake does not find vte-2.91.
  */
 
 

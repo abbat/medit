@@ -42,8 +42,7 @@ GtkWidget  *_moo_terminal_prefs_page    (MooPlugin      *plugin);
 char       *_moo_terminal_get_default_font (void);
 
 /* Restricts a font chooser widget to monospace families. Takes a GtkWidget so
-   that this header still compiles in the GTK+2 build, which has no
-   GtkFontChooser and which includes it through mooplugin-builtin.cpp. */
+   that this header needs no GtkFontChooser. */
 void        _moo_terminal_font_chooser_filter (GtkWidget      *chooser);
 
 G_END_DECLS

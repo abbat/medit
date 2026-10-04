@@ -208,9 +208,7 @@ get_tag (GtkTextBuffer         *buffer,
                                       (const char*) NULL);
 
     /*
-     * Only GTK+3 can colour an underline separately from the text, so on
-     * GTK+2 every severity gets the same squiggle and the margin icon and the
-     * pane are what tell them apart.
+     * The underline is coloured separately from the text.
      */
     {
         GdkRGBA rgba;

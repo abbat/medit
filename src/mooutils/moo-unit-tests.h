@@ -25,7 +25,7 @@
  * What belongs here is what a UI test can only reach through the whole
  * program: the arithmetic of the language server protocol, the shapes a reply
  * can take, a parser. What does not belong here is anything about widgets --
- * drawing, events and the GTK+2/GTK+3 split are what tests/ is for, and a unit
+ * drawing and events are what tests/ is for, and a unit
  * test that mocks a toolkit tests the mock.
  *
  * Nothing in here needs a display. GtkTextBuffer and GtkTreeStore are objects

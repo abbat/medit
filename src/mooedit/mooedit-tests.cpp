@@ -65,7 +65,7 @@
  * has initialised those types are not registered: creating a tag then is
  * twelve g_param_spec_boxed criticals, which glib's test framework turns into a
  * failure. Naming the type registers it, and that is the whole fix -- measured
- * on GTK+3 3.24 with and without a display, and GTK+2 needs nothing at all.
+ * on GTK+3 3.24 with and without a display.
  *
  * The result has to be used for something. The getter is G_GNUC_CONST, so a
  * call whose value is dropped is optimised away and the criticals come back.

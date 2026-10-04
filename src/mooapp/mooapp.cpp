@@ -955,8 +955,6 @@ start_input (MooApp *app)
                           TRUE, input_callback, app);
 }
 
-/* Callback function called when the GTK2 main loop is about to quit. */
-
 /*!
  * \brief Timeout function to check for received signals and handle them.
  * \param data unused data pointer
@@ -1012,18 +1010,11 @@ moo_app_activate (GApplication *application)
 }
 
 /*!
- * \brief Callback for session manager quit request.
- * \param app the MooApp instance
- */
-
-/*!
  * \brief Answer the session manager's request to end the session
  * \param application the GtkApplication, which is the MooApp itself
  * \param app the MooApp instance
  *
- * GTK+2 answered once, with egg_sm_client_will_quit (sm_client,
- * moo_app_quit (app)) -- one answer, whichever way the user decided. The
- * GTK+3 equivalent of taking that time is an inhibitor held across the
+ * Taking the time to ask is done with an inhibitor held across the
  * unsaved-documents dialog, and it has to be dropped whichever way the dialog
  * is answered: a cancelled quit that keeps it leaves the session unable to log
  * out at all, with nothing on screen to say why. A second query-end must not
