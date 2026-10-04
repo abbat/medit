@@ -5,33 +5,22 @@ export DH_OPTIONS=-v
 
 export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 
-# medit is built twice, once against each gtk version; the two binary packages
-# are mutually exclusive, so a system carries whichever one its user installs.
-GTK_BUILDS = gtk2 gtk3
-
 %:
 	dh $@ --buildsystem=cmake
 
 override_dh_auto_configure:
 	# ENABLE_LSP=ON so that a missing libjson-glib-dev fails the build
 	# instead of quietly dropping the language server client.
+	# ENABLE_TERMINAL=ON so that a missing libvte-2.91-dev fails the build
+	# instead of quietly dropping the terminal pane from the package.
 	# ENABLE_STRICT=ON because the package build is the only one that
 	# compiles with the distribution's own hardening flags, and a warning
 	# they turn up is worth the same as any other: an error.
-	dh_auto_configure --builddirectory=build-gtk2 -- -DGTK_VERSION=2 -DENABLE_LSP=ON -DENABLE_STRICT=ON
-	# ENABLE_TERMINAL=ON so that a missing libvte-2.91-dev fails the build
-	# instead of quietly dropping the terminal pane from the package
-	dh_auto_configure --builddirectory=build-gtk3 -- -DGTK_VERSION=3 -DENABLE_TERMINAL=ON -DENABLE_LSP=ON -DENABLE_STRICT=ON
-
-override_dh_auto_build:
-	dh_auto_build --builddirectory=build-gtk2
-	dh_auto_build --builddirectory=build-gtk3
+	dh_auto_configure -- -DENABLE_TERMINAL=ON -DENABLE_LSP=ON -DENABLE_STRICT=ON
 
 override_dh_auto_install:
-	set -e; for v in $(GTK_BUILDS); do \
-		dh_auto_install --builddirectory=build-$$v --destdir=debian/medit-$$v; \
-		find $(CURDIR)/debian/medit-$$v/ -type d -empty -delete; \
-	done
+	dh_auto_install --destdir=debian/medit-gtk3
+	find $(CURDIR)/debian/medit-gtk3/ -type d -empty -delete
 
 override_dh_auto_clean:
 	./clean.sh
