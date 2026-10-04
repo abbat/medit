@@ -3642,11 +3642,12 @@ moo_icon_view_maybe_drag (MooIconView    *view,
         view->priv->button_press_row = NULL;
     }
 
-    gtk_drag_begin (GTK_WIDGET (view),
-                    info->source_targets,
-                    info->source_actions,
-                    button,
-                    (GdkEvent*) event);
+    gtk_drag_begin_with_coordinates (GTK_WIDGET (view),
+                                     info->source_targets,
+                                     info->source_actions,
+                                     button,
+                                     (GdkEvent*) event,
+                                     -1, -1);
     view->priv->button_pressed = 0;
     return TRUE;
 

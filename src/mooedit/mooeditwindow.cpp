@@ -3641,9 +3641,9 @@ tab_icon_start_drag (GtkWidget      *evbox,
                          GTK_TARGET_SAME_APP,
                          TARGET_MOO_EDIT_TAB);
 
-    gtk_drag_begin (evbox, targets,
-                    GDK_ACTION_COPY | GDK_ACTION_MOVE | GDK_ACTION_LINK,
-                    1, (GdkEvent*) event);
+    gtk_drag_begin_with_coordinates (evbox, targets,
+                                     GDK_ACTION_COPY | GDK_ACTION_MOVE | GDK_ACTION_LINK,
+                                     1, (GdkEvent*) event, -1, -1);
 
     gtk_target_list_unref (targets);
 }
