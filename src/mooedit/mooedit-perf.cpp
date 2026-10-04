@@ -215,14 +215,13 @@ report (const char *name,
 }
 
 
-/* GtkTextTag's class needs gdk's colour types registered; see
-   mooedit-tests.cpp. The value has to be used or the call is dropped. */
+/* GtkTextTag's class needs the GdkColor type registered; see
+   register_colour_type() in mooedit-tests.cpp. */
 static void
 register_gdk_types (void)
 {
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-    g_assert (gdk_color_get_type () != G_TYPE_INVALID);
-G_GNUC_END_IGNORE_DEPRECATIONS
+    g_type_class_unref (g_type_class_ref (GTK_TYPE_WIDGET));
+    g_assert (g_type_from_name ("GdkColor") != G_TYPE_INVALID);
 }
 
 

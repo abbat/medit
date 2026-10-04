@@ -61,23 +61,18 @@
 
 
 /*
- * GtkTextTag's class installs properties of gdk's colour types, and before gtk
- * has initialised those types are not registered: creating a tag then is
- * twelve g_param_spec_boxed criticals, which glib's test framework turns into a
- * failure. Naming the type registers it, and that is the whole fix -- measured
- * on GTK+3 3.24 with and without a display.
- *
- * The result has to be used for something. The getter is G_GNUC_CONST, so a
- * call whose value is dropped is optimised away and the criticals come back.
+ * GtkTextTag's class installs a property of type GdkColor, which it finds with
+ * g_type_from_name ("GdkColor"), and before gtk has initialised nothing has
+ * registered that type: creating a tag then is twelve g_param_spec_boxed
+ * criticals, which glib's test framework turns into a failure. GtkWidget's
+ * class registers it for its cursor-color style property, without our naming
+ * the deprecated gdk_color_get_type().
  */
 static void
 register_colour_type (void)
 {
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-    GType type = gdk_color_get_type ();
-G_GNUC_END_IGNORE_DEPRECATIONS
-
-    g_assert (type != G_TYPE_INVALID);
+    g_type_class_unref (g_type_class_ref (GTK_TYPE_WIDGET));
+    g_assert (g_type_from_name ("GdkColor") != G_TYPE_INVALID);
 }
 
 
