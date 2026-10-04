@@ -20,40 +20,6 @@ add_custom_command(
     COMMENT "Generating marshals.cpp"
     VERBATIM)
 
-set(MOO_PIXMAPS
-    MOO_HIDE_ICON         mooutils/pixmaps/hide.png
-    MOO_CLOSE_ICON        mooutils/pixmaps/close.png
-    MOO_STICKY_ICON       mooutils/pixmaps/sticky.png
-    MOO_DETACH_ICON       mooutils/pixmaps/detach.png
-    MOO_ATTACH_ICON       mooutils/pixmaps/attach.png
-    MOO_KEEP_ON_TOP_ICON  mooutils/pixmaps/keepontop.png
-    MEDIT_ICON            mooutils/pixmaps/medit.png
-    SYMLINK_ARROW         mooutils/pixmaps/symlink.png
-    SYMLINK_ARROW_SMALL   mooutils/pixmaps/symlink-small.png)
-
-set(pixbuf_args "")
-set(pixbuf_deps "")
-list(LENGTH MOO_PIXMAPS pixmaps_count)
-math(EXPR pixmaps_last "${pixmaps_count} - 1")
-foreach(i RANGE 0 ${pixmaps_last} 2)
-    list(GET MOO_PIXMAPS ${i} symbol)
-    math(EXPR j "${i} + 1")
-    list(GET MOO_PIXMAPS ${j} png)
-    list(APPEND pixbuf_args ${symbol} "${CMAKE_CURRENT_SOURCE_DIR}/${png}")
-    list(APPEND pixbuf_deps "${CMAKE_CURRENT_SOURCE_DIR}/${png}")
-endforeach()
-
-add_custom_command(
-    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/moo-pixbufs.h"
-    COMMAND ${CMAKE_COMMAND}
-            "-DGDK_PIXBUF_CSOURCE=${GDK_PIXBUF_CSOURCE}"
-            "-DPIXBUF_ARGS=${pixbuf_args}"
-            "-DOUTPUT_FILE=${CMAKE_CURRENT_BINARY_DIR}/moo-pixbufs.h"
-            -P "${CMAKE_SOURCE_DIR}/cmake/GeneratePixbufHeader.cmake"
-    DEPENDS ${pixbuf_deps}
-            "${CMAKE_SOURCE_DIR}/cmake/GeneratePixbufHeader.cmake"
-    COMMENT "Generating moo-pixbufs.h"
-    VERBATIM)
 
 # every .ui, at any depth: plugins keep theirs one level deeper
 file(GLOB_RECURSE MOO_UI_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/*.ui")
@@ -137,7 +103,6 @@ add_executable(medit
     medit-app/main.cpp
     "${CMAKE_CURRENT_BINARY_DIR}/marshals.cpp"
     "${CMAKE_CURRENT_BINARY_DIR}/marshals.h"
-    "${CMAKE_CURRENT_BINARY_DIR}/moo-pixbufs.h"
     "${CMAKE_CURRENT_BINARY_DIR}/resources.cpp")
 
 add_dependencies(medit validate-xml check-builder-ids)

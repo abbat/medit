@@ -121,7 +121,6 @@ find_library(LIBM m)
 # find_program() only learned REQUIRED in cmake 3.18, so check by hand.
 find_program(GLIB_GENMARSHAL NAMES glib-genmarshal)
 find_program(GLIB_COMPILE_RESOURCES NAMES glib-compile-resources)
-find_program(GDK_PIXBUF_CSOURCE NAMES gdk-pixbuf-csource)
 
 # xmllint is required, not optional. resources.xml asks glib-compile-resources
 # to preprocess 33 files with xml-stripblanks, which is how malformed markup in
@@ -133,7 +132,7 @@ find_program(GDK_PIXBUF_CSOURCE NAMES gdk-pixbuf-csource)
 # glib development package, so it has to be asked for by name.
 find_program(XMLLINT NAMES xmllint)
 
-foreach(tool GLIB_GENMARSHAL GLIB_COMPILE_RESOURCES GDK_PIXBUF_CSOURCE XMLLINT)
+foreach(tool GLIB_GENMARSHAL GLIB_COMPILE_RESOURCES XMLLINT)
     if(NOT ${tool})
         message(FATAL_ERROR "${tool} not found")
     endif()

@@ -20,7 +20,6 @@
 
 #include "marshals.h"
 #include "moopaned.h"
-#include "moo-pixbufs.h"
 
 
 #define SPACING_IN_BUTTON 4
@@ -1579,7 +1578,7 @@ typedef enum {
 typedef struct {
     GtkWidget base;
     GdkPixbuf **pixbufs;
-    const guchar *data;
+    const char *data;
     IconType type;
 } MooIconWidget;
 
@@ -1681,7 +1680,7 @@ get_pixbuf (MooIconWidget *icon)
             int width, height, rowstride, n_channels;
             int x, y;
 
-            pixbuf = gdk_pixbuf_new_from_inline (-1, icon->data, TRUE, NULL);
+            pixbuf = gdk_pixbuf_new_from_resource (icon->data, NULL);
             g_return_val_if_fail (pixbuf != NULL, NULL);
 
             icon->pixbufs[state] = pixbuf;
@@ -1845,27 +1844,27 @@ GtkWidget *
 _moo_create_small_icon (MooSmallIcon icon)
 {
     MooIconWidget *icon_widget;
-    const guchar *data = NULL;
+    const char *data = NULL;
 
     switch (icon)
     {
         case MOO_SMALL_ICON_HIDE:
-            data = MOO_HIDE_ICON;
+            data = "/pixmap/hide.png";
             break;
         case MOO_SMALL_ICON_STICKY:
-            data = MOO_STICKY_ICON;
+            data = "/pixmap/sticky.png";
             break;
         case MOO_SMALL_ICON_CLOSE:
-            data = MOO_CLOSE_ICON;
+            data = "/pixmap/close.png";
             break;
         case MOO_SMALL_ICON_DETACH:
-            data = MOO_DETACH_ICON;
+            data = "/pixmap/detach.png";
             break;
         case MOO_SMALL_ICON_ATTACH:
-            data = MOO_ATTACH_ICON;
+            data = "/pixmap/attach.png";
             break;
         case MOO_SMALL_ICON_KEEP_ON_TOP:
-            data = MOO_KEEP_ON_TOP_ICON;
+            data = "/pixmap/keepontop.png";
             break;
     }
 

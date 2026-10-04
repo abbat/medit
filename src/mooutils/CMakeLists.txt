@@ -131,7 +131,4 @@ target_sources(medit PRIVATE
     mooutils.h
     moowindow.cpp
     moowindow.h
-    stock-file-24.h
-    stock-file-selector-24.h
-    stock-terminal-24.h
 )

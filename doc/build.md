@@ -315,8 +315,8 @@ beside the analyzer `--target analyze` already runs.
 
 ## Code generation
 
-Only three things are generated: `marshals.h`/`marshals.cpp` (glib-genmarshal), `moo-pixbufs.h`
-(gdk-pixbuf-csource) and `resources.cpp` (glib-compile-resources). Everything else that
+Only two things are generated: `marshals.h`/`marshals.cpp` (glib-genmarshal)
+and `resources.cpp` (glib-compile-resources). Everything else that
 used to be generated — interfaces, menu descriptions, the credits text — is a resource
 now, listed in `src/resources.xml` and read at runtime. The build needs no python, as above.
 Adding a source file means adding it to the `target_sources()` list in that directory's

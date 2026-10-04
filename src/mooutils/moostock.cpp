@@ -14,10 +14,6 @@
  */
 
 #include "mooutils/moostock.h"
-#include "mooutils/stock-terminal-24.h"
-#include "mooutils/stock-file-selector-24.h"
-#include "mooutils/stock-file-24.h"
-#include "moo-pixbufs.h"
 #include "mooutils/mooi18n.h"
 
 #define REAL_SMALL 6
@@ -77,16 +73,16 @@ register_stock_icon (GtkIconFactory *factory,
 
 static void
 add_default_image (gint          size,
-                   const guchar *inline_data,
+                   const char   *resource_path,
                    const char   *name1,
                    const char   *name2)
 {
     GdkPixbuf *pixbuf;
 
     g_return_if_fail (name1 != NULL);
-    g_return_if_fail (inline_data != NULL);
+    g_return_if_fail (resource_path != NULL);
 
-    pixbuf = gdk_pixbuf_new_from_inline (-1, inline_data, FALSE, NULL);
+    pixbuf = gdk_pixbuf_new_from_resource (resource_path, NULL);
     g_return_if_fail (pixbuf != NULL);
 
     gtk_icon_theme_add_builtin_icon (name1, size, pixbuf);
@@ -103,7 +99,7 @@ add_icon (GtkIconFactory *factory,
           const char     *stock_id,
           const char     *icon_name,
           gint            size,
-          const guchar   *data)
+          const char     *data)
 {
     if (data)
         add_default_image (size, data, stock_id, icon_name);
@@ -171,25 +167,25 @@ _moo_stock_init (void)
     /* XXX */
     if (icon_theme_name && !strcmp (icon_theme_name, "gnome"))
     {
-        add_icon (factory, MOO_STOCK_FILE_SELECTOR, "gnome-fs-directory", 24, MOO_FILE_SELECTOR_ICON);
+        add_icon (factory, MOO_STOCK_FILE_SELECTOR, "gnome-fs-directory", 24, "/pixmap/stock-file-selector-24.png");
     }
     else
     {
-        add_icon (factory, MOO_STOCK_FILE_SELECTOR, NULL, 24, MOO_FILE_SELECTOR_ICON);
+        add_icon (factory, MOO_STOCK_FILE_SELECTOR, NULL, 24, "/pixmap/stock-file-selector-24.png");
         add_icon_name (factory, MOO_STOCK_FILE_SELECTOR, "folder");
         add_icon_name (factory, MOO_STOCK_FILE_SELECTOR, "file-manager");
     }
 
-    add_icon (factory, MOO_STOCK_FILE, "unknown", 24, MOO_FILE_ICON);
+    add_icon (factory, MOO_STOCK_FILE, "unknown", 24, "/pixmap/stock-file-24.png");
     add_icon_name (factory, MOO_STOCK_FILE, "gnome-fs-regular");
 
-    add_icon (factory, MOO_STOCK_FOLDER, "gnome-fs-directory", 24, MOO_FILE_SELECTOR_ICON);
+    add_icon (factory, MOO_STOCK_FOLDER, "gnome-fs-directory", 24, "/pixmap/stock-file-selector-24.png");
     add_icon_name (factory, MOO_STOCK_FOLDER, "folder");
 
-    add_icon (factory, MOO_STOCK_TERMINAL, "terminal", 24, MOO_GNOME_TERMINAL_ICON);
+    add_icon (factory, MOO_STOCK_TERMINAL, "terminal", 24, "/pixmap/stock-terminal-24.png");
 
-    add_default_image (24, MEDIT_ICON, "medit", NULL);
-    add_default_image (48, MEDIT_ICON, "medit", NULL);
+    add_default_image (24, "/pixmap/medit.png", "medit", NULL);
+    add_default_image (48, "/pixmap/medit.png", "medit", NULL);
 
     gtk_stock_add_static (stock_items, 9);
 

@@ -8,6 +8,9 @@
     <file alias="keepontop.png">mooutils/pixmaps/keepontop.png</file>
     <file alias="medit.png">mooutils/pixmaps/medit.png</file>
     <file alias="sticky.png">mooutils/pixmaps/sticky.png</file>
+    <file alias="stock-file-24.png">mooutils/pixmaps/stock-file-24.png</file>
+    <file alias="stock-file-selector-24.png">mooutils/pixmaps/stock-file-selector-24.png</file>
+    <file alias="stock-terminal-24.png">mooutils/pixmaps/stock-terminal-24.png</file>
     <file alias="symlink.png">mooutils/pixmaps/symlink.png</file>
     <file alias="symlink-small.png">mooutils/pixmaps/symlink-small.png</file>
   </gresource>

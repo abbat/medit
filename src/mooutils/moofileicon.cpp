@@ -19,7 +19,6 @@
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooutils-debug.h"
 #include "mooutils/moostock.h"
-#include "moo-pixbufs.h"
 
 void
 moo_file_icon_for_file (MooFileIcon *icon,
@@ -312,13 +311,13 @@ add_arrow (GdkPixbuf     *original,
 
     if (!arrow)
     {
-        arrow = gdk_pixbuf_new_from_inline (-1, SYMLINK_ARROW, TRUE, NULL);
+        arrow = gdk_pixbuf_new_from_resource ("/pixmap/symlink.png", NULL);
         g_return_val_if_fail (arrow != NULL, GDK_PIXBUF (g_object_ref (original)));
     }
 
     if (!small_arrow)
     {
-        small_arrow = gdk_pixbuf_new_from_inline (-1, SYMLINK_ARROW_SMALL, TRUE, NULL);
+        small_arrow = gdk_pixbuf_new_from_resource ("/pixmap/symlink-small.png", NULL);
         g_return_val_if_fail (small_arrow != NULL, GDK_PIXBUF (g_object_ref (original)));
     }
 

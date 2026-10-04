@@ -136,7 +136,7 @@ else()
         VERBATIM
         USES_TERMINAL)
 
-    # marshals.c, resources.c and moo-pixbufs.h are generated, and the database
+    # marshals.c and resources.c are generated, and the database
     # names them; without them clang-tidy fails on the entries that include
     # them. Building medit first is also what makes an incremental run cheap.
     add_dependencies(analyze medit)
