@@ -66,9 +66,8 @@ jobs:
               exit 1
           fi
 
-  # Debian 12 and Ubuntu 26.04. A package build costs two compiles, because
-  # debian/rules configures a build directory per gtk version, so this is two
-  # of the five deb targets rather than all of them, picked for what each adds:
+  # Debian 12 and Ubuntu 26.04. This is two of the five deb targets rather than
+  # all of them, picked for what each adds:
   # Ubuntu 26.04 is the newest GTK+3 and the newest compiler anywhere in CI, and
   # Debian 12 is the oldest packaging -- and the two are where the dependency
   # names differ, which is what the `libjpeg62-turbo-dev | libjpeg-dev`
@@ -107,13 +106,13 @@ jobs:
         run: mk-build-deps -i -r -t "apt-get -y -qq --no-install-recommends" debian/control
 
       # -b, binary only: a source package would need the upstream tarball this
-      # tree does not carry. The build runs twice, once per gtk version.
+      # tree does not carry.
       - name: Build the packages
         run: dpkg-buildpackage -us -uc -b -j"$(nproc)"
 
       # Installing is the half a compile cannot reach: it is where
       # ${shlibs:Depends} has to name packages that exist, and where the
-      # metapackage's `medit-gtk3 | medit-gtk2` has to pick gtk3 on a system
+      # metapackage's dependency on medit-gtk3 has to resolve on a system
       # that has neither.
       # dpkg-buildpackage writes to the parent directory, which is outside
       # GITHUB_WORKSPACE and therefore out of reach of upload-artifact.

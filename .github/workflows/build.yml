@@ -38,11 +38,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Both toolkits on every deb-based target. GTK+2 is still a supported build,
-  # and mooplugin-builtin.cpp includes the plugin headers unconditionally, so a
-  # green GTK+3 build proves nothing about it.
   deb:
-    name: ${{ matrix.image }}, gtk${{ matrix.gtk }}
+    name: ${{ matrix.image }}
     runs-on: ubuntu-latest
     container: ${{ matrix.image }}
     strategy:
@@ -50,7 +47,6 @@ jobs:
       matrix:
         image:
           - ubuntu:22.04   # gtk 3.24.33, glib 2.72, gcc 11, cmake 3.22
-        gtk: [2, 3]
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
@@ -61,7 +57,7 @@ jobs:
           apt-get update -qq
           apt-get install -y -qq --no-install-recommends \
               build-essential cmake git pkg-config intltool gettext \
-              libglib2.0-dev libxml2-dev libxml2-utils libgtk2.0-dev libgtk-3-dev \
+              libglib2.0-dev libxml2-dev libxml2-utils libgtk-3-dev \
               libjson-glib-dev libvte-2.91-dev \
               libice-dev libsm-dev libxext-dev libxrender-dev
 
@@ -72,13 +68,11 @@ jobs:
           set -eux
           # ENABLE_LSP and ENABLE_TERMINAL default to AUTO, which turns a
           # missing dependency into a build quietly lacking that feature. Ask
-          # for them by name so the job fails instead. vte-2.91 dropped GTK+2 in
-          # 2011, so the terminal pane exists for the GTK+3 build only.
+          # for them by name so the job fails instead.
           cmake -S . -B build \
-              -DGTK_VERSION=${{ matrix.gtk }} \
               -DENABLE_STRICT=ON \
               -DENABLE_LSP=ON \
-              -DENABLE_TERMINAL=${{ matrix.gtk == 3 && 'ON' || 'OFF' }}
+              -DENABLE_TERMINAL=ON
 
       - name: Build
         run: cmake --build build -j"$(nproc)"
