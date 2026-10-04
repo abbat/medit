@@ -684,7 +684,7 @@ quick_open_activate (MooEditWindow *window)
     gtk_container_add (GTK_CONTAINER (scroll), GTK_WIDGET (dlg.view));
 
     dlg.status = GTK_LABEL (gtk_label_new (""));
-    gtk_misc_set_alignment (GTK_MISC (dlg.status), 0.0, 0.5);
+    gtk_label_set_xalign (GTK_LABEL (dlg.status), 0.0);
     gtk_box_pack_start (GTK_BOX (vbox), GTK_WIDGET (dlg.status), FALSE, FALSE, 0);
 
     g_signal_connect (dlg.entry, "key-press-event", G_CALLBACK (quick_open_entry_key_press), &dlg);

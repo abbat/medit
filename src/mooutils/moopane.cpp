@@ -625,8 +625,9 @@ create_frame_toolbar (MooPane  *pane,
     frame_label = gtk_label_new (NULL);
     gtk_widget_show (frame_label);
     gtk_box_pack_start (GTK_BOX (handle_hbox), frame_label, TRUE, TRUE, 0);
-    gtk_misc_set_alignment (GTK_MISC (frame_label), .0, .5);
-    gtk_misc_set_padding (GTK_MISC (frame_label), 6, 0);
+    gtk_label_set_xalign (GTK_LABEL (frame_label), 0.0);
+    gtk_widget_set_margin_start (frame_label, 6);
+    gtk_widget_set_margin_end (frame_label, 6);
     gtk_label_set_ellipsize (GTK_LABEL (frame_label), PANGO_ELLIPSIZE_END);
     if (pane->frame_label_markup)
         gtk_label_set_markup (GTK_LABEL (frame_label), pane->frame_label_text);
