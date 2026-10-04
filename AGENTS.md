@@ -183,7 +183,6 @@ times that on re-reading what it already had.
 | An action holds **one** accelerator, and `<Ctrl>plus` is the main-row key only: the numeric keypad sends `KP_Add` and `KP_Subtract`, other keysyms, so zoom worked for everyone but the people on the keypad. An xdotool test with `ctrl+plus` passes and says nothing about it | handle the keypad keys by hand in the view's `key-press-event` (`moo_edit_view_key_press_event`), and test them with `t.key("ctrl+KP_Add")` |
 | `MooMarkup` turns a `<![CDATA[…]]>` section into a **comment node**, where `moo_markup_get_content()` cannot see it | put the text in as ordinary escaped element content; `GMarkup` unescapes it on the way in |
 | `GMarkup` accepts a `--` **inside an XML comment**; expat and every other conforming parser reject it. A comment mentioning a command line like `clangd --background-index` therefore loads in medit and fails everywhere else | check any xml the user is meant to edit with a real parser: `python3 -c "import xml.dom.minidom as m; m.parse('f.xml')"` |
-| GTK+3 hides images in menus unless `gtk-menu-images` is on. It is off in a bare sandbox and commonly on in a real desktop, so a screenshot from the sandbox showing no icon says nothing about what the user sees, and GTK+2 shows them always | to check an icon on GTK+3, write `[Settings]\ngtk-menu-images=1` into `$XDG_CONFIG_HOME/gtk-3.0/settings.ini` for the run |
 | A hover tooltip and a synthetic right click do not mix: with the pointer left resting on the target, the tooltip comes up and the context menu does not, and the run reads as a regression in whatever the menu was going to do (mechanism not established — the click may be swallowed, or the menu covered and dismissed) | move the pointer and click in the same breath, without a dwell, then screenshot and confirm the menu is up before clicking an item in it |
 | A build-tree run also reads data from an **installed** medit package (`/usr/share/medit/`), so its stale `menu.xml` produces warnings about our tree | reproduce with `MOO_DATA_DIRS=<dir>` holding the tree's own xml — but note it *replaces* the whole search list, so style schemes and the file-selector plugin stop loading; use it to attribute a warning, not to test the UI |
 | `-Wstrict-null-sentinel` fires on every `g_object_set()`-style variadic call in the tree — 166 of them, none a defect — because it warns about an uncast `NULL` where the sentinel is expected, which is only a portability concern where `NULL` is the integer `0`. Under `-Werror` that is a red build, and silencing it with `-Wno-error=format` throws away `-Werror=format` for the whole tree | the flag is deliberately absent from `cmake/CompilerFlags.cmake`; the comment there says why. Do not add it back |
@@ -374,7 +373,7 @@ blurry triangles. When the GTK+2 original addressed individual pixels, fill
   English.
 - Trailer:
   ```
-  Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+  Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
   ```
 - Do not push unless asked.
 
