@@ -28,7 +28,7 @@ docker build -t medit-deb - <<'EOF'
 FROM ubuntu:22.04
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -qq && apt-get install -y -qq build-essential debhelper cmake \
-    pkg-config intltool libgtk2.0-dev libgtk-3-dev libxml2-dev libxml2-utils \
+    pkg-config intltool libgtk-3-dev libxml2-dev libxml2-utils \
     libjson-glib-dev libvte-2.91-dev libjpeg-dev
 EOF
 S=<scratch>                                                  # session scratch dir
@@ -38,17 +38,13 @@ docker run --rm -v $S:/w medit-deb bash -c 'set -o pipefail
   dpkg-buildpackage -us -uc -b -j8 2>&1 | tail -25'
 ```
 
-The package builds medit **twice**, once per gtk version: `medit-gtk2` and
-`medit-gtk3` carry the two builds and conflict with each other, and `medit` is an
-arch-all metapackage depending on `medit-gtk3 | medit-gtk2`. So `debian/rules` runs
-`dh_auto_configure`/`dh_auto_build`/`dh_auto_install` once per `--builddirectory`, and a
-package build takes twice as long as a plain one. When changing the packaging, check
-both the fresh install (`apt install medit` must pull gtk3, the first alternative), the
-switch (`apt install medit-gtk2` must remove gtk3), and the upgrade from the old monolithic
-`medit` (its `/usr/bin/medit` has to move to `medit-gtk3` without a file conflict —
-that is what the `Breaks`/`Replaces: medit (<< 1.3.1)` are for). A fourth case is worth
-one more run: a system already on `medit-gtk2` must **stay** there, because the installed
-package still satisfies the alternative and apt does not reconsider the order.
+`medit-gtk3` carries the build and `medit` is an arch-all metapackage depending on it.
+The name `medit-gtk3` is kept from the time there were two builds (the last release with
+`medit-gtk2` is 1.3.12), so an installed `medit-gtk3` keeps being upgraded. When changing
+the packaging, check the fresh install (`apt install medit` must pull `medit-gtk3`) and
+the upgrade from the old monolithic `medit` (its `/usr/bin/medit` has to move to
+`medit-gtk3` without a file conflict — that is what the `Breaks`/`Replaces: medit (<< 1.3.1)`
+are for).
 
 Cache the image once (`docker build -t medit-u2004`); each fresh `apt-get install` costs
 a few minutes. To collect **every** error in one pass instead of one per run, replace
@@ -74,7 +70,7 @@ What has actually broken on an old toolchain, none of it visible in a local buil
 
 ## Fedora and Arch packages
 
-Two packaging trees live side by side: `debian/` (three packages, both gtk versions) and
+Two packaging trees live side by side: `debian/` (two packages) and
 `packages/` (everything else — `medit.spec`, `PKGBUILD`, and the OBS files). The spec and
 the PKGBUILD build gtk-3 only. `PKGBUILD` builds from the GitHub tag tarball, so its
 `sha256sums` follows the release and not the working tree; `medit.spec` expects

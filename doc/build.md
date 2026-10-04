@@ -3,26 +3,19 @@
 *For agents working in this tree. Read `AGENTS.md` first: it carries the rules that
 apply to every change, and this file assumes them.*
 
-CMake, out of source. Two build directories keep both GTK versions alive at the same
-time — no copying of the tree, no `distclean`:
+CMake, out of source. GTK+3 is the only toolkit (3.24.33 or newer); there is no option
+to choose one. Further build directories — a clang one, a coverage one — sit beside it,
+no copying of the tree, no `distclean`:
 
 ```bash
 SRC=$(git rev-parse --show-toplevel)              # repository root; every path below is relative to it
-cmake -S "$SRC" -B "$SRC/build3" -DGTK_VERSION=3  # once; 3 is the default, the flag is for clarity
+cmake -S "$SRC" -B "$SRC/build3"                  # once
 cmake --build "$SRC/build3" -j8                   # ~10s for one .o + link
 ```
 
-The GTK+2 reference build is just another directory, and there the flag is required:
-
-```bash
-cmake -S "$SRC" -B "$SRC/build2" -DGTK_VERSION=2
-cmake --build "$SRC/build2" -j8
-```
-
 The binary lands in `<build dir>/src/medit`, the compiled catalogs in
-`<build dir>/locale/`. Full build ≈ 3 min, incremental ≈ 10s. Both GTK+2 2.24.33 and
-GTK+3 3.24.38 dev packages are installed. **Every fix must build clean and behave
-correctly on both.**
+`<build dir>/locale/`. Full build ≈ 3 min, incremental ≈ 10s. The GTK+3 3.24.38 dev
+package is installed.
 
 `./clean.sh` removes every build directory (anything holding a CMakeCache.txt), the
 leftovers of a package build under `debian/`, the `__pycache__` a test run leaves, the
@@ -70,7 +63,7 @@ itself a developer's tool, and no test may need one to run.
 
 ## A/B comparison of one change
 
-**Do not use a pre-session build as the "GTK+2 reference".** Since the translations fix
+**Do not use a pre-session build as the reference.** Since the translations fix
 the UI language differs, so pixel comparisons against an old build are noise. Compare
 *the same tree* with and without the one change, rebuilding in place:
 
@@ -91,19 +84,19 @@ sees.
 
 | job | what it covers |
 |---|---|
-| `deb` | ubuntu 22.04, both toolkits — the low end of everything: gtk 3.24.33, glib 2.72, gcc 11, cmake 3.22 |
+| `deb` | ubuntu 22.04 — the low end of everything: gtk 3.24.33, glib 2.72, gcc 11, cmake 3.22 |
 | `langs` | `src/mooedit/langs/check.sh` over the 187 language definitions and schemes |
 
 `.github/workflows/package.yml` is the other half of the compiling: the deb on Debian 12
-and Ubuntu 26.04 (both toolkits each), the rpm on fedora:44 with LTO, the Arch package,
+and Ubuntu 26.04, the rpm on fedora:44 with LTO, the Arch package,
 and a check that the version is the same in all seven places it is written.
 
 `.github/workflows/ui.yml` compiles with clang, runs the static analyzer, and is the only
 job that runs the program rather than reading it. Its `harness` job goes first and takes
 seconds: `flake8` over `tests/`, because a name that is not defined in a test file is a
 failure the ui job reports half an hour later as "the dialog never opened". It builds debian:13 with
-`-DENABLE_STRICT=ON -DENABLE_UI_TESTS=ON -DENABLE_SANITIZERS=address,undefined` for both
-toolkits, runs `analyze`, then the `ui-test` target — a real X server, a real accessibility bus,
+`-DENABLE_STRICT=ON -DENABLE_UI_TESTS=ON -DENABLE_SANITIZERS=address,undefined`,
+runs `analyze`, then the `ui-test` target — a real X server, a real accessibility bus,
 real clicks, sanitizers underneath. It is the only place a dialog that stopped opening
 can fail anything. See `doc/testing.md` for what the tests are and how to write one; the evidence a
 failure leaves is uploaded as an artifact, because a UI failure is close to
@@ -111,16 +104,16 @@ undiagnosable without it.
 
 The same build is instrumented for coverage (`-DENABLE_COVERAGE=ON`, clang's own), so what
 the clicks and the unit tests reached is measured without a second compile of anything. A
-third job merges the two toolkits' reports, writes the table into the run's summary, and
+third job reads the report, writes the table into the run's summary, and
 compares the total with `tests/coverage.floor` — a percentage kept in the tree, raised by
 hand with the change that earned it. `doc/testing-panes.md` has the commands and what the number does
 not mean.
 
-`.github/workflows/codeql.yml` runs CodeQL over both toolkits on every push, on pull
+`.github/workflows/codeql.yml` runs CodeQL on every push, on pull
 requests, and weekly. It judges a pull request on the alerts it *introduces*, which is
 why it can be a gate while the analyzer's existing findings are not zero. A third job
 reads the python of `tests/` (`build-mode: none`, a category of its own so its results
-sit beside the toolkits' rather than replacing one) — until it was added, `languages:
+sit beside the C++ ones rather than replacing them) — until it was added, `languages:
 c-cpp` meant the harness was analyzed by nothing at all.
 
 **A workflow takes its `schedule` and `workflow_dispatch` triggers from the default
@@ -229,8 +222,8 @@ entry for a path cmake no longer installs, and a binary that links but does not 
 
 So a source change does not need a container to prove it compiles anywhere, or that it
 still packages. What is still manual: the **apt scenarios**, which need a sequence of
-installs rather than one — the fresh install, the switch to gtk2, the upgrade from the
-old monolithic `medit`, and the system already on `medit-gtk2` that must stay there —
+installs rather than one — the fresh install and the upgrade from the
+old monolithic `medit` —
 anything visual, and anything that has to run further than `--version`.
 
 ## The analyze target
@@ -243,8 +236,7 @@ cmake --build builda --target analyze          # whole tree, about 2 minutes
 clang-tidy -p builda src/mooutils/moopaned.cpp   # one file, a couple of seconds
 ```
 
-It needs a **clang-configured build directory of its own**, a third beside `build2` and
-`build3` — or, on a machine with no clang at all, the ui container of `doc/testing.md`, which has clang
+It needs a **clang-configured build directory of its own**, a separate one beside `build3` — or, on a machine with no clang at all, the ui container of `doc/testing.md`, which has clang
 and clang-tidy already and where `cmake --build <dir> --target analyze` is the same gate CI
 runs. Worth doing before a push that touches C or C++: it is a gate, and it reports nothing
 on this tree, so anything it does report is new. That is not taste: clang-tidy takes its flags from `compile_commands.json`,
@@ -287,8 +279,8 @@ The disqualifying part is quieter. Semgrep has no preprocessor, and it **drops a
 cannot parse without failing** -- the scan prints "Parsed lines: ~99.9%" and exits green.
 Four files are dropped: `mootextview.cpp`, `mooiconview.cpp`, `moonotebook.cpp` (since
 deleted), `moopaned.cpp`.
-Those are exactly the top four by `GTK_CHECK_VERSION` count (58, 51, 34 and 25; the fifth
-has 14 and parses), because they put `#if` inside argument lists. The blind spot is
+Those were exactly the top four by `GTK_CHECK_VERSION` count (58, 51, 34 and 25; the fifth
+had 14 and parsed), because they put `#if` inside argument lists. The blind spot is
 precisely the code the GTK+3 port touched hardest. A custom rule written against the
 "style calls silently dead on GTK+3" table finds one of its five call sites for that
 reason -- and would in any case have flagged the three `gdk_window_set_background()`
@@ -317,8 +309,8 @@ those three files, so the one analyzer that could read the code a tree-specific 
 would be about can no longer read any of it, and there is no point re-running it.
 Semgrep's finding stands as measured -- it has a C++ target, and the four files it drops
 it drops for `#if` inside an argument list, which the migration did not touch. If a
-pattern checker is wanted for a rule specific to this tree -- a GTK+2 idiom that must
-not appear on the GTK+3 side, say -- what is left in reach is a clang-tidy matcher,
+pattern checker is wanted for a rule specific to this tree -- a GTK+3 call that must
+not appear, say -- what is left in reach is a clang-tidy matcher,
 beside the analyzer `--target analyze` already runs.
 
 ## Code generation
@@ -412,12 +404,10 @@ to know when touching them:
   widgets from elsewhere need a `g_type_ensure()` of their own.
 * **Placeholder windows must not be `visible`**, or GtkBuilder shows them: empty windows
   appear beside the real dialog and get drawn after their content was moved out.
-* **A `.ui` that has to load in the GTK+2 build cannot use `GtkBox` or `GtkGrid`.**
-  `GtkBox` is abstract in GTK+2 and `GtkGrid` does not exist there, so every
-  interface in the tree uses `GtkVBox`/`GtkHBox`/`GtkTable`, which still load in
-  GTK+3. The terminal's is the only exception, and only because the terminal is a
-  GTK+3-only feature. GtkBuilder reports the difference as "Invalid object type",
-  at the moment the dialog is opened.
+* **Most of the `.ui` files still use `GtkVBox`/`GtkHBox`/`GtkTable`**, because they
+  had to load in the GTK+2 build; they are deprecated but load in GTK+3, and
+  `GtkBox`/`GtkGrid` are fine in a new one. A type GtkBuilder does not know is
+  reported as "Invalid object type", at the moment the dialog is opened.
 * **Do not describe a model or cell renderers** for a combo the code fills itself
   (`init_combo()` and friends). Two renderers draw the value twice — "Selected lines
   Selected lines" — and it looks like a theme glitch rather than a bug.
@@ -524,15 +514,14 @@ until a view is told `show-line-marks`, and that has to be set before the marks
 arrive. `moo_line_mark_set_markup()` is **not** a tooltip: the markup is drawn in
 the margin, in place of the icon.
 
-A dependency that only one gtk version has follows `MOO_BUILD_CTAGS` / `MOO_BUILD_TERMINAL`:
+An optional dependency follows `MOO_BUILD_CTAGS` / `MOO_BUILD_TERMINAL`:
 a tri-state `ENABLE_<X>` cache variable (AUTO/ON/OFF), a `#cmakedefine` in
 `cmake/config.h.in`, and `#ifdef` around the `add_subdirectory()`, the
 `target_link_libraries()` and the one call in `moo_plugin_init()`. What that does *not*
 cover is the plugin's own header: `mooplugin-builtin.cpp` includes it unconditionally,
-so **it is compiled by the gtk2 build too**. Keep types the other toolkit lacks
-(`GtkFontChooser`, `VteTerminal`, …) out of it — declare a `GtkWidget*` and cast inside
-the `.cpp`. A green gtk3 build proves nothing here; only building gtk2 does, which is
-how this one was caught, in a container, after the local gtk2 build had gone stale.
+so **it is compiled with the option off too**. Keep types from the optional library
+(`VteTerminal`, …) out of it — declare a `GtkWidget*` and cast inside the `.cpp`. A
+build with the option on proves nothing here; only a build with it off does.
 
 ## The spell checker loads Enchant at run time
 

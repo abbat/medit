@@ -26,8 +26,7 @@ reached when there is nothing left worth doing above it.
    so an optimisation that costs three hundred lines needs numbers before it is written,
    not after.
 3. **New features.** Last, and only what the rungs above do not already argue against. New
-   ones go into the GTK+3 build; GTK+2 is kept working, not extended, and a feature that
-   would need a second implementation there simply does not get one.
+   ones need no second implementation for an older toolkit: GTK+2 support is gone.
 
 Translations and documentation are not a rung: they are part of the change that made them
 wrong, and are updated in the same commit. Packaging is last of all — CI builds the
@@ -66,8 +65,7 @@ So a crash, a killed session or a power cut loses every modified document.
 
 The cheap shape: a timer that writes each modified document to a file of its own under
 `$XDG_CACHE_HOME/medit/`, never over the original, deletes it on save or close, and at
-the next start offers to restore whatever is left. It is toolkit-independent, so it is
-one implementation for both builds. The part that decides what to restore — the list of
+the next start offers to restore whatever is left. The part that decides what to restore — the list of
 leftover files against the documents being opened — is the part to lift out and unit
 test.
 
@@ -90,19 +88,6 @@ discovers a break that happened days earlier and gets blamed for it.
 
 A nightly `schedule:` on `ui.yml` alone would separate "my change broke it" from "the world
 moved", which is the only question that matters when a run goes red.
-
-## GTK+2 stays until something real needs it gone
-
-Both toolkits are built and tested on every push, which doubles every CI run, and GTK+2 is
-why the terminal pane exists in one build and not the other, why `MOO_GTK3` guards exist in
-the tests, and why a good deal of `mooutils` has two branches. GTK+2 has had no release
-since 2020 and Debian 13 still ships it.
-
-The condition for dropping it is not a date: it is the first distribution medit is packaged
-for dropping the runtime, or the first feature that cannot be written twice. Until one of
-those happens the double build is the price of a fork that still runs where the original
-ran, and this entry exists so that the next person to ask is told what the answer depends
-on rather than told no.
 
 ---
 

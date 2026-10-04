@@ -10,7 +10,7 @@ shortcut tests know is in `doc/testing-panes.md`.*
 Inside medit, behind a hidden option:
 
 ```bash
-cmake -S . -B buildu3 -DGTK_VERSION=3 -DENABLE_UI_TESTS=ON \
+cmake -S . -B buildu3 -DENABLE_UI_TESTS=ON \
       -DENABLE_SANITIZERS=address,undefined      # unit tests follow UI tests
 cmake --build buildu3 -j"$(nproc)"
 
@@ -29,7 +29,7 @@ run with `--unit-test-list` after every link, and `cmake/DiscoverUnitTests.cmake
 what it prints into `add_test()` lines that ctest includes — the same trick
 `gtest_discover_tests` plays, and for the same reason: the tests are registered in C and
 cmake cannot know them at configure time. So `/mooutils/accel/parse` becomes
-`unit.mooutils.accel.parse`, labelled `unit`, `gtk2`/`gtk3` and its subsystem, with a
+`unit.mooutils.accel.parse`, labelled `unit` and its subsystem, with a
 timeout of its own. It used to be one entry called `unit.all`, where a failure named the
 group and left the log to be read.
 
@@ -92,7 +92,7 @@ dependency at all — which is the reason this fork can have unit tests again af
 ones went with the interpreter they needed.
 
 **What belongs here is what a UI test cannot reach**: arithmetic, the shapes a reply can
-take, a parser. Not widgets. Drawing, events and the GTK+2/GTK+3 split are what `tests/`
+take, a parser. Not widgets. Drawing and events are what `tests/`
 is for, and a unit test that mocks a toolkit tests the mock.
 
 **No display is needed, and that is a measured fact rather than a hope**: `GtkTextBuffer`
@@ -107,7 +107,7 @@ since it is the initialisation that is missing and not the screen. Naming the ty
 registers it and that is the whole fix; `register_colour_type()` in
 `src/mooedit/mooedit-tests.cpp` is it, and the note there records that the getter is
 `G_GNUC_CONST`, so the call has to be used for something or the compiler drops it and the
-criticals come back. Measured on GTK+3 3.24; GTK+2 needs nothing.
+criticals come back. Measured on GTK+3 3.24.
 
 This is what makes the highlighting goldens below possible, and it lifts the old rule that
 anything about tags had to be a UI test. Drawing and events still are.
@@ -196,9 +196,6 @@ anything that would have lost something on the way: the pane still writes its li
 pieces, because the severity is coloured and a single string would have taken the colour
 with it.
 
-`gdk/gdkkeysyms.h` has to be included for `GDK_KEY_s` on GTK+2 — the compat names live
-there, and a test that only ever built against GTK+3 does not find out.
-
 **`event->x` and `event->y` are in the coordinates of `event->window`**, and a
 GtkTextView has several windows: the text, and a border window for each side that
 is in use. Converting them with `gtk_text_view_window_to_buffer_coords (…,
@@ -243,7 +240,7 @@ ids the C asks for against the ids the file declares, and every id here existed.
 
 `mooedit-tests.cpp` also registers table-driven `/mooedit/search/*` and
 `/mooedit/replace/*` tests. They use a plain `GtkTextBuffer` without a display,
-and run on both toolkits. Search asserts character offsets (including Cyrillic
+and need no display. Search asserts character offsets (including Cyrillic
 and an emoji before the match), direction, word/case options and range limits.
 Replacement asserts both the complete resulting text and the replacement count:
 deletion, capture references, literal backslashes, Unicode, a bounded range that
@@ -308,7 +305,7 @@ is upstream code the report deliberately ignores (`MOO_COVERAGE_IGNORE` in
 of `moolang` around it.
 
 **The engine matches with `GRegex`, so the goldens are as portable as pcre is.** They pass
-on both toolkits and on glib 2.74 and 2.88 as written; if a distribution ever disagrees
+on glib 2.74 and 2.88 as written; if a distribution ever disagrees
 about one of them, that is a real difference in what a user sees and worth knowing rather
 than papering over. The samples stay on mainstream constructs — comments, strings,
 keywords, numbers — for the same reason.
@@ -317,29 +314,30 @@ keywords, numbers — for the same reason.
 ## The UI tests
 
 ```bash
-cmake -S . -B buildu3 -DGTK_VERSION=3 -DENABLE_UI_TESTS=ON \
+cmake -S . -B buildu3 -DENABLE_UI_TESTS=ON \
       -DENABLE_SANITIZERS=address,undefined
 cmake --build buildu3 -j"$(nproc)"
 
-cd buildu3 && ctest -j8                       # every test of this toolkit
+cd buildu3 && ctest -j8                       # every test
 ctest -R about_dialog --output-on-failure      # one test
 ctest -L app                                   # one subsystem
 cmake --build buildu3 --target ui-test         # ctest -j UI_TEST_PARALLEL
 
-tests/run.sh --gtk both                        # both toolkits, from the source tree
-tests/run.sh --gtk 3 -L terminal                # one subsystem of one toolkit
-tests/run.sh --verbose --gtk 3                 # every line, as ctest prints it
+tests/run.sh                                   # every test, from the source tree
+tests/run.sh -L terminal                       # one subsystem
+tests/run.sh --verbose                         # every line, as ctest prints it
+MUI_BUILD=/path/to/dir tests/run.sh            # another build directory than buildu3
 ```
 
-**`tests/run.sh` is quiet on purpose.** A passing run is one line per toolkit —
-`GTK+3  50/50 passed  96s` — and the exit code; the compile and the per-test `Passed`
+**`tests/run.sh` is quiet on purpose.** A passing run is one line —
+`UI  50/50 passed  96s` — and the exit code; the compile and the per-test `Passed`
 lines go to `<build dir>/run.log`. A failing run prints what the failing tests printed,
 the list at the end, and where the log is. `--verbose` restores the old behaviour, and
 `ctest` in the build directory was never quiet in the first place. The reason is
-arithmetic: a full run is 50 tests over two toolkits, so reading the roll call to learn
+arithmetic: a full run is 50 tests, so reading the roll call to learn
 what one number already said costs about 120 lines every time.
 
-Build directories of their own, `buildu2` and `buildu3` beside `build2` and `build3`: a
+A build directory of its own, `buildu3` beside `build3`: a
 sanitized binary is three times the size and visibly slower, which is not what an
 ordinary build should become.
 
@@ -348,10 +346,7 @@ A test is `tests/<subsystem>/<name>/test.py` — `app`, `editor`, `file`, `edit`
 being one menu each — one `run(t)` function, and nearly the whole vocabulary is on `t`
 (`tests/lib/context.py`); what is not is `from lib import input as ui` for the few things
 that are coordinates rather than widgets, and `from lib.notebook import ...` for the
-document strip. ctest labels each test with its subsystem and its toolkit. One
-file serves both toolkits wherever the two trees agree, which for dialogs they do, gail's
-and GTK+3's being the same tree there; the panes, the document and the terminal are GTK+3
-only, and those tests say so.
+document strip. ctest labels each test with its subsystem.
 
 A test may also define `setup(s)`, run **before medit starts** (`tests/lib/setup.py`):
 `s.pref()` writes a setting into `prefs.xml`, `s.script()` an executable, `s.open()` a
@@ -363,7 +358,7 @@ the pane is first shown. The same object is `t.sandbox` in `run(t)`, so both hal
 file the same way.
 
 A test names what this build may lack in its header — `# requires: MOO_BUILD_TERMINAL`,
-`# requires: MOO_GTK3` — and a build without it registers the test **disabled**, so
+`# requires: MOO_BUILD_LSP` — and a build without it registers the test **disabled**, so
 `ctest -N` lists the same tests in every build and says which cannot run. The names are
 cmake variables, which is also how a requirement on the *machine* rather than on the
 build is written: `MOO_HAVE_CTAGS` is a `find_program()` in `tests/CMakeLists.txt`,
@@ -372,7 +367,7 @@ always on — says only that the plugin was compiled.
 
 **Reading and acting are different mechanisms, on purpose.** Everything asserted comes
 from AT-SPI, so a test says "the Credits button is there" rather than comparing pixels,
-and says it identically on both toolkits. Input is `xdotool` at coordinates AT-SPI has
+Input is `xdotool` at coordinates AT-SPI has
 just given, and there is not one fixed coordinate anywhere.
 
 **What the tree can be asked, beyond names and text.** These are the readers the editor
@@ -517,7 +512,7 @@ docker run --rm -v "$PWD:/src:ro" -v /tmp/w:/w debian:13 bash -c '
     apt-get update -qq && apt-get install -y -qq --no-install-recommends <ui.yml apt lines>
     dbus-uuidgen --ensure
     export CC=clang CXX=clang++
-    cmake -S /src -B /w/build -DGTK_VERSION=3 -DENABLE_STRICT=ON \
+    cmake -S /src -B /w/build -DENABLE_STRICT=ON \
           -DENABLE_UI_TESTS=ON -DENABLE_SANITIZERS=address,undefined
     cmake --build /w/build -j"$(nproc)" && cd /w/build && ctest -j4 --output-on-failure'
 ```
@@ -597,8 +592,8 @@ to open a menu from and the action interface has none to give it. That is why th
 coordinates come from AT-SPI and the click from `xdotool`.
 
 **Park the pointer before every click.** `xdotool mousemove x y click 1` warps and presses
-in the same instant, and GTK+2 then acts on what it thought was under the pointer
-beforehand. A link in the About dialog does not open on the first click after a button in
+in the same instant, and the toolkit then acts on what it thought was under the pointer
+beforehand (measured on GTK+2, before the port; not rechecked on GTK+3). A link in the About dialog does not open on the first click after a button in
 the same dialog was clicked, and opens on the second. Measured, one variant per row:
 
 | what was done | result |
@@ -614,11 +609,9 @@ pause between each — which is what a hand produces and a warp does not.
 **A link in a label is not a widget.** It has no `Component` interface, so it has no
 extents: `queryComponent()` on it raises `NotImplementedError`. It is a range of the
 label's text, and its position comes from `queryText().getRangeExtents(start, end, ...)`.
-Worse, GTK+2 does not expose links at all — gail's label accessible implements `AtkText`
-but not `AtkHypertext`, so the same dialog reports zero links there. `a11y.links_of()`
-falls back to finding URLs in the label's own text, which works because the labels medit
-puts links in show the address as the link text, and makes the GTK+2 assertion slightly
-stronger than the GTK+3 one.
+`a11y.links_of()` falls back to finding URLs in the label's own text when the
+accessible lists no links, which works because the labels medit puts links in show the
+address as the link text.
 
 **Never match on a role name, only on the role constant.** at-spi renames them:
 `push button` became `button` in at-spi2-core 2.52, so a test written against debian 12
@@ -643,8 +636,8 @@ internal children of `MooPaned`, and `GtkContainerAccessible` lists children fro
 `gtk_container_get_children()`, which skips internal ones. Before `MooPanedAccessible`
 (`moopaned.cpp`) the paned reported one child, the document area: the file selector, the
 file list and the terminal were off the bus entirely, for a screen reader as much as for a
-test. GTK+3 only — GTK+2 keeps those types inside the gail module, which cannot be
-subclassed by linking against it — so anything inside a pane is a GTK+3 test.
+test. GTK+2 kept those types inside the gail module, which could not be
+subclassed by linking against it, so this only became possible with GTK+3.
 
 **A pane hides itself when it loses the focus, and its accessible does not.** A pane that
 is not sticky is closed the moment the document takes the focus back — which is what the
@@ -663,8 +656,6 @@ and nothing returned for it. Deleting the widget is what fixed that. GtkNotebook
 every page in the tree with a `page tab` of its own, named after the tab's label and
 following it, so an open document is `hello.txt` and becomes `*hello.txt` while it has
 unsaved changes, and under the page the document is a `text` node with the text in it.
-GTK+3 only, as above, so the status bar's `Chars: N` label is still how a GTK+2 test would
-count characters.
 
 **A test that asserts a fix should be seen failing without it.** The cheapest way, and the
 one that costs no thinking: `git stash push -- src`, rebuild the test tree (incremental,
@@ -678,13 +669,11 @@ after the part it tested passed. A test that types into a document saves it firs
 `Ctrl+S` on a file from `s.open()`, so no chooser appears.
 
 **Accessibility itself produces criticals, and they are not medit's.** On this machine
-the About test reports three on GTK+3 —
+the About test reports three —
 `gtk_notebook_get_tab_label: assertion 'list != NULL' failed`, as the credits notebook is
-destroyed — and one on GTK+2, `gail_notebook_real_remove_gtk: assertion 'obj' failed`.
-medit calls neither function; both are inside the toolkit's own accessible
-implementations, which only run because the bridge is loaded. The count also depends on
-the toolkit's version, not only on medit: debian 13's GTK+3 produces none of the three,
-and its GTK+2 still produces the one. GTK's Print dialog produces ten of the same
+destroyed. medit does not call that function; it is inside the toolkit's own accessible
+implementation, which only runs because the bridge is loaded. The count also depends on
+the toolkit's version, not only on medit: debian 13's GTK+3 produces none of the three. GTK's Print dialog produces ten of the same
 `gtk_notebook_get_tab_label` critical every time it is opened, which is why the two print
 tests report ten and twenty. So the runner counts criticals and prints the
 count, and does not gate on it.
@@ -769,8 +758,9 @@ convert a.png -crop 250x150+930+175 +repage -scale 250% zoom.png   # then Read i
 convert a.png -crop 19x1+930+600 +repage txt:                      # exact pixel values
 compare -metric AE before.png after.png null:                      # 0 = identical
 ```
-A/B against the GTK+2 build is the fastest way to identify a UI regression — it turns
-"looks wrong" into "GTK+2 draws X here, GTK+3 does not".
+A/B of the same tree with and without the change (see build.md) is the fastest way to
+identify a UI regression — it turns "looks wrong" into "this change draws X here, the
+tree without it does not". What GTK+2 drew is in `git show v1.3.12:<path>`.
 
 Crop carefully before concluding anything: a wrong offset once made a fix look like it
 had broken the tab labels, and it had done the opposite. `import -window $WID` gives

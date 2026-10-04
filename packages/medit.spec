@@ -55,7 +55,7 @@ the editor Yevgen Muntyan stopped working on in 2017, ported to GTK+3.
 %build
 # --no-warn-unused-cli silences the notice about the flags %%cmake always
 # passes. %%cmake_build is current Fedora and openSUSE, but not Leap 15.2.
-%cmake --no-warn-unused-cli -DGTK_VERSION=3 -DENABLE_INSTALL_HOOKS=OFF \
+%cmake --no-warn-unused-cli -DENABLE_INSTALL_HOOKS=OFF \
     -DENABLE_TERMINAL=ON -DENABLE_LSP=ON -DENABLE_STRICT=ON
 %cmake_build
 

@@ -65,11 +65,9 @@ the third and is fixed. None of them fails a test, as criticals do not.
 a real server answers depends on its version, on the index it built and on the machine it
 runs on, and the CI container has no server at all.
 
-**Both toolkits**, unlike the terminal — the client is compiled for GTK+2 too, and only
-the tests that need the document's own accessible or a pane's carry
-`# requires: MOO_GTK3`: clicking a particular word, reading the text attributes of one,
-looking inside a pane. Everything that can be asserted from the server's log, from a
-dialog, from a popup window or from the bytes of a saved file runs on both. All of them carry `# requires: MOO_BUILD_LSP`, which is off where
+Most of what these tests assert comes from the server's log, from a dialog, from a popup
+window or from the bytes of a saved file, which is why they need no more of the document
+than the harness can see. All of them carry `# requires: MOO_BUILD_LSP`, which is off where
 json-glib is missing.
 
 **The client is off until it is asked for.** It runs other people's programs, so it
@@ -162,8 +160,8 @@ is opened rather than written behind the user's back; and a file's edits are one
 not one per range. Nothing is saved, deliberately -- a rename reaching files the user never
 chose is exactly what should be looked at before it is on disk -- so `rename` saves each
 document by hand and asserts on the bytes in the sandbox (`t.sandbox.read()`), which is also
-what makes it a test both toolkits run: nothing in it reads the document's text out of the
-accessibility tree.
+what keeps it independent of the document's accessible: nothing in it reads the text out
+of the accessibility tree.
 
 `formatting` is the same test one size smaller, plus the half that is its own: what medit
 *sends*. A formatter told nothing about the editor's settings undoes them, so the request
@@ -177,11 +175,11 @@ position on its own says nothing to read; the line comes from the open document 
 file is open and off the disk when it is not — which is also how the column gets out of the
 server's UTF-16 counting and into the character medit counts everywhere else. The path is
 relative to the project root that server was started for. So `references` has a file it
-never opens and asserts the line that came back from it; GTK+3 only, being a pane.
+never opens and asserts the line that came back from it.
 
 **A message dialog cannot be looked up by name.** `moo_error_dialog()` produces a
 GtkMessageDialog, which has no title at all and whose role is `alert` rather than `dialog`
-— both toolkits, measured — so `t.dialog("...")` finds nothing. The rename test looks for
+— measured — so `t.dialog("...")` finds nothing. The rename test looks for
 the text of its labels among the toplevels with that role instead. It is worth having: a
 server that refuses a rename has to say so, and a client that swallowed the refusal would
 leave the user with a dialog they filled in and a document nothing happened to.
@@ -198,7 +196,7 @@ three fixed here — with the test that failed first written down beside each:
   fails again while already failed changes no state and it is the *last* message ("exited
   immediately 3 times in a row, check the command") that a user needs; and the pane has to
   fill itself on `::map`, because a server that gave up before anyone opened it has
-  nothing left to notify anybody with. `server_gives_up` covers the log on both toolkits,
+  nothing left to notify anybody with. `server_gives_up` covers the log,
   `failure_pane` the pane.
 * **An entry whose program was not installed shadowed the entries after it.**
   `find_config()` returned the first entry whose *filter* matched and
@@ -261,7 +259,7 @@ look them up, and are not connected to the window's accelerator group, because c
 terminal's selection while the document has the focus is not what the key means. They are
 in no menu either: the dialog lists actions, not menu items.
 
-**The dialog itself is driven in `tests/app/shortcuts`**, on both toolkits. Three things
+**The dialog itself is driven in `tests/app/shortcuts`**. Three things
 about doing that. The list is a tree, expanded, whose rows are the actions' display names —
 which is how that test can assert that every command of the client is configurable at all.
 The shortcut is set through a `MooAccelButton`, which opens a dialog with nothing to type
@@ -290,7 +288,7 @@ was reached.
 
 ```bash
 cmake -S . -B buildc3 -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ \
-      -DGTK_VERSION=3 -DENABLE_UI_TESTS=ON -DENABLE_COVERAGE=ON \
+      -DENABLE_UI_TESTS=ON -DENABLE_COVERAGE=ON \
       -DENABLE_SANITIZERS=address,undefined
 cmake --build buildc3 -j"$(nproc)"
 
@@ -298,12 +296,12 @@ cmake --build buildc3 --target ui-test         # or ctest -R lsp, or ctest -L un
 cmake --build buildc3 --target coverage        # merge, export, print the TOTAL line
 cmake --build buildc3 --target coverage-html   # the same, plus annotated source
 
-python3 tests/coverage.py buildc2/coverage/medit.info buildc3/coverage/medit.info \
-        --floor tests/coverage.floor           # both toolkits as one number
+python3 tests/coverage.py buildc3/coverage/medit.info \
+        --floor tests/coverage.floor           # compare with the floor
 ```
 
-`tests/run.sh` is not part of this: it drives `buildu2` and `buildu3`, which are the
-ordinary test build directories and are better left uninstrumented. A coverage run is
+`tests/run.sh` is not part of this: it drives `buildu3`, which is the
+ordinary test build directory and are better left uninstrumented. A coverage run is
 `ctest` or the `ui-test` target inside the coverage build directory, and then the target
 above.
 
@@ -327,12 +325,10 @@ same reason both work here: a test quits medit through File/Quit and waits for i
 code. A test that hangs and is killed contributes nothing to the number — and it has
 failed anyway.
 
-Two toolkits are two builds, hence two profiles and two reports, and merging them needs
-neither binary: `tests/coverage.py` unions the lcov files line by line. That is why
-`llvm-cov` is told to name files relative to the top of the tree — the two halves were
-built in two containers, and an absolute path would have made them two different files.
-GTK+2 is not the lesser half: it is what runs the `#else` branch of every
-`GTK_CHECK_VERSION` split, and a line only it executed is a covered line. The script lives
+`tests/coverage.py` reads lcov files, and unions them line by line when given several —
+the habit from the days of two builds, kept because it also merges the reports of separate
+runs. `llvm-cov` is told to name files relative to the top of the tree so that reports
+made in different containers agree on what a file is. The script lives
 under `tests/` because that is where the harness lives and where `flake8` already reads.
 
 Vendored code is not measured — `src/vendor/gtksourceview`, `src/vendor/eggsmclient` and
@@ -362,11 +358,8 @@ undefended. Adding a test is usually worth more than that on its own: `tests/lsp
 Lowering it is a legitimate commit too — covered code was deleted, a test was retired — and
 the reason belongs in the file beside the number.
 
-**What it says today**: 74.91% of lines and 57.60% of functions, GTK+2 at 48.84% and GTK+3
-at 75.24%. The merged number comes out 0.33 pp under GTK+3 alone, which is arithmetic and
-not a loss — the GTK+2 build compiles 984 lines the GTK+3 build does not, and the 446 of
-them the tests reach move the numerator less than the rest move the denominator. Those
-lines are exactly the `#else` branches nothing else exercises, which is the reason to merge.
+**What it says today** is the number in `tests/coverage.floor`, plus 0.3. The figures that
+used to stand here were measured over two toolkits merged and no longer apply.
 
 The interesting part is not the total but where it is spent:
 

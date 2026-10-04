@@ -27,8 +27,7 @@ build() {
         -DENABLE_INSTALL_HOOKS=OFF \
         -DENABLE_TERMINAL=ON \
         -DENABLE_LSP=ON \
-        -DENABLE_STRICT=ON \
-        -DGTK_VERSION=3
+        -DENABLE_STRICT=ON
     cmake --build build
 }
 

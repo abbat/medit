@@ -15,13 +15,13 @@ One loop, polling once a minute, not a series of manual checks:
 until [ "$(gh run view "$ID" --json status --jq .status)" = "completed" ]; do sleep 60; done
 ```
 
-The workflows are `ui` (harness and flake8, GTK+2 and GTK+3 suites, then coverage),
+The workflows are `ui` (harness and flake8, the UI suite, then coverage),
 `build`, `package` (which carries the `version in seven places` job and the deb, rpm
 and Arch builds) and `codeql`. `gh run list --limit 5 --json databaseId,name,status,conclusion,headSha`
 finds the runs of a commit; the prompt usually names either a run id or "the latest".
 
-A `ui` run takes about 25 minutes and its coverage job starts only after both
-toolkits are green, so a run whose suites have passed is not finished.
+A `ui` run takes about 25 minutes and its coverage job starts only after the
+suite is green, so a run whose suites have passed is not finished.
 
 ## Reading a failure
 

@@ -1,12 +1,13 @@
 # AGENTS.md — medit
 
-Fork of medit (GTK+ text editor) **ported from GTK+2 to GTK+3**; both builds are kept
-alive. Work branch: `main`.
+Fork of medit (GTK+ text editor) **ported from GTK+2 to GTK+3**. GTK+2 support was
+dropped after 1.3.12, the last release with a GTK+2 build (tag `v1.3.12`); the minimum
+is GTK+ 3.24.33. Work branch: `main`.
 
 The port was largely done by an AI and is buggy. It left 53 blocks marked
 `/* FIXME: This code was written by AI and requires review */`, a marker that said
 only who wrote the code, not what was wrong with it. All 53 have been read against
-their GTK+2 branch: 33 were faithful translations and lost the marker, 19 named a
+their GTK+2 branch (as it was then): 33 were faithful translations and lost the marker, 19 named a
 defect, and those defects are fixed — the story is in `doc/bugs.md`.
 
 None of those markers is left in `src/`. The last one was in `moonotebook.cpp`, on
@@ -17,9 +18,11 @@ their GTK+2 branch, the two that still made a cairo context of their own are fix
 and that marker is gone too. The `FIXME:`s that remain are all in `src/vendor/` and
 in the language files, and are upstream's.
 
-**The GTK+2 branch of every `#if GTK_CHECK_VERSION(3,0,0)` is the specification.**
-When GTK+3 misbehaves, read the `#else` branch first and ask what it achieved, then find
-the GTK+3 way to achieve the same. Do not invent new behaviour.
+**The GTK+2 code as of `v1.3.12` is the specification.** The `#if GTK_CHECK_VERSION`
+splits are gone from `src/`, but the tag keeps what they held. When GTK+3 misbehaves,
+read the old code with `git show v1.3.12:<path>` (`git blame v1.3.12 -- <path>` and
+`git log -L` help to find it), ask what it achieved, then find the GTK+3 way to achieve
+the same. Do not invent new behaviour.
 
 **The tree's own sources are compiled as C++** — 150 `.cpp` and 205 `.h` under `src/`,
 against three `.c` files left in the ctags plugin. What that buys is a stricter compiler
@@ -101,7 +104,7 @@ conventions for code and commits.
    `doc/running.md` has the rest.
 2. **Build with `-DENABLE_STRICT=ON`.** Every job that compiles anything in CI does,
    including the package builds. A warning you never see locally is a red CI. `doc/build.md`.
-3. **The GTK+2 branch is the specification** — the paragraph above says it, and it is
+3. **The GTK+2 code at `v1.3.12` is the specification** — the paragraph above says it, and it is
    the rule most often skipped under time pressure.
 4. **Measure the widget, do not assume the value.** Borders, thicknesses and style
    contexts differ per widget and per theme; several defects here came from a number
@@ -168,7 +171,7 @@ times that on re-reading what it already had.
 | A per-line `grep` over a `-j8` build log miscounts: two compilers writing at once interleave mid-line, so one warning's text lands inside another's and a filter like `grep warning: \| grep -v deprecated` reports a warning that does not exist | check the surrounding lines before believing a count of one |
 | `gtk-builder-tool validate` stops at the **first** error, and 13 of our 30 `.ui` files fail immediately on `Invalid object type 'MooEntry'` and friends, because the standalone tool does not know the Moo widgets. Everything after that line in those files goes unchecked | it is still worth running on the 17 it can read; a full check needs a validator that registers the types first |
 | gcc 12 accepts C constructs that gcc 9/10 reject (unnamed parameters), so a clean local build says nothing about the oldest target | no compiler in the current matrix rejects them; see "Debian package build (old distros)" |
-| `pkg_check_modules(<prefix> …)` writes `<prefix>_VERSION` into the **cache**, so a prefix of `GTK` overwrote the `GTK_VERSION` entry that selects the toolkit — the first configure worked, the second failed with "Unsupported GTK version: 3.24.38" | fixed: the prefix is `GTKPKG`, and `GTK_VERSION` is again the toolkit choice and safe to branch on. Never give `pkg_check_modules` a prefix that names an option |
+| `pkg_check_modules(<prefix> …)` writes `<prefix>_VERSION` into the **cache**, so a prefix that names an option overwrites the option — it was `GTK` against `GTK_VERSION`, and the second configure failed with "Unsupported GTK version: 3.24.38" | the prefix is `GTKPKG`. Never give `pkg_check_modules` a prefix that names an option |
 | A key name in an accelerator string is **case sensitive**: `"<Ctrl>Space"` does not parse and `"<Ctrl>space"` does. `_moo_accel_register()` drops an unparsable accelerator without a word, so the action simply has no key | test it: `gtk_accelerator_parse()` returns key 0. `MOO_EDIT_ACCEL_COMPLETE` carried this mistake unused since 1.2.92 |
 | `_moo_get_accel()` and `_moo_get_default_accel()` read **different maps**: the first holds accelerators that were actually set, the second the defaults registered with the action. An accelerator that has only ever had its default reads as empty from the first | ask the first, fall back to the second — that is what a plugin matching its own accelerator by hand has to do |
 | The focused widget sees a key before the accelerators (`moo_window_key_press_event`), so a plugin action whose key the text view consumes — `Ctrl+Space` — never fires | match the accelerator by hand in the view's `key-press-event`, as the terminal and the LSP completion do |
@@ -339,13 +342,11 @@ blurry triangles. When the GTK+2 original addressed individual pixels, fill
 
 ## Conventions
 
-- Fix both GTK versions in one change where the API allows it, and **delete the
-  `#if GTK_CHECK_VERSION` split** when one code path is correct for both.
 - Remove the `FIXME:` on any block you fix, and if you review one and find nothing,
   remove it too — a marker that survives a reading it passed costs the next reader the
   same reading. If you find something and are not fixing it now, replace the marker
   with what you found and how you found it.
-- Verify before claiming: build both **with `-DENABLE_STRICT=ON`**, run both with the
+- Verify before claiming: build **with `-DENABLE_STRICT=ON`**, run with the
   exit-code rule, screenshot when the change is visual, and state what was *not*
   verified. Strict is not an extra: every job that compiles anything uses it, the
   package builds included, so an ordinary local build is a weaker check than any gate
@@ -426,8 +427,8 @@ an alignment of its own instead, and made the hand-fitted diff larger rather tha
 smaller, 60010 changed lines against 69860.
 
 The cost of running it anyway is not the noise in one commit. What this fork does most
-is read a line against the GTK+2 code it was ported from — the 263 `GTK_CHECK_VERSION`
-splits and the blocks still marked `FIXME:` — and a tree-wide reformat puts one
+is read a line against the GTK+2 code it was ported from — the `GTK_CHECK_VERSION`
+splits are gone now, and that code lives in `v1.3.12` — and a tree-wide reformat puts one
 commit on top of every line of that history.
 
 What is enforced is the mechanical half only, through `.editorconfig`: indent width,

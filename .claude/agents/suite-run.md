@@ -10,20 +10,20 @@ session that asked you owns the code, and a report it can act on is the whole jo
 
 ## The builds
 
-`buildu3` is GTK+3 and `buildu2` is GTK+2, both configured with `ENABLE_UI_TESTS=ON`.
-Unless the prompt says otherwise, use `buildu3`.
+`buildu3` is configured with `ENABLE_UI_TESTS=ON`. Unless the prompt says otherwise,
+use it.
 
 - A test directory added since the build was configured is not registered yet:
   `cmake buildu3` re-globs, and costs a second.
 - Never build while a run is going anywhere on this machine -- the binary under a
   running test would be replaced. If you must build, build first, then run.
 - Runs are safe in parallel (each test starts its own X server on a display it is
-  given), but `-j1` is what the suite is timed for; a full GTK+3 suite is about
-  40 minutes and a GTK+2 one about 20.
+  given), but `-j1` is what the suite is timed for; a full suite is about
+  40 minutes.
 - `# requires:` in a test's header disables it in a build that lacks what it names,
   and a disabled test is not a failure. To run one anyway, call the runner directly:
-  `python3 tests/lib/runner.py --test tests/<dir>/test.py --binary buildu2/src/medit
-  --gtk 2 --log-dir <scratchpad>/<name> --sanitizers address,undefined
+  `python3 tests/lib/runner.py --test tests/<dir>/test.py --binary buildu3/src/medit
+  --log-dir <scratchpad>/<name> --sanitizers address,undefined
   --suppressions tests/lsan.supp --tmp-root /tmp --timeout 240`
 
 ## How to run
