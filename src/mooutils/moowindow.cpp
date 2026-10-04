@@ -1877,7 +1877,7 @@ G_STMT_START {                                                  \
 G_STMT_START {                                                                                                  \
     while (prop_name__)                                                                                         \
     {                                                                                                           \
-        GParameter param__ = {NULL, {0, {{0}, {0}}}};                                                           \
+        MooParameter param__ = {NULL, {0, {{0}, {0}}}};                                                           \
                                                                                                                 \
         /* ignore id property */                                                                                \
         if (!strcmp ((prop_name__), "id") || !strcmp ((prop_name__), "name"))                                   \
@@ -1973,7 +1973,7 @@ G_STMT_START {                                                                  
  * way through.
  *
  * The arrays are half filled in then, and what is in them owns memory of its
- * own: a GParameter has both a name and a value, a condition is a string. Any
+ * own: a MooParameter has both a name and a value, a condition is a string. Any
  * of the four may be NULL, since the failure can come before they exist.
  */
 static void
@@ -1985,7 +1985,7 @@ free_collected_params (GArray       *action_params,
     if (action_params)
     {
         guint i;
-        GParameter *params = (GParameter*) action_params->data;
+        MooParameter *params = (MooParameter*) action_params->data;
 
         for (i = 0; i < action_params->len; ++i)
         {
@@ -2056,7 +2056,7 @@ collect_params_and_props (guint              n_callback_args,
     g_return_val_if_fail (!n_callback_args || callback_args_p != NULL, FALSE);
 
     conditions = g_ptr_array_new ();
-    action_params = g_array_new (FALSE, TRUE, sizeof (GParameter));
+    action_params = g_array_new (FALSE, TRUE, sizeof (MooParameter));
 
     if (n_callback_args)
     {
@@ -2081,7 +2081,7 @@ collect_params_and_props (guint              n_callback_args,
         MooActionFactory *action_factory;
 
         action_factory = moo_action_factory_new_a (action_type,
-                                                   (GParameter*) action_params->data,
+                                                   (MooParameter*) action_params->data,
                                                    action_params->len);
 
         if (!action_factory)
@@ -2091,7 +2091,7 @@ collect_params_and_props (guint              n_callback_args,
         }
 
         *action_factory_p = action_factory;
-        _moo_param_array_free ((GParameter*) action_params->data, action_params->len);
+        _moo_param_array_free ((MooParameter*) action_params->data, action_params->len);
         g_array_free (action_params, FALSE);
         action_params = NULL;
 

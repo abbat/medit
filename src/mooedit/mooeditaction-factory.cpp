@@ -250,7 +250,7 @@ moo_edit_class_new_actionv (MooEditClass       *klass,
     g_return_if_fail (first_prop_name != NULL);
     g_return_if_fail (action_id != NULL);
 
-    action_params = g_array_new (FALSE, TRUE, sizeof (GParameter));
+    action_params = g_array_new (FALSE, TRUE, sizeof (MooParameter));
     doc_conditions = g_ptr_array_new ();
     view_conditions = g_ptr_array_new ();
 
@@ -276,7 +276,7 @@ moo_edit_class_new_actionv (MooEditClass       *klass,
     name = first_prop_name;
     while (name)
     {
-        GParameter param = { 0 };
+        MooParameter param = { 0 };
         GParamSpec *pspec;
         char *err = NULL;
 
@@ -381,7 +381,7 @@ moo_edit_class_new_actionv (MooEditClass       *klass,
         MooActionFactory *action_factory = NULL;
 
         action_factory = moo_action_factory_new_a (action_type,
-                                                   (GParameter*) action_params->data,
+                                                   (MooParameter*) action_params->data,
                                                    action_params->len);
 
         if (!action_factory)
@@ -392,7 +392,7 @@ moo_edit_class_new_actionv (MooEditClass       *klass,
 
         /* FALSE: the factory took the parameter values, so free the array and
            not its contents. */
-        _moo_param_array_free ((GParameter*) action_params->data, action_params->len);
+        _moo_param_array_free ((MooParameter*) action_params->data, action_params->len);
         g_array_free (action_params, FALSE);
         action_params = NULL;
 
@@ -424,7 +424,7 @@ error:
     if (action_params)
     {
         guint i;
-        GParameter *params = (GParameter*) action_params->data;
+        MooParameter *params = (MooParameter*) action_params->data;
 
         for (i = 0; i < action_params->len; ++i)
         {

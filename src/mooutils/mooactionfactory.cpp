@@ -113,7 +113,7 @@ moo_action_group_add_action (GtkActionGroup *group,
 
 static gboolean
 collect_valist (GType        type,
-                GParameter **props_p,
+                MooParameter **props_p,
                 guint       *n_props_p,
                 const char  *first_prop_name,
                 va_list      var_args)
@@ -127,13 +127,13 @@ collect_valist (GType        type,
     klass = G_OBJECT_CLASS (g_type_class_ref (type));
     g_return_val_if_fail (klass != NULL, FALSE);
 
-    props = g_array_new (FALSE, TRUE, sizeof (GParameter));
+    props = g_array_new (FALSE, TRUE, sizeof (MooParameter));
     prop_name = first_prop_name;
 
     while (prop_name)
     {
         char *error = NULL;
-        GParameter param;
+        MooParameter param;
         GParamSpec *pspec;
 
         pspec = g_object_class_find_property (klass, prop_name);
@@ -143,7 +143,7 @@ collect_valist (GType        type,
             g_warning ("could not find property '%s' for class '%s'",
                        prop_name, g_type_name (type));
 
-            _moo_param_array_free ((GParameter*) props->data, props->len);
+            _moo_param_array_free ((MooParameter*) props->data, props->len);
             g_array_free (props, FALSE);
 
             g_type_class_unref (klass);
@@ -162,7 +162,7 @@ collect_valist (GType        type,
             g_value_unset (&param.value);
             g_free ((char*)param.name);
 
-            _moo_param_array_free ((GParameter*) props->data, props->len);
+            _moo_param_array_free ((MooParameter*) props->data, props->len);
             g_array_free (props, FALSE);
 
             g_type_class_unref (klass);
@@ -177,7 +177,7 @@ collect_valist (GType        type,
     g_type_class_unref (klass);
 
     *n_props_p = props->len;
-    *props_p = (GParameter*) g_array_free (props, FALSE);
+    *props_p = (MooParameter*) g_array_free (props, FALSE);
 
     return TRUE;
 }
@@ -210,9 +210,9 @@ moo_action_factory_new_valist (GType       action_type,
 
 static void
 array_add_parameter (GArray     *array,
-                     GParameter *param)
+                     MooParameter *param)
 {
-    GParameter p;
+    MooParameter p;
     p.name = g_strdup (param->name);
     p.value.g_type = 0;
     g_value_init (&p.value, G_VALUE_TYPE (&param->value));
@@ -221,17 +221,17 @@ array_add_parameter (GArray     *array,
 }
 
 
-static GParameter *
-param_array_concatenate (GParameter *props1,
+static MooParameter *
+param_array_concatenate (MooParameter *props1,
                          guint       n_props1,
-                         GParameter *props2,
+                         MooParameter *props2,
                          guint       n_props2,
                          guint      *n_props)
 {
     GArray *array;
     guint i;
 
-    array = g_array_new (FALSE, TRUE, sizeof (GParameter));
+    array = g_array_new (FALSE, TRUE, sizeof (MooParameter));
 
     for (i = 0; i < n_props1; ++i)
         array_add_parameter (array, &props1[i]);
@@ -239,7 +239,7 @@ param_array_concatenate (GParameter *props1,
         array_add_parameter (array, &props2[i]);
 
     *n_props = array->len;
-    return (GParameter*) g_array_free (array, FALSE);
+    return (MooParameter*) g_array_free (array, FALSE);
 }
 
 
@@ -250,7 +250,7 @@ moo_action_factory_create_action (MooActionFactory   *factory,
                                   ...)
 {
     GObject *object;
-    GParameter *props, *add_props;
+    MooParameter *props, *add_props;
     guint n_props, n_add_props;
     va_list var_args;
     gboolean success;
@@ -265,9 +265,9 @@ moo_action_factory_create_action (MooActionFactory   *factory,
     }
 
     if (!prop_name)
-        return GTK_ACTION (g_object_newv (factory->action_type,
-                                          factory->n_props,
-                                          factory->props));
+        return GTK_ACTION (_moo_object_newv (factory->action_type,
+                                              factory->n_props,
+                                              factory->props));
 
     va_start (var_args, prop_name);
 
@@ -286,7 +286,7 @@ moo_action_factory_create_action (MooActionFactory   *factory,
                                      n_add_props,
                                      &n_props);
 
-    object = G_OBJECT (g_object_newv (factory->action_type, n_props, props));
+    object = G_OBJECT (_moo_object_newv (factory->action_type, n_props, props));
 
     _moo_param_array_free (props, n_props);
     _moo_param_array_free (add_props, n_add_props);
@@ -299,7 +299,7 @@ moo_action_factory_create_action (MooActionFactory   *factory,
 
 MooActionFactory *
 moo_action_factory_new_a (GType       action_type,
-                          GParameter *params,
+                          MooParameter *params,
                           guint       n_params)
 {
     MooActionFactory *factory;
@@ -310,11 +310,11 @@ moo_action_factory_new_a (GType       action_type,
     g_return_val_if_fail (g_type_is_a (action_type, MOO_TYPE_ACTION_BASE), NULL);
 
     klass = G_OBJECT_CLASS (g_type_class_ref (action_type));
-    props = g_array_new (FALSE, TRUE, sizeof (GParameter));
+    props = g_array_new (FALSE, TRUE, sizeof (MooParameter));
 
     for (i = 0; i < n_params; ++i)
     {
-        GParameter param;
+        MooParameter param;
         GParamSpec *pspec;
         const char *prop_name = params[i].name;
 
@@ -325,7 +325,7 @@ moo_action_factory_new_a (GType       action_type,
             g_warning ("could not find property '%s' for class '%s'",
                        prop_name, g_type_name (action_type));
 
-            _moo_param_array_free ((GParameter*) props->data, props->len);
+            _moo_param_array_free ((MooParameter*) props->data, props->len);
             g_array_free (props, FALSE);
 
             g_type_class_unref (klass);
@@ -346,7 +346,7 @@ moo_action_factory_new_a (GType       action_type,
     factory->action_type = action_type;
 
     factory->n_props = props->len;
-    factory->props = (GParameter*) g_array_free (props, FALSE);
+    factory->props = (MooParameter*) g_array_free (props, FALSE);
 
     return factory;
 }

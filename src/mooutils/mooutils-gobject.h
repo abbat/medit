@@ -86,11 +86,20 @@ const char     *_moo_convert_bool_to_string (gboolean        value);
 
 
 /*****************************************************************************/
-/* GParameter array manipulation
+/* Parameter array manipulation. MooParameter has the layout of GParameter,
+ * which glib deprecated in 2.54 along with g_object_newv().
  */
 
-void            _moo_param_array_free       (GParameter *array,
-                                             guint       len);
+typedef struct {
+    const char *name;
+    GValue      value;
+} MooParameter;
+
+void            _moo_param_array_free       (MooParameter *array,
+                                             guint         len);
+GObject        *_moo_object_newv            (GType         type,
+                                             guint         n_params,
+                                             MooParameter *params);
 
 
 /*****************************************************************************/

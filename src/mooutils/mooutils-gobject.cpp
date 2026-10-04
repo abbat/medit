@@ -876,13 +876,13 @@ _moo_value_change_type (GValue *val,
 }
 
 /*****************************************************************************/
-/* GParameter array manipulation
+/* Parameter array manipulation
  */
 
 
 
 void
-_moo_param_array_free (GParameter *array,
+_moo_param_array_free (MooParameter *array,
                        guint       len)
 {
     guint i;
@@ -894,6 +894,23 @@ _moo_param_array_free (GParameter *array,
     }
 
     g_free (array);
+}
+
+GObject *
+_moo_object_newv (GType         type,
+                  guint         n_params,
+                  MooParameter *params)
+{
+    g_autofree const char **names = g_new (const char *, n_params + 1);
+    g_autofree GValue *values = g_new (GValue, n_params + 1);
+
+    for (guint i = 0; i < n_params; ++i)
+    {
+        names[i] = params[i].name;
+        values[i] = params[i].value;
+    }
+
+    return g_object_new_with_properties (type, n_params, names, values);
 }
 
 

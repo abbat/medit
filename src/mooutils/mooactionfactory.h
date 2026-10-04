@@ -16,6 +16,8 @@
 #ifndef MOO_ACTION_FACTORY_H
 #define MOO_ACTION_FACTORY_H
 
+#include "mooutils/mooutils-gobject.h"
+
 
 G_BEGIN_DECLS
 
@@ -43,7 +45,7 @@ struct _MooActionFactory
 
     GType       action_type;
     guint       n_props;
-    GParameter *props;
+    MooParameter *props;
 };
 
 struct _MooActionFactoryClass
@@ -57,7 +59,7 @@ GType               moo_action_factory_get_type     (void) G_GNUC_CONST;
 MooActionFactory   *moo_action_factory_new_func     (MooActionFactoryFunc factory_func,
                                                      gpointer            data);
 MooActionFactory   *moo_action_factory_new_a        (GType               object_type,
-                                                     GParameter         *params,
+                                                     MooParameter         *params,
                                                      guint               n_params);
 
 GtkAction          *moo_action_factory_create_action(MooActionFactory   *factory,
