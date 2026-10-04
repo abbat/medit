@@ -41,7 +41,7 @@ on_license_button_clicked (GtkWidget *widget, gpointer data)
 {
   (void) widget;
   (void) data;
-  gtk_show_uri (NULL, "https://github.com/abbat/medit/blob/main/COPYING", GDK_CURRENT_TIME, NULL);
+  gtk_show_uri_on_window (NULL, "https://github.com/abbat/medit/blob/main/COPYING", GDK_CURRENT_TIME, NULL);
 }
 
 /*!

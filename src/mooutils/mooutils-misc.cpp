@@ -63,7 +63,7 @@ open_uri (const char *uri,
 {
     GError *error = NULL;
 
-    if (!gtk_show_uri (NULL, uri, gtk_get_current_event_time (), &error))
+    if (!gtk_show_uri_on_window (NULL, uri, gtk_get_current_event_time (), &error))
     {
         g_warning ("Unable to show '%s': %s", uri, error->message);
         g_error_free (error);
