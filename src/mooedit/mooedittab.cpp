@@ -42,9 +42,9 @@ static void
 moo_edit_tab_init (MooEditTab *tab)
 {
     gtk_box_set_homogeneous (GTK_BOX (tab), FALSE);
-    tab->hpaned = gtk_hpaned_new ();
-    tab->vpaned1 = gtk_vpaned_new ();
-    tab->vpaned2 = gtk_vpaned_new ();
+    tab->hpaned = gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
+    tab->vpaned1 = gtk_paned_new (GTK_ORIENTATION_VERTICAL);
+    tab->vpaned2 = gtk_paned_new (GTK_ORIENTATION_VERTICAL);
     gtk_paned_pack1 (GTK_PANED (tab->hpaned), tab->vpaned1, TRUE, FALSE);
     gtk_paned_pack2 (GTK_PANED (tab->hpaned), tab->vpaned2, TRUE, FALSE);
     gtk_widget_show (tab->hpaned);

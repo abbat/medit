@@ -1116,7 +1116,7 @@ moo_edit_window_constructor (GType                  type,
 
     create_paned (window);
 
-    window->priv->doc_paned = gtk_hpaned_new ();
+    window->priv->doc_paned = gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
     gtk_widget_show (window->priv->doc_paned);
     g_signal_connect_swapped (window->priv->doc_paned, "notify::position",
                               G_CALLBACK (queue_save_window_config), window);
