@@ -297,7 +297,7 @@ KNOWN_DEPRECATED = frozenset([
     "GtkCellRendererPixbuf:stock-id",       # 3: stock icons in tree views
     "GtkSettings:gtk-button-images",        # 3: stock buttons
     "GtkSettings:gtk-menu-images",          # 4.1: GtkAction's menu proxies
-    "GtkWidget::visibility-notify-event",   # source not found yet
+    "GtkWidget::visibility-notify-event",   # VTE's own accessible; not ours
 ])
 
 
