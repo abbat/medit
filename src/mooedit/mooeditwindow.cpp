@@ -33,7 +33,6 @@
 #include "mooedit/mooeditbookmark.h"
 #include "mooedit/moolangmgr.h"
 #include "mooutils/moobuilder.h"
-#include "mooutils/moostock.h"
 #include "marshals.h"
 #include "mooutils/moomenuaction.h"
 #include "mooutils/mooutils-misc.h"

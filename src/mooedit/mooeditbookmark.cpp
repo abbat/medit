@@ -20,7 +20,6 @@
 #include "mooedit/mooeditbookmark.h"
 #include "mooedit/mooedit-private.h"
 #include "mooedit/mootextbuffer.h"
-#include "mooutils/moostock.h"
 #include "mooutils/mooutils-misc.h"
 
 

@@ -18,7 +18,6 @@
 #include "mooutils/mooutils-treeview.h"
 #include "mooutils/mooutils.h"
 #include "mooutils/mooi18n.h"
-#include "mooutils/moostock.h"
 #include "mooutils/moohelp.h"
 #include "mooutils/moobuilder.h"
 

@@ -1,6 +1,5 @@
 #include "mooeditwindowoutput.h"
 #include "moocmdview.h"
-#include "mooutils/moostock.h"
 #include "mooutils/mooi18n.h"
 
 #define MOO_EDIT_WINDOW_OUTPUT "moo-edit-window-output"

@@ -40,7 +40,6 @@
 #include "mooedit/mooeditaction-factory.h"
 #include "plugins/support/moolineview.h"
 #include "mooutils/mooi18n.h"
-#include "mooutils/moostock.h"
 #include "mooutils/mooutils-misc.h"
 
 typedef struct {

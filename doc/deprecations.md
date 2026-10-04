@@ -168,8 +168,8 @@ Facts the survey of 2026-10-04 established, so they need not be found again:
   index → `view-list`, the Shortcuts page → `preferences-desktop-keyboard-shortcuts`,
   Plugins → `application-x-addon`.
   Our own pixmaps are named `medit-terminal`, `medit-file-selector`, `medit-file`;
-  until 3.7 `moostock.cpp` registers them with `gtk_icon_theme_add_builtin_icon`
-  from the same pixbufs. Nothing here is read from user config, so no id mapping
+  they are an icon theme in the GResource (3.7), laid out as `/medit/icons/<size>x<size>/apps/`
+  and registered with `gtk_icon_theme_add_resource_path`. Nothing here is read from user config, so no id mapping
   on load (bookmarks are 3.5).
 - [x] 3.5 Bookmarks: map stock ids to icon names on load (unknown → `folder`),
   write icon names, build the icon combo from icon names. Test the round trip with
@@ -189,12 +189,23 @@ Facts the survey of 2026-10-04 established, so they need not be found again:
   longer call `gtk_stock_lookup`, and `strip_underscore` is gone. The 109 action
   accelerators dumped before and after are identical. Our own Keyboard id maps to
   `preferences-desktop-keyboard-shortcuts`, as on the Shortcuts page.
-- [ ] 3.7 `moostock.cpp`: the pixmaps become an icon theme in the GResource
+- [x] 3.7 `moostock.cpp`: the pixmaps become an icon theme in the GResource
   (`gtk_icon_theme_add_resource_path`); the factory, the aliases,
   `gtk_stock_add_static` and `_moo_stock_init` go. Fix `mooaccelbutton.ui`.
   Removes `GtkButton:use-stock` and `GtkSettings:gtk-button-images` from
   `KNOWN_DEPRECATED`, if stock buttons were their source.
-- [ ] 3.8 Remove what is left unused in `moostock.h`, or the header. Build with
+  Done: `moostock.cpp` and `moostock.h` are both gone (nothing but `MOO_STOCK_FILE` was
+  still read, and that is now `medit-file` by name in `moofileicon.cpp`). The pixmaps
+  are in `resources.xml` under `/medit/icons/<size>x<size>/apps/` (`medit-file`,
+  `medit-file-selector`, `medit-terminal`, `medit`), added once in the `MooEditor`
+  constructor with `gtk_icon_theme_add_resource_path (…, "/medit/icons")`. The prefix
+  must not contain the theme name: with `/medit/icons/hicolor` the names did not
+  resolve and the pane labels showed the missing-image icon. `mooaccelbutton.ui` lost
+  its two `gtk-cancel`/`gtk-ok` images. `GtkButton:use-stock` and
+  `GtkSettings:gtk-button-images` stay in `KNOWN_DEPRECATED`: no `use-stock` is left
+  in `src/`, but GTK's own dialogs may read them, and only a UI run shows whether
+  they still fire at startup or in a dialog.
+- [x] 3.8 Remove what is left unused in `moostock.h`, or the header (gone with 3.7). Build with
   clang too — it flags every `GTK_STOCK_*` macro gcc lets through. Push and CI.
 
 ## Stage 4 — GtkAction

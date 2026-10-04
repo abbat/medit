@@ -22,7 +22,6 @@
 #include "moofileview/moofileview-tools.h"
 #include "plugins/mooplugin-builtin.h"
 #include "marshals.h"
-#include "mooutils/moostock.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooutils-fs.h"
 #include "mooutils/mooutils.h"

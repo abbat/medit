@@ -37,7 +37,6 @@
 #include "mooutils/mooaction-private.h"
 #include "mooutils/mooutils-enums.h"
 #include "mooutils/mooutils-fs.h"
-#include "mooutils/moostock.h"
 #include "mooutils/mooi18n.h"
 #include "mooutils/mooencodings.h"
 
@@ -351,7 +350,7 @@ moo_editor_constructor (GType                  type,
     object = G_OBJECT_CLASS (moo_editor_parent_class)->constructor (type, n_props, props);
     editor = MOO_EDITOR (object);
 
-    _moo_stock_init ();
+    gtk_icon_theme_add_resource_path (gtk_icon_theme_get_default (), "/medit/icons");
 
     char *ui;
 

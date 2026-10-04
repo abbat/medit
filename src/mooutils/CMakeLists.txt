@@ -96,8 +96,6 @@ target_sources(medit PRIVATE
     mooregion.h
     moospawn.cpp
     moospawn.h
-    moostock.cpp
-    moostock.h
     mootype-macros.h
     moouixml.cpp
     moouixml.h

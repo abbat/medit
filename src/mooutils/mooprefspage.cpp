@@ -18,7 +18,6 @@
  **/
 
 #include "mooutils/mooprefspage.h"
-#include "mooutils/moostock.h"
 #include "mooutils/mooprefs.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooutils-gobject.h"

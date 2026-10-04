@@ -38,7 +38,6 @@
 #include "mooutils/mooprefsdialog.h"
 #include "mooutils/moobuilder.h"
 #include "mooutils/mooi18n.h"
-#include "mooutils/moostock.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooutils-mem.h"
 #include "mooutils/mooutils-debug.h"

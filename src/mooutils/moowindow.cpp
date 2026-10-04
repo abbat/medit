@@ -25,7 +25,6 @@
 #include "mooutils/mooaccel.h"
 #include "mooutils/mooprefs.h"
 #include "marshals.h"
-#include "mooutils/moostock.h"
 #include "mooutils/mooactionfactory.h"
 #include "mooutils/mooi18n.h"
 #include "mooutils/mooutils-misc.h"

@@ -32,7 +32,6 @@
 #include "mooutils/mooutils-treeview.h"
 #include "mooutils/moodialogs.h"
 #include "mooutils/moofiltermgr.h"
-#include "mooutils/moostock.h"
 #include "mooutils/mooactionfactory.h"
 #include "mooutils/mooaction-private.h"
 #include "mooutils/mooeditops.h"

@@ -21,7 +21,6 @@
 #include "support/moocmdview.h"
 #include "mooedit/mooedit-accels.h"
 #include "mooedit/mootextbuffer.h"
-#include "mooutils/moostock.h"
 #include "mooutils/moohistorycombo.h"
 #include "mooutils/moodialogs.h"
 #include "mooutils/mooi18n.h"

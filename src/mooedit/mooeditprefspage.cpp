@@ -20,7 +20,6 @@
 #include "mooedit/mooeditfiltersettings.h"
 #include "mooutils/mooprefsdialog.h"
 #include "mooutils/moobuilder.h"
-#include "mooutils/moostock.h"
 #include "mooutils/moofontsel.h"
 #include "mooutils/mooutils-treeview.h"
 #include "mooutils/mooutils-misc.h"

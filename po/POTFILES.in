@@ -49,7 +49,6 @@ src/mooutils/moohelp.cpp
 src/mooutils/moohistorycombo.cpp
 src/mooutils/moohistorymgr.cpp
 src/mooutils/moopane.cpp
-src/mooutils/moostock.cpp
 src/mooutils/mooutils-file.cpp
 src/mooutils/mooutils-fs.cpp
 src/mooutils/mooutils-misc.cpp

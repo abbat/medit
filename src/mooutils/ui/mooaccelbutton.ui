@@ -55,16 +55,6 @@ New accelerator...
                     <property name="visible">True</property>
                     <property name="spacing">2</property>
                     <child>
-                      <object class="GtkImage" id="image1">
-                        <property name="visible">True</property>
-                        <property name="icon_name">gtk-cancel</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                      </packing>
-                    </child>
-                    <child>
                       <object class="GtkLabel" id="label65">
                         <property name="visible">True</property>
                         <property name="label">Cancel</property>
@@ -90,16 +80,6 @@ New accelerator...
                     <property name="valign">center</property>
                     <property name="visible">True</property>
                     <property name="spacing">2</property>
-                    <child>
-                      <object class="GtkImage" id="image2">
-                        <property name="visible">True</property>
-                        <property name="icon_name">gtk-ok</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                      </packing>
-                    </child>
                     <child>
                       <object class="GtkLabel" id="label66">
                         <property name="visible">True</property>

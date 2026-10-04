@@ -19,7 +19,6 @@
 #include "mooutils/mooaccelbutton.h"
 #include "mooutils/moodialogs.h"
 #include "mooutils/mooi18n.h"
-#include "mooutils/moostock.h"
 #include "mooutils/mooaction-private.h"
 #include "mooutils/mooactiongroup.h"
 #include "mooutils/mootype-macros.h"

@@ -27,7 +27,6 @@
 #include "mooedit/mooplugin-macro.h"
 #include "mooedit/mooedit-accels.h"
 #include "mooutils/mooi18n.h"
-#include "mooutils/moostock.h"
 #include "mooutils/mooutils-misc.h"
 
 

@@ -28,7 +28,6 @@
 #include "mooutils/moohelp.h"
 #include "mooutils/mooi18n.h"
 #include "mooutils/mooprefsdialog.h"
-#include "mooutils/moostock.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooutils-script.h"
 
@@ -1150,8 +1149,6 @@ static void
 moo_app_instance_init (MooApp *app, G_GNUC_UNUSED gpointer data)
 {
   g_return_if_fail (moo_app_data.instance == NULL);
-
-  _moo_stock_init ();
 
   moo_app_data.instance = app;
 
