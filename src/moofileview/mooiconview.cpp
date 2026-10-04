@@ -88,11 +88,9 @@ struct _MooIconViewPrivate {
 
     int              xoffset;
     GtkAdjustment   *adjustment;
-#if GTK_CHECK_VERSION(3,0,0)
     GtkAdjustment   *vadjustment;
     guint            hscroll_policy : 1;
     guint            vscroll_policy : 1;
-#endif
     GtkTreeRowReference *scroll_to;
 
     guint            update_idle;
@@ -141,25 +139,15 @@ static void     moo_icon_view_unrealize     (GtkWidget      *widget);
 static void     moo_icon_view_size_allocate (GtkWidget      *widget,
                                              GtkAllocation  *allocation);
 
-#if GTK_CHECK_VERSION(3,0,0)
 static void     moo_icon_view_get_preferred_width (GtkWidget *widget,
                                                    gint *minimum_width,
                                                    gint *natural_width);
 static void     moo_icon_view_get_preferred_height (GtkWidget *widget,
                                                     gint *minimum_height,
                                                     gint *natural_height);
-#else
-static void     moo_icon_view_size_request  (GtkWidget      *widget,
-                                             GtkRequisition *requisition);
-#endif
 
-#if GTK_CHECK_VERSION(3,0,0)
 static gboolean moo_icon_view_draw          (GtkWidget      *widget,
                                              cairo_t        *cr);
-#else
-static gboolean moo_icon_view_expose        (GtkWidget      *widget,
-                                             GdkEventExpose *event);
-#endif
 
 static gboolean moo_icon_view_button_press  (GtkWidget      *widget,
                                              GdkEventButton *event);
@@ -221,10 +209,8 @@ static void     _moo_icon_view_set_cell     (MooIconView        *view,
 
 static void     _moo_icon_view_set_adjustment   (MooIconView    *view,
                                                  GtkAdjustment  *adjustment);
-#if GTK_CHECK_VERSION(3,0,0)
 static void     set_vadjustment                 (MooIconView    *view,
                                                  GtkAdjustment  *adjustment);
-#endif
 static void     moo_icon_view_set_scroll_adjustments
                                                 (GtkWidget      *widget,
                                                  GtkAdjustment  *hadj,
@@ -279,7 +265,6 @@ static void     dnd_info_free               (DndInfo        *info);
 
 
 /* MOO_TYPE_ICON_VIEW */
-#if GTK_CHECK_VERSION(3,0,0)
 /* GtkScrollable is how a GTK+3 scrolled window hands its adjustments to its
    child, in place of GTK+2's set-scroll-adjustments signal. There is nothing
    to implement beyond the four properties below -- the interface has no
@@ -288,21 +273,16 @@ static void     dnd_info_free               (DndInfo        *info);
 G_DEFINE_TYPE_WITH_CODE (MooIconView, _moo_icon_view, GTK_TYPE_WIDGET,
                          G_ADD_PRIVATE (MooIconView)
                          G_IMPLEMENT_INTERFACE (GTK_TYPE_SCROLLABLE, NULL))
-#else
-G_DEFINE_TYPE_WITH_CODE (MooIconView, _moo_icon_view, GTK_TYPE_WIDGET, G_ADD_PRIVATE(MooIconView))
-#endif
 
 enum {
     PROP_0,
     PROP_PIXBUF_CELL,
     PROP_TEXT_CELL,
     PROP_MODEL,
-#if GTK_CHECK_VERSION(3,0,0)
     PROP_HADJUSTMENT,
     PROP_VADJUSTMENT,
     PROP_HSCROLL_POLICY,
     PROP_VSCROLL_POLICY
-#endif
 };
 
 enum {
@@ -338,14 +318,9 @@ _moo_icon_view_class_init (MooIconViewClass *klass)
     widget_class->unrealize = moo_icon_view_unrealize;
     widget_class->size_allocate = moo_icon_view_size_allocate;
 
-#if GTK_CHECK_VERSION(3,0,0)
     widget_class->draw = moo_icon_view_draw;
     widget_class->get_preferred_width = moo_icon_view_get_preferred_width;
     widget_class->get_preferred_height = moo_icon_view_get_preferred_height;
-#else
-    widget_class->size_request = moo_icon_view_size_request;
-    widget_class->expose_event = moo_icon_view_expose;
-#endif
 
     widget_class->scroll_event = moo_icon_view_scroll_event;
     widget_class->button_press_event = moo_icon_view_button_press;
@@ -421,7 +396,6 @@ _moo_icon_view_class_init (MooIconViewClass *klass)
                           G_TYPE_NONE, 2,
                           GTK_TYPE_ADJUSTMENT,
                           GTK_TYPE_ADJUSTMENT);
-#if GTK_CHECK_VERSION(3,0,0)
     /* GTK+2 named a signal here and the scrolled window emitted it; GTK+3 sets
      * the properties of GtkScrollable, which this class implements and
      * overrides just below. The signal itself stays: it is still what
@@ -430,9 +404,6 @@ _moo_icon_view_class_init (MooIconViewClass *klass)
     g_object_class_override_property (gobject_class, PROP_VADJUSTMENT, "vadjustment");
     g_object_class_override_property (gobject_class, PROP_HSCROLL_POLICY, "hscroll-policy");
     g_object_class_override_property (gobject_class, PROP_VSCROLL_POLICY, "vscroll-policy");
-#else
-    widget_class->set_scroll_adjustments_signal = signals[SET_SCROLL_ADJUSTMENTS];
-#endif
 
     signals[ACTIVATE_ITEM_AT_CURSOR] =
             _moo_signal_new_cb ("activate-item-at-cursor",
@@ -597,9 +568,7 @@ moo_icon_view_dispose (GObject *object)
 
     g_clear_object (&view->priv->adjustment);
 
-#if GTK_CHECK_VERSION(3,0,0)
     set_vadjustment (view, NULL);
-#endif
 
     if (view->priv->update_idle)
     {
@@ -691,7 +660,6 @@ static void         moo_icon_view_set_property  (GObject        *object,
                                      MOO_ICON_VIEW_CELL_TEXT,
                                      (GtkCellRenderer *) g_value_get_object (value));
             break;
-#if GTK_CHECK_VERSION(3,0,0)
         case PROP_HADJUSTMENT:
             _moo_icon_view_set_adjustment (view, (GtkAdjustment*) g_value_get_object (value));
             break;
@@ -712,7 +680,6 @@ static void         moo_icon_view_set_property  (GObject        *object,
             view->priv->vscroll_policy = g_value_get_enum (value);
             gtk_widget_queue_resize (GTK_WIDGET (view));
             break;
-#endif
         default:
             G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -737,7 +704,6 @@ static void         moo_icon_view_get_property  (GObject        *object,
         case PROP_TEXT_CELL:
             g_value_set_object (value, view->priv->text.cell);
             break;
-#if GTK_CHECK_VERSION(3,0,0)
         case PROP_HADJUSTMENT:
             g_value_set_object (value, view->priv->adjustment);
             break;
@@ -750,7 +716,6 @@ static void         moo_icon_view_get_property  (GObject        *object,
         case PROP_VSCROLL_POLICY:
             g_value_set_enum (value, view->priv->vscroll_policy);
             break;
-#endif
         default:
             G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -942,14 +907,9 @@ moo_icon_view_style_set (GtkWidget *widget,
 {
     if (gtk_widget_get_realized (widget))
     {
-#if GTK_CHECK_VERSION(3,0,0)
         /* GDK does not paint window backgrounds on GTK+3; moo_icon_view_draw()
            fills it instead, so there is nothing to set here. */
         gtk_widget_queue_draw (widget);
-#else
-        gdk_window_set_background (gtk_widget_get_window (widget),
-                                   &widget->style->base[gtk_widget_get_state (widget)]);
-#endif
     }
 }
 
@@ -960,10 +920,6 @@ moo_icon_view_state_changed (GtkWidget *widget,
 {
     if (gtk_widget_get_realized (widget))
     {
-#if !GTK_CHECK_VERSION(3,0,0)
-        gdk_window_set_background (gtk_widget_get_window (widget),
-                                   &widget->style->base[gtk_widget_get_state (widget)]);
-#endif
     }
 
     if (!gtk_widget_is_sensitive (widget))
@@ -1003,27 +959,17 @@ moo_icon_view_realize (GtkWidget *widget)
     attributes.visual = gtk_widget_get_visual (widget);
     attributes.wclass = GDK_INPUT_OUTPUT;
 
-#if GTK_CHECK_VERSION (3, 0, 0)
     attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL;
-#else
-    attributes.colormap = gtk_widget_get_colormap (widget);
-    attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL | GDK_WA_COLORMAP;
-#endif
 
     gtk_widget_set_window (widget, gdk_window_new (gtk_widget_get_parent_window (widget),
                                      &attributes, attributes_mask));
     gdk_window_set_user_data (gtk_widget_get_window (widget), widget);
 
-#if GTK_CHECK_VERSION(3,0,0)
     /* The view class makes the theme give us the text-view background rather
        than the fully transparent colour a bare widget context yields. The
        window background itself is painted in moo_icon_view_draw(). */
     gtk_style_context_add_class (gtk_widget_get_style_context (widget),
                                  GTK_STYLE_CLASS_VIEW);
-#else
-    widget->style = gtk_style_attach (widget->style, gtk_widget_get_window (widget));
-    gdk_window_set_background (gtk_widget_get_window (widget), &widget->style->base[GTK_STATE_NORMAL]);
-#endif
 
     moo_icon_view_invalidate_layout (view);
 }
@@ -1039,7 +985,6 @@ moo_icon_view_unrealize (GtkWidget *widget)
 }
 
 
-#if GTK_CHECK_VERSION(3,0,0)
 static void
 moo_icon_view_get_preferred_width (G_GNUC_UNUSED GtkWidget *widget,
                                    gint *minimum_width,
@@ -1061,16 +1006,6 @@ moo_icon_view_get_preferred_height (G_GNUC_UNUSED GtkWidget *widget,
     if (natural_height)
         *natural_height = 1;
 }
-#else
-
-static void
-moo_icon_view_size_request (G_GNUC_UNUSED GtkWidget *widget,
-                            GtkRequisition *requisition)
-{
-    requisition->width = 1;
-    requisition->height = 1;
-}
-#endif
 
 
 static void
@@ -1161,11 +1096,7 @@ num_entries (Column *column)
 
 static void     draw_column                 (MooIconView    *view,
                                              Column         *column,
-#if GTK_CHECK_VERSION(3,0,0)
                                              cairo_region_t *clip,
-#else
-                                             GdkRegion      *clip,
-#endif
                                              cairo_t        *cr);
 
 static void     draw_entry                  (MooIconView    *view,
@@ -1199,34 +1130,19 @@ get_drag_select_rect (MooIconView  *view,
 }
 
 static gboolean
-#if GTK_CHECK_VERSION(3,0,0)
 moo_icon_view_draw (GtkWidget *widget,
                     cairo_t   *cr)
-#else
-moo_icon_view_expose (GtkWidget      *widget,
-                      GdkEventExpose *event)
-#endif
 {
     GSList *l;
     MooIconView *view = MOO_ICON_VIEW (widget);
     Layout *layout = view->priv->layout;
 
-#if GTK_CHECK_VERSION(3,0,0)
     cairo_region_t *area;
     cairo_rectangle_int_t clip_rect;
-#else
-    GdkWindow *event_window;
-    GdkRegion *area;
-    GdkRegion *event_region;
-
-    event_window = event->window;
-    event_region = event->region;
-#endif
 
     if (check_empty (view))
         return TRUE;
 
-#if GTK_CHECK_VERSION(3,0,0)
     /* The damage region in this widget's own coordinates is what the cairo
        clip carries. The drawing context's clip is expressed in the frame's
        toplevel coordinate space instead, so intersecting the columns with it
@@ -1248,20 +1164,11 @@ moo_icon_view_expose (GtkWidget      *widget,
 
     area = cairo_region_create_rectangle (&clip_rect);
     cairo_region_translate (area, view->priv->xoffset, 0);
-#else
-    area = gdk_region_copy (event_region);
-    gdk_region_offset (area, view->priv->xoffset, 0);
-#endif
 
     for (l = layout->columns; l != NULL; l = l->next)
     {
-#if GTK_CHECK_VERSION(3,0,0)
        cairo_rectangle_int_t  column_rect;
        cairo_region_t        *column_region;
-#else
-        GdkRectangle column_rect;
-        GdkRegion *column_region;
-#endif
         Column *column;
 
         column = (Column *) l->data;
@@ -1271,35 +1178,17 @@ moo_icon_view_expose (GtkWidget      *widget,
         column_rect.width = column->width;
         column_rect.height = num_entries (column) * layout->row_height;
 
-#if GTK_CHECK_VERSION(3,0,0)
         column_region = cairo_region_create_rectangle (&column_rect);
         cairo_region_intersect (column_region, area);
         if (!cairo_region_is_empty (column_region))
-#else
-        column_region = gdk_region_rectangle (&column_rect);
-        gdk_region_intersect (column_region, area);
-        if (!gdk_region_empty (column_region))
-#endif
         {
-#if GTK_CHECK_VERSION(3,0,0)
             draw_column (view, column, column_region, cr);
-#else
-            draw_column (view, column, column_region, NULL);
-#endif
         }
 
-#if GTK_CHECK_VERSION(3,0,0)
         cairo_region_destroy (column_region);
-#else
-        gdk_region_destroy (column_region);
-#endif
     }
 
-#if GTK_CHECK_VERSION(3,0,0)
     cairo_region_destroy (area);
-#else
-    gdk_region_destroy (area);
-#endif
 
     if (view->priv->drag_select)
     {
@@ -1307,7 +1196,6 @@ moo_icon_view_expose (GtkWidget      *widget,
         GdkColor *color;
         double dash_len = 1.;
 
-#if GTK_CHECK_VERSION(3,0,0)
         GtkStyleContext *context = gtk_widget_get_style_context (widget);
         GdkRGBA color_rgba;
         GdkColor color_gdk;
@@ -1327,12 +1215,6 @@ moo_icon_view_expose (GtkWidget      *widget,
         color_gdk.green = color_rgba.green * 65535;
         color_gdk.blue = color_rgba.blue * 65535;
         color = &color_gdk;
-#else
-        cairo_t *cr;
-
-        cr = gdk_cairo_create (event_window);
-        color = &widget->style->base[GTK_STATE_SELECTED];
-#endif
 
         get_drag_select_rect (view, &rect);
 
@@ -1354,11 +1236,7 @@ moo_icon_view_expose (GtkWidget      *widget,
                          rect.height - 1);
         cairo_stroke (cr);
 
-#if GTK_CHECK_VERSION(3,0,0)
         cairo_restore (cr);
-#else
-        cairo_destroy (cr);
-#endif
     }
 
     return TRUE;
@@ -1368,11 +1246,7 @@ moo_icon_view_expose (GtkWidget      *widget,
 static void
 draw_column                                 (MooIconView     *view,
                                              Column          *column,
-#if GTK_CHECK_VERSION(3,0,0)
                                              cairo_region_t  *clip,
-#else
-                                             GdkRegion       *clip,
-#endif
                                              cairo_t         *cr)
 {
     int i;
@@ -1381,7 +1255,6 @@ draw_column                                 (MooIconView     *view,
     Layout *layout = view->priv->layout;
     GdkRectangle clip_rect;
 
-#if GTK_CHECK_VERSION(3,0,0)
     cairo_rectangle_int_t cairo_clip_rect;
     cairo_region_get_extents (clip, &cairo_clip_rect);
 
@@ -1389,9 +1262,6 @@ draw_column                                 (MooIconView     *view,
     clip_rect.y = cairo_clip_rect.y;
     clip_rect.width = cairo_clip_rect.width;
     clip_rect.height = cairo_clip_rect.height;
-#else
-    gdk_region_get_clipbox (clip, &clip_rect);
-#endif
 
     gtk_tree_model_get_iter (view->priv->model, &iter,
                              column->first);
@@ -1436,13 +1306,9 @@ static void     draw_entry                  (MooIconView    *view,
     GtkTreePath *cursor_path, *drop_path;
     gboolean selected, cursor, drop;
 
-#if GTK_CHECK_VERSION(3,0,0)
     GtkStyleContext *context = gtk_widget_get_style_context (widget);
 
     (void) window;
-#else
-    (void) cr;
-#endif
 
     selected = _moo_icon_view_path_is_selected (view, path);
 
@@ -1456,7 +1322,6 @@ static void     draw_entry                  (MooIconView    *view,
 
     if (selected || drop)
     {
-#if GTK_CHECK_VERSION(3,0,0)
         GtkStateFlags flags = GTK_STATE_FLAG_SELECTED;
 
         if (gtk_widget_has_focus (widget) || drop)
@@ -1480,28 +1345,6 @@ static void     draw_entry                  (MooIconView    *view,
                                entry_rect->x, entry_rect->y,
                                entry_rect->width, entry_rect->height);
         gtk_style_context_restore (context);
-#else
-        GdkGC *selection_gc;
-
-        if (gtk_widget_has_focus (widget) || drop)
-        {
-            selection_gc = widget->style->base_gc [GTK_STATE_SELECTED];
-            state = (GtkCellRendererState) (GTK_CELL_RENDERER_SELECTED | GTK_CELL_RENDERER_FOCUSED);
-        }
-        else
-        {
-            selection_gc = widget->style->base_gc [GTK_STATE_ACTIVE];
-            state = GTK_CELL_RENDERER_SELECTED;
-        }
-
-        gdk_draw_rectangle (window,
-                            selection_gc,
-                            TRUE,
-                            entry_rect->x,
-                            entry_rect->y,
-                            entry_rect->width,
-                            entry_rect->height);
-#endif
     }
 
     if (view->priv->pixbuf.show && view->priv->layout->pixbuf_height > 0)
@@ -1512,22 +1355,12 @@ static void     draw_entry                  (MooIconView    *view,
 
         cell_area.width = view->priv->layout->pixbuf_width;
 
-#if GTK_CHECK_VERSION(3,0,0)
         gtk_cell_renderer_render (view->priv->pixbuf.cell,
                                   cr,
                                   widget,
                                   entry_rect,
                                   &cell_area,
                                   state);
-#else
-        gtk_cell_renderer_render (view->priv->pixbuf.cell,
-                                  window,
-                                  widget,
-                                  entry_rect,
-                                  &cell_area,
-                                  entry_rect,
-                                  state);
-#endif
     }
 
     if (view->priv->text.show && view->priv->layout->text_height > 0)
@@ -1539,27 +1372,16 @@ static void     draw_entry                  (MooIconView    *view,
         cell_area.x += view->priv->layout->pixbuf_width;
         cell_area.width = entry_rect->width - view->priv->layout->pixbuf_width;
 
-#if GTK_CHECK_VERSION(3,0,0)
         gtk_cell_renderer_render (view->priv->text.cell,
                                   cr,
                                   widget,
                                   entry_rect,
                                   &cell_area,
                                   state);
-#else
-        gtk_cell_renderer_render (view->priv->text.cell,
-                                  window,
-                                  widget,
-                                  entry_rect,
-                                  &cell_area,
-                                  entry_rect,
-                                  state);
-#endif
     }
 
     if (cursor || drop)
     {
-#if GTK_CHECK_VERSION(3,0,0)
         gtk_style_context_save (context);
         gtk_style_context_set_state (context, GTK_STATE_FLAG_SELECTED);
         gtk_render_focus (context, cr,
@@ -1568,18 +1390,6 @@ static void     draw_entry                  (MooIconView    *view,
                           entry_rect->width,
                           entry_rect->height);
         gtk_style_context_restore (context);
-#else
-        gtk_paint_focus (widget->style,
-                         window,
-                         GTK_STATE_SELECTED,
-                         entry_rect,
-                         widget,
-                         "icon_view",
-                         entry_rect->x,
-                         entry_rect->y,
-                         entry_rect->width,
-                         entry_rect->height);
-#endif
     }
 }
 
@@ -2109,7 +1919,6 @@ static void     moo_icon_view_update_adjustment (MooIconView    *view)
 }
 
 
-#if GTK_CHECK_VERSION(3,0,0)
 static void
 set_vadjustment (MooIconView   *view,
                  GtkAdjustment *adjustment)
@@ -2125,7 +1934,6 @@ set_vadjustment (MooIconView   *view,
     if (adjustment)
         g_object_ref_sink (adjustment);
 }
-#endif
 
 
 static void
@@ -2395,29 +2203,17 @@ moo_icon_view_drag_select (MooIconView    *view,
     GdkRectangle rect;
     GList *rect_items_list;
     GTree *new_selection;
-#if GTK_CHECK_VERSION(3,0,0)
     cairo_region_t *region = cairo_region_create();
-#else
-    GdkRegion *region = gdk_region_new ();
-#endif
 
     get_drag_select_rect (view, &rect);
 
-#if GTK_CHECK_VERSION(3,0,0)
     cairo_region_union_rectangle (region, &rect);
-#else
-    gdk_region_union_with_rect (region, &rect);
-#endif
 
     view->priv->drag_select_x = event->x + view->priv->xoffset;
     view->priv->drag_select_y = event->y;
     get_drag_select_rect (view, &rect);
 
-#if GTK_CHECK_VERSION(3,0,0)
     cairo_region_union_rectangle (region, &rect);
-#else
-    gdk_region_union_with_rect (region, &rect);
-#endif
 
     gdk_window_invalidate_region (gtk_widget_get_window (GTK_WIDGET (view)), region, TRUE);
     drag_scroll_check (view, (int) event->x, (int) event->y);
@@ -2453,11 +2249,7 @@ moo_icon_view_drag_select (MooIconView    *view,
 
     path_set_free (new_selection);
 
-#if GTK_CHECK_VERSION(3,0,0)
     cairo_region_destroy (region);
-#else
-    gdk_region_destroy (region);
-#endif
 }
 
 static gboolean
@@ -2882,11 +2674,7 @@ static double get_wheel_delta (MooIconView  *view)
 {
     GtkAdjustment *adj = view->priv->adjustment;
 
-#if 1
     return pow (gtk_adjustment_get_page_size (adj), 2.0 / 3.0);
-#else
-    return gtk_adjustment_get_step_increment (adj) * 2;
-#endif
 }
 
 
@@ -2908,11 +2696,9 @@ static gboolean moo_icon_view_scroll_event  (GtkWidget      *widget,
             offset += get_wheel_delta (view);
             break;
 
-#if GTK_CHECK_VERSION(3,0,0)
         // TODO:
         case GDK_SCROLL_SMOOTH:
             break;
-#endif
     }
 
     moo_icon_view_scroll_to (view, offset);
@@ -4038,10 +3824,8 @@ drag_scroll_timeout (MooIconView *view)
     GdkEvent *event;
     DndInfo *info = view->priv->dnd_info;
 
-#if GTK_CHECK_VERSION(3,0,0)
     GdkSeat *seat;
     GdkDisplay *display;
-#endif
 
     gtk_widget_get_allocation (widget, alc);
 
@@ -4101,14 +3885,9 @@ drag_scroll_timeout (MooIconView *view)
         event->motion.state = mask;
         event->motion.is_hint = FALSE;
 
-#if GTK_CHECK_VERSION(3,0,0)
         display = gdk_display_get_default();
         seat = gdk_display_get_default_seat(display);
         event->motion.device = gdk_seat_get_pointer(seat);
-#else
-        /* XXX ??? do I need it, is it right? */
-        event->motion.device = gdk_device_get_core_pointer ();
-#endif
 
         gdk_window_get_position (gtk_widget_get_window (toplevel), &x, &y);
         event->motion.x_root = x + event->motion.x;

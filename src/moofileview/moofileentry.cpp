@@ -146,7 +146,6 @@ enum {
 
 static guint signals[LAST_SIGNAL];
 
-#if GTK_CHECK_VERSION(3,0,0)
 static const char *popup_selection_css =
     /* keep the selected row looking selected even though the popup's tree
        view never takes focus; GTK+2 did this by copying base[SELECTED]
@@ -155,7 +154,6 @@ static const char *popup_selection_css =
     "  background-color: @theme_selected_bg_color;"
     "  color: @theme_selected_fg_color;"
     "}";
-#endif
 
 static void
 _moo_file_entry_completion_class_init (MooFileEntryCompletionClass *klass)
@@ -784,7 +782,6 @@ completion_popup (MooFileEntryCompletion *cmpl)
 
     gtk_widget_ensure_style (GTK_WIDGET (cmpl->priv->treeview));
 
-#if GTK_CHECK_VERSION(3,0,0)
     {
         GtkStyleContext *context =
             gtk_widget_get_style_context (GTK_WIDGET (cmpl->priv->treeview));
@@ -795,12 +792,6 @@ completion_popup (MooFileEntryCompletion *cmpl)
                                         GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
         g_object_unref (provider);
     }
-#else
-    gtk_widget_modify_bg (GTK_WIDGET (cmpl->priv->treeview), GTK_STATE_ACTIVE,
-                          &GTK_WIDGET(cmpl->priv->treeview)->style->base[GTK_STATE_SELECTED]);
-    gtk_widget_modify_base (GTK_WIDGET (cmpl->priv->treeview), GTK_STATE_ACTIVE,
-                            &GTK_WIDGET(cmpl->priv->treeview)->style->base[GTK_STATE_SELECTED]);
-#endif
 
     gtk_grab_add (cmpl->priv->popup);
     gdk_pointer_grab (gtk_widget_get_window (cmpl->priv->popup), TRUE,
@@ -1343,7 +1334,6 @@ entry_get_borders (GtkEntry *entry,
 
     if (gtk_entry_get_has_frame (entry))
     {
-#if GTK_CHECK_VERSION(3,0,0)
         /* A realized GtkEntry's context answers 1 on every side here, the
            same as GTK+2's xthickness and ythickness -- measured, because the
            same call on MooPaned answers 0 and this looked like the same bug.
@@ -1354,10 +1344,6 @@ entry_get_borders (GtkEntry *entry,
         gtk_style_context_get_border(context, GTK_STATE_FLAG_NORMAL, &border);
         *xborder = border.left;
         *yborder = border.top;
-#else
-        *xborder = widget->style->xthickness;
-        *yborder = widget->style->ythickness;
-#endif
     }
     else
     {
@@ -1594,11 +1580,7 @@ static void     moo_file_entry_get_property (GObject        *object,
                                              GValue         *value,
                                              GParamSpec     *pspec);
 
-#if GTK_CHECK_VERSION(3,0,0)
 static void     moo_file_entry_destroy      (GtkWidget      *object);
-#else
-static void     moo_file_entry_destroy      (GtkObject      *object);
-#endif
 
 static gboolean moo_file_entry_key_press    (GtkWidget      *widget,
                                              GdkEventKey    *event);
@@ -1616,11 +1598,7 @@ static void
 _moo_file_entry_class_init (MooFileEntryClass *klass)
 {
     GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
-#if GTK_CHECK_VERSION(3,0,0)
     GtkWidgetClass *gtkobject_class = GTK_WIDGET_CLASS (klass);
-#else
-    GtkObjectClass *gtkobject_class = GTK_OBJECT_CLASS (klass);
-#endif
     GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
     gobject_class->set_property = moo_file_entry_set_property;
@@ -1648,11 +1626,7 @@ _moo_file_entry_init (G_GNUC_UNUSED MooFileEntry *entry)
 
 
 static void
-#if GTK_CHECK_VERSION(3,0,0)
 moo_file_entry_destroy (GtkWidget *object)
-#else
-moo_file_entry_destroy (GtkObject *object)
-#endif
 {
     MooFileEntry *entry = MOO_FILE_ENTRY (object);
 
@@ -1663,11 +1637,7 @@ moo_file_entry_destroy (GtkObject *object)
         entry->completion = NULL;
     }
 
-#if GTK_CHECK_VERSION(3,0,0)
     GTK_WIDGET_CLASS(_moo_file_entry_parent_class)->destroy (object);
-#else
-    GTK_OBJECT_CLASS(_moo_file_entry_parent_class)->destroy (object);
-#endif
 }
 
 

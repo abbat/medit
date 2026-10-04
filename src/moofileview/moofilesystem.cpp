@@ -20,13 +20,9 @@
 #include "mooutils/mooutils.h"
 #include "marshals.h"
 
-#if 0 && MOO_DEBUG
-#define DEBUG_MESSAGE g_message
-#else
 static void G_GNUC_PRINTF(1,2) DEBUG_MESSAGE (G_GNUC_UNUSED const char *format, ...)
 {
 }
-#endif
 
 #define BROKEN_NAME "<" "????" ">"
 #define FOLDERS_CACHE_SIZE 10

@@ -449,7 +449,6 @@ model_remove_moo_file (MooFile        *file,
 
 
 #ifdef MOO_DEBUG
-#if 1
 #define CHECK_ORDER(order,n)                \
 G_STMT_START {                              \
     int *check = g_new0 (int, n);           \
@@ -462,7 +461,6 @@ G_STMT_START {                              \
     }                                       \
     g_free (check);                         \
 } G_STMT_END
-#endif
 #endif /* MOO_DEBUG */
 #ifndef CHECK_ORDER
 #define CHECK_ORDER(order,n)

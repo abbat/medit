@@ -1217,13 +1217,8 @@ static void combo_label_data_func   (GtkCellLayout      *cell_layout,
                                      GtkCellRenderer    *cell,
                                      GtkTreeModel       *model,
                                      GtkTreeIter        *iter, gpointer);
-#if GTK_CHECK_VERSION(3,0,0)
 static void fill_icon_store         (GtkListStore       *store,
                                      GtkStyleContext    *context);
-#else
-static void fill_icon_store         (GtkListStore       *store,
-                                     GtkStyle           *style);
-#endif
 static void icon_store_find_pixbuf  (GtkListStore       *store,
                                      GtkTreeIter        *iter,
                                      GdkPixbuf          *pixbuf);
@@ -1250,12 +1245,8 @@ init_icon_combo (GtkComboBox *combo,
         icon_store = gtk_list_store_new (3, GDK_TYPE_PIXBUF,
                                          G_TYPE_STRING, G_TYPE_STRING);
 
-#if GTK_CHECK_VERSION(3,0,0)
         GtkStyleContext *context = gtk_widget_get_style_context (dialog);
         fill_icon_store (icon_store, context);
-#else
-        fill_icon_store (icon_store, dialog->style);
-#endif
     }
 
     gtk_cell_layout_clear (GTK_CELL_LAYOUT (combo));
@@ -1362,11 +1353,7 @@ combo_label_data_func (G_GNUC_UNUSED GtkCellLayout *cell_layout,
 
 static void
 fill_icon_store (GtkListStore   *store,
-#if GTK_CHECK_VERSION(3,0,0)
                 GtkStyleContext *context
-#else
-                 GtkStyle       *style
-#endif
 )
 {
     GtkTreeIter iter;
@@ -1379,13 +1366,9 @@ fill_icon_store (GtkListStore   *store,
         GtkStockItem item;
         GtkIconSet* set;
 
-#if GTK_CHECK_VERSION(3,0,0)
         // Deprecated since: 3.10
         // Use gtk_icon_theme_lookup_icon() instead.
         set = gtk_style_context_lookup_icon_set (context, (const char *) l->data);
-#else
-        set = gtk_style_lookup_icon_set (style, (const char *) l->data);
-#endif
 
         if (!set)
             continue;

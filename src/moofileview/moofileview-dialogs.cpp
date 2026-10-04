@@ -24,11 +24,7 @@
 #include "mooutils/moocompat.h"
 #include "mooutils/moobuilder.h"
 
-#if GTK_CHECK_VERSION(3,0,0)
 static void moo_file_props_dialog_destroy   (GtkWidget          *object);
-#else
-static void moo_file_props_dialog_destroy   (GtkObject          *object);
-#endif
 
 static void moo_file_props_dialog_show      (GtkWidget          *widget);
 static void moo_file_props_dialog_response  (GtkDialog          *dialog,
@@ -41,11 +37,7 @@ G_DEFINE_TYPE(MooFilePropsDialog, _moo_file_props_dialog, GTK_TYPE_DIALOG)
 static void
 _moo_file_props_dialog_class_init (MooFilePropsDialogClass *klass)
 {
-#if GTK_CHECK_VERSION(3,0,0)
     GtkWidgetClass *gtkobject_class = GTK_WIDGET_CLASS (klass);
-#else
-    GtkObjectClass *gtkobject_class = GTK_OBJECT_CLASS (klass);
-#endif
     GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
     GtkDialogClass *dialog_class = GTK_DIALOG_CLASS (klass);
 
@@ -76,11 +68,7 @@ _moo_file_props_dialog_init (MooFilePropsDialog *dialog)
     gtk_container_remove (GTK_CONTAINER (gtk_widget_get_parent (dialog->notebook)),
                           dialog->notebook);
 
-#if GTK_CHECK_VERSION(3,0,0)
     gtk_container_add (GTK_CONTAINER(gtk_dialog_get_content_area(GTK_DIALOG(dialog))), dialog->notebook);
-#else
-    gtk_container_add (GTK_CONTAINER(GTK_DIALOG(dialog)->vbox), dialog->notebook);
-#endif
 
     g_object_unref (dialog->notebook);
     gtk_widget_destroy (window);
@@ -316,11 +304,7 @@ _moo_file_props_dialog_set_file (MooFilePropsDialog *dialog,
 
 
 static void
-#if GTK_CHECK_VERSION(3,0,0)
 moo_file_props_dialog_destroy (GtkWidget *object)
-#else
-moo_file_props_dialog_destroy (GtkObject *object)
-#endif
 {
     MooFilePropsDialog *dialog = MOO_FILE_PROPS_DIALOG (object);
 
@@ -338,11 +322,7 @@ moo_file_props_dialog_destroy (GtkObject *object)
         dialog->table = NULL;
     }
 
-#if GTK_CHECK_VERSION(3,0,0)
     GTK_WIDGET_CLASS(_moo_file_props_dialog_parent_class)->destroy (object);
-#else
-    GTK_OBJECT_CLASS(_moo_file_props_dialog_parent_class)->destroy (object);
-#endif
 }
 
 

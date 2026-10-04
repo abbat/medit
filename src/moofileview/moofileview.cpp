@@ -164,11 +164,7 @@ static void         moo_file_view_get_property  (GObject        *object,
                                                  GValue         *value,
                                                  GParamSpec     *pspec);
 
-#if GTK_CHECK_VERSION(3,0,0)
 static void         moo_file_view_destroy       (GtkWidget      *object);
-#else
-static void         moo_file_view_destroy       (GtkObject      *object);
-#endif
 
 static void         moo_file_view_hide          (GtkWidget      *widget);
 static gboolean     moo_file_view_key_press     (MooFileView    *fileview,
@@ -492,11 +488,7 @@ static void
 moo_file_view_class_init (MooFileViewClass *klass)
 {
     GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
-#if GTK_CHECK_VERSION(3,0,0)
     GtkWidgetClass *gtkobject_class = GTK_WIDGET_CLASS (klass);
-#else
-    GtkObjectClass *gtkobject_class = GTK_OBJECT_CLASS (klass);
-#endif
     GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
     GtkBindingSet *binding_set;
 
@@ -927,11 +919,7 @@ moo_file_view_init (MooFileView *fileview)
 
 
 static void
-#if GTK_CHECK_VERSION(3,0,0)
 moo_file_view_destroy (GtkWidget *object)
-#else
-moo_file_view_destroy (GtkObject *object)
-#endif
 {
     MooFileView *fileview = MOO_FILE_VIEW (object);
 
@@ -941,11 +929,7 @@ moo_file_view_destroy (GtkObject *object)
         fileview->priv->props_dialog = NULL;
     }
 
-#if GTK_CHECK_VERSION(3,0,0)
     GTK_WIDGET_CLASS (moo_file_view_parent_class)->destroy (object);
-#else
-    GTK_OBJECT_CLASS (moo_file_view_parent_class)->destroy (object);
-#endif
 }
 
 
@@ -1584,12 +1568,10 @@ create_scrolled_window (GtkPolicyType hpolicy,
     gtk_widget_show (swin);
     gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (swin), hpolicy, vpolicy);
 
-#if GTK_CHECK_VERSION(3,0,0)
     /* A tabless GtkNotebook painted a frame around its page on GTK+2, which is
        what gave the file list its border. GTK+3 themes draw no such frame, so
        ask the scrolled window for the border instead. */
     gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (swin), GTK_SHADOW_IN);
-#endif
 
     return swin;
 }
@@ -1647,11 +1629,7 @@ create_filter_combo (G_GNUC_UNUSED MooFileView *fileview)
     gtk_widget_show (button);
     gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 
-#if GTK_CHECK_VERSION(3,0,0)
     combo = gtk_combo_box_new_with_entry ();
-#else
-    combo = gtk_combo_box_entry_new ();
-#endif
 
     gtk_widget_show (combo);
     gtk_box_pack_start (GTK_BOX (hbox), combo, TRUE, TRUE, 0);
@@ -1683,15 +1661,6 @@ static GtkWidget   *create_treeview     (MooFileView    *fileview)
     GtkCellRenderer *cell;
 
     treeview = gtk_tree_view_new ();
-
-#if 0
-    gtk_tree_view_enable_model_drag_source (GTK_TREE_VIEW (treeview),
-                                            GDK_CONTROL_MASK,
-                                            source_targets,
-                                            G_N_ELEMENTS (source_targets),
-                                            GDK_ACTION_COPY | GDK_ACTION_MOVE |
-                                                    GDK_ACTION_LINK);
-#endif
 
     selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (treeview));
     gtk_tree_selection_set_mode (selection, GTK_SELECTION_MULTIPLE);
