@@ -1793,6 +1793,28 @@ static gboolean node_is_empty (Node *node)
 }
 
 
+/* What gtk_image_menu_item_new_from_stock() made: the stock label as a mnemonic
+ * and the stock image. An unknown id is the label, as it was there. The stock id
+ * comes from the xml here, so this goes with item 3.4 of doc/deprecations.md.
+ */
+static GtkWidget *
+_moo_menu_item_new_from_stock (const char *stock_id)
+{
+    g_return_val_if_fail (stock_id != NULL, NULL);
+
+    G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+    GtkStockItem stock_item;
+
+    if (!gtk_stock_lookup (stock_id, &stock_item))
+        return _moo_menu_item_new (stock_id, FALSE,
+                                   gtk_image_new_from_stock (stock_id, GTK_ICON_SIZE_MENU));
+
+    return _moo_menu_item_new (stock_item.label, TRUE,
+                               gtk_image_new_from_stock (stock_id, GTK_ICON_SIZE_MENU));
+    G_GNUC_END_IGNORE_DEPRECATIONS
+}
+
+
 static void
 create_menu_item (MooUiXml       *xml,
                   Toplevel       *toplevel,

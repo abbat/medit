@@ -93,7 +93,6 @@ GdkModifierType _moo_get_modifiers          (GtkWidget      *widget);
 GtkWidget *_moo_menu_item_new              (const char     *label,
                                              gboolean        mnemonic,
                                              GtkWidget      *image);
-GtkWidget *_moo_menu_item_new_from_stock    (const char     *stock_id);
 void       _moo_menu_item_set_accel_label   (GtkWidget      *menu_item,
                                              const char     *label);
 void       _moo_menu_item_parse_accel_label (const char     *label,

@@ -577,12 +577,12 @@ create_popup_menu (WindowStuff *stuff)
 
     menu = gtk_menu_new ();
 
-    item = _moo_menu_item_new_from_stock (GTK_STOCK_COPY);
+    item = _moo_menu_item_new (_("_Copy"), TRUE, gtk_image_new_from_icon_name ("edit-copy", GTK_ICON_SIZE_MENU));
     gtk_widget_set_sensitive (item, vte_terminal_get_has_selection (stuff->terminal));
     g_signal_connect (item, "activate", G_CALLBACK (copy_item_activated), stuff);
     gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 
-    item = _moo_menu_item_new_from_stock (GTK_STOCK_PASTE);
+    item = _moo_menu_item_new (_("_Paste"), TRUE, gtk_image_new_from_icon_name ("edit-paste", GTK_ICON_SIZE_MENU));
     g_signal_connect (item, "activate", G_CALLBACK (paste_item_activated), stuff);
     gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 
@@ -603,17 +603,17 @@ create_popup_menu (WindowStuff *stuff)
 
     gtk_menu_shell_append (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
 
-    item = _moo_menu_item_new_from_stock (GTK_STOCK_PROPERTIES);
+    item = _moo_menu_item_new (_("_Properties"), TRUE, gtk_image_new_from_icon_name ("document-properties", GTK_ICON_SIZE_MENU));
     gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 
     submenu = gtk_menu_new ();
     gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), submenu);
 
-    item = _moo_menu_item_new_from_stock (GTK_STOCK_SELECT_FONT);
+    item = _moo_menu_item_new (_("_Font"), TRUE, NULL);
     g_signal_connect (item, "activate", G_CALLBACK (font_item_activated), stuff);
     gtk_menu_shell_append (GTK_MENU_SHELL (submenu), item);
 
-    item = _moo_menu_item_new_from_stock (GTK_STOCK_SELECT_COLOR);
+    item = _moo_menu_item_new (_("_Color"), TRUE, NULL);
     gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), create_color_scheme_menu ());
     gtk_menu_shell_append (GTK_MENU_SHELL (submenu), item);
 

@@ -6225,8 +6225,8 @@ popup_drop_action_menu (MooFileView    *fileview,
     g_object_set_data_full (G_OBJECT (menu), "moo-file-view-drop-dir",
                             dir_copy, g_free);
 
-#define CREATE_IT(stock,action,accel_label)                                                 \
-    item = _moo_menu_item_new_from_stock (stock);                                \
+#define CREATE_IT(label,icon,action,accel_label)                                            \
+    item = _moo_menu_item_new (label, TRUE, icon);                                          \
     g_object_set_data (G_OBJECT (item), "moo-file-view-drop-files", filenames);             \
     g_object_set_data (G_OBJECT (item), "moo-file-view-drop-dir", dir_copy);                \
     g_object_set_data (G_OBJECT (item), "moo-file-view-drop-action",                        \
@@ -6236,9 +6236,10 @@ popup_drop_action_menu (MooFileView    *fileview,
     _moo_menu_item_set_accel_label (item, accel_label);                                     \
     gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 
-    CREATE_IT (MOO_STOCK_FILE_MOVE, GDK_ACTION_MOVE, "Shift");
-    CREATE_IT (MOO_STOCK_FILE_COPY, GDK_ACTION_COPY, "Control");
-    CREATE_IT (MOO_STOCK_FILE_LINK, GDK_ACTION_LINK, "Control+Shift");
+    CREATE_IT (_("Move"), NULL, GDK_ACTION_MOVE, "Shift");
+    CREATE_IT (_("_Copy"), gtk_image_new_from_icon_name ("edit-copy", GTK_ICON_SIZE_MENU),
+               GDK_ACTION_COPY, "Control");
+    CREATE_IT (_("Link"), NULL, GDK_ACTION_LINK, "Control+Shift");
 #undef CREATE_IT
 
     item = gtk_separator_menu_item_new ();
@@ -6247,7 +6248,7 @@ popup_drop_action_menu (MooFileView    *fileview,
 
     /* Cancel carries no data and no handler: dismissing the menu is all it
        has to do, and the menu going away is what frees the list. */
-    item = _moo_menu_item_new_from_stock (GTK_STOCK_CANCEL);
+    item = _moo_menu_item_new (_("_Cancel"), TRUE, NULL);
     gtk_widget_show (item);
     _moo_menu_item_set_accel_label (item, "Escape");
     gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);

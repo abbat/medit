@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: moo\n"
 "Report-Msgid-Bugs-To: https://github.com/abbat/medit/issues\n"
-"POT-Creation-Date: 2026-10-04 20:25+0300\n"
+"POT-Creation-Date: 2026-10-04 20:30+0300\n"
 "PO-Revision-Date: 2014-08-05 02:59+0200\n"
 "Last-Translator: Yannick Duchêne <yannick_duchene@yahoo.fr>\n"
 "Language-Team: Yannick Duchêne <yannick_duchene@yahoo.fr>\n"
@@ -375,6 +375,8 @@ msgstr "Dessiner la marge de droite"
 msgid "at column"
 msgstr "à la colonne"
 
+#. Cancel carries no data and no handler: dismissing the menu is all it
+#. has to do, and the menu going away is what frees the list.
 #: src/mooedit/ui/mooeditprogress.ui:33 src/mooedit/ui/mooprint.ui:483
 #: src/mooedit/ui/mootextfind.ui:292 src/mooedit/ui/mootextgotoline.ui:89
 #: src/mooedit/mooeditdialogs.cpp:343 src/mooedit/mooeditdialogs.cpp:442
@@ -384,11 +386,12 @@ msgstr "à la colonne"
 #: src/moofileview/ui/moofileprops.ui:83
 #: src/moofileview/ui/moofileview-drop.ui:56
 #: src/moofileview/moofileview.cpp:3252 src/moofileview/moofileview.cpp:5851
-#: src/mooutils/mooaccelprefs.cpp:882 src/mooutils/moodialogs.cpp:384
-#: src/mooutils/moodialogs.cpp:439 src/mooutils/moofiledialog.cpp:280
-#: src/mooutils/moofontsel.cpp:1309 src/mooutils/moohistorymgr.cpp:1667
-#: src/plugins/ui/moofileselector.ui:56 src/plugins/ui/moofileselector.ui:136
-#: src/plugins/ui/moofind.ui:141 src/plugins/ui/moogrep.ui:196
+#: src/moofileview/moofileview.cpp:6251 src/mooutils/mooaccelprefs.cpp:882
+#: src/mooutils/moodialogs.cpp:384 src/mooutils/moodialogs.cpp:439
+#: src/mooutils/moofiledialog.cpp:280 src/mooutils/moofontsel.cpp:1309
+#: src/mooutils/moohistorymgr.cpp:1667 src/plugins/ui/moofileselector.ui:56
+#: src/plugins/ui/moofileselector.ui:136 src/plugins/ui/moofind.ui:141
+#: src/plugins/ui/moogrep.ui:196 src/plugins/moofileselector.cpp:1147
 #: src/plugins/lsp/lsp-edits.cpp:368
 msgid "_Cancel"
 msgstr "A_nnuler"
@@ -1673,6 +1676,19 @@ msgstr "Impossible de déplacer « %s »"
 msgid "Could not create a link to \"%s\""
 msgstr "Impossible de créer un lien vers « %s »"
 
+#: src/moofileview/moofileview.cpp:6239 src/mooutils/moostock.cpp:31
+msgid "Move"
+msgstr "Déplacer"
+
+#: src/moofileview/moofileview.cpp:6240
+#: src/plugins/terminal/terminal-plugin.cpp:580
+msgid "_Copy"
+msgstr "_Copier"
+
+#: src/moofileview/moofileview.cpp:6242 src/mooutils/moostock.cpp:32
+msgid "Link"
+msgstr "Lien"
+
 #. Translators: this is a context menu item label in the file selector, remove the part before and including |
 #: src/moofileview/moofileview-tools.cpp:335
 msgid "Open with|Default Application"
@@ -2035,6 +2051,14 @@ msgctxt "insert-special-char"
 msgid "Tab"
 msgstr "Tabulation"
 
+#: src/mooutils/mooentry.cpp:527
+msgid "_Redo"
+msgstr "_Rétablir"
+
+#: src/mooutils/mooentry.cpp:534
+msgid "_Undo"
+msgstr "A_nnuler"
+
 #. label of Insert Special Character submenu in text entry context menu
 #: src/mooutils/mooentry.cpp:551
 msgctxt "insert-special-char"
@@ -2042,6 +2066,7 @@ msgid "Insert Special Character"
 msgstr "Insérer un caractère spécial"
 
 #: src/mooutils/moofiledialog.cpp:355 src/mooutils/moohistorymgr.cpp:1668
+#: src/plugins/moofilelist.cpp:2018
 msgid "_Open"
 msgstr "_Ouvrir"
 
@@ -2103,14 +2128,6 @@ msgstr "Attacher"
 msgid "Keep on top"
 msgstr "Garder au premier plan"
 
-#: src/mooutils/moostock.cpp:31
-msgid "Move"
-msgstr "Déplacer"
-
-#: src/mooutils/moostock.cpp:32
-msgid "Link"
-msgstr "Lien"
-
 #: src/mooutils/moostock.cpp:34 src/plugins/moofileselector.cpp:1133
 msgid "Save Copy"
 msgstr "Enregistrer une copie"
@@ -2143,7 +2160,7 @@ msgid "Could not remove %s: %s"
 msgstr "« %s » n’a pas put être supprimé : %s"
 
 #. Translators: remove the part before and including |
-#: src/mooutils/mooutils-misc.cpp:1751
+#: src/mooutils/mooutils-misc.cpp:1731
 #, c-format
 msgid "console message|in file %s, line %d, function %s: %s"
 msgstr "Fichier « %s », ligne %d, fonction “%s” : %s"
@@ -2151,7 +2168,7 @@ msgstr "Fichier « %s », ligne %d, fonction “%s” : %s"
 #. "Unknown error" may be displayed if there is a bug in the program
 #. and proper error message has not been set. It doesn't provide any
 #. useful information obviously
-#: src/mooutils/mooutils-misc.cpp:1958
+#: src/mooutils/mooutils-misc.cpp:1938
 msgid "Unknown error"
 msgstr "Erreur inconnue"
 
@@ -2289,12 +2306,16 @@ msgstr "Rechercher dans des fichiers"
 msgid "Fi_les"
 msgstr "Fi_chiers"
 
-#: src/plugins/moofilelist.cpp:2332 src/plugins/moofilelist.cpp:2333
-#: src/plugins/moofilelist.cpp:2391
+#: src/plugins/moofilelist.cpp:2030
+msgid "_Remove"
+msgstr "_Enlever"
+
+#: src/plugins/moofilelist.cpp:2331 src/plugins/moofilelist.cpp:2332
+#: src/plugins/moofilelist.cpp:2390
 msgid "File List"
 msgstr "Liste de fichiers"
 
-#: src/plugins/moofilelist.cpp:2391
+#: src/plugins/moofilelist.cpp:2390
 msgid "List of files"
 msgstr "Liste des fichiers"
 
@@ -3081,6 +3102,10 @@ msgstr ""
 msgid "Terminal"
 msgstr "Terminal"
 
+#: src/plugins/terminal/terminal-plugin.cpp:585
+msgid "_Paste"
+msgstr "C_oller"
+
 #: src/plugins/terminal/terminal-plugin.cpp:591
 msgid "“cd” to current file directory"
 msgstr "« cd » vers le répertoire du fichier courant"
@@ -3088,6 +3113,19 @@ msgstr "« cd » vers le répertoire du fichier courant"
 #: src/plugins/terminal/terminal-plugin.cpp:598
 msgid "“pushd” to current file directory"
 msgstr "« pushd » vers le répertoire du fichier courant"
+
+#: src/plugins/terminal/terminal-plugin.cpp:606
+msgid "_Properties"
+msgstr "_Propriétés"
+
+#: src/plugins/terminal/terminal-plugin.cpp:612
+#: src/plugins/terminal/ui/terminal-prefs.ui:68
+msgid "_Font"
+msgstr "_Police"
+
+#: src/plugins/terminal/terminal-plugin.cpp:616
+msgid "_Color"
+msgstr "_Couleur"
 
 #: src/plugins/terminal/terminal-plugin.cpp:853
 msgid "Show the terminal pane"
@@ -3130,10 +3168,6 @@ msgstr ""
 #: src/plugins/terminal/ui/terminal-prefs.ui:45
 msgid "Color _scheme"
 msgstr "_Jeu de couleurs"
-
-#: src/plugins/terminal/ui/terminal-prefs.ui:68
-msgid "_Font"
-msgstr "_Police"
 
 #: src/plugins/terminal/ui/terminal-prefs.ui:93
 msgid "_Default"

@@ -2015,19 +2015,19 @@ popup_menu (WindowPlugin *plugin,
 
     if (can_open (plugin->list, selected))
     {
-        menuitem = _moo_menu_item_new_from_stock (GTK_STOCK_OPEN);
+        menuitem = _moo_menu_item_new (_("_Open"), TRUE, gtk_image_new_from_icon_name ("document-open", GTK_ICON_SIZE_MENU));
         g_signal_connect (menuitem, "activate", G_CALLBACK (open_activated), plugin);
         gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
     }
 
-    menuitem = _moo_menu_item_new_from_stock (GTK_STOCK_ADD);
-    _moo_menu_item_set_label (menuitem, "Add Group", FALSE);
+    menuitem = _moo_menu_item_new ("Add Group", FALSE,
+                                       gtk_image_new_from_icon_name ("list-add", GTK_ICON_SIZE_MENU));
     g_signal_connect (menuitem, "activate", G_CALLBACK (add_group_activated), plugin);
     gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
 
     if (selected)
     {
-        menuitem = _moo_menu_item_new_from_stock (GTK_STOCK_REMOVE);
+        menuitem = _moo_menu_item_new (_("_Remove"), TRUE, gtk_image_new_from_icon_name ("list-remove", GTK_ICON_SIZE_MENU));
         g_signal_connect (menuitem, "activate", G_CALLBACK (remove_activated), plugin);
         gtk_widget_set_sensitive (menuitem, can_remove (plugin->list, selected));
         gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
@@ -2035,8 +2035,7 @@ popup_menu (WindowPlugin *plugin,
 
     if (single_item && ITEM_IS_GROUP (single_item))
     {
-        menuitem = _moo_menu_item_new_from_stock (GTK_STOCK_EDIT);
-        _moo_menu_item_set_label (menuitem, "Rename", FALSE);
+        menuitem = _moo_menu_item_new ("Rename", FALSE, NULL);
         g_signal_connect (menuitem, "activate", G_CALLBACK (rename_activated), plugin);
         gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
     }

@@ -135,8 +135,8 @@ Facts the survey of 2026-10-04 established, so they need not be found again:
 - [x] 3.1 Dialog and button text: `gtk_dialog_add_button`/`gtk_info_bar_add_button`
   given a `GTK_STOCK_*` → our own `_("_Cancel")`-style string. Also
   `moofiledialog.cpp`'s `get_string_maybe_stock` goes; callers pass plain titles. Done: about 40 buttons and 2 titles across 12 files now take our own `_("_Cancel")`-style strings; `get_string_maybe_stock` is gone and the translations were copied from gtk30 into our catalogs.
-- [ ] 3.2 Menu items: `_moo_menu_item_new_from_stock()` (`mooutils-misc.cpp`) →
-  a label + icon-name constructor at every caller, then delete it.
+- [x] 3.2 Menu items: `_moo_menu_item_new_from_stock()` (`mooutils-misc.cpp`) →
+  a label + icon-name constructor at every caller, then delete it. Done: every caller passes `_("_Undo")`-style label + icon name to `_moo_menu_item_new()`; ids with no freedesktop icon (cancel, font, colour, edit, move, link) pass no image. The function survives only as a static in `moouixml.cpp`, fed by the xml stock id, and goes with 3.4.
 - [ ] 3.3 Images: `gtk_image_*_from_stock` → `_from_icon_name`;
   `gtk_widget_render_icon` → `gtk_icon_theme_load_icon` (`moolinemark.cpp`,
   `moofileicon.cpp`); `_moo_window_set_icon_from_stock` →

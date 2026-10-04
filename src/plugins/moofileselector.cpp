@@ -1144,7 +1144,7 @@ create_drop_doc_menu (MooFileSelector *filesel,
     gtk_widget_show (item);
     gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 
-    item = _moo_menu_item_new_from_stock (GTK_STOCK_CANCEL);
+    item = _moo_menu_item_new (_("_Cancel"), TRUE, NULL);
     gtk_widget_show (item);
     _moo_menu_item_set_accel_label (item, "Escape");
     gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);

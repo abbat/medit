@@ -22,6 +22,7 @@
 #include "mooutils/mooutils-gobject.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/mooutils-messages.h"
+#include "mooutils/mooi18n.h"
 
 
 struct _MooLineViewPrivate {
@@ -616,7 +617,7 @@ moo_line_view_populate_popup (GtkTextView *text_view,
                            (GtkCallback) moo_widget_destroy,
                            NULL);
 
-    item = _moo_menu_item_new_from_stock (GTK_STOCK_COPY);
+    item = _moo_menu_item_new (_("_Copy"), TRUE, gtk_image_new_from_icon_name ("edit-copy", GTK_ICON_SIZE_MENU));
     g_signal_connect_swapped (item, "activate",
                               G_CALLBACK (copy_clipboard), text_view);
     has_selection = moo_text_view_has_selection (MOO_TEXT_VIEW (text_view));
@@ -624,7 +625,7 @@ moo_line_view_populate_popup (GtkTextView *text_view,
     gtk_widget_show (item);
     gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 
-    item = _moo_menu_item_new_from_stock (GTK_STOCK_SELECT_ALL);
+    item = _moo_menu_item_new (_("Select _All"), TRUE, gtk_image_new_from_icon_name ("edit-select-all", GTK_ICON_SIZE_MENU));
     g_signal_connect_swapped (item, "activate",
                               G_CALLBACK (moo_text_view_select_all),
                               text_view);

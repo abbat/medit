@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: moo\n"
 "Report-Msgid-Bugs-To: https://github.com/abbat/medit/issues\n"
-"POT-Creation-Date: 2026-10-04 20:25+0300\n"
+"POT-Creation-Date: 2026-10-04 20:30+0300\n"
 "PO-Revision-Date: 2007-12-06 04:32+0800\n"
 "Last-Translator: Chaosye <chao-7410@163.com>\n"
 "Language-Team: Chaosye <chao-7410@163.com>\n"
@@ -368,6 +368,8 @@ msgstr "绘制右边界"
 msgid "at column"
 msgstr "在列"
 
+#. Cancel carries no data and no handler: dismissing the menu is all it
+#. has to do, and the menu going away is what frees the list.
 #: src/mooedit/ui/mooeditprogress.ui:33 src/mooedit/ui/mooprint.ui:483
 #: src/mooedit/ui/mootextfind.ui:292 src/mooedit/ui/mootextgotoline.ui:89
 #: src/mooedit/mooeditdialogs.cpp:343 src/mooedit/mooeditdialogs.cpp:442
@@ -377,11 +379,12 @@ msgstr "在列"
 #: src/moofileview/ui/moofileprops.ui:83
 #: src/moofileview/ui/moofileview-drop.ui:56
 #: src/moofileview/moofileview.cpp:3252 src/moofileview/moofileview.cpp:5851
-#: src/mooutils/mooaccelprefs.cpp:882 src/mooutils/moodialogs.cpp:384
-#: src/mooutils/moodialogs.cpp:439 src/mooutils/moofiledialog.cpp:280
-#: src/mooutils/moofontsel.cpp:1309 src/mooutils/moohistorymgr.cpp:1667
-#: src/plugins/ui/moofileselector.ui:56 src/plugins/ui/moofileselector.ui:136
-#: src/plugins/ui/moofind.ui:141 src/plugins/ui/moogrep.ui:196
+#: src/moofileview/moofileview.cpp:6251 src/mooutils/mooaccelprefs.cpp:882
+#: src/mooutils/moodialogs.cpp:384 src/mooutils/moodialogs.cpp:439
+#: src/mooutils/moofiledialog.cpp:280 src/mooutils/moofontsel.cpp:1309
+#: src/mooutils/moohistorymgr.cpp:1667 src/plugins/ui/moofileselector.ui:56
+#: src/plugins/ui/moofileselector.ui:136 src/plugins/ui/moofind.ui:141
+#: src/plugins/ui/moogrep.ui:196 src/plugins/moofileselector.cpp:1147
 #: src/plugins/lsp/lsp-edits.cpp:368
 msgid "_Cancel"
 msgstr "取消(_C)"
@@ -1646,6 +1649,19 @@ msgstr "无法移动 '%s'"
 msgid "Could not create a link to \"%s\""
 msgstr "无法创建指向 '%s' 的链接"
 
+#: src/moofileview/moofileview.cpp:6239 src/mooutils/moostock.cpp:31
+msgid "Move"
+msgstr "移动"
+
+#: src/moofileview/moofileview.cpp:6240
+#: src/plugins/terminal/terminal-plugin.cpp:580
+msgid "_Copy"
+msgstr "复制(_C)"
+
+#: src/moofileview/moofileview.cpp:6242 src/mooutils/moostock.cpp:32
+msgid "Link"
+msgstr "链接"
+
 #. Translators: this is a context menu item label in the file selector, remove the part before and including |
 #: src/moofileview/moofileview-tools.cpp:335
 msgid "Open with|Default Application"
@@ -2007,6 +2023,14 @@ msgctxt "insert-special-char"
 msgid "Tab"
 msgstr "制表符"
 
+#: src/mooutils/mooentry.cpp:527
+msgid "_Redo"
+msgstr "重做(_R)"
+
+#: src/mooutils/mooentry.cpp:534
+msgid "_Undo"
+msgstr "撤消(_U)"
+
 #. label of Insert Special Character submenu in text entry context menu
 #: src/mooutils/mooentry.cpp:551
 msgctxt "insert-special-char"
@@ -2014,6 +2038,7 @@ msgid "Insert Special Character"
 msgstr "插入特殊字符"
 
 #: src/mooutils/moofiledialog.cpp:355 src/mooutils/moohistorymgr.cpp:1668
+#: src/plugins/moofilelist.cpp:2018
 msgid "_Open"
 msgstr "打开(_O)"
 
@@ -2075,14 +2100,6 @@ msgstr "依附在主窗口"
 msgid "Keep on top"
 msgstr "总在最上"
 
-#: src/mooutils/moostock.cpp:31
-msgid "Move"
-msgstr "移动"
-
-#: src/mooutils/moostock.cpp:32
-msgid "Link"
-msgstr "链接"
-
 #: src/mooutils/moostock.cpp:34 src/plugins/moofileselector.cpp:1133
 msgid "Save Copy"
 msgstr "保存副本"
@@ -2115,7 +2132,7 @@ msgid "Could not remove %s: %s"
 msgstr "无法删除 %s:%s"
 
 #. Translators: remove the part before and including |
-#: src/mooutils/mooutils-misc.cpp:1751
+#: src/mooutils/mooutils-misc.cpp:1731
 #, c-format
 msgid "console message|in file %s, line %d, function %s: %s"
 msgstr "在文件 %s 第 %d 行,函数 %s:%s"
@@ -2123,7 +2140,7 @@ msgstr "在文件 %s 第 %d 行,函数 %s:%s"
 #. "Unknown error" may be displayed if there is a bug in the program
 #. and proper error message has not been set. It doesn't provide any
 #. useful information obviously
-#: src/mooutils/mooutils-misc.cpp:1958
+#: src/mooutils/mooutils-misc.cpp:1938
 msgid "Unknown error"
 msgstr "未知错误"
 
@@ -2255,12 +2272,16 @@ msgstr "在文档中查找"
 msgid "Fi_les"
 msgstr "文档(_f)"
 
-#: src/plugins/moofilelist.cpp:2332 src/plugins/moofilelist.cpp:2333
-#: src/plugins/moofilelist.cpp:2391
+#: src/plugins/moofilelist.cpp:2030
+msgid "_Remove"
+msgstr "移除(_R)"
+
+#: src/plugins/moofilelist.cpp:2331 src/plugins/moofilelist.cpp:2332
+#: src/plugins/moofilelist.cpp:2390
 msgid "File List"
 msgstr "文件列表"
 
-#: src/plugins/moofilelist.cpp:2391
+#: src/plugins/moofilelist.cpp:2390
 msgid "List of files"
 msgstr "文件列表"
 
@@ -3030,6 +3051,10 @@ msgstr "shell 一直立即退出，将不再重启。请在终端首选项中检
 msgid "Terminal"
 msgstr "终端"
 
+#: src/plugins/terminal/terminal-plugin.cpp:585
+msgid "_Paste"
+msgstr "粘贴(_P)"
+
 #: src/plugins/terminal/terminal-plugin.cpp:591
 msgid "“cd” to current file directory"
 msgstr "“cd”到当前文件所在目录"
@@ -3037,6 +3062,19 @@ msgstr "“cd”到当前文件所在目录"
 #: src/plugins/terminal/terminal-plugin.cpp:598
 msgid "“pushd” to current file directory"
 msgstr "“pushd”到当前文件所在目录"
+
+#: src/plugins/terminal/terminal-plugin.cpp:606
+msgid "_Properties"
+msgstr "属性(_P)"
+
+#: src/plugins/terminal/terminal-plugin.cpp:612
+#: src/plugins/terminal/ui/terminal-prefs.ui:68
+msgid "_Font"
+msgstr "字体(_F)"
+
+#: src/plugins/terminal/terminal-plugin.cpp:616
+msgid "_Color"
+msgstr "颜色(_C)"
 
 #: src/plugins/terminal/terminal-plugin.cpp:853
 msgid "Show the terminal pane"
@@ -3077,10 +3115,6 @@ msgstr "留空则使用登录 shell。下次启动 shell 时生效。"
 #: src/plugins/terminal/ui/terminal-prefs.ui:45
 msgid "Color _scheme"
 msgstr "配色方案(_S)"
-
-#: src/plugins/terminal/ui/terminal-prefs.ui:68
-msgid "_Font"
-msgstr "字体(_F)"
 
 #: src/plugins/terminal/ui/terminal-prefs.ui:93
 msgid "_Default"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: moo\n"
 "Report-Msgid-Bugs-To: https://github.com/abbat/medit/issues\n"
-"POT-Creation-Date: 2026-10-04 20:25+0300\n"
+"POT-Creation-Date: 2026-10-04 20:30+0300\n"
 "PO-Revision-Date: 2007-11-10 22:45+0100\n"
 "Last-Translator: Vlastimil Ott <vlastimil@e-ott.info>\n"
 "Language-Team:  <cs@li.org>\n"
@@ -371,6 +371,8 @@ msgstr "Zobrazit pravý okraj"
 msgid "at column"
 msgstr "na řádku"
 
+#. Cancel carries no data and no handler: dismissing the menu is all it
+#. has to do, and the menu going away is what frees the list.
 #: src/mooedit/ui/mooeditprogress.ui:33 src/mooedit/ui/mooprint.ui:483
 #: src/mooedit/ui/mootextfind.ui:292 src/mooedit/ui/mootextgotoline.ui:89
 #: src/mooedit/mooeditdialogs.cpp:343 src/mooedit/mooeditdialogs.cpp:442
@@ -380,11 +382,12 @@ msgstr "na řádku"
 #: src/moofileview/ui/moofileprops.ui:83
 #: src/moofileview/ui/moofileview-drop.ui:56
 #: src/moofileview/moofileview.cpp:3252 src/moofileview/moofileview.cpp:5851
-#: src/mooutils/mooaccelprefs.cpp:882 src/mooutils/moodialogs.cpp:384
-#: src/mooutils/moodialogs.cpp:439 src/mooutils/moofiledialog.cpp:280
-#: src/mooutils/moofontsel.cpp:1309 src/mooutils/moohistorymgr.cpp:1667
-#: src/plugins/ui/moofileselector.ui:56 src/plugins/ui/moofileselector.ui:136
-#: src/plugins/ui/moofind.ui:141 src/plugins/ui/moogrep.ui:196
+#: src/moofileview/moofileview.cpp:6251 src/mooutils/mooaccelprefs.cpp:882
+#: src/mooutils/moodialogs.cpp:384 src/mooutils/moodialogs.cpp:439
+#: src/mooutils/moofiledialog.cpp:280 src/mooutils/moofontsel.cpp:1309
+#: src/mooutils/moohistorymgr.cpp:1667 src/plugins/ui/moofileselector.ui:56
+#: src/plugins/ui/moofileselector.ui:136 src/plugins/ui/moofind.ui:141
+#: src/plugins/ui/moogrep.ui:196 src/plugins/moofileselector.cpp:1147
 #: src/plugins/lsp/lsp-edits.cpp:368
 msgid "_Cancel"
 msgstr "_Zrušit"
@@ -1663,6 +1666,19 @@ msgstr "Nelze přesunout '%s'"
 msgid "Could not create a link to \"%s\""
 msgstr "Nelze vytvořit odkaz na '%s'"
 
+#: src/moofileview/moofileview.cpp:6239 src/mooutils/moostock.cpp:31
+msgid "Move"
+msgstr "Přesunout"
+
+#: src/moofileview/moofileview.cpp:6240
+#: src/plugins/terminal/terminal-plugin.cpp:580
+msgid "_Copy"
+msgstr "_Kopírovat"
+
+#: src/moofileview/moofileview.cpp:6242 src/mooutils/moostock.cpp:32
+msgid "Link"
+msgstr "Odkaz"
+
 #. Translators: this is a context menu item label in the file selector, remove the part before and including |
 #: src/moofileview/moofileview-tools.cpp:335
 msgid "Open with|Default Application"
@@ -2024,6 +2040,14 @@ msgctxt "insert-special-char"
 msgid "Tab"
 msgstr "Tabulátor"
 
+#: src/mooutils/mooentry.cpp:527
+msgid "_Redo"
+msgstr "Zn_ovu"
+
+#: src/mooutils/mooentry.cpp:534
+msgid "_Undo"
+msgstr "_Zpět"
+
 #. label of Insert Special Character submenu in text entry context menu
 #: src/mooutils/mooentry.cpp:551
 msgctxt "insert-special-char"
@@ -2031,6 +2055,7 @@ msgid "Insert Special Character"
 msgstr "Vložit speciální znak"
 
 #: src/mooutils/moofiledialog.cpp:355 src/mooutils/moohistorymgr.cpp:1668
+#: src/plugins/moofilelist.cpp:2018
 msgid "_Open"
 msgstr "_Otevřít"
 
@@ -2092,14 +2117,6 @@ msgstr "Ukotvit"
 msgid "Keep on top"
 msgstr "Stále navrchu"
 
-#: src/mooutils/moostock.cpp:31
-msgid "Move"
-msgstr "Přesunout"
-
-#: src/mooutils/moostock.cpp:32
-msgid "Link"
-msgstr "Odkaz"
-
 #: src/mooutils/moostock.cpp:34 src/plugins/moofileselector.cpp:1133
 msgid "Save Copy"
 msgstr "Uložit kopii"
@@ -2132,7 +2149,7 @@ msgid "Could not remove %s: %s"
 msgstr "Nelze odstranit %s: %s"
 
 #. Translators: remove the part before and including |
-#: src/mooutils/mooutils-misc.cpp:1751
+#: src/mooutils/mooutils-misc.cpp:1731
 #, c-format
 msgid "console message|in file %s, line %d, function %s: %s"
 msgstr "v souboru %s, řádek %d, funkce %s: %s"
@@ -2140,7 +2157,7 @@ msgstr "v souboru %s, řádek %d, funkce %s: %s"
 #. "Unknown error" may be displayed if there is a bug in the program
 #. and proper error message has not been set. It doesn't provide any
 #. useful information obviously
-#: src/mooutils/mooutils-misc.cpp:1958
+#: src/mooutils/mooutils-misc.cpp:1938
 msgid "Unknown error"
 msgstr "Neznámá chyba"
 
@@ -2275,12 +2292,16 @@ msgstr "Najít v souborech"
 msgid "Fi_les"
 msgstr "S_oubory"
 
-#: src/plugins/moofilelist.cpp:2332 src/plugins/moofilelist.cpp:2333
-#: src/plugins/moofilelist.cpp:2391
+#: src/plugins/moofilelist.cpp:2030
+msgid "_Remove"
+msgstr "O_dstranit"
+
+#: src/plugins/moofilelist.cpp:2331 src/plugins/moofilelist.cpp:2332
+#: src/plugins/moofilelist.cpp:2390
 msgid "File List"
 msgstr "Seznam souborů"
 
-#: src/plugins/moofilelist.cpp:2391
+#: src/plugins/moofilelist.cpp:2390
 msgid "List of files"
 msgstr "Seznam souborů"
 
@@ -3066,6 +3087,10 @@ msgstr ""
 msgid "Terminal"
 msgstr "Terminál"
 
+#: src/plugins/terminal/terminal-plugin.cpp:585
+msgid "_Paste"
+msgstr "V_ložit"
+
 #: src/plugins/terminal/terminal-plugin.cpp:591
 msgid "“cd” to current file directory"
 msgstr "„cd“ do adresáře aktuálního souboru"
@@ -3073,6 +3098,19 @@ msgstr "„cd“ do adresáře aktuálního souboru"
 #: src/plugins/terminal/terminal-plugin.cpp:598
 msgid "“pushd” to current file directory"
 msgstr "„pushd“ do adresáře aktuálního souboru"
+
+#: src/plugins/terminal/terminal-plugin.cpp:606
+msgid "_Properties"
+msgstr "_Vlastnosti"
+
+#: src/plugins/terminal/terminal-plugin.cpp:612
+#: src/plugins/terminal/ui/terminal-prefs.ui:68
+msgid "_Font"
+msgstr "_Písmo"
+
+#: src/plugins/terminal/terminal-plugin.cpp:616
+msgid "_Color"
+msgstr "_Barva"
 
 #: src/plugins/terminal/terminal-plugin.cpp:853
 msgid "Show the terminal pane"
@@ -3115,10 +3153,6 @@ msgstr ""
 #: src/plugins/terminal/ui/terminal-prefs.ui:45
 msgid "Color _scheme"
 msgstr "_Barevné schéma"
-
-#: src/plugins/terminal/ui/terminal-prefs.ui:68
-msgid "_Font"
-msgstr "_Písmo"
 
 #: src/plugins/terminal/ui/terminal-prefs.ui:93
 msgid "_Default"
