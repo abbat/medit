@@ -455,7 +455,7 @@ _moo_text_view_update_text_cursor (MooTextView *view,
     view->priv->text_cursor = tcursor;
 
     if (cursor)
-        gdk_cursor_unref (cursor);
+        g_object_unref (cursor);
 }
 
 static void
@@ -464,7 +464,7 @@ set_invisible_cursor (GdkWindow *window)
     GdkDisplay *display = gdk_window_get_display (window);
     GdkCursor *cursor = gdk_cursor_new_for_display (display, GDK_BLANK_CURSOR);
     gdk_window_set_cursor (window, cursor);
-    gdk_cursor_unref (cursor);
+    g_object_unref (cursor);
 }
 
 static void

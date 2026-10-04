@@ -837,11 +837,11 @@ realize_handle (MooPaned *paned)
     {
         case MOO_PANE_POS_LEFT:
         case MOO_PANE_POS_RIGHT:
-            attributes.cursor = gdk_cursor_new (GDK_SB_H_DOUBLE_ARROW);
+            attributes.cursor = gdk_cursor_new_for_display (gtk_widget_get_display (widget), GDK_SB_H_DOUBLE_ARROW);
             break;
         case MOO_PANE_POS_TOP:
         case MOO_PANE_POS_BOTTOM:
-            attributes.cursor = gdk_cursor_new (GDK_SB_V_DOUBLE_ARROW);
+            attributes.cursor = gdk_cursor_new_for_display (gtk_widget_get_display (widget), GDK_SB_V_DOUBLE_ARROW);
             break;
     }
 
@@ -849,7 +849,7 @@ realize_handle (MooPaned *paned)
             &attributes, attributes_mask);
     gdk_window_set_user_data (paned->priv->handle_window, widget);
 
-    gdk_cursor_unref (attributes.cursor);
+    g_object_unref (attributes.cursor);
 }
 
 
@@ -3218,10 +3218,10 @@ handle_button_press (GtkWidget      *widget,
     paned->priv->handle_drag_start_x = event->x;
     paned->priv->handle_drag_start_y = event->y;
 
-    cursor = gdk_cursor_new (paned->priv->handle_cursor_type);
+    cursor = gdk_cursor_new_for_display (gtk_widget_get_display (widget), paned->priv->handle_cursor_type);
     g_return_val_if_fail (cursor != NULL, TRUE);
     gdk_window_set_cursor (gtk_widget_get_window (widget), cursor);
-    gdk_cursor_unref (cursor);
+    g_object_unref (cursor);
 
     return TRUE;
 }

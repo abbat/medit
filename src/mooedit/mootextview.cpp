@@ -2944,9 +2944,9 @@ update_left_margin (MooTextView *view)
     if (old_size == 0 && margin_size != 0)
     {
         GdkWindow *window = gtk_text_view_get_window (text_view, GTK_TEXT_WINDOW_LEFT);
-        GdkCursor *cursor = gdk_cursor_new (GDK_RIGHT_PTR);
+        GdkCursor *cursor = gdk_cursor_new_for_display (gtk_widget_get_display (GTK_WIDGET (text_view)), GDK_RIGHT_PTR);
         gdk_window_set_cursor (window, cursor);
-        gdk_cursor_unref (cursor);
+        g_object_unref (cursor);
     }
 
     /* XXX do not invalidate whole widget */
