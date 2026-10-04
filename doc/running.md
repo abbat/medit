@@ -149,7 +149,9 @@ The property GtkSettings:gtk-menu-images is deprecated …
 ```
 
 It is a thing GTK+4 removes outright, so this is the cheapest survey of that work
-there is. Opening dialogs finds more.
+there is. Opening dialogs finds more. The runner sets it for every test and **fails** a
+test that reports a name outside `KNOWN_DEPRECATED` in `tests/lib/runner.py`: the names
+still in use, each until the stage of `doc/deprecations.md` that removes it.
 
 **Sanitizers are a build option now**, `-DENABLE_SANITIZERS=address,undefined`, which
 puts the flag on the compile and the link together. Measured, so that nobody has to

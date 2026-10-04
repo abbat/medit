@@ -289,9 +289,20 @@ def last_words(log_dir, was_alive, code, lines=10):
 # shouldn't be used anymore", and the same sentence for a signal.
 DEPRECATED = re.compile(r"The (?:property|signal) ([\w.:-]+) is deprecated")
 
+# The deprecations still in use, each until the stage of doc/deprecations.md
+# that removes it. Anything else fails the test, so that none comes back; take
+# a name out of here in the commit that stops using it.
+KNOWN_DEPRECATED = frozenset([
+    "GtkButton:use-stock",                  # 3: stock buttons
+    "GtkCellRendererPixbuf:stock-id",       # 3: stock icons in tree views
+    "GtkSettings:gtk-button-images",        # 3: stock buttons
+    "GtkSettings:gtk-menu-images",          # 4.1: GtkAction's menu proxies
+    "GtkWidget::visibility-notify-event",   # source not found yet
+])
+
 
 def scan_log(log_dir):
-    """Count what glib printed, and name the deprecations. Reported, not a verdict.
+    """Count what glib printed, and name the deprecations; report_logs judges them.
 
     Named, because a count alone cannot be acted on: the number moves with the
     toolkit's version as much as with medit's code, and the only question worth
@@ -435,7 +446,12 @@ def report_logs(log_dir, sanitizers):
     if not sanitizers_ok:
         print("FAIL: the sanitizers reported findings, see %s" % log_dir)
 
-    return sanitizers_ok
+    unexpected = sorted(set(counts["names"]) - KNOWN_DEPRECATED)
+    if unexpected:
+        print("FAIL: deprecated API in use: %s (doc/deprecations.md)"
+              % ", ".join(unexpected))
+
+    return sanitizers_ok and not unexpected
 
 
 def inner(args):

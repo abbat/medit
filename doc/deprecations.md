@@ -31,9 +31,8 @@ same commit that does it. Each step names how to check it and who can do it.
 | focus chain, composite child, `get_background_color`, `GdkColor`, `GtkTable`, `GtkMisc`, `GtkImageMenuItem` | ~40 lines |
 | `G_GNUC_BEGIN_IGNORE_DEPRECATIONS` blocks | 114 in 53 files |
 
-At runtime, `G_ENABLE_DIAGNOSTIC=1` reports `GtkSettings:gtk-toolbar-style`,
-`GtkSettings:gtk-menu-images` and `GtkAlignment:left-padding`/`right-padding` on a
-bare start. Dialogs report more.
+At runtime, `G_ENABLE_DIAGNOSTIC=1` reports five names over the UI suite; 0.2 lists
+them.
 
 ## Stage 0 — measuring
 
@@ -54,10 +53,20 @@ bare start. Dialogs report more.
 
   `gtk_misc_set_alignment`, `GtkTable` and `GtkImageMenuItem` in the inventory above
   were grep hits in comments; there is no code to change for them.
-- [ ] 0.2 Runtime inventory: run the whole UI suite with `G_ENABLE_DIAGNOSTIC=1`
-  and collect every distinct "is deprecated" message from the logs, with the test
-  that produced it. Find who reads `gtk-toolbar-style` and `gtk-menu-images`, our
-  code or GTK+ itself (`break g_logv`). Record the list here.
+- [x] 0.2 Runtime inventory: the runner sets `G_ENABLE_DIAGNOSTIC=1` and prints a
+  `deprecated:` line per test. Over the 162 UI tests, 2026-10-04:
+  | name | tests | source | stage |
+  |---|---|---|---|
+  | `GtkCellRendererPixbuf:stock-id` | 162 | stock icons in tree views | 3 |
+  | `GtkSettings:gtk-menu-images` | 162 | GtkImageMenuItem made by `gtk_action_create_menu_item` | 4.1 |
+  | `GtkWidget::visibility-notify-event` | 162 | not found yet; absent from a bare start | — |
+  | `GtkSettings:gtk-button-images` | 61 | stock buttons, presumably; not traced | 3 |
+  | `GtkButton:use-stock` | 60 | stock buttons in `.ui` and code | 3 |
+
+  Fixed while taking it: `gtk-toolbar-style` (01587e0), `rules-hint` (2149438),
+  GtkMisc paddings (b46849f), `gtk-show-unicode-menu` (ddddd17). The GtkAlignment
+  paddings, `GtkImage:stock` and `xscale`/`yscale` of an earlier inventory are gone
+  with stage 2.
 
 ## Stage 1 — single-site replacements
 
@@ -89,8 +98,10 @@ bare start. Dialogs report more.
   `GtkImage` `stock` → `icon_name` (each pair probed pixel-identical).
   **Translation trap:** GTK+'s own domain translated the stock labels. The new strings
   are ours and carry gtk30's "Stock label" translations, so the buttons read as before.
-- [ ] 2.5 Gate: `tests/lib/runner.py` fails a test on any "is deprecated" diagnostic.
-  Push and CI.
+- [x] 2.5 Gate: `tests/lib/runner.py` fails a test on any deprecated name outside
+  `KNOWN_DEPRECATED`, which holds the five of 0.2. Each stage takes its names out of
+  that list in the commit that stops using them. Checked against an empty list: 158
+  of 162 UI tests failed with `FAIL: deprecated API in use: …`.
 
 ## Stage 3 — stock to named icons
 
