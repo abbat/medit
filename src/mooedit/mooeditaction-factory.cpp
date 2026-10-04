@@ -617,7 +617,7 @@ _moo_edit_class_init_actions (MooEditClass *klass)
 
     moo_edit_class_new_action (klass, "SpecialChars",
                                "action-type::", MOO_TYPE_MENU_ACTION,
-                               "label", D_("_Insert Unicode Control Character", "gtk30"),
+                               "label", _("_Insert Unicode Control Character"),
                                "menu-func", create_special_chars_menu_item,
                                (char*) 0);
 }

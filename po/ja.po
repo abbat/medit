@@ -3233,3 +3233,7 @@ msgstr "現在のドキュメント"
 msgctxt "Save-combo"
 msgid "All documents"
 msgstr "全てのドキュメント"
+#: src/mooedit/mooeditaction-factory.cpp:620
+msgid "_Insert Unicode Control Character"
+msgstr "Unicode 制御文字の挿入(_I)"
+

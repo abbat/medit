@@ -3244,3 +3244,6 @@ msgstr "Aktuální dokument"
 msgctxt "Save-combo"
 msgid "All documents"
 msgstr "Všechny dokumenty"
+#: src/mooedit/mooeditaction-factory.cpp:620
+msgid "_Insert Unicode Control Character"
+msgstr "Vloži_t řídící znak Unicode"

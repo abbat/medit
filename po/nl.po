@@ -3250,3 +3250,6 @@ msgstr "Huidig document"
 msgctxt "Save-combo"
 msgid "All documents"
 msgstr "Alle documenten"
+#: src/mooedit/mooeditaction-factory.cpp:620
+msgid "_Insert Unicode Control Character"
+msgstr "_Unicode controleteken invoegen"

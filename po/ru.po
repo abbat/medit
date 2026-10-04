@@ -3268,3 +3268,7 @@ msgstr "Текущий документ"
 msgctxt "Save-combo"
 msgid "All documents"
 msgstr "Все документы"
+#: src/mooedit/mooeditaction-factory.cpp:620
+msgid "_Insert Unicode Control Character"
+msgstr "Вст_авить управляющий символ Юникод"
+

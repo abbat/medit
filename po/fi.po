@@ -3255,3 +3255,7 @@ msgstr "Nykyinen asiakirja"
 msgctxt "Save-combo"
 msgid "All documents"
 msgstr "Kaikki asiakirjat"
+#: src/mooedit/mooeditaction-factory.cpp:620
+msgid "_Insert Unicode Control Character"
+msgstr "_Lisää Unicode-säätömerkki"
+
