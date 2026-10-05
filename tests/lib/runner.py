@@ -289,9 +289,8 @@ def last_words(log_dir, was_alive, code, lines=10):
 # shouldn't be used anymore", and the same sentence for a signal.
 DEPRECATED = re.compile(r"The (?:property|signal) ([\w.:-]+) is deprecated")
 
-# The deprecations still in use, each until the stage of doc/deprecations.md
-# that removes it. Anything else fails the test, so that none comes back; take
-# a name out of here in the commit that stops using it.
+# Deprecated names that come from libraries rather than from our code. Anything
+# else fails the test, so that none comes back (doc/deprecations.md).
 KNOWN_DEPRECATED = frozenset([
     "GtkWidget::visibility-notify-event",   # VTE's own accessible; not ours
     "VteTerminal::window-title-changed",    # same accessible (vteaccess.cc); we use termprops

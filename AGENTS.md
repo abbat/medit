@@ -75,7 +75,7 @@ anything else belongs upstream. Deprecated API is an error under `ENABLE_STRICT`
 everywhere, `src/vendor/` included, with no exceptions left: the GtkAction family and
 GtkStock that used to be wrapped in `G_GNUC_BEGIN_IGNORE_DEPRECATIONS` have been
 replaced, the style scheme's `GtkRcStyle` code was ported from gtksourceview 3.24, and
-a new wrapper is not wanted. `doc/deprecations.md` is the record of how.
+a new wrapper is not wanted. `doc/deprecations.md` keeps what that work taught.
 
 ---
 
@@ -95,7 +95,7 @@ them.
 | write a test for the terminal, LSP or shortcuts; look at coverage | `doc/testing-panes.md` |
 | hunt a defect and want to know what this tree already got wrong | `doc/bugs.md` |
 | say what could be improved, or pick what to do next | `doc/todo.md`, "What to suggest first" |
-| remove deprecated API, or continue that work after an interruption | `doc/deprecations.md` |
+| meet deprecated API, a deprecation warning, or GtkStock/GtkAction leftovers | `doc/deprecations.md` |
 | work with the `lean-ctx` MCP tools (only when the server is installed) | `doc/lean-ctx.md` |
 
 Below, in this file: the rules that cost real time when broken, the environment traps,

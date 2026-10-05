@@ -168,11 +168,10 @@ here") arrives without it, and the code that would have a documentation URL does
 one. Both need somewhere to show a secondary location, which the diagnostics pane could
 grow as child rows.
 
-## Deprecated API left after `doc/deprecations.md`
+## Hand check of the action rewrite
 
-Stages 0–4 of that plan are done: nothing in `src/` outside `src/vendor/` calls deprecated
-API or wraps a call in `G_GNUC_BEGIN_IGNORE_DEPRECATIONS`, and since stage 5 neither does
-`src/vendor/`. One thing was put off: **a hand check of the action rewrite** (4.5) —
+Deprecated API is gone from the tree (`doc/deprecations.md`). One thing was put off:
+**a hand check of the GtkAction → MooAction rewrite** —
 menus, toolbar, accelerators, toggles, user tools and plugin actions, looked at on screen.
 The UI suite in CI passed on `1b63b88`; nobody has looked yet. (The `.pot` was
 regenerated: the renames moved no string, but the GtkStock replacements had left seven

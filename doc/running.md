@@ -146,17 +146,11 @@ variable read by libgobject, not a build flag — there is nothing to enable in
 `CMakeLists.txt`. With it set, GObject warns when a **deprecated property or signal** is
 used, which is a class the compiler cannot see at all: `-Wdeprecated-declarations`
 catches deprecated *functions*, while these are named by string, through `g_object_set()`
-or from a `.ui` file. A bare startup produces one, from the GtkImageMenuItem that
-GtkAction makes for every menu item:
-
-```
-The property GtkSettings:gtk-menu-images is deprecated …
-```
-
-It is a thing GTK+4 removes outright, so this is the cheapest survey of that work
-there is. Opening dialogs finds more. The runner sets it for every test and **fails** a
-test that reports a name outside `KNOWN_DEPRECATED` in `tests/lib/runner.py`: the names
-still in use, each until the stage of `doc/deprecations.md` that removes it.
+or from a `.ui` file. What it reports is a thing GTK+4 removes outright, so this is the
+cheapest survey of that work there is. The runner sets it for every test and **fails** a
+test that reports a name outside `KNOWN_DEPRECATED` in `tests/lib/runner.py`. Our own code
+uses none any more; the two names listed there come from libvte's accessible, which medit
+cannot change.
 
 **Sanitizers are a build option now**, `-DENABLE_SANITIZERS=address,undefined`, which
 puts the flag on the compile and the link together. Measured, so that nobody has to
