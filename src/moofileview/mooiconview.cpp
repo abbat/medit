@@ -917,10 +917,6 @@ static void
 moo_icon_view_state_changed (GtkWidget *widget,
                              G_GNUC_UNUSED GtkStateType previous_state)
 {
-    if (gtk_widget_get_realized (widget))
-    {
-    }
-
     if (!gtk_widget_is_sensitive (widget))
         _moo_icon_view_unselect_all (MOO_ICON_VIEW (widget));
 

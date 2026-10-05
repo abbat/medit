@@ -18,6 +18,7 @@
 #include "mooutils/mooactiongroup.h"
 #include "mooutils/mooaccel.h"
 #include "mooutils/mooutils-gobject.h"
+#include "mooutils/mooutils-misc.h"
 #include "marshals.h"
 
 
@@ -639,6 +640,7 @@ typedef struct {
 } ProxyLink;
 
 static const char PROXIES_KEY[] = "moo-action-proxies";
+static const char IMAGE_KEY[] = "moo-action-menu-image";
 
 static void
 sync_link (ProxyLink *link)
@@ -662,8 +664,18 @@ sync_link (ProxyLink *link)
         GtkMenuItem *item = GTK_MENU_ITEM (proxy);
         const char *accel_path = moo_action_get_accel_path (action);
 
-        gtk_menu_item_set_label (item, label ? label : "");
-        gtk_menu_item_set_use_underline (item, use_underline);
+        GtkImage *image = GTK_IMAGE (g_object_get_data (G_OBJECT (item), IMAGE_KEY));
+
+        if (image)
+        {
+            gtk_image_set_from_icon_name (image, icon_name, GTK_ICON_SIZE_MENU);
+            _moo_menu_item_set_label (proxy, label ? label : "", use_underline);
+        }
+        else
+        {
+            gtk_menu_item_set_label (item, label ? label : "");
+            gtk_menu_item_set_use_underline (item, use_underline);
+        }
 
         if (accel_path)
             gtk_menu_item_set_accel_path (item, accel_path);
@@ -776,8 +788,21 @@ moo_action_create_default_menu_item (MooAction *action)
 {
     g_return_val_if_fail (MOO_IS_ACTION (action), NULL);
 
-    return MOO_IS_TOGGLE_ACTION (action) ? gtk_check_menu_item_new ()
-                                         : gtk_menu_item_new ();
+    if (MOO_IS_TOGGLE_ACTION (action))
+        return gtk_check_menu_item_new ();
+
+    g_autofree char *icon_name = NULL;
+    g_object_get (action, "icon-name", &icon_name, NULL);
+
+    if (!icon_name || !*icon_name)
+        return gtk_menu_item_new ();
+
+    /* ponytail: the image is made only if the action has an icon when its item
+       is created; an icon given later is not drawn in the menu */
+    GtkWidget *image = gtk_image_new_from_icon_name (icon_name, GTK_ICON_SIZE_MENU);
+    GtkWidget *item = _moo_menu_item_new ("", TRUE, image);
+    g_object_set_data (G_OBJECT (item), IMAGE_KEY, image);
+    return item;
 }
 
 GtkWidget *

@@ -512,10 +512,10 @@ moo_paned_init (MooPaned *paned)
 
     paned->button_box = NULL;
 
-    /* TRUE means default and broken tooltips,
-     * FALSE mean inverted order and working tooltips
-     * http://bugzilla.gnome.org/show_bug.cgi?id=550345 */
-    paned->priv->forall_bottom_to_top = TRUE;
+    /* Internals (the panes) before the child (the document). Measured: the other
+     * way round GTK+3 hands the pointer to the document, which spans the whole
+     * window, and the buttons of a floating pane get no tooltip. */
+    paned->priv->forall_bottom_to_top = FALSE;
 
     paned->priv->pane_position = (MooPanePosition) -1;
     paned->priv->handle_window = NULL;

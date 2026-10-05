@@ -352,8 +352,8 @@ static const struct {
     { "moo-file-selector",  "folder" },
     { "moo-file",           "text-x-generic" },
     { "moo-new-folder",     "folder-new" },
-    { "moo-file-bookmark",  "bookmark" },
-    { "moo-edit-bookmark",  "bookmark" },
+    { "moo-file-bookmark",  "bookmark-new" },
+    { "moo-edit-bookmark",  "bookmark-new" },
     { "moo-terminal",       "utilities-terminal" },
 };
 

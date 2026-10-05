@@ -114,7 +114,7 @@
                     </child>
                   </object>
                   <packing>
-                    <property name="expand">True</property>
+                    <property name="expand">False</property>
                     <property name="position">3</property>
                   </packing>
                 </child>
@@ -132,7 +132,7 @@
                     </child>
                   </object>
                   <packing>
-                    <property name="expand">True</property>
+                    <property name="expand">False</property>
                     <property name="position">4</property>
                   </packing>
                 </child>
@@ -144,7 +144,6 @@
                     <child>
                       <object class="GtkSpinButton" id="indent_width">
                         <property name="halign">center</property>
-                        <property name="vexpand">True</property>
                         <property name="visible">True</property>
                         <property name="adjustment">adjustment1</property>
                         <property name="climb_rate">1</property>
@@ -157,7 +156,6 @@
                     </child>
                     <child>
                       <object class="GtkLabel" id="label32">
-                        <property name="vexpand">True</property>
                         <property name="visible">True</property>
                         <property name="xalign">1</property>
                         <property name="label" translatable="yes">Indent width</property>
@@ -171,7 +169,6 @@
                     <child>
                       <object class="GtkSpinButton" id="tab_width">
                         <property name="halign">center</property>
-                        <property name="vexpand">True</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="adjustment">adjustment2</property>
@@ -185,7 +182,6 @@
                     </child>
                     <child>
                       <object class="GtkLabel" id="label19">
-                        <property name="vexpand">True</property>
                         <property name="visible">True</property>
                         <property name="xalign">1</property>
                         <property name="label" translatable="yes">Tab width</property>
@@ -198,7 +194,7 @@
                     </child>
                   </object>
                   <packing>
-                    <property name="expand">True</property>
+                    <property name="expand">False</property>
                     <property name="position">5</property>
                   </packing>
                 </child>
