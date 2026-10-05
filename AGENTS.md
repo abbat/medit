@@ -360,6 +360,9 @@ blurry triangles. When the GTK+2 original addressed individual pixels, fill
   remove it too — a marker that survives a reading it passed costs the next reader the
   same reading. If you find something and are not fixing it now, replace the marker
   with what you found and how you found it.
+- A side finding that is not settled here and now gets a `bd` issue (`bd create`, a bug
+  or a task, with where it was seen and what is still unchecked) instead of a line in the
+  reply or a code comment. Say in the reply that it was filed, with the id.
 - Verify before claiming: build **with `-DENABLE_STRICT=ON`**, run with the
   exit-code rule, screenshot when the change is visual, and state what was *not*
   verified. Strict is not an extra: every job that compiles anything uses it, the
