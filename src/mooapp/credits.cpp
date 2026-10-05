@@ -162,8 +162,8 @@ create_close_button (GtkDialog *dialog)
   button = GTK_BUTTON (widget);
   image = gtk_image_new_from_icon_name ("window-close", GTK_ICON_SIZE_BUTTON);
 
-  gtk_button_set_image (button, image);
   gtk_button_set_always_show_image (button, TRUE);
+  gtk_button_set_image (button, image);
   gtk_widget_set_focus_on_click (widget, FALSE);
 
   gtk_widget_set_can_focus (widget, TRUE);

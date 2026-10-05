@@ -293,8 +293,6 @@ DEPRECATED = re.compile(r"The (?:property|signal) ([\w.:-]+) is deprecated")
 # that removes it. Anything else fails the test, so that none comes back; take
 # a name out of here in the commit that stops using it.
 KNOWN_DEPRECATED = frozenset([
-    "GtkButton:use-stock",                  # 3: stock buttons
-    "GtkSettings:gtk-button-images",        # 3: stock buttons
     "GtkSettings:gtk-menu-images",          # 4.1: GtkAction's menu proxies
     "GtkWidget::visibility-notify-event",   # VTE's own accessible; not ours
     "VteTerminal::window-title-changed",    # same accessible (vteaccess.cc); we use termprops

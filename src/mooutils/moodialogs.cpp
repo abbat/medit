@@ -361,7 +361,7 @@ moo_overwrite_file_dialog (const char *display_name,
                            GtkWidget  *parent)
 {
     int response;
-    GtkWidget *dialog, *button, *toplevel = NULL;
+    GtkWidget *dialog, *toplevel = NULL;
 
     g_return_val_if_fail (display_name != NULL, FALSE);
     g_return_val_if_fail (display_dirname != NULL, FALSE);
@@ -383,11 +383,7 @@ moo_overwrite_file_dialog (const char *display_name,
 
     gtk_dialog_add_button (GTK_DIALOG (dialog), _("_Cancel"), GTK_RESPONSE_CANCEL);
 
-    button = gtk_button_new_with_mnemonic ("_Replace");
-    gtk_button_set_image (GTK_BUTTON (button),
-                          gtk_image_new_from_icon_name ("document-save-as", GTK_ICON_SIZE_BUTTON));
-    gtk_widget_show (button);
-    gtk_dialog_add_action_widget (GTK_DIALOG (dialog), button, GTK_RESPONSE_YES);
+    gtk_dialog_add_button (GTK_DIALOG (dialog), "_Replace", GTK_RESPONSE_YES);
 
     gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CANCEL);
 

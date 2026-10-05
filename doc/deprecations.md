@@ -208,10 +208,15 @@ Facts the survey of 2026-10-04 established, so they need not be found again:
   constructor with `gtk_icon_theme_add_resource_path (…, "/medit/icons")`. The prefix
   must not contain the theme name: with `/medit/icons/hicolor` the names did not
   resolve and the pane labels showed the missing-image icon. `mooaccelbutton.ui` lost
-  its two `gtk-cancel`/`gtk-ok` images. `GtkButton:use-stock` and
-  `GtkSettings:gtk-button-images` stay in `KNOWN_DEPRECATED`: no `use-stock` is left
-  in `src/`, but GTK's own dialogs may read them, and only a UI run shows whether
-  they still fire at startup or in a dialog.
+  its two `gtk-cancel`/`gtk-ok` images.
+  A local UI run with `ctest -V` (the lines are not in the CI log) then found
+  `use-stock` in no test and `gtk-button-images` in two. `GtkButton` reads the setting
+  in `show_image()` unless `always-show-image` is already set, so
+  `gtk_button_set_image()` before `gtk_button_set_always_show_image()` reads it once:
+  the About dialog's two buttons and the Credits close button now set the flag first.
+  The other was the overwrite dialog's `_Replace` button, whose `document-save-as`
+  image GTK+3 never showed (the setting defaults to FALSE); it is a plain dialog button
+  now. Both names are out of `KNOWN_DEPRECATED`.
 - [x] 3.8 Remove what is left unused in `moostock.h`, or the header (gone with 3.7). Build with
   clang too — it flags every `GTK_STOCK_*` macro gcc lets through. Push and CI.
 
