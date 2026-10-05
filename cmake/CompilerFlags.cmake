@@ -42,10 +42,7 @@ foreach(flag
         -Wall
         -Wextra
         -fexceptions
-        -fno-strict-aliasing
-        -Wno-missing-field-initializers
-        -Wno-format-y2k
-        -Wno-overlength-strings)
+        -fno-strict-aliasing)
     moo_try_flag(${flag})
 endforeach()
 
@@ -100,8 +97,7 @@ if(ENABLE_STRICT)
             -Wctor-dtor-privacy
             -Woverloaded-virtual
             -Wsign-promo
-            -Wnon-virtual-dtor
-            -Wno-long-long)
+            -Wnon-virtual-dtor)
         moo_try_cxx_flag(${flag})
     endforeach()
 endif()

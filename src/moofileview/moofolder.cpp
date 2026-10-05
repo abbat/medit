@@ -1014,22 +1014,13 @@ get_size_string (MgwStatBuf *statbuf)
 static char *
 moo_file_get_mtime_string (MooFile *file)
 {
-    char buf[1024];
-    struct tm tm_buf;
-    mgw_errno_t err;
-
     if (!MOO_FILE_EXISTS (file))
         return NULL;
 
     g_return_val_if_fail (file->statbuf != NULL, NULL);
 
-    if (!mgw_localtime_r (&file->statbuf->mtime, &tm_buf, &err))
-        return NULL;
-
-    if (strftime (buf, sizeof buf, "%x %X", &tm_buf))
-        return g_strdup (buf);
-    else
-        return NULL;
+    g_autoptr(GDateTime) dt = g_date_time_new_from_unix_local (file->statbuf->mtime.value);
+    return dt ? g_date_time_format (dt, "%x %X") : NULL;
 }
 
 
