@@ -96,6 +96,7 @@ them.
 | hunt a defect and want to know what this tree already got wrong | `doc/bugs.md` |
 | say what could be improved, or pick what to do next | `doc/todo.md`, "What to suggest first" |
 | remove deprecated API, or continue that work after an interruption | `doc/deprecations.md` |
+| work with the `lean-ctx` MCP tools (only when the server is installed) | `doc/lean-ctx.md` |
 
 Below, in this file: the rules that cost real time when broken, the environment traps,
 the three GTK+3 porting mistakes to check first when anything looks wrong, and the
@@ -152,11 +153,10 @@ times that on re-reading what it already had.
    in full runs several thousand tokens for one look). Drop to `full` only for the function
    you are about to touch.
 6. **Use lean-ctx where it is installed.** When the `lean-ctx` MCP server is available,
-   its tools come first: `ctx_shell` over a bare shell, `ctx_read`/`ctx_search` over
-   whole-file reads and grep, `ctx_edit` for edits. They compress what comes back, and
-   the shell is where compression pays most. A native tool is for what lean-ctx cannot
-   do. The same goes for a subagent: say so in its prompt, since it starts without this
-   file's context.
+   its tools come first, and `doc/lean-ctx.md` says how to use them here — including
+   the traps, such as compressed shell output that keeps every line saying "error".
+   Without the server, skip that file. A subagent starts without this context: its
+   prompt must say to use lean-ctx.
 
 ---
 

@@ -1,7 +1,7 @@
 ---
 name: suite-run
 description: Runs a ctest suite of this tree and reports counts and failures only, never logs. Use for a whole-suite run, a subsystem run, or a batch experiment over many tests -- the work that would otherwise fill a session's context with output it re-reads on every later call.
-tools: Bash, Read, Grep, mcp__lean-ctx__ctx_shell, mcp__lean-ctx__ctx_read, mcp__lean-ctx__ctx_search
+tools: Bash, Read, Grep, mcp__lean-ctx__ctx_shell, mcp__lean-ctx__ctx_read, mcp__lean-ctx__ctx_search, mcp__lean-ctx__ctx_expand
 model: haiku
 ---
 
@@ -10,7 +10,9 @@ session that asked you owns the code, and a report it can act on is the whole jo
 
 Where the lean-ctx tools are available, use `ctx_shell` for commands and
 `ctx_read`/`ctx_search` for logs: they compress what comes back. Bash, Read and Grep
-are the fallback.
+are the fallback. `doc/lean-ctx.md` has the traps -- above all, `ctx_shell`
+compression keeps any line with "fail" or "error" in it, so read a count from a
+file you grep, or with `raw=true`, never from a compressed reply.
 
 ## The builds
 
