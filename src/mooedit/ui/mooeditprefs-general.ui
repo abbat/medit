@@ -114,6 +114,7 @@
                     </child>
                   </object>
                   <packing>
+                    <property name="expand">True</property>
                     <property name="position">3</property>
                   </packing>
                 </child>
@@ -131,6 +132,7 @@
                     </child>
                   </object>
                   <packing>
+                    <property name="expand">True</property>
                     <property name="position">4</property>
                   </packing>
                 </child>
@@ -196,6 +198,7 @@
                     </child>
                   </object>
                   <packing>
+                    <property name="expand">True</property>
                     <property name="position">5</property>
                   </packing>
                 </child>

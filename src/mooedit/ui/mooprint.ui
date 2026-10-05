@@ -118,6 +118,9 @@
                         <property name="visible">True</property>
                         <property name="label" translatable="yes" comments="Part of the phrase &quot;Print line numbers&quot; &quot;every&quot; &quot;1&quot; &quot;lines&quot;">every</property>
                       </object>
+                      <packing>
+                        <property name="expand">True</property>
+                      </packing>
                     </child>
                     <child>
                       <object class="GtkSpinButton" id="line_numbers_step">
@@ -296,6 +299,7 @@
                         </child>
                       </object>
                       <packing>
+                        <property name="expand">True</property>
                         <property name="position">1</property>
                       </packing>
                     </child>
@@ -445,6 +449,7 @@
                         </child>
                       </object>
                       <packing>
+                        <property name="expand">True</property>
                         <property name="position">1</property>
                       </packing>
                     </child>

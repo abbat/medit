@@ -37,6 +37,7 @@
                         <property name="activates_default">True</property>
                       </object>
                       <packing>
+                        <property name="expand">True</property>
                         <property name="position">1</property>
                       </packing>
                     </child>
@@ -53,6 +54,7 @@
                     <property name="row_spacing">6</property>
                   </object>
                   <packing>
+                    <property name="expand">True</property>
                     <property name="position">1</property>
                   </packing>
                 </child>

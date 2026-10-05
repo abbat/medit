@@ -26,6 +26,7 @@
                 <property name="visible">True</property>
               </object>
               <packing>
+                <property name="expand">True</property>
                 <property name="position">1</property>
               </packing>
             </child>
@@ -50,6 +51,7 @@
             </child>
           </object>
           <packing>
+            <property name="expand">True</property>
             <property name="position">1</property>
           </packing>
         </child>
@@ -119,10 +121,14 @@
                         <property name="focus_on_click">False</property>
                       </object>
                       <packing>
+                        <property name="expand">True</property>
                         <property name="position">3</property>
                       </packing>
                     </child>
                   </object>
+                  <packing>
+                    <property name="expand">True</property>
+                  </packing>
                 </child>
                 <child>
                   <object class="GtkBox" id="hbox11">
@@ -150,6 +156,7 @@
                     </child>
                   </object>
                   <packing>
+                    <property name="expand">True</property>
                     <property name="position">1</property>
                   </packing>
                 </child>

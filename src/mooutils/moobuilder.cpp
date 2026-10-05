@@ -179,7 +179,12 @@ moo_builder_reparent (GtkBuilder *builder, const char *id, GtkWidget *parent)
 
     g_object_ref (widget);
     gtk_container_remove (GTK_CONTAINER (gtk_widget_get_parent (widget)), widget);
-    gtk_container_add (GTK_CONTAINER (parent), widget);
+    /* MooPrefsPage was a GtkVBox, whose gtk_container_add() packed with
+       expand = TRUE; GtkBox's packs with FALSE. */
+    if (MOO_IS_PREFS_PAGE (parent))
+        gtk_box_pack_start (GTK_BOX (parent), widget, TRUE, TRUE, 0);
+    else
+        gtk_container_add (GTK_CONTAINER (parent), widget);
     g_object_unref (widget);
 
     if (GTK_IS_WINDOW (placeholder))

@@ -87,7 +87,14 @@ them.
 - [x] 2.1 In `.ui`: `GtkVBox`/`GtkHBox` → `GtkBox` + `orientation`, `GtkHButtonBox` →
   `GtkButtonBox`, `GtkVSeparator` → `GtkSeparator` + `orientation`. A script, one commit
   per type. Check the defaults: a `GtkVBox` had `homogeneous` FALSE and `spacing` 0,
-  the same as a `GtkBox`.
+  the same as a `GtkBox`. **Not the same: `expand`.** `GtkVBox`/`GtkHBox` call
+  `_gtk_box_set_old_defaults()`, so `gtk_container_add()` and GtkBuilder packed their
+  children with `expand` TRUE; a plain `GtkBox` packs with FALSE. Every child without
+  an `expand` in its `<packing>` collapsed (`lsp.plugin_toggle` found it: the plugin
+  list had no extent). Fixed by giving those children `expand` True in the `.ui` files,
+  and in C++ by packing with `gtk_box_pack_start (…, TRUE, TRUE, 0)` where a former
+  VBox gets a child through `gtk_container_add()`. Internal children (a dialog's
+  `vbox`) were never old-default boxes and are left alone.
 - [x] 2.2 `GtkAlignment` in `.ui` → margins and `halign`/`valign` on the child.
   `left_padding` maps to `margin-start`, and so on. Also check `xalign`/`xpad` on
   anything that is not a `GtkLabel`: those are `GtkMisc` properties.

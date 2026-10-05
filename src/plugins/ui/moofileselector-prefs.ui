@@ -50,6 +50,9 @@
                           </object>
                         </child>
                       </object>
+                      <packing>
+                        <property name="expand">True</property>
+                      </packing>
                     </child>
                     <child>
                       <object class="GtkGrid" id="table">
@@ -182,10 +185,14 @@
                         </child>
                       </object>
                       <packing>
+                        <property name="expand">True</property>
                         <property name="position">1</property>
                       </packing>
                     </child>
                   </object>
+                  <packing>
+                    <property name="expand">True</property>
+                  </packing>
                 </child>
                 <child>
                   <object class="GtkBox" id="hbox2">
@@ -271,10 +278,14 @@
                 </child>
               </object>
               <packing>
+                <property name="expand">True</property>
                 <property name="position">1</property>
               </packing>
             </child>
           </object>
+          <packing>
+            <property name="expand">True</property>
+          </packing>
         </child>
       </object>
     </child>

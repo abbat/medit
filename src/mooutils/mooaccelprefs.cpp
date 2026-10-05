@@ -277,7 +277,7 @@ _moo_accel_prefs_page_init (MooAccelPrefsPage *page)
     content = GTK_WIDGET (moo_builder_get (builder, "AccelPrefsPage"));
     g_object_ref (content);
     gtk_container_remove (GTK_CONTAINER (gtk_widget_get_parent (content)), content);
-    gtk_container_add (GTK_CONTAINER (page), content);
+    gtk_box_pack_start (GTK_BOX (page), content, TRUE, TRUE, 0);
     g_object_unref (content);
 
     page->treeview = GTK_TREE_VIEW (moo_builder_get (builder, "treeview"));

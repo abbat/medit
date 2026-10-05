@@ -30,6 +30,9 @@
                 <property name="can_focus">True</property>
                 <property name="tooltip_text" translatable="yes">Comma-separated, such as en_US,ru_RU. A word is looked up in the language of its own alphabet: the first Cyrillic one for Cyrillic words, the first other one for the rest.</property>
               </object>
+              <packing>
+                <property name="expand">True</property>
+              </packing>
             </child>
           </object>
           <packing>
@@ -58,6 +61,9 @@
                 <property name="can_focus">True</property>
                 <property name="tooltip_text" translatable="yes">Comma-separated, such as txt,md,rst,tex. The whole text of these is checked.</property>
               </object>
+              <packing>
+                <property name="expand">True</property>
+              </packing>
             </child>
           </object>
           <packing>

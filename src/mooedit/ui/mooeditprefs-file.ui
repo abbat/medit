@@ -57,11 +57,13 @@
                         <property name="tooltip-text" translatable="yes">Comma-separated list of encodings to try when opening a file. 'LOCALE' means current locale encoding.</property>
                       </object>
                       <packing>
+                        <property name="expand">True</property>
                         <property name="position">1</property>
                       </packing>
                     </child>
                   </object>
                   <packing>
+                    <property name="expand">True</property>
                     <property name="position">0</property>
                   </packing>
                 </child>
@@ -127,6 +129,7 @@
                         <property name="has_entry">True</property>
                       </object>
                       <packing>
+                        <property name="expand">True</property>
                         <property name="position">1</property>
                       </packing>
                     </child>

@@ -1399,7 +1399,7 @@ reparent (GtkWidget *widget,
 {
     g_object_ref (widget);
     gtk_container_remove (GTK_CONTAINER (old_container), widget);
-    gtk_container_add (GTK_CONTAINER (new_container), widget);
+    gtk_box_pack_start (GTK_BOX (new_container), widget, TRUE, TRUE, 0);
     g_object_unref (widget);
 }
 
