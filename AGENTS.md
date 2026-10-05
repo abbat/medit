@@ -72,11 +72,10 @@ and ctags' `readtags.c`. It is excluded from `--target analyze`
 (`cmake/Analyze.cmake`), exempt from `.editorconfig`, and outside the style measurements
 below. Do not reformat or restyle it, and keep a change there to what our build needs —
 anything else belongs upstream. Deprecation warnings are switched off for these files
-(`src/CMakeLists.txt`). Everywhere else deprecated API is an error under `ENABLE_STRICT`;
-the only exceptions are the GtkAction/GtkActionGroup/GtkUIManager family, GtkStock and its
-icon helpers, which have no replacement short of GAction/GMenu and named icons and are
-wrapped in `G_GNUC_BEGIN_IGNORE_DEPRECATIONS`. They are being removed too:
-`doc/deprecations.md` is the plan.
+(`src/CMakeLists.txt`). Everywhere else deprecated API is an error under `ENABLE_STRICT`,
+with no exceptions left: the GtkAction family and GtkStock that used to be wrapped in
+`G_GNUC_BEGIN_IGNORE_DEPRECATIONS` have been replaced, and a new wrapper is not
+wanted. `doc/deprecations.md` is the record of how, and of what remains in `src/vendor/`.
 
 ---
 

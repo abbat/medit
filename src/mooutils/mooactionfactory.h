@@ -34,7 +34,7 @@ G_BEGIN_DECLS
 typedef struct _MooActionFactory        MooActionFactory;
 typedef struct _MooActionFactoryClass   MooActionFactoryClass;
 
-typedef GtkAction* (*MooActionFactoryFunc) (gpointer          data,
+typedef MooAction* (*MooActionFactoryFunc) (gpointer          data,
                                             MooActionFactory *factory);
 
 struct _MooActionFactory
@@ -63,13 +63,13 @@ MooActionFactory   *moo_action_factory_new_a        (GType               object_
                                                      MooParameter         *params,
                                                      guint               n_params);
 
-GtkAction          *moo_action_factory_create_action(MooActionFactory   *factory,
+MooAction          *moo_action_factory_create_action(MooActionFactory   *factory,
                                                      gpointer            data,
                                                      const char         *additional_prop_name,
                                                      ...) G_GNUC_NULL_TERMINATED;
 
 
-GtkAction          *moo_action_group_add_action     (MooActionGroup      *group,
+MooAction          *moo_action_group_add_action     (MooActionGroup      *group,
                                                      const char         *name,
                                                      const char         *first_prop_name,
                                                      ...) G_GNUC_NULL_TERMINATED;

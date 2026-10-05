@@ -82,10 +82,10 @@ errors everywhere — `build.yml` asks for it, and so do `debian/rules`,
 too: Fedora is where LTO happens, and `-Wodr` has caught defects there that nothing else
 sees.
 
-That includes deprecated API: `-Wdeprecated-declarations` is an error under strict. The
-GtkAction/GtkStock subsystems that have no GTK+3 replacement are wrapped in
-`G_GNUC_BEGIN_IGNORE_DEPRECATIONS` (see AGENTS.md); `src/vendor` is exempt. clang sees more
-of them than gcc (the `GTK_STOCK_*` macros, deprecated parent types), so a gcc-only build
+That includes deprecated API: `-Wdeprecated-declarations` is an error under strict, and
+no call in `src/` is wrapped in `G_GNUC_BEGIN_IGNORE_DEPRECATIONS` any more (see
+AGENTS.md); `src/vendor` is exempt. clang reports deprecations gcc does not (deprecated
+macros, deprecated parent types in `G_DEFINE_TYPE`), so a gcc-only build
 is not enough to know the clang job is green.
 
 | job | what it covers |

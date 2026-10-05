@@ -19,11 +19,6 @@
 #include "mooutils/mooaction.h"
 #include "mooutils/mooactionbase.h"
 
-/* This file is the GtkAction/GtkStock family. Those classes are deprecated
-   since GTK+ 3.10 and have no replacement short of moving to GAction/GMenu and
-   named icons, which is GTK+ 4 work, so they are used knowingly. */
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-
 
 static MooActionFactory *moo_action_factory_new_valist  (GType       action_type,
                                                          const char *first_prop_name,
@@ -63,14 +58,14 @@ moo_action_factory_init (MooActionFactory *factory)
 }
 
 
-static GtkAction *
+static MooAction *
 moo_action_new_valist (GType       action_type,
                        const char *name,
                        const char *first_prop_name,
                        va_list     var_args)
 {
     MooActionFactory *factory;
-    GtkAction *action;
+    MooAction *action;
 
     g_return_val_if_fail (g_type_is_a (action_type, MOO_TYPE_ACTION_BASE), NULL);
 
@@ -82,13 +77,13 @@ moo_action_new_valist (GType       action_type,
 }
 
 
-GtkAction *
+MooAction *
 moo_action_group_add_action (MooActionGroup *group,
                              const char     *name,
                              const char     *first_prop_name,
                              ...)
 {
-    GtkAction *action;
+    MooAction *action;
     GType action_type = MOO_TYPE_ACTION;
     va_list var_args;
 
@@ -249,7 +244,7 @@ param_array_concatenate (MooParameter *props1,
 }
 
 
-GtkAction *
+MooAction *
 moo_action_factory_create_action (MooActionFactory   *factory,
                                   gpointer            data,
                                   const char         *prop_name,
@@ -271,7 +266,7 @@ moo_action_factory_create_action (MooActionFactory   *factory,
     }
 
     if (!prop_name)
-        return GTK_ACTION (_moo_object_newv (factory->action_type,
+        return MOO_ACTION (_moo_object_newv (factory->action_type,
                                               factory->n_props,
                                               factory->props));
 
@@ -297,7 +292,7 @@ moo_action_factory_create_action (MooActionFactory   *factory,
     _moo_param_array_free (props, n_props);
     _moo_param_array_free (add_props, n_add_props);
 
-    return GTK_ACTION (object);
+    return MOO_ACTION (object);
 }
 
 
@@ -373,4 +368,3 @@ moo_action_factory_new_func (MooActionFactoryFunc factory_func,
     return factory;
 }
 
-G_GNUC_END_IGNORE_DEPRECATIONS

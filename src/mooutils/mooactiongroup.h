@@ -34,7 +34,7 @@ struct _MooActionGroup {
     GObject base;
     char *name;
     char *display_name;
-    GHashTable *actions;    /* name -> GtkAction*, owned */
+    GHashTable *actions;    /* name -> MooAction*, owned */
     MooActionCollection *collection;
 };
 
@@ -59,10 +59,10 @@ void                 _moo_action_group_set_collection   (MooActionGroup         
 
 const char          *moo_action_group_get_name          (MooActionGroup         *group);
 void                 moo_action_group_insert_action     (MooActionGroup         *group,
-                                                         GtkAction              *action);
+                                                         MooAction              *action);
 void                 moo_action_group_remove_action     (MooActionGroup         *group,
-                                                         GtkAction              *action);
-GtkAction           *moo_action_group_get_action        (MooActionGroup         *group,
+                                                         MooAction              *action);
+MooAction           *moo_action_group_get_action        (MooActionGroup         *group,
                                                          const char             *name);
 GList               *moo_action_group_list_actions      (MooActionGroup         *group);
 

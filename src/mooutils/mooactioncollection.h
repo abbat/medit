@@ -17,6 +17,8 @@
 #define MOO_ACTION_COLLECTION_H
 
 
+#include "mooutils/mooaction.h"
+
 G_BEGIN_DECLS
 
 
@@ -56,10 +58,10 @@ MooActionGroup      *moo_action_collection_get_group        (MooActionCollection
                                                              const char             *name);
 const GSList        *moo_action_collection_get_groups       (MooActionCollection    *coll);
 
-GtkAction           *moo_action_collection_get_action       (MooActionCollection    *coll,
+MooAction           *moo_action_collection_get_action       (MooActionCollection    *coll,
                                                              const char             *name);
 void                 moo_action_collection_remove_action    (MooActionCollection    *coll,
-                                                             GtkAction              *action);
+                                                             MooAction              *action);
 
 void                 _moo_action_collection_set_window      (MooActionCollection    *coll,
                                                              gpointer                window);

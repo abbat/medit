@@ -569,8 +569,6 @@ command_page_new (MooPrefsPage *page)
 }
 
 
-/* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 GtkWidget *
 moo_user_tools_prefs_page_new (void)
 {
@@ -595,4 +593,3 @@ moo_user_tools_prefs_page_new (void)
 
     return page;
 }
-G_GNUC_END_IGNORE_DEPRECATIONS

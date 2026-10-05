@@ -212,7 +212,7 @@ find_user_tools_file (int     type,
 
 
 static gboolean
-check_sensitive_func (GtkAction      *gtkaction,
+check_sensitive_func (MooAction      *gtkaction,
                       G_GNUC_UNUSED MooEditWindow  *window,
                       MooEdit        *doc,
                       G_GNUC_UNUSED gpointer data)
@@ -1303,7 +1303,7 @@ moo_tool_action_finalize (GObject *object)
 
 
 static void
-moo_tool_action_activate (GtkAction *gtkaction)
+moo_tool_action_activate (MooAction *gtkaction)
 {
     MooEditWindow *window;
     MooCommandContext *ctx = NULL;
@@ -1345,8 +1345,7 @@ moo_tool_action_check_state (MooEditAction *edit_action)
 
     MOO_EDIT_ACTION_CLASS (_moo_tool_action_parent_class)->check_state (edit_action);
 
-    /* GtkAction is deprecated since GTK+ 3.10; there is no replacement short of GAction/GMenu. */
-    gboolean visible = moo_action_is_visible (GTK_ACTION (action));
+    gboolean visible = moo_action_is_visible (MOO_ACTION (action));
 
     if (!visible)
         return;
@@ -1368,13 +1367,13 @@ static void
 _moo_tool_action_class_init (MooToolActionClass *klass)
 {
     GObjectClass *object_class = G_OBJECT_CLASS (klass);
-    GtkActionClass *gtkaction_class = GTK_ACTION_CLASS (klass);
+    MooActionClass *moo_action_class = MOO_ACTION_CLASS (klass);
     MooEditActionClass *action_class = MOO_EDIT_ACTION_CLASS (klass);
 
     object_class->set_property = moo_tool_action_set_property;
     object_class->get_property = moo_tool_action_get_property;
     object_class->finalize = moo_tool_action_finalize;
-    gtkaction_class->activate = moo_tool_action_activate;
+    moo_action_class->activate = moo_tool_action_activate;
     action_class->check_state = moo_tool_action_check_state;
 
     g_object_class_install_property (object_class, PROP_COMMAND,

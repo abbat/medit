@@ -17,6 +17,8 @@
 #define MOO_ACTION_BASE_H
 
 
+#include "mooutils/mooaction.h"
+
 G_BEGIN_DECLS
 
 
@@ -35,31 +37,31 @@ struct _MooActionBaseClass {
 
 GType        moo_action_base_get_type     (void) G_GNUC_CONST;
 
-/* Accessors for the properties of an action. They delegate to GtkAction for now,
-   so that the day it goes the change is in one place. */
-const char  *moo_action_get_name          (GtkAction       *action);
-gboolean     moo_action_get_sensitive     (GtkAction       *action);
-void         moo_action_set_sensitive     (GtkAction       *action,
+/* Accessors for the properties of an action. They read and write the fields of
+   MooAction; the toggle ones are defined in mooaction.cpp. */
+const char  *moo_action_get_name          (MooAction       *action);
+gboolean     moo_action_get_sensitive     (MooAction       *action);
+void         moo_action_set_sensitive     (MooAction       *action,
                                            gboolean         sensitive);
-gboolean     moo_action_get_visible       (GtkAction       *action);
-gboolean     moo_action_is_visible        (GtkAction       *action);
-void         moo_action_set_visible       (GtkAction       *action,
+gboolean     moo_action_get_visible       (MooAction       *action);
+gboolean     moo_action_is_visible        (MooAction       *action);
+void         moo_action_set_visible       (MooAction       *action,
                                            gboolean         visible);
-void         moo_action_activate          (GtkAction       *action);
-const char  *moo_action_get_accel_path    (GtkAction       *action);
-void         moo_action_set_accel_path    (GtkAction       *action,
+void         moo_action_activate          (MooAction       *action);
+const char  *moo_action_get_accel_path    (MooAction       *action);
+void         moo_action_set_accel_path    (MooAction       *action,
                                            const char      *accel_path);
-gboolean     moo_toggle_action_get_active (GtkToggleAction *action);
-void         moo_toggle_action_set_active (GtkToggleAction *action,
+gboolean     moo_toggle_action_get_active (MooToggleAction *action);
+void         moo_toggle_action_set_active (MooToggleAction *action,
                                            gboolean         active);
 
 /* Proxies: the menu items and tool buttons that mirror an action. They are
-   created and kept in step here, not by GtkAction. */
-GtkWidget   *moo_action_create_menu_item  (GtkAction       *action);
+   created and kept in step here, not by MooAction. */
+GtkWidget   *moo_action_create_menu_item  (MooAction       *action);
 /* the bare item, for create_menu_item overrides to start from */
-GtkWidget   *moo_action_create_default_menu_item (GtkAction *action);
-GtkWidget   *moo_action_create_tool_item  (GtkAction       *action);
-void         moo_action_sync_proxies      (GtkAction       *action);
+GtkWidget   *moo_action_create_default_menu_item (MooAction *action);
+GtkWidget   *moo_action_create_tool_item  (MooAction       *action);
+void         moo_action_sync_proxies      (MooAction       *action);
 
 
 G_END_DECLS

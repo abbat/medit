@@ -1650,8 +1650,6 @@ add_clear_button (GtkWidget     *dialog,
     gtk_button_box_set_child_secondary (GTK_BUTTON_BOX (area), button, TRUE);
 }
 
-/* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 GtkWidget *
 moo_history_mgr_create_dialog (MooHistoryMgr   *mgr,
                                MooHistoryCallback callback,
@@ -1686,7 +1684,6 @@ moo_history_mgr_create_dialog (MooHistoryMgr   *mgr,
 
     return dialog;
 }
-G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 static gboolean

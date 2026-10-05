@@ -14,7 +14,7 @@
  */
 
 /**
- * class:MooAction: (parent GtkAction) (moo.private 1)
+ * class:MooAction: (parent GObject) (moo.private 1)
  **/
 
 #include "mooutils/mooaction-private.h"
@@ -22,14 +22,17 @@
 #include "mooutils/mooutils-gobject.h"
 #include "mooutils/mooactiongroup.h"
 
-/* This file is the GtkAction/GtkStock family. Those classes are deprecated
-   since GTK+ 3.10 and have no replacement short of moving to GAction/GMenu and
-   named icons, which is GTK+ 4 work, so they are used knowingly. */
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-
 
 static void _moo_action_set_closure (MooAction  *action,
                                      MooClosure *closure);
+static void moo_action_set_property (GObject      *object,
+                                     guint         property_id,
+                                     const GValue *value,
+                                     GParamSpec   *pspec);
+static void moo_action_get_property (GObject      *object,
+                                     guint         property_id,
+                                     GValue       *value,
+                                     GParamSpec   *pspec);
 
 
 gpointer
@@ -38,7 +41,7 @@ _moo_action_get_window (gpointer action)
     MooActionGroup *group;
     MooActionCollection *collection;
 
-    g_return_val_if_fail (GTK_IS_ACTION (action), NULL);
+    g_return_val_if_fail (MOO_IS_ACTION (action), NULL);
 
     group = _moo_action_get_group (action);
     g_return_val_if_fail (MOO_IS_ACTION_GROUP (group), NULL);
@@ -48,44 +51,20 @@ _moo_action_get_window (gpointer action)
 }
 
 
-#define DEFINE_ACTION_TYPE(TypeName, type_name, TYPE_PARENT)               \
-                                                                           \
-G_DEFINE_TYPE_WITH_CODE (TypeName, type_name, TYPE_PARENT,                 \
-                         G_IMPLEMENT_INTERFACE(MOO_TYPE_ACTION_BASE, NULL) \
-                         G_ADD_PRIVATE(TypeName))                          \
-                                                                           \
-static void type_name##_set_property    (GObject            *object,       \
-                                         guint               property_id,  \
-                                         const GValue       *value,        \
-                                         GParamSpec         *pspec);       \
-                                                                           \
-static void type_name##_get_property    (GObject            *object,       \
-                                         guint               property_id,  \
-                                         GValue             *value,        \
-                                         GParamSpec         *pspec);       \
-                                                                           \
-static void                                                                \
-type_name##_base_class_init (gpointer klass)                               \
-{                                                                          \
-    GObjectClass *object_class = G_OBJECT_CLASS (klass);                   \
-                                                                           \
-    object_class->set_property = type_name##_set_property;                 \
-    object_class->get_property = type_name##_get_property;                 \
-                                                                           \
-    _moo_action_base_init_class (object_class);                            \
-}
-
-
 /*****************************************************************************/
 /* MooAction
  */
 
-struct _MooActionPrivate {
-    MooClosure *closure;
+G_DEFINE_TYPE_WITH_CODE (MooAction, moo_action, G_TYPE_OBJECT,
+                         G_IMPLEMENT_INTERFACE (MOO_TYPE_ACTION_BASE, NULL)
+                         G_ADD_PRIVATE (MooAction))
+
+enum {
+    ACTION_ACTIVATE,
+    N_ACTION_SIGNALS
 };
 
-
-DEFINE_ACTION_TYPE (MooAction, moo_action, GTK_TYPE_ACTION)
+static guint action_signals[N_ACTION_SIGNALS];
 
 
 enum {
@@ -102,6 +81,8 @@ static void
 moo_action_init (MooAction *action)
 {
     action->priv = (MooActionPrivate*) moo_action_get_instance_private (action);
+    action->priv->sensitive = TRUE;
+    action->priv->visible = TRUE;
 
     _moo_action_base_init_instance (action);
 }
@@ -123,13 +104,22 @@ moo_action_dispose (GObject *object)
 
 
 static void
-moo_action_activate_real (GtkAction *gtkaction)
+moo_action_finalize (GObject *object)
 {
-    MooAction *action = MOO_ACTION (gtkaction);
+    MooActionPrivate *priv = MOO_ACTION (object)->priv;
 
-    if (GTK_ACTION_CLASS (moo_action_parent_class)->activate)
-        GTK_ACTION_CLASS (moo_action_parent_class)->activate (gtkaction);
+    g_free (priv->name);
+    g_free (priv->label);
+    g_free (priv->tooltip);
+    g_free (priv->icon_name);
 
+    G_OBJECT_CLASS (moo_action_parent_class)->finalize (object);
+}
+
+
+static void
+moo_action_activate_real (MooAction *action)
+{
     if (action->priv->closure)
         moo_closure_invoke (action->priv->closure);
 }
@@ -190,14 +180,21 @@ moo_action_constructor (GType                  type,
 static void
 moo_action_class_init (MooActionClass *klass)
 {
-    moo_action_base_class_init (klass);
-
     GObjectClass *object_class = G_OBJECT_CLASS (klass);
-    GtkActionClass *action_class = GTK_ACTION_CLASS (klass);
 
+    object_class->set_property = moo_action_set_property;
+    object_class->get_property = moo_action_get_property;
     object_class->dispose = moo_action_dispose;
+    object_class->finalize = moo_action_finalize;
     object_class->constructor = moo_action_constructor;
-    action_class->activate = moo_action_activate_real;
+    klass->activate = moo_action_activate_real;
+
+    _moo_action_base_init_class (object_class);
+
+    action_signals[ACTION_ACTIVATE] =
+        g_signal_new ("activate", G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_FIRST,
+                      G_STRUCT_OFFSET (MooActionClass, activate),
+                      NULL, NULL, g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
 
     g_object_class_install_property (object_class, ACTION_PROP_CLOSURE,
                                      g_param_spec_boxed ("closure", "closure", "closure",
@@ -299,14 +296,33 @@ struct _MooToggleActionPrivate {
     MooToggleActionCallback callback;
     MooObjectPtr *ptr;
     gpointer data;
+    gboolean active;
 };
 
 
-DEFINE_ACTION_TYPE (MooToggleAction, moo_toggle_action, GTK_TYPE_TOGGLE_ACTION)
+G_DEFINE_TYPE_WITH_CODE (MooToggleAction, moo_toggle_action, MOO_TYPE_ACTION,
+                         G_ADD_PRIVATE (MooToggleAction))
+
+enum {
+    TOGGLED_TOGGLED,
+    N_TOGGLE_SIGNALS
+};
+
+static guint toggle_signals[N_TOGGLE_SIGNALS];
+
+static void moo_toggle_action_set_property  (GObject      *object,
+                                             guint         property_id,
+                                             const GValue *value,
+                                             GParamSpec   *pspec);
+static void moo_toggle_action_get_property  (GObject      *object,
+                                             guint         property_id,
+                                             GValue       *value,
+                                             GParamSpec   *pspec);
 
 
 enum {
-    MOO_ACTION_BASE_PROPS(TOGGLE_ACTION),
+    TOGGLE_ACTION_PROP_0,
+    TOGGLE_ACTION_PROP_ACTIVE,
     TOGGLE_ACTION_PROP_TOGGLED_CALLBACK,
     TOGGLE_ACTION_PROP_TOGGLED_OBJECT,
     TOGGLE_ACTION_PROP_TOGGLED_DATA
@@ -317,8 +333,6 @@ static void
 moo_toggle_action_init (MooToggleAction *action)
 {
     action->priv = (MooToggleActionPrivate*) moo_toggle_action_get_instance_private (action);
-
-    _moo_action_base_init_instance (action);
 }
 
 
@@ -337,13 +351,42 @@ moo_toggle_action_dispose (GObject *object)
 }
 
 
+gboolean
+moo_toggle_action_get_active (MooToggleAction *action)
+{
+    g_return_val_if_fail (MOO_IS_TOGGLE_ACTION (action), FALSE);
+    return action->priv->active;
+}
+
+
+/* Like gtk_toggle_action_set_active(): goes through "activate", so a handler
+   of it sees the change, but does not look at the sensitivity. */
+void
+moo_toggle_action_set_active (MooToggleAction *action,
+                              gboolean         active)
+{
+    g_return_if_fail (MOO_IS_TOGGLE_ACTION (action));
+
+    if (!action->priv->active != !active)
+        g_signal_emit_by_name (action, "activate");
+}
+
+
 static void
-moo_toggle_action_toggled (GtkToggleAction *gtkaction)
+moo_toggle_action_activate (MooAction *base)
+{
+    MooToggleAction *action = MOO_TOGGLE_ACTION (base);
+
+    action->priv->active = !action->priv->active;
+    g_object_notify (G_OBJECT (action), "active");
+    g_signal_emit (action, toggle_signals[TOGGLED_TOGGLED], 0);
+}
+
+
+static void
+moo_toggle_action_toggled (MooToggleAction *gtkaction)
 {
     MooToggleAction *action = MOO_TOGGLE_ACTION (gtkaction);
-
-    if (GTK_TOGGLE_ACTION_CLASS (moo_toggle_action_parent_class)->toggled)
-        GTK_TOGGLE_ACTION_CLASS (moo_toggle_action_parent_class)->toggled (gtkaction);
 
     if (action->priv->callback)
     {
@@ -430,14 +473,24 @@ moo_toggle_action_constructor (GType                  type,
 static void
 moo_toggle_action_class_init (MooToggleActionClass *klass)
 {
-    moo_toggle_action_base_class_init (klass);
-
     GObjectClass *object_class = G_OBJECT_CLASS (klass);
-    GtkToggleActionClass *toggle_action_class = GTK_TOGGLE_ACTION_CLASS (klass);
+    MooToggleActionClass *toggle_action_class = MOO_TOGGLE_ACTION_CLASS (klass);
 
+    object_class->set_property = moo_toggle_action_set_property;
+    object_class->get_property = moo_toggle_action_get_property;
     object_class->dispose = moo_toggle_action_dispose;
     object_class->constructor = moo_toggle_action_constructor;
+    MOO_ACTION_CLASS (klass)->activate = moo_toggle_action_activate;
     toggle_action_class->toggled = moo_toggle_action_toggled;
+
+    toggle_signals[TOGGLED_TOGGLED] =
+        g_signal_new ("toggled", G_OBJECT_CLASS_TYPE (klass), G_SIGNAL_RUN_FIRST,
+                      G_STRUCT_OFFSET (MooToggleActionClass, toggled),
+                      NULL, NULL, g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
+
+    g_object_class_install_property (object_class, TOGGLE_ACTION_PROP_ACTIVE,
+                                     g_param_spec_boolean ("active", "active", "active",
+                                                           FALSE, (GParamFlags) (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY)));
 
     g_object_class_install_property (object_class, TOGGLE_ACTION_PROP_TOGGLED_CALLBACK,
                                      g_param_spec_pointer ("toggled-callback", "toggled-callback", "toggled-callback",
@@ -459,13 +512,15 @@ moo_toggle_action_set_property (GObject            *object,
 {
     switch (property_id)
     {
+        case TOGGLE_ACTION_PROP_ACTIVE:
+            moo_toggle_action_set_active (MOO_TOGGLE_ACTION (object), g_value_get_boolean (value));
+            break;
+
         case TOGGLE_ACTION_PROP_TOGGLED_CALLBACK:
         case TOGGLE_ACTION_PROP_TOGGLED_OBJECT:
         case TOGGLE_ACTION_PROP_TOGGLED_DATA:
             /* these are handled in the constructor */
             break;
-
-        MOO_ACTION_BASE_SET_PROPERTY (TOGGLE_ACTION);
 
         default:
             G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -481,7 +536,9 @@ moo_toggle_action_get_property (GObject    *object,
 {
     switch (property_id)
     {
-        MOO_ACTION_BASE_GET_PROPERTY (TOGGLE_ACTION);
+        case TOGGLE_ACTION_PROP_ACTIVE:
+            g_value_set_boolean (value, MOO_TOGGLE_ACTION (object)->priv->active);
+            break;
 
         default:
             G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -509,7 +566,7 @@ static MooObjectWatchClass ToggleWatchClass = {NULL, NULL, toggle_watch_destroy}
 static ToggleWatch *
 toggle_watch_new (GObject    *master,
                   const char *prop,
-                  GtkAction  *action,
+                  MooAction  *action,
                   gboolean    invert)
 {
     ToggleWatch *watch;
@@ -518,7 +575,7 @@ toggle_watch_new (GObject    *master,
     char *signal;
 
     g_return_val_if_fail (G_IS_OBJECT (master), NULL);
-    g_return_val_if_fail (GTK_IS_TOGGLE_ACTION (action), NULL);
+    g_return_val_if_fail (MOO_IS_TOGGLE_ACTION (action), NULL);
     g_return_val_if_fail (prop != NULL, NULL);
 
     klass = G_OBJECT_CLASS (g_type_class_peek (G_OBJECT_TYPE (master)));
@@ -563,7 +620,7 @@ toggle_watch_destroy (MooObjectWatch *watch)
 
     if (MOO_OBJECT_PTR_GET (watch->target))
     {
-        g_assert (GTK_IS_TOGGLE_ACTION (MOO_OBJECT_PTR_GET (watch->target)));
+        g_assert (MOO_IS_TOGGLE_ACTION (MOO_OBJECT_PTR_GET (watch->target)));
         g_signal_handlers_disconnect_by_func (MOO_OBJECT_PTR_GET (watch->target),
                                               (gpointer) action_toggled,
                                               watch);
@@ -572,14 +629,14 @@ toggle_watch_destroy (MooObjectWatch *watch)
 
 
 void
-_moo_sync_toggle_action (GtkAction  *action,
+_moo_sync_toggle_action (MooAction  *action,
                          gpointer    master,
                          const char *prop,
                          gboolean    invert)
 {
     ToggleWatch *watch;
 
-    g_return_if_fail (GTK_IS_TOGGLE_ACTION (action));
+    g_return_if_fail (MOO_IS_TOGGLE_ACTION (action));
     g_return_if_fail (G_IS_OBJECT (master));
     g_return_if_fail (prop != NULL);
 
@@ -600,8 +657,8 @@ prop_changed (ToggleWatch *watch)
                   watch->pspec->name, &value, NULL);
 
     action = MOO_OBJECT_PTR_GET (watch->parent.target);
-    g_assert (GTK_IS_TOGGLE_ACTION (action));
-    active = moo_toggle_action_get_active (GTK_TOGGLE_ACTION (action));
+    g_assert (MOO_IS_TOGGLE_ACTION (action));
+    active = moo_toggle_action_get_active (MOO_TOGGLE_ACTION (action));
 
     if (!watch->invert)
         equal = !value == !active;
@@ -609,7 +666,7 @@ prop_changed (ToggleWatch *watch)
         equal = !value != !active;
 
     if (!equal)
-        moo_toggle_action_set_active (GTK_TOGGLE_ACTION (action), watch->invert ? !value : value);
+        moo_toggle_action_set_active (MOO_TOGGLE_ACTION (action), watch->invert ? !value : value);
 }
 
 
@@ -623,8 +680,8 @@ action_toggled (ToggleWatch *watch)
                   watch->pspec->name, &value, NULL);
 
     action = MOO_OBJECT_PTR_GET (watch->parent.target);
-    g_assert (GTK_IS_TOGGLE_ACTION (action));
-    active = moo_toggle_action_get_active (GTK_TOGGLE_ACTION (action));
+    g_assert (MOO_IS_TOGGLE_ACTION (action));
+    active = moo_toggle_action_get_active (MOO_TOGGLE_ACTION (action));
 
     if (!watch->invert)
         equal = !value == !active;
@@ -639,4 +696,3 @@ action_toggled (ToggleWatch *watch)
 
 
 
-G_GNUC_END_IGNORE_DEPRECATIONS

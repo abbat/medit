@@ -567,8 +567,6 @@ create_color_scheme_menu (void)
 }
 
 
-/* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static GtkWidget *
 create_popup_menu (WindowStuff *stuff)
 {
@@ -621,7 +619,6 @@ create_popup_menu (WindowStuff *stuff)
 
     return menu;
 }
-G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 static gboolean
@@ -662,7 +659,7 @@ terminal_accel_pressed (WindowStuff *stuff,
                         GdkEventKey *event,
                         const char  *action_id)
 {
-    GtkAction *action = moo_window_get_action (MOO_WINDOW (stuff->window), action_id);
+    MooAction *action = moo_window_get_action (MOO_WINDOW (stuff->window), action_id);
 
     return _moo_accel_check_action_event (GTK_WIDGET (stuff->terminal), event, action);
 }

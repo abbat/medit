@@ -218,7 +218,7 @@ static MooEditTab   *get_nth_tab                        (GtkNotebook        &not
 static MooEdit      *get_nth_doc                        (GtkNotebook        *notebook,
                                                          guint               n);
 
-static GtkAction    *create_lang_action                 (MooEditWindow      *window, gpointer);
+static MooAction    *create_lang_action                 (MooEditWindow      *window, gpointer);
 
 static void          create_paned                       (MooEditWindow      *window);
 static void          save_paned_config                  (MooEditWindow      *window);
@@ -258,9 +258,9 @@ static gboolean      notebook_drag_motion               (GtkWidget          *wid
 static void action_new_doc                      (MooEditWindow      *window);
 static void action_open                         (MooEditWindow      *window);
 static void action_reload                       (MooEditWindow      *window);
-static GtkAction *create_reopen_with_encoding_action (MooEditWindow *window, gpointer);
-static GtkAction *create_doc_encoding_action    (MooEditWindow      *window, gpointer);
-static GtkAction *create_doc_line_end_action    (MooEditWindow      *window, gpointer);
+static MooAction *create_reopen_with_encoding_action (MooEditWindow *window, gpointer);
+static MooAction *create_doc_encoding_action    (MooEditWindow      *window, gpointer);
+static MooAction *create_doc_line_end_action    (MooEditWindow      *window, gpointer);
 static void action_save                         (MooEditWindow      *window);
 static void action_save_as                      (MooEditWindow      *window);
 static void action_close_tab                    (MooEditWindow      *window);
@@ -280,7 +280,7 @@ static void action_zoom_reset                   (MooEditWindow      *window);
 static void action_toggle_bookmark              (MooEditWindow      *window);
 static void action_next_bookmark                (MooEditWindow      *window);
 static void action_prev_bookmark                (MooEditWindow      *window);
-static GtkAction *create_goto_bookmark_action   (MooWindow          *window,
+static MooAction *create_goto_bookmark_action   (MooWindow          *window,
                                                  gpointer            data);
 
 static void action_find_now_f                   (MooEditWindow      *window);
@@ -341,7 +341,6 @@ static guint signals[NUM_SIGNALS];
     g_object_class_install_property (gobject_class, prop_id,                \
         g_param_spec_boolean (name, name, name, FALSE, G_PARAM_READABLE))
 
-/* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
 static void
 moo_edit_window_class_init (MooEditWindowClass *klass)
 {
@@ -1446,10 +1445,10 @@ reopen_encoding_item_activated (const char *encoding,
     moo_edit_reload (doc, info, nullptr);
 }
 
-static GtkAction *
+static MooAction *
 create_reopen_with_encoding_action (MooEditWindow *window, gpointer)
 {
-    GtkAction *action;
+    MooAction *action;
 
     action = _moo_encodings_menu_action_new ("ReopenWithEncoding",
                                              _("Reopen Using Encoding"),
@@ -1466,7 +1465,7 @@ static void
 update_doc_encoding_item (MooEditWindow *window)
 {
     MooEdit *doc;
-    GtkAction *action;
+    MooAction *action;
     const char *enc;
 
     if (!(doc = ACTIVE_DOC (window)))
@@ -1496,10 +1495,10 @@ doc_encoding_item_activated (const char *encoding,
     moo_edit_set_encoding (doc, encoding);
 }
 
-static GtkAction *
+static MooAction *
 create_doc_encoding_action (MooEditWindow *window, gpointer)
 {
-    GtkAction *action;
+    MooAction *action;
 
     action = _moo_encodings_menu_action_new ("EncodingMenu",
                                              _("_Encoding"),
@@ -1523,7 +1522,7 @@ static void
 update_doc_line_end_item (MooEditWindow *window)
 {
     MooEdit *doc;
-    GtkAction *action;
+    MooAction *action;
     MooLineEndType le;
 
     if (!(doc = ACTIVE_DOC (window)))
@@ -1550,10 +1549,10 @@ doc_line_end_item_set_active (MooEditWindow *window, gpointer data)
     moo_edit_set_line_end_type (doc, (MooLineEndType) GPOINTER_TO_INT (data));
 }
 
-static GtkAction *
+static MooAction *
 create_doc_line_end_action (MooEditWindow *window, gpointer)
 {
-    GtkAction *action;
+    MooAction *action;
     MooMenuMgr *mgr;
 
     action = moo_menu_action_new ("LineEndMenu", _("Line En_dings"));
@@ -1900,7 +1899,7 @@ action_prev_bookmark (MooEditWindow *window)
 
 
 static void
-goto_bookmark_activated (GtkAction *action,
+goto_bookmark_activated (MooAction *action,
                          gpointer   data)
 {
     MooEditView *view;
@@ -1918,11 +1917,11 @@ goto_bookmark_activated (GtkAction *action,
         moo_edit_view_goto_bookmark (view, bk);
 }
 
-static GtkAction *
+static MooAction *
 create_goto_bookmark_action (MooWindow *window,
                              gpointer   data)
 {
-    GtkAction *action;
+    MooAction *action;
     guint n = GPOINTER_TO_UINT (data);
     char *accel;
     char *name;
@@ -1930,7 +1929,7 @@ create_goto_bookmark_action (MooWindow *window,
     name = g_strdup_printf (MOO_EDIT_GOTO_BOOKMARK_ACTION "%u", n);
     accel = g_strdup_printf ("<ctrl>%u", n);
 
-    action = GTK_ACTION (g_object_new (MOO_TYPE_ACTION, "name", name, "default-accel", accel,
+    action = MOO_ACTION (g_object_new (MOO_TYPE_ACTION, "name", name, "default-accel", accel,
                                        "connect-accel", TRUE, "accel-editable", FALSE,
                                        (const char*) nullptr));
     g_signal_connect (action, "activate", G_CALLBACK (goto_bookmark_activated), data);
@@ -1973,7 +1972,7 @@ create_bookmark_item (MooEditWindow   *window,
 
     if (bk->no)
     {
-        GtkAction *action;
+        MooAction *action;
         char *action_name;
 
         action_name = g_strdup_printf (MOO_EDIT_GOTO_BOOKMARK_ACTION "%u", bk->no);
@@ -1982,10 +1981,7 @@ create_bookmark_item (MooEditWindow   *window,
         if (action)
         {
             g_object_set (action, "label", label, "use-underline", FALSE, nullptr);
-            /* GtkAction is deprecated since GTK+ 3.10; there is no replacement short of GAction/GMenu. */
-            G_GNUC_BEGIN_IGNORE_DEPRECATIONS
             item = moo_action_create_menu_item (action);
-            G_GNUC_END_IGNORE_DEPRECATIONS
         }
         else
         {
@@ -2015,7 +2011,7 @@ populate_bookmark_menu (MooEditWindow *window,
                         GtkWidget     *menu,
                         GtkWidget     *next_bk_item)
 {
-    GtkAction *pn;
+    MooAction *pn;
     MooEdit *doc;
     MooEditView *view;
     GtkWidget *item;
@@ -2320,7 +2316,7 @@ copy_full_path_activated (GtkWidget     *item,
 
 namespace {
 const ObjectDataAccessor<GtkWidget, GtkNotebook*> data_notebook("moo-notebook");
-const ObjectDataAccessor<MooEdit, GtkAction*> data_doc_list_action("moo-doc-list-action");
+const ObjectDataAccessor<MooEdit, MooAction*> data_doc_list_action("moo-doc-list-action");
 } // namespace
 
 static gboolean
@@ -2916,7 +2912,7 @@ view_wrap_mode_changed (MooEditWindow *window,
                         G_GNUC_UNUSED GParamSpec *pspec,
                         MooEditView   *view)
 {
-    GtkAction *action;
+    MooAction *action;
     GtkWrapMode mode;
 
     if (view != ACTIVE_VIEW (window))
@@ -2926,7 +2922,7 @@ view_wrap_mode_changed (MooEditWindow *window,
     g_return_if_fail (action != nullptr);
 
     g_object_get (view, "wrap-mode", &mode, nullptr);
-    moo_toggle_action_set_active (GTK_TOGGLE_ACTION (action), mode != GTK_WRAP_NONE);
+    moo_toggle_action_set_active (MOO_TOGGLE_ACTION (action), mode != GTK_WRAP_NONE);
 
     moo_action_sync_proxies (action);
 }
@@ -2937,7 +2933,7 @@ view_show_line_numbers_changed (MooEditWindow *window,
                                 G_GNUC_UNUSED GParamSpec *pspec,
                                 MooEditView   *view)
 {
-    GtkAction *action;
+    MooAction *action;
     gboolean show;
 
     if (view != ACTIVE_VIEW (window))
@@ -2947,7 +2943,7 @@ view_show_line_numbers_changed (MooEditWindow *window,
     g_return_if_fail (action != nullptr);
 
     g_object_get (view, "show-line-numbers", &show, nullptr);
-    moo_toggle_action_set_active (GTK_TOGGLE_ACTION (action), show);
+    moo_toggle_action_set_active (MOO_TOGGLE_ACTION (action), show);
 
     moo_action_sync_proxies (action);
 }
@@ -3444,7 +3440,7 @@ _moo_edit_window_remove_doc (MooEditWindow *window,
                              MooEdit       *doc)
 {
     int page;
-    GtkAction *action;
+    MooAction *action;
     MooEditView *new_view;
     MooEditViewArray *views;
     gboolean had_focus = FALSE;
@@ -4033,7 +4029,7 @@ add_pane_action (MooEditWindow *window,
 {
     char *action_id;
     MooWindowClass *klass;
-    GtkAction *action;
+    MooAction *action;
     MooUiXml *xml;
 
     action_id = make_show_pane_action_id (user_id);
@@ -4074,7 +4070,7 @@ remove_pane_action (MooEditWindow *window,
                     const char    *user_id)
 {
     char *action_id;
-    GtkAction *action;
+    MooAction *action;
 
     action_id = make_show_pane_action_id (user_id);
     action = moo_window_get_action (MOO_WINDOW (window), action_id);
@@ -4366,10 +4362,10 @@ lang_item_activated (MooEditWindow *window,
 }
 
 
-static GtkAction*
+static MooAction*
 create_lang_action (MooEditWindow *window, gpointer)
 {
-    GtkAction *action;
+    MooAction *action;
     MooMenuMgr *menu_mgr;
     MooLangMgr *lang_mgr;
     GSList *langs, *sections, *l;
@@ -4425,7 +4421,7 @@ static void
 update_lang_menu (MooEditWindow      *window)
 {
     MooEditView *view;
-    GtkAction *action;
+    MooAction *action;
     MooLang *lang;
 
     view = ACTIVE_VIEW (window);
@@ -4466,7 +4462,7 @@ window_check_one_action (const char    *action_id,
                          MooEdit       *doc)
 {
     MooActionCheckFunc func;
-    GtkAction *action;
+    MooAction *action;
     gboolean visible = TRUE, sensitive = TRUE;
 
     action = moo_window_get_action (MOO_WINDOW (window), action_id);
@@ -4625,7 +4621,7 @@ moo_edit_window_remove_action_check (const char        *action_id,
 
 
 static gboolean
-check_action_filter (G_GNUC_UNUSED GtkAction *action,
+check_action_filter (G_GNUC_UNUSED MooAction *action,
                      G_GNUC_UNUSED MooEditWindow *window,
                      MooEdit *doc,
                      gpointer filter)
@@ -4979,11 +4975,9 @@ populate_window_menu (MooEditWindow *window,
         if (idx >= 0 && idx < 9)
         {
             char *action_name = g_strdup_printf (DOCUMENT_ACTION "%u", idx + 1);
-            GtkAction *action = moo_window_get_action (MOO_WINDOW (window), action_name);
-            G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+            MooAction *action = moo_window_get_action (MOO_WINDOW (window), action_name);
             gtk_menu_item_set_accel_path (GTK_MENU_ITEM (item),
                                           moo_action_get_accel_path (action));
-            G_GNUC_END_IGNORE_DEPRECATIONS
             g_free (action_name);
         }
     }
@@ -5456,9 +5450,9 @@ action_focus_next_split_view (MooEditWindow *window)
 static void
 update_split_view_actions (MooEditWindow *window)
 {
-    GtkAction *action_split_horizontal;
-    GtkAction *action_split_vertical;
-    GtkAction *action_cycle;
+    MooAction *action_split_horizontal;
+    MooAction *action_split_vertical;
+    MooAction *action_cycle;
     gboolean has_split_horizontal;
     gboolean has_split_vertical;
     MooEditTab *tab = ACTIVE_TAB (window);
@@ -5477,8 +5471,8 @@ update_split_view_actions (MooEditWindow *window)
     has_split_vertical = _moo_edit_tab_get_split_vertical (tab);
 
     moo_action_set_sensitive (action_cycle, has_split_horizontal || has_split_vertical);
-    moo_toggle_action_set_active (GTK_TOGGLE_ACTION (action_split_horizontal), has_split_horizontal);
-    moo_toggle_action_set_active (GTK_TOGGLE_ACTION (action_split_vertical), has_split_vertical);
+    moo_toggle_action_set_active (MOO_TOGGLE_ACTION (action_split_horizontal), has_split_horizontal);
+    moo_toggle_action_set_active (MOO_TOGGLE_ACTION (action_split_vertical), has_split_vertical);
 
     moo_action_sync_proxies (action_cycle);
     moo_action_sync_proxies (action_split_horizontal);

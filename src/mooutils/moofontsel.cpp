@@ -1284,8 +1284,6 @@ moo_font_selection_dialog_class_init (G_GNUC_UNUSED MooFontSelectionDialogClass 
 {
 }
 
-/* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static void
 moo_font_selection_dialog_init (MooFontSelectionDialog *fontseldiag)
 {
@@ -1328,7 +1326,6 @@ moo_font_selection_dialog_init (MooFontSelectionDialog *fontseldiag)
                         D_("Font Selection", "gtk30"));
 
 }
-G_GNUC_END_IGNORE_DEPRECATIONS
 
 GtkWidget*
 moo_font_selection_dialog_new (const gchar *title)

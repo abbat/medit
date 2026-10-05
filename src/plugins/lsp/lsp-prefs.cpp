@@ -71,8 +71,6 @@ prefs_page_apply (G_GNUC_UNUSED GtkBuilder *builder)
 }
 
 
-/* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 GtkWidget *
 _moo_lsp_prefs_page (G_GNUC_UNUSED MooPlugin *plugin)
 {
@@ -119,4 +117,3 @@ _moo_lsp_prefs_page (G_GNUC_UNUSED MooPlugin *plugin)
 
     return page;
 }
-G_GNUC_END_IGNORE_DEPRECATIONS

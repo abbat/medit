@@ -550,16 +550,14 @@ user_info_free (UserInfo *info)
 }
 
 
-/* GtkAction is deprecated since GTK+ 3.10; the bookmark menu items are actions. */
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static void
-item_activated (GtkAction      *action,
+item_activated (MooAction      *action,
                 MooBookmarkMgr *mgr)
 {
     MooBookmark *bookmark;
     gpointer user;
 
-    g_return_if_fail (GTK_IS_ACTION (action));
+    g_return_if_fail (MOO_IS_ACTION (action));
     g_return_if_fail (MOO_IS_BOOKMARK_MGR (mgr));
 
     bookmark = (MooBookmark *) g_object_get_data (G_OBJECT (action), "moo-bookmark");
@@ -569,7 +567,6 @@ item_activated (GtkAction      *action,
 
     g_signal_emit (mgr, signals[ACTIVATE], 0, bookmark, user);
 }
-G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 static void
@@ -592,7 +589,7 @@ make_menu (MooBookmarkMgr *mgr,
     do
     {
         MooBookmark *bookmark = NULL;
-        GtkAction *action;
+        MooAction *action;
         char *action_id;
 
         gtk_tree_model_get (model, &iter, COLUMN_BOOKMARK, &bookmark, -1);
@@ -638,7 +635,7 @@ destroy_menu (UserInfo *info)
 
     for (l = info->bm_actions; l != NULL; l = l->next)
     {
-        GtkAction *action = (GtkAction *) l->data;
+        MooAction *action = (MooAction *) l->data;
         moo_action_collection_remove_action (info->actions, action);
         g_object_unref (action);
     }

@@ -19,6 +19,8 @@
 #include "mooutils/mooutils-gobject.h"
 #include "mooutils/moouixml.h"
 
+#include "mooutils/mooaction.h"
+
 G_BEGIN_DECLS
 
 
@@ -70,7 +72,7 @@ struct _MooWindowClass
     MooCloseResponse (*close) (MooWindow *window);
 };
 
-typedef GtkAction *(*MooWindowActionFunc) (MooWindow *window,
+typedef MooAction *(*MooWindowActionFunc) (MooWindow *window,
                                            gpointer   data);
 
 GType       moo_window_get_type             (void) G_GNUC_CONST;
@@ -125,7 +127,7 @@ void        moo_window_set_ui_xml           (MooWindow          *window,
                                              MooUiXml           *xml);
 
 MooActionCollection *moo_window_get_actions (MooWindow          *window);
-GtkAction  *moo_window_get_action           (MooWindow          *window,
+MooAction  *moo_window_get_action           (MooWindow          *window,
                                              const char         *action);
 
 void        moo_window_set_default_geometry (const char         *geometry);

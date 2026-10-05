@@ -349,8 +349,6 @@ word_at (const GtkTextIter *where)
 }
 
 
-/* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static char *
 ask_for_name (MooEditWindow *window,
               const char    *old_name)
@@ -412,7 +410,6 @@ ask_for_name (MooEditWindow *window,
 
     return name;
 }
-G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 gboolean

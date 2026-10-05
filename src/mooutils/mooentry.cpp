@@ -509,8 +509,6 @@ create_special_chars_menu (MooEntry *entry)
 }
 
 
-/* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static void
 moo_entry_populate_popup (GtkEntry           *gtkentry,
                               GtkWidget      *menu)
@@ -556,7 +554,6 @@ moo_entry_populate_popup (GtkEntry           *gtkentry,
         gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), submenu);
     }
 }
-G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 void

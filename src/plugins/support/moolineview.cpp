@@ -604,8 +604,6 @@ copy_clipboard (GtkTextView *text_view)
 }
 
 
-/* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static void
 moo_line_view_populate_popup (GtkTextView *text_view,
                               GtkWidget      *menu)
@@ -634,7 +632,6 @@ moo_line_view_populate_popup (GtkTextView *text_view,
     gtk_widget_show (item);
     gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 }
-G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 void

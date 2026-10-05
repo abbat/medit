@@ -23,14 +23,9 @@
 #include "mooutils/mooi18n.h"
 #include "mooutils/mooutils-mem.h"
 
-/* This file is the GtkAction/GtkStock family. Those classes are deprecated
-   since GTK+ 3.10 and have no replacement short of moving to GAction/GMenu and
-   named icons, which is GTK+ 4 work, so they are used knowingly. */
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-
 
 static void moo_edit_add_action                 (MooEdit            *edit,
-                                                 GtkAction          *action);
+                                                 MooAction          *action);
 static void moo_edit_remove_action              (MooEdit            *edit,
                                                  const char         *action_id);
 
@@ -87,12 +82,12 @@ action_info_free (ActionInfo *info)
 
 static void
 moo_edit_add_action (MooEdit   *edit,
-                     GtkAction *action)
+                     MooAction *action)
 {
     MooActionGroup *group;
 
     g_return_if_fail (MOO_IS_EDIT (edit));
-    g_return_if_fail (GTK_IS_ACTION (action));
+    g_return_if_fail (MOO_IS_ACTION (action));
 
     group = moo_edit_get_actions (edit);
     moo_action_group_insert_action (group, action);
@@ -104,7 +99,7 @@ moo_edit_remove_action (MooEdit    *edit,
                         const char *action_id)
 {
     MooActionGroup *group;
-    GtkAction *action;
+    MooAction *action;
 
     g_return_if_fail (MOO_IS_EDIT (edit));
     g_return_if_fail (action_id != NULL);
@@ -115,12 +110,12 @@ moo_edit_remove_action (MooEdit    *edit,
 }
 
 
-static GtkAction*
+static MooAction*
 create_action (const char *action_id,
                ActionInfo *info,
                MooEdit    *edit)
 {
-    GtkAction *action;
+    MooAction *action;
     char **p;
     MooEditView *view;
 
@@ -131,14 +126,14 @@ create_action (const char *action_id,
 
     view = moo_edit_get_view (edit);
 
-    if (g_type_is_a (info->action->action_type, MOO_TYPE_ACTION))
-        action = moo_action_factory_create_action (info->action, edit,
-                                                   "closure-object", edit,
-                                                   "name", action_id,
-                                                   (char*) 0);
-    else if (g_type_is_a (info->action->action_type, MOO_TYPE_TOGGLE_ACTION))
+    if (g_type_is_a (info->action->action_type, MOO_TYPE_TOGGLE_ACTION))
         action = moo_action_factory_create_action (info->action, edit,
                                                    "toggled-object", edit,
+                                                   "name", action_id,
+                                                   (char*) 0);
+    else if (g_type_is_a (info->action->action_type, MOO_TYPE_ACTION))
+        action = moo_action_factory_create_action (info->action, edit,
+                                                   "closure-object", edit,
                                                    "name", action_id,
                                                    (char*) 0);
     else
@@ -227,7 +222,7 @@ moo_edit_class_install_action (MooEditClass      *klass,
     {
         if (g_type_is_a (G_OBJECT_TYPE (l->data), type))
         {
-            GtkAction *action = create_action (action_id, info, l->data);
+            MooAction *action = create_action (action_id, info, l->data);
 
             if (action)
             {
@@ -488,7 +483,7 @@ moo_edit_get_actions (MooEdit *edit)
 }
 
 
-GtkAction *
+MooAction *
 moo_edit_get_action_by_id (MooEdit    *edit,
                            const char *action_id)
 {
@@ -507,7 +502,7 @@ add_action (const char *id,
             ActionInfo *info,
             MooEdit    *edit)
 {
-    GtkAction *action = create_action (id, info, edit);
+    MooAction *action = create_action (id, info, edit);
 
     if (action)
     {
@@ -542,7 +537,7 @@ _moo_edit_add_class_actions (MooEdit *edit)
 }
 
 static GtkWidget *
-create_special_chars_menu_item (GtkAction *action)
+create_special_chars_menu_item (MooAction *action)
 {
     MooEditView *view;
     GtkWidget *item, *menu;
@@ -707,4 +702,3 @@ append_special_char_menuitems (GtkMenuShell *menu,
     }
 }
 
-G_GNUC_END_IGNORE_DEPRECATIONS

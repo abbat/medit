@@ -17,6 +17,8 @@
 #define MOO_ENCODINGS_H
 
 
+#include "mooutils/mooaction.h"
+
 G_BEGIN_DECLS
 
 
@@ -60,11 +62,11 @@ const char  *_moo_encodings_combo_get       (GtkWidget              *dialog,
 
 typedef void (*MooEncodingsMenuFunc)        (const char             *encoding,
                                              gpointer                data);
-GtkAction   *_moo_encodings_menu_action_new (const char             *id,
+MooAction   *_moo_encodings_menu_action_new (const char             *id,
                                              const char             *label,
                                              MooEncodingsMenuFunc    func,
                                              gpointer                data);
-void         _moo_encodings_menu_action_set_current (GtkAction      *action,
+void         _moo_encodings_menu_action_set_current (MooAction      *action,
                                              const char             *enc);
 
 const char  *_moo_encoding_locale           (void);

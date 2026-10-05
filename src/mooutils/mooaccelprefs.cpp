@@ -26,16 +26,11 @@
 #include "mooutils/moohelp.h"
 #include "mooutils/moobuilder.h"
 
-/* This file is the GtkAction/GtkStock family. Those classes are deprecated
-   since GTK+ 3.10 and have no replacement short of moving to GAction/GMenu and
-   named icons, which is GTK+ 4 work, so they are used knowingly. */
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-
 
 typedef struct {
     MooPrefsPage base;
 
-    GtkAction *current_action;
+    MooAction *current_action;
     GtkTreeRowReference *current_row;
 
     GtkTreeView *treeview;
@@ -208,7 +203,7 @@ global_cell_data_func (G_GNUC_UNUSED GtkTreeViewColumn *column,
                        GtkTreeModel       *model,
                        GtkTreeIter        *iter, gpointer)
 {
-    GtkAction *action = NULL;
+    MooAction *action = NULL;
     char *accel = NULL;
 
     gtk_tree_model_get (model, iter,
@@ -314,7 +309,7 @@ _moo_accel_prefs_page_init (MooAccelPrefsPage *page)
 
     page->store = gtk_tree_store_new (N_COLUMNS,
                                       G_TYPE_STRING,
-                                      GTK_TYPE_ACTION,
+                                      MOO_TYPE_ACTION,
                                       G_TYPE_STRING,
                                       G_TYPE_BOOLEAN);
     gtk_tree_view_set_model (page->treeview, GTK_TREE_MODEL (page->store));
@@ -376,7 +371,7 @@ _moo_accel_prefs_page_init (MooAccelPrefsPage *page)
 
 
 static const char *
-get_action_accel (GtkAction *action)
+get_action_accel (MooAction *action)
 {
     const char *accel_path = _moo_action_get_accel_path (action);
     return _moo_get_accel (accel_path);
@@ -384,7 +379,7 @@ get_action_accel (GtkAction *action)
 
 
 static void
-apply_one (GtkAction *action,
+apply_one (MooAction *action,
            Shortcut  *shortcut, gpointer)
 {
     const char *accel_path = _moo_action_get_accel_path (action);
@@ -418,7 +413,7 @@ apply_global (GtkTreeModel *model,
               G_GNUC_UNUSED GtkTreePath *path,
               GtkTreeIter  *iter, gpointer)
 {
-    GtkAction *action = NULL;
+    MooAction *action = NULL;
     gboolean global = FALSE;
 
     gtk_tree_model_get (model, iter,
@@ -462,7 +457,7 @@ get_accel_label_for_path (const char *accel_path)
 
 static gboolean
 add_row (MooActionGroup     *group,
-         GtkAction         *action,
+         MooAction         *action,
          MooAccelPrefsPage *page)
 {
     const char *group_name;
@@ -545,7 +540,7 @@ moo_accel_prefs_page_init (MooPrefsPage *prefs_page)
 
         while (list)
         {
-            add_row (group, GTK_ACTION (list->data), page);
+            add_row (group, MOO_ACTION (list->data), page);
             list = g_list_delete_link (list, list);
         }
     }
@@ -563,7 +558,7 @@ tree_selection_changed (MooAccelPrefsPage *page)
 {
     gboolean selected_action = FALSE;
     GtkTreeIter iter;
-    GtkAction *action = NULL;
+    MooAction *action = NULL;
     GtkTreePath *path;
     char *default_label;
     /* Dead for the same reason as in apply_one(), and kept for the same reason. */
@@ -917,4 +912,3 @@ _moo_accel_prefs_dialog_run (MooActionCollection *collection,
     return response == GTK_RESPONSE_OK;
 }
 
-G_GNUC_END_IGNORE_DEPRECATIONS

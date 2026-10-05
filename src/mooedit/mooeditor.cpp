@@ -54,7 +54,7 @@ static MooEditor* editor_instance = NULL;
 static void          set_single_window          (MooEditor      *editor,
                                                  gboolean        single);
 
-static GtkAction    *create_open_recent_action  (MooWindow      *window,
+static MooAction    *create_open_recent_action  (MooWindow      *window,
                                                  gpointer        user_data);
 static void          action_recent_dialog       (MooEditWindow  *window);
 
@@ -744,10 +744,10 @@ clear_recent_history (void)
 }
 
 static GtkWidget *
-create_recent_menu (GtkAction *action)
+create_recent_menu (MooAction *action)
 {
     GtkWidget *menu, *item;
-    GtkAction *action_more;
+    MooAction *action_more;
     MooWindow *window;
     MooEditor *editor;
 
@@ -767,10 +767,7 @@ create_recent_menu (GtkAction *action)
     gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 
     action_more = moo_window_get_action (window, RECENT_DIALOG_ACTION_ID);
-    /* GtkAction is deprecated since GTK+ 3.10; there is no replacement short of GAction/GMenu. */
-    G_GNUC_BEGIN_IGNORE_DEPRECATIONS
     item = moo_action_create_menu_item (action_more);
-    G_GNUC_END_IGNORE_DEPRECATIONS
     gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 
     /* The submenu is insensitive while the history is empty, so there is no
@@ -788,11 +785,11 @@ create_recent_menu (GtkAction *action)
     return item;
 }
 
-static GtkAction *
+static MooAction *
 create_open_recent_action (G_GNUC_UNUSED MooWindow *window,
                            G_GNUC_UNUSED gpointer   user_data)
 {
-    GtkAction *action;
+    MooAction *action;
 
     action = moo_menu_action_new ("OpenRecent", _("Open Recent"));
     moo_menu_action_set_func (MOO_MENU_ACTION (action), create_recent_menu);

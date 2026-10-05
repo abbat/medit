@@ -36,7 +36,7 @@ static void moo_menu_action_get_property    (GObject            *object,
                                              GValue             *value,
                                              GParamSpec         *pspec);
 
-static GtkWidget *moo_menu_action_create_menu_item (GtkAction   *action);
+static GtkWidget *moo_menu_action_create_menu_item (MooAction   *action);
 
 static void data_destroyed                  (MooMenuAction      *action,
                                              gpointer            data);
@@ -85,7 +85,7 @@ moo_menu_action_init (MooMenuAction *action)
 {
     action->mgr = NULL;
     action->func = NULL;
-    _moo_action_set_no_accel (GTK_ACTION (action), TRUE);
+    _moo_action_set_no_accel (MOO_ACTION (action), TRUE);
 }
 
 
@@ -138,7 +138,7 @@ moo_menu_action_set_property (GObject        *object,
 
 
 static GtkWidget *
-moo_menu_action_create_menu_item (GtkAction *action)
+moo_menu_action_create_menu_item (MooAction *action)
 {
     MooMenuAction *menu_action;
     GtkWidget *item;
@@ -149,7 +149,7 @@ moo_menu_action_create_menu_item (GtkAction *action)
     menu_action = MOO_MENU_ACTION (action);
 
     if (menu_action->func)
-        return menu_action->func (GTK_ACTION (menu_action));
+        return menu_action->func (MOO_ACTION (menu_action));
 
     if (menu_action->data && menu_action->is_object)
     {
@@ -172,11 +172,11 @@ moo_menu_action_create_menu_item (GtkAction *action)
 }
 
 
-GtkAction *
+MooAction *
 moo_menu_action_new (const char *id,
                      const char *label)
 {
-    return GTK_ACTION (g_object_new (MOO_TYPE_MENU_ACTION,
+    return MOO_ACTION (g_object_new (MOO_TYPE_MENU_ACTION,
                                      "name", id, "label", label,
                                      (const char*) NULL));
 }

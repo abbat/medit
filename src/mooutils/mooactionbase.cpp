@@ -20,11 +20,6 @@
 #include "mooutils/mooutils-gobject.h"
 #include "marshals.h"
 
-/* This file is the GtkAction/GtkStock family. Those classes are deprecated
-   since GTK+ 3.10 and have no replacement short of moving to GAction/GMenu and
-   named icons, which is GTK+ 4 work, so they are used knowingly. */
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-
 
 enum {
     MOO_ACTION_BASE_PROPS(MOO_ACTION_BASE)
@@ -55,9 +50,6 @@ class_init (gpointer g_iface, G_GNUC_UNUSED gpointer data)
     g_object_interface_install_property (g_iface,
         g_param_spec_boolean ("dead", "dead", "dead",
                               FALSE, (GParamFlags) (G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY)));
-    g_object_interface_install_property (g_iface,
-        g_param_spec_boolean ("active", "active", "active",
-                              TRUE, (GParamFlags) G_PARAM_WRITABLE));
     g_object_interface_install_property (g_iface,
         g_param_spec_boolean ("has-submenu", "has-submenu", "has-submenu",
                               FALSE, (GParamFlags) G_PARAM_READWRITE));
@@ -91,9 +83,6 @@ _moo_action_base_init_class (GObjectClass *klass)
     g_object_class_install_property (klass, MOO_ACTION_BASE_PROP_DEAD,
         g_param_spec_boolean ("dead", "dead", "dead",
                               FALSE, (GParamFlags) (G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY)));
-    g_object_class_install_property (klass, MOO_ACTION_BASE_PROP_ACTIVE,
-        g_param_spec_boolean ("active", "active", "active",
-                              TRUE, G_PARAM_WRITABLE));
     g_object_class_install_property (klass, MOO_ACTION_BASE_PROP_HAS_SUBMENU,
         g_param_spec_boolean ("has-submenu", "has-submenu", "has-submenu",
                               FALSE, (GParamFlags) G_PARAM_READWRITE));
@@ -101,12 +90,24 @@ _moo_action_base_init_class (GObjectClass *klass)
         g_param_spec_boolean ("use-underline", "use-underline", "use-underline",
                               TRUE, (GParamFlags) G_PARAM_READWRITE));
 
-    g_object_class_override_property (klass,
-                                      MOO_ACTION_BASE_PROP_LABEL,
-                                      "label");
-    g_object_class_override_property (klass,
-                                      MOO_ACTION_BASE_PROP_TOOLTIP,
-                                      "tooltip");
+    g_object_class_install_property (klass, MOO_ACTION_BASE_PROP_NAME,
+        g_param_spec_string ("name", "name", "name",
+                             NULL, (GParamFlags) (G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY)));
+    g_object_class_install_property (klass, MOO_ACTION_BASE_PROP_LABEL,
+        g_param_spec_string ("label", "label", "label",
+                             NULL, (GParamFlags) (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY)));
+    g_object_class_install_property (klass, MOO_ACTION_BASE_PROP_TOOLTIP,
+        g_param_spec_string ("tooltip", "tooltip", "tooltip",
+                             NULL, (GParamFlags) (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY)));
+    g_object_class_install_property (klass, MOO_ACTION_BASE_PROP_ICON_NAME,
+        g_param_spec_string ("icon-name", "icon-name", "icon-name",
+                             NULL, (GParamFlags) (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY)));
+    g_object_class_install_property (klass, MOO_ACTION_BASE_PROP_SENSITIVE,
+        g_param_spec_boolean ("sensitive", "sensitive", "sensitive",
+                              TRUE, (GParamFlags) (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY)));
+    g_object_class_install_property (klass, MOO_ACTION_BASE_PROP_VISIBLE,
+        g_param_spec_boolean ("visible", "visible", "visible",
+                              TRUE, (GParamFlags) (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY)));
 }
 
 
@@ -133,7 +134,7 @@ moo_action_base_get_type (void)
         type = g_type_register_static (G_TYPE_INTERFACE,
                                        "MooActionBase",
                                        &info, (GTypeFlags) 0);
-        g_type_interface_add_prerequisite (type, GTK_TYPE_ACTION);
+        g_type_interface_add_prerequisite (type, G_TYPE_OBJECT);
     }
 
     return type;
@@ -193,7 +194,7 @@ _moo_action_get_display_name (gpointer action)
     display_name = get_string (action, "moo-action-display-name");
 
     if (!display_name)
-        display_name = moo_action_get_name (GTK_ACTION (action));
+        display_name = moo_action_get_name (MOO_ACTION (action));
 
     return display_name;
 }
@@ -313,14 +314,6 @@ _moo_action_get_dead (gpointer action)
 
 
 static void
-moo_action_base_set_active (MooActionBase *ab, gboolean active)
-{
-    g_return_if_fail (MOO_IS_ACTION_BASE (ab));
-    g_object_set (ab, "visible", active, "sensitive", active, NULL);
-}
-
-
-static void
 moo_action_base_set_has_submenu (MooActionBase *ab, gboolean has_submenu)
 {
     g_return_if_fail (MOO_IS_ACTION_BASE (ab));
@@ -342,7 +335,7 @@ moo_action_base_set_use_underline (gpointer action,
 {
     g_return_if_fail (MOO_IS_ACTION_BASE (action));
     set_bool (action, "moo-action-use-underline", use_underline);
-    moo_action_sync_proxies (GTK_ACTION (action));
+    moo_action_sync_proxies (MOO_ACTION (action));
     g_object_notify (G_OBJECT (action), "use-underline");
 }
 
@@ -354,23 +347,33 @@ moo_action_base_get_use_underline (gpointer action)
 }
 
 
+/* sets a string field of the action and says so, if it changed */
 static void
-moo_action_base_set_label (MooActionBase *ab,
-                           const char    *label)
+set_action_string (GObject    *object,
+                   char      **field,
+                   const char *value,
+                   GParamSpec *pspec)
 {
-    g_return_if_fail (MOO_IS_ACTION_BASE (ab));
+    if (g_strcmp0 (*field, value) == 0)
+        return;
 
-    g_object_set (G_OBJECT (ab), "GtkAction::label", label, NULL);
+    g_free (*field);
+    *field = g_strdup (value);
+    g_object_notify_by_pspec (object, pspec);
 }
 
-
+/* the same for a flag */
 static void
-moo_action_base_set_tooltip (MooActionBase *ab,
-                             const char    *tooltip)
+set_action_flag (GObject    *object,
+                 gboolean   *field,
+                 gboolean    value,
+                 GParamSpec *pspec)
 {
-    g_return_if_fail (MOO_IS_ACTION_BASE (ab));
+    if (*field == value)
+        return;
 
-    g_object_set (G_OBJECT (ab), "GtkAction::tooltip", tooltip, NULL);
+    *field = value;
+    g_object_notify_by_pspec (object, pspec);
 }
 
 
@@ -381,6 +384,7 @@ _moo_action_base_set_property (GObject      *object,
                                GParamSpec   *pspec)
 {
     MooActionBase *ab = MOO_ACTION_BASE (object);
+    MooActionPrivate *priv = MOO_ACTION (object)->priv;
 
     switch (property_id)
     {
@@ -405,17 +409,27 @@ _moo_action_base_set_property (GObject      *object,
         case MOO_ACTION_BASE_PROP_DEAD:
             moo_action_base_set_dead (ab, g_value_get_boolean (value));
             break;
-        case MOO_ACTION_BASE_PROP_ACTIVE:
-            moo_action_base_set_active (ab, g_value_get_boolean (value));
-            break;
         case MOO_ACTION_BASE_PROP_HAS_SUBMENU:
             moo_action_base_set_has_submenu (ab, g_value_get_boolean (value));
             break;
+        case MOO_ACTION_BASE_PROP_NAME:
+            g_free (priv->name);
+            priv->name = g_value_dup_string (value);
+            break;
         case MOO_ACTION_BASE_PROP_LABEL:
-            moo_action_base_set_label (ab, g_value_get_string (value));
+            set_action_string (object, &priv->label, g_value_get_string (value), pspec);
             break;
         case MOO_ACTION_BASE_PROP_TOOLTIP:
-            moo_action_base_set_tooltip (ab, g_value_get_string (value));
+            set_action_string (object, &priv->tooltip, g_value_get_string (value), pspec);
+            break;
+        case MOO_ACTION_BASE_PROP_ICON_NAME:
+            set_action_string (object, &priv->icon_name, g_value_get_string (value), pspec);
+            break;
+        case MOO_ACTION_BASE_PROP_SENSITIVE:
+            set_action_flag (object, &priv->sensitive, g_value_get_boolean (value), pspec);
+            break;
+        case MOO_ACTION_BASE_PROP_VISIBLE:
+            set_action_flag (object, &priv->visible, g_value_get_boolean (value), pspec);
             break;
         case MOO_ACTION_BASE_PROP_USE_UNDERLINE:
             moo_action_base_set_use_underline (ab, g_value_get_boolean (value));
@@ -434,6 +448,7 @@ _moo_action_base_get_property (GObject    *object,
                                GParamSpec *pspec)
 {
     MooActionBase *ab = MOO_ACTION_BASE (object);
+    MooActionPrivate *priv = MOO_ACTION (object)->priv;
 
     switch (property_id)
     {
@@ -465,11 +480,23 @@ _moo_action_base_get_property (GObject    *object,
             g_value_set_boolean (value, moo_action_base_get_use_underline (ab));
             break;
 
+        case MOO_ACTION_BASE_PROP_NAME:
+            g_value_set_string (value, priv->name);
+            break;
         case MOO_ACTION_BASE_PROP_LABEL:
-            g_object_get_property (object, "GtkAction::label", value);
+            g_value_set_string (value, priv->label);
             break;
         case MOO_ACTION_BASE_PROP_TOOLTIP:
-            g_object_get_property (object, "GtkAction::tooltip", value);
+            g_value_set_string (value, priv->tooltip);
+            break;
+        case MOO_ACTION_BASE_PROP_ICON_NAME:
+            g_value_set_string (value, priv->icon_name);
+            break;
+        case MOO_ACTION_BASE_PROP_SENSITIVE:
+            g_value_set_boolean (value, priv->sensitive);
+            break;
+        case MOO_ACTION_BASE_PROP_VISIBLE:
+            g_value_set_boolean (value, priv->visible);
             break;
 
         default:
@@ -492,7 +519,7 @@ _moo_action_make_accel_path (gpointer action)
     collection = _moo_action_group_get_collection (group);
     g_return_val_if_fail (MOO_IS_ACTION_COLLECTION (collection), NULL);
 
-    name = moo_action_get_name (GTK_ACTION (action));
+    name = moo_action_get_name (MOO_ACTION (action));
     group_name = moo_action_group_get_name (group);
     collection_name = moo_action_collection_get_name (collection);
 
@@ -511,7 +538,7 @@ _moo_action_set_accel_path (gpointer    action,
                             const char *accel_path)
 {
     g_return_if_fail (MOO_IS_ACTION_BASE (action));
-    moo_action_set_accel_path (GTK_ACTION (action), accel_path);
+    moo_action_set_accel_path (MOO_ACTION (action), accel_path);
 }
 
 
@@ -519,78 +546,75 @@ const char *
 _moo_action_get_accel_path (gpointer action)
 {
     g_return_val_if_fail (MOO_IS_ACTION_BASE (action), NULL);
-    return moo_action_get_accel_path (GTK_ACTION (action));
+    return moo_action_get_accel_path (MOO_ACTION (action));
 }
 
 
 const char *
-moo_action_get_name (GtkAction *action)
+moo_action_get_name (MooAction *action)
 {
-    return gtk_action_get_name (action);
+    g_return_val_if_fail (MOO_IS_ACTION (action), NULL);
+    return action->priv->name;
 }
 
 gboolean
-moo_action_get_sensitive (GtkAction *action)
+moo_action_get_sensitive (MooAction *action)
 {
-    return gtk_action_get_sensitive (action);
+    g_return_val_if_fail (MOO_IS_ACTION (action), FALSE);
+    return action->priv->sensitive;
 }
 
 void
-moo_action_set_sensitive (GtkAction *action,
+moo_action_set_sensitive (MooAction *action,
                           gboolean   sensitive)
 {
-    gtk_action_set_sensitive (action, sensitive);
+    g_return_if_fail (MOO_IS_ACTION (action));
+    g_object_set (action, "sensitive", sensitive, nullptr);
 }
 
 gboolean
-moo_action_get_visible (GtkAction *action)
+moo_action_get_visible (MooAction *action)
 {
-    return gtk_action_get_visible (action);
+    g_return_val_if_fail (MOO_IS_ACTION (action), FALSE);
+    return action->priv->visible;
 }
 
 gboolean
-moo_action_is_visible (GtkAction *action)
+moo_action_is_visible (MooAction *action)
 {
-    return gtk_action_is_visible (action);
+    return moo_action_get_visible (action);
 }
 
 void
-moo_action_set_visible (GtkAction *action,
+moo_action_set_visible (MooAction *action,
                         gboolean   visible)
 {
-    gtk_action_set_visible (action, visible);
+    g_return_if_fail (MOO_IS_ACTION (action));
+    g_object_set (action, "visible", visible, nullptr);
 }
 
 void
-moo_action_activate (GtkAction *action)
+moo_action_activate (MooAction *action)
 {
-    gtk_action_activate (action);
+    g_return_if_fail (MOO_IS_ACTION (action));
+
+    if (action->priv->sensitive)
+        g_signal_emit_by_name (action, "activate");
 }
 
 const char *
-moo_action_get_accel_path (GtkAction *action)
+moo_action_get_accel_path (MooAction *action)
 {
-    return gtk_action_get_accel_path (action);
+    g_return_val_if_fail (MOO_IS_ACTION (action), NULL);
+    return action->priv->accel_path;
 }
 
 void
-moo_action_set_accel_path (GtkAction  *action,
+moo_action_set_accel_path (MooAction  *action,
                            const char *accel_path)
 {
-    gtk_action_set_accel_path (action, accel_path);
-}
-
-gboolean
-moo_toggle_action_get_active (GtkToggleAction *action)
-{
-    return gtk_toggle_action_get_active (action);
-}
-
-void
-moo_toggle_action_set_active (GtkToggleAction *action,
-                              gboolean         active)
-{
-    gtk_toggle_action_set_active (action, active);
+    g_return_if_fail (MOO_IS_ACTION (action));
+    action->priv->accel_path = g_intern_string (accel_path);
 }
 
 
@@ -605,10 +629,10 @@ _moo_action_get_default_accel (gpointer action)
 
 /* A proxy is a menu item or a tool button that mirrors an action. Its link holds
    a reference to the action and the handlers on both sides, and goes away with the
-   proxy. The links of an action are kept on it as qdata, as the list GtkAction
+   proxy. The links of an action are kept on it as qdata, as the list MooAction
    kept of its proxies. */
 typedef struct {
-    GtkAction *action;
+    MooAction *action;
     GtkWidget *proxy;
     gulong     activate_id;
     gboolean   toggle;
@@ -619,7 +643,7 @@ static const char PROXIES_KEY[] = "moo-action-proxies";
 static void
 sync_link (ProxyLink *link)
 {
-    GtkAction *action = link->action;
+    MooAction *action = link->action;
     GtkWidget *proxy = link->proxy;
     g_autofree char *label = NULL;
     g_autofree char *tooltip = NULL;
@@ -630,8 +654,8 @@ sync_link (ProxyLink *link)
 
     gboolean use_underline = moo_action_base_get_use_underline (action);
 
-    gtk_widget_set_sensitive (proxy, gtk_action_is_sensitive (action));
-    gtk_widget_set_visible (proxy, gtk_action_is_visible (action));
+    gtk_widget_set_sensitive (proxy, moo_action_get_sensitive (action));
+    gtk_widget_set_visible (proxy, moo_action_get_visible (action));
 
     if (GTK_IS_MENU_ITEM (proxy))
     {
@@ -656,7 +680,7 @@ sync_link (ProxyLink *link)
 
     if (link->toggle)
     {
-        gboolean active = moo_toggle_action_get_active (GTK_TOGGLE_ACTION (action));
+        gboolean active = moo_toggle_action_get_active (MOO_TOGGLE_ACTION (action));
 
         /* setting the state activates the proxy, which would toggle the action back */
         g_signal_handler_block (proxy, link->activate_id);
@@ -679,7 +703,7 @@ on_action_notify (G_GNUC_UNUSED GObject *action,
 }
 
 static void
-on_action_toggled (G_GNUC_UNUSED GtkAction *action,
+on_action_toggled (G_GNUC_UNUSED MooAction *action,
                    ProxyLink *link)
 {
     sync_link (link);
@@ -696,7 +720,7 @@ static void
 on_proxy_destroy (GtkWidget *proxy,
                   ProxyLink *link)
 {
-    GtkAction *action = link->action;
+    MooAction *action = link->action;
 
     g_signal_handlers_disconnect_by_data (proxy, link);
     g_signal_handlers_disconnect_by_data (action, link);
@@ -707,14 +731,14 @@ on_proxy_destroy (GtkWidget *proxy,
 }
 
 static void
-connect_proxy (GtkAction *action,
+connect_proxy (MooAction *action,
                GtkWidget *proxy)
 {
     ProxyLink *link = g_new0 (ProxyLink, 1);
 
-    link->action = (GtkAction*) g_object_ref (action);
+    link->action = (MooAction*) g_object_ref (action);
     link->proxy = proxy;
-    link->toggle = GTK_IS_TOGGLE_ACTION (action) &&
+    link->toggle = MOO_IS_TOGGLE_ACTION (action) &&
                    (GTK_IS_CHECK_MENU_ITEM (proxy) || GTK_IS_TOGGLE_TOOL_BUTTON (proxy));
     link->activate_id = g_signal_connect (proxy, GTK_IS_MENU_ITEM (proxy) ? "activate" : "clicked",
                                           G_CALLBACK (on_proxy_activate), link);
@@ -735,9 +759,9 @@ connect_proxy (GtkAction *action,
 }
 
 void
-moo_action_sync_proxies (GtkAction *action)
+moo_action_sync_proxies (MooAction *action)
 {
-    g_return_if_fail (GTK_IS_ACTION (action));
+    g_return_if_fail (MOO_IS_ACTION (action));
 
     GSList *links = g_slist_copy ((GSList*) g_object_get_data (G_OBJECT (action), PROXIES_KEY));
 
@@ -748,18 +772,18 @@ moo_action_sync_proxies (GtkAction *action)
 }
 
 GtkWidget *
-moo_action_create_default_menu_item (GtkAction *action)
+moo_action_create_default_menu_item (MooAction *action)
 {
-    g_return_val_if_fail (GTK_IS_ACTION (action), NULL);
+    g_return_val_if_fail (MOO_IS_ACTION (action), NULL);
 
-    return GTK_IS_TOGGLE_ACTION (action) ? gtk_check_menu_item_new ()
+    return MOO_IS_TOGGLE_ACTION (action) ? gtk_check_menu_item_new ()
                                          : gtk_menu_item_new ();
 }
 
 GtkWidget *
-moo_action_create_menu_item (GtkAction *action)
+moo_action_create_menu_item (MooAction *action)
 {
-    g_return_val_if_fail (GTK_IS_ACTION (action), NULL);
+    g_return_val_if_fail (MOO_IS_ACTION (action), NULL);
 
     GtkWidget *item;
 
@@ -775,15 +799,15 @@ moo_action_create_menu_item (GtkAction *action)
 }
 
 GtkWidget *
-moo_action_create_tool_item (GtkAction *action)
+moo_action_create_tool_item (MooAction *action)
 {
-    g_return_val_if_fail (GTK_IS_ACTION (action), NULL);
+    g_return_val_if_fail (MOO_IS_ACTION (action), NULL);
 
     GtkWidget *item;
 
     if (_moo_action_get_has_submenu (action))
         item = GTK_WIDGET (gtk_menu_tool_button_new (NULL, NULL));
-    else if (GTK_IS_TOGGLE_ACTION (action))
+    else if (MOO_IS_TOGGLE_ACTION (action))
         item = GTK_WIDGET (gtk_toggle_tool_button_new ());
     else
         item = GTK_WIDGET (gtk_tool_button_new (NULL, NULL));
@@ -800,4 +824,3 @@ _moo_action_base_init_instance (gpointer action)
     set_bool (action, "moo-action-use-underline", TRUE);
 }
 
-G_GNUC_END_IGNORE_DEPRECATIONS

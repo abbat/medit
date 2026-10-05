@@ -1160,7 +1160,7 @@ action_item_activated (const char *encoding,
 }
 
 static GtkWidget *
-moo_encodings_menu_action_create_menu_item (GtkAction *gtkaction)
+moo_encodings_menu_action_create_menu_item (MooAction *gtkaction)
 {
     MooEncodingsMenuAction *action = MOO_ENCODINGS_MENU_ACTION (gtkaction);
     GtkWidget *menu_item;
@@ -1200,7 +1200,7 @@ moo_encodings_menu_action_class_init (MooEncodingsMenuActionClass *klass)
     MOO_ACTION_CLASS (klass)->create_menu_item = moo_encodings_menu_action_create_menu_item;
 }
 
-GtkAction *
+MooAction *
 _moo_encodings_menu_action_new (const char            *id,
                                 const char            *label,
                                 MooEncodingsMenuFunc   func,
@@ -1218,7 +1218,7 @@ _moo_encodings_menu_action_new (const char            *id,
     action->func = func;
     action->func_data = data;
 
-    return GTK_ACTION (action);
+    return MOO_ACTION (action);
 }
 
 static gboolean
@@ -1248,7 +1248,7 @@ update_recent_list_visibility (MooEncodingsMenuAction *action)
 }
 
 void
-_moo_encodings_menu_action_set_current (GtkAction  *gtkaction,
+_moo_encodings_menu_action_set_current (MooAction  *gtkaction,
                                         const char *enc_name)
 {
     MooEncodingsMenuAction *action;

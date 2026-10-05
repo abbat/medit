@@ -87,7 +87,7 @@ struct _MooWindowPrivate {
 typedef struct {
     guint keyval;
     GdkModifierType modifiers;
-    GtkAction *action;
+    MooAction *action;
 } AccelEntry;
 
 static const char *setting (MooWindow *window, const char *s)
@@ -130,7 +130,7 @@ static void         moo_window_set_id                   (MooWindow      *window,
 static void         moo_window_create_class_actions     (MooWindow      *window);
 static void         moo_window_add_action               (MooWindow      *window,
                                                          const char     *group,
-                                                         GtkAction      *action);
+                                                         MooAction      *action);
 static void         moo_window_remove_action            (MooWindow      *window,
                                                          const char     *action_id);
 
@@ -154,7 +154,7 @@ static void         moo_window_set_toolbar_visible      (MooWindow      *window,
 static void         moo_window_set_statusbar_visible    (MooWindow      *window,
                                                          gboolean        visible);
 
-static GtkAction   *create_toolbar_style_action         (MooWindow      *window,
+static MooAction   *create_toolbar_style_action         (MooWindow      *window,
                                                          gpointer        dummy);
 
 static MooCloseResponse moo_window_close_handler        (MooWindow      *window);
@@ -217,7 +217,6 @@ static gpointer moo_window_grand_parent_class;
     g_object_class_install_property (gobject_class, prop_id,                \
         g_param_spec_boolean (name, name, name, FALSE, G_PARAM_READABLE))
 
-/* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
 static void
 moo_window_class_init (MooWindowClass *klass)
 {
@@ -532,7 +531,7 @@ moo_window_constructor (GType                  type,
     GtkWidget *vbox;
     MooWindow *window;
     MooWindowClass *klass;
-    GtkAction *action;
+    MooAction *action;
 
     GObject *object =
         G_OBJECT_CLASS(moo_window_parent_class)->constructor (type, n_props, props);
@@ -719,7 +718,7 @@ moo_window_delete_event (GtkWidget      *widget,
 static AccelEntry *
 accel_entry_new (guint            key,
                  GdkModifierType  mods,
-                 GtkAction       *action)
+                 MooAction       *action)
 {
     AccelEntry *entry = g_slice_new0 (AccelEntry);
     entry->keyval = key;
@@ -754,12 +753,11 @@ update_accels (MooWindow *window)
         MooActionGroup *group = (MooActionGroup *) l->data;
         GList *actions;
 
-        /* GtkAction is deprecated since GTK+ 3.10; there is no replacement short of GAction/GMenu. */
         actions = moo_action_group_list_actions (group);
 
         while (actions != NULL)
         {
-            GtkAction *action = (GtkAction *) actions->data;
+            MooAction *action = (MooAction *) actions->data;
             const char *accel_path = NULL;
 
             if (MOO_IS_ACTION (action) &&
@@ -1240,11 +1238,11 @@ toolbar_style_toggled (MooWindow            *window,
 #define ICONS_AND_LABELS "icons-and-labels"
 #define ICONS_AND_LABELS_HORIZ "icons-and-labels-horiz"
 
-static GtkAction*
+static MooAction*
 create_toolbar_style_action (MooWindow      *window,
                              G_GNUC_UNUSED gpointer dummy)
 {
-    GtkAction *action;
+    MooAction *action;
     guint i;
     GtkToolbarStyle style;
     MooMenuMgr *menu_mgr;
@@ -1420,7 +1418,7 @@ type_ensure_store (GType type)
 
 
 static void
-action_activated (GtkAction   *action,
+action_activated (MooAction   *action,
                   ClosureInfo *info)
 {
     GClosure *closure;
@@ -1456,7 +1454,7 @@ action_activated (GtkAction   *action,
 }
 
 static void
-connect_closure (GtkAction   *action,
+connect_closure (MooAction   *action,
                  ClosureInfo *info,
                  MooWindow   *window)
 {
@@ -1473,7 +1471,7 @@ connect_closure (GtkAction   *action,
 }
 
 static void
-disconnect_closure (GtkAction *action)
+disconnect_closure (MooAction *action)
 {
     g_signal_handlers_disconnect_matched (action,
                                           G_SIGNAL_MATCH_FUNC,
@@ -1482,25 +1480,25 @@ disconnect_closure (GtkAction *action)
                                           NULL);
 }
 
-static GtkAction *
+static MooAction *
 create_action (const char *action_id,
                ActionInfo *info,
                MooWindow  *window)
 {
-    GtkAction *action;
+    MooAction *action;
 
     g_return_val_if_fail (info != NULL, NULL);
     g_return_val_if_fail (MOO_IS_ACTION_FACTORY (info->action), NULL);
     g_return_val_if_fail (action_id && action_id[0], NULL);
 
-    if (g_type_is_a (info->action->action_type, MOO_TYPE_ACTION))
-        action = moo_action_factory_create_action (info->action, window,
-                                                   "closure-object", window,
-                                                   "name", action_id,
-                                                   NULL);
-    else if (g_type_is_a (info->action->action_type, MOO_TYPE_TOGGLE_ACTION))
+    if (g_type_is_a (info->action->action_type, MOO_TYPE_TOGGLE_ACTION))
         action = moo_action_factory_create_action (info->action, window,
                                                    "toggled-object", window,
+                                                   "name", action_id,
+                                                   NULL);
+    else if (g_type_is_a (info->action->action_type, MOO_TYPE_ACTION))
+        action = moo_action_factory_create_action (info->action, window,
+                                                   "closure-object", window,
                                                    "name", action_id,
                                                    NULL);
     else
@@ -1591,7 +1589,7 @@ moo_window_class_install_action (MooWindowClass     *klass,
     {
         if (g_type_is_a (G_OBJECT_TYPE (l->data), type))
         {
-            GtkAction *action = create_action (action_id, info, (MooWindow *) l->data);
+            MooAction *action = create_action (action_id, info, (MooWindow *) l->data);
 
             if (action)
             {
@@ -1603,7 +1601,7 @@ moo_window_class_install_action (MooWindowClass     *klass,
 }
 
 
-static GtkAction *
+static MooAction *
 custom_action_factory_func (MooWindow        *window,
                             MooActionFactory *factory)
 {
@@ -1780,7 +1778,7 @@ moo_window_get_actions (MooWindow *window)
 }
 
 
-GtkAction *
+MooAction *
 moo_window_get_action (MooWindow  *window,
                        const char *action)
 {
@@ -1807,7 +1805,7 @@ add_action (const char *id,
             ActionInfo *info,
             MooWindow  *window)
 {
-    GtkAction *action = create_action (id, info, window);
+    MooAction *action = create_action (id, info, window);
 
     if (action)
     {
@@ -1874,9 +1872,9 @@ moo_window_class_set_id (MooWindowClass     *klass,
     g_type_set_qdata (type, MOO_WINDOW_NAME_QUARK, g_strdup (name));
 }
 
-/* What GtkAction's accel closure did: an insensitive action lets the key through */
+/* What MooAction's accel closure did: an insensitive action lets the key through */
 static gboolean
-accel_activate (GtkAction                     *action,
+accel_activate (MooAction                     *action,
                 G_GNUC_UNUSED GObject         *acceleratable,
                 G_GNUC_UNUSED guint            keyval,
                 G_GNUC_UNUSED GdkModifierType  modifier,
@@ -1892,7 +1890,7 @@ accel_activate (GtkAction                     *action,
 static void
 moo_window_add_action (MooWindow  *window,
                        const char *group_name,
-                       GtkAction  *action)
+                       MooAction  *action)
 {
     MooActionGroup *group;
     MooActionCollection *coll;
@@ -1932,7 +1930,7 @@ moo_window_remove_action (MooWindow  *window,
                           const char *action_id)
 {
     MooActionCollection *coll;
-    GtkAction *action;
+    MooAction *action;
 
     g_return_if_fail (MOO_IS_WINDOW (window));
     g_return_if_fail (action_id != NULL);

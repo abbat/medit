@@ -80,7 +80,7 @@ GType                moo_edit_window_get_type               (void) G_GNUC_CONST;
 gboolean             moo_edit_window_close                  (MooEditWindow  *window);
 gboolean             moo_edit_window_close_all              (MooEditWindow  *window);
 
-typedef gboolean (*MooActionCheckFunc) (GtkAction      *action,
+typedef gboolean (*MooActionCheckFunc) (MooAction      *action,
                                         MooEditWindow  *window,
                                         MooEdit        *doc,
                                         gpointer        data);

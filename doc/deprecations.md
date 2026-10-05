@@ -36,7 +36,8 @@ them.
 
 ## Stage 0 — measuring
 
-- [x] 0.1 `-DMOO_SHOW_DEPRECATIONS=ON` makes `G_GNUC_BEGIN/END_IGNORE_DEPRECATIONS`
+- [x] 0.1 (The option is gone since stage 4 left no wrapper to unwrap; a non-strict
+  build now lists every deprecated call by itself.) `-DMOO_SHOW_DEPRECATIONS=ON` made `G_GNUC_BEGIN/END_IGNORE_DEPRECATIONS`
   expand to nothing (`src/sysheaders.h`), so a non-strict build lists every remaining
   site. Measure it with clang, which also reports `GTK_STOCK_*` and deprecated parent
   types:
@@ -293,12 +294,25 @@ accelerator editor for the same result.
     f. (4.4) The public headers take `MooAction *` instead of `GtkAction *`; the
        ignore-deprecation wrappers and `GtkSettings:gtk-menu-images` in
        `KNOWN_DEPRECATED` go.
+       Done: steps e and f. `MooAction` derives from `GObject` and keeps `name`,
+       `label`, `tooltip`, `icon-name`, `sensitive` and `visible` itself, with an
+       `activate` signal; `moo_action_activate()` emits it only on a sensitive action,
+       as `gtk_action_activate()` did. `MooToggleAction` adds `active` and `toggled`
+       with GtkToggleAction's semantics: setting a new value emits `activate`, whose
+       default handler flips the state and emits `toggled`. There was no
+       `MooRadioAction` to port. The interface property `active`, which set
+       `visible` and `sensitive` together, had no user left and went; the user-tool
+       filters set the two directly. Every `G_GNUC_BEGIN_IGNORE_DEPRECATIONS` in
+       `src/` is gone, and with them `MOO_SHOW_DEPRECATIONS`, which had nothing left
+       to unwrap. Where an action factory dispatches on type, the toggle test comes
+       first, since a toggle is a `MooAction` too: in the other order
+       `view.toggles` failed.
     g. (4.5) Hand check, then CI.
 - [x] 4.1 Our own proxy creation and sync in `moouixml.cpp` instead of
   `gtk_action_create_menu_item`/`create_tool_item` and GtkActivatable.
 - [x] 4.2 MooActionGroup/collection without GtkActionGroup.
-- [ ] 4.3 MooAction, MooToggleAction and MooRadioAction rebased on GObject.
-- [ ] 4.4 The remaining `gtk_action_*` callers: accel prefs, bookmarks,
+- [x] 4.3 MooAction and MooToggleAction rebased on GObject (there was no MooRadioAction).
+- [x] 4.4 The remaining `gtk_action_*` callers: accel prefs, bookmarks,
   fileview tools, LSP, spell, user tools.
 - [ ] 4.5 Hand check: menus, toolbar, accelerators, toggle/radio, user tools,
   plugin actions. Push and CI.

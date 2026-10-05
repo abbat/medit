@@ -445,7 +445,7 @@ set_action (MooEdit    *doc,
             gboolean    visible,
             const char *label)
 {
-    GtkAction *action = moo_edit_get_action_by_id (doc, id);
+    MooAction *action = moo_edit_get_action_by_id (doc, id);
 
     if (!action)
         return;
@@ -881,8 +881,6 @@ new_doc_action (MooEditClass *klass,
                                (char*) 0);
 }
 
-/* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static gboolean
 spell_plugin_init (SpellPlugin *plugin)
 {
@@ -951,7 +949,6 @@ spell_plugin_init (SpellPlugin *plugin)
     g_type_class_unref (klass);
     return TRUE;
 }
-G_GNUC_END_IGNORE_DEPRECATIONS
 
 static void
 spell_plugin_deinit (SpellPlugin *plugin)

@@ -32,7 +32,7 @@ void    moo_edit_class_remove_action        (MooEditClass       *klass,
                                              const char         *id);
 
 MooActionGroup *moo_edit_get_actions        (MooEdit            *edit);
-GtkAction *moo_edit_get_action_by_id        (MooEdit            *edit,
+MooAction *moo_edit_get_action_by_id        (MooEdit            *edit,
                                              const char         *action_id);
 
 

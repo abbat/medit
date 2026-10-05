@@ -100,7 +100,7 @@ run_command (const char *command_template,
 }
 
 static void
-moo_file_view_tool_action_activate (GtkAction *_action)
+moo_file_view_tool_action_activate (MooAction *_action)
 {
     ToolAction *action = (ToolAction*) _action;
     GList *files;
@@ -153,7 +153,7 @@ static void
 _moo_file_view_tool_action_class_init (ToolActionClass *klass)
 {
     G_OBJECT_CLASS (klass)->finalize = moo_file_view_tool_action_finalize;
-    GTK_ACTION_CLASS (klass)->activate = moo_file_view_tool_action_activate;
+    MOO_ACTION_CLASS (klass)->activate = moo_file_view_tool_action_activate;
 }
 
 
@@ -184,8 +184,7 @@ remove_old_tools (MooFileView    *fileview,
 
         while (info->actions)
         {
-            GtkAction *action = (GtkAction*) info->actions->data;
-            /* GtkAction is deprecated since GTK+ 3.10; there is no replacement short of GAction/GMenu. */
+            MooAction *action = (MooAction*) info->actions->data;
             moo_action_group_remove_action (group, action);
             g_object_unref (action);
             info->actions = g_slist_delete_link (info->actions, info->actions);
@@ -197,7 +196,7 @@ remove_old_tools (MooFileView    *fileview,
 }
 
 
-static GtkAction *
+static MooAction *
 tool_action_new (MooFileView *fileview,
                  const char  *label,
                  const char  *extensions,
@@ -254,7 +253,7 @@ tool_action_new (MooFileView *fileview,
     }
 
     g_free (name);
-    return GTK_ACTION (action);
+    return MOO_ACTION (action);
 }
 
 
@@ -292,7 +291,7 @@ _moo_file_view_tools_load (MooFileView *fileview)
 
     for (child = root ? root->children : NULL; child != NULL; child = child->next)
     {
-        GtkAction *action;
+        MooAction *action;
         const char *label, *extensions, *mimetypes;
         const char *command;
 
@@ -332,7 +331,7 @@ _moo_file_view_tools_load (MooFileView *fileview)
 
     {
         /* Translators: this is a context menu item label in the file selector, remove the part before and including | */
-        GtkAction *action = tool_action_new (fileview, Q_("Open with|Default Application"), "*", NULL,
+        MooAction *action = tool_action_new (fileview, Q_("Open with|Default Application"), "*", NULL,
                                              "xdg-open %f"
                                             );
         info->actions = g_slist_prepend (info->actions, action);
@@ -342,7 +341,7 @@ _moo_file_view_tools_load (MooFileView *fileview)
 
     for (l = info->actions; l != NULL; l = l->next)
     {
-        GtkAction *action = (GtkAction*) l->data;
+        MooAction *action = (MooAction*) l->data;
         char *markup;
 
         moo_action_group_insert_action (group, action);

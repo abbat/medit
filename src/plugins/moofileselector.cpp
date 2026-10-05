@@ -333,12 +333,11 @@ moo_file_selector_populate_popup (MooFileView *fileview,
                                   GList       *selected,
                                   G_GNUC_UNUSED GtkMenu *menu)
 {
-    GtkAction *new_file, *open;
+    MooAction *new_file, *open;
 
     new_file = moo_action_collection_get_action (moo_file_view_get_actions (fileview), "NewFile");
     open = moo_action_collection_get_action (moo_file_view_get_actions (fileview), "Open");
 
-    /* GtkAction is deprecated since GTK+ 3.10; there is no replacement short of GAction/GMenu. */
     if (new_file)
         moo_action_set_sensitive (new_file, !selected || !selected->next);
 
@@ -565,7 +564,6 @@ notify_show_hidden_files (MooFileSelector *filesel)
 /* Constructor
  */
 
-/* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
 static GObject *
 moo_file_selector_constructor (GType           type,
                                guint           n_props,

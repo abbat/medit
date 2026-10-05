@@ -32,15 +32,18 @@ typedef struct _MooActionPrivate MooActionPrivate;
 typedef struct _MooActionClass   MooActionClass;
 
 struct _MooAction {
-    GtkAction base;
+    GObject base;
     MooActionPrivate *priv;
 };
 
 struct _MooActionClass {
-    GtkActionClass base_class;
+    GObjectClass base_class;
+
+    /* the "activate" signal's class slot; MooAction's runs the closure */
+    void (*activate) (MooAction *action);
 
     /* makes the item only, the action connects it; NULL means a plain item */
-    GtkWidget *(*create_menu_item) (GtkAction *action);
+    GtkWidget *(*create_menu_item) (MooAction *action);
 };
 
 
@@ -56,12 +59,15 @@ typedef struct _MooToggleActionPrivate MooToggleActionPrivate;
 typedef struct _MooToggleActionClass   MooToggleActionClass;
 
 struct _MooToggleAction {
-    GtkToggleAction base;
+    MooAction base;
     MooToggleActionPrivate *priv;
 };
 
 struct _MooToggleActionClass {
-    GtkToggleActionClass base_class;
+    MooActionClass base_class;
+
+    /* the "toggled" signal's class slot */
+    void (*toggled) (MooToggleAction *action);
 };
 
 

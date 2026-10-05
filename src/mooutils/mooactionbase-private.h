@@ -30,12 +30,14 @@ G_BEGIN_DECLS
     prefix##_PROP_ACCEL_EDITABLE,                   \
     prefix##_PROP_FORCE_ACCEL_LABEL,                \
     prefix##_PROP_DEAD,                             \
-    prefix##_PROP_ACTIVE,                           \
     prefix##_PROP_HAS_SUBMENU,                      \
     prefix##_PROP_USE_UNDERLINE,                    \
-    /* these are overridden GtkAction properties */ \
+    prefix##_PROP_NAME,                             \
     prefix##_PROP_LABEL,                            \
-    prefix##_PROP_TOOLTIP
+    prefix##_PROP_TOOLTIP,                          \
+    prefix##_PROP_ICON_NAME,                        \
+    prefix##_PROP_SENSITIVE,                        \
+    prefix##_PROP_VISIBLE
 
 
 #define MOO_ACTION_BASE_SET_GET_PROPERTY(prefix,func)   \
@@ -46,11 +48,14 @@ G_BEGIN_DECLS
     case prefix##_PROP_ACCEL_EDITABLE:                  \
     case prefix##_PROP_FORCE_ACCEL_LABEL:               \
     case prefix##_PROP_DEAD:                            \
-    case prefix##_PROP_ACTIVE:                          \
     case prefix##_PROP_HAS_SUBMENU:                     \
     case prefix##_PROP_USE_UNDERLINE:                   \
+    case prefix##_PROP_NAME:                            \
     case prefix##_PROP_LABEL:                           \
     case prefix##_PROP_TOOLTIP:                         \
+    case prefix##_PROP_ICON_NAME:                       \
+    case prefix##_PROP_SENSITIVE:                       \
+    case prefix##_PROP_VISIBLE:                         \
         func (object, property_id, value, pspec);       \
         break
 

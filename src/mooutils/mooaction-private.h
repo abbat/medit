@@ -23,7 +23,19 @@
 G_BEGIN_DECLS
 
 
-void        _moo_sync_toggle_action         (GtkAction          *action,
+struct _MooActionPrivate {
+    MooClosure *closure;
+    char *name;
+    char *label;
+    char *tooltip;
+    char *icon_name;
+    const char *accel_path; /* interned */
+    gboolean sensitive;
+    gboolean visible;
+};
+
+
+void        _moo_sync_toggle_action         (MooAction          *action,
                                              gpointer            master,
                                              const char         *prop,
                                              gboolean            invert);

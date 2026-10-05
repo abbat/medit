@@ -15,11 +15,8 @@
 
 #include "mooutils/mooactiongroup.h"
 #include "mooutils/mooaction-private.h"
+#include "mooutils/mooactionbase.h"
 #include "mooutils/mooutils-misc.h"
-
-/* GtkAction is deprecated since GTK+ 3.10 and still the base of MooAction
-   (stage 4, step e of doc/deprecations.md), so it is named here knowingly. */
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 
 
 G_DEFINE_TYPE (MooActionGroup, _moo_action_group, G_TYPE_OBJECT)
@@ -40,7 +37,7 @@ group_quark (void)
 MooActionGroup *
 _moo_action_get_group (gpointer action)
 {
-    g_return_val_if_fail (GTK_IS_ACTION (action), NULL);
+    g_return_val_if_fail (MOO_IS_ACTION (action), NULL);
     return (MooActionGroup*) g_object_get_qdata (G_OBJECT (action), group_quark ());
 }
 
@@ -140,16 +137,16 @@ moo_action_group_get_name (MooActionGroup *group)
 
 void
 moo_action_group_insert_action (MooActionGroup *group,
-                                GtkAction      *action)
+                                MooAction      *action)
 {
     g_return_if_fail (MOO_IS_ACTION_GROUP (group));
-    g_return_if_fail (GTK_IS_ACTION (action));
+    g_return_if_fail (MOO_IS_ACTION (action));
 
-    const char *name = gtk_action_get_name (action);
+    const char *name = moo_action_get_name (action);
     g_return_if_fail (name != NULL);
 
-    /* GtkActionGroup replaced an action of the same name, too */
-    GtkAction *old = (GtkAction*) g_hash_table_lookup (group->actions, name);
+    /* an action of the same name is replaced, too */
+    MooAction *old = (MooAction*) g_hash_table_lookup (group->actions, name);
     if (old == action)
         return;
     if (old)
@@ -161,12 +158,12 @@ moo_action_group_insert_action (MooActionGroup *group,
 
 void
 moo_action_group_remove_action (MooActionGroup *group,
-                                GtkAction      *action)
+                                MooAction      *action)
 {
     g_return_if_fail (MOO_IS_ACTION_GROUP (group));
-    g_return_if_fail (GTK_IS_ACTION (action));
+    g_return_if_fail (MOO_IS_ACTION (action));
 
-    const char *name = gtk_action_get_name (action);
+    const char *name = moo_action_get_name (action);
     if (g_hash_table_lookup (group->actions, name) != action)
         return;
 
@@ -174,12 +171,12 @@ moo_action_group_remove_action (MooActionGroup *group,
     g_hash_table_remove (group->actions, name);
 }
 
-GtkAction *
+MooAction *
 moo_action_group_get_action (MooActionGroup *group,
                              const char     *name)
 {
     g_return_val_if_fail (MOO_IS_ACTION_GROUP (group), NULL);
-    return (GtkAction*) g_hash_table_lookup (group->actions, name);
+    return (MooAction*) g_hash_table_lookup (group->actions, name);
 }
 
 GList *
@@ -189,4 +186,3 @@ moo_action_group_list_actions (MooActionGroup *group)
     return g_hash_table_get_values (group->actions);
 }
 
-G_GNUC_END_IGNORE_DEPRECATIONS

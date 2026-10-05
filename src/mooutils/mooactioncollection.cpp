@@ -23,11 +23,6 @@
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/moowindow.h"
 
-/* This file is the GtkAction/GtkStock family. Those classes are deprecated
-   since GTK+ 3.10 and have no replacement short of moving to GAction/GMenu and
-   named icons, which is GTK+ 4 work, so they are used knowingly. */
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-
 
 struct _MooActionCollectionPrivate {
     MooActionGroup *default_group;
@@ -227,7 +222,7 @@ moo_action_collection_get_groups (MooActionCollection *coll)
 }
 
 
-GtkAction *
+MooAction *
 moo_action_collection_get_action (MooActionCollection *coll,
                                   const char          *name)
 {
@@ -239,7 +234,7 @@ moo_action_collection_get_action (MooActionCollection *coll,
     for (l = coll->priv->groups_list; l != NULL; l = l->next)
     {
         MooActionGroup *group = (MooActionGroup*) l->data;
-        GtkAction *action = moo_action_group_get_action (group, name);
+        MooAction *action = moo_action_group_get_action (group, name);
         if (action)
             return action;
     }
@@ -250,10 +245,10 @@ moo_action_collection_get_action (MooActionCollection *coll,
 
 void
 moo_action_collection_remove_action (MooActionCollection *coll,
-                                     GtkAction           *action)
+                                     MooAction           *action)
 {
     g_return_if_fail (MOO_IS_ACTION_COLLECTION (coll));
-    g_return_if_fail (GTK_IS_ACTION (action));
+    g_return_if_fail (MOO_IS_ACTION (action));
 
     MooActionGroup *group = _moo_action_get_group (action);
     g_return_if_fail (group != NULL);
@@ -282,4 +277,3 @@ _moo_action_collection_get_window (MooActionCollection *coll)
     return coll->priv->window;
 }
 
-G_GNUC_END_IGNORE_DEPRECATIONS

@@ -25,10 +25,6 @@
 #include "mooutils/mooactionbase.h"
 #include "mooutils/mooactiongroup.h"
 
-/* This file is the GtkAction/GtkStock family. Those classes are deprecated
-   since GTK+ 3.10 and have no replacement short of moving to GAction/GMenu and
-   named icons, which is GTK+ 4 work, so they are used knowingly. */
-
 
 typedef enum {
     FILTER_SENSITIVE,
@@ -252,10 +248,10 @@ moo_edit_action_check_visible_real (MooEditAction *action)
     GRegex *filter = action->priv->filters[FILTER_VISIBLE];
 
     if (!action->priv->doc)
-        return moo_action_get_visible (GTK_ACTION (action));
+        return moo_action_get_visible (MOO_ACTION (action));
 
     if (!action->priv->file_filter && !filter)
-        return moo_action_get_visible (GTK_ACTION (action));
+        return moo_action_get_visible (MOO_ACTION (action));
 
     if (visible && action->priv->file_filter)
         if (!_moo_edit_filter_match (action->priv->file_filter, action->priv->doc))
@@ -279,7 +275,7 @@ moo_edit_action_check_sensitive_real (MooEditAction *action)
     GRegex *filter = action->priv->filters[FILTER_SENSITIVE];
 
     if (!action->priv->doc || !filter)
-        return moo_action_get_sensitive (GTK_ACTION (action));
+        return moo_action_get_sensitive (MOO_ACTION (action));
 
     line = get_current_line (action->priv->doc);
     return g_regex_match (filter, line, (GRegexMatchFlags) 0, NULL);
@@ -353,7 +349,7 @@ moo_edit_action_check_visible (MooEditAction *action)
     if (MOO_EDIT_ACTION_GET_CLASS (action)->check_visible)
         return MOO_EDIT_ACTION_GET_CLASS (action)->check_visible (action);
     else
-        return moo_action_get_visible (GTK_ACTION (action));
+        return moo_action_get_visible (MOO_ACTION (action));
 }
 
 static gboolean
@@ -364,7 +360,7 @@ moo_edit_action_check_sensitive (MooEditAction *action)
     if (MOO_EDIT_ACTION_GET_CLASS (action)->check_sensitive)
         return MOO_EDIT_ACTION_GET_CLASS (action)->check_sensitive (action);
     else
-        return moo_action_get_sensitive (GTK_ACTION (action));
+        return moo_action_get_sensitive (MOO_ACTION (action));
 }
 
 static void
@@ -385,7 +381,7 @@ _moo_edit_check_actions (MooEdit     *edit,
 
     while (actions)
     {
-        GtkAction *action = (GtkAction*) actions->data;
+        MooAction *action = (MooAction*) actions->data;
         g_object_set_data (G_OBJECT (action), "moo-edit", edit);
         g_object_set_data (G_OBJECT (action), "moo-edit-view", view);
         if (MOO_IS_EDIT_ACTION (action))

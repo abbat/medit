@@ -1996,7 +1996,6 @@ can_remove (FileList *list,
     return FALSE;
 }
 
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static void
 popup_menu (WindowPlugin *plugin,
             GList        *selected)
@@ -2040,7 +2039,6 @@ popup_menu (WindowPlugin *plugin,
     gtk_widget_show_all (menu);
     gtk_menu_popup_at_pointer (GTK_MENU (menu), nullptr);
 }
-G_GNUC_END_IGNORE_DEPRECATIONS
 
 static gboolean
 treeview_button_press (GtkTreeView    *treeview,
@@ -2301,7 +2299,6 @@ window_plugin_queue_update_ui (WindowPlugin *plugin)
 }
 
 
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static gboolean
 file_list_window_plugin_create (WindowPlugin *plugin)
 {
@@ -2346,7 +2343,6 @@ file_list_window_plugin_create (WindowPlugin *plugin)
 
     return TRUE;
 }
-G_GNUC_END_IGNORE_DEPRECATIONS
 
 static void
 file_list_window_plugin_destroy (WindowPlugin *plugin)

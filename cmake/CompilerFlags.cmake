@@ -50,8 +50,7 @@ foreach(flag
 endforeach()
 
 # Deprecated API is not tolerated: -Wdeprecated-declarations is on, and an error
-# under strict. The GtkAction/GtkStock subsystems that have no replacement short
-# of GAction/GMenu are marked in the source with G_GNUC_BEGIN_IGNORE_DEPRECATIONS.
+# under strict.
 
 moo_try_cxx_flag(-fno-rtti)
 

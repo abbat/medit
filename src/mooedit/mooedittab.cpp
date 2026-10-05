@@ -479,8 +479,6 @@ notice_response (G_GNUC_UNUSED GtkInfoBar *bar,
     _moo_edit_tab_hide_notice (tab);
 }
 
-/* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 void
 _moo_edit_tab_set_notice (MooEditTab     *tab,
                           GtkMessageType  type,
@@ -511,4 +509,3 @@ _moo_edit_tab_set_notice (MooEditTab     *tab,
     gtk_box_reorder_child (GTK_BOX (tab), GTK_WIDGET (tab->notice), tab->progress ? 1 : 0);
     gtk_widget_show (GTK_WIDGET (tab->notice));
 }
-G_GNUC_END_IGNORE_DEPRECATIONS

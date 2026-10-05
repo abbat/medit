@@ -46,8 +46,6 @@ _moo_file_props_dialog_class_init (MooFilePropsDialogClass *klass)
 }
 
 
-/* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static void
 _moo_file_props_dialog_init (MooFilePropsDialog *dialog)
 {
@@ -81,7 +79,6 @@ _moo_file_props_dialog_init (MooFilePropsDialog *dialog)
                             NULL);
     gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 }
-G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 static void

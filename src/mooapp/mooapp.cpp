@@ -227,8 +227,6 @@ moo_app_prefs_dialog (GtkWidget *parent)
 /*!
  * \brief Installs common actions for all windows in the application, including Preferences, About, Help, Report Bug, and Quit.
  */
-/* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static void
 install_common_actions (void)
 {
@@ -275,7 +273,6 @@ install_common_actions (void)
 
   g_type_class_unref (klass);
 }
-G_GNUC_END_IGNORE_DEPRECATIONS
 
 /*!
  * \brief Installs editor-specific actions. Currently a placeholder function.
