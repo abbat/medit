@@ -135,9 +135,51 @@ test_lookups_follow_add_and_remove (void)
 }
 
 
+/*
+ * The four comparators get_cmp_func() picks from the two sort flags: folders
+ * first or intermixed, and display names compared bytewise or through the
+ * filename collation key, which orders the digits in names as numbers. Only
+ * locale-independent orderings are asserted -- whether "B" sorts before "a"
+ * depends on LC_COLLATE.
+ */
+static void
+test_comparators_follow_sort_flags (void)
+{
+    static const struct {
+        MooFileCmp cmp;
+        const char *order[4];
+    } cases[] = {
+        { (MooFileCmp) moo_file_cmp,         { "..", "sub", "f10", "f2" } },
+        { (MooFileCmp) moo_file_case_cmp,    { "..", "sub", "f2", "f10" } },
+        { (MooFileCmp) moo_file_cmp_fi,      { "..", "f10", "f2", "sub" } },
+        { (MooFileCmp) moo_file_case_cmp_fi, { "..", "f2", "f10", "sub" } },
+    };
+
+    for (const auto &c : cases)
+    {
+        FileList *flist = file_list_new (c.cmp);
+
+        for (const char *name : { "f2", "sub", "..", "f10" })
+        {
+            MooFile *f = _moo_file_new ("/tmp", name);
+            if (!strcmp (name, "sub"))
+                f->info = (MooFileInfo) (f->info | MOO_FILE_INFO_IS_DIR);
+            file_list_add (flist, f);
+            _moo_file_unref (f);
+        }
+
+        for (int i = 0; i < 4; ++i)
+            g_assert_cmpstr (_moo_file_name (file_list_nth (flist, i)), ==, c.order[i]);
+
+        file_list_destroy (flist);
+    }
+}
+
+
 void
 _moo_add_moofoldermodel_unit_tests (void)
 {
+    g_test_add_func ("/moofoldermodel/comparators-follow-sort-flags", test_comparators_follow_sort_flags);
     g_test_add_func ("/moofoldermodel/set-cmp-func-reorders-list", test_set_cmp_func_reorders_list);
     g_test_add_func ("/moofoldermodel/lookups-follow-add-and-remove", test_lookups_follow_add_and_remove);
 }
