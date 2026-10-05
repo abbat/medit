@@ -101,6 +101,17 @@ Reading these first will usually identify the next one:
   copy of the flag said the cursor was up, so it never set it again.
   → *A private field that replaced a public one is state you can no longer see: chain up,
   and check what the window actually has rather than what you last set.*
+- **File entry completion popup** `completion_entry_focus_out()` was connected to
+  `focus-out-event` as `(entry, cmpl)`, so the `GdkEventFocus *` arrived as `cmpl` and
+  its `priv` was whatever lay 24 bytes into the event — since before `v1.3.12`. It did
+  nothing for years, then an unrelated commit (stage 4.1) moved the heap and it read NULL:
+  `app.file_selector_completion_popup` crashed on every run. With the signature fixed the
+  handler did run, and closed the popup at once, because the popup's own grab sends the
+  entry a focus-out; it was removed, since the grab already routes clicks outside the
+  popup to `completion_popup_button_press()`.
+  → *A crash that a harmless commit "introduced" is worth a probe printing the pointers at
+  both ends of the signal: the one connected and the one received.* `G_CALLBACK` hides
+  every signature mismatch from the compiler.
 
 ## What the marker sweep found, and what it cost to fix
 

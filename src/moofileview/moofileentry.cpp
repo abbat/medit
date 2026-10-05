@@ -91,8 +91,6 @@ static void     completion_cell_data_func       (GtkTreeViewColumn      *column,
 static gboolean completion_visible_func         (GtkTreeModel           *model,
                                                  GtkTreeIter            *iter,
                                                  MooFileEntryCompletion *cmpl);
-static gboolean completion_entry_focus_out      (GtkEntry               *entry,
-                                                 MooFileEntryCompletion *cmpl);
 static gboolean completion_popup_button_press   (GtkWidget              *popup_window,
                                                  GdkEventButton         *event,
                                                  MooFileEntryCompletion *cmpl);
@@ -796,9 +794,6 @@ completion_popup (MooFileEntryCompletion *cmpl)
                    GDK_SEAT_CAPABILITY_POINTER, TRUE,
                    NULL, NULL, NULL, NULL);
 
-    g_signal_connect (cmpl->priv->entry, "focus-out-event",
-                      G_CALLBACK (completion_entry_focus_out), cmpl);
-
     g_signal_connect (cmpl->priv->popup, "button-press-event",
                       G_CALLBACK (completion_popup_button_press), cmpl);
     g_signal_connect (cmpl->priv->popup, "key-press-event",
@@ -814,15 +809,6 @@ completion_popup (MooFileEntryCompletion *cmpl)
 }
 
 
-static gboolean
-completion_entry_focus_out (G_GNUC_UNUSED GtkEntry *entry,
-                            MooFileEntryCompletion *cmpl)
-{
-    completion_popdown (cmpl);
-    return FALSE;
-}
-
-
 static void
 completion_popdown (MooFileEntryCompletion *cmpl)
 {
@@ -831,10 +817,6 @@ completion_popdown (MooFileEntryCompletion *cmpl)
 
     DELETE_MEM (cmpl->priv->real_text);
     cmpl->priv->walking_list = FALSE;
-
-    g_signal_handlers_disconnect_by_func (cmpl->priv->entry,
-                                          (gpointer) completion_entry_focus_out,
-                                          cmpl);
 
     g_signal_handlers_disconnect_by_func (cmpl->priv->popup,
                                           (gpointer) completion_popup_button_press,
