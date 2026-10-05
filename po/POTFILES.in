@@ -24,14 +24,17 @@ src/mooedit/mooedit-fileops.cpp
 src/mooedit/mooeditor.cpp
 src/mooedit/mooeditprefs.cpp
 src/mooedit/mooeditprefspage.cpp
+src/mooedit/mooedittab.cpp
 src/mooedit/mooeditwindow.cpp
 src/mooedit/mooplugin.cpp
 src/mooedit/mootextfind.cpp
+src/mooedit/mootextview.cpp
 [type: gettext/glade]src/moofileview/ui/moobookmark-editor.ui
 [type: gettext/glade]src/moofileview/ui/moocreatefolder.ui
 [type: gettext/glade]src/moofileview/ui/moofileprops.ui
 [type: gettext/glade]src/moofileview/ui/moofileview-drop.ui
 src/moofileview/moobookmarkmgr.cpp
+src/moofileview/moofileview-dialogs.cpp
 src/moofileview/moofileview.cpp
 src/moofileview/moofileview-tools.cpp
 src/moofileview/moofileview.xml
@@ -49,6 +52,7 @@ src/mooutils/moohelp.cpp
 src/mooutils/moohistorycombo.cpp
 src/mooutils/moohistorymgr.cpp
 src/mooutils/moopane.cpp
+src/mooutils/mooprefsdialog.cpp
 src/mooutils/mooutils-file.cpp
 src/mooutils/mooutils-fs.cpp
 src/mooutils/mooutils-misc.cpp
@@ -64,6 +68,7 @@ src/plugins/moofileselector-prefs.cpp
 src/plugins/moofind.cpp
 src/plugins/mooquickopen.cpp
 src/plugins/support/mooeditwindowoutput.cpp
+src/plugins/support/moolineview.cpp
 src/plugins/lsp/lsp-actions.cpp
 src/plugins/lsp/lsp-completion.cpp
 src/plugins/lsp/lsp-diagnostics.cpp

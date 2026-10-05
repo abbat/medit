@@ -80,11 +80,16 @@ merge, drop what went obsolete with `msgattrib --no-obsolete`. For strings gtk i
 carries, `D_(str, "gtk30")` borrows gtk's catalog (`"Pick a Font"`); the python plugin used
 `"gtk20"`.
 
-Catalog state against the current template (623 strings): `ru` is complete and is the one
-to check first; `es` and `fr` are 12 short, `pl` 11 short with nine fuzzy entries, `de` 31,
-`fi` 35, `ja` 40; `nl` is 124 short, and `cs` (191) and `zh_CN` (218) are still half empty.
-Every string of the terminal and of the LSP client is translated in all ten, which is the
-one part of the tree where the newer catalogs are not behind.
+Catalog state against the current template (761 strings): all ten catalogs are complete,
+with no fuzzy entries. `cs`, `es`, `fr` and `nl` leave `encodings_list` empty, which is a
+setting rather than a string — empty means the default list of encodings. `ru` is the one
+to check first.
+
+**Replacing GtkStock added strings nobody translated.** A stock item brought its label
+from gtk's own catalog; its replacement passes a literal of ours, which is a new msgid
+— `"Folder"`, `"Desktop"`, `"New Folder"` and four more were English in every language
+until a regeneration listed them. After a change that turns gtk's labels into ours, look
+for empty msgstrs, not only for a changed template.
 
 **A string can be live, translated, and still English on screen.** Two ways, both found by
 auditing rather than by looking: a string xgettext never sees, and a literal that was never

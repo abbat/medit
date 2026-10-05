@@ -172,10 +172,8 @@ grow as child rows.
 
 Stages 0–4 of that plan are done: nothing in `src/` outside `src/vendor/` calls deprecated
 API or wraps a call in `G_GNUC_BEGIN_IGNORE_DEPRECATIONS`, and since stage 5 neither does
-`src/vendor/`. Two things were put off.
-
-- **A hand check of the action rewrite** (4.5): menus, toolbar, accelerators, toggles, user
-  tools and plugin actions, looked at on screen. The UI suite in CI passed on `1b63b88`;
-  nobody has looked yet.
-- **The `.pot`**: the stage 4 renames may have moved translatable strings; regenerate it
-  and see whether anything changed.
+`src/vendor/`. One thing was put off: **a hand check of the action rewrite** (4.5) —
+menus, toolbar, accelerators, toggles, user tools and plugin actions, looked at on screen.
+The UI suite in CI passed on `1b63b88`; nobody has looked yet. (The `.pot` was
+regenerated: the renames moved no string, but the GtkStock replacements had left seven
+msgids untranslated in every catalog, now filled.)
