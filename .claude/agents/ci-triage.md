@@ -14,6 +14,10 @@ are the fallback. `doc/lean-ctx.md` has the traps -- above all, `ctx_shell`
 compression keeps any line with "fail" or "error" in it, so read a conclusion from
 a file you grep, or with `raw=true`, never from a compressed reply.
 
+If a command is refused by the lean-ctx allowlist, do not work around it (no `lean-ctx
+allow`, no rerouting through Bash or `ctx_execute`): report the refused command and
+skip that step. Whether to allow it is the user's call, made by the session that asked.
+
 ## Waiting
 
 One loop, polling once a minute, not a series of manual checks:
