@@ -19,6 +19,7 @@
 #include "mooutils/mooprefs.h"
 #include "mooutils/mootype-macros.h"
 #include "mooutils/mooaction.h"
+#include "mooutils/mooactionbase.h"
 
 #define MAX_RECENT_ENCODINGS 5
 #define ROW_AUTO              0
@@ -1164,7 +1165,7 @@ moo_encodings_menu_action_create_menu_item (GtkAction *gtkaction)
     MooEncodingsMenuAction *action = MOO_ENCODINGS_MENU_ACTION (gtkaction);
     GtkWidget *menu_item;
 
-    menu_item = GTK_ACTION_CLASS (moo_encodings_menu_action_parent_class)->create_menu_item (gtkaction);
+    menu_item = moo_action_create_default_menu_item (gtkaction);
     action->menu_data = _moo_encodings_menu_new (action_item_activated, action);
     gtk_menu_item_set_submenu (GTK_MENU_ITEM (menu_item), action->menu_data->menu);
 
@@ -1196,7 +1197,7 @@ static void
 moo_encodings_menu_action_class_init (MooEncodingsMenuActionClass *klass)
 {
     G_OBJECT_CLASS(klass)->finalize = moo_encodings_menu_action_finalize;
-    GTK_ACTION_CLASS (klass)->create_menu_item = moo_encodings_menu_action_create_menu_item;
+    MOO_ACTION_CLASS (klass)->create_menu_item = moo_encodings_menu_action_create_menu_item;
 }
 
 GtkAction *

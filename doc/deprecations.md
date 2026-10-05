@@ -263,6 +263,11 @@ accelerator editor for the same result.
     b. (4.1) Proxy creation behind our own helpers and a MooAction `create_menu_item`
        slot; our own proxy sync from `notify::` (label, tooltip, icon, sensitive,
        visible, active). Risk: toggle feedback loops, menu icons, accel labels.
+       Done: step b. `moo_action_create_menu_item`/`_tool_item`/`_sync_proxies` make plain
+       GtkMenuItem/GtkCheckMenuItem and GtkToolButton/GtkToggleToolButton/GtkMenuToolButton and
+       follow `notify::` and `toggled`; overriders fill `MooActionClass.create_menu_item`.
+       `connect-proxy`/`disconnect-proxy` had no listeners and are gone; `gtk-menu-images` left
+       `KNOWN_DEPRECATED`.
     c. (4.2) MooActionGroup on GObject: a name and a hash of actions.
     d. Accelerators connected by path ourselves. Risk: user-set shortcuts and
        runtime changes; the shortcut tests in `doc/testing-panes.md` cover them.
@@ -272,9 +277,7 @@ accelerator editor for the same result.
        ignore-deprecation wrappers and `GtkSettings:gtk-menu-images` in
        `KNOWN_DEPRECATED` go.
     g. (4.5) Hand check, then CI.
-  - Open: whether anything listens to Moo's `connect-proxy`/`disconnect-proxy`;
-    check before removing them in step e.
-- [ ] 4.1 Our own proxy creation and sync in `moouixml.cpp` instead of
+- [x] 4.1 Our own proxy creation and sync in `moouixml.cpp` instead of
   `gtk_action_create_menu_item`/`create_tool_item` and GtkActivatable.
 - [ ] 4.2 MooActionGroup/collection without GtkActionGroup.
 - [ ] 4.3 MooAction, MooToggleAction and MooRadioAction rebased on GObject.

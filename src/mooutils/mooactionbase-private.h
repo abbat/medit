@@ -67,8 +67,6 @@ void        _moo_action_base_get_property   (GObject        *object,
                                              guint           property_id,
                                              GValue         *value,
                                              GParamSpec     *pspec);
-void        _moo_action_base_connect_proxy  (GtkAction      *action,
-                                             GtkWidget      *proxy);
 void        _moo_action_base_init_instance  (gpointer        action);
 
 

@@ -30,11 +30,6 @@ typedef struct _MooActionBaseClass  MooActionBaseClass;
 
 struct _MooActionBaseClass {
     GTypeInterface parent;
-
-    void (*connect_proxy)    (MooActionBase *action,
-                              GtkWidget     *proxy);
-    void (*disconnect_proxy) (MooActionBase *action,
-                              GtkWidget     *proxy);
 };
 
 
@@ -57,6 +52,14 @@ void         moo_action_set_accel_path    (GtkAction       *action,
 gboolean     moo_toggle_action_get_active (GtkToggleAction *action);
 void         moo_toggle_action_set_active (GtkToggleAction *action,
                                            gboolean         active);
+
+/* Proxies: the menu items and tool buttons that mirror an action. They are
+   created and kept in step here, not by GtkAction. */
+GtkWidget   *moo_action_create_menu_item  (GtkAction       *action);
+/* the bare item, for create_menu_item overrides to start from */
+GtkWidget   *moo_action_create_default_menu_item (GtkAction *action);
+GtkWidget   *moo_action_create_tool_item  (GtkAction       *action);
+void         moo_action_sync_proxies      (GtkAction       *action);
 
 
 G_END_DECLS

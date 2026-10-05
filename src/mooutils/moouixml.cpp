@@ -26,6 +26,7 @@
  */
 
 #include "mooutils/mooaction-private.h"
+#include "mooutils/mooactionbase.h"
 #include "mooutils/moouixml.h"
 #include "marshals.h"
 #include "mooutils/mooutils-misc.h"
@@ -1806,7 +1807,7 @@ create_menu_item (MooUiXml       *xml,
             return;
 
         gtk_action_set_accel_group (action, toplevel->accel_group);
-        menu_item = gtk_action_create_menu_item (action);
+        menu_item = moo_action_create_menu_item (action);
     }
     else
     {
@@ -2167,21 +2168,12 @@ create_tool_item (MooUiXml       *xml,
 
         gtk_action_set_accel_group (action, toplevel->accel_group);
 
-        if (_moo_action_get_has_submenu (action))
-        {
-            tool_item = GTK_WIDGET (gtk_menu_tool_button_new (NULL, NULL));
-            gtk_activatable_set_related_action (GTK_ACTIVATABLE (tool_item), action);
-        }
-        else
-        {
-            tool_item = gtk_action_create_tool_item (action);
-        }
+        tool_item = moo_action_create_tool_item (action);
 
         if (index > gtk_toolbar_get_n_items (toolbar))
             index = -1;
 
         gtk_toolbar_insert (toolbar, GTK_TOOL_ITEM (tool_item), index);
-        _moo_action_ring_the_bells_it_has_tooltip (action);
 
         if (node->children)
         {

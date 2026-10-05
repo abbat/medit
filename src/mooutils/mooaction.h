@@ -38,6 +38,9 @@ struct _MooAction {
 
 struct _MooActionClass {
     GtkActionClass base_class;
+
+    /* makes the item only, the action connects it; NULL means a plain item */
+    GtkWidget *(*create_menu_item) (GtkAction *action);
 };
 
 

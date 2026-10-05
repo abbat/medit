@@ -1984,7 +1984,7 @@ create_bookmark_item (MooEditWindow   *window,
             g_object_set (action, "label", label, "use-underline", FALSE, nullptr);
             /* GtkAction is deprecated since GTK+ 3.10; there is no replacement short of GAction/GMenu. */
             G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-            item = gtk_action_create_menu_item (action);
+            item = moo_action_create_menu_item (action);
             G_GNUC_END_IGNORE_DEPRECATIONS
         }
         else
@@ -2912,22 +2912,6 @@ view_cursor_moved (MooEditWindow *window,
 
 
 static void
-sync_proxies (GtkAction *action)
-{
-    G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-    GSList *l = gtk_action_get_proxies (action);
-    G_GNUC_END_IGNORE_DEPRECATIONS
-    while (l)
-    {
-        G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-        gtk_activatable_sync_action_properties ((GtkActivatable*) l->data, action);
-        G_GNUC_END_IGNORE_DEPRECATIONS
-        l = l->next;
-    }
-}
-
-
-static void
 view_wrap_mode_changed (MooEditWindow *window,
                         G_GNUC_UNUSED GParamSpec *pspec,
                         MooEditView   *view)
@@ -2944,7 +2928,7 @@ view_wrap_mode_changed (MooEditWindow *window,
     g_object_get (view, "wrap-mode", &mode, nullptr);
     moo_toggle_action_set_active (GTK_TOGGLE_ACTION (action), mode != GTK_WRAP_NONE);
 
-    sync_proxies (action);
+    moo_action_sync_proxies (action);
 }
 
 
@@ -2965,7 +2949,7 @@ view_show_line_numbers_changed (MooEditWindow *window,
     g_object_get (view, "show-line-numbers", &show, nullptr);
     moo_toggle_action_set_active (GTK_TOGGLE_ACTION (action), show);
 
-    sync_proxies (action);
+    moo_action_sync_proxies (action);
 }
 
 
@@ -5496,7 +5480,7 @@ update_split_view_actions (MooEditWindow *window)
     moo_toggle_action_set_active (GTK_TOGGLE_ACTION (action_split_horizontal), has_split_horizontal);
     moo_toggle_action_set_active (GTK_TOGGLE_ACTION (action_split_vertical), has_split_vertical);
 
-    sync_proxies (action_cycle);
-    sync_proxies (action_split_horizontal);
-    sync_proxies (action_split_vertical);
+    moo_action_sync_proxies (action_cycle);
+    moo_action_sync_proxies (action_split_horizontal);
+    moo_action_sync_proxies (action_split_vertical);
 }

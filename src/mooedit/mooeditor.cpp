@@ -34,6 +34,7 @@
 #include "mooutils/moobuilder.h"
 #include "marshals.h"
 #include "mooutils/mooutils-misc.h"
+#include "mooutils/mooactionbase.h"
 #include "mooutils/mooaction-private.h"
 #include "mooutils/mooutils-enums.h"
 #include "mooutils/mooutils-fs.h"
@@ -768,7 +769,7 @@ create_recent_menu (GtkAction *action)
     action_more = moo_window_get_action (window, RECENT_DIALOG_ACTION_ID);
     /* GtkAction is deprecated since GTK+ 3.10; there is no replacement short of GAction/GMenu. */
     G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-    item = gtk_action_create_menu_item (action_more);
+    item = moo_action_create_menu_item (action_more);
     G_GNUC_END_IGNORE_DEPRECATIONS
     gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 

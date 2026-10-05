@@ -26,10 +26,6 @@
 G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 
 
-static void proxy_set_use_underline       (GtkWidget *proxy,
-                                           gboolean   use_underline);
-
-
 enum {
     MOO_ACTION_BASE_PROPS(MOO_ACTION_BASE)
 };
@@ -68,22 +64,6 @@ class_init (gpointer g_iface, G_GNUC_UNUSED gpointer data)
     g_object_interface_install_property (g_iface,
         g_param_spec_boolean ("use-underline", "use-underline", "use-underline",
                               TRUE, (GParamFlags) G_PARAM_READWRITE));
-
-    g_signal_new ("connect-proxy",
-                  MOO_TYPE_ACTION_BASE,
-                  G_SIGNAL_RUN_LAST,
-                  G_STRUCT_OFFSET (MooActionBaseClass, connect_proxy),
-                  NULL, NULL,
-                  _moo_marshal_VOID__OBJECT,
-                  G_TYPE_NONE, 1, GTK_TYPE_WIDGET);
-
-    g_signal_new ("disconnect-proxy",
-                  MOO_TYPE_ACTION_BASE,
-                  G_SIGNAL_RUN_LAST,
-                  G_STRUCT_OFFSET (MooActionBaseClass, disconnect_proxy),
-                  NULL, NULL,
-                  _moo_marshal_VOID__OBJECT,
-                  G_TYPE_NONE, 1, GTK_TYPE_WIDGET);
 }
 
 
@@ -357,29 +337,12 @@ _moo_action_get_has_submenu (gpointer action)
 
 
 static void
-sync_proxies_use_underline (gpointer action,
-                            gboolean use_underline)
-{
-    GSList *proxies;
-
-    proxies = g_slist_copy (gtk_action_get_proxies (GTK_ACTION (action)));
-    g_slist_foreach (proxies, (GFunc) moo_object_ref, NULL);
-
-    while (proxies)
-    {
-        proxy_set_use_underline (GTK_WIDGET (proxies->data), use_underline);
-        g_object_unref (proxies->data);
-        proxies = g_slist_delete_link (proxies, proxies);
-    }
-}
-
-static void
 moo_action_base_set_use_underline (gpointer action,
                                    gboolean use_underline)
 {
     g_return_if_fail (MOO_IS_ACTION_BASE (action));
     set_bool (action, "moo-action-use-underline", use_underline);
-    sync_proxies_use_underline (action, use_underline);
+    moo_action_sync_proxies (GTK_ACTION (action));
     g_object_notify (G_OBJECT (action), "use-underline");
 }
 
@@ -398,8 +361,6 @@ moo_action_base_set_label (MooActionBase *ab,
     g_return_if_fail (MOO_IS_ACTION_BASE (ab));
 
     g_object_set (G_OBJECT (ab), "GtkAction::label", label, NULL);
-
-    sync_proxies_use_underline (ab, moo_action_base_get_use_underline (ab));
 }
 
 
@@ -657,25 +618,194 @@ _moo_action_get_default_accel (gpointer action)
 }
 
 
-void
-_moo_action_base_connect_proxy (GtkAction *action,
-                                GtkWidget *proxy)
+
+/* A proxy is a menu item or a tool button that mirrors an action. Its link holds
+   a reference to the action and the handlers on both sides, and goes away with the
+   proxy. The links of an action are kept on it as qdata, as the list GtkAction
+   kept of its proxies. */
+typedef struct {
+    GtkAction *action;
+    GtkWidget *proxy;
+    gulong     activate_id;
+    gboolean   toggle;
+} ProxyLink;
+
+static const char PROXIES_KEY[] = "moo-action-proxies";
+
+static void
+sync_link (ProxyLink *link)
 {
-    g_return_if_fail (MOO_IS_ACTION_BASE (action));
-    g_return_if_fail (GTK_IS_WIDGET (proxy));
-    proxy_set_use_underline (proxy, moo_action_base_get_use_underline (action));
+    GtkAction *action = link->action;
+    GtkWidget *proxy = link->proxy;
+    g_autofree char *label = NULL;
+    g_autofree char *tooltip = NULL;
+    g_autofree char *icon_name = NULL;
+
+    g_object_get (action, "label", &label, "tooltip", &tooltip,
+                  "icon-name", &icon_name, NULL);
+
+    gboolean use_underline = moo_action_base_get_use_underline (action);
+
+    gtk_widget_set_sensitive (proxy, gtk_action_is_sensitive (action));
+    gtk_widget_set_visible (proxy, gtk_action_is_visible (action));
+
+    if (GTK_IS_MENU_ITEM (proxy))
+    {
+        GtkMenuItem *item = GTK_MENU_ITEM (proxy);
+        const char *accel_path = moo_action_get_accel_path (action);
+
+        gtk_menu_item_set_label (item, label ? label : "");
+        gtk_menu_item_set_use_underline (item, use_underline);
+
+        if (accel_path)
+            gtk_menu_item_set_accel_path (item, accel_path);
+    }
+    else
+    {
+        GtkToolButton *button = GTK_TOOL_BUTTON (proxy);
+
+        gtk_tool_button_set_label (button, label);
+        gtk_tool_button_set_use_underline (button, use_underline);
+        gtk_tool_button_set_icon_name (button, icon_name);
+        gtk_tool_item_set_tooltip_text (GTK_TOOL_ITEM (proxy), tooltip);
+    }
+
+    if (link->toggle)
+    {
+        gboolean active = moo_toggle_action_get_active (GTK_TOGGLE_ACTION (action));
+
+        /* setting the state activates the proxy, which would toggle the action back */
+        g_signal_handler_block (proxy, link->activate_id);
+
+        if (GTK_IS_MENU_ITEM (proxy))
+            gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (proxy), active);
+        else
+            gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (proxy), active);
+
+        g_signal_handler_unblock (proxy, link->activate_id);
+    }
 }
 
 static void
-proxy_set_use_underline (GtkWidget *proxy,
-                         gboolean   use_underline)
+on_action_notify (G_GNUC_UNUSED GObject *action,
+                  G_GNUC_UNUSED GParamSpec *pspec,
+                  ProxyLink *link)
 {
-    g_return_if_fail (GTK_IS_WIDGET (proxy));
+    sync_link (link);
+}
 
-    if (GTK_IS_MENU_ITEM (proxy) && gtk_bin_get_child (GTK_BIN (proxy)) && GTK_IS_LABEL (gtk_bin_get_child (GTK_BIN (proxy))))
-        gtk_label_set_use_underline (GTK_LABEL (gtk_bin_get_child (GTK_BIN (proxy))), use_underline);
-    else if (GTK_IS_BUTTON (proxy))
-        gtk_button_set_use_underline (GTK_BUTTON (proxy), use_underline);
+static void
+on_action_toggled (G_GNUC_UNUSED GtkAction *action,
+                   ProxyLink *link)
+{
+    sync_link (link);
+}
+
+static void
+on_proxy_activate (G_GNUC_UNUSED GtkWidget *proxy,
+                   ProxyLink *link)
+{
+    moo_action_activate (link->action);
+}
+
+static void
+on_proxy_destroy (GtkWidget *proxy,
+                  ProxyLink *link)
+{
+    GtkAction *action = link->action;
+
+    g_signal_handlers_disconnect_by_data (proxy, link);
+    g_signal_handlers_disconnect_by_data (action, link);
+    g_object_set_data (G_OBJECT (action), PROXIES_KEY,
+                       g_slist_remove ((GSList*) g_object_get_data (G_OBJECT (action), PROXIES_KEY), link));
+    g_free (link);
+    g_object_unref (action);
+}
+
+static void
+connect_proxy (GtkAction *action,
+               GtkWidget *proxy)
+{
+    ProxyLink *link = g_new0 (ProxyLink, 1);
+
+    link->action = (GtkAction*) g_object_ref (action);
+    link->proxy = proxy;
+    link->toggle = GTK_IS_TOGGLE_ACTION (action) &&
+                   (GTK_IS_CHECK_MENU_ITEM (proxy) || GTK_IS_TOGGLE_TOOL_BUTTON (proxy));
+    link->activate_id = g_signal_connect (proxy, GTK_IS_MENU_ITEM (proxy) ? "activate" : "clicked",
+                                          G_CALLBACK (on_proxy_activate), link);
+    g_signal_connect (proxy, "destroy", G_CALLBACK (on_proxy_destroy), link);
+
+    g_signal_connect (action, "notify::label", G_CALLBACK (on_action_notify), link);
+    g_signal_connect (action, "notify::tooltip", G_CALLBACK (on_action_notify), link);
+    g_signal_connect (action, "notify::icon-name", G_CALLBACK (on_action_notify), link);
+    g_signal_connect (action, "notify::sensitive", G_CALLBACK (on_action_notify), link);
+    g_signal_connect (action, "notify::visible", G_CALLBACK (on_action_notify), link);
+
+    if (link->toggle)
+        g_signal_connect (action, "toggled", G_CALLBACK (on_action_toggled), link);
+
+    g_object_set_data (G_OBJECT (action), PROXIES_KEY,
+                       g_slist_prepend ((GSList*) g_object_get_data (G_OBJECT (action), PROXIES_KEY), link));
+    sync_link (link);
+}
+
+void
+moo_action_sync_proxies (GtkAction *action)
+{
+    g_return_if_fail (GTK_IS_ACTION (action));
+
+    GSList *links = g_slist_copy ((GSList*) g_object_get_data (G_OBJECT (action), PROXIES_KEY));
+
+    for (GSList *l = links; l != NULL; l = l->next)
+        sync_link ((ProxyLink*) l->data);
+
+    g_slist_free (links);
+}
+
+GtkWidget *
+moo_action_create_default_menu_item (GtkAction *action)
+{
+    g_return_val_if_fail (GTK_IS_ACTION (action), NULL);
+
+    return GTK_IS_TOGGLE_ACTION (action) ? gtk_check_menu_item_new ()
+                                         : gtk_menu_item_new ();
+}
+
+GtkWidget *
+moo_action_create_menu_item (GtkAction *action)
+{
+    g_return_val_if_fail (GTK_IS_ACTION (action), NULL);
+
+    GtkWidget *item;
+
+    if (MOO_IS_ACTION (action) && MOO_ACTION_GET_CLASS (action)->create_menu_item)
+        item = MOO_ACTION_GET_CLASS (action)->create_menu_item (action);
+    else
+        item = moo_action_create_default_menu_item (action);
+
+    if (item)
+        connect_proxy (action, item);
+
+    return item;
+}
+
+GtkWidget *
+moo_action_create_tool_item (GtkAction *action)
+{
+    g_return_val_if_fail (GTK_IS_ACTION (action), NULL);
+
+    GtkWidget *item;
+
+    if (_moo_action_get_has_submenu (action))
+        item = GTK_WIDGET (gtk_menu_tool_button_new (NULL, NULL));
+    else if (GTK_IS_TOGGLE_ACTION (action))
+        item = GTK_WIDGET (gtk_toggle_tool_button_new ());
+    else
+        item = GTK_WIDGET (gtk_tool_button_new (NULL, NULL));
+
+    connect_proxy (action, item);
+    return item;
 }
 
 

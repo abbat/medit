@@ -45,8 +45,6 @@ void        _moo_action_set_accel_path      (gpointer            action,
 const char *_moo_action_get_accel_path      (gpointer            action);
 const char *_moo_action_get_default_accel   (gpointer            action);
 
-void        _moo_action_ring_the_bells_it_has_tooltip   (GtkAction  *action);
-
 
 G_END_DECLS
 

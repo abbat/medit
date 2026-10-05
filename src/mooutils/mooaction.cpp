@@ -32,16 +32,6 @@ static void _moo_action_set_closure (MooAction  *action,
                                      MooClosure *closure);
 
 
-void
-_moo_action_ring_the_bells_it_has_tooltip (GtkAction *action)
-{
-    char *tooltip;
-    g_object_get (action, "tooltip", &tooltip, NULL);
-    g_object_set (action, "tooltip", tooltip, NULL);
-    g_free (tooltip);
-}
-
-
 gpointer
 _moo_action_get_window (gpointer action)
 {
@@ -85,9 +75,6 @@ type_name##_base_class_init (gpointer klass)                               \
     _moo_action_base_init_class (object_class);                            \
 }
 
-
-static void connect_proxy    (GtkAction *action, GtkWidget *widget);
-static void disconnect_proxy (GtkAction *action, GtkWidget *widget);
 
 /*****************************************************************************/
 /* MooAction
@@ -211,8 +198,6 @@ moo_action_class_init (MooActionClass *klass)
     object_class->dispose = moo_action_dispose;
     object_class->constructor = moo_action_constructor;
     action_class->activate = moo_action_activate_real;
-    action_class->connect_proxy = connect_proxy;
-    action_class->disconnect_proxy = disconnect_proxy;
 
     g_object_class_install_property (object_class, ACTION_PROP_CLOSURE,
                                      g_param_spec_boxed ("closure", "closure", "closure",
@@ -448,14 +433,11 @@ moo_toggle_action_class_init (MooToggleActionClass *klass)
     moo_toggle_action_base_class_init (klass);
 
     GObjectClass *object_class = G_OBJECT_CLASS (klass);
-    GtkActionClass *action_class = GTK_ACTION_CLASS (klass);
     GtkToggleActionClass *toggle_action_class = GTK_TOGGLE_ACTION_CLASS (klass);
 
     object_class->dispose = moo_toggle_action_dispose;
     object_class->constructor = moo_toggle_action_constructor;
     toggle_action_class->toggled = moo_toggle_action_toggled;
-    action_class->connect_proxy = connect_proxy;
-    action_class->disconnect_proxy = disconnect_proxy;
 
     g_object_class_install_property (object_class, TOGGLE_ACTION_PROP_TOGGLED_CALLBACK,
                                      g_param_spec_pointer ("toggled-callback", "toggled-callback", "toggled-callback",
@@ -656,36 +638,5 @@ action_toggled (ToggleWatch *watch)
 }
 
 
-static void
-connect_proxy (GtkAction *action,
-               GtkWidget *widget)
-{
-    GtkActionClass *parent_class;
-
-    if (MOO_IS_ACTION (action))
-        parent_class = GTK_ACTION_CLASS (moo_action_parent_class);
-    else
-        parent_class = GTK_ACTION_CLASS (moo_toggle_action_parent_class);
-
-    parent_class->connect_proxy (action, widget);
-    g_signal_emit_by_name (action, "connect-proxy", widget);
-
-    _moo_action_base_connect_proxy (action, widget);
-}
-
-static void
-disconnect_proxy (GtkAction *action,
-                  GtkWidget *widget)
-{
-    GtkActionClass *parent;
-
-    if (MOO_IS_ACTION (action))
-        parent = GTK_ACTION_CLASS (moo_action_parent_class);
-    else
-        parent = GTK_ACTION_CLASS (moo_toggle_action_parent_class);
-
-    g_signal_emit_by_name (action, "disconnect-proxy", widget);
-    parent->disconnect_proxy (action, widget);
-}
 
 G_GNUC_END_IGNORE_DEPRECATIONS

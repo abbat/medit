@@ -56,13 +56,12 @@ static void
 moo_menu_action_class_init (MooMenuActionClass *klass)
 {
     GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
-    GtkActionClass *action_class = GTK_ACTION_CLASS (klass);
 
     gobject_class->set_property = moo_menu_action_set_property;
     gobject_class->get_property = moo_menu_action_get_property;
     gobject_class->finalize = moo_menu_action_finalize;
 
-    action_class->create_menu_item = moo_menu_action_create_menu_item;
+    MOO_ACTION_CLASS (klass)->create_menu_item = moo_menu_action_create_menu_item;
 
     g_object_class_install_property (gobject_class,
                                      PROP_MENU_MGR,
