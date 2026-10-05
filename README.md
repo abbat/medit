@@ -26,7 +26,7 @@ ships packages for the distributions that lost it.
 ## download
 
 [**Packages**](http://software.opensuse.org/download.html?project=home:antonbatenev:medit&package=medit)
-for Debian 12, 13, Ubuntu 22.04, 24.04, 26.04, Fedora and openSUSE — deb and
+for Debian 12, 13, Ubuntu 24.04, 26.04, Fedora and openSUSE — deb and
 rpm come from the same place, and the page walks you through adding the
 repository for whichever one you are on.
 
@@ -39,7 +39,7 @@ can stay on 1.3.12. The rpm is a single `medit` package, built against GTK+3.
 
 Everything that kept medit out of the distributions is gone:
 
-* **GTK+3.** medit builds and runs against gtk-3.24 (3.24.33 or newer).
+* **GTK+3.** medit builds and runs against gtk-3.24 (3.24.38 or newer).
   The gtk-2.24 build was kept up to 1.3.12 and is gone since.
 * **No python.** The dialogs used to be generated from glade files by a python
   script and parsed at runtime by a bundled copy of libglade. They are plain

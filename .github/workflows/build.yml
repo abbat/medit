@@ -1,8 +1,8 @@
 # Compile medit everywhere it is expected to compile, with warnings fatal.
 #
 # The local machine says very little about the distributions this fork targets:
-# it has gcc 12 and glib 2.74, while the matrix below spans gcc 11 to gcc 15 and
-# cmake 3.22 to cmake 4.2. Every class of breakage recorded in doc/build.md --
+# it has gcc 12 and glib 2.74, while the matrix below spans gcc 12 to gcc 15 and
+# cmake 3.25 to cmake 4.2. Every class of breakage recorded in doc/build.md --
 # symbols newer than the oldest glib, constructs one compiler accepts silently
 # and another rejects -- is invisible until one of these jobs runs.
 #
@@ -12,16 +12,14 @@
 # report there is a line in the log rather than a failure -- but a second full
 # build of the tree is a lot to pay for that difference.
 #
-# One distribution here, and it is the oldest: Ubuntu 22.04, gtk 3.24.33 with
-# glib 2.72, gcc 11 and cmake 3.22. What breaks a build is the age of the
-# toolchain and of GTK+3, and this is the low end of both.
+# One distribution here: Ubuntu 24.04, gtk 3.24.41 with glib 2.80, gcc 13 and
+# cmake 3.28. What breaks a build is the age of the toolchain and of GTK+3.
 #
-# The high end is compiled in package.yml, which builds the deb on Ubuntu 26.04
-# (3.24.52, glib 2.88, gcc 15, cmake 4.2), the rpm on Fedora and the package on
-# Arch; debian:13 is compiled by ui.yml; debian:12 by package.yml as well.
-# Ubuntu 24.04 is between the two ends and is compiled nowhere on a push -- the
-# release procedure builds it by hand on OBS, and nothing has ever broken in the
-# middle of a range without breaking at one of its ends.
+# The low end is compiled in package.yml, which builds the deb on Debian 12
+# (gtk 3.24.38, glib 2.74, gcc 12, cmake 3.25) and on Ubuntu 26.04 (3.24.52,
+# glib 2.88, gcc 15, cmake 4.2), the rpm on Fedora and the package on Arch;
+# debian:13 is compiled by ui.yml. Without this job Ubuntu 24.04 would be
+# compiled nowhere on a push: it is the one target not at an end of the range.
 name: build
 
 on:
@@ -46,7 +44,7 @@ jobs:
       fail-fast: false
       matrix:
         image:
-          - ubuntu:22.04   # gtk 3.24.33, glib 2.72, gcc 11, cmake 3.22
+          - ubuntu:24.04   # gtk 3.24.41, glib 2.80, gcc 13, cmake 3.28
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:

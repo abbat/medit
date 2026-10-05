@@ -3,7 +3,7 @@
 *For agents working in this tree. Read `AGENTS.md` first: it carries the rules that
 apply to every change, and this file assumes them.*
 
-CMake, out of source. GTK+3 is the only toolkit (3.24.33 or newer); there is no option
+CMake, out of source. GTK+3 is the only toolkit (3.24.38 or newer); there is no option
 to choose one. Further build directories — a clang one, a coverage one — sit beside it,
 no copying of the tree, no `distclean`:
 
@@ -90,7 +90,7 @@ is not enough to know the clang job is green.
 
 | job | what it covers |
 |---|---|
-| `deb` | ubuntu 22.04 — the low end of everything: gtk 3.24.33, glib 2.72, gcc 11, cmake 3.22 |
+| `deb` | ubuntu 22.04 — the low end of everything: gtk 3.24.38, glib 2.72, gcc 11, cmake 3.22 |
 | `langs` | `src/mooedit/langs/check.sh` over the 187 language definitions and schemes |
 
 `.github/workflows/package.yml` is the other half of the compiling: the deb on Debian 12

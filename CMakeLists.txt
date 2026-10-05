@@ -98,9 +98,9 @@ find_package(PkgConfig REQUIRED)
 # The prefix is GTKPKG and not GTK on purpose. pkg_check_modules writes
 # <prefix>_VERSION into the cache, so a prefix that names one of our own
 # options would overwrite that option with the version of the module it
-# found, and the second configure would fail on the clobbered value. 3.24.33
-# is what Ubuntu 22.04, the oldest supported distribution, ships.
-pkg_check_modules(GTKPKG REQUIRED IMPORTED_TARGET gtk+-3.0>=3.24.33)
+# found, and the second configure would fail on the clobbered value. 3.24.38
+# is what Debian 12, the oldest supported distribution, ships.
+pkg_check_modules(GTKPKG REQUIRED IMPORTED_TARGET gtk+-3.0>=3.24.38)
 message(STATUS "Building against gtk+-3.0 ${GTKPKG_VERSION}")
 pkg_check_modules(GLIB REQUIRED IMPORTED_TARGET glib-2.0 gthread-2.0 gmodule-2.0)
 pkg_check_modules(XML REQUIRED IMPORTED_TARGET libxml-2.0)

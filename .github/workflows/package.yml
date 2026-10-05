@@ -66,17 +66,17 @@ jobs:
               exit 1
           fi
 
-  # Debian 12 and Ubuntu 26.04. This is two of the five deb targets rather than
+  # Debian 12 and Ubuntu 26.04. This is two of the four deb targets rather than
   # all of them, picked for what each adds:
   # Ubuntu 26.04 is the newest GTK+3 and the newest compiler anywhere in CI, and
   # Debian 12 is the oldest packaging -- and the two are where the dependency
   # names differ, which is what the `libjpeg62-turbo-dev | libjpeg-dev`
   # alternative in debian/control is for.
   #
-  # What the rest get: Ubuntu 22.04 is compiled by build.yml, Debian 13 by
-  # ui.yml, and Ubuntu 24.04 by neither -- the release procedure builds every
-  # target by hand on OBS, and Debian rarely moves its packaging under a stable
-  # release. debian/rules asks for ENABLE_STRICT, so these are gates.
+  # What the rest get: Ubuntu 24.04 is compiled by build.yml and Debian 13 by
+  # ui.yml -- the release procedure builds every target by hand on OBS, and
+  # Debian rarely moves its packaging under a stable release. debian/rules asks
+  # for ENABLE_STRICT, so these are gates.
   deb:
     name: dpkg-buildpackage, ${{ matrix.image }}
     runs-on: ubuntu-latest

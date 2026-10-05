@@ -5,27 +5,26 @@
 
 ## Debian package build (old distros)
 
-The package targets **Debian 12 and 13, Ubuntu 22.04, 24.04 and 26.04** — Debian 11 and
-Ubuntu 20.04 were dropped when their support ended. Each is covered once, and by the job
-that adds the most:
+The package targets **Debian 12 and 13, Ubuntu 24.04 and 26.04** — Debian 11 and Ubuntu
+20.04 were dropped when their support ended, Ubuntu 22.04 when the floor moved to Debian 12
+(gtk 3.24.38, glib 2.74). Each is covered once, and by the job that adds the most:
 
 | target | compiled by | why there |
 |---|---|---|
-| Ubuntu 22.04 | `build.yml` | the oldest gtk, glib, gcc and cmake of the five |
-| Ubuntu 26.04 | `package.yml` | the newest of all four, and the packaging of the LTS most users are on |
-| Debian 12 | `package.yml` | the oldest packaging; `debian/rules` is a gate there |
+| Ubuntu 24.04 | `build.yml` | between the two ends, which would otherwise leave it compiled nowhere on a push |
+| Ubuntu 26.04 | `package.yml` | the newest of all, and the packaging of the LTS most users are on |
+| Debian 12 | `package.yml` | the oldest gtk, glib, gcc and cmake, and the oldest packaging; `debian/rules` is a gate there |
 | Debian 13 | `ui.yml` | where the UI tests run anyway |
-| Ubuntu 24.04 | nothing, on a push | between two ends that are both built; the release builds it by hand on OBS |
 
 A package build costs two compiles, one per toolkit, which is why `package.yml` carries
-two targets rather than five. `debian/rules`, `packages/PKGBUILD` and `packages/medit.spec`
+two targets rather than four. `debian/rules`, `packages/PKGBUILD` and `packages/medit.spec`
 all ask for `ENABLE_STRICT`, so every one of those builds is a gate rather than a smoke
 test. What is worth doing by hand is the faster loop while *writing* a
 packaging change, and the apt scenarios below, which CI does not reach:
 
 ```bash
 docker build -t medit-deb - <<'EOF'
-FROM ubuntu:22.04
+FROM debian:12
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -qq && apt-get install -y -qq build-essential debhelper cmake \
     pkg-config intltool libgtk-3-dev libxml2-dev libxml2-utils \
@@ -51,15 +50,15 @@ a few minutes. To collect **every** error in one pass instead of one per run, re
 `dpkg-buildpackage` with `cmake -S . -B b && cmake --build b -j8 -- -k 2>&1 | grep
 error: | sort -u` — `-k` keeps make going after the first failing file.
 
-The span the matrix covers is gcc 11 to gcc 15 and cmake 3.22 to cmake 4.2. The oldest
-is Ubuntu 22.04; `cmake_minimum_required` still asks for 3.16, which is lower than
+The span the matrix covers is gcc 12 to gcc 15 and cmake 3.25 to cmake 4.2. The oldest
+is Debian 12; `cmake_minimum_required` still asks for 3.16, which is lower than
 anything now tested and deliberately so — cmake 4 is the version that stops accepting
 compatibility with anything before 3.5, and 3.16 is above that line.
 
 What has actually broken on an old toolchain, none of it visible in a local build:
 
-* **Symbols newer than the oldest target glib**, e.g. `G_REGEX_DEFAULT` (2.74) on Ubuntu
-  22.04's 2.72. Use `(GRegexCompileFlags) 0`, as the rest of the tree does.
+* **Symbols newer than the oldest target glib**, e.g. `g_string_free_and_steal()` (2.76) on
+  Debian 12's 2.74. Call what the pinned API level (`GLIB_VERSION_MAX_ALLOWED`) has.
 * **`g_object_ref` in C++** returns `gpointer` on older glib (no `typeof` magic), so
   assigning it to a typed field needs an explicit cast.
 * **Unnamed parameters** in C function definitions (`static void f (Foo *x, gpointer)`) —
@@ -118,14 +117,13 @@ what is supported *today*, and fix both directions — drop what has reached end
 add what has been released since:
 
 * `README.md` — the "DEB packages for …" line under **download**.
-* `.github/workflows/build.yml` — the `deb` job's `image:`, which is the oldest target
-  and only that, so an aged image there loses the low end of the range rather than one
-  point of it.
+* `.github/workflows/build.yml` — the `deb` job's `image:`, now the middle of the range.
+  The low end is `debian:12` in `package.yml`; when it ages out, move the floor in
+  `CMakeLists.txt` and `cmake/CompilerFlags.cmake` with it.
 * `.github/workflows/codeql.yml` — the runner and its dependency list.
-* `.github/workflows/package.yml` — the `deb` matrix, which carries the newest target and
-  the oldest packaging, and the Fedora release in the `rpm` job. **Build the targets no
-  workflow covers by hand at release time**, on OBS: Ubuntu 24.04 is compiled nowhere on a
-  push, and Ubuntu 22.04 and Debian 13 are compiled but not packaged.
+* `.github/workflows/package.yml` — the `deb` matrix, which carries the oldest and the
+  newest target, and the Fedora release in the `rpm` job. **Build the targets no workflow
+  covers by hand at release time**, on OBS: Debian 13 is compiled but not packaged.
 * This file, "Debian package build (old distros)", which names the targets and the
   compiler span they cover.
 * `debian/control`, `packages/medit.spec`, `packages/PKGBUILD` — dependency names

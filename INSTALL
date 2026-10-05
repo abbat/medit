@@ -7,7 +7,7 @@ cmake --install build
 This will configure, build, and install medit to /usr/local. Pass
 -DCMAKE_INSTALL_PREFIX=/usr to install into /usr instead.
 
-medit requires development packages of the following: gtk3 (3.24.33 or newer), glib2, libxml2.
+medit requires development packages of the following: gtk3 (3.24.38 or newer), glib2, libxml2.
 For example, on Debian you may need to install libgtk-3-dev, libxml2-dev, and to build
 the sources also cmake, pkg-config, intltool and gettext.
 
