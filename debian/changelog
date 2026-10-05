@@ -1,3 +1,13 @@
+medit (1.4.1) unstable; urgency=low
+
+  * Show the tooltips of the buttons of a floating file selector pane.
+  * Show the icons of the main menu items again.
+  * Use symbolic names for the bookmark and about icons, which the Adwaita 48
+    theme (Debian 13) needs.
+  * Fix the layout of the Preferences dialog.
+
+ -- Anton Batenev <antonbatenev@yandex.ru>  Tue, 06 Oct 2026 00:48:57 +0300
+
 medit (1.4.0) unstable; urgency=low
 
   * Remove GTK+2 support; medit-gtk2 is gone and medit is a metapackage

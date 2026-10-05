@@ -1,3 +1,13 @@
+2026-10-06  Anton Batenev  <antonbatenev@yandex.ru>
+
+    * === Released 1.4.1 ===
+
+    Fixes: the buttons of a floating file selector pane show their
+    tooltips again; items of the main menu show their icons again; the
+    bookmark and about icons use names that the Adwaita 48 theme has
+    (Debian 13); the Preferences dialog has a border around its buttons
+    and no longer stretches the rows of the General page.
+
 2026-10-05  Anton Batenev  <antonbatenev@yandex.ru>
 
     * === Released 1.4.0 ===

@@ -6,7 +6,7 @@
 # have to carry the same version.
 
 Name:           medit
-Version:        1.4.0
+Version:        1.4.1
 Release:        1%{?dist}
 Summary:        Useful programming and around-programming text editor
 Group:          Productivity/Text/Editors
@@ -80,6 +80,10 @@ rm -rf %{buildroot}
 %{_mandir}/man1/%{name}.1*
 
 %changelog
+* Tue Oct 06 2026 Anton Batenev <antonbatenev@yandex.ru> - 1.4.1-1
+- Tooltips of a floating file selector pane, main menu icons, symbolic
+  bookmark and about icons for Adwaita 48, Preferences dialog layout
+
 * Mon Oct 05 2026 Anton Batenev <antonbatenev@yandex.ru> - 1.4.0-1
 - GTK+2 support removed; minimum is GTK+ 3.24.38 and glib 2.74; no
   deprecated GTK+/GDK/glib API left (GtkAction, GtkStock, GtkTable and
