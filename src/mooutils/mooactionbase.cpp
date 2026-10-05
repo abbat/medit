@@ -213,7 +213,7 @@ _moo_action_get_display_name (gpointer action)
     display_name = get_string (action, "moo-action-display-name");
 
     if (!display_name)
-        display_name = gtk_action_get_name (GTK_ACTION (action));
+        display_name = moo_action_get_name (GTK_ACTION (action));
 
     return display_name;
 }
@@ -547,8 +547,8 @@ _moo_action_make_accel_path (gpointer action)
     collection = _moo_action_group_get_collection (MOO_ACTION_GROUP (group));
     g_return_val_if_fail (MOO_IS_ACTION_COLLECTION (collection), NULL);
 
-    name = gtk_action_get_name (GTK_ACTION (action));
-    group_name = gtk_action_group_get_name (group);
+    name = moo_action_get_name (GTK_ACTION (action));
+    group_name = moo_action_group_get_name (group);
     collection_name = moo_action_collection_get_name (collection);
 
     g_return_val_if_fail (collection_name != NULL, NULL);
@@ -566,7 +566,7 @@ _moo_action_set_accel_path (gpointer    action,
                             const char *accel_path)
 {
     g_return_if_fail (MOO_IS_ACTION_BASE (action));
-    gtk_action_set_accel_path (GTK_ACTION (action), accel_path);
+    moo_action_set_accel_path (GTK_ACTION (action), accel_path);
 }
 
 
@@ -574,7 +574,78 @@ const char *
 _moo_action_get_accel_path (gpointer action)
 {
     g_return_val_if_fail (MOO_IS_ACTION_BASE (action), NULL);
-    return gtk_action_get_accel_path (GTK_ACTION (action));
+    return moo_action_get_accel_path (GTK_ACTION (action));
+}
+
+
+const char *
+moo_action_get_name (GtkAction *action)
+{
+    return gtk_action_get_name (action);
+}
+
+gboolean
+moo_action_get_sensitive (GtkAction *action)
+{
+    return gtk_action_get_sensitive (action);
+}
+
+void
+moo_action_set_sensitive (GtkAction *action,
+                          gboolean   sensitive)
+{
+    gtk_action_set_sensitive (action, sensitive);
+}
+
+gboolean
+moo_action_get_visible (GtkAction *action)
+{
+    return gtk_action_get_visible (action);
+}
+
+gboolean
+moo_action_is_visible (GtkAction *action)
+{
+    return gtk_action_is_visible (action);
+}
+
+void
+moo_action_set_visible (GtkAction *action,
+                        gboolean   visible)
+{
+    gtk_action_set_visible (action, visible);
+}
+
+void
+moo_action_activate (GtkAction *action)
+{
+    gtk_action_activate (action);
+}
+
+const char *
+moo_action_get_accel_path (GtkAction *action)
+{
+    return gtk_action_get_accel_path (action);
+}
+
+void
+moo_action_set_accel_path (GtkAction  *action,
+                           const char *accel_path)
+{
+    gtk_action_set_accel_path (action, accel_path);
+}
+
+gboolean
+moo_toggle_action_get_active (GtkToggleAction *action)
+{
+    return gtk_toggle_action_get_active (action);
+}
+
+void
+moo_toggle_action_set_active (GtkToggleAction *action,
+                              gboolean         active)
+{
+    gtk_toggle_action_set_active (action, active);
 }
 
 

@@ -238,7 +238,7 @@ moo_action_collection_get_action (MooActionCollection *coll,
     for (l = coll->priv->groups_list; l != NULL; l = l->next)
     {
         GtkActionGroup *group = GTK_ACTION_GROUP (l->data);
-        GtkAction *action = gtk_action_group_get_action (group, name);
+        GtkAction *action = moo_action_group_get_action (group, name);
         if (action)
             return action;
     }
@@ -260,7 +260,7 @@ moo_action_collection_remove_action (MooActionCollection *coll,
     g_return_if_fail (group != NULL);
     g_return_if_fail (g_slist_find (coll->priv->groups_list, group) != NULL);
 
-    gtk_action_group_remove_action (group, action);
+    moo_action_group_remove_action (group, action);
 }
 
 

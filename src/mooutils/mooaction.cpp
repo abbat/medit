@@ -136,7 +136,7 @@ moo_action_dispose (GObject *object)
 
 
 static void
-moo_action_activate (GtkAction *gtkaction)
+moo_action_activate_real (GtkAction *gtkaction)
 {
     MooAction *action = MOO_ACTION (gtkaction);
 
@@ -210,7 +210,7 @@ moo_action_class_init (MooActionClass *klass)
 
     object_class->dispose = moo_action_dispose;
     object_class->constructor = moo_action_constructor;
-    action_class->activate = moo_action_activate;
+    action_class->activate = moo_action_activate_real;
     action_class->connect_proxy = connect_proxy;
     action_class->disconnect_proxy = disconnect_proxy;
 
@@ -366,12 +366,12 @@ moo_toggle_action_toggled (GtkToggleAction *gtkaction)
         {
             GObject *obj = MOO_OBJECT_PTR_GET (action->priv->ptr);
             g_object_ref (obj);
-            action->priv->callback (obj, gtk_toggle_action_get_active (gtkaction));
+            action->priv->callback (obj, moo_toggle_action_get_active (gtkaction));
             g_object_unref (obj);
         }
         else
         {
-            action->priv->callback (action->priv->data, gtk_toggle_action_get_active (gtkaction));
+            action->priv->callback (action->priv->data, moo_toggle_action_get_active (gtkaction));
         }
     }
 }
@@ -619,7 +619,7 @@ prop_changed (ToggleWatch *watch)
 
     action = MOO_OBJECT_PTR_GET (watch->parent.target);
     g_assert (GTK_IS_TOGGLE_ACTION (action));
-    active = gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action));
+    active = moo_toggle_action_get_active (GTK_TOGGLE_ACTION (action));
 
     if (!watch->invert)
         equal = !value == !active;
@@ -627,7 +627,7 @@ prop_changed (ToggleWatch *watch)
         equal = !value != !active;
 
     if (!equal)
-        gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), watch->invert ? !value : value);
+        moo_toggle_action_set_active (GTK_TOGGLE_ACTION (action), watch->invert ? !value : value);
 }
 
 
@@ -642,7 +642,7 @@ action_toggled (ToggleWatch *watch)
 
     action = MOO_OBJECT_PTR_GET (watch->parent.target);
     g_assert (GTK_IS_TOGGLE_ACTION (action));
-    active = gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action));
+    active = moo_toggle_action_get_active (GTK_TOGGLE_ACTION (action));
 
     if (!watch->invert)
         equal = !value == !active;

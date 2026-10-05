@@ -14,6 +14,7 @@
  */
 
 #include "mooutils/mooactionfactory.h"
+#include "mooutils/mooactiongroup.h"
 #include "mooutils/mooutils-gobject.h"
 #include "mooutils/mooaction.h"
 #include "mooutils/mooactionbase.h"
@@ -109,7 +110,7 @@ moo_action_group_add_action (GtkActionGroup *group,
 
     g_return_val_if_fail (action != NULL, NULL);
 
-    gtk_action_group_add_action (group, action);
+    moo_action_group_insert_action (group, action);
     g_object_unref (action);
 
     return action;

@@ -14,6 +14,7 @@
  */
 
 #include "mooutils/mooaccel.h"
+#include "mooutils/mooactionbase.h"
 #include "mooutils/mooprefs.h"
 
 /* This file is the GtkAction/GtkStock family. Those classes are deprecated
@@ -506,7 +507,7 @@ _moo_accel_check_action_event (GtkWidget   *widget,
     if (!action || !GTK_IS_ACTION (action))
         return FALSE;
 
-    accel_path = gtk_action_get_accel_path (GTK_ACTION (action));
+    accel_path = moo_action_get_accel_path (GTK_ACTION (action));
     accel = accel_path ? _moo_get_accel (accel_path) : NULL;
 
     if (!accel || !accel[0] || !_moo_accel_parse (accel, &key, &mods))

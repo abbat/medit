@@ -16,6 +16,7 @@
 #include "moousertools.h"
 #include "moousertools-prefs.h"
 #include "moocommand-private.h"
+#include "mooutils/mooactionbase.h"
 #include "plugins/mooplugin-builtin.h"
 #include "mooedit/mooeditaction.h"
 #include "mooedit/mooeditaction-factory.h"
@@ -1345,9 +1346,7 @@ moo_tool_action_check_state (MooEditAction *edit_action)
     MOO_EDIT_ACTION_CLASS (_moo_tool_action_parent_class)->check_state (edit_action);
 
     /* GtkAction is deprecated since GTK+ 3.10; there is no replacement short of GAction/GMenu. */
-    G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-    gboolean visible = gtk_action_is_visible (GTK_ACTION (action));
-    G_GNUC_END_IGNORE_DEPRECATIONS
+    gboolean visible = moo_action_is_visible (GTK_ACTION (action));
 
     if (!visible)
         return;

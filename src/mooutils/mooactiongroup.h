@@ -56,6 +56,15 @@ MooActionCollection *_moo_action_group_get_collection   (MooActionGroup         
 void                 _moo_action_group_set_collection   (MooActionGroup         *group,
                                                          MooActionCollection    *collection);
 
+const char          *moo_action_group_get_name          (GtkActionGroup         *group);
+void                 moo_action_group_insert_action     (GtkActionGroup         *group,
+                                                         GtkAction              *action);
+void                 moo_action_group_remove_action     (GtkActionGroup         *group,
+                                                         GtkAction              *action);
+GtkAction           *moo_action_group_get_action        (GtkActionGroup         *group,
+                                                         const char             *name);
+GList               *moo_action_group_list_actions      (GtkActionGroup         *group);
+
 
 G_END_DECLS
 

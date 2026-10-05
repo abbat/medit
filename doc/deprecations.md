@@ -252,6 +252,9 @@ accelerator editor for the same result.
   - Order, each step building and working:
     a. `moo_action_*`/`moo_action_group_*` accessors that still delegate to GtkAction;
        move the ~47 call sites onto them, so later steps touch one file.
+       Done: step a. The group's add is `moo_action_group_insert_action`, since
+       `moo_action_group_add_action` is already the action factory; the MooAction
+       `activate` vfunc became `moo_action_activate_real` for the same reason.
     b. (4.1) Proxy creation behind our own helpers and a MooAction `create_menu_item`
        slot; our own proxy sync from `notify::` (label, tooltip, icon, sensitive,
        visible, active). Risk: toggle feedback loops, menu icons, accel labels.

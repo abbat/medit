@@ -17,6 +17,7 @@
 #include "moofileselector.h"
 #include "mooedit/mooplugin-macro.h"
 #include "mooedit/mooedittab.h"
+#include "mooutils/mooactionbase.h"
 #include "moofileview/moobookmarkmgr.h"
 #include "moofileview/moofile.h"
 #include "moofileview/moofileview-tools.h"
@@ -338,13 +339,11 @@ moo_file_selector_populate_popup (MooFileView *fileview,
     open = moo_action_collection_get_action (moo_file_view_get_actions (fileview), "Open");
 
     /* GtkAction is deprecated since GTK+ 3.10; there is no replacement short of GAction/GMenu. */
-    G_GNUC_BEGIN_IGNORE_DEPRECATIONS
     if (new_file)
-        gtk_action_set_sensitive (new_file, !selected || !selected->next);
+        moo_action_set_sensitive (new_file, !selected || !selected->next);
 
     if (open)
-        gtk_action_set_visible (open, anything_to_open (selected));
-    G_GNUC_END_IGNORE_DEPRECATIONS
+        moo_action_set_visible (open, anything_to_open (selected));
 }
 
 
@@ -567,7 +566,6 @@ notify_show_hidden_files (MooFileSelector *filesel)
  */
 
 /* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static GObject *
 moo_file_selector_constructor (GType           type,
                                guint           n_props,
@@ -647,7 +645,6 @@ moo_file_selector_constructor (GType           type,
 
     return object;
 }
-G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 static gboolean
@@ -1095,7 +1092,6 @@ alternate_toggled (GtkWidget *menu)
     }
 }
 
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static GtkWidget *
 create_drop_doc_menu (MooFileSelector *filesel,
                       MooEdit         *doc,
@@ -1148,7 +1144,6 @@ create_drop_doc_menu (MooFileSelector *filesel,
 
     return menu;
 }
-G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 static void

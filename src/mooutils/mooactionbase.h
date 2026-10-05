@@ -38,7 +38,25 @@ struct _MooActionBaseClass {
 };
 
 
-GType   moo_action_base_get_type    (void) G_GNUC_CONST;
+GType        moo_action_base_get_type     (void) G_GNUC_CONST;
+
+/* Accessors for the properties of an action. They delegate to GtkAction for now,
+   so that the day it goes the change is in one place. */
+const char  *moo_action_get_name          (GtkAction       *action);
+gboolean     moo_action_get_sensitive     (GtkAction       *action);
+void         moo_action_set_sensitive     (GtkAction       *action,
+                                           gboolean         sensitive);
+gboolean     moo_action_get_visible       (GtkAction       *action);
+gboolean     moo_action_is_visible        (GtkAction       *action);
+void         moo_action_set_visible       (GtkAction       *action,
+                                           gboolean         visible);
+void         moo_action_activate          (GtkAction       *action);
+const char  *moo_action_get_accel_path    (GtkAction       *action);
+void         moo_action_set_accel_path    (GtkAction       *action,
+                                           const char      *accel_path);
+gboolean     moo_toggle_action_get_active (GtkToggleAction *action);
+void         moo_toggle_action_set_active (GtkToggleAction *action,
+                                           gboolean         active);
 
 
 G_END_DECLS

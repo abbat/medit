@@ -18,6 +18,7 @@
 #include "mooedit/mooedit-private.h"
 #include "mooutils/mooactionfactory.h"
 #include "mooutils/mooactionbase.h"
+#include "mooutils/mooactiongroup.h"
 #include "mooutils/moomenuaction.h"
 #include "mooutils/mooi18n.h"
 #include "mooutils/mooutils-mem.h"
@@ -94,7 +95,7 @@ moo_edit_add_action (MooEdit   *edit,
     g_return_if_fail (GTK_IS_ACTION (action));
 
     group = moo_edit_get_actions (edit);
-    gtk_action_group_add_action (group, action);
+    moo_action_group_insert_action (group, action);
 }
 
 
@@ -109,8 +110,8 @@ moo_edit_remove_action (MooEdit    *edit,
     g_return_if_fail (action_id != NULL);
 
     group = moo_edit_get_actions (edit);
-    action = gtk_action_group_get_action (group, action_id);
-    gtk_action_group_remove_action (group, action);
+    action = moo_action_group_get_action (group, action_id);
+    moo_action_group_remove_action (group, action);
 }
 
 
@@ -497,7 +498,7 @@ moo_edit_get_action_by_id (MooEdit    *edit,
     g_return_val_if_fail (action_id != NULL, NULL);
 
     actions = moo_edit_get_actions (edit);
-    return gtk_action_group_get_action (actions, action_id);
+    return moo_action_group_get_action (actions, action_id);
 }
 
 

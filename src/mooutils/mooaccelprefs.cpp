@@ -20,6 +20,7 @@
 #include "mooutils/moodialogs.h"
 #include "mooutils/mooi18n.h"
 #include "mooutils/mooaction-private.h"
+#include "mooutils/mooactionbase.h"
 #include "mooutils/mooactiongroup.h"
 #include "mooutils/mootype-macros.h"
 #include "mooutils/moohelp.h"
@@ -517,7 +518,7 @@ add_row (GtkActionGroup    *group,
 
     accel = get_accel_label_for_path (_moo_action_get_accel_path (action));
     name = _moo_action_get_display_name (action);
-    global = _moo_accel_prefs_get_global (gtk_action_get_accel_path (action));
+    global = _moo_accel_prefs_get_global (moo_action_get_accel_path (action));
 
     gtk_tree_store_set (page->store, &iter,
                         COLUMN_ACTION_NAME, name,
@@ -540,7 +541,7 @@ moo_accel_prefs_page_init (MooPrefsPage *prefs_page)
     for (i = 0; i < page->actions->len; ++i)
     {
         GtkActionGroup *group = (GtkActionGroup*) g_ptr_array_index (page->actions, i);
-        GList *list = gtk_action_group_list_actions (group);
+        GList *list = moo_action_group_list_actions (group);
 
         while (list)
         {

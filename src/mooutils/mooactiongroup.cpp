@@ -35,7 +35,7 @@ _moo_action_group_get_display_name (MooActionGroup *group)
     name = group->display_name;
 
     if (!name)
-        name = gtk_action_group_get_name (GTK_ACTION_GROUP (group));
+        name = moo_action_group_get_name (GTK_ACTION_GROUP (group));
 
     if (!name)
         name = "Actions";
@@ -106,6 +106,40 @@ _moo_action_group_set_collection (MooActionGroup      *group,
     g_return_if_fail (MOO_IS_ACTION_GROUP (group));
     g_return_if_fail (!collection || MOO_IS_ACTION_COLLECTION (collection));
     group->collection = collection;
+}
+
+
+const char *
+moo_action_group_get_name (GtkActionGroup *group)
+{
+    return gtk_action_group_get_name (group);
+}
+
+void
+moo_action_group_insert_action (GtkActionGroup *group,
+                             GtkAction      *action)
+{
+    gtk_action_group_add_action (group, action);
+}
+
+void
+moo_action_group_remove_action (GtkActionGroup *group,
+                                GtkAction      *action)
+{
+    gtk_action_group_remove_action (group, action);
+}
+
+GtkAction *
+moo_action_group_get_action (GtkActionGroup *group,
+                             const char     *name)
+{
+    return gtk_action_group_get_action (group, name);
+}
+
+GList *
+moo_action_group_list_actions (GtkActionGroup *group)
+{
+    return gtk_action_group_list_actions (group);
 }
 
 G_GNUC_END_IGNORE_DEPRECATIONS

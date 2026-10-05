@@ -20,6 +20,7 @@
 #include "mooutils/moowindow.h"
 #include "mooutils/mooaction-private.h"
 #include "mooutils/mooactionbase-private.h"
+#include "mooutils/mooactiongroup.h"
 #include "mooutils/moomenuaction.h"
 #include "mooutils/mooaccelprefs.h"
 #include "mooutils/mooaccel.h"
@@ -217,7 +218,6 @@ static gpointer moo_window_grand_parent_class;
         g_param_spec_boolean (name, name, name, FALSE, G_PARAM_READABLE))
 
 /* GtkStock is deprecated since GTK+ 3.10; there is no replacement short of named icons everywhere. */
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static void
 moo_window_class_init (MooWindowClass *klass)
 {
@@ -422,7 +422,6 @@ moo_window_class_init (MooWindowClass *klass)
                       _moo_marshal_ENUM__VOID,
                       MOO_TYPE_CLOSE_RESPONSE, 0);
 }
-G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 /* Reads a decimal number, with no sign: the sign is part of the geometry
@@ -756,9 +755,7 @@ update_accels (MooWindow *window)
         GList *actions;
 
         /* GtkAction is deprecated since GTK+ 3.10; there is no replacement short of GAction/GMenu. */
-        G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-        actions = gtk_action_group_list_actions (group);
-        G_GNUC_END_IGNORE_DEPRECATIONS
+        actions = moo_action_group_list_actions (group);
 
         while (actions != NULL)
         {
@@ -768,9 +765,7 @@ update_accels (MooWindow *window)
             if (MOO_IS_ACTION (action) &&
                 !_moo_action_get_no_accel (action))
             {
-                G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-                accel_path = gtk_action_get_accel_path (action);
-                G_GNUC_END_IGNORE_DEPRECATIONS
+                accel_path = moo_action_get_accel_path (action);
             }
 
             if (accel_path && _moo_accel_prefs_get_global (accel_path))
@@ -823,9 +818,7 @@ activate_global_accel (MooWindow   *window,
 
         if (entry->keyval == keyval && entry->modifiers == mods)
         {
-            G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-            gtk_action_activate (entry->action);
-            G_GNUC_END_IGNORE_DEPRECATIONS
+            moo_action_activate (entry->action);
             return TRUE;
         }
     }
@@ -1897,7 +1890,7 @@ moo_window_add_action (MooWindow  *window,
     g_return_if_fail (group != NULL);
 
     G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-    gtk_action_group_add_action (group, action);
+    moo_action_group_insert_action (group, action);
     gtk_action_set_accel_group (action, window->accel_group);
     G_GNUC_END_IGNORE_DEPRECATIONS
 
