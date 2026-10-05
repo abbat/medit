@@ -6,7 +6,7 @@
 # have to carry the same version.
 
 Name:           medit
-Version:        1.3.12
+Version:        1.4.0
 Release:        1%{?dist}
 Summary:        Useful programming and around-programming text editor
 Group:          Productivity/Text/Editors
@@ -80,6 +80,11 @@ rm -rf %{buildroot}
 %{_mandir}/man1/%{name}.1*
 
 %changelog
+* Mon Oct 05 2026 Anton Batenev <antonbatenev@yandex.ru> - 1.4.0-1
+- GTK+2 support removed; minimum is GTK+ 3.24.38 and glib 2.74; no
+  deprecated GTK+/GDK/glib API left (GtkAction, GtkStock, GtkTable and
+  the rest replaced)
+
 * Tue Sep 29 2026 Anton Batenev <antonbatenev@yandex.ru> - 1.3.12-1
 - Translations filled in for all languages; file selector tree view
   and icon view teardown fixes; desktop file Keywords fix

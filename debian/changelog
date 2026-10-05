@@ -1,3 +1,13 @@
+medit (1.4.0) unstable; urgency=low
+
+  * Remove GTK+2 support; medit-gtk2 is gone and medit is a metapackage
+    pulling in medit-gtk3.
+  * Require GTK+ 3.24.38 and glib 2.74; Ubuntu 22.04 is no longer supported.
+  * Replace all deprecated GTK+, GDK and glib API, including GtkAction,
+    GtkStock, GtkTable and the box classes.
+
+ -- Anton Batenev <antonbatenev@yandex.ru>  Mon, 05 Oct 2026 14:23:15 +0300
+
 medit (1.3.12) unstable; urgency=low
 
   * Fill in missing and fuzzy translations in every language.
