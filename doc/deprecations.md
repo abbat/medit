@@ -314,10 +314,10 @@ accelerator editor for the same result.
 - [x] 4.3 MooAction and MooToggleAction rebased on GObject (there was no MooRadioAction).
 - [x] 4.4 The remaining `gtk_action_*` callers: accel prefs, bookmarks,
   fileview tools, LSP, spell, user tools.
-- [ ] 4.5 Hand check: menus, toolbar, accelerators, toggle/radio, user tools,
+- [ ] 4.5 (put off: `doc/todo.md`) Hand check: menus, toolbar, accelerators, toggle/radio, user tools,
   plugin actions. Push and CI.
 
-## Stage 5 — vendored gtksourceview (needs the user's decision)
+## Stage 5 — vendored gtksourceview (put off: `doc/todo.md`)
 
 - [ ] 5.1 Measure: build `src/vendor` without `-Wno-deprecated-declarations` and count.
 - [ ] 5.2 The user decides whether to fix it in place (upstream gtksourceview 3 is

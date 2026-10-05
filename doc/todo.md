@@ -167,3 +167,19 @@ than to the symbols pane, even though the results are the symbols pane's rows.
 here") arrives without it, and the code that would have a documentation URL does not carry
 one. Both need somewhere to show a secondary location, which the diagnostics pane could
 grow as child rows.
+
+## Deprecated API left after `doc/deprecations.md`
+
+Stages 0–4 of that plan are done: nothing in `src/` outside `src/vendor/` calls deprecated
+API or wraps a call in `G_GNUC_BEGIN_IGNORE_DEPRECATIONS`. Three things were put off.
+
+- **The vendored gtksourceview** (stage 5) still builds with `-Wno-deprecated-declarations`
+  (`src/CMakeLists.txt`). Upstream gtksourceview 3 is finished, so "belongs upstream" no
+  longer applies; the choice is between fixing it in place, keeping the exemption, or
+  moving to a system gtksourceview, which changes the API and the `.lang`/style formats.
+  First measure: build `src/vendor` without the flag and count.
+- **A hand check of the action rewrite** (4.5): menus, toolbar, accelerators, toggles, user
+  tools and plugin actions, looked at on screen. The UI suite in CI passed on `1b63b88`;
+  nobody has looked yet.
+- **The `.pot`**: the stage 4 renames may have moved translatable strings; regenerate it
+  and see whether anything changed.
