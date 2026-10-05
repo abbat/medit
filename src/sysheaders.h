@@ -32,7 +32,6 @@
 #include <gmodule.h>
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
-#include <gtk/deprecated/gtkstock.h>
 #include <gtk/gtk-a11y.h>
 #include <gdk/gdkkeysyms.h>
 #include <gobject/gvaluecollector.h>
