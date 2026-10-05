@@ -224,8 +224,48 @@ creation and sync). MooUiXml and the plugin API stay. The alternative,
 GAction/GMenu/GtkApplication, rewrites menus, toolbars, user tools and the
 accelerator editor for the same result.
 
-- [ ] 4.0 Design: list every GtkAction feature actually used (properties, signals,
+- [x] 4.0 Design: list every GtkAction feature actually used (properties, signals,
   proxies, Activatable sync), and the order of migration.
+  Inventory (2026-10-05): 299 lines in 35 files name the family, about 47 of them
+  real `gtk_action_*`/`gtk_toggle_action_*` calls; the rest are `GtkAction *` types
+  and casts. GtkUIManager and radio actions are not used at all, so only MooAction
+  and MooToggleAction need a new base. No binding (.defs, gir, lua, python) exposes
+  GtkAction.
+  - Used from GtkAction: `name`, `label`, `tooltip`, `icon-name`, `sensitive`,
+    `visible`, `accel-path`, `activate` (signal and vfunc), and `active`/`toggled`
+    on toggles. Never used: `stock-id`, `gicon`, `short-label`, `is-important`,
+    `hide-if-empty`, `visible-horizontal/vertical`, `accel-closure`, everything
+    radio.
+  - Everything else (`display-name`, `default-accel`, `no-accel`, `dead`,
+    `has-submenu`, `use-underline`, the closure properties) is already Moo's own,
+    in `mooactionbase.cpp` and `mooaction.cpp`.
+  - Proxies: `moouixml.cpp` creates menu items (`gtk_action_create_menu_item`) and
+    tool items (`gtk_action_create_tool_item`, or `gtk_activatable_set_related_action`
+    for a split button); five classes override `create_menu_item` (MooMenuAction,
+    the encodings menu, special characters, open recent, go-to-bookmark). GtkActivatable
+    does all syncing; the one manual `sync_proxies()` is in `mooeditwindow.cpp`.
+  - Accelerators: `moo_window_add_action()` gives each action an accel path and the
+    window's accel group; GtkAction connects the closure and the menu item shows the
+    label. Without it: `gtk_accel_group_connect_by_path()` and
+    `gtk_menu_item_set_accel_path()` ourselves. GtkAccelMap itself is not deprecated
+    and stays.
+  - Order, each step building and working:
+    a. `moo_action_*`/`moo_action_group_*` accessors that still delegate to GtkAction;
+       move the ~47 call sites onto them, so later steps touch one file.
+    b. (4.1) Proxy creation behind our own helpers and a MooAction `create_menu_item`
+       slot; our own proxy sync from `notify::` (label, tooltip, icon, sensitive,
+       visible, active). Risk: toggle feedback loops, menu icons, accel labels.
+    c. (4.2) MooActionGroup on GObject: a name and a hash of actions.
+    d. Accelerators connected by path ourselves. Risk: user-set shortcuts and
+       runtime changes; the shortcut tests in `doc/testing-panes.md` cover them.
+    e. (4.3) MooAction and MooToggleAction on GObject, with their own properties
+       and `activate`/`toggled` signals.
+    f. (4.4) The public headers take `MooAction *` instead of `GtkAction *`; the
+       ignore-deprecation wrappers and `GtkSettings:gtk-menu-images` in
+       `KNOWN_DEPRECATED` go.
+    g. (4.5) Hand check, then CI.
+  - Open: whether anything listens to Moo's `connect-proxy`/`disconnect-proxy`;
+    check before removing them in step e.
 - [ ] 4.1 Our own proxy creation and sync in `moouixml.cpp` instead of
   `gtk_action_create_menu_item`/`create_tool_item` and GtkActivatable.
 - [ ] 4.2 MooActionGroup/collection without GtkActionGroup.
