@@ -22,18 +22,7 @@
 
 #include "moofileview/moofile-private.h"
 
-/* moofoldermodel-private.h defines its whole FileList API as static functions
-   inline in the header; this file exercises only a slice of it, so the rest
-   are "defined but not used" in this translation unit -- not the case
-   moofoldermodel.cpp's own compile of the header is in. */
-#if defined(__GNUC__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-function"
-#endif
 #include "moofileview/moofoldermodel-private.h"
-#if defined(__GNUC__)
-#pragma GCC diagnostic pop
-#endif
 
 
 /* Reverse of moo_file_cmp: a resort with this as the new comparator must
@@ -101,10 +90,56 @@ test_set_cmp_func_reorders_list (void)
 }
 
 
+/*
+ * The lookups the model answers its rows with: by position, by file, by name,
+ * by display name, and the whole list in walk order. ".." sorts first whatever
+ * its name would say, and a removal shifts the positions after it.
+ */
+static void
+test_lookups_follow_add_and_remove (void)
+{
+    static const char *names[] = { "b", "..", "c", "a" };
+    FileList *flist = file_list_new ((MooFileCmp) moo_file_cmp);
+
+    for (const char *name : names)
+    {
+        MooFile *f = _moo_file_new ("/tmp", name);
+        file_list_add (flist, f);
+        _moo_file_unref (f);
+    }
+
+    static const char *sorted[] = { "..", "a", "b", "c" };
+    for (int i = 0; i < 4; ++i)
+    {
+        MooFile *file = file_list_nth (flist, i);
+        g_assert_cmpstr (_moo_file_name (file), ==, sorted[i]);
+        g_assert_cmpint (file_list_position (flist, file), ==, i);
+        g_assert_true (file_list_find_name (flist, sorted[i]) == file);
+        g_assert_true (file_list_find_display_name (flist, _moo_file_display_name (file)) == file);
+    }
+
+    g_assert_null (file_list_find_name (flist, "missing"));
+
+    MooFile *b = file_list_find_name (flist, "b");
+    g_assert_cmpint (file_list_remove (flist, b), ==, 2);
+    g_assert_null (file_list_find_name (flist, "b"));
+    g_assert_cmpint (file_list_position (flist, file_list_find_name (flist, "c")), ==, 2);
+
+    GSList *slist = file_list_get_slist (flist);
+    g_assert_cmpuint (g_slist_length (slist), ==, 3);
+    g_assert_cmpstr (_moo_file_name ((MooFile *) slist->data), ==, "..");
+    g_assert_cmpstr (_moo_file_name ((MooFile *) g_slist_last (slist)->data), ==, "c");
+    g_slist_free_full (slist, (GDestroyNotify) _moo_file_unref);
+
+    file_list_destroy (flist);
+}
+
+
 void
 _moo_add_moofoldermodel_unit_tests (void)
 {
     g_test_add_func ("/moofoldermodel/set-cmp-func-reorders-list", test_set_cmp_func_reorders_list);
+    g_test_add_func ("/moofoldermodel/lookups-follow-add-and-remove", test_lookups_follow_add_and_remove);
 }
 
 #endif /* MOO_ENABLE_UNIT_TESTS */

@@ -34,14 +34,7 @@
 
 #include "moofileview/moofile-private.h"
 
-#if defined(__GNUC__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-function"
-#endif
 #include "moofileview/moofoldermodel-private.h"
-#if defined(__GNUC__)
-#pragma GCC diagnostic pop
-#endif
 
 
 #define PERF_RUNS 3

@@ -43,46 +43,46 @@ struct _FileList {
 };
 
 
-static FileList *file_list_new          (MooFileCmp  cmp_func);
-static void      file_list_destroy      (FileList   *flist);
+static inline FileList *file_list_new          (MooFileCmp  cmp_func);
+static inline void      file_list_destroy      (FileList   *flist);
 
-static void      file_list_set_cmp_func (FileList   *flist,
+static inline void      file_list_set_cmp_func (FileList   *flist,
                                          MooFileCmp  cmp_func,
                                          int       **new_order);
 
-static int       file_list_add          (FileList   *flist,
+static inline int       file_list_add          (FileList   *flist,
                                          MooFile    *file);
-static int       file_list_remove       (FileList   *flist,
+static inline int       file_list_remove       (FileList   *flist,
                                          MooFile    *file);
 
-static MooFile  *file_list_nth          (FileList   *flist,
+static inline MooFile  *file_list_nth          (FileList   *flist,
                                          int         index_);
-static int       file_list_position     (FileList   *flist,
+static inline int       file_list_position     (FileList   *flist,
                                          MooFile    *file);
 
-static MooFile  *file_list_find_name    (FileList   *flist,
+static inline MooFile  *file_list_find_name    (FileList   *flist,
                                          const char *name);
-static MooFile  *file_list_find_display_name
+static inline MooFile  *file_list_find_display_name
                                         (FileList   *flist,
                                          const char *display_name);
 
-static MooFile  *file_list_first        (FileList   *flist);
-static MooFile  *file_list_next         (FileList   *flist,
+static inline MooFile  *file_list_first        (FileList   *flist);
+static inline MooFile  *file_list_next         (FileList   *flist,
                                          MooFile    *file);
 
-static GSList   *file_list_get_slist    (FileList   *flist);
+static inline GSList   *file_list_get_slist    (FileList   *flist);
 
-static int       _cmp_func_wrapper      (gconstpointer   a,
+static inline int       _cmp_func_wrapper      (gconstpointer   a,
                                          gconstpointer   b,
                                          gpointer        user_data);
-static int       _compare_file_indices  (int            *a,
+static inline int       _compare_file_indices  (int            *a,
                                          int            *b,
                                          gpointer        user_data);
 
-static void      _hash_table_insert     (FileList       *flist,
+static inline void      _hash_table_insert     (FileList       *flist,
                                          MooFile        *file,
                                          GSequenceIter  *iter);
-static void      _hash_table_remove     (FileList       *flist,
+static inline void      _hash_table_remove     (FileList       *flist,
                                          MooFile        *file);
 
 
@@ -94,7 +94,7 @@ static void      _hash_table_remove     (FileList       *flist,
 #endif
 
 
-static FileList *file_list_new          (MooFileCmp cmp_func)
+static inline FileList *file_list_new          (MooFileCmp cmp_func)
 {
     FileList *flist = g_new0 (FileList, 1);
 
@@ -112,7 +112,7 @@ static FileList *file_list_new          (MooFileCmp cmp_func)
 }
 
 
-static void      file_list_destroy      (FileList   *flist)
+static inline void      file_list_destroy      (FileList   *flist)
 {
     GSequenceIter *iter;
 
@@ -133,7 +133,7 @@ static void      file_list_destroy      (FileList   *flist)
 }
 
 
-static int       file_list_add          (FileList   *flist,
+static inline int       file_list_add          (FileList   *flist,
                                          MooFile    *file)
 {
     MooFile *f = _moo_file_ref (file);
@@ -153,7 +153,7 @@ static int       file_list_add          (FileList   *flist,
 }
 
 
-static int       file_list_remove       (FileList   *flist,
+static inline int       file_list_remove       (FileList   *flist,
                                          MooFile    *file)
 {
     GSequenceIter *iter;
@@ -174,7 +174,7 @@ static int       file_list_remove       (FileList   *flist,
 }
 
 
-static MooFile  *file_list_nth          (FileList   *flist,
+static inline MooFile  *file_list_nth          (FileList   *flist,
                                          int         index_)
 {
     GSequenceIter *iter;
@@ -201,7 +201,7 @@ G_GNUC_UNUSED static gboolean
 }
 
 
-static int       file_list_position     (FileList   *flist,
+static inline int       file_list_position     (FileList   *flist,
                                          MooFile    *file)
 {
     GSequenceIter *iter;
@@ -215,14 +215,14 @@ static int       file_list_position     (FileList   *flist,
 }
 
 
-static MooFile  *file_list_find_name    (FileList   *flist,
+static inline MooFile  *file_list_find_name    (FileList   *flist,
                                          const char *name)
 {
     return (MooFile *) g_hash_table_lookup (flist->name_to_file, name);
 }
 
 
-static MooFile  *file_list_find_display_name
+static inline MooFile  *file_list_find_display_name
                                         (FileList   *flist,
                                          const char *display_name)
 {
@@ -231,7 +231,7 @@ static MooFile  *file_list_find_display_name
 }
 
 
-static MooFile  *file_list_first        (FileList   *flist)
+static inline MooFile  *file_list_first        (FileList   *flist)
 {
     GSequenceIter *iter = g_sequence_get_begin_iter (flist->seq);
 
@@ -242,7 +242,7 @@ static MooFile  *file_list_first        (FileList   *flist)
 }
 
 
-static MooFile  *file_list_next         (FileList   *flist,
+static inline MooFile  *file_list_next         (FileList   *flist,
                                          MooFile    *file)
 {
     GSequenceIter *iter = (GSequenceIter *) g_hash_table_lookup (flist->file_to_iter, file);
@@ -258,7 +258,7 @@ static MooFile  *file_list_next         (FileList   *flist,
 }
 
 
-static GSList   *file_list_get_slist    (FileList   *flist)
+static inline GSList   *file_list_get_slist    (FileList   *flist)
 {
     GSequenceIter *iter;
     GSList *slist = NULL;
@@ -281,7 +281,7 @@ static GSList   *file_list_get_slist    (FileList   *flist)
  * pass to reinsert -- no per-element O(log n) insert-sorted, since the target
  * order is already known.
  */
-static void      file_list_set_cmp_func (FileList   *flist,
+static inline void      file_list_set_cmp_func (FileList   *flist,
                                          MooFileCmp  cmp_func,
                                          int       **new_order)
 {
@@ -335,7 +335,7 @@ static void      file_list_set_cmp_func (FileList   *flist,
 }
 
 
-static void      _hash_table_insert     (FileList       *flist,
+static inline void      _hash_table_insert     (FileList       *flist,
                                          MooFile        *file,
                                          GSequenceIter  *iter)
 {
@@ -349,7 +349,7 @@ static void      _hash_table_insert     (FileList       *flist,
 }
 
 
-static void      _hash_table_remove     (FileList       *flist,
+static inline void      _hash_table_remove     (FileList       *flist,
                                          MooFile        *file)
 {
     g_hash_table_remove (flist->file_to_iter, file);
@@ -360,7 +360,7 @@ static void      _hash_table_remove     (FileList       *flist,
 }
 
 
-static int
+static inline int
 moo_file_case_cmp (MooFile *f1,
                    MooFile *f2)
 {
@@ -377,7 +377,7 @@ moo_file_case_cmp (MooFile *f1,
                                        _moo_file_collation_key (f2));
 }
 
-static int
+static inline int
 moo_file_cmp (MooFile *f1,
               MooFile *f2)
 {
@@ -394,7 +394,7 @@ moo_file_cmp (MooFile *f1,
                        _moo_file_display_name (f2));
 }
 
-static int
+static inline int
 moo_file_case_cmp_fi (MooFile *f1,
                       MooFile *f2)
 {
@@ -407,7 +407,7 @@ moo_file_case_cmp_fi (MooFile *f1,
                                        _moo_file_collation_key (f2));
 }
 
-static int
+static inline int
 moo_file_cmp_fi (MooFile *f1,
                  MooFile *f2)
 {
@@ -424,7 +424,7 @@ moo_file_cmp_fi (MooFile *f1,
 /* Adapts a MooFileCmp (no user_data) to the GCompareDataFunc g_sequence_*
    wants, so the same comparators used everywhere else in this file can be
    passed straight to g_sequence_insert_sorted(). */
-static int       _cmp_func_wrapper      (gconstpointer   a,
+static inline int       _cmp_func_wrapper      (gconstpointer   a,
                                          gconstpointer   b,
                                          gpointer        user_data)
 {
@@ -433,7 +433,7 @@ static int       _cmp_func_wrapper      (gconstpointer   a,
 }
 
 
-static int       _compare_file_indices  (int            *a,
+static inline int       _compare_file_indices  (int            *a,
                                          int            *b,
                                          gpointer        user_data)
 {
