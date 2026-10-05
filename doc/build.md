@@ -84,7 +84,7 @@ sees.
 
 That includes deprecated API: `-Wdeprecated-declarations` is an error under strict, and
 no call in `src/` is wrapped in `G_GNUC_BEGIN_IGNORE_DEPRECATIONS` any more (see
-AGENTS.md); `src/vendor` is exempt. clang reports deprecations gcc does not (deprecated
+AGENTS.md), `src/vendor` included. clang reports deprecations gcc does not (deprecated
 macros, deprecated parent types in `G_DEFINE_TYPE`), so a gcc-only build
 is not enough to know the clang job is green.
 

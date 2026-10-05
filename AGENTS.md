@@ -71,11 +71,11 @@ one only a user can. `tests/` and `tests/coverage.floor` say what the suite cove
 and ctags' `readtags.c`. It is excluded from `--target analyze`
 (`cmake/Analyze.cmake`), exempt from `.editorconfig`, and outside the style measurements
 below. Do not reformat or restyle it, and keep a change there to what our build needs —
-anything else belongs upstream. Deprecation warnings are switched off for these files
-(`src/CMakeLists.txt`). Everywhere else deprecated API is an error under `ENABLE_STRICT`,
-with no exceptions left: the GtkAction family and GtkStock that used to be wrapped in
-`G_GNUC_BEGIN_IGNORE_DEPRECATIONS` have been replaced, and a new wrapper is not
-wanted. `doc/deprecations.md` is the record of how, and of what remains in `src/vendor/`.
+anything else belongs upstream. Deprecated API is an error under `ENABLE_STRICT`
+everywhere, `src/vendor/` included, with no exceptions left: the GtkAction family and
+GtkStock that used to be wrapped in `G_GNUC_BEGIN_IGNORE_DEPRECATIONS` have been
+replaced, the style scheme's `GtkRcStyle` code was ported from gtksourceview 3.24, and
+a new wrapper is not wanted. `doc/deprecations.md` is the record of how.
 
 ---
 

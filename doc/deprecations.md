@@ -317,11 +317,19 @@ accelerator editor for the same result.
 - [ ] 4.5 (put off: `doc/todo.md`) Hand check: menus, toolbar, accelerators, toggle/radio, user tools,
   plugin actions. Push and CI.
 
-## Stage 5 — vendored gtksourceview (put off: `doc/todo.md`)
+## Stage 5 — vendored gtksourceview
 
-- [ ] 5.1 Measure: build `src/vendor` without `-Wno-deprecated-declarations` and count.
-- [ ] 5.2 The user decides whether to fix it in place (upstream gtksourceview 3 is
-  finished, so "belongs upstream" no longer applies) or to keep the exemption.
+- [x] 5.1 Measure: build `src/vendor` without `-Wno-deprecated-declarations` and count.
+  Nine calls, all in `gtksourcestylescheme.c`: `gdk_color_parse` and the `GtkRcStyle`
+  machinery (`gtk_widget_modify_style`, `_modify_cursor`, `_get_modifier_style`,
+  `_ensure_style`, `_get_style`) that applied a scheme's text, selection, line-number
+  and cursor colours to the view.
+- [x] 5.2 Fixed in place: that code was dead on GTK+3 anyway — the view stayed white
+  under cobalt (`tests/editor/color_scheme`). Ported from gtksourceview 3.24.11: the
+  scheme builds a `GtkCssProvider` (lazily, since our manager sets the parent after
+  parsing) and the view gets it at `APPLICATION - 2`; the previous scheme's provider
+  is removed. Upstream's `gtk_style_context_invalidate()` is left out — adding a
+  provider invalidates the context. The `-Wno-deprecated-declarations` is gone.
 
 ## Stage 6 — locking it in
 
