@@ -269,6 +269,14 @@ accelerator editor for the same result.
        `connect-proxy`/`disconnect-proxy` had no listeners and are gone; `gtk-menu-images` left
        `KNOWN_DEPRECATED`.
     c. (4.2) MooActionGroup on GObject: a name and a hash of actions.
+       Done: step c. `MooActionGroup` is a plain GObject: a name, a display name and a hash
+       of its actions, which it owns. An action finds its group through a pointer on itself
+       that insert sets and remove or the group's finalize clears; the `action-group` property
+       of GtkAction is no longer read. Nothing in `src/` set a group insensitive or invisible,
+       or listened to `pre-activate`/`post-activate`, so the group sensitivity/visibility
+       GtkAction folded into `is_sensitive` is dropped. `moo_action_collection_*` and every
+       caller take `MooActionGroup *`. Accelerators are untouched: GtkAction connects them
+       through its own accel group and accel path, neither of which involves the group.
     d. Accelerators connected by path ourselves. Risk: user-set shortcuts and
        runtime changes; the shortcut tests in `doc/testing-panes.md` cover them.
     e. (4.3) MooAction and MooToggleAction on GObject, with their own properties
@@ -279,7 +287,7 @@ accelerator editor for the same result.
     g. (4.5) Hand check, then CI.
 - [x] 4.1 Our own proxy creation and sync in `moouixml.cpp` instead of
   `gtk_action_create_menu_item`/`create_tool_item` and GtkActivatable.
-- [ ] 4.2 MooActionGroup/collection without GtkActionGroup.
+- [x] 4.2 MooActionGroup/collection without GtkActionGroup.
 - [ ] 4.3 MooAction, MooToggleAction and MooRadioAction rebased on GObject.
 - [ ] 4.4 The remaining `gtk_action_*` callers: accel prefs, bookmarks,
   fileview tools, LSP, spell, user tools.

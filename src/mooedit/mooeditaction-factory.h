@@ -17,6 +17,7 @@
 #define MOO_EDIT_ACTION_FACTORY_H
 
 #include "mooutils/mooaction.h"
+#include "mooutils/mooactiongroup.h"
 #include "mooedit/mooedit.h"
 
 G_BEGIN_DECLS
@@ -30,7 +31,7 @@ void    moo_edit_class_new_action           (MooEditClass       *klass,
 void    moo_edit_class_remove_action        (MooEditClass       *klass,
                                              const char         *id);
 
-GtkActionGroup *moo_edit_get_actions        (MooEdit            *edit);
+MooActionGroup *moo_edit_get_actions        (MooEdit            *edit);
 GtkAction *moo_edit_get_action_by_id        (MooEdit            *edit,
                                              const char         *action_id);
 

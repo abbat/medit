@@ -577,7 +577,7 @@ moo_file_selector_constructor (GType           type,
     MooFileView *fileview;
     GObject *object;
     guint merge_id;
-    GtkActionGroup *group;
+    MooActionGroup *group;
     MooPane *pane;
 
     object = G_OBJECT_CLASS(_moo_file_selector_parent_class)->constructor (type, n_props, props);

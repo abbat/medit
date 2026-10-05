@@ -751,7 +751,7 @@ update_accels (MooWindow *window)
 
     for (l = moo_action_collection_get_groups (window->priv->actions); l != NULL; l = l->next)
     {
-        GtkActionGroup *group = (GtkActionGroup *) l->data;
+        MooActionGroup *group = (MooActionGroup *) l->data;
         GList *actions;
 
         /* GtkAction is deprecated since GTK+ 3.10; there is no replacement short of GAction/GMenu. */
@@ -1879,7 +1879,7 @@ moo_window_add_action (MooWindow  *window,
                        const char *group_name,
                        GtkAction  *action)
 {
-    GtkActionGroup *group;
+    MooActionGroup *group;
     MooActionCollection *coll;
 
     g_return_if_fail (MOO_IS_WINDOW (window));

@@ -19,6 +19,7 @@
 
 #include "mooutils/mooactiongroup.h"
 #include "mooutils/mooactionbase.h"
+#include "mooutils/mooaction-private.h"
 #include "mooutils/mooutils-misc.h"
 #include "mooutils/moowindow.h"
 
@@ -179,18 +180,18 @@ moo_action_collection_get_display_name (MooActionCollection *coll)
 }
 
 
-static GtkActionGroup *
+static MooActionGroup *
 get_group (MooActionCollection *coll,
            const char          *name)
 {
     if (name)
-        return GTK_ACTION_GROUP (g_hash_table_lookup (coll->priv->groups, name));
+        return (MooActionGroup*) g_hash_table_lookup (coll->priv->groups, name);
     else
-        return GTK_ACTION_GROUP (coll->priv->default_group);
+        return coll->priv->default_group;
 }
 
 
-GtkActionGroup *
+MooActionGroup *
 moo_action_collection_add_group (MooActionCollection *coll,
                                  const char          *name,
                                  const char          *display_name)
@@ -205,11 +206,11 @@ moo_action_collection_add_group (MooActionCollection *coll,
     g_hash_table_insert (coll->priv->groups, g_strdup (name), group);
     coll->priv->groups_list = g_slist_prepend (coll->priv->groups_list, group);
 
-    return GTK_ACTION_GROUP (group);
+    return group;
 }
 
 
-GtkActionGroup *
+MooActionGroup *
 moo_action_collection_get_group (MooActionCollection *coll,
                                  const char          *name)
 {
@@ -237,7 +238,7 @@ moo_action_collection_get_action (MooActionCollection *coll,
 
     for (l = coll->priv->groups_list; l != NULL; l = l->next)
     {
-        GtkActionGroup *group = GTK_ACTION_GROUP (l->data);
+        MooActionGroup *group = (MooActionGroup*) l->data;
         GtkAction *action = moo_action_group_get_action (group, name);
         if (action)
             return action;
@@ -251,12 +252,10 @@ void
 moo_action_collection_remove_action (MooActionCollection *coll,
                                      GtkAction           *action)
 {
-    GtkActionGroup *group = NULL;
-
     g_return_if_fail (MOO_IS_ACTION_COLLECTION (coll));
     g_return_if_fail (GTK_IS_ACTION (action));
 
-    g_object_get (action, "action-group", &group, NULL);
+    MooActionGroup *group = _moo_action_get_group (action);
     g_return_if_fail (group != NULL);
     g_return_if_fail (g_slist_find (coll->priv->groups_list, group) != NULL);
 

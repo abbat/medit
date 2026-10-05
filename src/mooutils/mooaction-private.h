@@ -18,6 +18,7 @@
 
 #include "mooutils/mooaction.h"
 #include "mooutils/mooclosure.h"
+#include "mooutils/mooactiongroup.h"
 
 G_BEGIN_DECLS
 
@@ -32,7 +33,7 @@ gboolean    _moo_action_get_dead            (gpointer            action);
 gboolean    _moo_action_get_has_submenu     (gpointer            action);
 
 const char *_moo_action_get_display_name    (gpointer            action);
-GtkActionGroup *_moo_action_get_group       (gpointer            action);
+MooActionGroup *_moo_action_get_group       (gpointer            action);
 
 void        _moo_action_set_no_accel        (gpointer            action,
                                              gboolean            no_accel);

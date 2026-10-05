@@ -50,7 +50,7 @@ typedef struct {
     GtkTreeStore *store;
 
     GHashTable *changed;    /* Gtkction* -> Shortcut* */
-    GPtrArray *actions;     /* GtkActionGroup* */
+    GPtrArray *actions;     /* MooActionGroup* */
     GHashTable *groups;     /* char* -> GtkTreeRowReference* */
 } MooAccelPrefsPage;
 
@@ -461,7 +461,7 @@ get_accel_label_for_path (const char *accel_path)
 
 
 static gboolean
-add_row (GtkActionGroup    *group,
+add_row (MooActionGroup     *group,
          GtkAction         *action,
          MooAccelPrefsPage *page)
 {
@@ -475,7 +475,7 @@ add_row (GtkActionGroup    *group,
     if (_moo_action_get_no_accel (action) || !_moo_action_get_accel_editable (action))
         return FALSE;
 
-    group_name = _moo_action_group_get_display_name (MOO_ACTION_GROUP (group));
+    group_name = _moo_action_group_get_display_name (group);
 
     if (!group_name)
         group_name = "";
@@ -540,7 +540,7 @@ moo_accel_prefs_page_init (MooPrefsPage *prefs_page)
 
     for (i = 0; i < page->actions->len; ++i)
     {
-        GtkActionGroup *group = (GtkActionGroup*) g_ptr_array_index (page->actions, i);
+        MooActionGroup *group = (MooActionGroup*) g_ptr_array_index (page->actions, i);
         GList *list = moo_action_group_list_actions (group);
 
         while (list)

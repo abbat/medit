@@ -28,17 +28,18 @@ G_BEGIN_DECLS
 #define MOO_IS_ACTION_GROUP_CLASS(klass)        (G_TYPE_CHECK_CLASS_TYPE ((klass), MOO_TYPE_ACTION_GROUP))
 #define MOO_ACTION_GROUP_GET_CLASS(obj)         (G_TYPE_INSTANCE_GET_CLASS ((obj), MOO_TYPE_ACTION_GROUP, MooActionGroupClass))
 
-typedef struct _MooActionGroup             MooActionGroup;
 typedef struct _MooActionGroupClass        MooActionGroupClass;
 
 struct _MooActionGroup {
-    GtkActionGroup base;
+    GObject base;
+    char *name;
     char *display_name;
+    GHashTable *actions;    /* name -> GtkAction*, owned */
     MooActionCollection *collection;
 };
 
 struct _MooActionGroupClass {
-    GtkActionGroupClass base_class;
+    GObjectClass base_class;
 };
 
 
@@ -56,14 +57,14 @@ MooActionCollection *_moo_action_group_get_collection   (MooActionGroup         
 void                 _moo_action_group_set_collection   (MooActionGroup         *group,
                                                          MooActionCollection    *collection);
 
-const char          *moo_action_group_get_name          (GtkActionGroup         *group);
-void                 moo_action_group_insert_action     (GtkActionGroup         *group,
+const char          *moo_action_group_get_name          (MooActionGroup         *group);
+void                 moo_action_group_insert_action     (MooActionGroup         *group,
                                                          GtkAction              *action);
-void                 moo_action_group_remove_action     (GtkActionGroup         *group,
+void                 moo_action_group_remove_action     (MooActionGroup         *group,
                                                          GtkAction              *action);
-GtkAction           *moo_action_group_get_action        (GtkActionGroup         *group,
+GtkAction           *moo_action_group_get_action        (MooActionGroup         *group,
                                                          const char             *name);
-GList               *moo_action_group_list_actions      (GtkActionGroup         *group);
+GList               *moo_action_group_list_actions      (MooActionGroup         *group);
 
 
 G_END_DECLS

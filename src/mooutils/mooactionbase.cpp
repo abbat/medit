@@ -478,26 +478,10 @@ _moo_action_base_get_property (GObject    *object,
 }
 
 
-GtkActionGroup *
-_moo_action_get_group (gpointer action)
-{
-    GtkActionGroup *group = NULL;
-
-    g_return_val_if_fail (GTK_IS_ACTION (action), NULL);
-
-    g_object_get (action, "action-group", &group, NULL);
-
-    if (group)
-        g_object_unref (group);
-
-    return group;
-}
-
-
 char *
 _moo_action_make_accel_path (gpointer action)
 {
-    GtkActionGroup *group = NULL;
+    MooActionGroup *group = NULL;
     MooActionCollection *collection;
     const char *name, *group_name, *collection_name;
 
@@ -505,7 +489,7 @@ _moo_action_make_accel_path (gpointer action)
 
     group = _moo_action_get_group (action);
     g_return_val_if_fail (MOO_IS_ACTION_GROUP (group), NULL);
-    collection = _moo_action_group_get_collection (MOO_ACTION_GROUP (group));
+    collection = _moo_action_group_get_collection (group);
     g_return_val_if_fail (MOO_IS_ACTION_COLLECTION (collection), NULL);
 
     name = moo_action_get_name (GTK_ACTION (action));

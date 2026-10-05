@@ -1130,7 +1130,7 @@ static void
 init_actions (MooFileView *fileview)
 {
     GtkAction *action;
-    GtkActionGroup *group;
+    MooActionGroup *group;
 
     fileview->priv->actions = moo_action_collection_new ("File Selector", _("File Selector"));
     char *ui;

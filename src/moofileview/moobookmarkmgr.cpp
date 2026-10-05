@@ -579,7 +579,7 @@ make_menu (MooBookmarkMgr *mgr,
     GtkTreeModel *model = GTK_TREE_MODEL (mgr->priv->store);
     GtkTreeIter iter;
     GString *markup;
-    GtkActionGroup *group;
+    MooActionGroup *group;
 
     if (!gtk_tree_model_get_iter_first (model, &iter))
         return;

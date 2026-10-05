@@ -380,7 +380,7 @@ void
 _moo_edit_check_actions (MooEdit     *edit,
                          MooEditView *view)
 {
-    GtkActionGroup *group = moo_edit_get_actions (edit);
+    MooActionGroup *group = moo_edit_get_actions (edit);
     GList *actions = moo_action_group_list_actions (group);
 
     while (actions)

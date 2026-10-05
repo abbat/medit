@@ -83,7 +83,7 @@ moo_action_new_valist (GType       action_type,
 
 
 GtkAction *
-moo_action_group_add_action (GtkActionGroup *group,
+moo_action_group_add_action (MooActionGroup *group,
                              const char     *name,
                              const char     *first_prop_name,
                              ...)
@@ -92,7 +92,7 @@ moo_action_group_add_action (GtkActionGroup *group,
     GType action_type = MOO_TYPE_ACTION;
     va_list var_args;
 
-    g_return_val_if_fail (GTK_IS_ACTION_GROUP (group), NULL);
+    g_return_val_if_fail (MOO_IS_ACTION_GROUP (group), NULL);
 
     va_start (var_args, first_prop_name);
 

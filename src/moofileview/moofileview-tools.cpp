@@ -172,7 +172,7 @@ tools_info_free (ToolsInfo *info)
 static void
 remove_old_tools (MooFileView    *fileview,
                   MooUiXml       *xml,
-                  GtkActionGroup *group)
+                  MooActionGroup *group)
 {
     ToolsInfo *info;
 
@@ -266,7 +266,7 @@ _moo_file_view_tools_load (MooFileView *fileview)
     MooMarkupNode *root, *child;
     MooUiXml *xml;
     MooActionCollection *actions;
-    GtkActionGroup *group;
+    MooActionGroup *group;
     MooUiNode *ph;
     GSList *l;
 

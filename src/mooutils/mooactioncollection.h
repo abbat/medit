@@ -28,6 +28,7 @@ G_BEGIN_DECLS
 #define MOO_ACTION_COLLECTION_GET_CLASS(obj)    (G_TYPE_INSTANCE_GET_CLASS ((obj), MOO_TYPE_ACTION_COLLECTION, MooActionCollectionClass))
 
 typedef struct _MooActionCollection        MooActionCollection;
+typedef struct _MooActionGroup             MooActionGroup;
 typedef struct _MooActionCollectionPrivate MooActionCollectionPrivate;
 typedef struct _MooActionCollectionClass   MooActionCollectionClass;
 
@@ -48,10 +49,10 @@ MooActionCollection *moo_action_collection_new              (const char         
 
 const char          *moo_action_collection_get_name         (MooActionCollection    *coll);
 
-GtkActionGroup      *moo_action_collection_add_group        (MooActionCollection    *coll,
+MooActionGroup      *moo_action_collection_add_group        (MooActionCollection    *coll,
                                                              const char             *name,
                                                              const char             *display_name);
-GtkActionGroup      *moo_action_collection_get_group        (MooActionCollection    *coll,
+MooActionGroup      *moo_action_collection_get_group        (MooActionCollection    *coll,
                                                              const char             *name);
 const GSList        *moo_action_collection_get_groups       (MooActionCollection    *coll);
 

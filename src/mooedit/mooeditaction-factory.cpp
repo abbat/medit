@@ -89,7 +89,7 @@ static void
 moo_edit_add_action (MooEdit   *edit,
                      GtkAction *action)
 {
-    GtkActionGroup *group;
+    MooActionGroup *group;
 
     g_return_if_fail (MOO_IS_EDIT (edit));
     g_return_if_fail (GTK_IS_ACTION (action));
@@ -103,7 +103,7 @@ static void
 moo_edit_remove_action (MooEdit    *edit,
                         const char *action_id)
 {
-    GtkActionGroup *group;
+    MooActionGroup *group;
     GtkAction *action;
 
     g_return_if_fail (MOO_IS_EDIT (edit));
@@ -480,7 +480,7 @@ moo_edit_class_remove_action (MooEditClass *klass,
 }
 
 
-GtkActionGroup *
+MooActionGroup *
 moo_edit_get_actions (MooEdit *edit)
 {
     g_return_val_if_fail (MOO_IS_EDIT (edit), NULL);
@@ -492,7 +492,7 @@ GtkAction *
 moo_edit_get_action_by_id (MooEdit    *edit,
                            const char *action_id)
 {
-    GtkActionGroup *actions;
+    MooActionGroup *actions;
 
     g_return_val_if_fail (MOO_IS_EDIT (edit), NULL);
     g_return_val_if_fail (action_id != NULL, NULL);

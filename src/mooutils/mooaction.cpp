@@ -35,7 +35,7 @@ static void _moo_action_set_closure (MooAction  *action,
 gpointer
 _moo_action_get_window (gpointer action)
 {
-    GtkActionGroup *group;
+    MooActionGroup *group;
     MooActionCollection *collection;
 
     g_return_val_if_fail (GTK_IS_ACTION (action), NULL);
@@ -43,7 +43,7 @@ _moo_action_get_window (gpointer action)
     group = _moo_action_get_group (action);
     g_return_val_if_fail (MOO_IS_ACTION_GROUP (group), NULL);
 
-    collection = _moo_action_group_get_collection (MOO_ACTION_GROUP (group));
+    collection = _moo_action_group_get_collection (group);
     return _moo_action_collection_get_window (collection);
 }
 

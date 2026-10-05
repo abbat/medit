@@ -17,6 +17,7 @@
 #define MOO_ACTION_FACTORY_H
 
 #include "mooutils/mooutils-gobject.h"
+#include "mooutils/mooactiongroup.h"
 
 
 G_BEGIN_DECLS
@@ -68,7 +69,7 @@ GtkAction          *moo_action_factory_create_action(MooActionFactory   *factory
                                                      ...) G_GNUC_NULL_TERMINATED;
 
 
-GtkAction          *moo_action_group_add_action     (GtkActionGroup     *group,
+GtkAction          *moo_action_group_add_action     (MooActionGroup      *group,
                                                      const char         *name,
                                                      const char         *first_prop_name,
                                                      ...) G_GNUC_NULL_TERMINATED;
