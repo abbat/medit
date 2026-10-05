@@ -67,6 +67,14 @@ def run(t):
     # would go nowhere.
     t.focus()
 
+    # Alt+N is connected by the window itself (connect-accel), ahead of the
+    # Window menu's document item that carries the same path; the first handler
+    # to take the key wins, so this reaches the window's closure.
+    t.key("alt+2")
+    t.wait(lambda: showing(t) == DOCS[1],
+           "Alt+2 shows the second tab; %s is showing" % showing(t))
+    t.log("ok: Alt+2 shows the second tab")
+
     for left in (2, 1):
         t.key("ctrl+w")
         t.wait(lambda n=left: len(order(t)) == n,

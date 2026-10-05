@@ -1874,6 +1874,21 @@ moo_window_class_set_id (MooWindowClass     *klass,
     g_type_set_qdata (type, MOO_WINDOW_NAME_QUARK, g_strdup (name));
 }
 
+/* What GtkAction's accel closure did: an insensitive action lets the key through */
+static gboolean
+accel_activate (GtkAction                     *action,
+                G_GNUC_UNUSED GObject         *acceleratable,
+                G_GNUC_UNUSED guint            keyval,
+                G_GNUC_UNUSED GdkModifierType  modifier,
+                G_GNUC_UNUSED GtkAccelGroup   *accel_group)
+{
+    if (!moo_action_get_sensitive (action))
+        return FALSE;
+
+    moo_action_activate (action);
+    return TRUE;
+}
+
 static void
 moo_window_add_action (MooWindow  *window,
                        const char *group_name,
@@ -1889,10 +1904,7 @@ moo_window_add_action (MooWindow  *window,
     group = moo_action_collection_get_group (coll, group_name);
     g_return_if_fail (group != NULL);
 
-    G_GNUC_BEGIN_IGNORE_DEPRECATIONS
     moo_action_group_insert_action (group, action);
-    gtk_action_set_accel_group (action, window->accel_group);
-    G_GNUC_END_IGNORE_DEPRECATIONS
 
     if (!_moo_action_get_dead (action) && !_moo_action_get_no_accel (action))
     {
@@ -1902,12 +1914,11 @@ moo_window_add_action (MooWindow  *window,
         _moo_accel_register (accel_path, _moo_action_get_default_accel (action));
         _moo_action_set_accel_path (action, accel_path);
 
+        /* The closure dies with the action, and the accel group drops it then */
         if (_moo_action_get_connect_accel (action))
-        {
-            G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-            gtk_action_connect_accelerator (action);
-            G_GNUC_END_IGNORE_DEPRECATIONS
-        }
+            gtk_accel_group_connect_by_path (window->accel_group, accel_path,
+                                             g_cclosure_new_object_swap (G_CALLBACK (accel_activate),
+                                                                         G_OBJECT (action)));
 
         accels_changed (window);
 

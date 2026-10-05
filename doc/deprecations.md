@@ -279,6 +279,15 @@ accelerator editor for the same result.
        through its own accel group and accel path, neither of which involves the group.
     d. Accelerators connected by path ourselves. Risk: user-set shortcuts and
        runtime changes; the shortcut tests in `doc/testing-panes.md` cover them.
+       Done: step d. Neither `gtk_action_set_accel_group()` nor
+       `gtk_action_connect_accelerator()` is called any more. Menu items already took
+       the window's accel group from their menu and the accel path from the action
+       (step b), so only the `connect-accel` actions needed anything:
+       `moo_window_add_action()` connects a closure by path that does what GtkAction's
+       did — activate a sensitive action and take the key, let an insensitive one pass
+       it on. It is connected before any menu item for the same path, and the first
+       handler to take a key wins, so it is the one that runs: `window.tab_navigation`
+       presses Alt+2 and fails when the closure takes the key without activating.
     e. (4.3) MooAction and MooToggleAction on GObject, with their own properties
        and `activate`/`toggled` signals.
     f. (4.4) The public headers take `MooAction *` instead of `GtkAction *`; the

@@ -1806,7 +1806,6 @@ create_menu_item (MooUiXml       *xml,
         if (_moo_action_get_dead (action))
             return;
 
-        gtk_action_set_accel_group (action, toplevel->accel_group);
         menu_item = moo_action_create_menu_item (action);
     }
     else
@@ -2165,8 +2164,6 @@ create_tool_item (MooUiXml       *xml,
 
         if (!action || _moo_action_get_dead (action))
             return TRUE;
-
-        gtk_action_set_accel_group (action, toplevel->accel_group);
 
         tool_item = moo_action_create_tool_item (action);
 
