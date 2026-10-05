@@ -764,7 +764,7 @@ moo_edit_window_class_init (MooEditWindowClass *klass)
     moo_window_class_new_action (window_class, "ToggleBookmark", nullptr,
                                  "display-name", _("Toggle Bookmark"),
                                  "label", _("Toggle _Bookmark"),
-                                 "icon-name", "bookmark-new",
+                                 "icon-name", "bookmark-new-symbolic",
                                  "default-accel", MOO_EDIT_ACCEL_BOOKMARK,
                                  "closure-callback", action_toggle_bookmark,
                                  "condition::sensitive", "has-open-document",

@@ -1253,7 +1253,7 @@ init_actions (MooFileView *fileview)
     moo_action_group_add_action (group, "BookmarksMenu",
                                  "label", _("Bookmarks"),
                                  "tooltip", _("Bookmarks"),
-                                 "icon-name", "help-about",
+                                 "icon-name", "help-about-symbolic",
                                  "closure-object", fileview,
                                  "closure-callback", view_bookmarks,
                                  "has-submenu", TRUE,

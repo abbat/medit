@@ -11,9 +11,10 @@ screen: the text of a menu is grey, and an icon of these two has colour in it, s
 a pixel with colour in the strip at the left of the item is the icon.
 """
 
-ITEMS = (("Edit", "Paste"), ("Edit", "Increase Indent"),
-         # its icon name was one the theme does not have, so it drew nothing
-         ("Document", "Toggle Bookmark"))
+# Not Toggle Bookmark, although its icon name was one the theme does not have: the
+# icon is a grey symbolic one, which a colour test cannot tell from the check
+# indicator the item draws in the same place.
+ITEMS = (("Edit", "Paste"), ("Edit", "Increase Indent"))
 
 # How far apart the channels of a pixel are, at least, for it to be colour and
 # not the grey of text or of the menu.
