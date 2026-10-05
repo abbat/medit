@@ -27,13 +27,17 @@ file: `ctx_shell` 39%, `ctx_read` 28%, `ctx_search` 19%, `ctx_patch` 7%, then
   keeps the output out of the channel altogether.
 - **The full output of a compressed call is kept** in a log whose path the reply
   names; `ctx_expand id=<that path> search=<text>` slices it instead of re-running.
-- **An allowlist blocks some binaries**: `apt-cache`, `dpkg`, `clang-tidy`, `bash`,
-  heredocs, `ctest` among others, and wrapping one in `timeout` does not help. Use
-  `pkg-config --modversion` for versions; run the rest through the native Bash tool.
-  The hook guards the native Bash too for some: `msgattrib`, `msgcomm` and `python3`
-  with a heredoc are refused there as well, while `msgmerge` and `msgfmt` pass. Put
-  the logic in a script file in the scratchpad and run that.
-  Do not run `lean-ctx allow` to widen it — that is the user's call.
+- **An allowlist blocks binaries not named in it** (`shell_allowlist` in
+  `~/.config/lean-ctx/config.toml`, per machine), and wrapping one in `timeout` does
+  not help. The hook guards the native Bash too, so a blocked command is blocked
+  everywhere. Use `pkg-config --modversion` for versions rather than `apt-cache` or
+  `dpkg`. Do not run `lean-ctx allow` to widen it — that is the user's call.
+- **A config that fails to parse silently drops back to the built-in allowlist**, so
+  an entry just added "does not work". The refusal names the TOML error;
+  `lean-ctx doctor 2>&1 | grep "parse error"` checks it.
+- **Python goes through `ctx_execute language=python`**, not `python3 -c` or a heredoc,
+  which the hook refuses. For a script kept in the scratchpad, `ctx_execute
+  action=file path=…`.
 - **A command past ~110s detaches** into a `shell_*` job (`timeout_ms` sets its
   lifetime, `background_action=status job_id=…` polls it). A full build fits; a CI
   wait loop does not — it stays in Bash.
