@@ -684,7 +684,7 @@ static gboolean
 _moo_value_convert_to_bool (const GValue *val,
                             gboolean     *dest)
 {
-    GValue result = {0};
+    GValue result = {};
 
     g_value_init (&result, G_TYPE_BOOLEAN);
 
@@ -702,7 +702,7 @@ static gboolean
 _moo_value_convert_to_int (const GValue *val,
                            int          *dest)
 {
-    GValue result = {0};
+    GValue result = {};
 
     g_value_init (&result, G_TYPE_INT);
 
@@ -719,7 +719,7 @@ static gboolean
 _moo_value_convert_to_uint (const GValue *val,
                             guint        *dest)
 {
-    GValue result = {0};
+    GValue result = {};
 
     g_value_init (&result, G_TYPE_UINT);
 
@@ -756,7 +756,7 @@ gboolean
 _moo_value_convert_from_string (const char *string,
                                 GValue     *val)
 {
-    GValue str_val = {0};
+    GValue str_val = {};
     gboolean result;
 
     g_return_val_if_fail (G_IS_VALUE (val), FALSE);
@@ -779,7 +779,7 @@ _moo_convert_string_to_int (const char *string,
 
     if (string && string[0])
     {
-        GValue str_val = {0};
+        GValue str_val = {};
 
         g_value_init (&str_val, G_TYPE_STRING);
         g_value_set_static_string (&str_val, string);
@@ -802,7 +802,7 @@ _moo_convert_string_to_uint (const char *string,
 
     if (string && string[0])
     {
-        GValue str_val = {0};
+        GValue str_val = {};
 
         g_value_init (&str_val, G_TYPE_STRING);
         g_value_set_static_string (&str_val, string);
@@ -825,7 +825,7 @@ _moo_convert_string_to_bool (const char *string,
 
     if (string && string[0])
     {
-        GValue str_val = {0};
+        GValue str_val = {};
 
         g_value_init (&str_val, G_TYPE_STRING);
         g_value_set_static_string (&str_val, string);
@@ -844,7 +844,7 @@ _moo_convert_string_to_bool (const char *string,
 const char*
 _moo_convert_bool_to_string (gboolean value)
 {
-    GValue bool_val = {0};
+    GValue bool_val = {};
 
     g_value_init (&bool_val, G_TYPE_BOOLEAN);
     g_value_set_boolean (&bool_val, value);
@@ -857,7 +857,7 @@ gboolean
 _moo_value_change_type (GValue *val,
                         GType   new_type)
 {
-    GValue tmp = {0};
+    GValue tmp = {};
     gboolean result;
 
     g_return_val_if_fail (G_IS_VALUE (val), FALSE);
@@ -1153,7 +1153,7 @@ _moo_add_property_watch (gpointer            target,
 static void
 prop_watch_check (PropWatch *watch)
 {
-    GValue source_val = {0}, target_val = {0}, old_target_val = {0};
+    GValue source_val = {}, target_val = {}, old_target_val = {};
     GObject *source, *target;
 
     source = MOO_OBJECT_PTR_GET (watch->parent.source);
@@ -1386,7 +1386,7 @@ _moo_data_insert_ptr (MooData        *data,
                       GDestroyNotify  destroy)
 {
     MooPtr *ptr;
-    GValue gval = {0};
+    GValue gval = {};
 
     g_return_if_fail (data != NULL);
     g_return_if_fail (value != NULL);

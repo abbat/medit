@@ -671,8 +671,8 @@ static void
 load_file (MooHistoryMgr *mgr)
 {
     const char *filename;
-    GMarkupParser parser = {0};
-    ParserData data = {0};
+    GMarkupParser parser = {};
+    ParserData data = {};
     GError *error = NULL;
 
     mgr->priv->loaded = TRUE;

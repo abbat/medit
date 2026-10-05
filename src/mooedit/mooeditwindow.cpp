@@ -928,7 +928,7 @@ moo_edit_window_class_init (MooEditWindowClass *klass)
                                         nullptr, nullptr);
 
     {
-        GValue val = { 0 };
+        GValue val = {};
         g_value_init (&val, G_TYPE_INT);
         g_value_set_int (&val, 0);
         moo_prefs_new_key (PREFS_KEY_SPLIT_POS, G_TYPE_INT, &val, MOO_PREFS_STATE);

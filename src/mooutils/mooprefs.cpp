@@ -384,8 +384,8 @@ prefs_new_key_from_string (const char   *key,
                            int           prefs_kind)
 {
     PrefsItem *item;
-    GValue string_val = { 0 };
-    GValue real_val = { 0 };
+    GValue string_val = {};
+    GValue real_val = {};
     GType value_type;
 
     g_return_if_fail (key && key[0]);
@@ -413,7 +413,7 @@ prefs_new_key_from_string (const char   *key,
 
     if (!item)
     {
-        GValue default_val = { 0 };
+        GValue default_val = {};
         g_value_init (&default_val, value_type);
         if (prefs_kind == MOO_PREFS_SYS)
             g_value_copy (&real_val, &default_val);
@@ -1192,7 +1192,7 @@ void
 moo_prefs_set_int (const char *key,
                    int         val)
 {
-    GValue gval = { 0 };
+    GValue gval = {};
 
     g_return_if_fail (key != NULL);
 
@@ -1213,7 +1213,7 @@ void
 moo_prefs_set_bool (const char *key,
                     gboolean    val)
 {
-    GValue gval = { 0 };
+    GValue gval = {};
 
     g_return_if_fail (key != NULL);
 

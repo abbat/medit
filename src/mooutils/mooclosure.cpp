@@ -183,7 +183,7 @@ moo_closure_signal_new (gpointer    object,
                         GCallback   proxy_func)
 {
     guint signal_id = 0;
-    GSignalQuery query = {0}; /* make MSVC happy */
+    GSignalQuery query = {}; /* make MSVC happy */
     MooClosureSignal *cl;
 
     g_return_val_if_fail (G_IS_OBJECT (object), NULL);

@@ -397,7 +397,7 @@ _moo_file_get_icon (const MooFile  *file,
                     GtkWidget      *widget,
                     GtkIconSize     size)
 {
-    MooFileIcon icon = {0};
+    MooFileIcon icon = {};
 
     g_return_val_if_fail (file != NULL, NULL);
     g_return_val_if_fail (GTK_IS_WIDGET (widget), NULL);

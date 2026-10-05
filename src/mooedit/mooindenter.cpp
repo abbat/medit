@@ -296,7 +296,7 @@ iter_get_visual_offset (GtkTextIter *iter,
                         int         *offsetp,
                         int         *white_spacep)
 {
-    GtkTextIter start, white_space_start = {0};
+    GtkTextIter start, white_space_start = {};
     guint offset, white_space;
 
     start = *iter;

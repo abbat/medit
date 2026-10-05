@@ -277,7 +277,7 @@ moo_edit_class_new_actionv (MooEditClass       *klass,
     name = first_prop_name;
     while (name)
     {
-        MooParameter param = { 0 };
+        MooParameter param = {};
         GParamSpec *pspec;
         char *err = NULL;
 

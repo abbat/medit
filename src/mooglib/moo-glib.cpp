@@ -98,7 +98,7 @@ mgw_file_error_from_errno (mgw_errno_t err)
 int
 mgw_stat (const gchar *filename, MgwStatBuf *buf, mgw_errno_t *err)
 {
-    GStatBuf gbuf = { 0 };
+    GStatBuf gbuf = {};
     int result;
     call_with_errno2 (g_stat, result, filename, &gbuf);
     convert_g_stat_buf (&gbuf, buf);
@@ -108,7 +108,7 @@ mgw_stat (const gchar *filename, MgwStatBuf *buf, mgw_errno_t *err)
 int
 mgw_lstat (const gchar *filename, MgwStatBuf *buf, mgw_errno_t *err)
 {
-    GStatBuf gbuf = { 0 };
+    GStatBuf gbuf = {};
     int result;
     call_with_errno2 (g_lstat, result, filename, &gbuf);
     convert_g_stat_buf (&gbuf, buf);

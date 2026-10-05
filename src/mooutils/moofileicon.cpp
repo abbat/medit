@@ -43,7 +43,7 @@ moo_get_icon_for_path (const char  *path,
                        GtkWidget   *widget,
                        GtkIconSize  size)
 {
-    MooFileIcon icon = {0};
+    MooFileIcon icon = {};
     moo_file_icon_for_file (&icon, path);
     return moo_file_icon_get_pixbuf (&icon, widget, size);
 }
