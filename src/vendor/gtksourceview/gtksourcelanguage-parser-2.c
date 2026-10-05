@@ -1537,7 +1537,11 @@ file_parse (gchar                     *filename,
 	fd = open (filename, O_RDONLY, 0);
 
 	if (fd != -1)
-		reader = xmlReaderForFd (fd, filename, NULL, 0);
+		/* XML_PARSE_NOENT in place of xmlSubstituteEntitiesDefault (1),
+		 * deprecated in libxml2 2.12. The options API always keeps line
+		 * numbers, which xmlLineNumbersDefault (1) used to turn on. */
+		reader = xmlReaderForFd (fd, filename, NULL,
+					 XML_PARSE_NOENT DEBUG (| XML_PARSE_PEDANTIC));
 
 	if (reader == NULL)
 	{
@@ -1716,9 +1720,6 @@ _gtk_source_language_file_parse_version2 (GtkSourceLanguage       *language,
 	 * nodes (XML_PARSE_NOBLANKS), if it is possible with
 	 * xmlTextReader. */
 	xmlKeepBlanksDefault (0);
-	xmlLineNumbersDefault (1);
-	xmlSubstituteEntitiesDefault (1);
-	DEBUG (xmlPedanticParserDefault (1));
 
 	defined_regexes = g_hash_table_new_full (g_str_hash, g_str_equal,
 						 g_free, g_free);
